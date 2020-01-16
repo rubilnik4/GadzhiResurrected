@@ -1,4 +1,6 @@
-﻿using Prism.Ioc;
+﻿using GadzhieResurrected.ViewModels;
+using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
@@ -19,10 +21,17 @@ namespace GadzhieResurrected
         {
             return Container.Resolve<MainWindow>();
         }
-
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+                protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
 
+        }
+
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+          
+            ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
         }
     }
 }
