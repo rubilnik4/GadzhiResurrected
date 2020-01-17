@@ -4,16 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhieResurrected.Infrastructure
+namespace GadzhiModules.Infrastructure
 {
     public class ApplicationGadzhi : IApplicationGadzhi
     {
+        public ApplicationGadzhi()
+        {
+        }
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
         public async Task AddFromFiles()
         {
-           await Task.Delay(2000);
+            await Task.Delay(2000);
         }
 
         /// <summary>

@@ -13,14 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GadzhieResurrected
-{
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+namespace GadzhiModules.FilesConvertModule.Views
+{  
+    public partial class FilesConvertView : UserControl
     {
-        public MainWindow()
+        public FilesConvertView()
         {
             InitializeComponent();
         }

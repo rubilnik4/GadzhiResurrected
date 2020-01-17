@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gadzhie.Model
+namespace GadzhiModules.FilesConvertModule.Model
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах

@@ -7,11 +7,11 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набор атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Gadzhie")]
-[assembly: AssemblyDescription("Convert DOC and DGN files intp PDF")]
+[assembly: AssemblyTitle("Gadzhi")]
+[assembly: AssemblyDescription("Convert DOC and DGN files into PDF")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ivan Rubilnik")]
-[assembly: AssemblyProduct("Gadzhie")]
+[assembly: AssemblyProduct("Gadzhi")]
 [assembly: AssemblyCopyright("Ivan Rubilnik ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

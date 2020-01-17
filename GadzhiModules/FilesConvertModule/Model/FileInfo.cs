@@ -1,11 +1,11 @@
-﻿using GadzhieResurrected.Model.Enums;
+﻿using GadzhiModules.FilesConvertModule.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhieResurrected.Model
+namespace GadzhiModules.FilesConvertModule.Model
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемых файлах

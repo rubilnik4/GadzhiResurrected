@@ -1,6 +1,8 @@
-﻿using GadzhieResurrected.Infrastructure;
-using GadzhieResurrected.ViewModels;
+﻿using GadzhiModules.FilesConvertModule;
+using GadzhiResurrected.ViewModels;
+using GadzhiResurrected.Views;
 using Prism.Ioc;
+using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Unity;
 using System;
@@ -11,7 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace GadzhieResurrected
+namespace GadzhiResurrected
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml
@@ -23,15 +25,12 @@ namespace GadzhieResurrected
         /// </summary>       
         protected override Window CreateShell()
         {
-            return Container.Resolve<MainWindow>();
+            return Container.Resolve<MainView>();
         }
-
-        /// <summary>
-        /// Привязка интерфейсов к реализации
-        /// </summary>  
+      
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IApplicationGadzhi, ApplicationGadzhi>();
+          
         }
 
         /// <summary>
@@ -40,7 +39,15 @@ namespace GadzhieResurrected
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
-            ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
+            ViewModelLocationProvider.Register<MainView, MainViewModel>();
+        }
+
+        /// <summary>
+        /// Регистрируем отображаемые модули
+        /// </summary>
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+        {
+            moduleCatalog.AddModule<FilesConvertModule>();
         }
     }
 }
