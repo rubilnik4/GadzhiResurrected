@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gadzhie.Properties {
+namespace GadzhieResurrected.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

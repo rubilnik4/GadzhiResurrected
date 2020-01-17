@@ -1,4 +1,5 @@
-﻿using GadzhieResurrected.ViewModels;
+﻿using GadzhieResurrected.Infrastructure;
+using GadzhieResurrected.ViewModels;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Unity;
@@ -15,22 +16,30 @@ namespace GadzhieResurrected
     /// <summary>
     /// Логика взаимодействия для App.xaml
     /// </summary>
-    public partial class App: PrismApplication
+    public partial class App : PrismApplication
     {
+        /// <summary>
+        /// Запуск главного окна
+        /// </summary>       
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
         }
-                protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
 
+        /// <summary>
+        /// Привязка интерфейсов к реализации
+        /// </summary>  
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<IApplicationGadzhi, ApplicationGadzhi>();
         }
 
-
+        /// <summary>
+        /// Привязка View к ViewModels
+        /// </summary>
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
-          
             ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
         }
     }

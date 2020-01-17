@@ -9,9 +9,9 @@
         xmlns:vm="clr-namespace:GadzhieResurrected.ViewModels"
         mc:Ignorable="d"
         Title="Gadzhi" Height="450" Width="800">
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:MainWindowViewModel />
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <Grid>
         <Grid.RowDefinitions>
@@ -30,7 +30,7 @@
                      OverflowMode ="Never"
                      HorizontalAlignment="Stretch">
                 <Button Content="New" />
-                <Button Content="Open Files" />
+                <Button Command="{Binding AddFromFilesDelegateCommand}" Content="Open Files" />
                 <Button Content="Open Folder" />
             </ToolBar>
         </DockPanel>
