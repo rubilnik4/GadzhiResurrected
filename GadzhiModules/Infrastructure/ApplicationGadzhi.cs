@@ -16,6 +16,17 @@ namespace GadzhiModules.Infrastructure
         /// </summary>
         public async Task AddFromFiles()
         {
+            //using (var fbd = new FolderBrowserDialog())
+            //{
+            //    DialogResult result = fbd.ShowDialog();
+
+            //    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            //    {
+            //        string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+            //        System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
+            //    }
+            //}
             await Task.Delay(2000);
         }
 

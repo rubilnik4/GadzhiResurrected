@@ -16,14 +16,10 @@ namespace GadzhiModules.FilesConvertModule
 {
     public class FilesConvertModule : IModule
     {
-        /// <summary>
-        /// Инверсия управления для слоя application
-        /// </summary>
-        IUnityContainer _container; //используется для подключения injection property [Dependency]
-
-        public FilesConvertModule(IUnityContainer container)
-        {
-            _container = container;
+       
+        public FilesConvertModule()
+        { 
+            
         }
 
         /// <summary>
@@ -38,17 +34,14 @@ namespace GadzhiModules.FilesConvertModule
         /// <summary>
         /// Привязка View к ViewModels
         /// </summary>
-        private void ConfigureViewModelLocator()
+        public void ConfigureViewModelLocator()
         {
             ViewModelLocationProvider.Register<FilesConvertView, FilesConvertViewModel>();
         }
-
-        /// <summary>
-        /// Инверсия управления для сервисов
-        /// </summary>
+        
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            _container.RegisterType<IApplicationGadzhi, ApplicationGadzhi>();
+           
         }
     }
 }

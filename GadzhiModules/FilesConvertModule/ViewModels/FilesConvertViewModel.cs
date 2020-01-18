@@ -20,7 +20,7 @@ namespace GadzhiModules.FilesConvertModule.ViewModels
         public IApplicationGadzhi ApplicationGadzhi { get; set; }
 
         public FilesConvertViewModel()
-        {           
+        {
             AddFromFilesDelegateCommand = new DelegateCommand(
                 async () => await AddFromFiles(),
                 () => !IsLoading).

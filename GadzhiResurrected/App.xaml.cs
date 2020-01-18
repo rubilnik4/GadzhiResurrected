@@ -1,4 +1,5 @@
 ﻿using GadzhiModules.FilesConvertModule;
+using GadzhiModules.Infrastructure;
 using GadzhiResurrected.ViewModels;
 using GadzhiResurrected.Views;
 using Prism.Ioc;
@@ -12,6 +13,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Unity;
 
 namespace GadzhiResurrected
 {
@@ -30,7 +32,8 @@ namespace GadzhiResurrected
       
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-          
+            IUnityContainer unityContainer = containerRegistry.GetContainer();
+            unityContainer.RegisterType<IApplicationGadzhi, ApplicationGadzhi>();
         }
 
         /// <summary>
