@@ -8,6 +8,6 @@ namespace GadzhiModules
 {
     public static class RegionNames
     {
-        public static string FilesConvertModule = nameof(FilesConvertModule);       
+        public static readonly string FilesConvertModule = nameof(FilesConvertModule);       
     }
 }

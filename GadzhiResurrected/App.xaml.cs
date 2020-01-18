@@ -31,9 +31,10 @@ namespace GadzhiResurrected
         }
       
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
+        {          
             IUnityContainer unityContainer = containerRegistry.GetContainer();
             unityContainer.RegisterType<IApplicationGadzhi, ApplicationGadzhi>();
+            unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
         }
 
         /// <summary>

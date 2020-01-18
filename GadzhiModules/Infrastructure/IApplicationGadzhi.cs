@@ -17,7 +17,7 @@ namespace GadzhiModules.Infrastructure
         /// <summary>
         /// Указать папку для конвертации
         /// </summary>       
-        Task AddFromFolder();
+        Task AddFromFolders();
 
         /// <summary>
         /// Очистить список файлов

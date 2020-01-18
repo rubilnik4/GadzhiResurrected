@@ -27,7 +27,7 @@
                      HorizontalAlignment="Stretch">
                 <Button Content="New" />
                 <Button Command="{Binding AddFromFilesDelegateCommand}" Content="Open Files" />
-                <Button Content="Open Folder" />
+                <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Open Folders" />
             </ToolBar>
         </DockPanel>
 

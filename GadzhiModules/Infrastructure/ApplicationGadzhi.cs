@@ -1,13 +1,24 @@
-﻿using System;
+﻿using GadzhiModules.Infrastructure.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 
 namespace GadzhiModules.Infrastructure
 {
+    /// <summary>
+    /// Слой приложения, инфраструктура
+    /// </summary>
     public class ApplicationGadzhi : IApplicationGadzhi
     {
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary> 
+        [Dependency]
+        public IDialogServiceStandard DialogServiceStandard { get; set; }
+
         public ApplicationGadzhi()
         {
         }
@@ -15,26 +26,25 @@ namespace GadzhiModules.Infrastructure
         /// Добавить файлы для конвертации
         /// </summary>
         public async Task AddFromFiles()
-        {
-            //using (var fbd = new FolderBrowserDialog())
-            //{
-            //    DialogResult result = fbd.ShowDialog();
+        {           
+            var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
+            if (filePaths != null)
+            {
 
-            //    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-            //    {
-            //        string[] files = Directory.GetFiles(fbd.SelectedPath);
-
-            //        System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
-            //    }
-            //}
+            }
             await Task.Delay(2000);
         }
 
         /// <summary>
         /// Указать папку для конвертации
         /// </summary>     
-        public Task AddFromFolder()
+        public Task AddFromFolders()
         {
+            var filePaths = DialogServiceStandard.OpenFolderDialog(true);
+            if (filePaths != null)
+            {
+
+            }
             return Task.Delay(2000);
         }
 

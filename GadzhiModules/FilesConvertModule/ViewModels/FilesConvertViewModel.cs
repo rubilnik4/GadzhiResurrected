@@ -25,12 +25,23 @@ namespace GadzhiModules.FilesConvertModule.ViewModels
                 async () => await AddFromFiles(),
                 () => !IsLoading).
                 ObservesProperty(() => IsLoading);
+
+            AddFromFoldersDelegateCommand = new DelegateCommand(
+              async () => await AddFromFolders(),
+              () => !IsLoading).
+              ObservesProperty(() => IsLoading);
         }
 
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>       
-        public DelegateCommand AddFromFilesDelegateCommand { get; private set; }    
+        public DelegateCommand AddFromFilesDelegateCommand { get; private set; }
+
+        /// <summary>
+        /// Добавить папки для конвертации
+        /// </summary>       
+        public DelegateCommand AddFromFoldersDelegateCommand { get; private set; }
+
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -40,7 +51,13 @@ namespace GadzhiModules.FilesConvertModule.ViewModels
            await ExecuteMethodAsync(ApplicationGadzhi.AddFromFiles);  
         }
 
-
+        /// <summary>
+        /// Добавить папки для конвертации
+        /// </summary> 
+        private async Task AddFromFolders()
+        {
+            await ExecuteMethodAsync(ApplicationGadzhi.AddFromFolders);
+        }
     }
 
 }
