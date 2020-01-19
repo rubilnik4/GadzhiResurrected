@@ -1,4 +1,4 @@
-﻿using GadzhiModules.FilesConvertModule.Model;
+﻿using GadzhiModules.Modules.FilesConvertModule.Model;
 using GadzhiModules.Helpers;
 using GadzhiModules.Infrastructure.Dialogs;
 using System;

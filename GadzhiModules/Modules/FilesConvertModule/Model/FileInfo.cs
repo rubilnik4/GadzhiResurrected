@@ -1,11 +1,11 @@
-﻿using GadzhiModules.FilesConvertModule.Model.Enums;
+﻿using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.FilesConvertModule.Model
+namespace GadzhiModules.Modules.FilesConvertModule.Model
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемых файлах

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
-namespace GadzhiModules.FilesConvertModule.ViewModels
+namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
     public class FilesConvertViewModel : ViewModelBase
     {

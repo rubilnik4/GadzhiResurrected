@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GadzhiModules.FilesConvertModule.Views
+namespace GadzhiModules.Modules.FilesConvertModule.Views
 {  
     public partial class FilesConvertView : UserControl
     {

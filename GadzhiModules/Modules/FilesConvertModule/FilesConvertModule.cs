@@ -1,6 +1,6 @@
-﻿using GadzhiModules.FilesConvertModule.Model;
-using GadzhiModules.FilesConvertModule.ViewModels;
-using GadzhiModules.FilesConvertModule.Views;
+﻿using GadzhiModules.Modules.FilesConvertModule.Model;
+using GadzhiModules.Modules.FilesConvertModule.ViewModels;
+using GadzhiModules.Modules.FilesConvertModule.Views;
 using GadzhiModules.Infrastructure;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
-namespace GadzhiModules.FilesConvertModule
+namespace GadzhiModules.Modules.FilesConvertModule
 {
     public class FilesConvertModule : IModule
     {

@@ -1,4 +1,4 @@
-﻿using GadzhiModules.FilesConvertModule;
+﻿using GadzhiModules.Modules.FilesConvertModule;
 using GadzhiModules.Infrastructure;
 using GadzhiResurrected.ViewModels;
 using GadzhiResurrected.Views;

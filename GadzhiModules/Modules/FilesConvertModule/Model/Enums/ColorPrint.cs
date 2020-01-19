@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.FilesConvertModule.Model.Enums
+namespace GadzhiModules.Modules.FilesConvertModule.Model.Enums
 {
     public enum ColorPrint
     {

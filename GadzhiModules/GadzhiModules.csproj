@@ -82,13 +82,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilesConvertModule\FilesConvertModule.cs" />
-    <Compile Include="FilesConvertModule\Model\Enums\ColorPrint.cs" />
-    <Compile Include="FilesConvertModule\Model\FileInfo.cs" />
-    <Compile Include="FilesConvertModule\Model\FilesInfo.cs" />
-    <Compile Include="FilesConvertModule\ViewModels\FilesConvertViewModel.cs" />
+    <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
+    <Compile Include="Modules\FilesConvertModule\Model\Enums\ColorPrint.cs" />
+    <Compile Include="Modules\FilesConvertModule\Model\FileInfo.cs" />
+    <Compile Include="Modules\FilesConvertModule\Model\FilesInfo.cs" />
+    <Compile Include="Modules\FilesConvertModule\ViewModels\FilesConvertViewModel.cs" />
     <Compile Include="BaseClasses\ViewModels\ViewModelBase.cs" />
-    <Compile Include="FilesConvertModule\Views\FilesConvertView.xaml.cs">
+    <Compile Include="Modules\FilesConvertModule\Views\FilesConvertView.xaml.cs">
       <DependentUpon>FilesConvertView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\FileHelpers.cs" />
@@ -105,7 +105,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="FilesConvertModule\Views\FilesConvertView.xaml">
+    <Page Include="Modules\FilesConvertModule\Views\FilesConvertView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
