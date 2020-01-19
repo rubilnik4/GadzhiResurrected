@@ -22,12 +22,12 @@ namespace GadzhiModules.Infrastructure
         public IDialogServiceStandard DialogServiceStandard { get; }
 
         /// <summary>
-        /// Класс содержащий данные о конвертируемых файлах
-        /// </summary>       
-        public FilesInfo FilesInfoProject { get; }
+        /// Модель конвертируемых файлов
+        /// </summary>     
+        public FilesData FilesInfoProject { get; }
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
-                                 FilesInfo filesInfoProject)
+                                 FilesData filesInfoProject)
         {
             DialogServiceStandard = dialogServiceStandard;
             FilesInfoProject = filesInfoProject;
@@ -37,7 +37,7 @@ namespace GadzhiModules.Infrastructure
         /// </summary>
         public async Task AddFromFiles()
         {
-            var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);  
+            var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);          
             await Task.Run(() => FilesInfoProject.AddFiles(filePaths));
         }
 

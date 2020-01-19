@@ -44,7 +44,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             IUnityContainer unityContainer = containerRegistry.GetContainer();
-            containerRegistry.Register<FilesInfo>();
+            containerRegistry.Register<FilesData>();
         }
     }
 }

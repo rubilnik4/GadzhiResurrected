@@ -7,7 +7,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:GadzhiResurrected.ViewModels"       
-        d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
         Title="{Binding Title}" Height="600" Width="800">   
     
     <Grid>

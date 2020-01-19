@@ -1,26 +1,39 @@
 ﻿using GadzhiModules.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure;
+using GadzhiModules.Modules.FilesConvertModule.Model;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Windows.Threading;
 using Unity;
 
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
     public class FilesConvertViewModel : ViewModelBase
     {
+        private object _itemsLock = new object ();
+
         /// <summary>
         /// Слой инфраструктуры
-        /// </summary> 
-        [Dependency]
-        public IApplicationGadzhi ApplicationGadzhi { get; set; }
+        /// </summary>        
+        private IApplicationGadzhi _applicationGadzhi;
 
-        public FilesConvertViewModel()
+        public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi)
         {
+            _applicationGadzhi = applicationGadzhi;
+
+            FilesDataCollection = new ObservableCollection<FileData>();
+            BindingOperations.EnableCollectionSynchronization(FilesDataCollection, _itemsLock);
+
+            _applicationGadzhi.FilesInfoProject.FilesDataUpdated += OnFilesInfoUpdated;
+
             AddFromFilesDelegateCommand = new DelegateCommand(
                 async () => await AddFromFiles(),
                 () => !IsLoading).
@@ -33,6 +46,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         }
 
         /// <summary>
+        /// Данные о конвертируемых файлах
+        /// </summary>
+        public ObservableCollection<FileData> FilesDataCollection { get; }
+
+        /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>       
         public DelegateCommand AddFromFilesDelegateCommand { get; private set; }
@@ -42,13 +60,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>       
         public DelegateCommand AddFromFoldersDelegateCommand { get; private set; }
 
-
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary> 
         private async Task AddFromFiles()
         {
-           await ExecuteMethodAsync(ApplicationGadzhi.AddFromFiles);  
+            await ExecuteMethodAsync(_applicationGadzhi.AddFromFiles);
         }
 
         /// <summary>
@@ -56,7 +73,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFolders()
         {
-            await ExecuteMethodAsync(ApplicationGadzhi.AddFromFolders);
+            await ExecuteMethodAsync(_applicationGadzhi.AddFromFolders);
+        }
+
+        /// <summary>
+        /// Обновление данных после изменения модели
+        /// </summary> 
+        private void OnFilesInfoUpdated(object sender, EventArgs args) 
+        {
+            lock (_itemsLock)
+            {
+                FilesDataCollection.Clear();
+                FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);
+            } 
         }
     }
 

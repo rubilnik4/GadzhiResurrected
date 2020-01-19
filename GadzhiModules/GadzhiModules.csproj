@@ -82,10 +82,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
     <Compile Include="Modules\FilesConvertModule\Model\Enums\ColorPrint.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\FileInfo.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\FilesInfo.cs" />
+    <Compile Include="Modules\FilesConvertModule\Model\FileData.cs" />
+    <Compile Include="Modules\FilesConvertModule\Model\FilesData.cs" />
     <Compile Include="Modules\FilesConvertModule\ViewModels\FilesConvertViewModel.cs" />
     <Compile Include="BaseClasses\ViewModels\ViewModelBase.cs" />
     <Compile Include="Modules\FilesConvertModule\Views\FilesConvertView.xaml.cs">

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiModules.Modules.FilesConvertModule.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace GadzhiModules.Infrastructure
 {
     public interface IApplicationGadzhi
     {
+        /// <summary>
+        /// Модель конвертируемых файлов
+        /// </summary>       
+        FilesData FilesInfoProject { get; }
 
         /// <summary>
         /// Добавить файлы для конвертации

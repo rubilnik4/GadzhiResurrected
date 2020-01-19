@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
+﻿using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     /// <summary>
     /// Класс для хранения информации о конвертируемых файлах
     /// </summary>
-    public class FileInfo
+    public class FileData
     {
-        public FileInfo(string fileType, string fileName, string filePath)
+        public FileData(string fileType, string fileName, string filePath)
         {
             FileType = fileType;
             FileName = fileName;
             FilePath = filePath;
         }
 
-        public FileInfo(string fileType, string fileName, string filePath, ColorPrint colorPrint)
+        public FileData(string fileType, string fileName, string filePath, ColorPrint colorPrint)
             : this(fileType, fileName, filePath)
         {
             ColorPrint = colorPrint;
@@ -44,5 +45,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// Цвет печати
         /// </summary>
         public ColorPrint ColorPrint { get; set; } = ColorPrint.BlackAndWhite;
+
+        /// <summary>
+        /// Цвет печати строковое значение
+        /// </summary>
+        public string ColorPrintName => ColorPrintConverter.ConvertColorPrintToString(ColorPrint);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GadzhiModules.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,27 +12,36 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
-    public class FilesInfo
+    public class FilesData
     {
+        public event EventHandler FilesDataUpdated;
+
+        private List<FileData> _files;
+
+        public FilesData()
+        {
+            _files = new List<FileData>();
+        }
+
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public List<FileInfo> Files { get; private set; } = new List<FileInfo>();
+        public IReadOnlyList<FileData> Files => _files;
 
         /// <summary>
         /// Добавить файл
         /// </summary>
-        public void AddFile(FileInfo file)
+        public void AddFile(FileData file)
         {
-            Files?.Add(file);
+            _files?.Add(file);
         }
 
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        public void AddFiles(IEnumerable<FileInfo> files)
+        public void AddFiles(IEnumerable<FileData> files)
         {
-            Files?.AddRange(files);
+            _files?.AddRange(files);
         }
 
         /// <summary>
@@ -40,13 +50,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void AddFiles(IEnumerable<string> files)
         {
             var filesInfo = files?.Where(f => File.Exists(f))
-                  .Select(f => new FileInfo(FileHelpers.ExtensionWithoutPoint(Path.GetExtension(f)), 
+                  .Select(f => new FileData(FileHelpers.ExtensionWithoutPoint(Path.GetExtension(f)),
                                             Path.GetFileNameWithoutExtension(f), f));
 
             if (filesInfo != null)
             {
-                Files?.AddRange(filesInfo);
+                _files?.AddRange(filesInfo);
             }
+
+            FilesDataUpdated?.Invoke(this, new EventArgs());
+            //RaiseEventOnUIThread(FilesDataUpdated, new List<object>() { new EventArgs() }.ToArray());
         }
 
         /// <summary>
@@ -54,15 +67,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// </summary>
         public void ClearFiles()
         {
-            Files?.Clear();
+            _files?.Clear();
         }
 
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        public void RemoveFiles(IEnumerable<FileInfo> files)
+        public void RemoveFiles(IEnumerable<FileData> files)
         {
-            Files?.RemoveAll(f => files?.Contains(f) == true);
+            _files?.RemoveAll(f => files?.Contains(f) == true);
         }
+
     }
 }

@@ -12,5 +12,5 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Enums
         BlackAndWhite,
         GrayScale,
         Color,
-    }
+    }    
 }

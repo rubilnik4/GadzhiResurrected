@@ -7,7 +7,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"       
         xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"       
-        d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
         >   
     <Grid>
         <Grid.RowDefinitions>
@@ -33,13 +33,15 @@
 
         <DataGrid Grid.Row="1"
                   HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"                 
-                  AutoGenerateColumns="False">
+                  VerticalAlignment="Stretch"  
+                  ItemsSource="{Binding FilesDataCollection}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Тип" Binding="{Binding Path=Title}" Width="*" />
-                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=Title}" Width="*" />
-                <DataGridTextColumn Header="Путь" Binding="{Binding Path=Price}" Width="*" />
-                <DataGridTextColumn Header="Цвет" Binding="{Binding Path=Price}" Width="*" />
+                <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
+                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=FileName}" Width="*" />
+                <DataGridTextColumn Header="Путь" Binding="{Binding Path=FilePath}" Width="*" />
+                <DataGridTextColumn Header="Цвет печати" Binding="{Binding Path=ColorPrintName}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
