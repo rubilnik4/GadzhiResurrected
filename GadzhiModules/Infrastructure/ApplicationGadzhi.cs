@@ -1,6 +1,9 @@
-﻿using GadzhiModules.Infrastructure.Dialogs;
+﻿using GadzhiModules.FilesConvertModule.Model;
+using GadzhiModules.Helpers;
+using GadzhiModules.Infrastructure.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,23 +18,28 @@ namespace GadzhiModules.Infrastructure
     {
         /// <summary>
         /// Стандартные диалоговые окна
-        /// </summary> 
-        [Dependency]
-        public IDialogServiceStandard DialogServiceStandard { get; set; }
+        /// </summary>        
+        public IDialogServiceStandard DialogServiceStandard { get; }
 
-        public ApplicationGadzhi()
+        /// <summary>
+        /// Класс содержащий данные о конвертируемых файлах
+        /// </summary>       
+        public FilesInfo FilesInfoProject { get; }
+
+        public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
+                                 FilesInfo filesInfoProject)
         {
+            DialogServiceStandard = dialogServiceStandard;
+            FilesInfoProject = filesInfoProject;
         }
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
         public async Task AddFromFiles()
-        {           
+        {
             var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
-            if (filePaths != null)
-            {
+            FilesInfoProject.AddFiles(filePaths);
 
-            }
             await Task.Delay(2000);
         }
 
@@ -40,11 +48,14 @@ namespace GadzhiModules.Infrastructure
         /// </summary>     
         public Task AddFromFolders()
         {
-            var filePaths = DialogServiceStandard.OpenFolderDialog(true);
-            if (filePaths != null)
-            {
+            var directoryPaths = DialogServiceStandard.OpenFolderDialog(true);
 
-            }
+            ///Поиск файлов на один уровень ниже
+            var filePaths = directoryPaths?.Union(directoryPaths?.SelectMany(d => Directory.GetDirectories(d)))?
+                                           .SelectMany(d => Directory.GetFiles(d))?
+                                           .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f));
+            FilesInfoProject.AddFiles(filePaths);
+
             return Task.Delay(2000);
         }
 

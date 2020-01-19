@@ -12,14 +12,14 @@ namespace GadzhiModules.FilesConvertModule.Model
     /// </summary>
     public class FileInfo
     {
-        public FileInfo(FileType fileType, string fileName, string filePath)
+        public FileInfo(string fileType, string fileName, string filePath)
         {
             FileType = fileType;
             FileName = fileName;
             FilePath = filePath;
         }
 
-        public FileInfo(FileType fileType, string fileName, string filePath, ColorPrint colorPrint)
+        public FileInfo(string fileType, string fileName, string filePath, ColorPrint colorPrint)
             : this(fileType, fileName, filePath)
         {
             ColorPrint = colorPrint;
@@ -28,7 +28,7 @@ namespace GadzhiModules.FilesConvertModule.Model
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public FileType FileType { get; }
+        public string FileType { get; }
 
         /// <summary>
         /// Имя файла

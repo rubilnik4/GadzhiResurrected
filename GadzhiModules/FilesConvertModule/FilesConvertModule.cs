@@ -1,10 +1,12 @@
-﻿using GadzhiModules.FilesConvertModule.ViewModels;
+﻿using GadzhiModules.FilesConvertModule.Model;
+using GadzhiModules.FilesConvertModule.ViewModels;
 using GadzhiModules.FilesConvertModule.Views;
 using GadzhiModules.Infrastructure;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +43,8 @@ namespace GadzhiModules.FilesConvertModule
         
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-           
+            IUnityContainer unityContainer = containerRegistry.GetContainer();
+            containerRegistry.Register<FilesInfo>();
         }
     }
 }

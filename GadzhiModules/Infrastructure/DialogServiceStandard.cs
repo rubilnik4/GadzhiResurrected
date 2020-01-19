@@ -28,7 +28,7 @@ namespace GadzhiModules.Infrastructure
             {
                 return openFileDialog.FileNames.ToList();
             }
-            return null;
+            return new List<string>();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace GadzhiModules.Infrastructure
             {
                 return commonOpenFileDialog.FileNames;               
             }         
-            return null;
+            return new List<string>();
         }
     }
 }

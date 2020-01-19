@@ -84,7 +84,6 @@
   <ItemGroup>
     <Compile Include="FilesConvertModule\FilesConvertModule.cs" />
     <Compile Include="FilesConvertModule\Model\Enums\ColorPrint.cs" />
-    <Compile Include="FilesConvertModule\Model\Enums\FileType.cs" />
     <Compile Include="FilesConvertModule\Model\FileInfo.cs" />
     <Compile Include="FilesConvertModule\Model\FilesInfo.cs" />
     <Compile Include="FilesConvertModule\ViewModels\FilesConvertViewModel.cs" />
@@ -92,6 +91,7 @@
     <Compile Include="FilesConvertModule\Views\FilesConvertView.xaml.cs">
       <DependentUpon>FilesConvertView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Infrastructure\ApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\DialogServiceStandard.cs" />
     <Compile Include="Infrastructure\Dialogs\DialogFilters.cs" />
