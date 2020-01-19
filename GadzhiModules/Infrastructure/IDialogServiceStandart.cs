@@ -20,5 +20,10 @@ namespace GadzhiModules.Infrastructure
         /// Выбор папки
         /// </summary>     
         IEnumerable<string> OpenFolderDialog(bool isMultiselect);
+
+        /// <summary>
+        /// Отобразить сообщение
+        /// </summary>     
+       void ShowMessage(string messageText);
     }
 }

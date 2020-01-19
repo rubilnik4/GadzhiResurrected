@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GadzhiModules.Infrastructure
 {
@@ -47,6 +48,11 @@ namespace GadzhiModules.Infrastructure
                 return commonOpenFileDialog.FileNames;               
             }         
             return new List<string>();
+        }
+
+        public void ShowMessage(string messageText)
+        {
+            MessageBox.Show(messageText);
         }
     }
 }

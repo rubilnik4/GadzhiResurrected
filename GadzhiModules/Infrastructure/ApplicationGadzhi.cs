@@ -37,10 +37,8 @@ namespace GadzhiModules.Infrastructure
         /// </summary>
         public async Task AddFromFiles()
         {
-            var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
-            FilesInfoProject.AddFiles(filePaths);
-
-            await Task.Delay(2000);
+            var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);  
+            await Task.Run(() => FilesInfoProject.AddFiles(filePaths));
         }
 
         /// <summary>
@@ -48,15 +46,15 @@ namespace GadzhiModules.Infrastructure
         /// </summary>     
         public Task AddFromFolders()
         {
-            var directoryPaths = DialogServiceStandard.OpenFolderDialog(true);
-
-            ///Поиск файлов на один уровень ниже
-            var filePaths = directoryPaths?.Union(directoryPaths?.SelectMany(d => Directory.GetDirectories(d)))?
-                                           .SelectMany(d => Directory.GetFiles(d))?
-                                           .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f));
-            FilesInfoProject.AddFiles(filePaths);
-
-            return Task.Delay(2000);
+            var directoryPaths = DialogServiceStandard.OpenFolderDialog(true); 
+            return Task.Run(() =>
+            {
+                ///Поиск файлов на один уровень ниже
+                var filePaths = directoryPaths?.Union(directoryPaths?.SelectMany(d => Directory.GetDirectories(d)))?
+                                               .SelectMany(d => Directory.GetFiles(d))?
+                                               .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f));
+                FilesInfoProject.AddFiles(filePaths);
+            });
         }
 
         /// <summary>

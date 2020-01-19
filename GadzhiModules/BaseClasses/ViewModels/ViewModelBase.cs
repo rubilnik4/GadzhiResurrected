@@ -1,14 +1,22 @@
-﻿using Prism.Mvvm;
+﻿using GadzhiModules.Infrastructure;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 
 namespace GadzhiModules.BaseClasses.ViewModels
 {
     public abstract class ViewModelBase : BindableBase
     {
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>     
+        [Dependency]
+        public IDialogServiceStandard DialogServiceStandard { get; set; } 
+
         /// <summary>
         /// Индикатор загрузки
         /// </summary>         
@@ -26,12 +34,12 @@ namespace GadzhiModules.BaseClasses.ViewModels
         {
             IsLoading = true;
             try
-            {                
+            {               
                 await asyncMethod();
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                DialogServiceStandard.ShowMessage(ex.Message);
             }
             finally
             {
