@@ -1,6 +1,7 @@
 ﻿using GadzhiModules.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure;
 using GadzhiModules.Modules.FilesConvertModule.Model;
+using GongSolutions.Wpf.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -10,13 +11,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Threading;
 using Unity;
 
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
-    public class FilesConvertViewModel : ViewModelBase
+    public class FilesConvertViewModel : ViewModelBase, IDropTarget
     {       
         /// <summary>
         /// Слой инфраструктуры
@@ -79,6 +81,31 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {          
                 FilesDataCollection.Clear();
                 FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);           
+        }
+
+        /// <summary>
+        /// Реализация Drag&Drop для ссылки на файлы
+        /// </summary>       
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+
+            var dataObject = dropInfo.Data as IDataObject;            
+            if (dataObject != null && dataObject.GetDataPresent(DataFormats.FileDrop))
+            {
+                dropInfo.Effects = DragDropEffects.Copy;
+            }           
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var dataObject = dropInfo.Data as DataObject;          
+            if (dataObject != null && dataObject.ContainsFileDropList())
+            {
+                var filePaths = dataObject.GetFileDropList();
+                
+            }
+         
         }
     }
 

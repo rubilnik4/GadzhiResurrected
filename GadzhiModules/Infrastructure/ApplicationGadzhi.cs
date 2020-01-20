@@ -32,28 +32,38 @@ namespace GadzhiModules.Infrastructure
             DialogServiceStandard = dialogServiceStandard;
             FilesInfoProject = filesInfoProject;
         }
+
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
         public async Task AddFromFiles()
         {
             var filePaths = await DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
-            FilesInfoProject.AddFiles(filePaths);
+            await AddFromFilesOrDirectories(filePaths);
         }
-
+       
         /// <summary>
         /// Указать папку для конвертации
         /// </summary>     
         public async Task AddFromFolders()
         {
             var directoryPaths = await DialogServiceStandard.OpenFolderDialog(true);
+            await AddFromFilesOrDirectories(directoryPaths);
+        }
 
-            ///Поиск файлов на один уровень ниже
-            var filePaths = await Task.FromResult(
-                 directoryPaths?.Union(directoryPaths?.SelectMany(d => Directory.GetDirectories(d)))?
-                                               .SelectMany(d => Directory.GetFiles(d))?
-                                               .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f))
-            );           
+        /// <summary>
+        /// Добавить файлы или папки для конвертации
+        /// </summary>
+        public async Task AddFromFilesOrDirectories(IEnumerable <string> fileOrDirectoriesPaths)
+        {
+            ///Поиск файлов на один уровень ниже и в текущей папке
+            var filePaths = fileOrDirectoriesPaths?.Where(f => File.Exists(f));
+            var directoriesPath = fileOrDirectoriesPaths?.Where(d => Directory.Exists(d));
+            var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => Directory.GetDirectories(d)))?
+                                                     .SelectMany(d => Directory.GetFiles(d))?
+                                                     .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f));
+            var allFilePaths = filePaths?.Union(filesInDirectories);
+            await Task.FromResult(allFilePaths);
 
             FilesInfoProject.AddFiles(filePaths);
         }

@@ -25,6 +25,11 @@ namespace GadzhiModules.Infrastructure
         Task AddFromFolders();
 
         /// <summary>
+        /// Добавить файлы или папки для конвертации
+        /// </summary>
+        Task AddFromFilesOrDirectories();   
+
+        /// <summary>
         /// Очистить список файлов
         /// </summary>       
         void ClearFiles();
