@@ -26,7 +26,7 @@
             <ToolBar ToolBarTray.IsLocked="True"
                      OverflowMode ="Never"
                      HorizontalAlignment="Stretch">
-                <Button Content="New" />
+                <Button Command="{Binding ClearFilesDelegateCommand}" Content="New" />
                 <Button Command="{Binding AddFromFilesDelegateCommand}" Content="Open Files" />
                 <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Open Folders" />
             </ToolBar>

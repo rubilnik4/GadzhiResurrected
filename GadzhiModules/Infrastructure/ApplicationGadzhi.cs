@@ -64,8 +64,7 @@ namespace GadzhiModules.Infrastructure
                                                      .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f));
             var allFilePaths = filePaths?.Union(filesInDirectories);
             await Task.FromResult(allFilePaths);
-
-            await Task.Delay(5000);
+            
             FilesInfoProject.AddFiles(allFilePaths);
         }
 
@@ -74,7 +73,7 @@ namespace GadzhiModules.Infrastructure
         /// </summary>  
         public void ClearFiles()
         {
-            // return Task.Delay(2000);
+            FilesInfoProject.ClearFiles();
         }
 
         /// <summary>

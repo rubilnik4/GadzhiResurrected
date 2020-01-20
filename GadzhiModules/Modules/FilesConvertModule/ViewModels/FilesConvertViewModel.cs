@@ -32,6 +32,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             FilesDataCollection = new ObservableCollection<FileData>();
             _applicationGadzhi.FilesInfoProject.FilesDataUpdatedEvent += OnFilesInfoUpdated;
 
+            ClearFilesDelegateCommand = new DelegateCommand(
+               ClearFiles,
+               () => !IsLoading).
+               ObservesProperty(() => IsLoading);
+
             AddFromFilesDelegateCommand = new DelegateCommand(
                 async () => await AddFromFiles(),
                 () => !IsLoading).
@@ -49,6 +54,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         public ObservableCollection<FileData> FilesDataCollection { get; }
 
         /// <summary>
+        /// Очистить список файлов
+        /// </summary>       
+        public DelegateCommand ClearFilesDelegateCommand { get; private set; }
+
+        /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>       
         public DelegateCommand AddFromFilesDelegateCommand { get; private set; }
@@ -57,6 +67,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Добавить папки для конвертации
         /// </summary>       
         public DelegateCommand AddFromFoldersDelegateCommand { get; private set; }
+
+        /// <summary>
+        /// Очистить список файлов
+        /// </summary> 
+        private void ClearFiles()
+        {
+            ExecuteMethod(_applicationGadzhi.ClearFiles);
+        }
 
         /// <summary>
         /// Добавить файлы для конвертации
