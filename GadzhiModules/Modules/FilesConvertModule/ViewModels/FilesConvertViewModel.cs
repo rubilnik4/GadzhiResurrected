@@ -19,7 +19,7 @@ using Unity;
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
     public class FilesConvertViewModel : ViewModelBase, IDropTarget
-    {       
+    {
         /// <summary>
         /// Слой инфраструктуры
         /// </summary>        
@@ -63,7 +63,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFiles()
         {
-            await ExecuteMethodAsync(_applicationGadzhi.AddFromFiles);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
         }
 
         /// <summary>
@@ -71,16 +71,24 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFolders()
         {
-            await ExecuteMethodAsync(_applicationGadzhi.AddFromFolders);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
+        }
+
+        /// <summary>
+        /// Добавить файлы и папки для конвертации
+        /// </summary> 
+        private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths)
+        {
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFilesOrDirectories, fileOrDirectoriesPaths);
         }
 
         /// <summary>
         /// Обновление данных после изменения модели
         /// </summary> 
-        private void OnFilesInfoUpdated(object sender, EventArgs args) 
-        {          
-                FilesDataCollection.Clear();
-                FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);           
+        private void OnFilesInfoUpdated(object sender, EventArgs args)
+        {
+            FilesDataCollection.Clear();
+            FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);
         }
 
         /// <summary>
@@ -90,22 +98,22 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
 
-            var dataObject = dropInfo.Data as IDataObject;            
+            var dataObject = dropInfo.Data as IDataObject;
             if (dataObject != null && dataObject.GetDataPresent(DataFormats.FileDrop))
             {
                 dropInfo.Effects = DragDropEffects.Copy;
-            }           
+            }
         }
 
         public void Drop(IDropInfo dropInfo)
         {
-            var dataObject = dropInfo.Data as DataObject;          
+            var dataObject = dropInfo.Data as DataObject;
             if (dataObject != null && dataObject.ContainsFileDropList())
             {
-                var filePaths = dataObject.GetFileDropList();
-                
+                var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();                
+                Task.FromResult(AddFromFilesAndFolders(filePaths));
             }
-         
+
         }
     }
 

@@ -27,7 +27,7 @@ namespace GadzhiModules.Infrastructure
         /// <summary>
         /// Добавить файлы или папки для конвертации
         /// </summary>
-        Task AddFromFilesOrDirectories();   
+        Task AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths);   
 
         /// <summary>
         /// Очистить список файлов

@@ -56,7 +56,7 @@ namespace GadzhiModules.Infrastructure
         /// </summary>
         public async Task AddFromFilesOrDirectories(IEnumerable <string> fileOrDirectoriesPaths)
         {
-            ///Поиск файлов на один уровень ниже и в текущей папке
+            //Поиск файлов на один уровень ниже и в текущей папке
             var filePaths = fileOrDirectoriesPaths?.Where(f => File.Exists(f));
             var directoriesPath = fileOrDirectoriesPaths?.Where(d => Directory.Exists(d));
             var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => Directory.GetDirectories(d)))?
@@ -65,7 +65,8 @@ namespace GadzhiModules.Infrastructure
             var allFilePaths = filePaths?.Union(filesInDirectories);
             await Task.FromResult(allFilePaths);
 
-            FilesInfoProject.AddFiles(filePaths);
+            await Task.Delay(5000);
+            FilesInfoProject.AddFiles(allFilePaths);
         }
 
         /// <summary>

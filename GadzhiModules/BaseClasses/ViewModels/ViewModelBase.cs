@@ -48,10 +48,11 @@ namespace GadzhiModules.BaseClasses.ViewModels
 
         }
 
+        //https://gist.github.com/ghstahl/7022ee06c1f9a1753a11efb51882740c
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронного метода
         /// </summary> 
-        protected async Task ExecuteMethodAsync(Func<Task> asyncMethod)
+        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod)
         {
             IsLoading = true;
             try
@@ -65,8 +66,15 @@ namespace GadzhiModules.BaseClasses.ViewModels
             finally
             {
                 IsLoading = false;
-            }
-           
+            }           
+        }
+
+        /// <summary>
+        /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронной функции
+        /// </summary> 
+        public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1)        
+        {
+            await ExecuteAndHandleErrorAsync(() => functionAsync(arg1));
         }
     }
 }
