@@ -17,9 +17,7 @@ using Unity;
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
     public class FilesConvertViewModel : ViewModelBase
-    {
-        private object _itemsLock = new object ();
-
+    {       
         /// <summary>
         /// Слой инфраструктуры
         /// </summary>        
@@ -30,9 +28,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             _applicationGadzhi = applicationGadzhi;
 
             FilesDataCollection = new ObservableCollection<FileData>();
-            BindingOperations.EnableCollectionSynchronization(FilesDataCollection, _itemsLock);
-
-            _applicationGadzhi.FilesInfoProject.FilesDataUpdated += OnFilesInfoUpdated;
+            _applicationGadzhi.FilesInfoProject.FilesDataUpdatedEvent += OnFilesInfoUpdated;
 
             AddFromFilesDelegateCommand = new DelegateCommand(
                 async () => await AddFromFiles(),
@@ -80,12 +76,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Обновление данных после изменения модели
         /// </summary> 
         private void OnFilesInfoUpdated(object sender, EventArgs args) 
-        {
-            lock (_itemsLock)
-            {
+        {          
                 FilesDataCollection.Clear();
-                FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);
-            } 
+                FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);           
         }
     }
 

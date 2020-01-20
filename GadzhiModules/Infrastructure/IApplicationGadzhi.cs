@@ -27,11 +27,11 @@ namespace GadzhiModules.Infrastructure
         /// <summary>
         /// Очистить список файлов
         /// </summary>       
-        Task ClearFiles();
+        void ClearFiles();
 
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        Task RemoveFiles();
+        void RemoveFiles();
     }
 }

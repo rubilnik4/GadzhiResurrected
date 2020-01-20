@@ -17,7 +17,7 @@ namespace GadzhiModules.Infrastructure
         /// <summary>
         ///  Выбор файлов
         /// </summary>    
-        public IEnumerable<string> OpenFileDialog(bool isMultiselect = false, string filter = "")
+        public async Task<IEnumerable<string>> OpenFileDialog(bool isMultiselect = false, string filter = "")
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
@@ -27,15 +27,15 @@ namespace GadzhiModules.Infrastructure
 
             if (openFileDialog.ShowDialog() == true)
             {
-                return openFileDialog.FileNames.ToList();
+                return await Task.FromResult(openFileDialog.FileNames.ToList());
             }
-            return new List<string>();
+            return await Task.FromResult(new List<string>());
         }
 
         /// <summary>
         /// Выбор папки
         /// </summary>     
-        public IEnumerable<string> OpenFolderDialog(bool isMultiselect = false)
+        public async Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect = false)
         {
             var commonOpenFileDialog = new CommonOpenFileDialog()
             {
@@ -45,9 +45,9 @@ namespace GadzhiModules.Infrastructure
 
             if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                return commonOpenFileDialog.FileNames;               
+                return await Task.FromResult(commonOpenFileDialog.FileNames);               
             }         
-            return new List<string>();
+            return await Task.FromResult(new List<string>());
         }
 
         public void ShowMessage(string messageText)

@@ -14,7 +14,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     /// </summary>
     public class FilesData
     {
-        public event EventHandler FilesDataUpdated;
+        public event EventHandler FilesDataUpdatedEvent;
 
         private List<FileData> _files;
 
@@ -34,6 +34,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void AddFile(FileData file)
         {
             _files?.Add(file);
+            UpdateFileData();
         }
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void AddFiles(IEnumerable<FileData> files)
         {
             _files?.AddRange(files);
+            UpdateFileData();
         }
 
         /// <summary>
@@ -58,8 +60,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
                 _files?.AddRange(filesInfo);
             }
 
-            FilesDataUpdated?.Invoke(this, new EventArgs());
-            //RaiseEventOnUIThread(FilesDataUpdated, new List<object>() { new EventArgs() }.ToArray());
+            UpdateFileData();
         }
 
         /// <summary>
@@ -68,6 +69,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void ClearFiles()
         {
             _files?.Clear();
+            UpdateFileData();
         }
 
         /// <summary>
@@ -76,7 +78,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void RemoveFiles(IEnumerable<FileData> files)
         {
             _files?.RemoveAll(f => files?.Contains(f) == true);
+            UpdateFileData();
         }
 
+        private void UpdateFileData()
+        {
+            FilesDataUpdatedEvent?.Invoke(this, new EventArgs());
+        }
     }
 }

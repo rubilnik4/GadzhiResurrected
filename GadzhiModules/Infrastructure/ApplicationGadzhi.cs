@@ -37,40 +37,41 @@ namespace GadzhiModules.Infrastructure
         /// </summary>
         public async Task AddFromFiles()
         {
-            var filePaths = DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);          
-            await Task.Run(() => FilesInfoProject.AddFiles(filePaths));
+            var filePaths = await DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
+            FilesInfoProject.AddFiles(filePaths);
         }
 
         /// <summary>
         /// Указать папку для конвертации
         /// </summary>     
-        public Task AddFromFolders()
+        public async Task AddFromFolders()
         {
-            var directoryPaths = DialogServiceStandard.OpenFolderDialog(true); 
-            return Task.Run(() =>
-            {
-                ///Поиск файлов на один уровень ниже
-                var filePaths = directoryPaths?.Union(directoryPaths?.SelectMany(d => Directory.GetDirectories(d)))?
+            var directoryPaths = await DialogServiceStandard.OpenFolderDialog(true);
+
+            ///Поиск файлов на один уровень ниже
+            var filePaths = await Task.FromResult(
+                 directoryPaths?.Union(directoryPaths?.SelectMany(d => Directory.GetDirectories(d)))?
                                                .SelectMany(d => Directory.GetFiles(d))?
-                                               .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f));
-                FilesInfoProject.AddFiles(filePaths);
-            });
+                                               .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f))
+            );           
+
+            FilesInfoProject.AddFiles(filePaths);
         }
 
         /// <summary>
         /// Очистить список файлов
         /// </summary>  
-        public Task ClearFiles()
+        public void ClearFiles()
         {
-            return Task.Delay(2000);
+            // return Task.Delay(2000);
         }
 
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        public Task RemoveFiles()
+        public void RemoveFiles()
         {
-            return Task.Delay(2000);
+            //  return Task.Delay(2000);
         }
     }
 }

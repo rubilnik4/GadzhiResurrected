@@ -25,10 +25,31 @@ namespace GadzhiModules.BaseClasses.ViewModels
         {
             get { return _isLoading; }
             set { SetProperty(ref _isLoading, value); }
-        } 
+        }
 
         /// <summary>
-        /// Обертка для вызова индикатора загрузки и отлова ошибок
+        /// Обертка для вызова индикатора загрузки и отлова ошибок метода
+        /// </summary> 
+        protected void ExecuteMethod(Action method)
+        {
+            IsLoading = true;
+            try
+            {
+                method();
+            }
+            catch (Exception ex)
+            {
+                DialogServiceStandard.ShowMessage(ex.Message);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+
+        }
+
+        /// <summary>
+        /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронного метода
         /// </summary> 
         protected async Task ExecuteMethodAsync(Func<Task> asyncMethod)
         {
