@@ -64,11 +64,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Выделенные строки
         /// </summary>
-        private IList _selectedFilesData = new ArrayList();
+        private IList<object> _selectedFilesData = new List<object>();
         /// <summary>
         /// Выделенные строки
         /// </summary>
-        public IList SelectedFilesData
+        public IList<object> SelectedFilesData
         {
             get { return _selectedFilesData; }
             set { SetProperty(ref _selectedFilesData, value); }
@@ -131,7 +131,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void RemoveFiles()
         {
-            ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, new List<FileData>());
+            var removeFiles = SelectedFilesData?.OfType<FileData>();
+            ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, removeFiles);
         }
 
         /// <summary>

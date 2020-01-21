@@ -2,13 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
-        xmlns:controls="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:prism="http://prismlibrary.com/"  
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:dd="urn:gong-wpf-dragdrop"     
         mc:Ignorable="d"       
-        xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"       
+        xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"
+        xmlns:bev="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"   
         d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
         >
     <Grid>
@@ -35,27 +36,31 @@
                 <Button Command="{Binding ClearFilesDelegateCommand}" Content="New" />
                 <Button Command="{Binding AddFromFilesDelegateCommand}" Content="Open Files" />
                 <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Open Folders" />
-                <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Remove Files" />
+                <Button Command="{Binding RemoveFilesDelegateCommand}" Content="Remove Files" />
             </ToolBar>
         </DockPanel>
-
-        <controls:CustomDataGrid Grid.Row="1"
+        <DataGrid Grid.Row="1"
                   HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"  
-                  ItemsSource="{Binding FilesDataCollection}"
-                  SelectedItemsList="{Binding SelectedFilesData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding FilesDataCollection}"                   
+                  SelectionMode="Extended"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True"                  
+                  IsReadOnly="True"  
+                  EnableRowVirtualization="True"
+                  CanUserReorderColumns="False"                 
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}">
-            <controls:CustomDataGrid.Columns>
+            <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
                 <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=FileName}" Width="*" />
                 <DataGridTextColumn Header="Путь" Binding="{Binding Path=FilePath}" Width="*" />
                 <DataGridTextColumn Header="Цвет печати" Binding="{Binding Path=ColorPrintName}" Width="*" />
-            </controls:CustomDataGrid.Columns>
-        </controls:CustomDataGrid>
+            </DataGrid.Columns>
+            <i:Interaction.Behaviors>
+                <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding SelectedFilesData, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+        </DataGrid>
 
         <DockPanel Grid.Row="2"
                    HorizontalAlignment="Stretch" 
