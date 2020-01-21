@@ -1,9 +1,11 @@
 ﻿using GadzhiModules.Helpers;
+using GadzhiModules.Modules.FilesConvertModule.Model.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,14 +16,18 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     /// </summary>
     public class FilesData
     {
-        public event EventHandler FilesDataUpdatedEvent;
-
         private List<FileData> _files;
 
         public FilesData()
         {
             _files = new List<FileData>();
+            FileDataChange = new Subject<FileChange>();
         }
+
+        /// <summary>
+        /// Подписка на изменение коллекции
+        /// </summary>
+        public ISubject<FileChange> FileDataChange { get; }
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -34,7 +40,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void AddFile(FileData file)
         {
             _files?.Add(file);
-            UpdateFileData();
+            UpdateFileData(new FileChange(new List<FileData>() { file },
+                                          ActionType.Add));
         }
 
         /// <summary>
@@ -43,7 +50,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void AddFiles(IEnumerable<FileData> files)
         {
             _files?.AddRange(files);
-            UpdateFileData();
+            UpdateFileData(new FileChange(files, ActionType.Add));
         }
 
         /// <summary>
@@ -60,7 +67,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
                 _files?.AddRange(filesInfo);
             }
 
-            UpdateFileData();
+            UpdateFileData(new FileChange(filesInfo, ActionType.Add));
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void ClearFiles()
         {
             _files?.Clear();
-            UpdateFileData();
+            UpdateFileData(new FileChange(new List<FileData>(), ActionType.Clear));
         }
 
         /// <summary>
@@ -78,12 +85,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public void RemoveFiles(IEnumerable<FileData> files)
         {
             _files?.RemoveAll(f => files?.Contains(f) == true);
-            UpdateFileData();
+            UpdateFileData(new FileChange(files, ActionType.Remove));
         }
 
-        private void UpdateFileData()
+        /// <summary>
+        /// Обновленить списка файлов
+        /// </summary>
+        private void UpdateFileData(FileChange fileChange)
         {
-            FilesDataUpdatedEvent?.Invoke(this, new EventArgs());
+            FileDataChange.OnNext(fileChange);
         }
     }
 }

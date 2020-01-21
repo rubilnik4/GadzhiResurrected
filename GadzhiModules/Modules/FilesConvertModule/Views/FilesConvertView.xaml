@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+        xmlns:beh="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:prism="http://prismlibrary.com/"  
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:dd="urn:gong-wpf-dragdrop"     
@@ -29,6 +31,7 @@
                 <Button Command="{Binding ClearFilesDelegateCommand}" Content="New" />
                 <Button Command="{Binding AddFromFilesDelegateCommand}" Content="Open Files" />
                 <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Open Folders" />
+                <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Remove Files" />
             </ToolBar>
         </DockPanel>
 
@@ -41,6 +44,10 @@
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}">
+            <i:Interaction.Behaviors>
+                <beh:DataGridSelectedItemsBlendBehavior
+                    SelectedItems="{Binding SelectedItems}" />
+            </i:Interaction.Behaviors>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
                 <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=FileName}" Width="*" />

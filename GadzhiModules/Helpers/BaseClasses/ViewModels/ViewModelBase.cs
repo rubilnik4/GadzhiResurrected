@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
-namespace GadzhiModules.BaseClasses.ViewModels
+namespace Helpers.GadzhiModules.BaseClasses.ViewModels
 {
     public abstract class ViewModelBase : BindableBase
     {
@@ -30,7 +30,7 @@ namespace GadzhiModules.BaseClasses.ViewModels
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок метода
         /// </summary> 
-        protected void ExecuteMethod(Action method)
+        protected void ExecuteAndHandleError(Action method)
         {
             IsLoading = true;
             try
@@ -46,6 +46,11 @@ namespace GadzhiModules.BaseClasses.ViewModels
                 IsLoading = false;
             }
 
+        }
+
+        public void ExecuteAndHandleError<T1>(Action<T1> function, T1 arg1)
+        {
+            ExecuteAndHandleError(() => function(arg1));
         }
 
         //https://gist.github.com/ghstahl/7022ee06c1f9a1753a11efb51882740c

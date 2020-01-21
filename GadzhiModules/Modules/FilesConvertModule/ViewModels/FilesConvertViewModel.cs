@@ -1,12 +1,15 @@
-﻿using GadzhiModules.BaseClasses.ViewModels;
-using GadzhiModules.Infrastructure;
+﻿using GadzhiModules.Infrastructure;
 using GadzhiModules.Modules.FilesConvertModule.Model;
+using GadzhiModules.Modules.FilesConvertModule.Model.ReactiveSubjects;
 using GongSolutions.Wpf.DragDrop;
+using Helpers.GadzhiModules.BaseClasses.ViewModels;
+using MvvmHelpers;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,8 +32,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             _applicationGadzhi = applicationGadzhi;
 
-            FilesDataCollection = new ObservableCollection<FileData>();
-            _applicationGadzhi.FilesInfoProject.FilesDataUpdatedEvent += OnFilesInfoUpdated;
+            FilesDataCollection = new ObservableRangeCollection<FileData>();
+            _applicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             ClearFilesDelegateCommand = new DelegateCommand(
                ClearFiles,
@@ -46,12 +49,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
               async () => await AddFromFolders(),
               () => !IsLoading).
               ObservesProperty(() => IsLoading);
+
+            RemoveFilesDelegateCommand = new DelegateCommand(
+              RemoveFiles,
+              () => !IsLoading).
+              ObservesProperty(() => IsLoading);
         }
 
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public ObservableCollection<FileData> FilesDataCollection { get; }
+        public ObservableRangeCollection<FileData> FilesDataCollection { get; }
 
         /// <summary>
         /// Очистить список файлов
@@ -69,11 +77,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         public DelegateCommand AddFromFoldersDelegateCommand { get; private set; }
 
         /// <summary>
+        /// Удалить файлы из списка
+        /// </summary>       
+        public DelegateCommand RemoveFilesDelegateCommand { get; private set; }
+
+        /// <summary>
         /// Очистить список файлов
         /// </summary> 
         private void ClearFiles()
         {
-            ExecuteMethod(_applicationGadzhi.ClearFiles);
+            ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
         }
 
         /// <summary>
@@ -101,12 +114,32 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         }
 
         /// <summary>
+        /// Удалить файлы из списка
+        /// </summary> 
+        private void RemoveFiles()
+        {
+            ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, new List<FileData>());
+        }
+
+        /// <summary>
         /// Обновление данных после изменения модели
         /// </summary> 
-        private void OnFilesInfoUpdated(object sender, EventArgs args)
+        private void OnFilesInfoUpdated(FileChange fileChange)
         {
-            FilesDataCollection.Clear();
-            FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);
+            if (fileChange.ActionType == ActionType.Add)
+            {
+                FilesDataCollection.AddRange(fileChange.FileData, NotifyCollectionChangedAction.Add);
+            }
+            else if (fileChange.ActionType == ActionType.Remove)
+            {
+                FilesDataCollection.RemoveRange(fileChange.FileData, NotifyCollectionChangedAction.Remove);
+            }
+            else if (fileChange.ActionType == ActionType.Clear)
+            {
+                FilesDataCollection.Clear();
+            }
+
+
         }
 
         /// <summary>
@@ -128,7 +161,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             var dataObject = dropInfo.Data as DataObject;
             if (dataObject != null && dataObject.ContainsFileDropList())
             {
-                var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();                
+                var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
                 Task.FromResult(AddFromFilesAndFolders(filePaths));
             }
 

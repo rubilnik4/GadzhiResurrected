@@ -79,7 +79,7 @@ namespace GadzhiModules.Infrastructure
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        public void RemoveFiles()
+        public void RemoveFiles(IEnumerable<FileData> filesToRemove)
         {
             //  return Task.Delay(2000);
         }
