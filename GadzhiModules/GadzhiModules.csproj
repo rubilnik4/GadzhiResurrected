@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\CustomDataGrid.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
     <Compile Include="Modules\FilesConvertModule\Model\Enums\ColorPrint.cs" />

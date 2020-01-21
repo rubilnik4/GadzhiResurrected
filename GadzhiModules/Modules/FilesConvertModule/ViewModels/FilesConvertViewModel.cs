@@ -6,6 +6,7 @@ using Helpers.GadzhiModules.BaseClasses.ViewModels;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -63,11 +64,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Выделенные строки
         /// </summary>
-        private ObservableCollection<object> _selectedFilesData;
+        private IList _selectedFilesData = new ArrayList();
         /// <summary>
         /// Выделенные строки
         /// </summary>
-        public ObservableCollection<object> SelectedFilesData
+        public IList SelectedFilesData
         {
             get { return _selectedFilesData; }
             set { SetProperty(ref _selectedFilesData, value); }

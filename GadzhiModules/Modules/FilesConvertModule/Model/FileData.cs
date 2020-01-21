@@ -13,6 +13,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     /// </summary>
     public class FileData
     {
+        public FileData()
+        {
+
+        }
         public FileData(string fileType, string fileName, string filePath)
         {
             FileType = fileType;

@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
-        xmlns:beh="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:controls="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"
         xmlns:prism="http://prismlibrary.com/"  
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:dd="urn:gong-wpf-dragdrop"     
@@ -13,6 +12,11 @@
         d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
         >
     <Grid>
+        <!--Ссылка на корневую ViewModel-->
+        <Grid.Resources>
+            <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height ="*"/>
@@ -35,25 +39,23 @@
             </ToolBar>
         </DockPanel>
 
-        <DataGrid Grid.Row="1"
+        <controls:CustomDataGrid Grid.Row="1"
                   HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"  
                   ItemsSource="{Binding FilesDataCollection}"
+                  SelectedItemsList="{Binding SelectedFilesData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True"
+                  IsReadOnly="True"                  
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}">
-            <i:Interaction.Behaviors>
-                <beh:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding SelectedItems, Mode=OneWayToSource}" />
-            </i:Interaction.Behaviors>
-            <DataGrid.Columns>
+            <controls:CustomDataGrid.Columns>
                 <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
                 <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=FileName}" Width="*" />
                 <DataGridTextColumn Header="Путь" Binding="{Binding Path=FilePath}" Width="*" />
                 <DataGridTextColumn Header="Цвет печати" Binding="{Binding Path=ColorPrintName}" Width="*" />
-            </DataGrid.Columns>
-        </DataGrid>
+            </controls:CustomDataGrid.Columns>
+        </controls:CustomDataGrid>
 
         <DockPanel Grid.Row="2"
                    HorizontalAlignment="Stretch" 
