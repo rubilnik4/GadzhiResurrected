@@ -3,7 +3,6 @@ using GadzhiModules.Modules.FilesConvertModule.Model;
 using GadzhiModules.Modules.FilesConvertModule.Model.ReactiveSubjects;
 using GongSolutions.Wpf.DragDrop;
 using Helpers.GadzhiModules.BaseClasses.ViewModels;
-using MvvmHelpers;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -32,7 +31,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             _applicationGadzhi = applicationGadzhi;
 
-            FilesDataCollection = new ObservableRangeCollection<FileData>();
+            FilesDataCollection = new ObservableCollection<FileData>();
             _applicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             ClearFilesDelegateCommand = new DelegateCommand(
@@ -59,7 +58,20 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public ObservableRangeCollection<FileData> FilesDataCollection { get; }
+        public ObservableCollection<FileData> FilesDataCollection { get; }
+
+        /// <summary>
+        /// Выделенные строки
+        /// </summary>
+        private ObservableCollection<object> _selectedFilesData;
+        /// <summary>
+        /// Выделенные строки
+        /// </summary>
+        public ObservableCollection<object> SelectedFilesData
+        {
+            get { return _selectedFilesData; }
+            set { SetProperty(ref _selectedFilesData, value); }
+        }
 
         /// <summary>
         /// Очистить список файлов
@@ -126,20 +138,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void OnFilesInfoUpdated(FileChange fileChange)
         {
-            if (fileChange.ActionType == ActionType.Add)
+            FilesDataCollection.Clear();
+            if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
             {
-                FilesDataCollection.AddRange(fileChange.FileData, NotifyCollectionChangedAction.Add);
+                FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);
             }
-            else if (fileChange.ActionType == ActionType.Remove)
-            {
-                FilesDataCollection.RemoveRange(fileChange.FileData, NotifyCollectionChangedAction.Remove);
-            }
-            else if (fileChange.ActionType == ActionType.Clear)
-            {
-                FilesDataCollection.Clear();
-            }
-
-
         }
 
         /// <summary>

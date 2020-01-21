@@ -45,8 +45,7 @@
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}">
             <i:Interaction.Behaviors>
-                <beh:DataGridSelectedItemsBlendBehavior
-                    SelectedItems="{Binding SelectedItems}" />
+                <beh:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding SelectedItems, Mode=OneWayToSource}" />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
