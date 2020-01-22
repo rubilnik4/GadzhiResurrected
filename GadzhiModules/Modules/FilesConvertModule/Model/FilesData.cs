@@ -39,9 +39,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// </summary>
         public void AddFile(FileData file)
         {
-            _files?.Add(file);
-            UpdateFileData(new FileChange(new List<FileData>() { file },
-                                          ActionType.Add));
+            if (file != null)
+            {
+                if (File.Exists(file.FilePath))
+                {
+                    _files?.Add(file);
+                    UpdateFileData(new FileChange(new List<FileData>() { file },
+                                                  ActionType.Add));
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("Подано пустое значение FileData в AddFile(FileData file)");
+            }
         }
 
         /// <summary>
@@ -49,8 +59,22 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// </summary>
         public void AddFiles(IEnumerable<FileData> files)
         {
-            _files?.AddRange(files);
-            UpdateFileData(new FileChange(files, ActionType.Add));
+            if (files != null)
+            {
+                if (files.All(f => f != null))
+                {
+                    var filesInfo = files?.Where(f => File.Exists(f.FilePath));
+                    if (filesInfo != null)
+                    {
+                        _files?.AddRange(filesInfo);
+                        UpdateFileData(new FileChange(files, ActionType.Add));
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException("Подано пустое значение FileData в AddFiles(IEnumerable<FileData> files)");
+                }
+            }
         }
 
         /// <summary>
@@ -58,16 +82,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// </summary>
         public void AddFiles(IEnumerable<string> files)
         {
-            var filesInfo = files?.Where(f => File.Exists(f))
+            if (files != null)
+            {
+                var filesInfo = files?.Where(f => File.Exists(f))
                   .Select(f => new FileData(FileHelpers.ExtensionWithoutPoint(Path.GetExtension(f)),
                                             Path.GetFileNameWithoutExtension(f), f));
 
-            if (filesInfo != null)
-            {
-                _files?.AddRange(filesInfo);
-            }
+                if (filesInfo != null)
+                {
+                    _files?.AddRange(filesInfo);
+                }
 
-            UpdateFileData(new FileChange(filesInfo, ActionType.Add));
+                UpdateFileData(new FileChange(filesInfo, ActionType.Add));
+            }
         }
 
         /// <summary>
@@ -84,16 +111,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// </summary>
         public void RemoveFiles(IEnumerable<FileData> files)
         {
-            _files?.RemoveAll(f => files?.Contains(f) == true);
-            UpdateFileData(new FileChange(files, ActionType.Remove));
+            if (files != null)
+            {
+                _files?.RemoveAll(f => files?.Contains(f) == true);
+                UpdateFileData(new FileChange(files, ActionType.Remove));
+            }
         }
 
         /// <summary>
-        /// Обновленить списка файлов
+        /// Обновленить список файлов
         /// </summary>
         private void UpdateFileData(FileChange fileChange)
         {
-            FileDataChange.OnNext(fileChange);
+            FileDataChange?.OnNext(fileChange);
         }
     }
 }

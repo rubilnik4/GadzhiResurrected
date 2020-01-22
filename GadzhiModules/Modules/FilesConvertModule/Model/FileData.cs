@@ -12,11 +12,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     /// Класс для хранения информации о конвертируемых файлах
     /// </summary>
     public class FileData
-    {
-        public FileData()
-        {
-
-        }
+    {     
         public FileData(string fileType, string fileName, string filePath)
         {
             FileType = fileType;

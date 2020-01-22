@@ -47,19 +47,28 @@
                   AutoGenerateColumns="False"
                   IsReadOnly="True"  
                   EnableRowVirtualization="True"
-                  CanUserReorderColumns="False"                 
+                  CanUserReorderColumns="False"   
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False" 
+                  CanUserSortColumns="False"
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
-                  dd:DragDrop.DropHandler="{Binding}">
+                  dd:DragDrop.DropHandler="{Binding}"
+                  >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
                 <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=FileName}" Width="*" />
                 <DataGridTextColumn Header="Путь" Binding="{Binding Path=FilePath}" Width="*" />
                 <DataGridTextColumn Header="Цвет печати" Binding="{Binding Path=ColorPrintName}" Width="*" />
             </DataGrid.Columns>
+            
             <i:Interaction.Behaviors>
-                <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding SelectedFilesData, Mode=TwoWay}" />
+                <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding Path=(vm:FilesConvertViewModel.SelectedFilesData), Mode=TwoWay}" />
             </i:Interaction.Behaviors>
+            
+            <DataGrid.InputBindings>
+                <KeyBinding Command="{Binding Path=(vm:FilesConvertViewModel.RemoveFilesDelegateCommand)}" Key="Delete" />
+            </DataGrid.InputBindings>
         </DataGrid>
 
         <DockPanel Grid.Row="2"
