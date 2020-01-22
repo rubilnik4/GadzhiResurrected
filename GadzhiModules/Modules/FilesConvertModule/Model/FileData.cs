@@ -15,6 +15,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
     {     
         public FileData(string fileType, string fileName, string filePath)
         {
+            if (String.IsNullOrEmpty(fileType) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentNullException("Входные параметры FileData имеют пустое значение");
+            }
             FileType = fileType;
             FileName = fileName;
             FilePath = filePath;

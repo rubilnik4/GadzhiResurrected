@@ -41,16 +41,13 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         {
             if (file != null)
             {
-                if (File.Exists(file.FilePath))
-                {
-                    _files?.Add(file);
-                    UpdateFileData(new FileChange(new List<FileData>() { file },
-                                                  ActionType.Add));
-                }
+                _files?.Add(file);
+                UpdateFileData(new FileChange(new List<FileData>() { file },
+                                              ActionType.Add));
             }
             else
             {
-                throw new ArgumentNullException("Подано пустое значение FileData в AddFile(FileData file)");
+                throw new ArgumentNullException("Пустое значение FileData в AddFile(FileData file)");
             }
         }
 
@@ -63,16 +60,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
             {
                 if (files.All(f => f != null))
                 {
-                    var filesInfo = files?.Where(f => File.Exists(f.FilePath));
-                    if (filesInfo != null)
-                    {
-                        _files?.AddRange(filesInfo);
-                        UpdateFileData(new FileChange(files, ActionType.Add));
-                    }
+                    _files?.AddRange(files);
+                    UpdateFileData(new FileChange(files, ActionType.Add));
                 }
                 else
                 {
-                    throw new ArgumentNullException("Подано пустое значение FileData в AddFiles(IEnumerable<FileData> files)");
+                    throw new ArgumentNullException("Пустое значение FileData в AddFiles(IEnumerable<FileData> files)");
                 }
             }
         }
@@ -84,16 +77,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         {
             if (files != null)
             {
-                var filesInfo = files?.Where(f => File.Exists(f))
-                  .Select(f => new FileData(FileHelpers.ExtensionWithoutPoint(Path.GetExtension(f)),
-                                            Path.GetFileNameWithoutExtension(f), f));
+                var filesInfo = files?.Select(f =>
+                                    new FileData(FileHelpers.ExtensionWithoutPoint(Path.GetExtension(f)),
+                                                 Path.GetFileNameWithoutExtension(f), f));
 
-                if (filesInfo != null)
+                if (filesInfo?.All(f => f != null) == true)
                 {
                     _files?.AddRange(filesInfo);
+                    UpdateFileData(new FileChange(filesInfo, ActionType.Add));
                 }
-
-                UpdateFileData(new FileChange(filesInfo, ActionType.Add));
+                else
+                {
+                    throw new ArgumentNullException("Пустое значение FileData в AddFiles(IEnumerable<string> files)");
+                }
             }
         }
 
