@@ -21,13 +21,24 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         public FilesData()
         {
             _files = new List<FileData>();
+            OnInitialize();
+        }
+
+        public FilesData(List<FileData> files)
+        {
+            _files = files;
+            OnInitialize();
+        }
+
+        private void OnInitialize()
+        {
             FileDataChange = new Subject<FileChange>();
         }
 
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FileChange> FileDataChange { get; }
+        public ISubject<FileChange> FileDataChange { get; private set; }
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -39,16 +50,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         /// </summary>
         public void AddFile(FileData file)
         {
-            if (file != null)
+            if (CanFileDataBeAddedtoList(file))
             {
                 _files?.Add(file);
                 UpdateFileData(new FileChange(new List<FileData>() { file },
                                               ActionType.Add));
-            }
-            else
-            {
-                throw new ArgumentNullException("Пустое значение FileData в AddFile(FileData file)");
-            }
+            }           
         }
 
         /// <summary>
@@ -58,15 +65,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         {
             if (files != null)
             {
-                if (files.All(f => f != null))
+                if (files.All(f => CanFileDataBeAddedtoList(f)))
                 {
                     _files?.AddRange(files);
                     UpdateFileData(new FileChange(files, ActionType.Add));
-                }
-                else
-                {
-                    throw new ArgumentNullException("Пустое значение FileData в AddFiles(IEnumerable<FileData> files)");
-                }
+                }               
             }
         }
 
@@ -77,19 +80,13 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         {
             if (files != null)
             {
-                var filesInfo = files?.Select(f =>
-                                    new FileData(FileHelpers.ExtensionWithoutPoint(Path.GetExtension(f)),
-                                                 Path.GetFileNameWithoutExtension(f), f));
+                var filesInfo = files?.Select(f => new FileData(f));
 
-                if (filesInfo?.All(f => f != null) == true)
+                if (filesInfo?.All(f => CanFileDataBeAddedtoList(f)) == true)
                 {
                     _files?.AddRange(filesInfo);
                     UpdateFileData(new FileChange(filesInfo, ActionType.Add));
-                }
-                else
-                {
-                    throw new ArgumentNullException("Пустое значение FileData в AddFiles(IEnumerable<string> files)");
-                }
+                }               
             }
         }
 
@@ -120,6 +117,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model
         private void UpdateFileData(FileChange fileChange)
         {
             FileDataChange?.OnNext(fileChange);
+        }
+
+        /// <summary>
+        /// Можно ли добавить файл в список для конвертирования
+        /// </summary>
+        private bool CanFileDataBeAddedtoList(FileData file)
+        {
+            if (file == null)
+            {
+                throw new ArgumentNullException("Пустое значение FileData в AddFile(FileData file)");
+            }
+            return file != null && 
+                   _files?.Contains(file) == false;
         }
     }
 }

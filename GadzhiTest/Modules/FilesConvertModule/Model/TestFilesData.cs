@@ -18,7 +18,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange     
             FilesData filesInfoProject = new FilesData();
-            var file = new FileData("doc", "firstName", "C:\\folder\\firstName.doc");
+            var file = DefaultFileData.FileDataToTestTwoPositions.First();
 
             // Act  
             filesInfoProject.AddFile(file);
@@ -51,11 +51,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange     
             FilesData filesInfoProject = new FilesData();
-            var files = new List<FileData>()
-            {
-                 new FileData ("doc", "firstName", "C:\\folder\\firstName.doc"),
-                 new FileData ("dgn", "secondName", "C:\\folder\\secondName.dgn"),
-            };
+            var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
 
             // Act  
             filesInfoProject.AddFiles(files);
@@ -111,11 +107,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange     
             FilesData filesInfoProject = new FilesData();
-            var files = new List<string>()
-            {
-                "C:\\folder\\firstName.doc",
-                "C:\\folder\\secondName.dgn",
-            };
+            var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
 
             // Act  
             filesInfoProject.AddFiles(files);
@@ -165,6 +157,87 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Act           
             filesInfoProject.AddFiles(files);
 
-        }       
+        }
+
+        /// <summary>
+        /// Проверка при добавлении существующего файла. Не добавлять
+        /// </summary>
+        [TestMethod]
+        public void AddFiles_ByString_Existing_NoChanges()
+        {
+            // Arrange     
+            var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
+            FilesData filesInfoProject = new FilesData(files);
+            var filesToAdd = new List<FileData>()
+            { 
+                new FileData(DefaultFileData.FileDataToTestTwoPositions[0].FilePath)
+            };
+            int filesCountExpected = files.Count;
+
+            // Act  
+            filesInfoProject.AddFiles(filesToAdd);
+
+            // Assert           
+            Assert.AreEqual(filesInfoProject.Files.Count, filesCountExpected);
+        }
+
+        /// <summary>
+        /// Проверка очистки списка. Пустой список
+        /// </summary>
+        [TestMethod]
+        public void ClearFiles_CountNullResult()
+        {
+            // Arrange 
+            var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
+            FilesData filesInfoProject = new FilesData(files);
+
+            // Act           
+            filesInfoProject.ClearFiles();
+
+            // Assert    
+            Assert.AreEqual(filesInfoProject.Files.Count, 0);
+        }
+
+        /// <summary>
+        /// Удаление файлов. Остается только третий (последний файл)
+        /// </summary>
+        [TestMethod]
+        public void RemoveFiles_ByIEnumerableFileData_OnlyLastResult()
+        {
+            // Arrange 
+            var files = new List<FileData>(DefaultFileData.FileDataToTestThreePositions);
+            FilesData filesInfoProject = new FilesData(files);
+            var filesToRemove = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
+            FileData LastExpectedFile = DefaultFileData.FileDataToTestThreePositions.Last();
+
+            // Act
+            filesInfoProject.RemoveFiles(filesToRemove);
+
+            // Assert    
+            Assert.AreEqual(filesInfoProject.Files.Count, 1);
+            Assert.AreEqual(filesInfoProject.Files.Last(), LastExpectedFile);
+        }
+
+        /// <summary>
+        /// Проверка при удалении пустого списка. Отсутствие ошибки
+        /// </summary>
+        [TestMethod]
+        public void RemoveFiles_ByIEnumerableFileData_NoException()
+        {
+            // Arrange     
+            List<FileData> files = null;
+            FilesData filesInfoProject = new FilesData(files);
+
+            // Act
+            try
+            {
+                filesInfoProject.RemoveFiles(files);
+            }
+            catch (Exception ex)
+            {
+                // Assert 
+                Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
+            }
+        }
     }
 }
