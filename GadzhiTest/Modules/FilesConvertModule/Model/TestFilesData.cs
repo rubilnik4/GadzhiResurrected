@@ -165,28 +165,6 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Act           
             filesInfoProject.AddFiles(files);
 
-        }
-
-        /// <summary>
-        /// Очистка данных
-        /// </summary>
-        [TestMethod]
-        public void ClearFiles()
-        {
-            // Arrange     
-            Mock<FilesData> FilesInfoProject = new FilesData();
-            
-
-            // Act  
-            FilesInfoProject.AddFiles(files);
-
-            // Assert           
-            Assert.AreEqual(FilesInfoProject.Files.Count, files.Count);
-
-            FileData fileLast = FilesInfoProject.Files.Last();
-            Assert.AreEqual(fileLast.FileType, "dgn");
-            Assert.AreEqual(fileLast.FileName, "secondName");
-            Assert.AreEqual(fileLast.FilePath, "C:\\folder\\secondName.dgn");
-        }
+        }       
     }
 }
