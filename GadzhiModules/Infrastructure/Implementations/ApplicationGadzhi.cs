@@ -71,7 +71,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                      FileSeach.IsFileExist(f));
             await Task.FromResult(allFilePaths);
 
-            if (allFilePaths != null)
+            if (allFilePaths != null && allFilePaths.Any())
             {
                 FilesInfoProject.AddFiles(allFilePaths);
             }          
