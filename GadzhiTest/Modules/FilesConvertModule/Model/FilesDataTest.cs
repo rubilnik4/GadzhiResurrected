@@ -9,7 +9,7 @@ using Moq;
 namespace GadzhiTest.Modules.FilesConvertModule.Model
 {
     [TestClass]
-    public class TestFilesData
+    public class FilesDataTest
     {
         /// <summary>
         /// Проверка при добавлении позиции в модель конвертации данных

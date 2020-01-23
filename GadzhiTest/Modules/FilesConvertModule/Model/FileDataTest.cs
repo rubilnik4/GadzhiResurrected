@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GadzhiTest.Modules.FilesConvertModule.Model
 {
     [TestClass]
-    public class TestFileData
+    public class FileDataTest
     {
         /// <summary>
         /// Проверяем правильность заполенния конструктора
