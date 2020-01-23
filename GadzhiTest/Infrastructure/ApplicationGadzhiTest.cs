@@ -69,7 +69,7 @@ namespace GadzhiTest
             var filesInSubDirectory = new List<string>(DefaultFileData.FileDataToTestOnlyPath.
                 Select(path => Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "Sub" + Path.GetExtension(path)));
 
-            Mock<IFileSeach> mockFileSeach = mockFileSeachFill(subDirectoryPath,filesInSubDirectory, subfolderGetFiles);
+            Mock<IFileSeach> mockFileSeach = mockFileSeachFill(subDirectoryPath, filesInSubDirectory, subfolderGetFiles);
 
             var mockFileInfoProject = new Mock<IFilesData>();
             IEnumerable<string> filesPathOut = new List<string>();
@@ -96,6 +96,76 @@ namespace GadzhiTest
             Assert.AreEqual(filesPathOut.Count(), 4);
             Assert.AreEqual(filesPathOut.First(), fileFirstExpected);
             Assert.AreEqual(filesPathOut.Last(), fileLastExpected);
+        }
+
+        /// <summary>    
+        /// Проверка при добавлении пустого списка в инфраструктуре
+        /// </summary>
+        [TestMethod]
+        public async Task AddFromFilesOrDirectories_AddNull_NoException()
+        {
+            // Arrange   
+            var mockDialogServiceStandard = new Mock<IDialogServiceStandard>();
+            Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
+            var mockFileInfoProject = new Mock<IFilesData>();
+
+            var applicationGadzhi = new ApplicationGadzhi(mockDialogServiceStandard.Object,
+                                                          mockFileSeach.Object,
+                                                          mockFileInfoProject.Object);
+
+            IEnumerable<string> files = null;
+            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
+
+            try
+            {
+                // Act  
+                await applicationGadzhi.AddFromFilesOrDirectories(files);
+
+                // Assert 
+                mockFileInfoProject.Verify(fileInfoProject => fileInfoProject.AddFiles(It.IsAny<IEnumerable<string>>()),
+                                           Times.Exactly(0),
+                                           "Ошибочно вызван метод AddFiles");
+            }
+            catch (Exception ex)
+            {
+                // Assert 
+                Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
+            }
+        }
+
+        /// <summary>    
+        /// Проверка при добавлении пустого списка в инфраструктуре
+        /// </summary>
+        [TestMethod]
+        public async Task AddFromFilesOrDirectories_AddListWithNull_NoException()
+        {
+            // Arrange   
+            var mockDialogServiceStandard = new Mock<IDialogServiceStandard>();
+            Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
+            var mockFileInfoProject = new Mock<IFilesData>();
+
+            var applicationGadzhi = new ApplicationGadzhi(mockDialogServiceStandard.Object,
+                                                          mockFileSeach.Object,
+                                                          mockFileInfoProject.Object);
+
+            IEnumerable<string> files = new List<string> { null };
+            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
+
+            try
+            {
+                // Act  
+                await applicationGadzhi.AddFromFilesOrDirectories(files);
+
+                // Assert 
+                mockFileInfoProject.Verify(fileInfoProject => fileInfoProject.AddFiles(It.IsAny<IEnumerable<string>>()),
+                                           Times.Exactly(0),
+                                           "Ошибочно вызван метод AddFiles");
+            }
+            catch (Exception ex)
+            {
+                // Assert 
+                Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
+            }
         }
 
         private Mock<IFileSeach> mockFileSeachFill(IEnumerable<string> subDirectoryPath = null,

@@ -66,12 +66,15 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                                      FileSeach.IsDirectoryExist(d));
             var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => FileSeach.GetDirectories(d)))?
                                                      .SelectMany(d => FileSeach.GetFiles(d));
-            var allFilePaths = filePaths?.Union(filesInDirectories)
+            var allFilePaths = filePaths?.Union(filesInDirectories)?
                                          .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) &&
                                                      FileSeach.IsFileExist(f));
             await Task.FromResult(allFilePaths);
 
-            FilesInfoProject.AddFiles(allFilePaths);
+            if (allFilePaths != null)
+            {
+                FilesInfoProject.AddFiles(allFilePaths);
+            }          
         }
 
         /// <summary>

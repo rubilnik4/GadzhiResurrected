@@ -72,9 +72,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             FilesData filesInfoProject = new FilesData();
             List<FileData> files = null;
 
-            // Act
             try
             {
+                // Act
                 filesInfoProject.AddFiles(files);
             }
             catch (Exception ex)
@@ -132,9 +132,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             FilesData filesInfoProject = new FilesData();
             List<string> files = null;
 
-            // Act
             try
             {
+                // Act
                 filesInfoProject.AddFiles(files);
             }
             catch (Exception ex)
@@ -170,7 +170,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
             FilesData filesInfoProject = new FilesData(files);
             var filesToAdd = new List<FileData>()
-            { 
+            {
                 new FileData(DefaultFileData.FileDataToTestTwoPositions[0].FilePath)
             };
             int filesCountExpected = files.Count;
@@ -228,10 +228,10 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Arrange     
             List<FileData> files = null;
             FilesData filesInfoProject = new FilesData(files);
-
-            // Act
+           
             try
             {
+                // Act
                 filesInfoProject.RemoveFiles(files);
             }
             catch (Exception ex)
