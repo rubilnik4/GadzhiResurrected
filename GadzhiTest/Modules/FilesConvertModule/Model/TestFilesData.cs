@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiModules.Modules.FilesConvertModule.Model;
+using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

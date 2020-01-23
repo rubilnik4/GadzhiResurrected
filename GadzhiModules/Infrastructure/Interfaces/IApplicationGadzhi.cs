@@ -1,18 +1,21 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model;
+﻿using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Infrastructure
+namespace GadzhiModules.Infrastructure.Interfaces
 {
+    /// <summary>
+    /// Слой приложения, инфраструктура
+    /// </summary>
     public interface IApplicationGadzhi
     {
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>       
-        FilesData FilesInfoProject { get; }
+        IFilesData FilesInfoProject { get; }
 
         /// <summary>
         /// Добавить файлы для конвертации

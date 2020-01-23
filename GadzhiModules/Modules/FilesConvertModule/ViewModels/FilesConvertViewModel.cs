@@ -1,6 +1,6 @@
-﻿using GadzhiModules.Infrastructure;
-using GadzhiModules.Modules.FilesConvertModule.Model;
-using GadzhiModules.Modules.FilesConvertModule.Model.ReactiveSubjects;
+﻿using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Model.Implementations.ReactiveSubjects;
 using GongSolutions.Wpf.DragDrop;
 using Helpers.GadzhiModules.BaseClasses.ViewModels;
 using Prism.Commands;

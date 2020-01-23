@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Infrastructure
+namespace GadzhiModules.Infrastructure.Interfaces
 {
     /// <summary>
     /// Стандартные диалоговые окна

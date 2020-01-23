@@ -1,4 +1,5 @@
 ﻿using GadzhiModules.Infrastructure;
+using GadzhiModules.Infrastructure.Interfaces;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;

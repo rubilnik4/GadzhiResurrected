@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Model
+namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемых файлах

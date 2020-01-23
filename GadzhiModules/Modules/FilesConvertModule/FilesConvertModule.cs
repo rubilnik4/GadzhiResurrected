@@ -13,15 +13,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity;
+using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
     public class FilesConvertModule : IModule
     {
-       
+
         public FilesConvertModule()
-        { 
-            
+        {
+
         }
 
         /// <summary>
@@ -40,11 +43,10 @@ namespace GadzhiModules.Modules.FilesConvertModule
         {
             ViewModelLocationProvider.Register<FilesConvertView, FilesConvertViewModel>();
         }
-        
+
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            IUnityContainer unityContainer = containerRegistry.GetContainer();
-            containerRegistry.Register<FilesData>();
+            containerRegistry.Register<IFilesData, FilesData>();
         }
     }
 }

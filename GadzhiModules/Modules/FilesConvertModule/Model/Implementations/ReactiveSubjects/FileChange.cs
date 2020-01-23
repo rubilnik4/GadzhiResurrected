@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Model.ReactiveSubjects
+namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations.ReactiveSubjects
 {
     /// <summary>
     /// Отправка изменений для реактивного свойства
