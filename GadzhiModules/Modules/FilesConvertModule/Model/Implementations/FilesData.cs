@@ -16,22 +16,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
     /// </summary>
     public class FilesData: IFilesData
     {
-        private List<FileData> _files;
+        private List<FileData> _filesData;
 
         public FilesData()
+            :this(new List<FileData>())
         {
-            _files = new List<FileData>();
-            OnInitialize();
+                    
         }
 
         public FilesData(List<FileData> files)
         {
-            _files = files;
-            OnInitialize();
-        }
-
-        private void OnInitialize()
-        {
+            _filesData = files;
             FileDataChange = new Subject<FileChange>();
         }
 
@@ -43,7 +38,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public IReadOnlyList<FileData> Files => _files;
+        public IReadOnlyList<FileData> Files => _filesData;
 
         /// <summary>
         /// Добавить файл
@@ -52,8 +47,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             if (CanFileDataBeAddedtoList(file))
             {
-                _files?.Add(file);
-                UpdateFileData(new FileChange(new List<FileData>() { file },
+                _filesData?.Add(file);
+                UpdateFileData(new FileChange(_filesData,
+                                              new List<FileData>() { file },
                                               ActionType.Add));
             }           
         }
@@ -67,8 +63,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
             {
                 if (files.All(f => CanFileDataBeAddedtoList(f)))
                 {
-                    _files?.AddRange(files);
-                    UpdateFileData(new FileChange(files, ActionType.Add));
+                    _filesData?.AddRange(files);
+                    UpdateFileData(new FileChange(_filesData, files, ActionType.Add));
                 }               
             }
         }
@@ -84,8 +80,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
 
                 if (filesInfo?.All(f => CanFileDataBeAddedtoList(f)) == true)
                 {
-                    _files?.AddRange(filesInfo);
-                    UpdateFileData(new FileChange(filesInfo, ActionType.Add));
+                    _filesData?.AddRange(filesInfo);
+                    UpdateFileData(new FileChange(_filesData, filesInfo, ActionType.Add));
                 }               
             }
         }
@@ -95,8 +91,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// </summary>
         public void ClearFiles()
         {
-            _files?.Clear();
-            UpdateFileData(new FileChange(new List<FileData>(), ActionType.Clear));
+            _filesData?.Clear();
+            UpdateFileData(new FileChange(_filesData, new List<FileData>(), ActionType.Clear));
         }
 
         /// <summary>
@@ -106,8 +102,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             if (files != null)
             {
-                _files?.RemoveAll(f => files?.Contains(f) == true);
-                UpdateFileData(new FileChange(files, ActionType.Remove));
+                _filesData?.RemoveAll(f => files?.Contains(f) == true);
+                UpdateFileData(new FileChange(_filesData, files, ActionType.Remove));
             }
         }
 
@@ -129,7 +125,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
                 throw new ArgumentNullException("Пустое значение FileData в AddFile(FileData file)");
             }
             return file != null && 
-                   _files?.Contains(file) == false;
+                   _filesData?.Contains(file) == false;
         }
     }
 }

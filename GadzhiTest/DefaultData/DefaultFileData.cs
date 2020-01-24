@@ -16,6 +16,14 @@ namespace GadzhiTest.DefaultData.Model
                  new FileData ("C:\\folder\\secondName.dgn"),
             };
 
+        static public IReadOnlyList<FileData> FileDataToTestFourPositions = new List<FileData>()
+            {
+                 FileDataToTestTwoPositions[0],
+                 FileDataToTestTwoPositions[1],
+                 new FileData ("C:\\folder\\thirdName.doc"),
+                 new FileData ("C:\\folder\\FourthName.dgn"),
+            };
+
         static public IReadOnlyList<FileData> FileDataToTestThreePositions = new List<FileData>()
             {
                  FileDataToTestTwoPositions[0],

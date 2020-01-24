@@ -16,15 +16,49 @@ namespace GadzhiTest
     [TestClass]
     public class ApplicationGadzhiTest
     {
+        /// <summary>
+        /// Диалоговые окна. Пустой класс
+        /// </summary>
+        Mock<IDialogServiceStandard> MockDialogServiceStandard;
+       
+        [TestInitialize]
+        public void ApplicationGadzhiTestInitialize()
+        {
+            MockDialogServiceStandard = new Mock<IDialogServiceStandard>();
+        }
+
+        /// <summary>
+        /// Инициализация класса поиска файлов
+        /// <summary>
+        private Mock<IFileSeach> mockFileSeachFill(IEnumerable<string> subDirectoryPath = null,
+                                                IEnumerable<string> filesInSubDirectory = null,
+                                                string subfolderGetFiles = null)
+        {
+            var mockFileSeach = new Mock<IFileSeach>();
+            var fileSeachImplementation = new FileSeach();
+            mockFileSeach.Setup(fileSeach => fileSeach.IsDirectoryExist(It.IsAny<string>()))
+                         .Returns(true);
+            mockFileSeach.Setup(fileSeach => fileSeach.IsFileExist(It.IsAny<string>()))
+                         .Returns(true);
+            mockFileSeach.Setup(fileSeach => fileSeach.IsDirectory(It.IsAny<string>()))
+                         .Returns<string>(path => fileSeachImplementation.IsDirectory(path));
+            mockFileSeach.Setup(fileSeach => fileSeach.IsFile(It.IsAny<string>()))
+                         .Returns<string>(path => fileSeachImplementation.IsFile(path));
+            mockFileSeach.Setup(fileSeach => fileSeach.GetDirectories(It.IsAny<string>()))
+                         .Returns(subDirectoryPath);
+            mockFileSeach.Setup(fileSeach => fileSeach.GetFiles(subfolderGetFiles))
+                         .Returns(filesInSubDirectory);
+
+            return mockFileSeach;
+        }
+
         /// <summary>    
         /// Проверка при добавлении двух позиций в инфраструктуре
         /// </summary>
         [TestMethod]
         public async Task AddFromFilesOrDirectories_AddTwoPositions()
         {
-            // Arrange   
-            var mockDialogServiceStandard = new Mock<IDialogServiceStandard>();
-
+            // Arrange
             Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
 
             var mockFileInfoProject = new Mock<IFilesData>();
@@ -32,7 +66,7 @@ namespace GadzhiTest
             mockFileInfoProject.Setup(fileInfo => fileInfo.AddFiles(It.IsAny<IEnumerable<string>>()))
                                .Callback<IEnumerable<string>>(filesPath => filesPathOut = filesPath);
 
-            var applicationGadzhi = new ApplicationGadzhi(mockDialogServiceStandard.Object,
+            var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
                                                           mockFileInfoProject.Object);
 
@@ -56,9 +90,7 @@ namespace GadzhiTest
         [TestMethod]
         public async Task AddFromFilesOrDirectories_AddTwoPositionsFromFiles_And_AddTwoPositionFromSubDirectory()
         {
-            // Arrange
-            var mockDialogServiceStandard = new Mock<IDialogServiceStandard>();
-
+            // Arrange 
             string subfolderGetFiles = "C:\\folder\\subfolderGetFiles";
             string subfolderNoFiles = "C:\\folder\\subfolderNoFiles";
             var subDirectoryPath = new List<string>()
@@ -76,7 +108,7 @@ namespace GadzhiTest
             mockFileInfoProject.Setup(fileInfo => fileInfo.AddFiles(It.IsAny<IEnumerable<string>>()))
                                .Callback<IEnumerable<string>>(filesPath => filesPathOut = filesPath);
 
-            var applicationGadzhi = new ApplicationGadzhi(mockDialogServiceStandard.Object,
+            var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
                                                           mockFileInfoProject.Object);
 
@@ -104,12 +136,11 @@ namespace GadzhiTest
         [TestMethod]
         public async Task AddFromFilesOrDirectories_AddNull_NoException()
         {
-            // Arrange   
-            var mockDialogServiceStandard = new Mock<IDialogServiceStandard>();
+            // Arrange            
             Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
             var mockFileInfoProject = new Mock<IFilesData>();
 
-            var applicationGadzhi = new ApplicationGadzhi(mockDialogServiceStandard.Object,
+            var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
                                                           mockFileInfoProject.Object);
 
@@ -139,12 +170,11 @@ namespace GadzhiTest
         [TestMethod]
         public async Task AddFromFilesOrDirectories_AddListWithNull_NoException()
         {
-            // Arrange   
-            var mockDialogServiceStandard = new Mock<IDialogServiceStandard>();
+            // Arrange             
             Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
             var mockFileInfoProject = new Mock<IFilesData>();
 
-            var applicationGadzhi = new ApplicationGadzhi(mockDialogServiceStandard.Object,
+            var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
                                                           mockFileInfoProject.Object);
 
@@ -168,26 +198,6 @@ namespace GadzhiTest
             }
         }
 
-        private Mock<IFileSeach> mockFileSeachFill(IEnumerable<string> subDirectoryPath = null,
-                                                   IEnumerable<string> filesInSubDirectory = null,
-                                                   string subfolderGetFiles = null)
-        {
-            var mockFileSeach = new Mock<IFileSeach>();
-            var fileSeachImplementation = new FileSeach();
-            mockFileSeach.Setup(fileSeach => fileSeach.IsDirectoryExist(It.IsAny<string>()))
-                         .Returns(true);
-            mockFileSeach.Setup(fileSeach => fileSeach.IsFileExist(It.IsAny<string>()))
-                         .Returns(true);
-            mockFileSeach.Setup(fileSeach => fileSeach.IsDirectory(It.IsAny<string>()))
-                         .Returns<string>(path => fileSeachImplementation.IsDirectory(path));
-            mockFileSeach.Setup(fileSeach => fileSeach.IsFile(It.IsAny<string>()))
-                         .Returns<string>(path => fileSeachImplementation.IsFile(path));
-            mockFileSeach.Setup(fileSeach => fileSeach.GetDirectories(It.IsAny<string>()))
-                         .Returns(subDirectoryPath);
-            mockFileSeach.Setup(fileSeach => fileSeach.GetFiles(subfolderGetFiles))
-                         .Returns(filesInSubDirectory);
-
-            return mockFileSeach;
-        }
+     
     }
 }

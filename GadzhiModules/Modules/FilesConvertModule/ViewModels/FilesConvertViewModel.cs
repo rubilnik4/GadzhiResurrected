@@ -143,7 +143,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             FilesDataCollection.Clear();
             if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
             {
-                FilesDataCollection.AddRange(_applicationGadzhi.FilesInfoProject.Files);
+                FilesDataCollection.AddRange(fileChange.FilesDataProject) ;
             }
         }
 

@@ -11,11 +11,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations.Reactiv
     /// </summary>
     public class FileChange
     {
-        public FileChange(IEnumerable<FileData> fileData, ActionType actionType)
+        public FileChange(IEnumerable<FileData> filesDataProject, IEnumerable<FileData> fileData, ActionType actionType)
         {
+            FilesDataProject = filesDataProject;
             FileData = fileData;
             ActionType = actionType;
         }
+
+        /// <summary>
+        /// Текущая модель
+        /// </summary>
+        public IEnumerable<FileData> FilesDataProject { get; }
 
         /// <summary>
         /// Список изменямых файлов
