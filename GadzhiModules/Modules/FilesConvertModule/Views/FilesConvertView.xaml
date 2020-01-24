@@ -23,9 +23,9 @@
             <RowDefinition Height ="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        
+
         <ContentControl Visibility="Collapsed" Content="{StaticResource ProxyElement}"></ContentControl>
-        
+
         <DockPanel Grid.Row="0"
 				   HorizontalAlignment="Stretch" 
 				   VerticalAlignment="Center" 
@@ -45,13 +45,16 @@
                   HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"  
                   ItemsSource="{Binding FilesDataCollection}"                   
-                  SelectionMode="Extended"
+                  SelectionMode="Extended"  
+                  SelectionUnit="CellOrRowHeader"
+                  RowHeaderWidth="30"
                   AutoGenerateColumns="False"                
                   EnableRowVirtualization="True"
                   CanUserReorderColumns="False"   
                   CanUserAddRows="False"
                   CanUserDeleteRows="False" 
                   CanUserSortColumns="False"
+                  CanUserResizeRows="False"
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}"
@@ -73,7 +76,7 @@
                                         Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ColorPrintName}" />                                     
+                            <TextBlock Text="{Binding ColorPrintName}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -83,6 +86,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Статус" 
+                                    Binding="{Binding StatusProcessingName}" 
+                                    Width="*" 
+                                    IsReadOnly="True"  />
             </DataGrid.Columns>
 
             <i:Interaction.Behaviors>
@@ -112,7 +119,8 @@
                             HorizontalAlignment="Center"
                             Width="120"/>
                 <Button  Grid.Column="1"
-                            Content="Закрыть" 
+                            Content="Закрыть"
+                            Command="{Binding CloseApplicationDelegateCommand}" 
                             VerticalAlignment="Center" 
                             HorizontalAlignment="Center" 
                             Width="120"/>

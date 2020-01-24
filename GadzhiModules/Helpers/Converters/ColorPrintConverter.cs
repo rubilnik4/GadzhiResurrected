@@ -20,6 +20,9 @@ namespace GadzhiModules.Helpers.Converters
                 { ColorPrint.Color, "Цветной" },
             };
 
+        /// <summary>
+        /// Преобразовать цветовое значение в наименование цвета
+        /// </summary>       
         public static string ConvertColorPrintToString (ColorPrint colorPrint)
         {
             string colorPrintString = String.Empty;
@@ -28,12 +31,15 @@ namespace GadzhiModules.Helpers.Converters
             return colorPrintString;
         }
 
-        public static ColorPrint ConvertColorPrintToColor(string colorPrint)
+        /// <summary>
+        /// Преобразовать наименование цвета в цветовое значение
+        /// </summary>       
+        public static ColorPrint ConvertStringToColorPrint(string colorPrint)
         {
-            ColorPrint ColorPrintOut = ColorPrintToString?.FirstOrDefault(color => color.Value == colorPrint).Key ?? 
+            ColorPrint colorPrintOut = ColorPrintToString?.FirstOrDefault(color => color.Value == colorPrint).Key ?? 
                                                            ColorPrint.BlackAndWhite;             
 
-            return ColorPrintOut;
+            return colorPrintOut;
         }
     }
 }

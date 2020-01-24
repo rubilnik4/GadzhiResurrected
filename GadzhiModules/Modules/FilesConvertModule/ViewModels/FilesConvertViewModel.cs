@@ -55,16 +55,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
               RemoveFiles,
               () => !IsLoading).
               ObservesProperty(() => IsLoading);
+
+            CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
         }
 
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         public ObservableCollection<FileData> FilesDataCollection { get; }
-
-        /// <summary>
-        /// Выделенные строки
-        /// </summary>
+        
         private IList<object> _selectedFilesData = new List<object>();
         /// <summary>
         /// Выделенные строки
@@ -99,6 +98,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Удалить файлы из списка
         /// </summary>       
         public DelegateCommand RemoveFilesDelegateCommand { get; private set; }
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>       
+        public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
 
         /// <summary>
         /// Очистить список файлов
@@ -139,6 +143,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             var removeFiles = SelectedFilesData?.OfType<FileData>();
             ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, removeFiles);
+        }
+
+        /// <summary>
+        /// Удалить файлы из списка
+        /// </summary> 
+        private void CloseApplication()
+        {          
+            ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
         }
 
         /// <summary>

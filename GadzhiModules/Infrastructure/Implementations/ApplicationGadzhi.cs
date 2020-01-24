@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using System.Windows;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -91,6 +92,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         public void RemoveFiles(IEnumerable<FileData> filesToRemove)
         {
             FilesInfoProject.RemoveFiles(filesToRemove);
+        }
+
+        public void CloseApplication()
+        {
+            Application.Current.Shutdown();
         }
     }
 }

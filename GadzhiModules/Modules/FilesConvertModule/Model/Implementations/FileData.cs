@@ -64,7 +64,21 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         public string ColorPrintName
         {
             get => ColorPrintConverter.ConvertColorPrintToString(ColorPrint);
-            set => ColorPrint = ColorPrintConverter.ConvertColorPrintToColor(value);            
+            set => ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);            
+        }
+
+        /// <summary>
+        /// Статус обработки файла
+        /// </summary>
+        public StatusProcessing StatusProcessing { get; private set; }
+
+        /// <summary>
+        /// Статус обработки строковое значение
+        /// </summary>
+        public string StatusProcessingName
+        {
+            get => StatusProcessingConverter.ConvertStatusProcessingToString(StatusProcessing);
+            set => StatusProcessing = StatusProcessingConverter.ConvertStringToStatusProcessing(value);
         }
 
         public bool Equals(FileData other)

@@ -41,5 +41,10 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Удалить файлы
         /// </summary>
         void RemoveFiles(IEnumerable<FileData> fileOrDirectoriesPaths);
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        void CloseApplication();
     }
 }

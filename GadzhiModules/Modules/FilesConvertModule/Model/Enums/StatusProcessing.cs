@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 namespace GadzhiModules.Modules.FilesConvertModule.Model.Enums
 {
     /// <summary>
-    /// Типы цветов для печати
+    /// Статус обработки файлов
     /// </summary>
-    public enum ColorPrint
+    public enum StatusProcessing
     {
-
-        BlackAndWhite,
-        GrayScale,
-        Color,
-    }    
+        NotSend,
+        InQueue,
+        InProcess,
+        Complited,
+        Error,
+    }
 }
