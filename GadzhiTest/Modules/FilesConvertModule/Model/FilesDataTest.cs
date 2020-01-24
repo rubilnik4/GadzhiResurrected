@@ -33,8 +33,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         /// Проверка при добавлении пустого класса. Отсутствие ошибки
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void AddFile_AddNull_Exception()
+        public void AddFile_AddNull_NoException()
         {
             // Arrange     
             FilesData filesInfoProject = new FilesData();
@@ -72,24 +71,15 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             FilesData filesInfoProject = new FilesData();
             List<FileData> files = null;
 
-            try
-            {
-                // Act
-                filesInfoProject.AddFiles(files);
-            }
-            catch (Exception ex)
-            {
-                // Assert 
-                Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
-            }
+            // Act
+            filesInfoProject.AddFiles(files);
         }
 
         /// <summary>
-        /// Проверка при добавлении списка с пустыми полями. Ошибка
+        /// Проверка при добавлении списка с пустыми полями
         /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void AddFiles_ByIEnumerableFileData_AddListWithNull_Exception()
+        [TestMethod]       
+        public void AddFiles_ByIEnumerableFileData_AddListWithNull_NoException()
         {
             // Arrange     
             FilesData filesInfoProject = new FilesData();
@@ -97,7 +87,6 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
 
             // Act           
             filesInfoProject.AddFiles(files);
-
         }
 
         /// <summary>
@@ -149,7 +138,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void AddFiles_ByString_AddListWithNull_Exception()
+        public void AddFiles_ByString_AddListWithNull_NoException()
         {
             // Arrange     
             FilesData filesInfoProject = new FilesData();
@@ -157,29 +146,26 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
 
             // Act           
             filesInfoProject.AddFiles(files);
-
         }
 
         /// <summary>
-        /// Проверка при добавлении существующего файла. Не добавлять
+        /// Проверка при добавлении существующего файла. ДОбавить 2 из 4. Итого 4
         /// </summary>
         [TestMethod]
-        public void AddFiles_ByString_Existing_NoChanges()
+        public void AddFiles_ByString_Existing_AddsTwoOfFour_TotalFour()
         {
             // Arrange     
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
             FilesData filesInfoProject = new FilesData(files);
-            var filesToAdd = new List<FileData>()
-            {
-                new FileData(DefaultFileData.FileDataToTestTwoPositions[0].FilePath)
-            };
+            var filesToAdd = DefaultFileData.FileDataToTestFourPositions;
+            
             int filesCountExpected = files.Count;
 
             // Act  
             filesInfoProject.AddFiles(filesToAdd);
 
             // Assert           
-            Assert.AreEqual(filesInfoProject.Files.Count, filesCountExpected);
+            Assert.AreEqual(filesInfoProject.Files.Count, 4);
         }
 
         /// <summary>
@@ -228,17 +214,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Arrange     
             List<FileData> files = null;
             FilesData filesInfoProject = new FilesData(files);
-           
-            try
-            {
-                // Act
-                filesInfoProject.RemoveFiles(files);
-            }
-            catch (Exception ex)
-            {
-                // Assert 
-                Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
-            }
+
+            // Act
+            filesInfoProject.RemoveFiles(files);
         }
     }
 }

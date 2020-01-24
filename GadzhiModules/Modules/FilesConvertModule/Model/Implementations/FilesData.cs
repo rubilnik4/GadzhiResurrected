@@ -60,12 +60,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         public void AddFiles(IEnumerable<FileData> files)
         {
             if (files != null)
-            {                
-                   var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f));
+            {
+                var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f));
                 if (filesInfo != null)
                 {
-                    _filesData?.AddRange(files);
-                    UpdateFileData(new FileChange(_filesData, files, ActionType.Add));
+                    _filesData?.AddRange(filesInfo);
+                    UpdateFileData(new FileChange(_filesData, filesInfo, ActionType.Add));
                 }
             }
         }
@@ -121,12 +121,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// </summary>
         private bool CanFileDataBeAddedtoList(FileData file)
         {
-            if (file == null)
-            {
-                throw new ArgumentNullException("Пустое значение FileData в AddFile(FileData file)");
-            }
             return file != null &&
-                   _filesData?.Contains(file) == false;
+                   _filesData?.Any(f => f.Equals(file)) == false;
         }
     }
 }
