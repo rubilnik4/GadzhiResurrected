@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:prism="http://prismlibrary.com/"  
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:dd="urn:gong-wpf-dragdrop"     
         mc:Ignorable="d"       
@@ -16,6 +17,12 @@
         <!--Ссылка на корневую ViewModel-->
         <Grid.Resources>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
+
+            <Style x:Key="PackIconToolBarStyle" 
+                   TargetType="materialDesign:PackIcon">
+                <Setter Property="Width" Value="24" />
+                <Setter Property="Height" Value="24"/>                
+            </Style>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -34,11 +41,39 @@
 
             <ToolBar ToolBarTray.IsLocked="True"
                      OverflowMode ="Never"
-                     HorizontalAlignment="Stretch">
-                <Button Command="{Binding ClearFilesDelegateCommand}" Content="New" />
-                <Button Command="{Binding AddFromFilesDelegateCommand}" Content="Open Files" />
-                <Button Command="{Binding AddFromFoldersDelegateCommand}" Content="Open Folders" />
-                <Button Command="{Binding RemoveFilesDelegateCommand}" Content="Remove Files" />
+                     HorizontalAlignment="Stretch">               
+              
+                <Button Command="{Binding AddFromFilesDelegateCommand}"
+                        ToolTip="Загрузить файлы">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Files"                                         
+                                                 Style="{StaticResource PackIconToolBarStyle}"/>
+                    </Button.Content>
+                </Button>
+                
+                <Button Command="{Binding AddFromFoldersDelegateCommand}" 
+                        ToolTip="Загрузить папки">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Folders"                                         
+                                                 Style="{StaticResource PackIconToolBarStyle}"/>
+                    </Button.Content>
+                </Button>
+                <Separator />
+                <Button Command="{Binding ClearFilesDelegateCommand}"
+                        ToolTip="Очистить список">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Eraser"                                         
+                                                 Style="{StaticResource PackIconToolBarStyle}"/>
+                    </Button.Content>
+                </Button>
+                
+                <Button Command="{Binding RemoveFilesDelegateCommand}"
+                        ToolTip="Удалить из списка">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="FileDocumentBoxRemove"                                         
+                                                 Style="{StaticResource PackIconToolBarStyle}"/>
+                    </Button.Content>
+                </Button>
             </ToolBar>
         </DockPanel>
         <DataGrid Grid.Row="1"
@@ -46,8 +81,7 @@
                   VerticalAlignment="Stretch"  
                   ItemsSource="{Binding FilesDataCollection}"                   
                   SelectionMode="Extended"  
-                  SelectionUnit="CellOrRowHeader"
-                  RowHeaderWidth="30"
+                  SelectionUnit="FullRow"                 
                   AutoGenerateColumns="False"                
                   EnableRowVirtualization="True"
                   CanUserReorderColumns="False"   
@@ -71,21 +105,15 @@
                 <DataGridTextColumn Header="Путь" 
                                     Binding="{Binding FilePath}" 
                                     Width="*" 
-                                    IsReadOnly="True"  />
-                <DataGridTemplateColumn Header="Цвет печати"
-                                        Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ColorPrintName}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}" 
-                                      SelectedItem="{Binding ColorPrintName}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
+                                    IsReadOnly="True"  /> 
+                
+                <materialDesign:DataGridComboBoxColumn
+                                    Header="Цвет печати"
+                                    IsEditable="True"
+                                    SelectedValueBinding="{Binding ColorPrintName}"
+                                    ItemsSourceBinding="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">                   
+                </materialDesign:DataGridComboBoxColumn>
+                
                 <DataGridTextColumn Header="Статус" 
                                     Binding="{Binding StatusProcessingName}" 
                                     Width="*" 
@@ -117,13 +145,13 @@
                             Content="Конвертировать" 
                             VerticalAlignment="Center" 
                             HorizontalAlignment="Center"
-                            Width="120"/>
+                            Width="150"/>
                 <Button  Grid.Column="1"
                             Content="Закрыть"
                             Command="{Binding CloseApplicationDelegateCommand}" 
                             VerticalAlignment="Center" 
                             HorizontalAlignment="Center" 
-                            Width="120"/>
+                            Width="150"/>
             </Grid>
         </DockPanel>
     </Grid>
