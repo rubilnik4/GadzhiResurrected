@@ -13,8 +13,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
     /// <summary>
     /// Класс для хранения информации о конвертируемых файлах
     /// </summary>
-    public class FileData: IEquatable<FileData>
-    {     
+    public class FileData : IEquatable<FileData>
+    {
         public FileData(string filePath)
         {
             string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePath);
@@ -27,6 +27,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
             FileType = fileType;
             FileName = fileName;
             FilePath = filePath;
+
+            ColorPrint = ColorPrint.BlackAndWhite;
         }
 
         public FileData(string filePath, ColorPrint colorPrint)
@@ -53,12 +55,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; set; } = ColorPrint.BlackAndWhite;
+        public ColorPrint ColorPrint { get; private set; } 
 
         /// <summary>
         /// Цвет печати строковое значение
         /// </summary>
-        public string ColorPrintName => ColorPrintConverter.ConvertColorPrintToString(ColorPrint);
+        public string ColorPrintName
+        {
+            get => ColorPrintConverter.ConvertColorPrintToString(ColorPrint);
+            set => ColorPrint = ColorPrintConverter.ConvertColorPrintToColor(value);            
+        }
 
         public bool Equals(FileData other)
         {

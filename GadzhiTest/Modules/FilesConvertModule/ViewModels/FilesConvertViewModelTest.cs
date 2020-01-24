@@ -128,7 +128,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
         }
 
         /// <summary>    
-        /// Проверка Включения кнопки после операции
+        /// Проверка включения кнопки после операции
         /// </summary>
         [TestMethod]
         public void FilesConvertViewModelTest_DisableButtons()

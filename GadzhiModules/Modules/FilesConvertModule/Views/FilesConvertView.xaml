@@ -23,7 +23,9 @@
             <RowDefinition Height ="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-
+        
+        <ContentControl Visibility="Collapsed" Content="{StaticResource ProxyElement}"></ContentControl>
+        
         <DockPanel Grid.Row="0"
 				   HorizontalAlignment="Stretch" 
 				   VerticalAlignment="Center" 
@@ -44,8 +46,7 @@
                   VerticalAlignment="Stretch"  
                   ItemsSource="{Binding FilesDataCollection}"                   
                   SelectionMode="Extended"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"  
+                  AutoGenerateColumns="False"                
                   EnableRowVirtualization="True"
                   CanUserReorderColumns="False"   
                   CanUserAddRows="False"
@@ -56,16 +57,38 @@
                   dd:DragDrop.DropHandler="{Binding}"
                   >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Тип" Binding="{Binding Path=FileType}" Width="*" />
-                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=FileName}" Width="*" />
-                <DataGridTextColumn Header="Путь" Binding="{Binding Path=FilePath}" Width="*" />
-                <DataGridTextColumn Header="Цвет печати" Binding="{Binding Path=ColorPrintName}" Width="*" />
+                <DataGridTextColumn Header="Тип" 
+                                    Binding="{Binding FileType}" 
+                                    Width="*"
+                                      IsReadOnly="True"  />
+                <DataGridTextColumn Header="Имя файла" 
+                                    Binding="{Binding FileName}" 
+                                    Width="*" 
+                                    IsReadOnly="True"  />
+                <DataGridTextColumn Header="Путь" 
+                                    Binding="{Binding FilePath}" 
+                                    Width="*" 
+                                    IsReadOnly="True"  />
+                <DataGridTemplateColumn Header="Цвет печати"
+                                        Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ColorPrintName}" />                                     
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}" 
+                                      SelectedItem="{Binding ColorPrintName}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
-            
+
             <i:Interaction.Behaviors>
                 <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding Path=(vm:FilesConvertViewModel.SelectedFilesData), Mode=TwoWay}" />
             </i:Interaction.Behaviors>
-            
+
             <DataGrid.InputBindings>
                 <KeyBinding Command="{Binding Path=(vm:FilesConvertViewModel.RemoveFilesDelegateCommand)}" Key="Delete" />
             </DataGrid.InputBindings>

@@ -14,14 +14,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
-    public class FilesData: IFilesData
+    public class FilesData : IFilesData
     {
         private List<FileData> _filesData;
 
         public FilesData()
-            :this(new List<FileData>())
+            : this(new List<FileData>())
         {
-                    
+
         }
 
         public FilesData(List<FileData> files)
@@ -51,7 +51,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
                 UpdateFileData(new FileChange(_filesData,
                                               new List<FileData>() { file },
                                               ActionType.Add));
-            }           
+            }
         }
 
         /// <summary>
@@ -61,11 +61,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             if (files != null)
             {
-                if (files.All(f => CanFileDataBeAddedtoList(f)))
+                var filesInfo = files?.Where(f => CanFileDataBeAddedtoList(f));
+                if (filesInfo != null)
                 {
                     _filesData?.AddRange(files);
                     UpdateFileData(new FileChange(_filesData, files, ActionType.Add));
-                }               
+                }
             }
         }
 
@@ -76,13 +77,13 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             if (files != null)
             {
-                var filesInfo = files?.Select(f => new FileData(f));
-
-                if (filesInfo?.All(f => CanFileDataBeAddedtoList(f)) == true)
+                var filesInfo = files?.Select(f => new FileData(f)).
+                                       Where(f => CanFileDataBeAddedtoList(f));
+                if (filesInfo != null)
                 {
                     _filesData?.AddRange(filesInfo);
                     UpdateFileData(new FileChange(_filesData, filesInfo, ActionType.Add));
-                }               
+                }
             }
         }
 
@@ -124,7 +125,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
             {
                 throw new ArgumentNullException("Пустое значение FileData в AddFile(FileData file)");
             }
-            return file != null && 
+            return file != null &&
                    _filesData?.Contains(file) == false;
         }
     }

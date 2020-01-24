@@ -27,5 +27,13 @@ namespace GadzhiModules.Helpers.Converters
            
             return colorPrintString;
         }
+
+        public static ColorPrint ConvertColorPrintToColor(string colorPrint)
+        {
+            ColorPrint ColorPrintOut = ColorPrintToString?.FirstOrDefault(color => color.Value == colorPrint).Key ?? 
+                                                           ColorPrint.BlackAndWhite;             
+
+            return ColorPrintOut;
+        }
     }
 }

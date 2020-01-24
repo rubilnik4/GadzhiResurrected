@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Infrastructure.Interfaces;
+﻿using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations.ReactiveSubjects;
 using GongSolutions.Wpf.DragDrop;
@@ -75,6 +76,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         }
 
         /// <summary>
+        /// Типы цветов для печати
+        /// </summary>
+        public IEnumerable<string> ColorPrintToString => ColorPrintConverter.ColorPrintToString.Select(color => color.Value);
+
+        /// <summary>
         /// Очистить список файлов
         /// </summary>       
         public DelegateCommand ClearFilesDelegateCommand { get; private set; }
@@ -143,7 +149,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             FilesDataCollection.Clear();
             if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
             {
-                FilesDataCollection.AddRange(fileChange.FilesDataProject) ;
+                FilesDataCollection.AddRange(fileChange.FilesDataProject);
             }
         }
 
