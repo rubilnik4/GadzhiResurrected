@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -57,7 +58,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
 
             var filesOutFromApplicationAdd = defaultFileData;
             mockApplicationGadzhi.Setup(app => app.RemoveFiles(It.IsAny<IEnumerable<FileData>>())).
-                                  Callback<IEnumerable<FileData>>(filesDataToRemove => 
+                                  Callback<IEnumerable<FileData>>(filesDataToRemove =>
                                         mockFileInfoProject.Object.RemoveFiles(filesDataToRemove));
             mockApplicationGadzhi.SetupGet(app => app.FilesInfoProject).Returns(mockFileInfoProject.Object);
 
@@ -110,11 +111,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             IEnumerable<FileData> defaultFileData = DefaultFileData.FileDataToTestFourPositions;
             Mock<IApplicationGadzhi> mockApplicationGadzhi = ApplicationGadzhiTestRemoveInitialize(defaultFileData);
 
-            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);
-            foreach (var fileData in defaultFileData) //заполняем ViewModel теми же данными, что и модель
-            {
-                filesConvertViewModel.FilesDataCollection.Add(fileData);
-            }
+            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);                     
+            filesConvertViewModel.FilesDataCollection.AddRange(defaultFileData); //заполняем ViewModel теми же данными, что и модель   
 
             var filesInput = new List<FileData>(DefaultFileData.FileDataToTestFourPositions.
                                                                 Take(2).
@@ -127,6 +125,32 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             // Assert 
             Assert.AreEqual(filesConvertViewModel.FilesDataCollection.Count, 2);
             Assert.AreEqual(filesConvertViewModel.FilesDataCollection.Last(), fileLastExpected);
+        }
+
+        /// <summary>    
+        /// Проверка Включения кнопки после операции
+        /// </summary>
+        [TestMethod]
+        public void FilesConvertViewModelTest_DisableButtons()
+        {
+            // Arrange
+            var mockApplicationGadzhi = new Mock<IApplicationGadzhi>();
+            var mockFileInfoProject = new Mock<IFilesData>();
+
+            mockApplicationGadzhi.Setup(app => app.AddFromFolders());
+            mockApplicationGadzhi.SetupGet(app => app.FilesInfoProject).
+                                  Returns(mockFileInfoProject.Object);
+
+            mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange).
+                                Returns(new Subject<FileChange>());
+
+            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);
+
+            // Act  
+            filesConvertViewModel.AddFromFoldersDelegateCommand.Execute();
+
+            // Assert
+            Assert.IsTrue(filesConvertViewModel.AddFromFoldersDelegateCommand.CanExecute());
         }
     }
 }

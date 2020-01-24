@@ -20,7 +20,7 @@ namespace GadzhiTest
         /// Диалоговые окна. Пустой класс
         /// </summary>
         Mock<IDialogServiceStandard> MockDialogServiceStandard;
-       
+
         [TestInitialize]
         public void ApplicationGadzhiTestInitialize()
         {
@@ -196,8 +196,6 @@ namespace GadzhiTest
                 // Assert 
                 Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
             }
-        }
-
-     
+        }        
     }
 }
