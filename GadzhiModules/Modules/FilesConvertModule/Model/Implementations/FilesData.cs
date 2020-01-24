@@ -60,8 +60,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         public void AddFiles(IEnumerable<FileData> files)
         {
             if (files != null)
-            {
-                var filesInfo = files?.Where(f => CanFileDataBeAddedtoList(f));
+            {                
+                   var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f));
                 if (filesInfo != null)
                 {
                     _filesData?.AddRange(files);
