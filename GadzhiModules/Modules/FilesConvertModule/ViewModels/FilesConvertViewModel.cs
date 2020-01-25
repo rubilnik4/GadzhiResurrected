@@ -56,6 +56,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
               () => !IsLoading).
               ObservesProperty(() => IsLoading);
 
+            ConvertingFilesDelegateCommand = new DelegateCommand(
+              ConvertingFiles,
+              () => !IsLoading).
+            ObservesProperty(() => IsLoading);
+
             CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
         }
 
@@ -100,9 +105,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         public DelegateCommand RemoveFilesDelegateCommand { get; private set; }
 
         /// <summary>
+        /// Конвертировать файлы
+        /// </summary>       
+        public DelegateCommand ConvertingFilesDelegateCommand { get; private set; }
+
+        /// <summary>
         /// Закрыть приложение
         /// </summary>       
-        public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
+        public DelegateCommand CloseApplicationDelegateCommand { get; private set; }       
 
         /// <summary>
         /// Очистить список файлов
@@ -143,6 +153,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             var removeFiles = SelectedFilesData?.OfType<FileData>();
             ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, removeFiles);
+        }
+
+        /// <summary>
+        /// Конвертировать файлы
+        /// </summary> 
+        private void ConvertingFiles()
+        {           
+            ExecuteAndHandleError(_applicationGadzhi.ConvertingFiles);
         }
 
         /// <summary>

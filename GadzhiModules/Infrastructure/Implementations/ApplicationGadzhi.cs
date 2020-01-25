@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 using System.Windows;
+using GadzhiDTO.Contracts.FilesConvert;
+using System.Configuration;
+using System.ServiceModel.Configuration;
+using GadzhiModules.Infrastructure.FabricChannel;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -94,9 +98,22 @@ namespace GadzhiModules.Infrastructure.Implementations
             FilesInfoProject.RemoveFiles(filesToRemove);
         }
 
+        /// <summary>
+        /// Конвертировать файлы на сервре
+        /// </summary>
+        public void ConvertingFiles()
+        {           
+            WCFServiceInvoker invoker = new WCFServiceInvoker();
+            int result = invoker.InvokeService<IFileConvertingService, int>(
+                proxy => proxy.SendFiles());
+        }
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
         public void CloseApplication()
         {
             Application.Current.Shutdown();
-        }
+        }               
     }
 }
