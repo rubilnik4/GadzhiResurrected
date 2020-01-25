@@ -61,18 +61,17 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GazhiConvertingService.svc" />
+    <Content Include="FileConvertService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GazhiConvertingService.svc.cs">
-      <DependentUpon>GazhiConvertingService.svc</DependentUpon>
+    <Compile Include="FileConvertService.svc.cs">
+      <DependentUpon>FileConvertService.svc</DependentUpon>
     </Compile>
-    <Compile Include="IGazhiConvertingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Web.Debug.config">

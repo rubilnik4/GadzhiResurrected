@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiDTO.FilesConvertDTO.Classes
+namespace GadzhiDTO.TransferModels.FilesConvert
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах

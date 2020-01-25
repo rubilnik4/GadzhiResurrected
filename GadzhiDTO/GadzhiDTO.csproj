@@ -43,14 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilesConvertDTO\Classes\FileDataDTO.cs" />
-    <Compile Include="FilesConvertDTO\Classes\FilesDataDTO.cs" />
+    <Compile Include="Contracts\FilesConvert\IFileConvertService.cs" />
+    <Compile Include="TransferModels\FilesConvert\FileDataDTO.cs" />
+    <Compile Include="TransferModels\FilesConvert\FilesDataDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FilesConvertDTO\Contracts\" />
-    <Folder Include="FilesConvertDTO\Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
