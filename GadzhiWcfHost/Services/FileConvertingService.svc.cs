@@ -1,10 +1,12 @@
 ﻿using GadzhiDTO.Contracts.FilesConvert;
+using GadzhiDTO.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GadzhiWcfHost.Services
 {
@@ -14,11 +16,11 @@ namespace GadzhiWcfHost.Services
     /// </summary>
     public class FileConvertingService : IFileConvertingService
     {       
-        public int SendFiles()
+        public async Task<bool> SendFiles(FilesDataRequest filesDataRequest)
         {
-            Console.WriteLine("Поихали");
+            await Task.Delay(5000);
 
-            return DateTime.Now.Second;
+            return true;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Является ли путь файлом
         /// </summary>       
-        public bool IsFile(string filePath) => !String.IsNullOrEmpty(filePath) && 
+        public bool IsFile(string filePath) => !String.IsNullOrEmpty(filePath) &&
                                                !String.IsNullOrEmpty(Path.GetExtension(filePath));
 
         /// <summary>
@@ -50,13 +51,25 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Представить файл в двоичном виде
         /// </summary>   
-        public async Task<byte[]> ConvertFileToByte(string filePath)
+        public async Task<byte[]> ConvertFileToByteAndZip(string fileName, string filePath)
         {
             byte[] result;
-            using (FileStream stream = File.Open(filePath, FileMode.Open))
+
+            //Create an archive and store the stream in memory.
+            using (var compressedFileStream = new MemoryStream())           
+            using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Create, false))
             {
-                result = new byte[stream.Length];
-                await stream.ReadAsync(result, 0, (int)stream.Length);
+                //Create a zip entry for each attachment
+                var zipEntry = zipArchive.CreateEntry(fileName);
+
+                //Get the stream of the attachment
+                using (var fileStream = new FileStream(filePath, FileMode.Open))              
+                using (var zipEntryStream = zipEntry.Open())
+                {
+                    //Copy the attachment stream to the zip entry stream
+                    await fileStream.CopyToAsync(zipEntryStream);
+                }
+                result = compressedFileStream.ToArray();
             }
 
             return result;

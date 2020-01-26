@@ -108,6 +108,19 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
             }
         }
 
+
+        /// <summary>
+        /// Пометить файл ошибкой
+        /// </summary>
+        public void MarkFilesWithError(IEnumerable<FileData> files)
+        {
+            if (files != null)
+            {               
+                _filesInfo?.ForEach(f => f.StatusProcessing = Enums.StatusProcessing.Error);
+                UpdateFileData(new FileChange(_filesInfo, files, ActionType.Remove));
+            }
+        }
+
         /// <summary>
         /// Обновленить список файлов
         /// </summary>

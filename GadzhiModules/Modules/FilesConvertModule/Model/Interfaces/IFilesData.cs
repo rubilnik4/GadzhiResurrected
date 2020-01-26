@@ -49,6 +49,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        void RemoveFiles(IEnumerable<FileData> files);       
+        void RemoveFiles(IEnumerable<FileData> files);
+
+        /// <summary>
+        /// Пометить файл ошибкой
+        /// </summary>
+        void MarkFilesWithError(IEnumerable<FileData> files);
     }
 }

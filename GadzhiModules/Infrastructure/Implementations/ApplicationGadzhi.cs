@@ -12,6 +12,7 @@ using System.ServiceModel.Configuration;
 using GadzhiModules.Infrastructure.FabricChannel;
 using System.ServiceModel;
 using GadzhiModules.Helpers.Converters.DTO;
+using GadzhiDTO.TransferModels.FilesConvert;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -103,15 +104,25 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать ф-айлы на сервре
         /// </summary>
-        public void ConvertingFiles()
+        public async Task ConvertingFiles()
         {
-            var filesExist = FilesInfoProject?.FilesInfo.Where(file => FileSeach.IsFileExist(file.FilePath))?.
-                                                         Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)) ;
+            var filesRequest = await GetFilesToRequest();
+           
+            if (filesRequest != null && filesRequest.Any())
+            {
+                var filesDataRequest = new FilesDataRequest()
+                {
+                    FilesData = filesRequest,
+                };
 
-
-            WCFServiceInvoker invoker = new WCFServiceInvoker();
-            int result = invoker.InvokeService<IFileConvertingService, int>(
-                proxy => proxy.SendFiles());
+                WCFServiceInvoker invoker = new WCFServiceInvoker();
+                await invoker.InvokeService<IFileConvertingService, Task<bool>>(
+                     async proxy => await proxy.SendFiles(filesDataRequest));
+            }
+            else
+            {
+                DialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
+            }
         }
 
         /// <summary>
@@ -121,5 +132,34 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             Application.Current.Shutdown();
         }
+
+        #region ConvertingFiles
+
+        /// <summary>
+        /// Получить файлы готовые к отправке с байтовыми массивами
+        /// </summary>       
+        private async Task<IEnumerable<FileDataRequest>> GetFilesToRequest()
+        {
+            var filesRequestExist = await Task.WhenAll(FilesInfoProject?.FilesInfo?.Where(file => FileSeach.IsFileExist(file.FilePath))?.
+                                                                             Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)));
+            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null && file.FileDataSource.Length != 0);
+
+            return filesRequestEnsuredWithBytes;
+        }
+
+        /// <summary>
+        /// Пометить недоступные для отправки файлы ошибкой
+        /// </summary>       
+        private void MarkUnavalableFilesWithError(bool serverResponse, IEnumerable<FileDataRequest> fileDataRequest)
+        {
+            var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
+
+            var filesWithError = FilesInfoProject?.FilesInfo.Where(file => serverResponse == false  ||
+                                                      fileDataRequestPaths?.Contains(file.FilePath) == false);
+
+
+        }
+
+        #endregion
     }
 }

@@ -57,7 +57,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
               ObservesProperty(() => IsLoading);
 
             ConvertingFilesDelegateCommand = new DelegateCommand(
-              ConvertingFiles,
+               async () => await ConvertingFiles(),
               () => !IsLoading).
             ObservesProperty(() => IsLoading);
 
@@ -158,9 +158,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Конвертировать файлы
         /// </summary> 
-        private void ConvertingFiles()
-        {           
-            ExecuteAndHandleError(_applicationGadzhi.ConvertingFiles);
+        private async Task ConvertingFiles()
+        {
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles);
         }
 
         /// <summary>
@@ -176,11 +176,18 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void OnFilesInfoUpdated(FileChange fileChange)
         {
-            FilesDataCollection.Clear();
-            if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
+            if (fileChange.ActionType != ActionType.Error)
             {
-                FilesDataCollection.AddRange(fileChange.FilesDataProject);
+                FilesDataCollection.Clear();
+                if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
+                {
+                    FilesDataCollection.AddRange(fileChange.FilesDataProject);
+                }
             }
+            else
+            {
+
+            }   
         }
 
         /// <summary>

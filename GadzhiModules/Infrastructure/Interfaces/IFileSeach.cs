@@ -44,6 +44,6 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Представить файл в двоичном виде
         /// </summary>        
-        Task<byte[]> ConvertFileToByte(string filePath);
+        Task<byte[]> ConvertFileToByteAndZip(string fileName, string filePath);
     }
 }

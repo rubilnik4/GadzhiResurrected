@@ -17,6 +17,6 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IEnumerable<FileDataRequest> Files { get; set; }
+        public IEnumerable<FileDataRequest> FilesData { get; set; }
     }
 }

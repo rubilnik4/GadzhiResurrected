@@ -45,7 +45,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Конвертировать файлы на сервре
         /// </summary>
-        void ConvertingFiles();
+        Task ConvertingFiles();
 
         /// <summary>
         /// Закрыть приложение

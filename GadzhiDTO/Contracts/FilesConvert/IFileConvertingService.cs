@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiDTO.TransferModels.FilesConvert;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -17,6 +18,6 @@ namespace GadzhiDTO.Contracts.FilesConvert
         /// Отправить файлы для конвертирования
         /// </summary>
         [OperationContract]
-        int SendFiles();
+        Task<bool> SendFiles(FilesDataRequest filesDataRequest);
     }
 }

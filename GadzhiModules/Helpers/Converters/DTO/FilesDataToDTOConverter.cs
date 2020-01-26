@@ -17,7 +17,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// </summary>      
         public static async Task<FileDataRequest> ConvertToFileDataDTO(FileData fileData, IFileSeach fileSeach)
         {
-            byte[] fileDataSource =await fileSeach.ConvertFileToByte(fileData.FilePath);
+            byte[] fileDataSource =await fileSeach.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
 
             return new FileDataRequest()
             {

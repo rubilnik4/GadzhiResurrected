@@ -70,7 +70,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; private set; }
+        public StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
         /// Статус обработки строковое значение

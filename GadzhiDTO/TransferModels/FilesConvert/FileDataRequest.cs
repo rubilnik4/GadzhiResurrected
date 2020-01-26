@@ -50,6 +50,6 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Файл данных в формате zip
         /// </summary>
         [DataMember]
-        public IEnumerable<byte> FileDataSource { get; set; }
+        public byte[] FileDataSource { get; set; }
     }
 }
