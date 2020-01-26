@@ -13,7 +13,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер информации о файлах из локальной модели в трансферную
         /// </summary>      
-        public static IEnumerable<FileDataDTO> ConvertToFilesDataDTO(IEnumerable<FileData> fileData)
+        public static IEnumerable<FileDataRequest> ConvertToFilesDataDTO(IEnumerable<FileData> fileData)
         {
             return fileData?.Select(file => FileDataToDTOConverter.ConvertToFileDataDTO(file));
         }

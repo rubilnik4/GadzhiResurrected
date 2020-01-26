@@ -13,9 +13,9 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
-        public static FileDataDTO ConvertToFileDataDTO(FileData fileData)
+        public static FileDataRequest ConvertToFileDataDTO(FileData fileData)
         {
-            return new FileDataDTO()
+            return new FileDataRequest()
             {
                 ColorPrint = fileData.ColorPrint,
                 FileName = fileData.FileName,

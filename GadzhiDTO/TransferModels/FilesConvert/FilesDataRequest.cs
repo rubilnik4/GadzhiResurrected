@@ -11,12 +11,12 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
     [DataContract]
-    public class FilesDataDTO
+    public class FilesDataRequest
     {
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IEnumerable<FileDataDTO> Files { get; set; }
+        public IEnumerable<FileDataRequest> Files { get; set; }
     }
 }
