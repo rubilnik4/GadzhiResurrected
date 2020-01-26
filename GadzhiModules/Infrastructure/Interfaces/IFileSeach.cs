@@ -40,5 +40,10 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Получить вложенные файлы
         /// </summary>        
         IEnumerable<string> GetFiles(string filePath);
+
+        /// <summary>
+        /// Представить файл в двоичном виде
+        /// </summary>        
+        Task<byte[]> ConvertFileToByte(string filePath);
     }
 }

@@ -47,5 +47,19 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public IEnumerable<string> GetFiles(string filePath) => Directory.GetFiles(filePath);
 
+        /// <summary>
+        /// Представить файл в двоичном виде
+        /// </summary>   
+        public async Task<byte[]> ConvertFileToByte(string filePath)
+        {
+            byte[] result;
+            using (FileStream stream = File.Open(filePath, FileMode.Open))
+            {
+                result = new byte[stream.Length];
+                await stream.ReadAsync(result, 0, (int)stream.Length);
+            }
+
+            return result;
+        }
     }
 }

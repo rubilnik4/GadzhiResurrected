@@ -25,8 +25,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.AddFile(file);
 
             // Assert 
-            Assert.AreEqual(filesInfoProject.Files.Count, 1);
-            Assert.AreSame(filesInfoProject.Files.Last(), file);
+            Assert.AreEqual(filesInfoProject.FilesInfo.Count, 1);
+            Assert.AreSame(filesInfoProject.FilesInfo.Last(), file);
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.AddFiles(files);
 
             // Assert 
-            Assert.AreEqual(filesInfoProject.Files.Count, files.Count);
-            Assert.AreSame(filesInfoProject.Files.Last(), files.Last());
+            Assert.AreEqual(filesInfoProject.FilesInfo.Count, files.Count);
+            Assert.AreSame(filesInfoProject.FilesInfo.Last(), files.Last());
         }
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.AddFiles(files);
 
             // Assert           
-            Assert.AreEqual(filesInfoProject.Files.Count, files.Count);
+            Assert.AreEqual(filesInfoProject.FilesInfo.Count, files.Count);
 
-            FileData fileLast = filesInfoProject.Files.Last();
+            FileData fileLast = filesInfoProject.FilesInfo.Last();
             Assert.AreEqual(fileLast.FileType, "dgn");
             Assert.AreEqual(fileLast.FileName, "secondName");
             Assert.AreEqual(fileLast.FilePath, "C:\\folder\\secondName.dgn");
@@ -165,7 +165,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.AddFiles(filesToAdd);
 
             // Assert           
-            Assert.AreEqual(filesInfoProject.Files.Count, 4);
+            Assert.AreEqual(filesInfoProject.FilesInfo.Count, 4);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.ClearFiles();
 
             // Assert    
-            Assert.AreEqual(filesInfoProject.Files.Count, 0);
+            Assert.AreEqual(filesInfoProject.FilesInfo.Count, 0);
         }
 
         /// <summary>
@@ -201,8 +201,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.RemoveFiles(filesToRemove);
 
             // Assert    
-            Assert.AreEqual(filesInfoProject.Files.Count, 1);
-            Assert.AreEqual(filesInfoProject.Files.Last(), LastExpectedFile);
+            Assert.AreEqual(filesInfoProject.FilesInfo.Count, 1);
+            Assert.AreEqual(filesInfoProject.FilesInfo.Last(), LastExpectedFile);
         }
 
         /// <summary>

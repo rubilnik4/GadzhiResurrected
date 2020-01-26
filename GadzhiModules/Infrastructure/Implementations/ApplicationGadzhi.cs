@@ -10,6 +10,8 @@ using GadzhiDTO.Contracts.FilesConvert;
 using System.Configuration;
 using System.ServiceModel.Configuration;
 using GadzhiModules.Infrastructure.FabricChannel;
+using System.ServiceModel;
+using GadzhiModules.Helpers.Converters.DTO;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -79,7 +81,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             if (allFilePaths != null && allFilePaths.Any())
             {
                 FilesInfoProject.AddFiles(allFilePaths);
-            }          
+            }
         }
 
         /// <summary>
@@ -99,10 +101,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Конвертировать файлы на сервре
+        /// Конвертировать ф-айлы на сервре
         /// </summary>
         public void ConvertingFiles()
-        {           
+        {
+            var filesExist = FilesInfoProject?.FilesInfo.Where(file => FileSeach.IsFileExist(file.FilePath))?.
+                                                         Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)) ;
+
+
             WCFServiceInvoker invoker = new WCFServiceInvoker();
             int result = invoker.InvokeService<IFileConvertingService, int>(
                 proxy => proxy.SendFiles());
@@ -114,6 +120,6 @@ namespace GadzhiModules.Infrastructure.Implementations
         public void CloseApplication()
         {
             Application.Current.Shutdown();
-        }               
+        }
     }
 }

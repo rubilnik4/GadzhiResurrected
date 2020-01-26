@@ -13,43 +13,43 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
-    [MessageContract]
+    [DataContract]
     public class FileDataRequest
     {
         /// <summary>
         /// Расширение файла
         /// </summary>
-        [MessageHeader]
+        [DataMember]
         public string FileType { get; set; }
 
         /// <summary>
         /// Имя файла
         /// </summary>
-        [MessageHeader]
+        [DataMember]
         public string FileName { get; set; }
 
         /// <summary>
         /// Путь файла
         /// </summary>
-        [MessageHeader]
+        [DataMember]
         public string FilePath { get; set; }
 
         /// <summary>
         /// Цвет печати
         /// </summary>
-        [MessageHeader]
+        [DataMember]
         public ColorPrint ColorPrint { get; set; }
 
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        [MessageHeader]
+        [DataMember]
         public StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
-        /// Статус обработки файла
+        /// Файл данных в формате zip
         /// </summary>
-        [MessageBodyMember]
-        public Stream FileData { get; set; }
+        [DataMember]
+        public IEnumerable<byte> FileDataSource { get; set; }
     }
 }

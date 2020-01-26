@@ -19,7 +19,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        ISubject<FileChange> FileDataChange { get; }       
+        ISubject<FileChange> FileDataChange { get; }
+
+        /// <summary>
+        /// Данные о конвертируемых файлах
+        /// </summary>
+        IReadOnlyList<FileData> FilesInfo { get; }
 
         /// <summary>
         /// Добавить файл
