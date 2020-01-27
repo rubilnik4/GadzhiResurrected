@@ -10,6 +10,7 @@ using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
 using WcfClientProxyGenerator;
+using GadzhiDTO.WCFClientWrapper;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -114,9 +115,8 @@ namespace GadzhiModules.Infrastructure.Implementations
                     FilesData = filesRequest,
                 };
 
-                IFileConvertingService proxy = WcfClientProxy.Create<IFileConvertingService>(c => c.SetEndpoint("FileConvertingService"));
-                var response = await proxy.SendFiles(filesDataRequest);
-
+                var wrapper = new WCFClientWrapper<IFileConvertingService, Task<bool>>();
+                var response = await wrapper.ExecuteAsyncFunction(proxy => proxy.SendFiles(filesDataRequest));
             }
             else
             {
