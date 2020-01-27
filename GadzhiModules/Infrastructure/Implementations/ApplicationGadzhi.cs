@@ -7,12 +7,9 @@ using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 using System.Windows;
 using GadzhiDTO.Contracts.FilesConvert;
-using System.Configuration;
-using System.ServiceModel.Configuration;
-using GadzhiModules.Infrastructure.FabricChannel;
-using System.ServiceModel;
 using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
+using WcfClientProxyGenerator;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -35,6 +32,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Модель конвертируемых файлов
         /// </summary>     
         public IFilesData FilesInfoProject { get; }
+
+
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSeach fileSeach,
@@ -107,7 +106,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public async Task ConvertingFiles()
         {
             var filesRequest = await GetFilesToRequest();
-           
+
             if (filesRequest != null && filesRequest.Any())
             {
                 var filesDataRequest = new FilesDataRequest()
@@ -115,9 +114,9 @@ namespace GadzhiModules.Infrastructure.Implementations
                     FilesData = filesRequest,
                 };
 
-                WCFServiceInvoker invoker = new WCFServiceInvoker();
-                await invoker.InvokeService<IFileConvertingService, Task<bool>>(
-                     async proxy => await proxy.SendFiles(filesDataRequest));
+                IFileConvertingService proxy = WcfClientProxy.Create<IFileConvertingService>(c => c.SetEndpoint("FileConvertingService"));
+                var response = await proxy.SendFiles(filesDataRequest);
+
             }
             else
             {
@@ -141,8 +140,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task<IEnumerable<FileDataRequest>> GetFilesToRequest()
         {
             var filesRequestExist = await Task.WhenAll(FilesInfoProject?.FilesInfo?.Where(file => FileSeach.IsFileExist(file.FilePath))?.
-                                                                             Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)));
-            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null && file.FileDataSource.Length != 0);
+                                                                                    Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)));
+            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
 
             return filesRequestEnsuredWithBytes;
         }
@@ -154,9 +153,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
 
-            var filesWithError = FilesInfoProject?.FilesInfo.Where(file => serverResponse == false  ||
+            var filesWithError = FilesInfoProject?.FilesInfo.Where(file => serverResponse == false ||
                                                       fileDataRequestPaths?.Contains(file.FilePath) == false);
-
 
         }
 

@@ -46,6 +46,9 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=3.0.1.920, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.3.0.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -105,6 +108,9 @@
     <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.11.1\lib\net47\Unity.Container.dll</HintPath>
     </Reference>
+    <Reference Include="WcfClientProxyGenerator, Version=2.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WcfClientProxyGenerator.2.2.6\lib\net45\WcfClientProxyGenerator.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Xamarin.Forms.3.6.0.344457\lib\netstandard2.0\Xamarin.Forms.Core.dll</HintPath>
@@ -122,9 +128,6 @@
     <Compile Include="Helpers\Converters\DTO\FilesDataToDTOConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
-    <Compile Include="Infrastructure\FabricChannel\ChannelFactoryManager.cs" />
-    <Compile Include="Infrastructure\FabricChannel\IServiceInvoker.cs" />
-    <Compile Include="Infrastructure\FabricChannel\WCFServiceInvoker.cs" />
     <Compile Include="Infrastructure\Implementations\FileSeach.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSeach.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />

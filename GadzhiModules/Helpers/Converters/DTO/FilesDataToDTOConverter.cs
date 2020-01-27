@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 namespace GadzhiModules.Helpers.Converters.DTO
 {
     public static class FilesDataToDTOConverter
-    {  
+    {
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
         public static async Task<FileDataRequest> ConvertToFileDataDTO(FileData fileData, IFileSeach fileSeach)
         {
-            byte[] fileDataSource =await fileSeach.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
-
+            byte[] fileDataSource = await fileSeach.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
+          
             return new FileDataRequest()
             {
                 ColorPrint = fileData.ColorPrint,

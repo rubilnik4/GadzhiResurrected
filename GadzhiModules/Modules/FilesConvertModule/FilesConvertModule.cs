@@ -13,8 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity;
-using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 
 namespace GadzhiModules.Modules.FilesConvertModule
@@ -47,6 +45,10 @@ namespace GadzhiModules.Modules.FilesConvertModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IFilesData, FilesData>();
+
+            //IUnityContainer unityContainer = containerRegistry.GetContainer();          
+            //unityContainer.RegisterFactory<IFileConvertingService>((unity) => WCFServiceInvoker.GetChannel<IFileConvertingService>());
+
         }
     }
 }

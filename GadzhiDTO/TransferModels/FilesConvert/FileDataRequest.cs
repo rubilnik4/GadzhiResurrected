@@ -47,7 +47,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         public StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
-        /// Файл данных в формате zip
+        /// Файл данных в формате zip GZipStream
         /// </summary>
         [DataMember]
         public byte[] FileDataSource { get; set; }
