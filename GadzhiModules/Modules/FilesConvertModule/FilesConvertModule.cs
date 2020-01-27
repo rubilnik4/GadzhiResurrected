@@ -18,6 +18,7 @@ using GadzhiDTO.Contracts.FilesConvert;
 using WcfClientProxyGenerator;
 using System.ServiceModel.Configuration;
 using System.Configuration;
+using GadzhiDTO.Healpers;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
@@ -52,10 +53,10 @@ namespace GadzhiModules.Modules.FilesConvertModule
 
             IUnityContainer unityContainer = containerRegistry.GetContainer();
 
-            var tt = typeof(IFileConvertingService);
-
+            var clientEndpoints = new ClientEndpoints();
+            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
             unityContainer.RegisterFactory<IFileConvertingService>((unity) => WcfClientProxy.Create<IFileConvertingService>(
-                                                                                    c => c.SetEndpoint(fileConvertingEndpoint.Name)));
+                                                                                    c => c.SetEndpoint(fileConvertingEndpoint)));
 
         }
     }

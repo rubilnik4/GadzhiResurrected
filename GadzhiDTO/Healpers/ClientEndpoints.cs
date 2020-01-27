@@ -20,10 +20,10 @@ namespace GadzhiDTO.Healpers
         /// </summary>
         public string GetEndpointByInterfaceFullPath(Type interfaceType)
         {
-            return _clientSection?.
-                                        Endpoints.
-                                        Cast<ChannelEndpointElement>()?.
-                                        FirstOrDefault(endpont => endpont.Contract == interfaceType.ToString());
+            return _clientSection?.Endpoints.
+                                   Cast<ChannelEndpointElement>()?.
+                                   FirstOrDefault(endpont => endpont.Contract == interfaceType.ToString()).
+                                   Name;
         }
 
     }
