@@ -19,8 +19,5 @@ namespace GadzhiDTO.Contracts.FilesConvert
         /// </summary>
         [OperationContract]
         Task<bool> SendFiles(FilesDataRequest filesDataRequest);
-
-        [OperationContract]
-        Task Send(FilesDataRequest filesDataRequest);
     }
 }

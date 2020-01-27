@@ -14,6 +14,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiDTO.Contracts.FilesConvert;
+using WcfClientProxyGenerator;
+using System.ServiceModel.Configuration;
+using System.Configuration;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
@@ -46,8 +50,12 @@ namespace GadzhiModules.Modules.FilesConvertModule
         {
             containerRegistry.Register<IFilesData, FilesData>();
 
-            //IUnityContainer unityContainer = containerRegistry.GetContainer();          
-            //unityContainer.RegisterFactory<IFileConvertingService>((unity) => WCFServiceInvoker.GetChannel<IFileConvertingService>());
+            IUnityContainer unityContainer = containerRegistry.GetContainer();
+
+            var tt = typeof(IFileConvertingService);
+
+            unityContainer.RegisterFactory<IFileConvertingService>((unity) => WcfClientProxy.Create<IFileConvertingService>(
+                                                                                    c => c.SetEndpoint(fileConvertingEndpoint.Name)));
 
         }
     }

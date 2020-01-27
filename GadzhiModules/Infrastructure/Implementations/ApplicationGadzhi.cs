@@ -9,8 +9,6 @@ using System.Windows;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
-using WcfClientProxyGenerator;
-using GadzhiDTO.WCFClientWrapper;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -34,15 +32,20 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>     
         public IFilesData FilesInfoProject { get; }
 
-
+        /// <summary>
+        /// Сервис конвертации
+        /// </summary>     
+        public IFileConvertingService FileConvertingService { get; }
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSeach fileSeach,
-                                 IFilesData filesInfoProject)
+                                 IFilesData filesInfoProject,
+                                 IFileConvertingService fileConvertingService)
         {
             DialogServiceStandard = dialogServiceStandard;
             FileSeach = fileSeach;
             FilesInfoProject = filesInfoProject;
+            FileConvertingService = fileConvertingService;
         }
 
         /// <summary>
@@ -106,17 +109,18 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task ConvertingFiles()
         {
-            var filesRequest = await GetFilesToRequest();
+            var filesData = await GetFilesToRequest();
 
-            if (filesRequest != null && filesRequest.Any())
+            if (filesData != null && filesData.Any())
             {
                 var filesDataRequest = new FilesDataRequest()
                 {
-                    FilesData = filesRequest,
+                    FilesData = filesData,
                 };
 
-                var wrapper = new WCFClientWrapper<IFileConvertingService, Task<bool>>();
-                var response = await wrapper.ExecuteAsyncFunction(proxy => proxy.SendFiles(filesDataRequest));
+                var response = await FileConvertingService.SendFiles(filesDataRequest);
+
+                MarkUnavalableFilesWithError(response, filesDataRequest.FilesData);
             }
             else
             {

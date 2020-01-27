@@ -22,10 +22,5 @@ namespace GadzhiWcfHost.Services
 
             return true;
         }
-
-        public async Task Send(FilesDataRequest filesDataRequest)
-        {
-            await Task.Delay(5000);
-        }
     }
 }
