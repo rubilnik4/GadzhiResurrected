@@ -10,6 +10,7 @@ using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.IO;
+using GadzhiDTO.Contracts.FilesConvert;
 
 namespace GadzhiTest
 {
@@ -21,10 +22,16 @@ namespace GadzhiTest
         /// </summary>
         Mock<IDialogServiceStandard> MockDialogServiceStandard;
 
+        /// <summary>
+        /// Сервис конвертирования. Пустой класс
+        /// </summary>
+        Mock<IFileConvertingService> MockFileConvertingService;
+
         [TestInitialize]
         public void ApplicationGadzhiTestInitialize()
         {
             MockDialogServiceStandard = new Mock<IDialogServiceStandard>();
+            MockFileConvertingService = new Mock<IFileConvertingService>();
         }
 
         /// <summary>
@@ -68,7 +75,8 @@ namespace GadzhiTest
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
-                                                          mockFileInfoProject.Object);
+                                                          mockFileInfoProject.Object,
+                                                          MockFileConvertingService.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
@@ -110,7 +118,8 @@ namespace GadzhiTest
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
-                                                          mockFileInfoProject.Object);
+                                                          mockFileInfoProject.Object,
+                                                          MockFileConvertingService.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             files.AddRange(subDirectoryPath); //добавляем к тесту директории
@@ -142,7 +151,8 @@ namespace GadzhiTest
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
-                                                          mockFileInfoProject.Object);
+                                                          mockFileInfoProject.Object,
+                                                          MockFileConvertingService.Object);
 
             IEnumerable<string> files = null;
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
@@ -176,7 +186,8 @@ namespace GadzhiTest
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
-                                                          mockFileInfoProject.Object);
+                                                          mockFileInfoProject.Object,
+                                                          MockFileConvertingService.Object);
 
             IEnumerable<string> files = new List<string> { null };
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();

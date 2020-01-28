@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Contracts\FilesConvert\IFileConvertingService.cs" />
     <Compile Include="Healpers\ClientEndpoints.cs" />
+    <Compile Include="TransferModels\FilesConvert\FilesDataIntermediateResponse.cs" />
+    <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequest.cs" />
     <Compile Include="TransferModels\FilesConvert\FilesDataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

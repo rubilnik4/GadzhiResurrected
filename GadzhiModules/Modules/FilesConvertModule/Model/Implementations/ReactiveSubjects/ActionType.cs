@@ -14,6 +14,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations.Reactiv
         Add,
         Remove,
         Clear,
-        Error,
+        StatusChange,
     }
 }

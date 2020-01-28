@@ -9,6 +9,7 @@ using System.Windows;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiCommon.Enums.FilesConvert;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -109,18 +110,28 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task ConvertingFiles()
         {
-            var filesData = await GetFilesToRequest();
-
-            if (filesData != null && filesData.Any())
+            if (FilesInfoProject?.FilesInfo?.Any() == true)
             {
-                var filesDataRequest = new FilesDataRequest()
+                var filesInSending = await GetFilesInSending();
+
+                 FilesInfoProject.ChangeFilesStatusAndMarkError(filesInSending);
+
+                var filesData = await GetFilesToRequest();
+                if (filesData != null && filesData.Any())
                 {
-                    FilesData = filesData,
-                };
+                    var filesDataRequest = new FilesDataRequest()
+                    {
+                        FilesData = filesData,
+                    };
 
-                var response = await FileConvertingService.SendFiles(filesDataRequest);
+                    FilesDataIntermediateResponse response = await FileConvertingService.SendFiles(filesDataRequest);
 
-                MarkUnavalableFilesWithError(response, filesDataRequest.FilesData);
+                    var filesNotFound = GetFilesNotFound(filesData);
+                    var filesChangedStatus = GetFilesStatusAfterUpload(response);
+                    var filesUnion = filesNotFound?.Union(filesChangedStatus);
+
+                    FilesInfoProject.ChangeFilesStatusAndMarkError(filesUnion);
+                }
             }
             else
             {
@@ -151,15 +162,41 @@ namespace GadzhiModules.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Назначить всем файлам статус к отправке
+        /// </summary>  
+        private Task<IEnumerable<FileStatus>> GetFilesInSending()
+        {
+            var filesInSending = FilesInfoProject?.
+                                       FilesInfo?.
+                                       Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
+
+            return Task.FromResult(filesInSending);
+        }
+
+        /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
-        /// </summary>       
-        private void MarkUnavalableFilesWithError(bool serverResponse, IEnumerable<FileDataRequest> fileDataRequest)
+        /// </summary>  
+        private IEnumerable<FileStatus> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest)
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
+            var filesNotFound = FilesInfoProject?.
+                                 FilesInfoPath.
+                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
+                                 Select(filePath => new FileStatus(filePath, StatusProcessing.Error, FileConvertErrorType.FileNotFound));
 
-            var filesWithError = FilesInfoProject?.FilesInfo.Where(file => serverResponse == false ||
-                                                      fileDataRequestPaths?.Contains(file.FilePath) == false);
+            return filesNotFound;
+        }
 
+        /// <summary>
+        /// Пометить недоступные для отправки файлы ошибкой
+        /// </summary>       
+        private IEnumerable<FileStatus> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse)
+        {
+            var filesStatusAfterUpload = fileDataResponse?.
+                                     FilesData.
+                                     Select(fileResponse => FilesDataFromDTOConverter.ConvertToFileStatus(fileResponse));
+
+            return filesStatusAfterUpload;
         }
 
         #endregion

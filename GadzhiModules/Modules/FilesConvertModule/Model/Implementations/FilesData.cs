@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Helpers;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Helpers;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
@@ -33,12 +34,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FileChange> FileDataChange { get; private set; }
+        public ISubject<FileChange> FileDataChange { get; }
 
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         public IReadOnlyList<FileData> FilesInfo => _filesInfo;
+
+        /// <summary>
+        /// Пути конвертируемых файлов
+        /// </summary>
+        public IEnumerable<string> FilesInfoPath => _filesInfo.Select(file => file.FilePath);
 
         /// <summary>
         /// Добавить файл
@@ -110,15 +116,31 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
 
 
         /// <summary>
-        /// Пометить файл ошибкой
+        /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        public void MarkFilesWithError(IEnumerable<FileData> files)
-        {
-            if (files != null)
-            {               
-                _filesInfo?.ForEach(f => f.StatusProcessing = Enums.StatusProcessing.Error);
-                UpdateFileData(new FileChange(_filesInfo, files, ActionType.Remove));
-            }
+        public void ChangeFilesStatusAndMarkError(IEnumerable<FileStatus> filesStatus)
+        {           
+            if (filesStatus != null)
+            {
+                //список файлов для изменений
+                var filesStatusChanged = _filesInfo?.
+                                          Select(file => new
+                                          {
+                                              File = file,
+                                              FileStatus = filesStatus?.FirstOrDefault(fileStatus => fileStatus.FilePath == file.FilePath)
+                                          }).Where
+                                          (fileComplex => fileComplex.FileStatus != null);
+              
+                //меняем статус
+                foreach (var fileStatus in filesStatusChanged)
+                {
+                    fileStatus.File.ChangeByFileStatus(fileStatus.FileStatus);
+                }
+
+                UpdateFileData(new FileChange(_filesInfo,
+                                              filesStatusChanged.Select(file => file.File), 
+                                              ActionType.StatusChange));               
+            }           
         }
 
         /// <summary>
@@ -127,7 +149,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         private void UpdateFileData(FileChange fileChange)
         {
             FileDataChange?.OnNext(fileChange);
-        }
+        }      
 
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования

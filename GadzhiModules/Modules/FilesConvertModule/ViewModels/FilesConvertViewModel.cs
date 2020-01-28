@@ -29,11 +29,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>        
         private IApplicationGadzhi _applicationGadzhi;
 
+        /// <summary>
+        /// Блокиратор доступа их нескольких потоков
+        /// </summary>
+        object _itemsLock = new object ();
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi)
         {
             _applicationGadzhi = applicationGadzhi;
 
             FilesDataCollection = new ObservableCollection<FileData>();
+            BindingOperations.EnableCollectionSynchronization(FilesDataCollection, _itemsLock); //для доступа из других потоков
+
             _applicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             ClearFilesDelegateCommand = new DelegateCommand(
@@ -57,9 +63,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
               ObservesProperty(() => IsLoading);
 
             ConvertingFilesDelegateCommand = new DelegateCommand(
-               async () => await ConvertingFiles(),
-              () => !IsLoading).
-            ObservesProperty(() => IsLoading);
+              async () => await ConvertingFiles(),
+              () => !IsConverting).
+              ObservesProperty(() => IsLoading);
 
             CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
         }
@@ -68,7 +74,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Данные о конвертируемых файлах
         /// </summary>
         public ObservableCollection<FileData> FilesDataCollection { get; }
-        
+
         private IList<object> _selectedFilesData = new List<object>();
         /// <summary>
         /// Выделенные строки
@@ -78,11 +84,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             get { return _selectedFilesData; }
             set { SetProperty(ref _selectedFilesData, value); }
         }
-
-        /// <summary>
-        /// Типы цветов для печати
-        /// </summary>
-        public IEnumerable<string> ColorPrintToString => ColorPrintConverter.ColorPrintToString.Select(color => color.Value);
 
         /// <summary>
         /// Очистить список файлов
@@ -112,7 +113,22 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Закрыть приложение
         /// </summary>       
-        public DelegateCommand CloseApplicationDelegateCommand { get; private set; }       
+        public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
+
+        /// <summary>
+        /// Типы цветов для печати
+        /// </summary>
+        public IEnumerable<string> ColorPrintToString => ColorPrintConverter.ColorPrintToString.Select(color => color.Value);
+
+        /// <summary>
+        /// Индикатор конвертирования файлов
+        /// </summary        
+        private bool _isConverting;
+        public bool IsConverting
+        {
+            get { return _isConverting; }
+            set { SetProperty(ref _isConverting, value); }
+        }
 
         /// <summary>
         /// Очистить список файлов
@@ -160,14 +176,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task ConvertingFiles()
         {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles);
+            IsConverting = true;
+            await Task.Run (() => ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles));
         }
 
         /// <summary>
         /// Удалить файлы из списка
         /// </summary> 
         private void CloseApplication()
-        {          
+        {
             ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
         }
 
@@ -176,7 +193,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void OnFilesInfoUpdated(FileChange fileChange)
         {
-            if (fileChange.ActionType != ActionType.Error)
+            if (fileChange.ActionType != ActionType.StatusChange)
             {
                 FilesDataCollection.Clear();
                 if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
@@ -186,8 +203,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             }
             else
             {
-
-            }   
+                lock (_itemsLock)
+                {
+                    FilesDataCollection.Clear();
+                    FilesDataCollection.AddRange(fileChange.FilesDataProject);
+                }
+            }
         }
 
         /// <summary>

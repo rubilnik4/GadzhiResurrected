@@ -18,6 +18,6 @@ namespace GadzhiDTO.Contracts.FilesConvert
         /// Отправить файлы для конвертирования
         /// </summary>
         [OperationContract]
-        Task<bool> SendFiles(FilesDataRequest filesDataRequest);
+        Task<FilesDataIntermediateResponse> SendFiles(FilesDataRequest filesDataRequest);
     }
 }

@@ -27,6 +27,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         IReadOnlyList<FileData> FilesInfo { get; }
 
         /// <summary>
+        /// Пути конвертируемых файлов
+        /// </summary>     
+        IEnumerable<string> FilesInfoPath { get; }
+
+        /// <summary>
         /// Добавить файл
         /// </summary>
         void AddFile(FileData file);
@@ -52,8 +57,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         void RemoveFiles(IEnumerable<FileData> files);
 
         /// <summary>
-        /// Пометить файл ошибкой
+        /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        void MarkFilesWithError(IEnumerable<FileData> files);
+        void ChangeFilesStatusAndMarkError(IEnumerable<FileStatus> files);
     }
 }

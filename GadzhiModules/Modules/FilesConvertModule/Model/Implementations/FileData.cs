@@ -1,6 +1,6 @@
-﻿using GadzhiModules.Helpers;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Helpers;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
 {
     /// <summary>
-    /// Класс для хранения информации о конвертируемых файлах
+    /// Класс для хранения информации о конвертируемом файле
     /// </summary>
     public class FileData : IEquatable<FileData>
     {
@@ -70,7 +70,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; set; }
+        public StatusProcessing StatusProcessing { get; private set; }
+
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        public FileConvertErrorType FileConvertErrorType { get; private set; }
 
         /// <summary>
         /// Статус обработки строковое значение
@@ -79,6 +84,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             get => StatusProcessingConverter.ConvertStatusProcessingToString(StatusProcessing);
             set => StatusProcessing = StatusProcessingConverter.ConvertStringToStatusProcessing(value);
+        }
+
+        /// <summary>
+        /// Изменить статус и вид ошибки при необходимости
+        /// </summary>
+        public void ChangeByFileStatus(FileStatus fileStatus)
+        {
+            StatusProcessing = fileStatus.StatusProcessing;
+            FileConvertErrorType = fileStatus.FileConvertErrorType;
         }
 
         public bool Equals(FileData other)

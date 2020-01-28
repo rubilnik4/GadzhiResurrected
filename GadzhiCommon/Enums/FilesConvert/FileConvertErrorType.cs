@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 namespace GadzhiCommon.Enums.FilesConvert
 {
     /// <summary>
-    /// Типы цветов для печати
+    /// Типы ошибок при конвертации файлов
     /// </summary>
-    public enum ColorPrint
+    public enum FileConvertErrorType
     {
-
-        BlackAndWhite,
-        GrayScale,
-        Color,
-    }    
+        NoError,
+        FileNotFound,
+        RejectedByServer,
+    }
 }

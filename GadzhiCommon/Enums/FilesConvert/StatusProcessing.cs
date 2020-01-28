@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Model.Enums
+namespace GadzhiCommon.Enums.FilesConvert
 {
     /// <summary>
     /// Статус обработки файлов
@@ -12,6 +12,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Enums
     public enum StatusProcessing
     {
         NotSend,
+        Sending,
         InQueue,
         InProcess,
         Complited,

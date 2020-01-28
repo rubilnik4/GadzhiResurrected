@@ -10,6 +10,14 @@ namespace GadzhiModules.Helpers.Converters.DTO
 {
     public static class FilesDataFromDTOConverter
     {
-       
+        /// <summary>
+        /// Конвертер информации из трансферной модели в класс
+        /// </summary>      
+        public static FileStatus ConvertToFileStatus(FileDataIntermediateResponse fileResponse)
+        {
+            return new FileStatus(fileResponse.FilePath,
+                                  fileResponse.StatusProcessing,
+                                  fileResponse.FileConvertErrorType);
+        }
     }
 }

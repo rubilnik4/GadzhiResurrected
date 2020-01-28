@@ -1,4 +1,5 @@
-﻿using GadzhiDTO.Contracts.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiDTO.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,22 @@ namespace GadzhiWcfHost.Services
     /// Сервис для конвертирования файлов. Контракт используется и клиентской и серверной частью
     /// </summary>
     public class FileConvertingService : IFileConvertingService
-    {       
-        public async Task<bool> SendFiles(FilesDataRequest filesDataRequest)
+    {
+        public async Task<FilesDataIntermediateResponse> SendFiles(FilesDataRequest filesDataRequest)
         {
             await Task.Delay(5000);
 
-            return true;
+            var filesDataIntermediateResponse = new FilesDataIntermediateResponse()
+            {
+                FilesData = filesDataRequest.FilesData.Select(
+                     file => new FileDataIntermediateResponse()
+                     {
+                         FilePath = file.FilePath,
+                         StatusProcessing = StatusProcessing.InQueue,
+                         
+                     })
+            };
+            return filesDataIntermediateResponse;
         }
     }
 }

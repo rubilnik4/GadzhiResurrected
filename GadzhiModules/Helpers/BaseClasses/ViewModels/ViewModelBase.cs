@@ -4,6 +4,8 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using Unity;
@@ -12,11 +14,16 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
 {
     public abstract class ViewModelBase : BindableBase
     {
+        public ViewModelBase()
+        {
+          
+        }
+
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary>     
         [Dependency]
-        public IDialogServiceStandard DialogServiceStandard { get; set; } 
+        public IDialogServiceStandard DialogServiceStandard { get; set; }
 
         /// <summary>
         /// Индикатор загрузки
@@ -26,7 +33,7 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         {
             get { return _isLoading; }
             set { SetProperty(ref _isLoading, value); }
-        }
+        }       
 
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок метода
@@ -38,6 +45,16 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
             {
                 method();
             }
+            // Ошибки WCF сервера
+            catch (TimeoutException ex)
+            {
+                DialogServiceStandard.ShowMessage(ex.Message);
+            }
+            catch (CommunicationException ex)
+            {
+                DialogServiceStandard.ShowMessage(ex.Message);
+            }
+            // Общие ошибки
             catch (Exception ex)
             {
                 DialogServiceStandard.ShowMessage(ex.Message);
@@ -62,9 +79,19 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         {
             IsLoading = true;
             try
-            {               
+            {
                 await asyncMethod();
             }
+            // Ошибки WCF сервера
+            catch (TimeoutException ex)
+            {
+                DialogServiceStandard.ShowMessage(ex.Message);
+            }
+            catch (CommunicationException ex)
+            {
+                DialogServiceStandard.ShowMessage(ex.Message);
+            }
+            // Общие ошибки
             catch (Exception ex)
             {
                 DialogServiceStandard.ShowMessage(ex.Message);
@@ -72,15 +99,15 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
             finally
             {
                 IsLoading = false;
-            }           
+            }
         }
 
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронной функции
         /// </summary> 
-        public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1)        
+        public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1)
         {
             await ExecuteAndHandleErrorAsync(() => functionAsync(arg1));
-        }
+        }      
     }
 }

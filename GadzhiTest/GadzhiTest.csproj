@@ -95,6 +95,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GadzhiDTO\GadzhiDTO.csproj">
+      <Project>{DE167026-7A41-4B2C-8F2A-00EA175E891E}</Project>
+      <Name>GadzhiDTO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiModules\GadzhiModules.csproj">
       <Project>{C0EC27FF-7373-45D7-B399-0C6AFE0E8BF4}</Project>
       <Name>GadzhiModules</Name>

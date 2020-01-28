@@ -80,6 +80,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
+      <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
+      <Name>GadzhiCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiDTO\GadzhiDTO.csproj">
       <Project>{DE167026-7A41-4B2C-8F2A-00EA175E891E}</Project>
       <Name>GadzhiDTO</Name>

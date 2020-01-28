@@ -1,4 +1,4 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;

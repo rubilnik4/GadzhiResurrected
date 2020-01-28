@@ -1,4 +1,4 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace GadzhiDTO.TransferModels.FilesConvert
 {
     /// <summary>
-    /// Класс содержащий данные о конвертируемых файлах
+    /// Класс содержащий данные о конвертируемом файле
     /// </summary>
     [DataContract]
     public class FileDataRequest

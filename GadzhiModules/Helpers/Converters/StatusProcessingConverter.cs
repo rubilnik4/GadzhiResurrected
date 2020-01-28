@@ -1,4 +1,4 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model.Enums;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,8 @@ namespace GadzhiModules.Helpers.Converters
             new Dictionary<StatusProcessing, string>
             {
                 { StatusProcessing.NotSend, "На старте" },
-                { StatusProcessing.InQueue, "Ожидаем" },
+                { StatusProcessing.Sending, "Отправляем" },
+                { StatusProcessing.InQueue, "В очереди" },
                 { StatusProcessing.InProcess, "Крутим-вертим" },
                 { StatusProcessing.Complited, "Удачненько" },
                 { StatusProcessing.Error, "Ошибочка" },
