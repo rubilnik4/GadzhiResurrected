@@ -13,13 +13,13 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
     {
         public FileDataViewModelItem(FileData filedata)
         {
-            FileData = filedata;        
+            FileData = filedata;
         }
 
         /// <summary>
         /// Модель данных для хранения информации о конвертируемом файле
         /// </summary>
-        public FileData FileData { get; }      
+        public FileData FileData { get; }
 
         /// <summary>
         /// Расширение файла
@@ -45,7 +45,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
             set
             {
                 FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
-                RaisePropertyChanged();
             }
         }
 
@@ -53,6 +52,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// Статус обработки строковое значение
         /// </summary>
         public string StatusProcessingName => StatusProcessingConverter.ConvertStatusProcessingToString(FileData.StatusProcessing);
+
+        /// <summary>
+        /// Обновление статусы обработки через событие
+        /// </summary>
+        public void UpdateStatusProcessing()
+        {
+            RaisePropertyChanged("StatusProcessingName");
+        }
 
     }
 }

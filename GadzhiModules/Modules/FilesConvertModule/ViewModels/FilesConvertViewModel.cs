@@ -30,16 +30,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>        
         private IApplicationGadzhi _applicationGadzhi;
 
-        /// <summary>
-        /// Блокиратор доступа их нескольких потоков
-        /// </summary>
-        //  object _itemsLock = new object ();
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi)
         {
             _applicationGadzhi = applicationGadzhi;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
-            //BindingOperations.EnableCollectionSynchronization(FilesDataCollection, _itemsLock); //для доступа из других потоков
 
             _applicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
@@ -205,8 +200,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                     var FileDataViewModel = fileChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
                     FilesDataCollection.AddRange(FileDataViewModel);
                 }
-
-                if (fileChange.ActionType == ActionType.Remove)
+                else if (fileChange.ActionType == ActionType.Remove)
                 {
                     if (fileChange?.FileData?.Count() == 1)
                     {
@@ -223,11 +217,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             }
             else
             {
-                //lock (_itemsLock)
-                //{
-                //    FilesDataCollection.Clear();
-                //    FilesDataCollection.AddRange(fileChange.FilesDataProject);
-                //}
+                var fileChangePath = fileChange?.FileData?.Select(file => file.FilePath);
+                if (fileChangePath != null)
+                {
+                    var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath?.Contains(fileData.FilePath) == true);
+                    foreach (var fileUpdate in filesDataNeedUpdate)
+                    {
+                        fileUpdate.UpdateStatusProcessing();
+                    }
+                }
             }
         }
 
