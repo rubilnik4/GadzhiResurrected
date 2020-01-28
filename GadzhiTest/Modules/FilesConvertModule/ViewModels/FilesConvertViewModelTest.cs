@@ -112,7 +112,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             Mock<IApplicationGadzhi> mockApplicationGadzhi = ApplicationGadzhiTestRemoveInitialize(defaultFileData);
 
             var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);                     
-            filesConvertViewModel.FilesDataCollection.AddRange(defaultFileData); //заполняем ViewModel теми же данными, что и модель   
+            //filesConvertViewModel.FilesDataCollection.AddRange(defaultFileData); //заполняем ViewModel теми же данными, что и модель   
 
             var filesInput = new List<FileData>(DefaultFileData.FileDataToTestFourPositions.
                                                                 Take(2).

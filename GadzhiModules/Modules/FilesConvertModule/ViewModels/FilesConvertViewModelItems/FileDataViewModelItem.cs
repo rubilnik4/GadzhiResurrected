@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+﻿using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -10,40 +11,48 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
 {
     public class FileDataViewModelItem : BindableBase
     {
+        public FileDataViewModelItem(FileData filedata)
+        {
+            FileData = filedata;        
+        }
+
         /// <summary>
         /// Модель данных для хранения информации о конвертируемом файле
         /// </summary>
-        private FileData _filedata;
-
-        public FileDataViewModelItem()
-        {
-
-        }
+        public FileData FileData { get; }      
 
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileType => _filedata.FileType;
+        public string FileType => FileData.FileType;
 
         /// <summary>
         /// Имя файла
         /// </summary>
-        public string FileName => _filedata.FileName;
+        public string FileName => FileData.FileName;
 
         /// <summary>
         /// Путь файла
         /// </summary>
-        public string FilePath => _filedata.FilePath;
+        public string FilePath => FileData.FilePath;
 
         /// <summary>
         /// Цвет печати строковое значение
         /// </summary>
-        public string ColorPrintName => _filedata.ColorPrintName;        
+        public string ColorPrintName
+        {
+            get => ColorPrintConverter.ConvertColorPrintToString(FileData.ColorPrint);
+            set
+            {
+                FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Статус обработки строковое значение
         /// </summary>
-        public string StatusProcessingName => _filedata.StatusProcessingName;
-       
+        public string StatusProcessingName => StatusProcessingConverter.ConvertStatusProcessingToString(FileData.StatusProcessing);
+
     }
 }

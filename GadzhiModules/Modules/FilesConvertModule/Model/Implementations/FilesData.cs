@@ -67,7 +67,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             if (files != null)
             {
-                var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f));
+                //ToList обязателен. Иначе данные зачищаются из списка
+                var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f)).ToList(); 
                 if (filesInfo != null)
                 {
                     _filesInfo?.AddRange(filesInfo);
@@ -83,8 +84,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         {
             if (files != null)
             {
+                //ToList обязателен. Иначе данные зачищаются из списка
                 var filesInfo = files?.Select(f => new FileData(f)).
-                                       Where(f => CanFileDataBeAddedtoList(f));
+                                       Where(f => CanFileDataBeAddedtoList(f)).ToList();
                 if (filesInfo != null)
                 {
                     _filesInfo?.AddRange(filesInfo);
@@ -119,7 +121,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
         public void ChangeFilesStatusAndMarkError(IEnumerable<FileStatus> filesStatus)
-        {           
+        {
             if (filesStatus != null)
             {
                 //список файлов для изменений
@@ -130,7 +132,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
                                               FileStatus = filesStatus?.FirstOrDefault(fileStatus => fileStatus.FilePath == file.FilePath)
                                           }).Where
                                           (fileComplex => fileComplex.FileStatus != null);
-              
+
                 //меняем статус
                 foreach (var fileStatus in filesStatusChanged)
                 {
@@ -138,9 +140,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
                 }
 
                 UpdateFileData(new FileChange(_filesInfo,
-                                              filesStatusChanged.Select(file => file.File), 
-                                              ActionType.StatusChange));               
-            }           
+                                              filesStatusChanged.Select(file => file.File),
+                                              ActionType.StatusChange));
+            }
         }
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         private void UpdateFileData(FileChange fileChange)
         {
             FileDataChange?.OnNext(fileChange);
-        }      
+        }
 
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования

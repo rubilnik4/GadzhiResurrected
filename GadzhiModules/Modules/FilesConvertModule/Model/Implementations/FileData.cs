@@ -56,16 +56,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; private set; } 
-
-        /// <summary>
-        /// Цвет печати строковое значение
-        /// </summary>
-        public string ColorPrintName
-        {
-            get => ColorPrintConverter.ConvertColorPrintToString(ColorPrint);
-            set => ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);            
-        }
+        public ColorPrint ColorPrint { get; set; }        
 
         /// <summary>
         /// Статус обработки файла
@@ -75,16 +66,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public FileConvertErrorType FileConvertErrorType { get; private set; }
-
-        /// <summary>
-        /// Статус обработки строковое значение
-        /// </summary>
-        public string StatusProcessingName
-        {
-            get => StatusProcessingConverter.ConvertStatusProcessingToString(StatusProcessing);
-            set => StatusProcessing = StatusProcessingConverter.ConvertStringToStatusProcessing(value);
-        }
+        public FileConvertErrorType FileConvertErrorType { get; private set; }           
 
         /// <summary>
         /// Изменить статус и вид ошибки при необходимости

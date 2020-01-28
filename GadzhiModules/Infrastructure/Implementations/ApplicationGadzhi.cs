@@ -187,7 +187,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             return filesNotFound;
         }
 
-        /// <summary>
+        /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
         private IEnumerable<FileStatus> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse)

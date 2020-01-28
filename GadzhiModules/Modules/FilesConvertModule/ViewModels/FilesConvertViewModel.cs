@@ -2,6 +2,7 @@
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Model.Implementations.ReactiveSubjects;
+using GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems;
 using GongSolutions.Wpf.DragDrop;
 using Helpers.GadzhiModules.BaseClasses.ViewModels;
 using Prism.Commands;
@@ -32,13 +33,13 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Блокиратор доступа их нескольких потоков
         /// </summary>
-        object _itemsLock = new object ();
+        //  object _itemsLock = new object ();
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi)
         {
             _applicationGadzhi = applicationGadzhi;
 
-            FilesDataCollection = new ObservableCollection<FileData>();
-            BindingOperations.EnableCollectionSynchronization(FilesDataCollection, _itemsLock); //для доступа из других потоков
+            FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
+            //BindingOperations.EnableCollectionSynchronization(FilesDataCollection, _itemsLock); //для доступа из других потоков
 
             _applicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
@@ -73,7 +74,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public ObservableCollection<FileData> FilesDataCollection { get; }
+        public ObservableCollection<FileDataViewModelItem> FilesDataCollection { get; }
 
         private IList<object> _selectedFilesData = new List<object>();
         /// <summary>
@@ -167,7 +168,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void RemoveFiles()
         {
-            var removeFiles = SelectedFilesData?.OfType<FileData>();
+            var removeFiles = SelectedFilesData?.
+                              OfType<FileDataViewModelItem>().
+                              Select(FileVm => FileVm.FileData);
+
             ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, removeFiles);
         }
 
@@ -177,7 +181,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private async Task ConvertingFiles()
         {
             IsConverting = true;
-            await Task.Run (() => ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles));
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles);
         }
 
         /// <summary>
@@ -195,19 +199,35 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             if (fileChange.ActionType != ActionType.StatusChange)
             {
-                FilesDataCollection.Clear();
-                if (fileChange.ActionType == ActionType.Add || fileChange.ActionType == ActionType.Remove)
+
+                if (fileChange.ActionType == ActionType.Add)
                 {
-                    FilesDataCollection.AddRange(fileChange.FilesDataProject);
+                    var FileDataViewModel = fileChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
+                    FilesDataCollection.AddRange(FileDataViewModel);
+                }
+
+                if (fileChange.ActionType == ActionType.Remove)
+                {
+                    if (fileChange?.FileData?.Count() == 1)
+                    {
+                        var fileRemove = FilesDataCollection.First(f => f.FilePath == fileChange.FileData.First().FilePath);
+                        FilesDataCollection.Remove(fileRemove);
+                    }
+                    else
+                    {
+                        FilesDataCollection.Clear();
+                        var FileDataViewModel = fileChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData));
+                        FilesDataCollection.AddRange(FileDataViewModel);
+                    }
                 }
             }
             else
             {
-                lock (_itemsLock)
-                {
-                    FilesDataCollection.Clear();
-                    FilesDataCollection.AddRange(fileChange.FilesDataProject);
-                }
+                //lock (_itemsLock)
+                //{
+                //    FilesDataCollection.Clear();
+                //    FilesDataCollection.AddRange(fileChange.FilesDataProject);
+                //}
             }
         }
 
