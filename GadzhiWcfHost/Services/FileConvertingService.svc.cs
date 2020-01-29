@@ -1,7 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Helpers;
+using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,8 @@ namespace GadzhiWcfHost.Services
     /// <summary>
     /// Сервис для конвертирования файлов. Контракт используется и клиентской и серверной частью
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, 
+                     IncludeExceptionDetailInFaults = true)]   
     public class FileConvertingService : IFileConvertingService
     {
         /// <summary>

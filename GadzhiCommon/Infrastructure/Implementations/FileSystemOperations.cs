@@ -120,15 +120,12 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public (bool isCreated, string path) CreateFolderByGuid(string startingPath)
         {
             bool isCreated = false;
-            string createdPath = startingPath + Guid.NewGuid() + "//";
+            string createdPath = startingPath + Guid.NewGuid() + "\\";
 
             if (!String.IsNullOrWhiteSpace(startingPath))
             {
-                if (Directory.Exists(startingPath))
-                {
-                    Directory.CreateDirectory(createdPath);
-                    isCreated = true;
-                }
+                Directory.CreateDirectory(createdPath);
+                isCreated = true;
             }
 
             return (isCreated, createdPath);

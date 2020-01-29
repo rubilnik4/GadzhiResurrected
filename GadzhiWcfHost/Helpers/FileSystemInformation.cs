@@ -8,5 +8,7 @@ namespace GadzhiWcfHost.Helpers
     public static class FileSystemInformation
     {
         public static string ApplicationPath => System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
+
+        public static string ConvertionDirectory => ApplicationPath + "ConvertingDirectory.gitignore\\";
     }
 }

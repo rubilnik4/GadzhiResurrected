@@ -1,7 +1,9 @@
 ﻿using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Interfaces;
+using GadzhiWcfHost.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,9 @@ namespace GadzhiWcfHost.DependencyInjection
             // Регистрируем зависимости
             container
                 .RegisterType<IApplicationReceiveAndSend, ApplicationReceiveAndSend>()
-                .RegisterType<IFileSystemOperations, FileSystemOperations>();
+                .RegisterType<IFileSystemOperations, FileSystemOperations>()
+                .RegisterType<IFileConvertingService, FileConvertingService>();
         }
+
     }
 }
