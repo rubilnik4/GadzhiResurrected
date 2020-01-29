@@ -46,14 +46,29 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                return await Task.FromResult(commonOpenFileDialog.FileNames);               
-            }         
+                return await Task.FromResult(commonOpenFileDialog.FileNames);
+            }
             return await Task.FromResult(new List<string>());
         }
 
+        /// <summary>
+        /// Информационное сообщение
+        /// </summary>  
         public void ShowMessage(string messageText)
         {
             MessageBox.Show(messageText);
+        }
+
+        /// <summary>
+        /// Диалоговое окно с подтверждением
+        /// </summary>  
+        public bool ShowMessageOkCancel(string messageText)
+        {
+            var dialogResul = MessageBox.Show(messageText, "Gadzhi", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+
+            return dialogResul == MessageBoxResult.OK ? 
+                   true : 
+                   false;
         }
     }
 }

@@ -28,15 +28,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Слой инфраструктуры
         /// </summary>        
-        private IApplicationGadzhi _applicationGadzhi;
+        private IApplicationGadzhi ApplicationGadzhi { get; }
 
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi)
         {
-            _applicationGadzhi = applicationGadzhi;
+            ApplicationGadzhi = applicationGadzhi;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            _applicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            ApplicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             ClearFilesDelegateCommand = new DelegateCommand(
                ClearFiles,
@@ -120,18 +120,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Индикатор конвертирования файлов
         /// </summary        
         private bool _isConverting;
-        public bool IsConverting
-        {
-            get { return _isConverting; }
-            set { SetProperty(ref _isConverting, value); }
-        }
-
+        public bool IsConverting => ApplicationGadzhi.IsConverting;
+       
         /// <summary>
         /// Очистить список файлов
         /// </summary> 
         private void ClearFiles()
         {
-            ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
+            ExecuteAndHandleError(ApplicationGadzhi.ClearFiles);
         }
 
         /// <summary>
@@ -139,7 +135,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFiles()
         {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
+            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.AddFromFiles);
         }
 
         /// <summary>
@@ -147,7 +143,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFolders()
         {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
+            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.AddFromFolders);
         }
 
         /// <summary>
@@ -155,7 +151,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths)
         {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFilesOrDirectories, fileOrDirectoriesPaths);
+            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.AddFromFilesOrDirectories, fileOrDirectoriesPaths);
         }
 
         /// <summary>
@@ -167,16 +163,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                               OfType<FileDataViewModelItem>().
                               Select(FileVm => FileVm.FileData);
 
-            ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, removeFiles);
+            ExecuteAndHandleError(ApplicationGadzhi.RemoveFiles, removeFiles);
         }
 
         /// <summary>
         /// Конвертировать файлы
         /// </summary> 
         private async Task ConvertingFiles()
-        {
-            IsConverting = true;
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles);
+        {          
+            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.ConvertingFiles);
         }
 
         /// <summary>
@@ -184,7 +179,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void CloseApplication()
         {
-            ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
+            ExecuteAndHandleError(ApplicationGadzhi.CloseApplication);
         }
 
         /// <summary>

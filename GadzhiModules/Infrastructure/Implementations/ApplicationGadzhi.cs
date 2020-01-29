@@ -11,6 +11,8 @@ using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using System.Reactive.Linq;
+using System;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -56,6 +58,19 @@ namespace GadzhiModules.Infrastructure.Implementations
             FileConvertingService = fileConvertingService;
             FileDataProcessingStatusMark = fileDataProcessingStatusMark;
         }
+
+        /// <summary>
+        /// Индикатор конвертирования файлов
+        /// </summary 
+        public bool IsConverting { get; private set; }
+
+        /// <summary>
+        /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
+        /// </summary>
+        private IDisposable StatusProcessingUpdater => Observable.                                
+                                                       Interval(TimeSpan.FromSeconds(10)).
+                                                       TakeWhile(_ => IsConverting).
+                                                       Subscribe(_ => UpdateStatusProseccing());
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -114,10 +129,12 @@ namespace GadzhiModules.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Конвертировать ф-айлы на сервре
+        /// Конвертировать файлы на сервере
         /// </summary>
         public async Task ConvertingFiles()
         {
+            IsConverting = true;
+
             if (FilesInfoProject?.FilesInfo?.Any() == true)
             {
                 var filesInSending = await FileDataProcessingStatusMark.GetFilesInSending();
@@ -149,10 +166,26 @@ namespace GadzhiModules.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Получить информацию о состоянии конвертируемых файлов
+        /// </summary>
+        private void UpdateStatusProseccing ()
+        {
+
+        }
+
+        /// <summary>
         /// Закрыть приложение
         /// </summary>
         public void CloseApplication()
         {
+            if (IsConverting)
+            {
+                if (!DialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
+                {
+                    return;
+                }
+            }
+
             Application.Current.Shutdown();
         }
     }

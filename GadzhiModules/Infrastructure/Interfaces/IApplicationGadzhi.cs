@@ -18,6 +18,11 @@ namespace GadzhiModules.Infrastructure.Interfaces
         IFilesData FilesInfoProject { get; }
 
         /// <summary>
+        /// Индикатор конвертирования файлов
+        /// </summary 
+        bool IsConverting { get; }
+
+        /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
         Task AddFromFiles();

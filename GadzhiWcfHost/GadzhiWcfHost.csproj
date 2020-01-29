@@ -91,6 +91,7 @@
     <Compile Include="Helpers\Converters\FilesDataFromDTOConverterToServer.cs" />
     <Compile Include="Helpers\FileSystemInformation.cs" />
     <Compile Include="Helpers\ValidateDTOData.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationReceiveAndSend.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationReceiveAndSend.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FileDataServer.cs" />

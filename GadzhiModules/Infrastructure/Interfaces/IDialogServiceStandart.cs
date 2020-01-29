@@ -22,8 +22,13 @@ namespace GadzhiModules.Infrastructure.Interfaces
         Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect);
 
         /// <summary>
-        /// Отобразить сообщение
-        /// </summary>     
-       void ShowMessage(string messageText);
+        /// Информационное сообщение
+        /// </summary>   
+        void ShowMessage(string messageText);
+
+        /// <summary>
+        /// Диалоговое окно с подтверждением
+        /// </summary>  
+        bool ShowMessageOkCancel(string messageText);
     }
 }

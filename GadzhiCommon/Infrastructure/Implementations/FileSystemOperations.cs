@@ -97,11 +97,11 @@ namespace GadzhiCommon.Infrastructure.Implementations
             {
                 if (fileBinary != null)
                 {
-                    using (FileStream input = File.Open(filePath, FileMode.Create))
-                    using (MemoryStream output = new MemoryStream())
-                    using (GZipStream zip = new GZipStream(output, CompressionMode.Decompress))
+                    using (MemoryStream input = new MemoryStream(fileBinary))
+                    using (GZipStream zip = new GZipStream(input, CompressionMode.Decompress))
+                    using (FileStream output = File.Create(filePath))
                     {
-                        await zip.CopyToAsync(zip);
+                        await zip.CopyToAsync(output);                       
                     }
 
                     succsess = true;
