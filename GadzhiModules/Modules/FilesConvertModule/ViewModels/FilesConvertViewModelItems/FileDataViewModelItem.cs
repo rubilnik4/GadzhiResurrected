@@ -54,11 +54,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         public string StatusProcessingName => StatusProcessingConverter.ConvertStatusProcessingToString(FileData.StatusProcessing);
 
         /// <summary>
-        /// Обновление статусы обработки через событие
+        /// Обновление статуса обработки через событие
         /// </summary>
         public void UpdateStatusProcessing()
         {
-            RaisePropertyChanged("StatusProcessingName");
+            RaisePropertyChanged(nameof(StatusProcessingName));
         }
 
     }

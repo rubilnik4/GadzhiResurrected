@@ -19,16 +19,6 @@ namespace GadzhiModules.Infrastructure.Implementations
     public class ApplicationGadzhi : IApplicationGadzhi
     {
         /// <summary>
-        /// Стандартные диалоговые окна
-        /// </summary>        
-        public IDialogServiceStandard DialogServiceStandard { get; }
-
-        /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        public IFileSeach FileSeach { get; }
-
-        /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
         public IFilesData FilesInfoProject { get; }
@@ -36,17 +26,34 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Сервис конвертации
         /// </summary>     
-        public IFileConvertingService FileConvertingService { get; }
+        private IFileConvertingService FileConvertingService { get; }
+
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>        
+        private IDialogServiceStandard DialogServiceStandard { get; }
+
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private IFileSeach FileSeach { get; }
+
+        /// <summary>
+        /// Получение файлов для изменения статуса
+        /// </summary>     
+        private IFileDataProcessingStatusMark FileDataProcessingStatusMark { get; }
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSeach fileSeach,
                                  IFilesData filesInfoProject,
-                                 IFileConvertingService fileConvertingService)
+                                 IFileConvertingService fileConvertingService,
+                                 IFileDataProcessingStatusMark fileDataProcessingStatusMark)
         {
             DialogServiceStandard = dialogServiceStandard;
             FileSeach = fileSeach;
             FilesInfoProject = filesInfoProject;
             FileConvertingService = fileConvertingService;
+            FileDataProcessingStatusMark = fileDataProcessingStatusMark;
         }
 
         /// <summary>
@@ -112,11 +119,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (FilesInfoProject?.FilesInfo?.Any() == true)
             {
-                var filesInSending = await GetFilesInSending();
+                var filesInSending = await FileDataProcessingStatusMark.GetFilesInSending();
 
-                 FilesInfoProject.ChangeFilesStatusAndMarkError(filesInSending);
+                FilesInfoProject.ChangeFilesStatusAndMarkError(filesInSending);
 
-                var filesData = await GetFilesToRequest();
+                var filesData = await FileDataProcessingStatusMark.GetFilesToRequest();
                 if (filesData != null && filesData.Any())
                 {
                     var filesDataRequest = new FilesDataRequest()
@@ -126,9 +133,10 @@ namespace GadzhiModules.Infrastructure.Implementations
 
                     FilesDataIntermediateResponse response = await FileConvertingService.SendFiles(filesDataRequest);
 
-                    var filesNotFound = GetFilesNotFound(filesData);
-                    var filesChangedStatus = GetFilesStatusAfterUpload(response);
-                    var filesUnion = filesNotFound?.Union(filesChangedStatus);
+                    var filesNotFound = FileDataProcessingStatusMark.GetFilesNotFound(filesData);
+                    var filesChangedStatus = FileDataProcessingStatusMark.GetFilesStatusAfterUpload(response);
+                    await Task.WhenAll(filesNotFound, filesChangedStatus);
+                    var filesUnion = filesNotFound?.Result.Union(filesChangedStatus.Result);
 
                     FilesInfoProject.ChangeFilesStatusAndMarkError(filesUnion);
                 }
@@ -146,59 +154,5 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             Application.Current.Shutdown();
         }
-
-        #region ConvertingFiles
-
-        /// <summary>
-        /// Получить файлы готовые к отправке с байтовыми массивами
-        /// </summary>       
-        private async Task<IEnumerable<FileDataRequest>> GetFilesToRequest()
-        {
-            var filesRequestExist = await Task.WhenAll(FilesInfoProject?.FilesInfo?.Where(file => FileSeach.IsFileExist(file.FilePath))?.
-                                                                                    Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)));
-            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
-
-            return filesRequestEnsuredWithBytes;
-        }
-
-        /// <summary>
-        /// Назначить всем файлам статус к отправке
-        /// </summary>  
-        private Task<IEnumerable<FileStatus>> GetFilesInSending()
-        {
-            var filesInSending = FilesInfoProject?.
-                                       FilesInfo?.
-                                       Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
-
-            return Task.FromResult(filesInSending);
-        }
-
-        /// <summary>
-        /// Пометить недоступные для отправки файлы ошибкой
-        /// </summary>  
-        private IEnumerable<FileStatus> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest)
-        {
-            var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
-            var filesNotFound = FilesInfoProject?.
-                                 FilesInfoPath.
-                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
-                                 Select(filePath => new FileStatus(filePath, StatusProcessing.Error, FileConvertErrorType.FileNotFound));
-
-            return filesNotFound;
-        }
-
-        /// <summary>5
-        /// Пометить недоступные для отправки файлы ошибкой
-        /// </summary>       
-        private IEnumerable<FileStatus> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse)
-        {
-            var filesStatusAfterUpload = fileDataResponse?.
-                                     FilesData.
-                                     Select(fileResponse => FilesDataFromDTOConverter.ConvertToFileStatus(fileResponse));
-
-            return filesStatusAfterUpload;
-        }
-
-        #endregion
     }
 }

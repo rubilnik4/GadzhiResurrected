@@ -125,8 +125,10 @@
     <Compile Include="Helpers\Converters\DTO\FilesDataToDTOConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
+    <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Implementations\FileSeach.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSeach.cs" />
+    <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
     <Compile Include="Modules\FilesConvertModule\Model\Implementations\FileStatus.cs" />
     <Compile Include="Modules\FilesConvertModule\Model\Implementations\ReactiveSubjects\ActionType.cs" />
