@@ -20,7 +20,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Расширение файла
         /// </summary>
         [DataMember]
-        public string FileType { get; set; }
+        public string FileExtension { get; set; }
 
         /// <summary>
         /// Имя файла

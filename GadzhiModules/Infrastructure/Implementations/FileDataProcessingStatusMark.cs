@@ -1,8 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,13 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSeach FileSeach { get; }
+        private IFileSystemOperations FileSystemOperations { get; }
 
         public FileDataProcessingStatusMark(IFilesData filesInfoProject,
-                                            IFileSeach fileSeach)
+                                            IFileSystemOperations fileSystemOperations)
         {
             FilesInfoProject = filesInfoProject;
-            FileSeach = fileSeach;
+            FileSystemOperations = fileSystemOperations;
         }
 
         /// <summary>
@@ -38,8 +39,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public async Task<IEnumerable<FileDataRequest>> GetFilesToRequest()
         {
-            var filesRequestExist = await Task.WhenAll(FilesInfoProject?.FilesInfo?.Where(file => FileSeach.IsFileExist(file.FilePath))?.
-                                                                                    Select(file => FilesDataToDTOConverter.ConvertToFileDataDTO(file, FileSeach)));
+            var filesRequestExist = await Task.WhenAll(FilesInfoProject?.FilesInfo?.Where(file => FileSystemOperations.IsFileExist(file.FilePath))?.
+                                                                                    Select(file => FilesDataClientToDTOConverter.ConvertToFileDataDTO(file, FileSystemOperations)));
             var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
 
             return filesRequestEnsuredWithBytes;
@@ -66,21 +67,23 @@ namespace GadzhiModules.Infrastructure.Implementations
             var filesNotFound = FilesInfoProject?.
                                 FilesInfoPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
-                                Select(filePath => new FileStatus(filePath, StatusProcessing.Error, FileConvertErrorType.FileNotFound));
+                                Select(filePath => new FileStatus(filePath,
+                                                                  StatusProcessing.Error,
+                                                                  new List<FileConvertErrorType>() { FileConvertErrorType.FileNotFound }));
 
             return Task.FromResult(filesNotFound);
         }
 
-        /// <summary>5
-        /// Пометить недоступные для отправки файлы ошибкой
-        /// </summary>       
-        public Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse)
-        {
-            var filesStatusAfterUpload = fileDataResponse?.
-                                         FilesData.
-                                         Select(fileResponse => FilesDataFromDTOConverter.ConvertToFileStatus(fileResponse));
+    /// <summary>5
+    /// Пометить недоступные для отправки файлы ошибкой
+    /// </summary>       
+    public Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse)
+    {
+        var filesStatusAfterUpload = fileDataResponse?.
+                                     FilesData.
+                                     Select(fileResponse => FilesDataFromDTOConverterToClient.ConvertToFileStatus(fileResponse));
 
-            return Task.FromResult(filesStatusAfterUpload);
-        }
+        return Task.FromResult(filesStatusAfterUpload);
     }
+}
 }

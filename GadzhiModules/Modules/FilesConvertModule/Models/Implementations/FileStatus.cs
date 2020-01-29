@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
+namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
     /// <summary>
     /// Класс содержащий статус и ошибки при конвертировании
@@ -13,12 +13,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
     public class FileStatus
     {
         public FileStatus(string filePath, StatusProcessing statusProcessing)
-            :this (filePath, statusProcessing, FileConvertErrorType.NoError)
+            :this (filePath, statusProcessing, new List<FileConvertErrorType> ())
         {
            
         }
 
-        public FileStatus(string filePath, StatusProcessing statusProcessing, FileConvertErrorType fileConvertErrorType)
+        public FileStatus(string filePath, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
@@ -38,6 +38,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public FileConvertErrorType FileConvertErrorType { get; }
+        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; }
     }
 }

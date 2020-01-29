@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -106,7 +106,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             Assert.AreEqual(filesInfoProject.FilesInfo.Count, files.Count);
 
             FileData fileLast = filesInfoProject.FilesInfo.Last();
-            Assert.AreEqual(fileLast.FileType, "dgn");
+            Assert.AreEqual(fileLast.FileExtension, "dgn");
             Assert.AreEqual(fileLast.FileName, "secondName");
             Assert.AreEqual(fileLast.FilePath, "C:\\folder\\secondName.dgn");
         }

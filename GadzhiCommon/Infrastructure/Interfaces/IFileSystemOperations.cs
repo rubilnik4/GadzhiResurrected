@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Infrastructure.Interfaces
+namespace GadzhiCommon.Infrastructure.Interfaces
 {
     /// <summary>
     /// Проверка состояния папок и файлов
     /// </summary>
-    public interface IFileSeach
+    public interface IFileSystemOperations
     {
         /// <summary>
         /// Является ли путь папкой
@@ -42,8 +42,23 @@ namespace GadzhiModules.Infrastructure.Interfaces
         IEnumerable<string> GetFiles(string filePath);
 
         /// <summary>
+        /// Получить полное имя файла по директории, имени и расширению
+        /// </summary>       
+        string CreateFilePath(string directoryPath, string fileNameWithoutExtension, string extension);
+
+        /// <summary>
         /// Представить файл в двоичном виде
         /// </summary>        
         Task<byte[]> ConvertFileToByteAndZip(string fileName, string filePath);
+
+        /// <summary>
+        /// Распаковать файл из двоичного вида и сохранить
+        /// </summary>   
+        Task<bool> UnzipFileAndSave(string filePath, byte[] fileBinary);
+
+        /// <summary>
+        /// Создать поддиректорию и пррисвоить идентефикатор
+        /// </summary>     
+        (bool isCreated, string path) CreateFolderByGuid(string startingPath);
     }
 }

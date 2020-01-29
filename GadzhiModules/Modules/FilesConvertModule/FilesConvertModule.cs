@@ -1,4 +1,4 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model;
+﻿using GadzhiModules.Modules.FilesConvertModule.Models;
 using GadzhiModules.Modules.FilesConvertModule.ViewModels;
 using GadzhiModules.Modules.FilesConvertModule.Views;
 using GadzhiModules.Infrastructure;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiDTO.Contracts.FilesConvert;
 using WcfClientProxyGenerator;
 using System.ServiceModel.Configuration;

@@ -1,5 +1,5 @@
 ﻿using GadzhiModules.Helpers;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations.ReactiveSubjects;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
+namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах

@@ -139,6 +139,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
+      <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
+      <Name>GadzhiCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiDTO\GadzhiDTO.csproj">
       <Project>{de167026-7a41-4b2c-8f2a-00ea175e891e}</Project>
       <Name>GadzhiDTO</Name>

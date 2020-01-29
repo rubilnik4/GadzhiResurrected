@@ -121,21 +121,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
-    <Compile Include="Helpers\Converters\DTO\FilesDataFromDTOConverter.cs" />
-    <Compile Include="Helpers\Converters\DTO\FilesDataToDTOConverter.cs" />
+    <Compile Include="Helpers\Converters\DTO\FilesDataFromDTOConverterToClient.cs" />
+    <Compile Include="Helpers\Converters\DTO\FilesDataClientToDTOConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
-    <Compile Include="Infrastructure\Implementations\FileSeach.cs" />
-    <Compile Include="Infrastructure\Interfaces\IFileSeach.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\Implementations\FileStatus.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\Implementations\ReactiveSubjects\ActionType.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\Implementations\ReactiveSubjects\FileChange.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\Implementations\FileData.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\Implementations\FilesData.cs" />
-    <Compile Include="Modules\FilesConvertModule\Model\Interfaces\IFilesData.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileStatus.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\ActionType.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\FileChange.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileData.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FilesData.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Interfaces\IFilesData.cs" />
     <Compile Include="Modules\FilesConvertModule\ViewModels\FilesConvertViewModel.cs" />
     <Compile Include="Helpers\BaseClasses\ViewModels\ViewModelBase.cs" />
     <Compile Include="Modules\FilesConvertModule\ViewModels\FilesConvertViewModelItems\FileDataViewModelItem.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using GadzhiModules.Modules.FilesConvertModule.Model;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -23,7 +23,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Assert   
             Assert.AreEqual(fileDataFirst.FileName, "firstName");
             Assert.AreEqual(fileDataFirst.FilePath, filePath);
-            Assert.AreEqual(fileDataFirst.FileType, "doc");
+            Assert.AreEqual(fileDataFirst.FileExtension, "doc");
 
         }
 

@@ -16,6 +16,8 @@ using System.Windows;
 using Unity;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Infrastructure.Implementations;
 
 namespace GadzhiResurrected
 {
@@ -37,7 +39,7 @@ namespace GadzhiResurrected
             IUnityContainer unityContainer = containerRegistry.GetContainer();
             unityContainer.RegisterType<IApplicationGadzhi, ApplicationGadzhi>();
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
-            unityContainer.RegisterType<IFileSeach, FileSeach>();          
+            unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();          
         }
 
         /// <summary>

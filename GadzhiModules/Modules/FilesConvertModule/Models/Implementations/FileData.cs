@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
+namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
@@ -18,14 +18,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
     {
         public FileData(string filePath)
         {
-            string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePath);
+            string fileExtension = FileHelpers.ExtensionWithoutPointFromPath(filePath);
             string fileName = Path.GetFileNameWithoutExtension(filePath);
-            if (String.IsNullOrEmpty(fileType) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))
+            if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))
             {
                 throw new ArgumentNullException("Входные параметры FileData имеют пустое значение");
-            }           
+            }
 
-            FileType = fileType;
+            FileExtension = fileExtension;
             FileName = fileName;
             FilePath = filePath;
 
@@ -41,7 +41,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileType { get; }
+        public string FileExtension { get; }
 
         /// <summary>
         /// Имя файла
@@ -56,7 +56,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; set; }        
+        public ColorPrint ColorPrint { get; set; }
 
         /// <summary>
         /// Статус обработки файла
@@ -66,7 +66,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Model.Implementations
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public FileConvertErrorType FileConvertErrorType { get; private set; }           
+        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; private set; }
 
         /// <summary>
         /// Изменить статус и вид ошибки при необходимости

@@ -13,6 +13,9 @@ namespace GadzhiCommon.Enums.FilesConvert
     {
         NoError,
         FileNotFound,
-        RejectedByServer,
+        IncorrectFileName,
+        IncorrectExtension,
+        IncorrectDataSource,
+        RejectToSave,
     }
 }

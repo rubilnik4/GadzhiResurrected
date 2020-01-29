@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System.Windows;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -36,7 +37,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSeach FileSeach { get; }
+        private IFileSystemOperations FileSystemOperations { get; }
 
         /// <summary>
         /// Получение файлов для изменения статуса
@@ -44,13 +45,13 @@ namespace GadzhiModules.Infrastructure.Implementations
         private IFileDataProcessingStatusMark FileDataProcessingStatusMark { get; }
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
-                                 IFileSeach fileSeach,
+                                 IFileSystemOperations fileSystemOperations,
                                  IFilesData filesInfoProject,
                                  IFileConvertingService fileConvertingService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark)
         {
             DialogServiceStandard = dialogServiceStandard;
-            FileSeach = fileSeach;
+            FileSystemOperations = fileSystemOperations;
             FilesInfoProject = filesInfoProject;
             FileConvertingService = fileConvertingService;
             FileDataProcessingStatusMark = fileDataProcessingStatusMark;
@@ -80,14 +81,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         public async Task AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths)
         {
             //Поиск файлов на один уровень ниже и в текущей папке          
-            var filePaths = fileOrDirectoriesPaths?.Where(f => FileSeach.IsFile(f));
-            var directoriesPath = fileOrDirectoriesPaths?.Where(d => FileSeach.IsDirectory(d) &&
-                                                                     FileSeach.IsDirectoryExist(d));
-            var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => FileSeach.GetDirectories(d)))?
-                                                     .SelectMany(d => FileSeach.GetFiles(d));
+            var filePaths = fileOrDirectoriesPaths?.Where(f => FileSystemOperations.IsFile(f));
+            var directoriesPath = fileOrDirectoriesPaths?.Where(d => FileSystemOperations.IsDirectory(d) &&
+                                                                     FileSystemOperations.IsDirectoryExist(d));
+            var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => FileSystemOperations.GetDirectories(d)))?
+                                                     .SelectMany(d => FileSystemOperations.GetFiles(d));
             var allFilePaths = filePaths?.Union(filesInDirectories)?
                                          .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) &&
-                                                     FileSeach.IsFileExist(f));
+                                                     FileSystemOperations.IsFileExist(f));
             await Task.FromResult(allFilePaths);
 
             if (allFilePaths != null && allFilePaths.Any())

@@ -1,6 +1,6 @@
-﻿using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+﻿using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 
 namespace GadzhiModules.Helpers.Converters.DTO
 {
-    public static class FilesDataToDTOConverter
+    public static class FilesDataClientToDTOConverter
     {
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
-        public static async Task<FileDataRequest> ConvertToFileDataDTO(FileData fileData, IFileSeach fileSeach)
+        public static async Task<FileDataRequest> ConvertToFileDataDTO(FileData fileData, IFileSystemOperations fileSystemOperations)
         {
-            byte[] fileDataSource = await fileSeach.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
+            byte[] fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
           
             return new FileDataRequest()
             {
                 ColorPrint = fileData.ColorPrint,
                 FileName = fileData.FileName,
                 FilePath = fileData.FilePath,
-                FileType = fileData.FileType,
+                FileExtension = fileData.FileExtension,
                 StatusProcessing = fileData.StatusProcessing,
                 FileDataSource = fileDataSource,
             };

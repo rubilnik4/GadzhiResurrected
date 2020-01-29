@@ -1,4 +1,4 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Model;
+﻿using GadzhiModules.Modules.FilesConvertModule.Models;
 using Microsoft.Xaml.Behaviors;
 using System;
 using System.Collections;

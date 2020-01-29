@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.IO;
 using GadzhiDTO.Contracts.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Infrastructure.Implementations;
 
 namespace GadzhiTest
 {
@@ -43,12 +45,12 @@ namespace GadzhiTest
         /// <summary>
         /// Инициализация класса поиска файлов
         /// <summary>
-        private Mock<IFileSeach> mockFileSeachFill(IEnumerable<string> subDirectoryPath = null,
+        private Mock<IFileSystemOperations> mockFileSystemOperationsFill(IEnumerable<string> subDirectoryPath = null,
                                                 IEnumerable<string> filesInSubDirectory = null,
                                                 string subfolderGetFiles = null)
         {
-            var mockFileSeach = new Mock<IFileSeach>();
-            var fileSeachImplementation = new FileSeach();
+            var mockFileSeach = new Mock<IFileSystemOperations>();
+            var fileSeachImplementation = new FileSystemOperations();
             mockFileSeach.Setup(fileSeach => fileSeach.IsDirectoryExist(It.IsAny<string>()))
                          .Returns(true);
             mockFileSeach.Setup(fileSeach => fileSeach.IsFileExist(It.IsAny<string>()))
@@ -72,7 +74,7 @@ namespace GadzhiTest
         public async Task AddFromFilesOrDirectories_AddTwoPositions()
         {
             // Arrange
-            Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
+            Mock<IFileSystemOperations> mockFileSystemOperations = mockFileSystemOperationsFill();
 
             var mockFileInfoProject = new Mock<IFilesData>();
             IEnumerable<string> filesPathOut = new List<string>();
@@ -80,7 +82,7 @@ namespace GadzhiTest
                                .Callback<IEnumerable<string>>(filesPath => filesPathOut = filesPath);
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
-                                                          mockFileSeach.Object,
+                                                          mockFileSystemOperations.Object,
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object);
@@ -116,7 +118,7 @@ namespace GadzhiTest
             var filesInSubDirectory = new List<string>(DefaultFileData.FileDataToTestOnlyPath.
                 Select(path => Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "Sub" + Path.GetExtension(path)));
 
-            Mock<IFileSeach> mockFileSeach = mockFileSeachFill(subDirectoryPath, filesInSubDirectory, subfolderGetFiles);
+            Mock<IFileSystemOperations> mockFileSeach = mockFileSystemOperationsFill(subDirectoryPath, filesInSubDirectory, subfolderGetFiles);
 
             var mockFileInfoProject = new Mock<IFilesData>();
             IEnumerable<string> filesPathOut = new List<string>();
@@ -154,7 +156,7 @@ namespace GadzhiTest
         public async Task AddFromFilesOrDirectories_AddNull_NoException()
         {
             // Arrange            
-            Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
+            Mock<IFileSystemOperations> mockFileSeach = mockFileSystemOperationsFill();
             var mockFileInfoProject = new Mock<IFilesData>();
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
@@ -190,7 +192,7 @@ namespace GadzhiTest
         public async Task AddFromFilesOrDirectories_AddListWithNull_NoException()
         {
             // Arrange             
-            Mock<IFileSeach> mockFileSeach = mockFileSeachFill();
+            Mock<IFileSystemOperations> mockFileSeach = mockFileSystemOperationsFill();
             var mockFileInfoProject = new Mock<IFilesData>();
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,

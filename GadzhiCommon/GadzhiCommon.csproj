@@ -44,7 +44,12 @@
     <Compile Include="Enums\FilesConvert\ColorPrint.cs" />
     <Compile Include="Enums\FilesConvert\FileConvertErrorType.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
+    <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
+    <Compile Include="Helpers\FileHelpers.cs" />
+    <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
+    <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,5 +1,5 @@
 ﻿using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Modules.FilesConvertModule.Model.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileType => FileData.FileType;
+        public string FileType => FileData.FileExtension;
 
         /// <summary>
         /// Имя файла
