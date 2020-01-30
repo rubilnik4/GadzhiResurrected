@@ -17,6 +17,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
     /// </summary>
     public class FilesData : IFilesData
     {
+        /// <summary>
+        /// Список файлов для обработки
+        /// </summary>
         private List<FileData> _filesInfo;
 
         public FilesData()

@@ -1,5 +1,4 @@
-﻿using GadzhiWcfHost.Models.FilesConvert.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -13,16 +12,22 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах на серверной части
     /// </summary>
-    public class FilesDataServer : IFilesDataServer
+    public class FilesDataServer
     {
-        public FilesDataServer()
-        {
+        /// <summary>
+        /// Файлы для конвертирования
+        /// </summary>
+        private List<FileDataServer> _filesDataToConverting;
 
+        public FilesDataServer(IEnumerable<FileDataServer> filesDataServer)
+        {
+            _filesDataToConverting = new List<FileDataServer>();
+            if (filesDataServer != null)
+            {
+                _filesDataToConverting.AddRange(filesDataServer);
+            }
         }
 
-        /// <summary>
-        /// Очередь неконвертированных файлов
-        /// </summary>
-        public Queue<FileDataServer> FileDataToConverting { get; private set; }
+       
     }
 }

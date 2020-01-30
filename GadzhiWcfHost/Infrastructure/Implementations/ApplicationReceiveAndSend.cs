@@ -2,6 +2,7 @@
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Helpers.Converters;
 using GadzhiWcfHost.Infrastructure.Interfaces;
+using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,23 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public class ApplicationReceiveAndSend: IApplicationReceiveAndSend
+    public class ApplicationReceiveAndSend : IApplicationReceiveAndSend
     {
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private IFileSystemOperations FileSystemOperations { get; }
 
-        public ApplicationReceiveAndSend(IFileSystemOperations fileSystemOperations)
+        /// <summary>
+        /// Класс для функций конвертирования файлов
+        /// </summary>
+        private IApplicationConverting ApplicationConverting { get; }
+
+        public ApplicationReceiveAndSend(IFileSystemOperations fileSystemOperations,
+                                        IApplicationConverting applicationConverting)
         {
             FileSystemOperations = fileSystemOperations;
+            ApplicationConverting = applicationConverting;
         }
 
         /// <summary>
@@ -32,11 +40,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         {
             var filesDataServerWithErrorsTask = filesDataRequest?.FilesData?.Select(fileDTO =>
                                     FilesDataFromDTOConverterToServer.ConvertToFileDataServerAndSaveFile(fileDTO, FileSystemOperations));
-            var filesDataServerWithError = await Task.WhenAll(filesDataServerWithErrorsTask);
+            var filesDataServerWithErrors = await Task.WhenAll(filesDataServerWithErrorsTask);
+
+            //файлы с ошибками просто не будут обработаны
+            var filesDataServerToQueue = new FilesDataServer(filesDataServerWithErrors);
+            ApplicationConverting.QueueFilesData(filesDataServerToQueue);
 
             return new FilesDataIntermediateResponse()
             {
-                FilesData = filesDataServerWithError?.Select(fileDataServer =>
+                FilesData = filesDataServerWithErrors?.Select(fileDataServer =>
                             FileDataServerToDTOConverter.ConvertToIntermediateResponse(fileDataServer)),
             };
         }
