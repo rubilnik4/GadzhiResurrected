@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -17,17 +18,38 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        private List<FileDataServer> _filesDataToConverting;
+        private List<FileDataServer> _filesDataInfo;
 
-        public FilesDataServer(IEnumerable<FileDataServer> filesDataServer)
+        public FilesDataServer(Guid id, IEnumerable<FileDataServer> filesDataServer)
         {
-            _filesDataToConverting = new List<FileDataServer>();
+            ID = id;
+
+            _filesDataInfo = new List<FileDataServer>();
             if (filesDataServer != null)
             {
-                _filesDataToConverting.AddRange(filesDataServer);
+                _filesDataInfo.AddRange(filesDataServer);
             }
         }
 
-       
+        /// <summary>
+        /// ID идентефикатор
+        /// </summary>
+        public Guid ID { get; }
+
+        /// <summary>
+        /// Файлы для конвертирования
+        /// </summary>
+        public IReadOnlyList<FileDataServer> FilesDataInfo => _filesDataInfo;
+
+        /// <summary>
+        /// Изменить статус обработки для всех файлов
+        /// </summary>
+        public void SetStatusToAllFiles(StatusProcessing statusProcessing)
+        {
+            _filesDataInfo?.ForEach(file =>
+            {
+                file.StatusProcessing = statusProcessing;
+            });
+        }
     }
 }

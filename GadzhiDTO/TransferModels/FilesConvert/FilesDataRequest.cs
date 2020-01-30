@@ -13,10 +13,25 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     [DataContract]
     public class FilesDataRequest
     {
+        public FilesDataRequest()
+        {
+            ID = new Guid();
+        }
+        /// <summary>
+        /// ID идентефикатор
+        /// </summary>
+        [DataMember]
+        public Guid ID { get; private set; }
+
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
         public IEnumerable<FileDataRequest> FilesData { get; set; }
+
+        /// <summary>
+        /// Удовлетворяет ли модель условиям для отправки
+        /// </summary>
+        public bool IsValidToSend => FilesData?.Any() == true;
     }
 }

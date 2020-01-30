@@ -11,9 +11,19 @@ namespace GadzhiModules.Helpers.Converters.DTO
     public static class FilesDataFromDTOConverterToClient
     {
         /// <summary>
+        /// Конвертер пакета информации из трансферной модели в класс клиентской части
+        /// </summary>      
+        public static IEnumerable<FileStatus> ConvertToFilesStatus(FilesDataIntermediateResponse filesDataResponse)
+        {
+           return filesDataResponse?.
+                  FilesData?.
+                  Select(fileResponse => ConvertToFileStatus(fileResponse));
+        }
+
+        /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части
         /// </summary>      
-        public static FileStatus ConvertToFileStatus(FileDataIntermediateResponse fileResponse)
+        private static FileStatus ConvertToFileStatus(FileDataIntermediateResponse fileResponse)
         {
             return new FileStatus(fileResponse.FilePath,
                                   fileResponse.StatusProcessing,

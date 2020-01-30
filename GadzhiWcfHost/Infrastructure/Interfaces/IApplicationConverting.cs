@@ -1,14 +1,16 @@
-﻿using GadzhiWcfHost.Models.FilesConvert.Implementations;
+﻿using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace GadzhiWcfHost.Infrastructure.Interfaces
 {
     /// <summary>
-    /// Класс для функций конвертирования файлов
+    /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
     public interface IApplicationConverting
     {
@@ -21,5 +23,10 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
         /// Поставить файлы в очередь для обработки
         /// </summary>
         void QueueFilesData(FilesDataServer filesDataServer);
+
+        /// <summary>
+        /// Поместить файлы для конвертации в очередь и отправить ответ
+        /// </summary>
+        Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest);
     }
 }

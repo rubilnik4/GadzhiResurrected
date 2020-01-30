@@ -13,6 +13,16 @@ namespace GadzhiWcfHost.Models.FilesConvert.Interfaces
     public interface IFilesDataPackages
     {
         /// <summary>
+        /// Очередь неконвертированных пакетов
+        /// </summary>
+        IEnumerable<FilesDataServer> FilesDataToConverting { get; }
+
+        /// <summary>
+        /// Получить пакет конвертируемых файлов по идентефикатору
+        /// </summary>      
+        FilesDataServer GetFilesDataServerByID(Guid FilesDataServerID);
+
+        /// <summary>
         /// Поместить файлы в очередь для конвертации
         /// </summary>
         void QueueFilesData(FilesDataServer filesDataServer);

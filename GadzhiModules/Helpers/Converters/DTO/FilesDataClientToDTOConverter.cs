@@ -13,14 +13,29 @@ namespace GadzhiModules.Helpers.Converters.DTO
     public static class FilesDataClientToDTOConverter
     {
         /// <summary>
+        /// Конвертер пакета информации о файле из локальной модели в трансферную
+        /// </summary>      
+        public static async Task<FilesDataRequest> ConvertToFilesDataRequest(IEnumerable<FileData> filesData, IFileSystemOperations fileSystemOperations)
+        {
+            var filesRequestExist = await Task.WhenAll(filesData?.Where(file => fileSystemOperations.IsFileExist(file.FilePath))?.
+                                                                                    Select(file => FilesDataClientToDTOConverter.ConvertToFileDataRequest(file, fileSystemOperations)));
+            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
+
+            return new FilesDataRequest()
+            {
+                FilesData = filesRequestEnsuredWithBytes,
+            };
+        }
+
+        /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
-        public static async Task<FileDataRequest> ConvertToFileDataDTO(FileData fileData, IFileSystemOperations fileSystemOperations)
+        private static async Task<FileDataRequest> ConvertToFileDataRequest(FileData fileData, IFileSystemOperations fileSystemOperations)
         {
             byte[] fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
           
             return new FileDataRequest()
-            {
+            {               
                 ColorPrint = fileData.ColorPrint,
                 FileName = fileData.FileName,
                 FilePath = fileData.FilePath,

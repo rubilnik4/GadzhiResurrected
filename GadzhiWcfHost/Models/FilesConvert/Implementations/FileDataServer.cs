@@ -67,7 +67,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; }
+        public StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла

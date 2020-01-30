@@ -86,15 +86,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\WcfServiceFactory.cs" />
-    <Compile Include="Helpers\Converters\FileDataServerToDTOConverter.cs" />
+    <Compile Include="Helpers\Converters\FilesDataServerToDTOConverter.cs" />
     <Compile Include="Helpers\Converters\FileSavedCheck.cs" />
     <Compile Include="Helpers\Converters\FilesDataFromDTOConverterToServer.cs" />
     <Compile Include="Helpers\FileSystemInformation.cs" />
     <Compile Include="Helpers\ValidateDTOData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
-    <Compile Include="Infrastructure\Implementations\ApplicationReceiveAndSend.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
-    <Compile Include="Infrastructure\Interfaces\IApplicationReceiveAndSend.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FilesDataPackages.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FileDataServer.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FilesDataServer.cs" />

@@ -24,11 +24,10 @@ namespace GadzhiWcfHost.DependencyInjection
         {
             // Регистрируем зависимости
             container
-                .RegisterType<IApplicationReceiveAndSend, ApplicationReceiveAndSend>()
                 .RegisterType<IFileSystemOperations, FileSystemOperations>()
                 .RegisterType<IFileConvertingService, FileConvertingService>()
-                .RegisterSingleton< IApplicationConverting,ApplicationConverting>()
-                .RegisterType< IFilesDataPackages, FilesDataPackages>();
+                .RegisterType<IFilesDataPackages, FilesDataPackages>()
+                .RegisterSingleton<IApplicationConverting, ApplicationConverting>();               
         }
 
     }

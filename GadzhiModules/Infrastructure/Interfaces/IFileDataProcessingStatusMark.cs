@@ -16,7 +16,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        Task<IEnumerable<FileDataRequest>> GetFilesToRequest();
+        Task<FilesDataRequest> GetFilesDataToRequest();
 
         /// <summary>
         /// Назначить всем файлам статус к отправке
@@ -33,5 +33,11 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
         Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse);
+
+        /// <summary>
+        /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
+        /// </summary>
+        Task<IEnumerable<FileStatus>> GetFileStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
+                                                                          FilesDataIntermediateResponse filesDataIntermediateResponse);        
     }
 }

@@ -18,17 +18,18 @@ namespace GadzhiWcfHost.Services
     //Обязательно сверять путь с файлом App.config
     /// <summary>
     /// Сервис для конвертирования файлов. Контракт используется и клиентской и серверной частью
-    /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, 
-                     IncludeExceptionDetailInFaults = true)]   
+    /// </summary>   
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession,
+                  //   ConcurrencyMode = ConcurrencyMode.Multiple,
+                     IncludeExceptionDetailInFaults = true)]
     public class FileConvertingService : IFileConvertingService
     {
         /// <summary>
         /// Сохранение, обработка, подготовка для отправки файлов
         /// </summary>   
-        private IApplicationReceiveAndSend ApplicationReceiveAndSend { get; }
+        private IApplicationConverting ApplicationReceiveAndSend { get; }
 
-        public FileConvertingService(IApplicationReceiveAndSend applicationReceiveAndSend)
+        public FileConvertingService(IApplicationConverting applicationReceiveAndSend)
         {
             ApplicationReceiveAndSend = applicationReceiveAndSend;
         }

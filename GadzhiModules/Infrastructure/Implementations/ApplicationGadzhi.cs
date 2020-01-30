@@ -141,22 +141,13 @@ namespace GadzhiModules.Infrastructure.Implementations
 
                 FilesInfoProject.ChangeFilesStatusAndMarkError(filesInSending);
 
-                var filesData = await FileDataProcessingStatusMark.GetFilesToRequest();
-                if (filesData != null && filesData.Any())
-                {
-                    var filesDataRequest = new FilesDataRequest()
-                    {
-                        FilesData = filesData,
-                    };
+                var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
+                if (filesDataRequest.IsValidToSend)
+                { 
+                    FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.SendFiles(filesDataRequest);
 
-                    FilesDataIntermediateResponse response = await FileConvertingService.SendFiles(filesDataRequest);
-
-                    var filesNotFound = FileDataProcessingStatusMark.GetFilesNotFound(filesData);
-                    var filesChangedStatus = FileDataProcessingStatusMark.GetFilesStatusAfterUpload(response);
-                    await Task.WhenAll(filesNotFound, filesChangedStatus);
-                    var filesUnion = filesNotFound?.Result.Union(filesChangedStatus.Result);
-
-                    FilesInfoProject.ChangeFilesStatusAndMarkError(filesUnion);
+                    var filesStatusUnion = await FileDataProcessingStatusMark.GetFileStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
+                    FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusUnion);
                 }
             }
             else

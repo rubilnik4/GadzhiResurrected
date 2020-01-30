@@ -37,13 +37,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        public async Task<IEnumerable<FileDataRequest>> GetFilesToRequest()
+        public async Task<FilesDataRequest> GetFilesDataToRequest()
         {
-            var filesRequestExist = await Task.WhenAll(FilesInfoProject?.FilesInfo?.Where(file => FileSystemOperations.IsFileExist(file.FilePath))?.
-                                                                                    Select(file => FilesDataClientToDTOConverter.ConvertToFileDataDTO(file, FileSystemOperations)));
-            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
-
-            return filesRequestEnsuredWithBytes;
+            return await FilesDataClientToDTOConverter.ConvertToFilesDataRequest(FilesInfoProject?.FilesInfo, 
+                                                                       FileSystemOperations);
         }
 
         /// <summary>
@@ -74,16 +71,28 @@ namespace GadzhiModules.Infrastructure.Implementations
             return Task.FromResult(filesNotFound);
         }
 
-    /// <summary>5
-    /// Пометить недоступные для отправки файлы ошибкой
-    /// </summary>       
-    public Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse)
-    {
-        var filesStatusAfterUpload = fileDataResponse?.
-                                     FilesData.
-                                     Select(fileResponse => FilesDataFromDTOConverterToClient.ConvertToFileStatus(fileResponse));
+        /// <summary>
+        /// Поменять статус файлов после промежуточного отчета
+        /// </summary>       
+        public Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse filesDataResponse)
+        {
+            var filesStatusAfterUpload = FilesDataFromDTOConverterToClient.ConvertToFilesStatus(filesDataResponse);
 
-        return Task.FromResult(filesStatusAfterUpload);
+            return Task.FromResult(filesStatusAfterUpload);
+        }
+
+        /// <summary>
+        /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
+        /// </summary>
+        public async Task<IEnumerable<FileStatus>> GetFileStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest, 
+                                                                          FilesDataIntermediateResponse filesDataIntermediateResponse)
+        {
+            var filesNotFound = GetFilesNotFound(filesDataRequest.FilesData);
+            var filesChangedStatus = GetFilesStatusAfterUpload(filesDataIntermediateResponse);
+            await Task.WhenAll(filesNotFound, filesChangedStatus);
+            var filesUnion = filesNotFound?.Result.Union(filesChangedStatus.Result);
+
+            return filesUnion;
+        }
     }
-}
 }

@@ -13,18 +13,29 @@ namespace GadzhiWcfHost.Helpers.Converters
     public static class FilesDataFromDTOConverterToServer
     {
         /// <summary>
-        /// Конвертер информации из трансферной модели в класс серверной части
+        /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        public static async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest, IFileSystemOperations fileSystemOperations)
+        public static async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequest filesDataRequest, IFileSystemOperations fileSystemOperations)
+        {
+            var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
+                                      ConvertToFileDataServerAndSaveFile(fileDTO, fileSystemOperations));
+            var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
+
+            return new FilesDataServer(filesDataRequest.ID, filesDataServerToConvert);
+        }
+
+        /// <summary>
+        /// Конвертер информации из трансферной модели в единичный класс
+        /// </summary>      
+        private static async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest, IFileSystemOperations fileSystemOperations)
         {
             FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, fileSystemOperations);
 
-            return new FileDataServer(fileSavedCheck.FilePath, 
-                                      fileDataRequest.FilePath, 
-                                      fileDataRequest.ColorPrint, 
+            return new FileDataServer(fileSavedCheck.FilePath,
+                                      fileDataRequest.FilePath,
+                                      fileDataRequest.ColorPrint,
                                       fileSavedCheck.Errors);
         }
-
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
