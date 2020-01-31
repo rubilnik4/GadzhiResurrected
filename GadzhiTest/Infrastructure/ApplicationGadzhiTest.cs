@@ -13,6 +13,7 @@ using System.IO;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Implementations;
+using ChannelAdam.ServiceModel;
 
 namespace GadzhiTest
 {
@@ -27,7 +28,7 @@ namespace GadzhiTest
         /// <summary>
         /// Сервис конвертирования. Пустой класс
         /// </summary>
-        Mock<IFileConvertingService> MockFileConvertingService;
+        Mock<IServiceConsumer<IFileConvertingService>> MockFileConvertingService;
 
         /// <summary>
         /// Получение файлов для изменения статуса. Пустой класс
@@ -38,7 +39,7 @@ namespace GadzhiTest
         public void ApplicationGadzhiTestInitialize()
         {
             MockDialogServiceStandard = new Mock<IDialogServiceStandard>();
-            MockFileConvertingService = new Mock<IFileConvertingService>();
+            MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingService>>();
             MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();
         }
 

@@ -21,9 +21,8 @@ namespace GadzhiWcfHost.Services
     /// </summary>   
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession,
                      ConcurrencyMode = ConcurrencyMode.Multiple,
-                     IncludeExceptionDetailInFaults = true)]
-    //[DeliveryRequirements(RequireOrderedDelivery = true)]
-    public class FileConvertingService : IFileConvertingService, IDisposable
+                     IncludeExceptionDetailInFaults = true)]   
+    public class FileConvertingService : IFileConvertingService
     {
         /// <summary>
         /// Сохранение, обработка, подготовка для отправки файлов
@@ -50,14 +49,20 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await ApplicationReceiveAndSend.GetIntermediateResponseByID(filesDataID);
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await ApplicationReceiveAndSend.GetIntermediateFilesDataResponseByID(filesDataID);
 
             return filesDataIntermediateResponse;
         }
 
-        public void Dispose()
+        /// <summary>
+        /// Отправить отконвертированные файлы
+        /// </summary>      
+        public async Task<FilesDataResponse> GetCompliteFiles(Guid filesDataID)
         {
-          
+            FilesDataResponse filesDataResponse = await ApplicationReceiveAndSend.GetFilesDataResponseByID(filesDataID);
+
+            return filesDataResponse;
         }
+        
     }
 }

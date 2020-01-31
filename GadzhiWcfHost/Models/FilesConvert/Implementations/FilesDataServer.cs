@@ -42,6 +42,11 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         public IReadOnlyList<FileDataServer> FilesDataInfo => _filesDataInfo;
 
         /// <summary>
+        /// Завершена ли обработка
+        /// </summary>
+        public bool IsComplited { get; set; }
+
+        /// <summary>
         /// Изменить статус обработки для всех файлов
         /// </summary>
         public void SetStatusToAllFiles(StatusProcessing statusProcessing)

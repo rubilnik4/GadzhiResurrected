@@ -54,11 +54,12 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// </summary>
         public async Task ConvertingFilesDataPackage(FilesDataServer filesDataServer)
         {           
-            foreach (var fileData in filesDataServer?.FilesDataInfo)
+            foreach (var fileData in filesDataServer.FilesDataInfo)
             {
                 await Task.Delay(2000);
                 fileData.StatusProcessing = StatusProcessing.Complited;
             }
+            filesDataServer.IsComplited = true;
         }
     }
 }

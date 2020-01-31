@@ -61,7 +61,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
             FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
             QueueFilesData(filesDataServer);
 
-            return await GetIntermediateResponseByID(filesDataServer.ID);
+            return await GetIntermediateFilesDataResponseByID(filesDataServer.ID);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        public async Task<FilesDataIntermediateResponse> GetIntermediateResponseByID(Guid filesDataServerID)
+        public async Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseByID(Guid filesDataServerID)
         {
             FilesDataServer filesDataServer = FileDataPackages.GetFilesDataServerByID(filesDataServerID);
 
@@ -83,6 +83,17 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
                 FilesDataServerToDTOConverter.ConvertFilesToIntermediateResponse(filesDataServer);
 
             return await Task.FromResult(filesDataIntermediateResponse);
+        }
+
+        /// <summary>
+        /// Получить отконвертированные файлы
+        /// </summary>
+        public async Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID)
+        {
+            FilesDataServer filesDataServer = FileDataPackages.GetFilesDataServerByID(filesDataServerID);
+            FilesDataResponse filesDataResponse = await FilesDataServerToDTOConverter.ConvertFilesToResponse(filesDataServer, 
+                                                                                                             FileSystemOperations);
+            return filesDataResponse;
         }
 
         /// <summary>

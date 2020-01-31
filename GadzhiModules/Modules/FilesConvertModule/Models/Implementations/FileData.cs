@@ -73,8 +73,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// </summary>
         public void ChangeByFileStatus(FileStatus fileStatus)
         {
-            StatusProcessing = fileStatus.StatusProcessing;
-            FileConvertErrorType = fileStatus.FileConvertErrorType;
+            StatusProcessing = fileStatus.StatusProcessing;          ;
         }
 
         public bool Equals(FileData other)

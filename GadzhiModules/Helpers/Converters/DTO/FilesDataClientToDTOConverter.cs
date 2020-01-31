@@ -33,7 +33,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// </summary>      
         private static async Task<FileDataRequest> ConvertToFileDataRequest(FileData fileData, IFileSystemOperations fileSystemOperations)
         {
-            byte[] fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileData.FileName, fileData.FilePath);
+            byte[] fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileData.FilePath);
 
             return new FileDataRequest()
             {

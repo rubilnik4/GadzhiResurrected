@@ -32,12 +32,17 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse fileDataResponse);
+        Task<IEnumerable<FileStatus>> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse fileDataResponse);
 
+        /// <summary>
+        /// Поменять статус файлов после окончательного отчета
+        /// </summary>       
+        Task<IEnumerable<FileStatus>> GetFilesStatusCompliteResponse(FilesDataResponse filesDataResponse);
+       
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        Task<IEnumerable<FileStatus>> GetFileStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
+        Task<IEnumerable<FileStatus>> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
                                                                           FilesDataIntermediateResponse filesDataIntermediateResponse);        
     }
 }

@@ -64,8 +64,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                 FilesInfoPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath,
-                                                                  StatusProcessing.Error,
-                                                                  new List<FileConvertErrorType>() { FileConvertErrorType.FileNotFound }));
+                                                                  StatusProcessing.Error));
 
             return Task.FromResult(filesNotFound);
         }
@@ -73,21 +72,31 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Поменять статус файлов после промежуточного отчета
         /// </summary>       
-        public Task<IEnumerable<FileStatus>> GetFilesStatusAfterUpload(FilesDataIntermediateResponse filesDataResponse)
+        public Task<IEnumerable<FileStatus>> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
-            var filesStatusAfterUpload = FilesDataFromDTOConverterToClient.ConvertToFilesStatus(filesDataResponse);
+            var filesStatusIntermediate = FilesDataFromDTOConverterToClient.ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
 
-            return Task.FromResult(filesStatusAfterUpload);
+            return Task.FromResult(filesStatusIntermediate);
+        }
+
+        /// <summary>
+        /// Поменять статус файлов после окончательного отчета
+        /// </summary>       
+        public Task<IEnumerable<FileStatus>> GetFilesStatusCompliteResponse(FilesDataResponse filesDataResponse)
+        {
+            var filesStatusResponse = FilesDataFromDTOConverterToClient.ConvertToFilesStatusFromResponse(filesDataResponse);
+
+            return Task.FromResult(filesStatusResponse);
         }
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        public async Task<IEnumerable<FileStatus>> GetFileStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest, 
+        public async Task<IEnumerable<FileStatus>> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest, 
                                                                           FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
             var filesNotFound = GetFilesNotFound(filesDataRequest.FilesData);
-            var filesChangedStatus = GetFilesStatusAfterUpload(filesDataIntermediateResponse);
+            var filesChangedStatus = GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             await Task.WhenAll(filesNotFound, filesChangedStatus);
             var filesUnion = filesNotFound?.Result.Union(filesChangedStatus.Result);
 

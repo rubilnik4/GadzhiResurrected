@@ -15,12 +15,14 @@ using System.Threading.Tasks;
 using Unity;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiDTO.Contracts.FilesConvert;
-using WcfClientProxyGenerator;
 using System.ServiceModel.Configuration;
 using System.Configuration;
 using GadzhiDTO.Healpers;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
+using ChannelAdam.ServiceModel;
+using Unity.Lifetime;
+using Unity.Injection;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
@@ -53,15 +55,18 @@ namespace GadzhiModules.Modules.FilesConvertModule
         /// Регистрация зависимостей
         /// </summary>        
         public void RegisterTypes(IContainerRegistry containerRegistry)
-        { 
+        {
             IUnityContainer unityContainer = containerRegistry.GetContainer();
 
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
-            unityContainer.RegisterFactory<IFileConvertingService>((unity) => WcfClientProxy.Create<IFileConvertingService>(
-                                                                                    c => c.SetEndpoint(fileConvertingEndpoint)));
+           
+            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingService>>((unity) =>
+                      ServiceConsumerFactory.Create<IFileConvertingService>(fileConvertingEndpoint));
+           
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
+
         }
     }
 }

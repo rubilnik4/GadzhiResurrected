@@ -16,8 +16,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     {
         public FileDataIntermediateResponse()
         {
-            StatusProcessing = StatusProcessing.NotSend;
-            FileConvertErrorType = new List<FileConvertErrorType>();
+            StatusProcessing = StatusProcessing.NotSend;           
         }
 
         /// <summary>
@@ -30,12 +29,6 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Статус обработки файла
         /// </summary>
         [DataMember]
-        public StatusProcessing StatusProcessing { get; set; }
-
-        /// <summary>
-        /// Тип ошибки при конвертации файла
-        /// </summary>
-        [DataMember]
-        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; set; }
+        public StatusProcessing StatusProcessing { get; set; }       
     }
 }

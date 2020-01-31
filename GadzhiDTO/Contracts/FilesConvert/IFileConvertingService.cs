@@ -28,6 +28,12 @@ namespace GadzhiDTO.Contracts.FilesConvert
                           IsTerminating = false)]
         Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID);
 
+        /// <summary>
+        /// Отправить отконвертированные файлы
+        /// </summary>  
+        [OperationContract(IsInitiating = false,
+                          IsTerminating = true)]
+        Task<FilesDataResponse> GetCompliteFiles(Guid filesDataID);
     }
 }
 

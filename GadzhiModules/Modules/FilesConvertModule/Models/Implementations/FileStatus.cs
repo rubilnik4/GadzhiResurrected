@@ -13,16 +13,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
     public class FileStatus
     {
         public FileStatus(string filePath, StatusProcessing statusProcessing)
-            :this (filePath, statusProcessing, new List<FileConvertErrorType> ())
-        {
-           
-        }
-
-        public FileStatus(string filePath, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
             FilePath = filePath;
-            StatusProcessing = statusProcessing;
-            FileConvertErrorType = fileConvertErrorType;
+            StatusProcessing = statusProcessing;          
         }
 
         /// <summary>
@@ -33,11 +26,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; }
-
-        /// <summary>
-        /// Тип ошибки при конвертации файла
-        /// </summary>
-        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; }
+        public StatusProcessing StatusProcessing { get; }       
     }
 }

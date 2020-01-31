@@ -76,7 +76,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Представить файл в двоичном виде и запаковать
         /// </summary>   
-        public async Task<byte[]> ConvertFileToByteAndZip(string fileName, string filePath)
+        public async Task<byte[]> ConvertFileToByteAndZip(string filePath)
         {
             byte[] result = null;
 
@@ -93,13 +93,10 @@ namespace GadzhiCommon.Infrastructure.Implementations
                     result = output.ToArray();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
-
-
-
             return result;
         }
 
@@ -125,7 +122,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                     succsess = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

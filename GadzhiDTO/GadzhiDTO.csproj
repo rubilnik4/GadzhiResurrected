@@ -42,16 +42,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WcfClientProxyGenerator, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WcfClientProxyGenerator.2.3.0-alpha4\lib\net45\WcfClientProxyGenerator.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\FilesConvert\IFileConvertingService.cs" />
     <Compile Include="Healpers\ClientEndpoints.cs" />
+    <Compile Include="TransferModels\FilesConvert\FileDataResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\FilesDataIntermediateResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequest.cs" />
+    <Compile Include="TransferModels\FilesConvert\FilesDataResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\FilesDataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -61,9 +60,6 @@
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

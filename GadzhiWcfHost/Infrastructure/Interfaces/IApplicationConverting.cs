@@ -32,6 +32,11 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        Task<FilesDataIntermediateResponse> GetIntermediateResponseByID(Guid filesDataServerID);
+        Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseByID(Guid filesDataServerID);
+
+        /// <summary>
+        /// Получить отконвертированные файлы
+        /// </summary>
+        Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID);
     }
 }

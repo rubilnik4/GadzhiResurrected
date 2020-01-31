@@ -16,6 +16,7 @@ using GadzhiCommon.Helpers.Dialogs;
 using System.Reactive.Disposables;
 using System.ServiceModel;
 using GadzhiDTO.Healpers;
+using ChannelAdam.ServiceModel;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -32,7 +33,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Сервис конвертации
         /// </summary>     
-        private IFileConvertingService FileConvertingService { get; }
+        private IServiceConsumer<IFileConvertingService> FileConvertingService { get; }
 
         /// <summary>
         /// Стандартные диалоговые окна
@@ -52,30 +53,27 @@ namespace GadzhiModules.Infrastructure.Implementations
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSystemOperations fileSystemOperations,
                                  IFilesData filesInfoProject,
-                                 IFileConvertingService fileConvertingService,
+                                 IServiceConsumer<IFileConvertingService> fileConvertingService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark)
         {
             DialogServiceStandard = dialogServiceStandard;
             FileSystemOperations = fileSystemOperations;
             FilesInfoProject = filesInfoProject;
-            FileConvertingService = fileConvertingService;        
+            FileConvertingService = fileConvertingService;
             FileDataProcessingStatusMark = fileDataProcessingStatusMark;
-          
+
             StatusProcessingUpdaterSubsriptions = new CompositeDisposable();
-
-            //var clientEndpoints = new ClientEndpoints();
-            //string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
-            //ChannelFactory<IFileConvertingService> myChannelFactory = new ChannelFactory<IFileConvertingService>(fileConvertingEndpoint);
-
-            //// Create a channel.
-            //FileConvertingService = myChannelFactory.CreateChannel();
-         
         }
 
         /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary 
         public bool IsConverting { get; private set; }
+
+        /// <summary>
+        /// Индикатор готовности файлов
+        /// </summary 
+        private bool IsComplited { get; set; }
 
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
@@ -128,12 +126,13 @@ namespace GadzhiModules.Infrastructure.Implementations
             FilesInfoProject.RemoveFiles(filesToRemove);
         }
 
+        #region ConvertingFilesOnServer
         /// <summary>
         /// Конвертировать файлы на сервере
         /// </summary>
         public async Task ConvertingFiles()
         {
-            IsConverting = true;
+            GetReadyPropertiesToConvert();
 
             if (FilesInfoProject?.FilesInfo?.Any() == true)
             {
@@ -144,34 +143,64 @@ namespace GadzhiModules.Infrastructure.Implementations
                 var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
                 if (filesDataRequest.IsValidToSend)
                 {
-                    FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.SendFiles(filesDataRequest);
-                    var filesStatusUnion = await FileDataProcessingStatusMark.GetFileStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
+                    FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
+                                                                                        Operations.
+                                                                                        SendFiles(filesDataRequest);
+                    var filesStatusUnion = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
 
                     FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusUnion);
 
                     StatusProcessingUpdaterSubsriptions.Add(Observable.
-                                                            Interval(TimeSpan.FromSeconds(10)).
-                                                            TakeWhile(_ => IsConverting).
-                                                            Subscribe(async _ => await UpdateStatusProcessing()));                    
+                                                            Interval(TimeSpan.FromSeconds(2)).
+                                                            TakeWhile(_ => IsConverting && !IsComplited).
+                                                            Subscribe(async _ => await UpdateStatusProcessing()));
                 }
             }
             else
             {
-                IsConverting = false;
+                AbortPropertiesConverting();
+
                 DialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
             }
         }
-      
+
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task UpdateStatusProcessing()
-        {           
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.CheckFilesStatusProcessing(FilesInfoProject.ID);
-            var filesStatusUnion = await FileDataProcessingStatusMark.GetFilesStatusAfterUpload(filesDataIntermediateResponse);
-
+        {
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
+                                                                                Operations.
+                                                                                CheckFilesStatusProcessing(FilesInfoProject.ID);
+            var filesStatusUnion = await FileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusUnion);
+
+            if (filesDataIntermediateResponse.IsComplited)
+            {
+                IsComplited = true;
+                ClearSubsriptions();
+                await GetCompliteFiles(filesDataIntermediateResponse.IsComplited);
+            }
         }
+
+        /// <summary>
+        /// Получить отконвертированные файлы
+        /// </summary>
+        private async Task GetCompliteFiles(bool isComplited)
+        {
+            if (isComplited)
+            {
+                FilesDataResponse filesDataResponse = await FileConvertingService.
+                                                            Operations.
+                                                            GetCompliteFiles(FilesInfoProject.ID);
+
+                var filesStatusWright = await FileDataProcessingStatusMark.GetFilesStatusCompliteResponse(filesDataResponse);                
+                FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusWright);
+
+                IsConverting = false;
+            }
+        }
+        #endregion  
 
         /// <summary>
         /// Закрыть приложение
@@ -189,10 +218,34 @@ namespace GadzhiModules.Infrastructure.Implementations
             Application.Current.Shutdown();
         }
 
+        /// <summary>
+        /// Обозначить начало конвертации
+        /// </summary>
+        private void GetReadyPropertiesToConvert()
+        {
+            IsConverting = true;
+            IsComplited = false;
+        }
+
+        /// <summary>
+        /// Сбросить индикаторы конвертации
+        /// </summary>
+        private void AbortPropertiesConverting()
+        {
+            IsConverting = false;
+            IsComplited = false;
+        }
+
+        /// <summary>
+        /// очистить подписки на обновление пакета конвертирования
+        /// </summary>
+        private void ClearSubsriptions()
+        {
+            StatusProcessingUpdaterSubsriptions?.Dispose();
+        }
         public void Dispose()
         {
-            //очистить подписки на обновление пакета конвертирования
-            StatusProcessingUpdaterSubsriptions?.Dispose();
+            ClearSubsriptions();
         }
     }
 }

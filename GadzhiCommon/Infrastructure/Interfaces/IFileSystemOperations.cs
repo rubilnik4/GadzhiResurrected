@@ -54,7 +54,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Представить файл в двоичном виде
         /// </summary>        
-        Task<byte[]> ConvertFileToByteAndZip(string fileName, string filePath);
+        Task<byte[]> ConvertFileToByteAndZip(string filePath);
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
