@@ -51,5 +51,6 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
                 file.StatusProcessing = statusProcessing;
             });
         }
+
     }
 }

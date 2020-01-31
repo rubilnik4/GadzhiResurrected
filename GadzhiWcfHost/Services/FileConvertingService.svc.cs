@@ -20,9 +20,10 @@ namespace GadzhiWcfHost.Services
     /// Сервис для конвертирования файлов. Контракт используется и клиентской и серверной частью
     /// </summary>   
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession,
-                  //   ConcurrencyMode = ConcurrencyMode.Multiple,
+                     ConcurrencyMode = ConcurrencyMode.Multiple,
                      IncludeExceptionDetailInFaults = true)]
-    public class FileConvertingService : IFileConvertingService
+    //[DeliveryRequirements(RequireOrderedDelivery = true)]
+    public class FileConvertingService : IFileConvertingService, IDisposable
     {
         /// <summary>
         /// Сохранение, обработка, подготовка для отправки файлов
@@ -31,7 +32,7 @@ namespace GadzhiWcfHost.Services
 
         public FileConvertingService(IApplicationConverting applicationReceiveAndSend)
         {
-            ApplicationReceiveAndSend = applicationReceiveAndSend;
+            ApplicationReceiveAndSend = applicationReceiveAndSend;          
         }
 
         /// <summary>
@@ -39,9 +40,24 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponse> SendFiles(FilesDataRequest filesDataRequest)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await ApplicationReceiveAndSend.QueueFilesDataAndGetResponse(filesDataRequest);
+            var filesDataIntermediateResponse = await ApplicationReceiveAndSend.QueueFilesDataAndGetResponse(filesDataRequest);
 
             return filesDataIntermediateResponse;
+        }
+
+        /// <summary>
+        /// Проверить статус файлов
+        /// </summary>      
+        public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID)
+        {
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await ApplicationReceiveAndSend.GetIntermediateResponseByID(filesDataID);
+
+            return filesDataIntermediateResponse;
+        }
+
+        public void Dispose()
+        {
+          
         }
     }
 }

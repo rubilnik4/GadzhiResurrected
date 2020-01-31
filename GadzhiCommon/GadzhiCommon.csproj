@@ -45,6 +45,7 @@
     <Compile Include="Enums\FilesConvert\FileConvertErrorType.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
     <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
+    <Compile Include="Helpers\Dialogs\DialogFilters.cs" />
     <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />

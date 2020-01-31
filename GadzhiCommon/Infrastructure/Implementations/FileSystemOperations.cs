@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Infrastructure.Interfaces;
+﻿using GadzhiCommon.Helpers.Dialogs;
+using GadzhiCommon.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,6 +55,23 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Получить вложенные файлы
         /// </summary>       
         public IEnumerable<string> GetFiles(string filePath) => Directory.GetFiles(filePath);
+
+        /// <summary>
+        /// Поиск файлов на один уровень ниже и в текущих папках. Допустимо передавать пути файлов для дальнейшего объединения      
+        /// </summary>    
+        public async Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths)
+        {
+            var filePaths = fileOrDirectoriesPaths?.Where(f => IsFile(f));
+            var directoriesPath = fileOrDirectoriesPaths?.Where(d => IsDirectory(d) &&
+                                                                     IsDirectoryExist(d));
+            var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => GetDirectories(d)))?
+                                                     .SelectMany(d => GetFiles(d));
+            var allFilePaths = filePaths?.Union(filesInDirectories)?
+                                         .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) &&
+                                                     IsFileExist(f));
+
+            return await Task.FromResult(allFilePaths);
+        }
 
         /// <summary>
         /// Представить файл в двоичном виде и запаковать

@@ -28,5 +28,10 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
         Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest);
+
+        /// <summary>
+        /// Получить промежуточный ответ о состоянии конвертируемых файлов
+        /// </summary>
+        Task<FilesDataIntermediateResponse> GetIntermediateResponseByID(Guid filesDataServerID);
     }
 }

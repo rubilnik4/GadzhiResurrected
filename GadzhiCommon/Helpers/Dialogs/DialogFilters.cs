@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Infrastructure.Dialogs
+namespace GadzhiCommon.Helpers.Dialogs
 {
     public static class DialogFilters
     {

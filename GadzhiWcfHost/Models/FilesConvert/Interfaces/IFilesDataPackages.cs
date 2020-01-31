@@ -12,10 +12,10 @@ namespace GadzhiWcfHost.Models.FilesConvert.Interfaces
     /// </summary>
     public interface IFilesDataPackages
     {
-        /// <summary>
-        /// Очередь неконвертированных пакетов
-        /// </summary>
-        IEnumerable<FilesDataServer> FilesDataToConverting { get; }
+        ///// <summary>
+        ///// Очередь неконвертированных пакетов
+        ///// </summary>
+        //IEnumerable<FilesDataServer> FilesDataToConverting { get; }
 
         /// <summary>
         /// Получить пакет конвертируемых файлов по идентефикатору
@@ -23,8 +23,18 @@ namespace GadzhiWcfHost.Models.FilesConvert.Interfaces
         FilesDataServer GetFilesDataServerByID(Guid FilesDataServerID);
 
         /// <summary>
+        /// Получить первый в очереди пакет
+        /// </summary>      
+        FilesDataServer GetFirstInQueuePackage();
+
+        /// <summary>
         /// Поместить файлы в очередь для конвертации
         /// </summary>
         void QueueFilesData(FilesDataServer filesDataServer);
+
+        /// <summary>
+        /// Запустить конвертацию пакета
+        /// </summary>
+        Task ConvertingFilesDataPackage(FilesDataServer filesDataServer);     
     }
 }

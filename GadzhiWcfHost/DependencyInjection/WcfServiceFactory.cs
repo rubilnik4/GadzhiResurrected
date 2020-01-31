@@ -27,7 +27,7 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IFileSystemOperations, FileSystemOperations>()
                 .RegisterType<IFileConvertingService, FileConvertingService>()
                 .RegisterType<IFilesDataPackages, FilesDataPackages>()
-                .RegisterSingleton<IApplicationConverting, ApplicationConverting>();               
+                .RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
         }
 
     }

@@ -9,15 +9,25 @@ using System.Threading.Tasks;
 namespace GadzhiDTO.Contracts.FilesConvert
 {
     /// <summary>
-    /// Сервис для конвертирования файлов. Контракт используется и клиентской и серверной частью
+    /// Сервис для конвертирования файлов.Контракт используется и клиентской и серверной частью
     /// </summary>
-    [ServiceContract]
+    [ServiceContract(SessionMode = SessionMode.Required)]
     public interface IFileConvertingService
     {
         /// <summary>
         /// Отправить файлы для конвертирования
         /// </summary>
-        [OperationContract]
+        [OperationContract(IsInitiating = true,
+                           IsTerminating = false)]
         Task<FilesDataIntermediateResponse> SendFiles(FilesDataRequest filesDataRequest);
+
+        /// <summary>
+        /// Проверить статус файлов
+        /// </summary>   
+        [OperationContract(IsInitiating = false,
+                          IsTerminating = false)]
+        Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID);
+
     }
 }
+

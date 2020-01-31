@@ -143,7 +143,6 @@
     <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Implementations\DialogServiceStandard.cs" />
-    <Compile Include="Infrastructure\Dialogs\DialogFilters.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Interfaces\IDialogServiceStandart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

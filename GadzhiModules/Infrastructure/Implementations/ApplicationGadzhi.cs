@@ -1,5 +1,4 @@
-﻿using GadzhiModules.Infrastructure.Dialogs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,13 +12,17 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using System.Reactive.Linq;
 using System;
+using GadzhiCommon.Helpers.Dialogs;
+using System.Reactive.Disposables;
+using System.ServiceModel;
+using GadzhiDTO.Healpers;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
     /// <summary>
     /// Слой приложения, инфраструктура
     /// </summary>
-    public class ApplicationGadzhi : IApplicationGadzhi
+    public class ApplicationGadzhi : IApplicationGadzhi, IDisposable
     {
         /// <summary>
         /// Модель конвертируемых файлов
@@ -55,8 +58,18 @@ namespace GadzhiModules.Infrastructure.Implementations
             DialogServiceStandard = dialogServiceStandard;
             FileSystemOperations = fileSystemOperations;
             FilesInfoProject = filesInfoProject;
-            FileConvertingService = fileConvertingService;
+            FileConvertingService = fileConvertingService;        
             FileDataProcessingStatusMark = fileDataProcessingStatusMark;
+          
+            StatusProcessingUpdaterSubsriptions = new CompositeDisposable();
+
+            //var clientEndpoints = new ClientEndpoints();
+            //string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
+            //ChannelFactory<IFileConvertingService> myChannelFactory = new ChannelFactory<IFileConvertingService>(fileConvertingEndpoint);
+
+            //// Create a channel.
+            //FileConvertingService = myChannelFactory.CreateChannel();
+         
         }
 
         /// <summary>
@@ -67,10 +80,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
         /// </summary>
-        private IDisposable StatusProcessingUpdater => Observable.                                
-                                                       Interval(TimeSpan.FromSeconds(10)).
-                                                       TakeWhile(_ => IsConverting).
-                                                       Subscribe(_ => UpdateStatusProseccing());
+        private CompositeDisposable StatusProcessingUpdaterSubsriptions { get; }
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -95,17 +105,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths)
         {
-            //Поиск файлов на один уровень ниже и в текущей папке          
-            var filePaths = fileOrDirectoriesPaths?.Where(f => FileSystemOperations.IsFile(f));
-            var directoriesPath = fileOrDirectoriesPaths?.Where(d => FileSystemOperations.IsDirectory(d) &&
-                                                                     FileSystemOperations.IsDirectoryExist(d));
-            var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => FileSystemOperations.GetDirectories(d)))?
-                                                     .SelectMany(d => FileSystemOperations.GetFiles(d));
-            var allFilePaths = filePaths?.Union(filesInDirectories)?
-                                         .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) &&
-                                                     FileSystemOperations.IsFileExist(f));
-            await Task.FromResult(allFilePaths);
-
+            var allFilePaths = await FileSystemOperations.GetFilesFromDirectoryAndSubDirectory(fileOrDirectoriesPaths);
             if (allFilePaths != null && allFilePaths.Any())
             {
                 FilesInfoProject.AddFiles(allFilePaths);
@@ -143,25 +143,34 @@ namespace GadzhiModules.Infrastructure.Implementations
 
                 var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
                 if (filesDataRequest.IsValidToSend)
-                { 
+                {
                     FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.SendFiles(filesDataRequest);
-
                     var filesStatusUnion = await FileDataProcessingStatusMark.GetFileStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
+
                     FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusUnion);
+
+                    StatusProcessingUpdaterSubsriptions.Add(Observable.
+                                                            Interval(TimeSpan.FromSeconds(10)).
+                                                            TakeWhile(_ => IsConverting).
+                                                            Subscribe(async _ => await UpdateStatusProcessing()));                    
                 }
             }
             else
             {
+                IsConverting = false;
                 DialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
             }
         }
-
+      
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
-        private void UpdateStatusProseccing ()
-        {
+        private async Task UpdateStatusProcessing()
+        {           
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.CheckFilesStatusProcessing(FilesInfoProject.ID);
+            var filesStatusUnion = await FileDataProcessingStatusMark.GetFilesStatusAfterUpload(filesDataIntermediateResponse);
 
+            FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusUnion);
         }
 
         /// <summary>
@@ -178,6 +187,12 @@ namespace GadzhiModules.Infrastructure.Implementations
             }
 
             Application.Current.Shutdown();
+        }
+
+        public void Dispose()
+        {
+            //очистить подписки на обновление пакета конвертирования
+            StatusProcessingUpdaterSubsriptions?.Dispose();
         }
     }
 }

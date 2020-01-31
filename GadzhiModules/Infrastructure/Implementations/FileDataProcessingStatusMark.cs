@@ -39,8 +39,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public async Task<FilesDataRequest> GetFilesDataToRequest()
         {
-            return await FilesDataClientToDTOConverter.ConvertToFilesDataRequest(FilesInfoProject?.FilesInfo, 
-                                                                       FileSystemOperations);
+            return await FilesDataClientToDTOConverter.ConvertToFilesDataRequest(FilesInfoProject, FileSystemOperations);
         }
 
         /// <summary>

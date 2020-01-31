@@ -12,16 +12,12 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     /// </summary>
     [DataContract]
     public class FilesDataRequest
-    {
-        public FilesDataRequest()
-        {
-            ID = new Guid();
-        }
+    {      
         /// <summary>
         /// ID идентефикатор
         /// </summary>
         [DataMember]
-        public Guid ID { get; private set; }
+        public Guid ID { get; set; }
 
         /// <summary>
         /// Данные о конвертируемых файлах

@@ -17,6 +17,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
     public interface IFilesData
     {
         /// <summary>
+        /// ID идентефикатор
+        /// </summary>    
+        Guid ID { get; }
+
+        /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
         ISubject<FileChange> FileDataChange { get; }

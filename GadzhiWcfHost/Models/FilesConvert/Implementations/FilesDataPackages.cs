@@ -3,6 +3,7 @@ using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace GadzhiWcfHost.Models.FilesConvert.Implementations
@@ -20,7 +21,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         public FilesDataPackages()
         {
             _filesDataToConverting = new Queue<FilesDataServer>();
-        }
+        }       
 
         /// <summary>
         /// Очередь неконвертированных пакетов
@@ -34,6 +35,11 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             _filesDataToConverting?.FirstOrDefault(file => file.ID == FilesDataServerID);
 
         /// <summary>
+        /// Получить первый в очереди пакет
+        /// </summary>      
+        public FilesDataServer GetFirstInQueuePackage() => _filesDataToConverting?.Peek();
+
+        /// <summary>
         /// Поместить файлы в очередь для конвертации
         /// </summary>
         public void QueueFilesData(FilesDataServer filesDataServer)
@@ -41,6 +47,18 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             filesDataServer.SetStatusToAllFiles(StatusProcessing.InQueue);
 
             _filesDataToConverting.Enqueue(filesDataServer);
+        }
+
+        /// <summary>
+        /// Запустить конвертацию пакета
+        /// </summary>
+        public async Task ConvertingFilesDataPackage(FilesDataServer filesDataServer)
+        {           
+            foreach (var fileData in filesDataServer?.FilesDataInfo)
+            {
+                await Task.Delay(2000);
+                fileData.StatusProcessing = StatusProcessing.Complited;
+            }
         }
     }
 }

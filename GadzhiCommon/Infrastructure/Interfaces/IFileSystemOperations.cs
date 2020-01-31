@@ -42,6 +42,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         IEnumerable<string> GetFiles(string filePath);
 
         /// <summary>
+        /// Поиск файлов на один уровень ниже и в текущей папке       
+        /// </summary>    
+        Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);
+
+        /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       
         string CreateFilePath(string directoryPath, string fileNameWithoutExtension, string extension);

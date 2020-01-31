@@ -30,9 +30,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 
         public FilesData(List<FileData> files)
         {
+            ID = Guid.NewGuid();
+
             _filesInfo = files;
             FileDataChange = new Subject<FileChange>();
         }
+
+        /// <summary>
+        /// ID идентефикатор
+        /// </summary>    
+        public Guid ID { get; }
 
         /// <summary>
         /// Подписка на изменение коллекции

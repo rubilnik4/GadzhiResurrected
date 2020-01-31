@@ -7,6 +7,8 @@ using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -15,7 +17,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public class ApplicationConverting : IApplicationConverting
+    public class ApplicationConverting : IApplicationConverting, IDisposable
     {
         /// <summary>
         /// Класс пользовательских пакетов на конвертирование
@@ -33,7 +35,23 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         {
             FileDataPackages = fileDataPackages;
             FileSystemOperations = fileSystemOperations;
+
+            ConvertingUpdaterSubsriptions = new CompositeDisposable();
+            ConvertingUpdaterSubsriptions.Add(Observable.
+                                              Interval(TimeSpan.FromSeconds(10)).
+                                              TakeWhile(_ => !IsConverting).
+                                              Subscribe(async _ => await ConvertingFirstInQueuePackage()));
         }
+
+        /// <summary>
+        /// Запуск процесса конвертирования
+        /// </summary>
+        private CompositeDisposable ConvertingUpdaterSubsriptions { get; }
+
+        /// <summary>
+        /// Запущен ли процесс конвертации
+        /// </summary>
+        public bool IsConverting { get; private set; }
 
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
@@ -43,7 +61,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
             FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
             QueueFilesData(filesDataServer);
 
-            return GetIntermediateResponseByID(filesDataServer.ID);
+            return await GetIntermediateResponseByID(filesDataServer.ID);
         }
 
         /// <summary>
@@ -57,14 +75,34 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        public FilesDataIntermediateResponse GetIntermediateResponseByID(Guid filesDataServerID)
+        public async Task<FilesDataIntermediateResponse> GetIntermediateResponseByID(Guid filesDataServerID)
         {
             FilesDataServer filesDataServer = FileDataPackages.GetFilesDataServerByID(filesDataServerID);
 
-            FilesDataIntermediateResponse filesDataIntermediateResponse = 
+            FilesDataIntermediateResponse filesDataIntermediateResponse =
                 FilesDataServerToDTOConverter.ConvertFilesToIntermediateResponse(filesDataServer);
 
-            return filesDataIntermediateResponse;
+            return await Task.FromResult(filesDataIntermediateResponse);
+        }
+
+        /// <summary>
+        /// Конвертировать первый в очереди пакет
+        /// </summary>
+        public async Task ConvertingFirstInQueuePackage()
+        {
+            IsConverting = true;
+
+            FilesDataServer filesDataServerFirstInQueue = FileDataPackages.GetFirstInQueuePackage();
+            await FileDataPackages.ConvertingFilesDataPackage(filesDataServerFirstInQueue);
+
+            IsConverting = false;
+        }
+
+
+        public void Dispose()
+        {
+            //очистить подписки на конвертирование пакетов
+            ConvertingUpdaterSubsriptions?.Dispose();
         }
     }
 }
