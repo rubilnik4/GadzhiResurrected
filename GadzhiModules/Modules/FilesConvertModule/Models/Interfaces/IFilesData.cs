@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Helpers;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Helpers;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        ISubject<FileChange> FileDataChange { get; }
+        ISubject<FilesChange> FileDataChange { get; }
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -35,6 +36,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// Пути конвертируемых файлов
         /// </summary>     
         IEnumerable<string> FilesInfoPath { get; }
+        
+        /// <summary>
+        /// Статус выполнения проекта
+        /// </summary>
+        StatusProcessingProject StatusProcessingProject { get; }
 
         /// <summary>
         /// Добавить файл
@@ -64,6 +70,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        void ChangeFilesStatusAndMarkError(IEnumerable<FileStatus> files);
+        void ChangeFilesStatusAndMarkError(FilesStatus filesStatus);
+
+        /// <summary>
+        /// Измененить статус всех файлов и присвоить ошибку
+        /// </summary>
+        void ChangeAllFilesStatusAndMarkError();
     }
 }

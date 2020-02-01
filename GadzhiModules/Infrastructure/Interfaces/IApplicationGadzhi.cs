@@ -35,7 +35,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Добавить файлы или папки для конвертации
         /// </summary>
-        Task AddFromFilesOrDirectories(IEnumerable<string> filesToRemove);   
+        Task AddFromFilesOrDirectories(IEnumerable<string> filesToRemove);
 
         /// <summary>
         /// Очистить список файлов
@@ -47,14 +47,20 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// </summary>
         void RemoveFiles(IEnumerable<FileData> fileOrDirectoriesPaths);
 
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        void CloseApplication();
+
         /// <summary>
         /// Конвертировать файлы на сервре
         /// </summary>
         Task ConvertingFiles();
 
         /// <summary>
-        /// Закрыть приложение
+        /// Сбросить индикаторы конвертации
         /// </summary>
-        void CloseApplication();          
+        void AbortPropertiesConverting();      
     }
 }

@@ -51,7 +51,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// <summary>
         /// Статус обработки строковое значение
         /// </summary>
-        public string StatusProcessingName => StatusProcessingConverter.ConvertStatusProcessingToString(FileData.StatusProcessing);
+        public string StatusProcessingName => StatusProcessingConverter.
+                                              ConvertStatusProcessingToString(FileData.StatusProcessing);
 
         /// <summary>
         /// Обновление статуса обработки через событие

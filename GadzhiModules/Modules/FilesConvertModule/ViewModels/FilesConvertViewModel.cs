@@ -44,24 +44,28 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                ObservesProperty(() => IsLoading);
 
             AddFromFilesDelegateCommand = new DelegateCommand(
-                async () => await AddFromFiles(),
-                () => !IsLoading).
-                ObservesProperty(() => IsLoading);
+               async () => await AddFromFiles(),
+               () => !IsLoading && !IsConverting).
+               ObservesProperty(() => IsLoading).
+               ObservesProperty(() => IsConverting);
 
             AddFromFoldersDelegateCommand = new DelegateCommand(
-              async () => await AddFromFolders(),
-              () => !IsLoading).
-              ObservesProperty(() => IsLoading);
+               async () => await AddFromFolders(),
+               () => !IsLoading && !IsConverting).
+               ObservesProperty(() => IsLoading).
+               ObservesProperty(() => IsConverting);
 
             RemoveFilesDelegateCommand = new DelegateCommand(
-              RemoveFiles,
-              () => !IsLoading).
-              ObservesProperty(() => IsLoading);
+               RemoveFiles,
+               () => !IsLoading && !IsConverting).
+               ObservesProperty(() => IsLoading).
+               ObservesProperty(() => IsConverting);
 
             ConvertingFilesDelegateCommand = new DelegateCommand(
               async () => await ConvertingFiles(),
-              () => !IsConverting).
-              ObservesProperty(() => IsLoading);
+              () => !IsLoading && !IsConverting).
+              ObservesProperty(() => IsLoading).
+              ObservesProperty(() => IsConverting);
 
             CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
         }
@@ -112,16 +116,21 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
 
         /// <summary>
+        /// Статус обработки проекта строковое значение
+        /// </summary>
+        public string StatusProcessingProjectName => StatusProcessingProjectConverter.
+                                                     ConvertStatusProcessingProjectToString(ApplicationGadzhi.FilesInfoProject.StatusProcessingProject);
+
+        /// <summary>
         /// Типы цветов для печати
         /// </summary>
         public IEnumerable<string> ColorPrintToString => ColorPrintConverter.ColorPrintToString.Select(color => color.Value);
 
         /// <summary>
         /// Индикатор конвертирования файлов
-        /// </summary        
-        private bool _isConverting;
+        /// </summary 
         public bool IsConverting => ApplicationGadzhi.IsConverting;
-       
+
         /// <summary>
         /// Очистить список файлов
         /// </summary> 
@@ -170,8 +179,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Конвертировать файлы
         /// </summary> 
         private async Task ConvertingFiles()
-        {          
-            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.ConvertingFiles);
+        {
+            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.ConvertingFiles, ApplicationGadzhi.AbortPropertiesConverting);
         }
 
         /// <summary>
@@ -185,7 +194,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Обновление данных после изменения модели
         /// </summary> 
-        private void OnFilesInfoUpdated(FileChange fileChange)
+        private void OnFilesInfoUpdated(FilesChange fileChange)
         {
             if (fileChange.ActionType != ActionType.StatusChange)
             {
@@ -220,6 +229,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                     {
                         fileUpdate.UpdateStatusProcessing();
                     }
+                }        
+                if (fileChange.IsConvertingChanged)
+                {
+                    RaisePropertyChanged(nameof(IsConverting));
+                }
+                if (fileChange.IsStatusProjectChanged)
+                {
+                    RaisePropertyChanged(nameof(StatusProcessingProjectName));
                 }
             }
         }

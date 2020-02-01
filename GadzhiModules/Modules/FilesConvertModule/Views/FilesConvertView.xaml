@@ -21,7 +21,15 @@
             <Style x:Key="PackIconToolBarStyle" 
                    TargetType="materialDesign:PackIcon">
                 <Setter Property="Width" Value="24" />
-                <Setter Property="Height" Value="24"/>                
+                <Setter Property="Height" Value="24"/>
+            </Style>
+
+            <Style x:Key="DockPanelStyle" 
+                   TargetType="DockPanel">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Height" Value="Auto"/>
+                <Setter Property="Margin" Value="0 5 0 5"/>
             </Style>
         </Grid.Resources>
 
@@ -29,20 +37,18 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height ="*"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Visibility="Collapsed" Content="{StaticResource ProxyElement}"></ContentControl>
+        <ContentControl Visibility="Collapsed" Content="{StaticResource ProxyElement}"/>
 
         <DockPanel Grid.Row="0"
-				   HorizontalAlignment="Stretch" 
-				   VerticalAlignment="Center" 
-				   Height="Auto"
-				   Margin="0 5 0 5">
+				   Style="{StaticResource DockPanelStyle}">
 
             <ToolBar ToolBarTray.IsLocked="True"
                      OverflowMode ="Never"
-                     HorizontalAlignment="Stretch">               
-              
+                     HorizontalAlignment="Stretch">
+
                 <Button Command="{Binding AddFromFilesDelegateCommand}"
                         ToolTip="Загрузить файлы">
                     <Button.Content>
@@ -50,7 +56,7 @@
                                                  Style="{StaticResource PackIconToolBarStyle}"/>
                     </Button.Content>
                 </Button>
-                
+
                 <Button Command="{Binding AddFromFoldersDelegateCommand}" 
                         ToolTip="Загрузить папки">
                     <Button.Content>
@@ -58,7 +64,9 @@
                                                  Style="{StaticResource PackIconToolBarStyle}"/>
                     </Button.Content>
                 </Button>
+
                 <Separator />
+
                 <Button Command="{Binding ClearFilesDelegateCommand}"
                         ToolTip="Очистить список">
                     <Button.Content>
@@ -66,7 +74,7 @@
                                                  Style="{StaticResource PackIconToolBarStyle}"/>
                     </Button.Content>
                 </Button>
-                
+
                 <Button Command="{Binding RemoveFilesDelegateCommand}"
                         ToolTip="Удалить из списка">
                     <Button.Content>
@@ -76,6 +84,7 @@
                 </Button>
             </ToolBar>
         </DockPanel>
+
         <DataGrid Grid.Row="1"
                   HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"  
@@ -97,7 +106,7 @@
                 <DataGridTextColumn Header="Тип" 
                                     Binding="{Binding FileType}" 
                                     Width="0.15*"
-                                      IsReadOnly="True"  />
+                                    IsReadOnly="True"  />
                 <DataGridTextColumn Header="Имя файла" 
                                     Binding="{Binding FileName}" 
                                     Width="0.4*" 
@@ -105,16 +114,17 @@
                 <DataGridTextColumn Header="Путь" 
                                     Binding="{Binding FilePath}" 
                                     Width="*" 
-                                    IsReadOnly="True"  /> 
-                
+                                    IsReadOnly="True"  />
+
                 <materialDesign:DataGridComboBoxColumn
                                     Header="Цвет печати"
                                     Width="0.4*" 
-                                    IsEditable="True"
+                                    IsEditable="True"   
+                                    IsReadOnly="{Binding Path=DataContext.(vm:FilesConvertViewModel.IsConverting), Source={StaticResource ProxyElement}}"
                                     SelectedValueBinding="{Binding ColorPrintName}"
-                                    ItemsSourceBinding="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">                   
+                                    ItemsSourceBinding="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">
                 </materialDesign:DataGridComboBoxColumn>
-                
+
                 <DataGridTextColumn Header="Статус" 
                                     Binding="{Binding StatusProcessingName}" 
                                     Width="0.3*" 
@@ -131,10 +141,30 @@
         </DataGrid>
 
         <DockPanel Grid.Row="2"
-                   HorizontalAlignment="Stretch" 
-                     VerticalAlignment="Center" 
-                   Height="Auto"
-                   Margin="0 5 0 5">
+                   Style="{StaticResource DockPanelStyle}">
+            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0 1 0 1" >
+                <Grid>
+                    <Grid.RowDefinitions >
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock  Grid.Row="0"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"
+                            Text="Перетащите необходимые файлы"/>
+
+                    <ProgressBar Grid.Row="1"      
+                                 Visibility="Collapsed"
+                                 IsIndeterminate="True"                               
+                                 Value="10"
+                                 Height="5"/>
+                </Grid>
+            </Border>
+        </DockPanel>
+
+        <DockPanel Grid.Row="3"
+                   Style="{StaticResource DockPanelStyle}">
 
             <Grid>
                 <Grid.ColumnDefinitions>

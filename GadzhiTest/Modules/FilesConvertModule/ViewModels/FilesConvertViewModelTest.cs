@@ -39,9 +39,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
                                    var filesDataProject = new List<FileData>(filesData); //добавляем данные в модель
 
                                    mockFileInfoProject.Object.FileDataChange.OnNext(
-                                       new FileChange(filesData, filesData, ActionType.Add));
+                                       new FilesChange(filesData, filesData, ActionType.Add));
                                });
-            var fileDataChange = new Subject<FileChange>();
+            var fileDataChange = new Subject<FilesChange>();
             mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange)
                                .Returns(fileDataChange);
 
@@ -69,9 +69,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
                                    filesDataProject.RemoveAll(fileData => filesDataToRemove.Contains(fileData)); //удаляем из модели
 
                                    mockFileInfoProject.Object.FileDataChange.OnNext(
-                                       new FileChange(filesDataProject, filesDataToRemove, ActionType.Remove));
+                                       new FilesChange(filesDataProject, filesDataToRemove, ActionType.Remove));
                                });
-            var fileDataChange = new Subject<FileChange>();
+            var fileDataChange = new Subject<FilesChange>();
             mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange)
                                .Returns(fileDataChange);
 
@@ -142,7 +142,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
                                   Returns(mockFileInfoProject.Object);
 
             mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange).
-                                Returns(new Subject<FileChange>());
+                                Returns(new Subject<FilesChange>());
 
             var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);
 

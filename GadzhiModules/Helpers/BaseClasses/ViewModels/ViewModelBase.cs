@@ -14,16 +14,11 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
 {
     public abstract class ViewModelBase : BindableBase
     {
-        public ViewModelBase()
-        {
-          
-        }
-
         /// <summary>
-        /// Стандартные диалоговые окна
-        /// </summary>     
+        /// Класс обертка для отлова ошибок
+        /// </summary> 
         [Dependency]
-        public IDialogServiceStandard DialogServiceStandard { get; set; }
+        public IExecuteAndCatchErrors ExecuteAndCatchErrors { get; set; }
 
         /// <summary>
         /// Индикатор загрузки
@@ -33,81 +28,42 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         {
             get { return _isLoading; }
             set { SetProperty(ref _isLoading, value); }
-        }       
-
-        /// <summary>
-        /// Обертка для вызова индикатора загрузки и отлова ошибок метода
-        /// </summary> 
-        protected void ExecuteAndHandleError(Action method)
-        {
-            IsLoading = true;
-            try
-            {
-                method();
-            }
-            // Ошибки WCF сервера
-            catch (TimeoutException ex)
-            {
-                DialogServiceStandard.ShowMessage(ex.Message);
-            }
-            catch (CommunicationException ex)
-            {
-                DialogServiceStandard.ShowMessage(ex.Message);
-            }
-            // Общие ошибки
-            catch (Exception ex)
-            {
-                DialogServiceStandard.ShowMessage(ex.Message);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-
         }
 
-        public void ExecuteAndHandleError<T1>(Action<T1> function, T1 arg1)
+        /// <summary>
+        /// Обертка для вызова индикатора загрузки и отлова ошибок метода.
+        /// При наличие ошибок WCF останаливает процеес конвертации
+        /// </summary> 
+        protected void ExecuteAndHandleError(Action method, Action ApplicationAbortionMethod = null)
         {
-            ExecuteAndHandleError(() => function(arg1));
+            IsLoading = true;
+            ExecuteAndCatchErrors.ExecuteAndHandleError(method, ApplicationAbortionMethod);
+            IsLoading = false;
+        }
+
+        public void ExecuteAndHandleError<T1>(Action<T1> function, T1 arg1, Action ApplicationAbortionMethod = null)
+        {
+            ExecuteAndHandleError(() => function(arg1), ApplicationAbortionMethod);
         }
 
         //https://gist.github.com/ghstahl/7022ee06c1f9a1753a11efb51882740c
         /// <summary>
-        /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронного метода
+        /// Обертка для вызова индикатора загрузки и отл5ова ошибок асинхронного метода
         /// </summary> 
-        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod)
+        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action ApplicationAbortionMethod = null)
         {
             IsLoading = true;
-            try
-            {
-                await asyncMethod();
-            }
-            // Ошибки WCF сервера
-            catch (TimeoutException ex)
-            {
-                DialogServiceStandard.ShowMessage(ex.Message);
-            }
-            catch (CommunicationException ex)
-            {
-                DialogServiceStandard.ShowMessage(ex.Message);
-            }
-            // Общие ошибки
-            catch (Exception ex)
-            {
-                DialogServiceStandard.ShowMessage(ex.Message);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            await ExecuteAndCatchErrors.ExecuteAndHandleErrorAsync(asyncMethod, ApplicationAbortionMethod);
+            IsLoading = false;
+
         }
 
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронной функции
         /// </summary> 
-        public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1)
+        public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1, Action ApplicationAbortionMethod = null)
         {
-            await ExecuteAndHandleErrorAsync(() => functionAsync(arg1));
-        }      
+            await ExecuteAndHandleErrorAsync(() => functionAsync(arg1), ApplicationAbortionMethod);
+        }
     }
 }

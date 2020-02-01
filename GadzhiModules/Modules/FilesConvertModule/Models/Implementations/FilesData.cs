@@ -31,9 +31,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public FilesData(List<FileData> files)
         {
             ID = Guid.NewGuid();
+            StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
             _filesInfo = files;
-            FileDataChange = new Subject<FileChange>();
+            FileDataChange = new Subject<FilesChange>();
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FileChange> FileDataChange { get; }
+        public ISubject<FilesChange> FileDataChange { get; }
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -57,6 +58,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public IEnumerable<string> FilesInfoPath => _filesInfo.Select(file => file.FilePath);
 
         /// <summary>
+        /// Статус выполнения проекта
+        /// </summary>
+        public StatusProcessingProject StatusProcessingProject { get; private set; }
+
+        /// <summary>
         /// Добавить файл
         /// </summary>
         public void AddFile(FileData file)
@@ -64,7 +70,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             if (CanFileDataBeAddedtoList(file))
             {
                 _filesInfo?.Add(file);
-                UpdateFileData(new FileChange(_filesInfo,
+                UpdateFileData(new FilesChange(_filesInfo,
                                               new List<FileData>() { file },
                                               ActionType.Add));
             }
@@ -78,11 +84,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             if (files != null)
             {
                 //ToList обязателен. Иначе данные зачищаются из списка
-                var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f)).ToList(); 
+                var filesInfo = files.Where(f => CanFileDataBeAddedtoList(f)).ToList();
                 if (filesInfo != null)
                 {
                     _filesInfo?.AddRange(filesInfo);
-                    UpdateFileData(new FileChange(_filesInfo, filesInfo, ActionType.Add));
+                    UpdateFileData(new FilesChange(_filesInfo, filesInfo, ActionType.Add));
                 }
             }
         }
@@ -100,7 +106,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
                 if (filesInfo != null)
                 {
                     _filesInfo?.AddRange(filesInfo);
-                    UpdateFileData(new FileChange(_filesInfo, filesInfo, ActionType.Add));
+                    UpdateFileData(new FilesChange(_filesInfo, filesInfo, ActionType.Add));
                 }
             }
         }
@@ -111,7 +117,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public void ClearFiles()
         {
             _filesInfo?.Clear();
-            UpdateFileData(new FileChange(_filesInfo, new List<FileData>(), ActionType.Clear));
+            UpdateFileData(new FilesChange(_filesInfo, new List<FileData>(), ActionType.Clear));
         }
 
         /// <summary>
@@ -122,7 +128,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             if (files != null)
             {
                 _filesInfo?.RemoveAll(f => files?.Contains(f) == true);
-                UpdateFileData(new FileChange(_filesInfo, files, ActionType.Remove));
+                UpdateFileData(new FilesChange(_filesInfo, files, ActionType.Remove));
             }
         }
 
@@ -130,35 +136,55 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        public void ChangeFilesStatusAndMarkError(IEnumerable<FileStatus> filesStatus)
+        public void ChangeFilesStatusAndMarkError(FilesStatus filesStatus)
         {
-            if (filesStatus != null)
+            if (filesStatus.IsValid)
             {
                 //список файлов для изменений
-                var filesStatusChanged = _filesInfo?.
+                var filesDataStatusChanged = _filesInfo?.
                                           Select(file => new
                                           {
                                               File = file,
-                                              FileStatus = filesStatus?.FirstOrDefault(fileStatus => fileStatus.FilePath == file.FilePath)
-                                          }).Where
-                                          (fileComplex => fileComplex.FileStatus != null);
+                                              FileStatus = filesStatus?.
+                                                           FileStatus?.
+                                                           FirstOrDefault(fileStatus => fileStatus.FilePath == file.FilePath)
+                                          }).Where(fileComplex => fileComplex.FileStatus != null);
 
                 //меняем статус
-                foreach (var fileStatus in filesStatusChanged)
+                foreach (var fileDataStatus in filesDataStatusChanged)
                 {
-                    fileStatus.File.ChangeByFileStatus(fileStatus.FileStatus);
+                    fileDataStatus.File.ChangeByFileStatus(fileDataStatus.FileStatus);
                 }
+                StatusProcessingProject = filesStatus.
+                var fileChange = new FilesChange(_filesInfo,
+                                                 filesDataStatusChanged.Select(file => file.File),
+                                                 ActionType.StatusChange)
+                {
+                    IsConvertingChanged = filesStatus.IsConvertingChanged,
+                    IsStatusProjectChanged = filesStatus.IsStatusProjectChanged,
+                };
 
-                UpdateFileData(new FileChange(_filesInfo,
-                                              filesStatusChanged.Select(file => file.File),
-                                              ActionType.StatusChange));
+                UpdateFileData(fileChange);
             }
+        }
+
+        /// <summary>
+        /// Измененить статус всех файлов и присвоить ошибку
+        /// </summary>
+        public void ChangeAllFilesStatusAndMarkError()
+        {           
+            var filesStatus = new FilesStatus(_filesInfo?.
+                                              Select(fileData => new FileStatus(fileData.FilePath,
+                                                                                StatusProcessing.Error)),
+                                              isConvertingChanged: true);
+
+            ChangeFilesStatusAndMarkError(filesStatus);
         }
 
         /// <summary>
         /// Обновленить список файлов
         /// </summary>
-        private void UpdateFileData(FileChange fileChange)
+        private void UpdateFileData(FilesChange fileChange)
         {
             FileDataChange?.OnNext(fileChange);
         }

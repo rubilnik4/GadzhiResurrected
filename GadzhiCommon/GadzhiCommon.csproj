@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Enums\FilesConvert\ColorPrint.cs" />
     <Compile Include="Enums\FilesConvert\FileConvertErrorType.cs" />
+    <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
     <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />

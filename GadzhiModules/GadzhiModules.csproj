@@ -136,14 +136,18 @@
     <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
     <Compile Include="Helpers\Converters\DTO\FilesDataFromDTOConverterToClient.cs" />
     <Compile Include="Helpers\Converters\DTO\FilesDataClientToDTOConverter.cs" />
+    <Compile Include="Helpers\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
+    <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FilesStatus.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileStatus.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\ActionType.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\FileChange.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\FilesChange.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileData.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\FilesData.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Interfaces\IFilesData.cs" />
@@ -171,9 +175,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>

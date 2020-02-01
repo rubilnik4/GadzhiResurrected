@@ -9,9 +9,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
     /// <summary>
     /// Отправка изменений для реактивного свойства
     /// </summary>
-    public class FileChange
+    public class FilesChange
     {
-        public FileChange(IEnumerable<FileData> filesDataProject, IEnumerable<FileData> fileData, ActionType actionType)
+        public FilesChange(IEnumerable<FileData> filesDataProject, IEnumerable<FileData> fileData, ActionType actionType)
         {
             FilesDataProject = filesDataProject;
             FileData = fileData;
@@ -32,5 +32,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
         /// Тип действия
         /// </summary>
         public ActionType ActionType { get; }
+
+        /// <summary>
+        /// Изменился ли статус запуска/остановки процесса конвертирования
+        /// </summary>
+        public bool IsConvertingChanged { get; set; }
+
+        /// <summary>
+        /// Изменился ли статус выполнения пакета конвертирования
+        /// </summary>
+        public bool IsStatusProjectChanged { get; set; }
     }
 }

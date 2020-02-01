@@ -66,6 +66,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
            
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
+            unityContainer.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
 
         }
     }

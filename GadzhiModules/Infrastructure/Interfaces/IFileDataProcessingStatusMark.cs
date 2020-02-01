@@ -21,28 +21,27 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Назначить всем файлам статус к отправке
         /// </summary>  
-        Task<IEnumerable<FileStatus>> GetFilesInSending();
+        Task<FilesStatus> GetFilesInSending();
 
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        Task<IEnumerable<FileStatus>> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest);
-
+        Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest);
 
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<IEnumerable<FileStatus>> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse fileDataResponse);
+        Task<FilesStatus> GetFilesStatusIntermediateRespo2nse(FilesDataIntermediateResponse fileDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task<IEnumerable<FileStatus>> GetFilesStatusCompliteResponse(FilesDataResponse filesDataResponse);
+        Task<FilesStatus> GetFilesStatusCompliteResponse(FilesDataResponse filesDataResponse);
        
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        Task<IEnumerable<FileStatus>> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
+        Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
                                                                           FilesDataIntermediateResponse filesDataIntermediateResponse);        
     }
 }
