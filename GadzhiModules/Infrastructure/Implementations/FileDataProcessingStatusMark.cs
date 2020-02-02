@@ -45,19 +45,22 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Назначить всем файлам статус к отправке
         /// </summary>  
-        public Task<IEnumerable<FileStatus>> GetFilesInSending()
+        public Task<FilesStatus> GetFilesInSending()
         {
             var filesInSending = FilesInfoProject?.
                                  FilesInfo?.
                                  Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
+            var filesStatusInSendind = new FilesStatus(filesInSending, 
+                                                       StatusProcessingProject.Sending, 
+                                                       true);
 
-            return Task.FromResult(filesInSending);
+            return Task.FromResult(filesStatusInSendind);
         }
 
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        public Task<IEnumerable<FileStatus>> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest)
+        public Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest)
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
             var filesNotFound = FilesInfoProject?.
@@ -65,42 +68,48 @@ namespace GadzhiModules.Infrastructure.Implementations
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath,
                                                                   StatusProcessing.Error));
-
-            return Task.FromResult(filesNotFound);
+            var filesStatusInSendind = new FilesStatus(filesNotFound,
+                                                       StatusProcessingProject.Sending);
+            return Task.FromResult(filesStatusInSendind);
         }
 
         /// <summary>
         /// Поменять статус файлов после промежуточного отчета
         /// </summary>       
-        public Task<IEnumerable<FileStatus>> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
+        public Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
-            var filesStatusIntermediate = FilesDataFromDTOConverterToClient.ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
-
+            var fileDataStatusIntermediate = FilesDataFromDTOConverterToClient.
+                                          ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
+            var filesStatusIntermediate = new FilesStatus(fileDataStatusIntermediate,
+                                                          filesDataIntermediateResponse.StatusProcessingProject);
             return Task.FromResult(filesStatusIntermediate);
         }
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        public Task<IEnumerable<FileStatus>> GetFilesStatusCompliteResponse(FilesDataResponse filesDataResponse)
+        public Task<FilesStatus> GetFilesStatusCompleteResponse(FilesDataResponse filesDataResponse)
         {
-            var filesStatusResponse = FilesDataFromDTOConverterToClient.ConvertToFilesStatusFromResponse(filesDataResponse);
-
+            var fileDataStatusResponse = FilesDataFromDTOConverterToClient.ConvertToFilesStatusFromResponse(filesDataResponse);
+            var filesStatusResponse = new FilesStatus(fileDataStatusResponse,
+                                                         StatusProcessingProject.Receiving);
             return Task.FromResult(filesStatusResponse);
         }
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        public async Task<IEnumerable<FileStatus>> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest, 
-                                                                          FilesDataIntermediateResponse filesDataIntermediateResponse)
+        public async Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest, 
+                                                                               FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
             var filesNotFound = GetFilesNotFound(filesDataRequest.FilesData);
             var filesChangedStatus = GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             await Task.WhenAll(filesNotFound, filesChangedStatus);
-            var filesUnion = filesNotFound?.Result.Union(filesChangedStatus.Result);
 
-            return filesUnion;
-        }
+            var filesDataUnion = filesNotFound?.Result.FileStatus.Union(filesChangedStatus.Result.FileStatus);
+            var filesStatusUnion = new FilesStatus(filesDataUnion,
+                                                   filesDataIntermediateResponse.StatusProcessingProject);
+            return filesStatusUnion;
+        }       
     }
 }

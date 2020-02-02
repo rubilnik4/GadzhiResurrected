@@ -12,9 +12,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
     /// </summary>
     public class FilesStatus
     {
-        public FilesStatus(IEnumerable<FileStatus> fileData, 
-                           bool isConvertingChanged,    
-                           StatusProcessingProject statusProcessingProject)
+        public FilesStatus(IEnumerable<FileStatus> fileData,
+                           StatusProcessingProject statusProcessingProject,
+                           bool isConvertingChanged = false)
         {
             FileStatus = fileData;
             IsConvertingChanged = isConvertingChanged;

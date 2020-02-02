@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Helpers.Converters;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
@@ -30,18 +31,33 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>        
         private IApplicationGadzhi ApplicationGadzhi { get; }
 
-        public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi)
+        /// <summary>
+        /// Текущий статус конвертирования
+        /// </summary>        
+        private IStatusProcessingInformation StatusProcessingInformation { get; }
+
+        public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi,
+                                     IStatusProcessingInformation statusProcessingInformation)
         {
             ApplicationGadzhi = applicationGadzhi;
+            StatusProcessingInformation = statusProcessingInformation;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
             ApplicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
+            InitializeDelegateCommands();
+        }
+
+        /// <summary>
+        /// Инициализировать команды
+        /// </summary>
+        private void InitializeDelegateCommands()
+        {
             ClearFilesDelegateCommand = new DelegateCommand(
-               ClearFiles,
-               () => !IsLoading).
-               ObservesProperty(() => IsLoading);
+             ClearFiles,
+             () => !IsLoading).
+             ObservesProperty(() => IsLoading);
 
             AddFromFilesDelegateCommand = new DelegateCommand(
                async () => await AddFromFiles(),
@@ -69,7 +85,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
             CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
         }
-
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
@@ -116,20 +131,37 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
 
         /// <summary>
-        /// Статус обработки проекта строковое значение
+        /// Индикатор конвертирования файлов
+        /// </summary 
+        public bool IsConverting => ApplicationGadzhi.IsConverting;
+
+        /// <summary>
+        /// Статус обработки проекта
         /// </summary>
-        public string StatusProcessingProjectName => StatusProcessingProjectConverter.
-                                                     ConvertStatusProcessingProjectToString(ApplicationGadzhi.FilesInfoProject.StatusProcessingProject);
+        public StatusProcessingProject StatusProcessingProject => StatusProcessingInformation.StatusProcessingProject;
+
+        /// <summary>
+        /// Статус обработки проекта c процентом выполнения
+        /// </summary>
+        public string StatusProcessingProjectName => StatusProcessingInformation.GetStatusProcessingProjectName();
 
         /// <summary>
         /// Типы цветов для печати
         /// </summary>
-        public IEnumerable<string> ColorPrintToString => ColorPrintConverter.ColorPrintToString.Select(color => color.Value);
+        public IEnumerable<string> ColorPrintToString => ColorPrintConverter.
+                                                         ColorPrintToString.
+                                                         Select(color => color.Value);
 
         /// <summary>
-        /// Индикатор конвертирования файлов
-        /// </summary 
-        public bool IsConverting => ApplicationGadzhi.IsConverting;
+        /// Отображать ли процент выполнения для ProgressBar
+        /// </summary>
+        public bool IsIndeterminateProgressBar => StatusProcessingProject != StatusProcessingProject.InQueue &&
+                                                  StatusProcessingProject != StatusProcessingProject.Converting;
+
+        /// <summary>
+        /// Процент выполнения для ProgressBar
+        /// </summary>
+        public int PercentageOfComplete => StatusProcessingInformation.CalculatePercentageOfComplete();
 
         /// <summary>
         /// Очистить список файлов
@@ -191,6 +223,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             ExecuteAndHandleError(ApplicationGadzhi.CloseApplication);
         }
 
+        #region FilesInfoUpdate
         /// <summary>
         /// Обновление данных после изменения модели
         /// </summary> 
@@ -201,45 +234,91 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
                 if (fileChange.ActionType == ActionType.Add)
                 {
-                    var FileDataViewModel = fileChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
-                    FilesDataCollection.AddRange(FileDataViewModel);
+                    ActionOnTypeAdd(fileChange);
                 }
                 else if (fileChange.ActionType == ActionType.Remove)
                 {
-                    if (fileChange?.FileData?.Count() == 1)
-                    {
-                        var fileRemove = FilesDataCollection.First(f => f.FilePath == fileChange.FileData.First().FilePath);
-                        FilesDataCollection.Remove(fileRemove);
-                    }
-                    else
-                    {
-                        FilesDataCollection.Clear();
-                        var FileDataViewModel = fileChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData));
-                        FilesDataCollection.AddRange(FileDataViewModel);
-                    }
+                    ActionOnTypeRemove(fileChange);
                 }
             }
             else
             {
-                var fileChangePath = fileChange?.FileData?.Select(file => file.FilePath);
-                if (fileChangePath != null)
-                {
-                    var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath?.Contains(fileData.FilePath) == true);
-                    foreach (var fileUpdate in filesDataNeedUpdate)
-                    {
-                        fileUpdate.UpdateStatusProcessing();
-                    }
-                }        
-                if (fileChange.IsConvertingChanged)
-                {
-                    RaisePropertyChanged(nameof(IsConverting));
-                }
-                if (fileChange.IsStatusProjectChanged)
-                {
-                    RaisePropertyChanged(nameof(StatusProcessingProjectName));
-                }
+                ActionOnTypeStatusChange(fileChange);
             }
         }
+
+        /// <summary>
+        /// Изменения коллекции при добавлении файлов
+        /// </summary>
+        private void ActionOnTypeAdd(FilesChange filesChange)
+        {
+            var FileDataViewModel = filesChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
+            FilesDataCollection.AddRange(FileDataViewModel);
+        }
+
+        /// <summary>
+        /// Изменения коллекции при удалении файлов
+        /// </summary>
+        private void ActionOnTypeRemove(FilesChange filesChange)
+        {
+            if (filesChange?.FileData?.Count() == 1)
+            {
+                var fileRemove = FilesDataCollection.First(f => f.FilePath == filesChange.FileData.First().FilePath);
+                FilesDataCollection.Remove(fileRemove);
+            }
+            else
+            {
+                FilesDataCollection.Clear();
+                var FileDataViewModel = filesChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData));
+                FilesDataCollection.AddRange(FileDataViewModel);
+            }
+        }
+
+        /// <summary>
+        /// Изменения коллекции при корректировке статуса конвертирования
+        /// </summary>
+        private void ActionOnTypeStatusChange(FilesChange filesChange)
+        {
+            var fileChangePath = filesChange?.FileData?.Select(file => file.FilePath);
+            if (fileChangePath != null)
+            {
+                var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath?.Contains(fileData.FilePath) == true);
+                foreach (var fileUpdate in filesDataNeedUpdate)
+                {
+                    fileUpdate.UpdateStatusProcessing();
+                }
+            }
+
+            RaiseAfterStatusChange(filesChange);
+        }
+
+        /// <summary>
+        /// Обновить поля после изменения статуса конвертирования
+        /// </summary>
+        private void RaiseAfterStatusChange(FilesChange filesChange)
+        {
+            //необходимо сначала вычислить проценты, затем статус
+            if (!IsIndeterminateProgressBar)
+            {
+                RaisePropertyChanged(nameof(PercentageOfComplete));
+            }
+            if (filesChange.IsStatusProjectChanged)
+            {
+                RaisePropertyChanged(nameof(IsIndeterminateProgressBar));
+                RaisePropertyChanged(nameof(StatusProcessingProject));
+            }
+            //Изменяем процент выполнения в заивисимости от типа операции
+            if (filesChange.IsStatusProjectChanged || !IsIndeterminateProgressBar)
+            {
+                RaisePropertyChanged(nameof(StatusProcessingProjectName));
+            }
+            if (filesChange.IsConvertingChanged)
+            {
+                RaisePropertyChanged(nameof(IsConverting));
+            }
+        }
+        #endregion
+
 
         /// <summary>
         /// Реализация Drag&Drop для ссылки на файлы

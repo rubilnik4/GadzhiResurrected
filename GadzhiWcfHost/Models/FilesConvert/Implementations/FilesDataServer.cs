@@ -29,6 +29,8 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             {
                 _filesDataInfo.AddRange(filesDataServer);
             }
+
+            StatusProcessingProject = StatusProcessingProject.InQueue;
         }
 
         /// <summary>
@@ -44,7 +46,12 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// <summary>
         /// Завершена ли обработка
         /// </summary>
-        public bool IsComplited { get; set; }
+        public bool IsCompleted { get; set; }
+
+        /// <summary>
+        /// Статус выполнения проекта
+        /// </summary>      
+        public StatusProcessingProject StatusProcessingProject { get; set; }
 
         /// <summary>
         /// Изменить статус обработки для всех файлов

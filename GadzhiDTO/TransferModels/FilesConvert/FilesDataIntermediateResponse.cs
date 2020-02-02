@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,12 +17,18 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Завершена ли обработка
         /// </summary>
         [DataMember]
-        public bool IsComplited { get; set; }
+        public bool IsCompleted { get; set; }
+
+        /// <summary>
+        /// Статус выполнения проекта
+        /// </summary>
+        [DataMember]
+        public StatusProcessingProject StatusProcessingProject { get; set; }
 
         /// <summary>
         /// Промежуточные данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IEnumerable<FileDataIntermediateResponse> FilesData { get; set; }      
+        public IEnumerable<FileDataIntermediateResponse> FilesData { get; set; }
     }
 }

@@ -31,17 +31,17 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusIntermediateRespo2nse(FilesDataIntermediateResponse fileDataResponse);
+        Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse fileDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompliteResponse(FilesDataResponse filesDataResponse);
+        Task<FilesStatus> GetFilesStatusCompleteResponse(FilesDataResponse filesDataResponse);
        
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
         Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
-                                                                          FilesDataIntermediateResponse filesDataIntermediateResponse);        
+                                                                  FilesDataIntermediateResponse filesDataIntermediateResponse);        
     }
 }

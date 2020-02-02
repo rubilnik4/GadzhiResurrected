@@ -132,7 +132,6 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             }
         }
 
-
         /// <summary>
         /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
@@ -140,30 +139,25 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             if (filesStatus.IsValid)
             {
-                //список файлов для изменений
-                var filesDataStatusChanged = _filesInfo?.
-                                          Select(file => new
-                                          {
-                                              File = file,
-                                              FileStatus = filesStatus?.
-                                                           FileStatus?.
-                                                           FirstOrDefault(fileStatus => fileStatus.FilePath == file.FilePath)
-                                          }).Where(fileComplex => fileComplex.FileStatus != null);
+                //меняем статус проекта
+                bool isStatusProjectChanged = filesStatus.StatusProcessingProject != StatusProcessingProject;
+                StatusProcessingProject = filesStatus.StatusProcessingProject;
 
-                //меняем статус
-                foreach (var fileDataStatus in filesDataStatusChanged)
-                {
-                    fileDataStatus.File.ChangeByFileStatus(fileDataStatus.FileStatus);
-                }
-                StatusProcessingProject = filesStatus.
+                //список файлов для изменений c откорректированным статусом
+                var filesDataChanged = filesStatus?.FileStatus.
+                                       Select(fileStatus =>
+                                       {
+                                           var fileData = _filesInfo?.FirstOrDefault(file => file.FilePath == fileStatus.FilePath);
+                                           fileData.ChangeByFileStatus(fileStatus);
+                                           return fileData;
+                                       });
+
+                //формируем данные для отправки изменений
                 var fileChange = new FilesChange(_filesInfo,
-                                                 filesDataStatusChanged.Select(file => file.File),
-                                                 ActionType.StatusChange)
-                {
-                    IsConvertingChanged = filesStatus.IsConvertingChanged,
-                    IsStatusProjectChanged = filesStatus.IsStatusProjectChanged,
-                };
-
+                                                 filesDataChanged,
+                                                 ActionType.StatusChange,
+                                                 filesStatus.IsConvertingChanged,
+                                                 isStatusProjectChanged);
                 UpdateFileData(fileChange);
             }
         }
@@ -172,10 +166,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// Измененить статус всех файлов и присвоить ошибку
         /// </summary>
         public void ChangeAllFilesStatusAndMarkError()
-        {           
+        {
             var filesStatus = new FilesStatus(_filesInfo?.
                                               Select(fileData => new FileStatus(fileData.FilePath,
                                                                                 StatusProcessing.Error)),
+                                              StatusProcessingProject.Error,
                                               isConvertingChanged: true);
 
             ChangeFilesStatusAndMarkError(filesStatus);

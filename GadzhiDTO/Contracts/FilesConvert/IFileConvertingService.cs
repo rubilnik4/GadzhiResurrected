@@ -33,7 +33,7 @@ namespace GadzhiDTO.Contracts.FilesConvert
         /// </summary>  
         [OperationContract(IsInitiating = false,
                           IsTerminating = true)]
-        Task<FilesDataResponse> GetCompliteFiles(Guid filesDataID);
+        Task<FilesDataResponse> GetCompleteFiles(Guid filesDataID);
     }
 }
 

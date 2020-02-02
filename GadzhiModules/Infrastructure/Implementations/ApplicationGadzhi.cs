@@ -167,7 +167,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         #region ConvertingFilesOnServer
 
         /// <summary>
-        /// Конвертировать файлы на сервере
+        /// Запустить процесс конвертирования
         /// </summary>
         public async Task ConvertingFiles()
         {
@@ -177,29 +177,12 @@ namespace GadzhiModules.Infrastructure.Implementations
 
                 if (FilesInfoProject?.FilesInfo?.Any() == true)
                 {
-                    var filesInSending = await FileDataProcessingStatusMark.GetFilesInSending();
-                    var filesStatus = new FilesStatus(filesInSending,
-                                                     isConvertingChanged: true,
-                                                     StatusProcessingProject.Sending);
-                    FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatus);
-
-                    var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
+                    FilesDataRequest filesDataRequest = await PrepareFilesToSending();
                     if (filesDataRequest.IsValidToSend)
                     {
-                        FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
-                                                                                            Operations.
-                                                                                            SendFiles(filesDataRequest);
-                        var filesStatusUnion = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
-                        var filesStatusAfterSending = new FilesStatus(filesStatusUnion,
-                                                                      isConvertingChanged: false,
-                                                                      StatusProcessingProject.InQueue);
-                        FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusAfterSending);
+                        await SendFilesToConverting(filesDataRequest);
 
-                        StatusProcessingUpdaterSubsriptions.Add(Observable.
-                                                                Interval(TimeSpan.FromSeconds(2)).
-                                                                TakeWhile(_ => IsConverting && !IsIntermediateResponseInProgress).
-                                                                Subscribe(async _ => await ExecuteAndCatchErrors.
-                                                                                           ExecuteAndHandleErrorAsync(UpdateStatusProcessing, AbortPropertiesConverting)));
+                        SubsribeToIntermediateResponse();
                     }
                 }
                 else
@@ -208,6 +191,43 @@ namespace GadzhiModules.Infrastructure.Implementations
                     DialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
                 }
             }
+        }
+
+        /// <summary>
+        /// Подготовить данные к отправке
+        /// </summary>     
+        private async Task<FilesDataRequest> PrepareFilesToSending()
+        {
+            var filesStatusInSending = await FileDataProcessingStatusMark.GetFilesInSending();
+            FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusInSending);
+
+            var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
+            return filesDataRequest;
+        }
+
+        /// <summary>
+        /// Отправить файлы для конвертации
+        /// </summary>
+        /// <returns></returns>
+        private async Task SendFilesToConverting(FilesDataRequest filesDataRequest)
+        {
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
+                                                                                           Operations.
+                                                                                           SendFiles(filesDataRequest);
+            var filesStatusAfterSending = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
+            FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusAfterSending);
+        }
+
+        /// <summary>
+        /// Подписаться на изменение статуса файлов при конвертировании
+        /// </summary>
+        private void SubsribeToIntermediateResponse()
+        {
+            StatusProcessingUpdaterSubsriptions.Add(Observable.
+                                                    Interval(TimeSpan.FromSeconds(2)).
+                                                    TakeWhile(_ => IsConverting && !IsIntermediateResponseInProgress).
+                                                    Subscribe(async _ => await ExecuteAndCatchErrors.
+                                                                               ExecuteAndHandleErrorAsync(UpdateStatusProcessing, AbortPropertiesConverting)));
         }
 
         /// <summary>
@@ -221,15 +241,12 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                                                 Operations.
                                                                                 CheckFilesStatusProcessing(FilesInfoProject.ID);
             var filesStatusUnion = await FileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
-            var filesStatus = new FilesStatus(filesStatusUnion,
-                                              isConvertingChanged: false,
-                                              StatusProcessingProject.);
-            FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatus);
+            FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusUnion);
 
-            if (filesDataIntermediateResponse.IsComplited)
+            if (filesDataIntermediateResponse.IsCompleted)
             {
                 ClearSubsriptions();
-                await GetCompliteFiles(filesDataIntermediateResponse.IsComplited);
+                await GetCompleteFiles(filesDataIntermediateResponse.IsCompleted);
             }
 
             IsIntermediateResponseInProgress = false;
@@ -238,22 +255,17 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Получить отконвертированные файлы
         /// </summary>
-        private async Task GetCompliteFiles(bool isComplited)
+        private async Task GetCompleteFiles(bool isCompleted)
         {
-            if (isComplited)
+            if (isCompleted)
             {
                 FilesDataResponse filesDataResponse = await FileConvertingService.
                                                             Operations.
-                                                            GetCompliteFiles(FilesInfoProject.ID);
+                                                            GetCompleteFiles(FilesInfoProject.ID);
 
                 var filesStatusWright = await FileDataProcessingStatusMark.
-                                              GetFilesStatusCompliteResponse(filesDataResponse);
-
-                var filesStatus = new FilesStatus(filesStatusWright,
-                                                  isConvertingChanged: true,
-                                                  StatusProcessingProject.Wrighting);
-
-                FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatus);
+                                              GetFilesStatusCompleteResponse(filesDataResponse);
+                FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatusWright);
 
                 IsConverting = false;
             }
@@ -278,7 +290,6 @@ namespace GadzhiModules.Infrastructure.Implementations
             ClearSubsriptions();
             FilesInfoProject.ChangeAllFilesStatusAndMarkError();
         }
-        #endregion
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования
@@ -287,6 +298,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             StatusProcessingUpdaterSubsriptions?.Dispose();
         }
+        #endregion
 
         public void Dispose()
         {

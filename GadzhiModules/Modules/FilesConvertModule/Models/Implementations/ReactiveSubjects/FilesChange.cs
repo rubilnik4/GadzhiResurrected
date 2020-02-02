@@ -11,11 +11,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
     /// </summary>
     public class FilesChange
     {
-        public FilesChange(IEnumerable<FileData> filesDataProject, IEnumerable<FileData> fileData, ActionType actionType)
+        public FilesChange(IEnumerable<FileData> filesDataProject,
+                           IEnumerable<FileData> fileData,
+                           ActionType actionType,
+                           bool isConvertingChanged = false,
+                           bool isStatusProjectChanged = false)
         {
             FilesDataProject = filesDataProject;
             FileData = fileData;
             ActionType = actionType;
+            IsConvertingChanged = isConvertingChanged;
+            IsStatusProjectChanged = isStatusProjectChanged;
         }
 
         /// <summary>
@@ -36,11 +42,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
         /// <summary>
         /// Изменился ли статус запуска/остановки процесса конвертирования
         /// </summary>
-        public bool IsConvertingChanged { get; set; }
+        public bool IsConvertingChanged { get; }
 
         /// <summary>
         /// Изменился ли статус выполнения пакета конвертирования
         /// </summary>
-        public bool IsStatusProjectChanged { get; set; }
+        public bool IsStatusProjectChanged { get; }        
     }
 }

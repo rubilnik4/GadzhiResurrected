@@ -11,12 +11,18 @@
         mc:Ignorable="d"       
         xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"
         xmlns:bev="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"   
+        xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"   
         d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
         >
     <Grid>
         <!--Ссылка на корневую ViewModel-->
         <Grid.Resources>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
+
+            <conv:StatusProjectVisibilityConverter x:Key="StatusProjectVisibilityConverter"
+                                                   TrueValue="Visible" 
+                                                   FalseValue="Collapsed" />
+            <conv:StatusProjectToStringConverter x:Key="StatusProjectToStringConverter"/>
 
             <Style x:Key="PackIconToolBarStyle" 
                    TargetType="materialDesign:PackIcon">
@@ -127,7 +133,7 @@
 
                 <DataGridTextColumn Header="Статус" 
                                     Binding="{Binding StatusProcessingName}" 
-                                    Width="0.3*" 
+                                    Width="0.35*" 
                                     IsReadOnly="True"  />
             </DataGrid.Columns>
 
@@ -152,12 +158,15 @@
                     <TextBlock  Grid.Row="0"
                             VerticalAlignment="Center" 
                             HorizontalAlignment="Center"
-                            Text="Перетащите необходимые файлы"/>
+                            Text="{Binding StatusProcessingProjectName}" />
 
                     <ProgressBar Grid.Row="1"      
-                                 Visibility="Collapsed"
-                                 IsIndeterminate="True"                               
-                                 Value="10"
+                                 Visibility="{Binding StatusProcessingProject, 
+                                              Converter={StaticResource StatusProjectVisibilityConverter}}"
+                                 IsIndeterminate="{Binding IsIndeterminateProgressBar}"
+                                 Value="{Binding PercentageOfComplete, Mode=OneWay}"
+                                 MinHeight="0"
+                                 Maximum="100"
                                  Height="5"/>
                 </Grid>
             </Border>
@@ -165,7 +174,6 @@
 
         <DockPanel Grid.Row="3"
                    Style="{StaticResource DockPanelStyle}">
-
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

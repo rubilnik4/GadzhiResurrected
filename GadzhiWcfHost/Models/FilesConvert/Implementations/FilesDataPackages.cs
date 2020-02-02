@@ -44,6 +44,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// </summary>
         public void QueueFilesData(FilesDataServer filesDataServer)
         {
+            filesDataServer.StatusProcessingProject = StatusProcessingProject.InQueue;
             filesDataServer.SetStatusToAllFiles(StatusProcessing.InQueue);
 
             _filesDataToConverting.Enqueue(filesDataServer);
@@ -53,13 +54,18 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// Запустить конвертацию пакета
         /// </summary>
         public async Task ConvertingFilesDataPackage(FilesDataServer filesDataServer)
-        {           
+        {
+            filesDataServer.StatusProcessingProject = StatusProcessingProject.Converting;
+
             foreach (var fileData in filesDataServer.FilesDataInfo)
             {
+                fileData.StatusProcessing = StatusProcessing.InProcess;
                 await Task.Delay(2000);
-                fileData.StatusProcessing = StatusProcessing.Complited;
+                fileData.StatusProcessing = StatusProcessing.Completed;
             }
-            filesDataServer.IsComplited = true;
+
+            filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
+            filesDataServer.IsCompleted = true;
         }
     }
 }

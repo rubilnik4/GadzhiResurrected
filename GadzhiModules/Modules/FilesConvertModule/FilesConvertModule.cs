@@ -60,14 +60,14 @@ namespace GadzhiModules.Modules.FilesConvertModule
 
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
-           
+
             unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingService>>((unity) =>
                       ServiceConsumerFactory.Create<IFileConvertingService>(fileConvertingEndpoint));
-           
+
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
             unityContainer.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
-
+            unityContainer.RegisterType<IStatusProcessingInformation, StatusProcessingInformation>();
         }
     }
 }

@@ -22,7 +22,8 @@ namespace GadzhiWcfHost.Helpers.Converters
         {
             return new FilesDataIntermediateResponse()
             {
-                IsComplited = filesDataServer.IsComplited,
+                IsCompleted = filesDataServer.IsCompleted,
+                StatusProcessingProject = filesDataServer.StatusProcessingProject,
                 FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
                                                            ConvertFileToIntermediateResponse(fileDataServer)),
             };
@@ -51,7 +52,7 @@ namespace GadzhiWcfHost.Helpers.Converters
             return new FileDataIntermediateResponse()
             {
                 FilePath = fileDataServer.FilePathClient,
-                StatusProcessing = fileDataServer.StatusProcessing,              
+                StatusProcessing = fileDataServer.StatusProcessing,
             };
         }
 
@@ -61,7 +62,7 @@ namespace GadzhiWcfHost.Helpers.Converters
         private static async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer, IFileSystemOperations fileSystemOperations)
         {
             var fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
-            
+
             return new FileDataResponse()
             {
                 FilePath = fileDataServer.FilePathClient,

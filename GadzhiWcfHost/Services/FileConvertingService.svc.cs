@@ -57,7 +57,7 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>      
-        public async Task<FilesDataResponse> GetCompliteFiles(Guid filesDataID)
+        public async Task<FilesDataResponse> GetCompleteFiles(Guid filesDataID)
         {
             FilesDataResponse filesDataResponse = await ApplicationReceiveAndSend.GetFilesDataResponseByID(filesDataID);
 

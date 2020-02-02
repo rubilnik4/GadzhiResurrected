@@ -20,8 +20,19 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
     public class FilesConvertViewModelTest
     {
         /// <summary>
+        /// Класс для получения информации о текущем статусе конвертирования
+        /// </summary>
+        Mock<IStatusProcessingInformation> MockStatusProcessingInformation;
+
+        [TestInitialize]
+        public void FilesConvertViewModelInitialize()
+        {
+            MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();
+        }
+
+        /// <summary>
         /// Инициализация инфраструктуры и модели данных для добавления
-        /// </summary>       
+        /// </summary> 
         private Mock<IApplicationGadzhi> ApplicationGadzhiTestAddInitialize()
         {
             var mockApplicationGadzhi = new Mock<IApplicationGadzhi>();
@@ -88,7 +99,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             Mock<IApplicationGadzhi> mockApplicationGadzhi = ApplicationGadzhiTestAddInitialize();
 
             // Arrange
-            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);
+            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object,
+                                                                  MockStatusProcessingInformation.Object);
 
             var filesInput = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             var fileLastExpected = filesInput.Last();
@@ -111,7 +123,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             IEnumerable<FileData> defaultFileData = DefaultFileData.FileDataToTestFourPositions;
             Mock<IApplicationGadzhi> mockApplicationGadzhi = ApplicationGadzhiTestRemoveInitialize(defaultFileData);
 
-            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);                     
+            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object,
+                                                                  MockStatusProcessingInformation.Object);
             //filesConvertViewModel.FilesDataCollection.AddRange(defaultFileData); //заполняем ViewModel теми же данными, что и модель   
 
             var filesInput = new List<FileData>(DefaultFileData.FileDataToTestFourPositions.
@@ -144,7 +157,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange).
                                 Returns(new Subject<FilesChange>());
 
-            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object);
+            var filesConvertViewModel = new FilesConvertViewModel(mockApplicationGadzhi.Object,
+                                                                  MockStatusProcessingInformation.Object);
 
             // Act  
             filesConvertViewModel.AddFromFoldersDelegateCommand.Execute();
