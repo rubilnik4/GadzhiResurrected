@@ -36,7 +36,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// <summary>
         /// ID идентефикатор
         /// </summary>
-        public Guid ID { get; }
+        public Guid ID { get; set; }
 
         /// <summary>
         /// Файлы для конвертирования

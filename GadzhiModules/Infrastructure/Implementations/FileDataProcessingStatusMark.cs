@@ -2,6 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiModules.Helpers.Converters.DTO;
+using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
@@ -51,8 +52,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                  FilesInfo?.
                                  Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
             var filesStatusInSendind = new FilesStatus(filesInSending, 
-                                                       StatusProcessingProject.Sending, 
-                                                       true);
+                                                       StatusProcessingProject.Sending);
 
             return Task.FromResult(filesStatusInSendind);
         }
@@ -78,10 +78,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
-            var fileDataStatusIntermediate = FilesDataFromDTOConverterToClient.
-                                          ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
-            var filesStatusIntermediate = new FilesStatus(fileDataStatusIntermediate,
-                                                          filesDataIntermediateResponse.StatusProcessingProject);
+            var filesStatusIntermediate = FilesDataFromDTOConverterToClient.
+                                             ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
+           
             return Task.FromResult(filesStatusIntermediate);
         }
 
@@ -108,7 +107,8 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             var filesDataUnion = filesNotFound?.Result.FileStatus.Union(filesChangedStatus.Result.FileStatus);
             var filesStatusUnion = new FilesStatus(filesDataUnion,
-                                                   filesDataIntermediateResponse.StatusProcessingProject);
+                                                   filesDataIntermediateResponse.StatusProcessingProject,
+                                                   filesChangedStatus.Result.FilesQueueInfo);
             return filesStatusUnion;
         }       
     }

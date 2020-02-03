@@ -101,7 +101,10 @@
     <Compile Include="Helpers\FileSystemInformation.cs" />
     <Compile Include="Helpers\ValidateDTOData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
+    <Compile Include="Infrastructure\Implementations\QueueInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Interfaces\IQueueInformation.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FilesDataPackages.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FileDataServer.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FilesDataServer.cs" />

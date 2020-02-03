@@ -16,12 +16,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Модель конвертируемых файлов
         /// </summary>       
         IFilesData FilesInfoProject { get; }
-
-        /// <summary>
-        /// Индикатор конвертирования файлов
-        /// </summary 
-        bool IsConverting { get; }
-
+       
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>

@@ -1,4 +1,5 @@
 ﻿using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;

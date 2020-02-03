@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers;
+using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
@@ -138,9 +139,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public void ChangeFilesStatusAndMarkError(FilesStatus filesStatus)
         {
             if (filesStatus.IsValid)
-            {
-                //меняем статус проекта
-                bool isStatusProjectChanged = filesStatus.StatusProcessingProject != StatusProcessingProject;
+            {                       
                 StatusProcessingProject = filesStatus.StatusProcessingProject;
 
                 //список файлов для изменений c откорректированным статусом
@@ -155,9 +154,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
                 //формируем данные для отправки изменений
                 var fileChange = new FilesChange(_filesInfo,
                                                  filesDataChanged,
-                                                 ActionType.StatusChange,
-                                                 filesStatus.IsConvertingChanged,
-                                                 isStatusProjectChanged);
+                                                 ActionType.StatusChange);
                 UpdateFileData(fileChange);
             }
         }
@@ -170,8 +167,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             var filesStatus = new FilesStatus(_filesInfo?.
                                               Select(fileData => new FileStatus(fileData.FilePath,
                                                                                 StatusProcessing.Error)),
-                                              StatusProcessingProject.Error,
-                                              isConvertingChanged: true);
+                                              StatusProcessingProject.Error);
 
             ChangeFilesStatusAndMarkError(filesStatus);
         }

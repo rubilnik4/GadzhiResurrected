@@ -133,17 +133,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary 
-        public bool IsConverting => ApplicationGadzhi.IsConverting;
-
-        /// <summary>
-        /// Статус обработки проекта
-        /// </summary>
-        public StatusProcessingProject StatusProcessingProject => StatusProcessingInformation.StatusProcessingProject;
-
-        /// <summary>
-        /// Статус обработки проекта c процентом выполнения
-        /// </summary>
-        public string StatusProcessingProjectName => StatusProcessingInformation.GetStatusProcessingProjectName();
+        public bool IsConverting => StatusProcessingInformation.IsConverting;
 
         /// <summary>
         /// Типы цветов для печати
@@ -153,15 +143,24 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                                                          Select(color => color.Value);
 
         /// <summary>
+        /// Статус обработки проекта
+        /// </summary>
+        public StatusProcessingProject StatusProcessingProject => StatusProcessingInformation.StatusProcessingProject;
+
+        /// <summary>
+        /// Статус обработки проекта c процентом выполнения
+        /// </summary>
+        public string StatusProcessingProjectName => StatusProcessingInformation.GetStatusProcessingProjectName();       
+
+        /// <summary>
         /// Отображать ли процент выполнения для ProgressBar
         /// </summary>
-        public bool IsIndeterminateProgressBar => StatusProcessingProject != StatusProcessingProject.InQueue &&
-                                                  StatusProcessingProject != StatusProcessingProject.Converting;
+        public bool IsIndeterminateProgressBar => !StatusProcessingInformation.HasStatusProcessPercentage;
 
         /// <summary>
         /// Процент выполнения для ProgressBar
         /// </summary>
-        public int PercentageOfComplete => StatusProcessingInformation.CalculatePercentageOfComplete();
+        public int PercentageOfComplete => StatusProcessingInformation.PercentageOfComplete;
 
         /// <summary>
         /// Очистить список файлов
@@ -298,21 +297,21 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private void RaiseAfterStatusChange(FilesChange filesChange)
         {
             //необходимо сначала вычислить проценты, затем статус
-            if (!IsIndeterminateProgressBar)
+            if (StatusProcessingInformation.HasStatusProcessPercentage)
             {
                 RaisePropertyChanged(nameof(PercentageOfComplete));
             }
-            if (filesChange.IsStatusProjectChanged)
+            if (StatusProcessingInformation.IsStatusProjectChanged)
             {
                 RaisePropertyChanged(nameof(IsIndeterminateProgressBar));
                 RaisePropertyChanged(nameof(StatusProcessingProject));
             }
-            //Изменяем процент выполнения в заивисимости от типа операции
-            if (filesChange.IsStatusProjectChanged || !IsIndeterminateProgressBar)
+            //Изменяем процент выполнения в зависимости от типа операции
+            if (StatusProcessingInformation.IsStatusProcessingProjectNameChanged)
             {
                 RaisePropertyChanged(nameof(StatusProcessingProjectName));
             }
-            if (filesChange.IsConvertingChanged)
+            if (StatusProcessingInformation.IsConvertingChanged)
             {
                 RaisePropertyChanged(nameof(IsConverting));
             }

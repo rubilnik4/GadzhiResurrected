@@ -16,28 +16,29 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// <summary>
         /// Очередь неконвертированных пакетов
         /// </summary>
-        private Queue<FilesDataServer> _filesDataToConverting;
+        private Queue<FilesDataServer> _filesDataPackagesToConverting;
 
         public FilesDataPackages()
         {
-            _filesDataToConverting = new Queue<FilesDataServer>();
+            _filesDataPackagesToConverting = new Queue<FilesDataServer>();
         }       
 
         /// <summary>
         /// Очередь неконвертированных пакетов
         /// </summary>
-        public IEnumerable<FilesDataServer> FilesDataToConverting => _filesDataToConverting;
+        public IEnumerable<FilesDataServer> FilesDataPackagesToConverting => _filesDataPackagesToConverting;
 
         /// <summary>
         /// Получить пакет конвертируемых файлов по идентефикатору
         /// </summary>      
         public FilesDataServer GetFilesDataServerByID(Guid FilesDataServerID) =>
-            _filesDataToConverting?.FirstOrDefault(file => file.ID == FilesDataServerID);
+            _filesDataPackagesToConverting?.FirstOrDefault(file => file.ID == FilesDataServerID);
 
         /// <summary>
-        /// Получить первый в очереди пакет
+        /// Получить первый невыполненный в очереди пакет
         /// </summary>      
-        public FilesDataServer GetFirstInQueuePackage() => _filesDataToConverting?.Peek();
+        public FilesDataServer GetFirstUncompliteInQueuePackage() => _filesDataPackagesToConverting?.
+                                                                     First(package => !package.IsCompleted);
 
         /// <summary>
         /// Поместить файлы в очередь для конвертации
@@ -47,7 +48,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             filesDataServer.StatusProcessingProject = StatusProcessingProject.InQueue;
             filesDataServer.SetStatusToAllFiles(StatusProcessing.InQueue);
 
-            _filesDataToConverting.Enqueue(filesDataServer);
+            _filesDataPackagesToConverting.Enqueue(filesDataServer);
         }
 
         /// <summary>

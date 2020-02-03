@@ -149,7 +149,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.ViewModels
             // Arrange
             var mockApplicationGadzhi = new Mock<IApplicationGadzhi>();
             var mockFileInfoProject = new Mock<IFilesData>();
-
+          
             mockApplicationGadzhi.Setup(app => app.AddFromFolders());
             mockApplicationGadzhi.SetupGet(app => app.FilesInfoProject).
                                   Returns(mockFileInfoProject.Object);

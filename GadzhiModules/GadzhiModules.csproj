@@ -143,13 +143,14 @@
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
+    <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FilesStatus.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileStatus.cs" />
+    <Compile Include="Infrastructure\Implementations\Information\FilesStatus.cs" />
+    <Compile Include="Infrastructure\Implementations\Information\FileStatus.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\ActionType.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\FilesChange.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileData.cs" />

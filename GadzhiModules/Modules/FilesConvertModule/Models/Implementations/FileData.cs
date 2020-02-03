@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers;
 using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure.Implementations.Information;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;

@@ -40,6 +40,11 @@ namespace GadzhiTest
         /// </summary>
         Mock<IExecuteAndCatchErrors> MockExecuteAndCatchErrors;
 
+        /// <summary>
+        /// Текущий статус конвертирования
+        /// </summary>   
+        Mock<IStatusProcessingInformation> MockStatusProcessingInformation;
+
         [TestInitialize]
         public void ApplicationGadzhiTestInitialize()
         {
@@ -47,6 +52,7 @@ namespace GadzhiTest
             MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingService>>();
             MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();
             MockExecuteAndCatchErrors = new Mock<IExecuteAndCatchErrors>();
+            MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();
         }
 
         /// <summary>
@@ -93,6 +99,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
+                                                          MockStatusProcessingInformation.Object,
                                                           MockExecuteAndCatchErrors.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
@@ -138,6 +145,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
+                                                          MockStatusProcessingInformation.Object,
                                                           MockExecuteAndCatchErrors.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
@@ -173,6 +181,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
+                                                          MockStatusProcessingInformation.Object,
                                                           MockExecuteAndCatchErrors.Object);
 
             IEnumerable<string> files = null;
@@ -210,6 +219,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
+                                                          MockStatusProcessingInformation.Object,
                                                           MockExecuteAndCatchErrors.Object);
 
             IEnumerable<string> files = new List<string> { null };
@@ -230,6 +240,6 @@ namespace GadzhiTest
                 // Assert 
                 Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
             }
-        }        
+        }
     }
 }

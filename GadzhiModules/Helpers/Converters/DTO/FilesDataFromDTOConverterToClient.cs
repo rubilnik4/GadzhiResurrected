@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,19 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер пакета информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        public static IEnumerable<FileStatus> ConvertToFilesStatusFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
+        public static FilesStatus ConvertToFilesStatusFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
-           return filesDataIntermediateResponse?.
-                  FilesData?.
-                  Select(fileResponse => ConvertToFileStatusFromIntermediateResponse(fileResponse));
+            var filesDataStatus = filesDataIntermediateResponse?.
+                                  FilesData?.
+                                  Select(fileResponse => ConvertToFileStatusFromIntermediateResponse(fileResponse));
+
+            FilesQueueInfo filesQueueInfo = ConvertToFilesQueueInfoFromResponse(filesDataIntermediateResponse?.
+                                                                                FilesQueueInfo);
+           
+            var filesStatusIntermediate = new FilesStatus(filesDataStatus,
+                                                          filesDataIntermediateResponse.StatusProcessingProject,
+                                                          filesQueueInfo);
+            return filesStatusIntermediate;
         }
 
         /// <summary>
@@ -47,6 +56,12 @@ namespace GadzhiModules.Helpers.Converters.DTO
         {
             return new FileStatus(fileResponse.FilePath,
                                   StatusProcessing.Wrighted);
+        }
+
+        private static FilesQueueInfo ConvertToFilesQueueInfoFromResponse(FilesQueueInfoResponse filesQueueInfoResponse)
+        {
+            return new FilesQueueInfo(filesQueueInfoResponse.FilesInQueueCount,
+                                      filesQueueInfoResponse.PackagesInQueueCount);
         }
     }
 }

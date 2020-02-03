@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
+namespace GadzhiModules.Infrastructure.Implementations.Information
 {
     /// <summary>
     /// Класс содержащий статус и ошибки при конвертировании для всего пакета
@@ -14,11 +14,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
     {
         public FilesStatus(IEnumerable<FileStatus> fileData,
                            StatusProcessingProject statusProcessingProject,
-                           bool isConvertingChanged = false)
+                           FilesQueueInfo filesQueueInfo = null)
         {
-            FileStatus = fileData;
-            IsConvertingChanged = isConvertingChanged;
+            FileStatus = fileData;         
             StatusProcessingProject = statusProcessingProject;
+            FilesQueueInfo = filesQueueInfo;
         }
 
         /// <summary>
@@ -27,14 +27,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public IEnumerable<FileStatus> FileStatus { get; }
 
         /// <summary>
-        /// Изменился ли статус запуска/остановки процесса конвертирования
-        /// </summary>
-        public bool IsConvertingChanged { get; }
-
-        /// <summary>
         /// Статус обработки пакета
         /// </summary>
         public StatusProcessingProject StatusProcessingProject { get; }
+
+        /// <summary>
+        /// Информация о количестве файлов в очереди на сервере
+        /// </summary>
+        public FilesQueueInfo FilesQueueInfo { get; }
 
         /// <summary>
         /// Список файлов для изменения статуса

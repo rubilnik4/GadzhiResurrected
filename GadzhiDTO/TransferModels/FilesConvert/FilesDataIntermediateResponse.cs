@@ -30,5 +30,11 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// </summary>
         [DataMember]
         public IEnumerable<FileDataIntermediateResponse> FilesData { get; set; }
-    }
+
+        /// <summary>
+        /// Информация о количестве файлов в очереди до текущего пакета
+        /// </summary>
+        [DataMember]
+        public FilesQueueInfoResponse FilesQueueInfo{ get; set; }
+}
 }

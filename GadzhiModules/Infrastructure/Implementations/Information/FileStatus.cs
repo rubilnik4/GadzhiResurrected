@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
+namespace GadzhiModules.Infrastructure.Implementations.Information
 {
     /// <summary>
     /// Класс содержащий статус и ошибки при конвертировании

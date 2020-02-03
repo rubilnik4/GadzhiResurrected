@@ -27,11 +27,11 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Сохранение, обработка, подготовка для отправки файлов
         /// </summary>   
-        private IApplicationConverting ApplicationReceiveAndSend { get; }
+        private IApplicationConverting ApplicationConverting { get; }
 
         public FileConvertingService(IApplicationConverting applicationReceiveAndSend)
         {
-            ApplicationReceiveAndSend = applicationReceiveAndSend;          
+            ApplicationConverting = applicationReceiveAndSend;          
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponse> SendFiles(FilesDataRequest filesDataRequest)
         {
-            var filesDataIntermediateResponse = await ApplicationReceiveAndSend.QueueFilesDataAndGetResponse(filesDataRequest);
+            var filesDataIntermediateResponse = await ApplicationConverting.QueueFilesDataAndGetResponse(filesDataRequest);
 
             return filesDataIntermediateResponse;
         }
@@ -49,7 +49,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await ApplicationReceiveAndSend.GetIntermediateFilesDataResponseByID(filesDataID);
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await ApplicationConverting.GetIntermediateFilesDataResponseByID(filesDataID);
 
             return filesDataIntermediateResponse;
         }
@@ -59,7 +59,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataResponse> GetCompleteFiles(Guid filesDataID)
         {
-            FilesDataResponse filesDataResponse = await ApplicationReceiveAndSend.GetFilesDataResponseByID(filesDataID);
+            FilesDataResponse filesDataResponse = await ApplicationConverting.GetFilesDataResponseByID(filesDataID);
 
             return filesDataResponse;
         }

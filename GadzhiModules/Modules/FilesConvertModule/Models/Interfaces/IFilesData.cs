@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers;
+using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         void RemoveFiles(IEnumerable<FileData> files);
 
         /// <summary>
-        /// Измененить статус файла и присвоить при необходимости ошибку
+        /// Измененить статус файлов и присвоить при необходимости ошибку
         /// </summary>
         void ChangeFilesStatusAndMarkError(FilesStatus filesStatus);
 

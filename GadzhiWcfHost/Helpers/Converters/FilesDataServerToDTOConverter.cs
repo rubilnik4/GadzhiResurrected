@@ -1,6 +1,8 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiWcfHost.Infrastructure.Implementations;
+using GadzhiWcfHost.Infrastructure.Implementations.Information;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
@@ -18,14 +20,21 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public static FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
+        public static FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer, IQueueInformation queueInformation)
         {
+            FilesQueueInfo filesQueueInfo = queueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
+
             return new FilesDataIntermediateResponse()
             {
                 IsCompleted = filesDataServer.IsCompleted,
                 StatusProcessingProject = filesDataServer.StatusProcessingProject,
                 FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
                                                            ConvertFileToIntermediateResponse(fileDataServer)),
+                FilesQueueInfo = new FilesQueueInfoResponse()
+                {
+                     FilesInQueueCount = filesQueueInfo.FilesInQueueCount,
+                     PackagesInQueueCount = filesQueueInfo.PackagesInQueueCount,
+                },
             };
         }
 

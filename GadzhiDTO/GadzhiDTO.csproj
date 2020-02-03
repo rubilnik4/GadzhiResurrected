@@ -53,6 +53,7 @@
     <Compile Include="TransferModels\FilesConvert\FilesDataResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\FilesDataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransferModels\FilesConvert\FilesQueueInfoResponse.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

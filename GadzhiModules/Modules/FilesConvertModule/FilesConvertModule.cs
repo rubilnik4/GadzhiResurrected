@@ -65,9 +65,9 @@ namespace GadzhiModules.Modules.FilesConvertModule
                       ServiceConsumerFactory.Create<IFileConvertingService>(fileConvertingEndpoint));
 
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
+            unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
             unityContainer.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
-            unityContainer.RegisterType<IStatusProcessingInformation, StatusProcessingInformation>();
         }
     }
 }

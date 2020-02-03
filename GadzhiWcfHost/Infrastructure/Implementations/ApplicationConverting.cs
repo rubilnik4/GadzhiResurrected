@@ -22,19 +22,26 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Класс пользовательских пакетов на конвертирование
         /// </summary>
-        public IFilesDataPackages FileDataPackages { get; }
-
+        public IFilesDataPackages FilesDataPackages { get; }
+       
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private IFileSystemOperations FileSystemOperations { get; }
 
+        /// <summary>
+        /// Информация о статусе конвертируемых файлов
+        /// </summary>   
+        private IQueueInformation QueueInformation { get; }
+
 
         public ApplicationConverting(IFilesDataPackages fileDataPackages,
-                                     IFileSystemOperations fileSystemOperations)
+                                     IFileSystemOperations fileSystemOperations,
+                                     IQueueInformation queueInformation)
         {
-            FileDataPackages = fileDataPackages;
+            FilesDataPackages = fileDataPackages;
             FileSystemOperations = fileSystemOperations;
+            QueueInformation = queueInformation;
 
             ConvertingUpdaterSubsriptions = new CompositeDisposable();
             ConvertingUpdaterSubsriptions.Add(Observable.
@@ -51,7 +58,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Запущен ли процесс конвертации
         /// </summary>
-        public bool IsConverting { get; private set; }
+        public bool IsConverting { get; private set; }        
 
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
@@ -59,9 +66,17 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         public async Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest)
         {
             FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-            QueueFilesData(filesDataServer);
+            FilesDataServer filesDataServer1 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
+            FilesDataServer filesDataServer2 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
 
-            return await GetIntermediateFilesDataResponseByID(filesDataServer.ID);
+            filesDataServer.ID = Guid.NewGuid();
+            filesDataServer1.ID = Guid.NewGuid();
+
+            QueueFilesData(filesDataServer);
+            QueueFilesData(filesDataServer1);
+            QueueFilesData(filesDataServer2);
+
+            return await GetIntermediateFilesDataResponseByID(filesDataRequest.ID);
         }
 
         /// <summary>
@@ -69,7 +84,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         public void QueueFilesData(FilesDataServer filesDataServer)
         {
-            FileDataPackages.QueueFilesData(filesDataServer);
+            FilesDataPackages.QueueFilesData(filesDataServer);
         }
 
         /// <summary>
@@ -77,10 +92,10 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         public async Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseByID(Guid filesDataServerID)
         {
-            FilesDataServer filesDataServer = FileDataPackages.GetFilesDataServerByID(filesDataServerID);
+            FilesDataServer filesDataServer = FilesDataPackages.GetFilesDataServerByID(filesDataServerID);
 
             FilesDataIntermediateResponse filesDataIntermediateResponse =
-                FilesDataServerToDTOConverter.ConvertFilesToIntermediateResponse(filesDataServer);
+                FilesDataServerToDTOConverter.ConvertFilesToIntermediateResponse(filesDataServer, QueueInformation);
 
             return await Task.FromResult(filesDataIntermediateResponse);
         }
@@ -90,7 +105,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         public async Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID)
         {
-            FilesDataServer filesDataServer = FileDataPackages.GetFilesDataServerByID(filesDataServerID);
+            FilesDataServer filesDataServer = FilesDataPackages.GetFilesDataServerByID(filesDataServerID);
             FilesDataResponse filesDataResponse = await FilesDataServerToDTOConverter.ConvertFilesToResponse(filesDataServer, 
                                                                                                              FileSystemOperations);
             return filesDataResponse;
@@ -103,8 +118,8 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         {
             IsConverting = true;
 
-            FilesDataServer filesDataServerFirstInQueue = FileDataPackages.GetFirstInQueuePackage();
-            await FileDataPackages.ConvertingFilesDataPackage(filesDataServerFirstInQueue);
+            FilesDataServer filesDataServerFirstInQueue = FilesDataPackages.GetFirstUncompliteInQueuePackage();
+            await FilesDataPackages.ConvertingFilesDataPackage(filesDataServerFirstInQueue);
 
             IsConverting = false;
         }

@@ -14,10 +14,10 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
     /// </summary>
     public interface IApplicationConverting
     {
-        ///// <summary>
-        ///// Класс пользовательских пакетов на конвертирование
-        ///// </summary>
-        //IFilesDataPackages FileDataPackage { get; }
+        /// <summary>
+        /// Класс пользовательских пакетов на конвертирование
+        /// </summary>
+        IFilesDataPackages FilesDataPackages { get; }
 
         /// <summary>
         /// Поставить файлы в очередь для обработки
