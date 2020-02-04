@@ -75,6 +75,11 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         public List<FileConvertErrorType> FileConvertErrorType { get; }
 
         /// <summary>
+        /// Завершена ли обработка файла
+        /// </summary>
+        public bool IsCompleted { get; set; }
+
+        /// <summary>
         /// Корректна ли модель
         /// </summary>
         public bool IsValid => FileConvertErrorType == null || FileConvertErrorType.Count == 0;

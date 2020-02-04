@@ -45,6 +45,11 @@ namespace GadzhiTest
         /// </summary>   
         Mock<IStatusProcessingInformation> MockStatusProcessingInformation;
 
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>   
+        Mock<IProjectSettings> MockProjectSettings;
+
         [TestInitialize]
         public void ApplicationGadzhiTestInitialize()
         {
@@ -53,6 +58,7 @@ namespace GadzhiTest
             MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();
             MockExecuteAndCatchErrors = new Mock<IExecuteAndCatchErrors>();
             MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();
+            MockProjectSettings = new Mock<IProjectSettings>();
         }
 
         /// <summary>
@@ -100,7 +106,8 @@ namespace GadzhiTest
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
                                                           MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object);
+                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockProjectSettings.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
@@ -146,7 +153,8 @@ namespace GadzhiTest
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
                                                           MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object);
+                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockProjectSettings.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             files.AddRange(subDirectoryPath); //добавляем к тесту директории
@@ -182,7 +190,8 @@ namespace GadzhiTest
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
                                                           MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object);
+                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockProjectSettings.Object);
 
             IEnumerable<string> files = null;
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
@@ -220,7 +229,8 @@ namespace GadzhiTest
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
                                                           MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object);
+                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockProjectSettings.Object);
 
             IEnumerable<string> files = new List<string> { null };
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();

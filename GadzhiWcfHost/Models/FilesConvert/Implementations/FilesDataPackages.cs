@@ -62,6 +62,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             {
                 fileData.StatusProcessing = StatusProcessing.InProcess;
                 await Task.Delay(2000);
+                fileData.IsCompleted = true;
                 fileData.StatusProcessing = StatusProcessing.Completed;
             }
 

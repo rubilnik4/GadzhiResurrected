@@ -54,7 +54,9 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
                                FilesDataPackagesToConverting.
                                Where(package => !package.IsCompleted).
                                TakeWhile(package => id == null || package.ID != id).
-                               Sum(package => package?.FilesDataInfo?.Count) ?? 0;
+                               Sum(package => package?.
+                                              FilesDataInfo?.
+                                              Count(file => !file.IsCompleted)) ?? 0;
 
             return new FilesQueueInfo(filesInQueue,
                                       packagesInQueue);

@@ -49,16 +49,23 @@ namespace GadzhiModules.Infrastructure.Implementations
                 case StatusProcessingProject.Sending:
                     IsConverting = true;
                     IsConvertingChanged = true;
+                    FirstFilesCountInQueue = 0;
+                    break;
+                case StatusProcessingProject.InQueue:
+                    if (FirstFilesCountInQueue == 0)
+                    {
+                        FirstFilesCountInQueue = filesStatus.FilesQueueInfo.FilesInQueueCount;
+                    }
                     break;
                 case StatusProcessingProject.End:
                     IsConverting = false;
                     IsConvertingChanged = true;
+                    FirstFilesCountInQueue = 0;
                     break;
             }
 
-            FilesQueueInfo = filesStatus.FilesQueueInfo;            
+            FilesQueueInfo = filesStatus.FilesQueueInfo;
             IsStatusProjectChanged = FilesInfoProject.StatusProcessingProject != filesStatus.StatusProcessingProject;
-            PercentageOfComplete = CalculatePercentageOfComplete();
 
             FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatus);
         }
@@ -94,9 +101,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         private FilesQueueInfo FilesQueueInfo { get; set; }
 
         /// <summary>
+        /// Первоначальное количество файлов в очереди. Для расчета процентов выполнения
+        /// </summary>
+        private int FirstFilesCountInQueue { get; set; }
+
+        /// <summary>
         /// Процент выполнения пакета конвертирования
         /// </summary>
-        public int PercentageOfComplete { get; private set; }
+        public int PercentageOfComplete => CalculatePercentageOfComplete();
 
         /// <summary>
         /// Есть ли у текущего процесса процент выполнения
@@ -113,7 +125,12 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue)
             {
-                percentageOfComplete = 0;
+                double percentagePerform = 100;
+                if (FirstFilesCountInQueue != 0)
+                {
+                    percentagePerform = ((double?)FilesQueueInfo?.FilesInQueueCount / (double?)FirstFilesCountInQueue) * 100 ?? 0;
+                }
+                percentageOfComplete = 100 - percentagePerform;
             }
             else if (FilesInfoProject?.StatusProcessingProject == StatusProcessingProject.Converting)
             {
@@ -140,7 +157,7 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue)
             {
-                statusProcessingProjectName += $". До вашей очереди {FilesQueueInfo.FilesInQueueCount} файл(ов)";
+                statusProcessingProjectName += $". Впереди {FilesQueueInfo?.FilesInQueueCount ?? 0} файлика(ов)";
             }
             else if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Converting)
             {

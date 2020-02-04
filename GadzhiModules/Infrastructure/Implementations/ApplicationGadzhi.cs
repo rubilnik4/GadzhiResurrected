@@ -56,6 +56,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>     
         private IFileDataProcessingStatusMark FileDataProcessingStatusMark { get; }
 
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private IProjectSettings ProjectSettings { get; }
+
 
 
         /// <summary>
@@ -69,7 +74,8 @@ namespace GadzhiModules.Infrastructure.Implementations
                                  IServiceConsumer<IFileConvertingService> fileConvertingService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation,
-                                 IExecuteAndCatchErrors executeAndCatchErrors)
+                                 IExecuteAndCatchErrors executeAndCatchErrors,
+                                 IProjectSettings projectSettings)
         {
             DialogServiceStandard = dialogServiceStandard;
             FileSystemOperations = fileSystemOperations;
@@ -78,6 +84,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             FileDataProcessingStatusMark = fileDataProcessingStatusMark;
             StatusProcessingInformation = statusProcessingInformation;
             ExecuteAndCatchErrors = executeAndCatchErrors;
+            ProjectSettings = projectSettings;
 
             StatusProcessingUpdaterSubsriptions = new CompositeDisposable();
         }
@@ -229,7 +236,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private void SubsribeToIntermediateResponse()
         {
             StatusProcessingUpdaterSubsriptions.Add(Observable.
-                                                    Interval(TimeSpan.FromSeconds(2)).
+                                                    Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToToIntermediateResponse)).
                                                     TakeWhile(_ => StatusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                                                     Subscribe(async _ => await ExecuteAndCatchErrors.
                                                                                ExecuteAndHandleErrorAsync(UpdateStatusProcessing, AbortPropertiesConverting)));

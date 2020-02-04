@@ -38,6 +38,7 @@ namespace GadzhiResurrected
         {          
             IUnityContainer unityContainer = containerRegistry.GetContainer();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
+            unityContainer.RegisterSingleton<IProjectSettings, ProjectSettings>();
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();          
         }
