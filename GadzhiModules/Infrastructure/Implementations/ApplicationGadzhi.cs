@@ -226,7 +226,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
                                                                                            Operations.
                                                                                            SendFiles(filesDataRequest);
-            var filesStatusAfterSending = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);           
+            var filesStatusAfterSending = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
             StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusAfterSending);
         }
 
@@ -252,13 +252,13 @@ namespace GadzhiModules.Infrastructure.Implementations
             FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
                                                                                 Operations.
                                                                                 CheckFilesStatusProcessing(FilesInfoProject.ID);
-            FilesStatus filesStatus = await FileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);         
+            FilesStatus filesStatus = await FileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             StatusProcessingInformation.ChangeFilesDataByStatus(filesStatus);
 
             if (filesDataIntermediateResponse.IsCompleted)
             {
                 ClearSubsriptions();
-                await GetCompleteFiles(filesDataIntermediateResponse.IsCompleted);
+                await GetCompleteFiles();
             }
 
             IsIntermediateResponseInProgress = false;
@@ -267,18 +267,22 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Получить отконвертированные файлы
         /// </summary>
-        private async Task GetCompleteFiles(bool isCompleted)
+        private async Task GetCompleteFiles()
         {
-            if (isCompleted)
-            {
-                FilesDataResponse filesDataResponse = await FileConvertingService.
-                                                            Operations.
-                                                            GetCompleteFiles(FilesInfoProject.ID);
 
-                var filesStatusWright = await FileDataProcessingStatusMark.
-                                              GetFilesStatusCompleteResponse(filesDataResponse);
-                StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusWright);
-            }
+            FilesDataResponse filesDataResponse = await FileConvertingService.
+                                                        Operations.
+                                                        GetCompleteFiles(FilesInfoProject.ID);
+
+            var filesStatusBeforeWrite = await FileDataProcessingStatusMark.
+                                         GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);           
+            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusBeforeWrite);
+
+            var filesStatusWrite = await FileDataProcessingStatusMark.
+                                         GetFilesStatusCompleteResponseAndWritten(filesDataResponse);
+
+            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusWrite);
+
         }
 
         /// <summary>
@@ -295,7 +299,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public void AbortPropertiesConverting()
         {
             IsIntermediateResponseInProgress = false;
-            ClearSubsriptions();          
+            ClearSubsriptions();
             StatusProcessingInformation.ClearFilesDataToInitialValues();
         }
 

@@ -16,7 +16,8 @@ namespace GadzhiCommon.Enums.FilesConvert
         InQueue,
         InProcess,
         Completed,
-        Wrighted,
+        Writing,
+        End,
         Error,
     }
 }

@@ -19,7 +19,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         public FileDataResponse()
         {
             FileConvertErrorType = new List<FileConvertErrorType>();
-        }
+        }     
 
         /// <summary>
         /// Путь файла

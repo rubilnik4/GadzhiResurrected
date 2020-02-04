@@ -34,7 +34,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        IEnumerable<string> GetDirectories(string directoryPath);
+        IEnumerable<string> GetDirectories(string directoryPath);        
 
         /// <summary>
         /// Получить вложенные файлы
@@ -49,7 +49,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       
-        string CreateFilePath(string directoryPath, string fileNameWithoutExtension, string extension);
+        string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension);
 
         /// <summary>
         /// Представить файл в двоичном виде
@@ -65,5 +65,10 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// Создать поддиректорию и пррисвоить идентефикатор
         /// </summary>     
         (bool isCreated, string path) CreateFolderByGuid(string startingPath);
+
+        /// <summary>
+        /// Создать поддиректорию
+        /// </summary>     
+        (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName);  
     }
 }

@@ -35,9 +35,14 @@ namespace GadzhiModules.Infrastructure.Interfaces
         Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse fileDataResponse);
 
         /// <summary>
+        /// Поменять статус файлов после окончательного отчета и перед записью файлов
+        /// </summary>       
+        Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponse filesDataResponse);       
+
+        /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompleteResponse(FilesDataResponse filesDataResponse);
+        Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponse filesDataResponse);
        
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов

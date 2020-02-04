@@ -41,14 +41,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
+        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);      
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       
-        public string CreateFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
+        public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
         {
-            return directoryPath + "//" + fileNameWithoutExtension + "." + extension;
+            extension = extension.TrimStart('.');
+
+            return directoryPath + fileNameWithoutExtension + "." + extension;
         }
 
         /// <summary>
@@ -116,7 +118,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                     using (GZipStream zip = new GZipStream(input, CompressionMode.Decompress))
                     using (FileStream output = File.Create(filePath))
                     {
-                        await zip.CopyToAsync(output);                       
+                        await zip.CopyToAsync(output);
                     }
 
                     succsess = true;
@@ -134,8 +136,20 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>     
         public (bool isCreated, string path) CreateFolderByGuid(string startingPath)
         {
-            bool isCreated = false;
-            string createdPath = startingPath + Guid.NewGuid() + "\\";
+            return CreateFolderByName(startingPath, Guid.NewGuid().ToString());
+        }
+
+        /// <summary>
+        /// Создать поддиректорию
+        /// </summary>     
+        public (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName)
+        {
+            bool isCreated = false;          
+            if (!startingPath.EndsWith ("\\"))
+            {
+                startingPath += "\\";
+            }
+            string createdPath = startingPath + folderName + "\\";
 
             if (!String.IsNullOrWhiteSpace(startingPath))
             {
@@ -144,6 +158,14 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
 
             return (isCreated, createdPath);
+        }
+
+        /// <summary>
+        /// Заменить запрещенные символы в пути файла
+        /// </summary>       
+        private string ReplaceInvalidChars(string filename)
+        {
+            return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }

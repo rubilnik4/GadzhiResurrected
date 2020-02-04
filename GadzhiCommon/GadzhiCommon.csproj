@@ -48,6 +48,7 @@
     <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />
     <Compile Include="Helpers\FileHelpers.cs" />
+    <Compile Include="Helpers\FileSystem\FileSavedCheck.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

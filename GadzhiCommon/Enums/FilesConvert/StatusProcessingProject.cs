@@ -17,7 +17,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         InQueue,
         Converting,
         Receiving,
-        Wrighting,
+        Writing,
         End,
         Error,
     }

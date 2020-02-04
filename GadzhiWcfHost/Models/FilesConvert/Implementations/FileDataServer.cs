@@ -15,13 +15,18 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
     /// </summary>
     public class FileDataServer : IEquatable<FileDataServer>
     {
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        public List<FileConvertErrorType> _fileConvertErrorType;
+
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
               : this(filePathServer, filePathClient, colorPrint, new List<FileConvertErrorType>())
         {
 
         }
 
-        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, List<FileConvertErrorType> fileConvertErrorType)
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
             string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePathServer);
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);
@@ -36,7 +41,8 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
 
-            FileConvertErrorType = fileConvertErrorType;
+            _fileConvertErrorType = new List<FileConvertErrorType>();
+            _fileConvertErrorType.AddRange(fileConvertErrorType);
         }
 
         /// <summary>
@@ -72,7 +78,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public List<FileConvertErrorType> FileConvertErrorType { get; }
+        public IReadOnlyList<FileConvertErrorType> FileConvertErrorType => _fileConvertErrorType;
 
         /// <summary>
         /// Завершена ли обработка файла

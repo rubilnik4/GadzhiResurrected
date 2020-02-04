@@ -21,7 +21,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         public FilesDataPackages()
         {
             _filesDataPackagesToConverting = new Queue<FilesDataServer>();
-        }       
+        }
 
         /// <summary>
         /// Очередь неконвертированных пакетов
@@ -38,7 +38,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// Получить первый невыполненный в очереди пакет
         /// </summary>      
         public FilesDataServer GetFirstUncompliteInQueuePackage() => _filesDataPackagesToConverting?.
-                                                                     First(package => !package.IsCompleted);
+                                                                     FirstOrDefault(package => !package.IsCompleted);
 
         /// <summary>
         /// Поместить файлы в очередь для конвертации
@@ -56,18 +56,21 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         /// </summary>
         public async Task ConvertingFilesDataPackage(FilesDataServer filesDataServer)
         {
-            filesDataServer.StatusProcessingProject = StatusProcessingProject.Converting;
-
-            foreach (var fileData in filesDataServer.FilesDataInfo)
+            if (filesDataServer != null)
             {
-                fileData.StatusProcessing = StatusProcessing.InProcess;
-                await Task.Delay(2000);
-                fileData.IsCompleted = true;
-                fileData.StatusProcessing = StatusProcessing.Completed;
-            }
+                filesDataServer.StatusProcessingProject = StatusProcessingProject.Converting;
 
-            filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
-            filesDataServer.IsCompleted = true;
+                foreach (var fileData in filesDataServer.FilesDataInfo)
+                {
+                    fileData.StatusProcessing = StatusProcessing.InProcess;
+                    await Task.Delay(2000);
+                    fileData.IsCompleted = true;
+                    fileData.StatusProcessing = StatusProcessing.Completed;
+                }
+
+                filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
+                filesDataServer.IsCompleted = true;
+            }
         }
     }
 }

@@ -32,8 +32,8 @@ namespace GadzhiWcfHost.Helpers.Converters
                                                            ConvertFileToIntermediateResponse(fileDataServer)),
                 FilesQueueInfo = new FilesQueueInfoResponse()
                 {
-                     FilesInQueueCount = filesQueueInfo.FilesInQueueCount,
-                     PackagesInQueueCount = filesQueueInfo.PackagesInQueueCount,
+                    FilesInQueueCount = filesQueueInfo.FilesInQueueCount,
+                    PackagesInQueueCount = filesQueueInfo.PackagesInQueueCount,
                 },
             };
         }
@@ -62,6 +62,7 @@ namespace GadzhiWcfHost.Helpers.Converters
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
+                FileConvertErrorType = fileDataServer.FileConvertErrorType,
             };
         }
 
@@ -73,7 +74,7 @@ namespace GadzhiWcfHost.Helpers.Converters
             var fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
 
             return new FileDataResponse()
-            {
+            {                
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FileDataSource = fileDataSource,

@@ -50,8 +50,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             var filesInSending = FilesInfoProject?.
                                  FilesInfo?.
-                                 Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
-            var filesStatusInSendind = new FilesStatus(filesInSending, 
+                                 Select(file => new FileStatus(file.FilePath, 
+                                                               StatusProcessing.Sending,
+                                                               FileConvertErrorType.IncorrectFileName));
+
+            var filesStatusInSendind = new FilesStatus(filesInSending,
                                                        StatusProcessingProject.Sending);
 
             return Task.FromResult(filesStatusInSendind);
@@ -67,7 +70,8 @@ namespace GadzhiModules.Infrastructure.Implementations
                                 FilesInfoPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath,
-                                                                  StatusProcessing.Error));
+                                                                  StatusProcessing.Error,
+                                                                  FileConvertErrorType.FileNotFound));
             var filesStatusInSendind = new FilesStatus(filesNotFound,
                                                        StatusProcessingProject.Sending);
             return Task.FromResult(filesStatusInSendind);
@@ -80,25 +84,35 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             var filesStatusIntermediate = FilesDataFromDTOConverterToClient.
                                              ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
-           
+
             return Task.FromResult(filesStatusIntermediate);
         }
 
         /// <summary>
-        /// Поменять статус файлов после окончательного отчета
+        /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        public Task<FilesStatus> GetFilesStatusCompleteResponse(FilesDataResponse filesDataResponse)
+        public Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponse filesDataResponse)
         {
-            var fileDataStatusResponse = FilesDataFromDTOConverterToClient.ConvertToFilesStatusFromResponse(filesDataResponse);
-            var filesStatusResponse = new FilesStatus(fileDataStatusResponse,
-                                                         StatusProcessingProject.Receiving);
-            return Task.FromResult(filesStatusResponse);
+            var filesStatusResponseBeforeWriting = FilesDataFromDTOConverterToClient.
+                                                   ConvertToFilesStatus(filesDataResponse);
+            return Task.FromResult(filesStatusResponseBeforeWriting);
+        }
+
+        /// <summary>
+        /// Поменять статус файлов после окончательного отчета и записи файлов
+        /// </summary>       
+        public async Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponse filesDataResponse)
+        {
+            var filesStatusResponse = await FilesDataFromDTOConverterToClient.
+                                            ConvertToFilesStatusAndSaveFiles(filesDataResponse,
+                                                                             FileSystemOperations);
+            return filesStatusResponse;
         }
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        public async Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest, 
+        public async Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
                                                                                FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
             var filesNotFound = GetFilesNotFound(filesDataRequest.FilesData);
@@ -110,6 +124,6 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                    filesDataIntermediateResponse.StatusProcessingProject,
                                                    filesChangedStatus.Result.FilesQueueInfo);
             return filesStatusUnion;
-        }       
+        }      
     }
 }

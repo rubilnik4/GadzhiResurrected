@@ -65,17 +65,20 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         public async Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest)
         {
+            //FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
+            //FilesDataServer filesDataServer1 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
+            //FilesDataServer filesDataServer2 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
+
+            //filesDataServer.ID = Guid.NewGuid();
+            //filesDataServer1.ID = Guid.NewGuid();
+
+            //QueueFilesData(filesDataServer);
+            //QueueFilesData(filesDataServer1);
+            //QueueFilesData(filesDataServer2);
             FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-            FilesDataServer filesDataServer1 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-            FilesDataServer filesDataServer2 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-
-            filesDataServer.ID = Guid.NewGuid();
-            filesDataServer1.ID = Guid.NewGuid();
-
+           
             QueueFilesData(filesDataServer);
-            QueueFilesData(filesDataServer1);
-            QueueFilesData(filesDataServer2);
-
+            
             return await GetIntermediateFilesDataResponseByID(filesDataRequest.ID);
         }
 

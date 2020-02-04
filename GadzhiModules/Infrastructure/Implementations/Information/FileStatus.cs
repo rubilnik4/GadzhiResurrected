@@ -12,20 +12,48 @@ namespace GadzhiModules.Infrastructure.Implementations.Information
     /// </summary>
     public class FileStatus
     {
-        public FileStatus(string filePath, StatusProcessing statusProcessing)
+        public FileStatus(string filePath,
+                          StatusProcessing statusProcessing,
+                          FileConvertErrorType error)           
+        {
+            var errors = new List<FileConvertErrorType>();
+            if (error != FileConvertErrorType.NoError)
+            {
+                errors.Add(error);
+            }
+
+            Initialize(filePath, statusProcessing, errors);
+        }
+
+        public FileStatus(string filePath,
+                          StatusProcessing statusProcessing,
+                          IEnumerable<FileConvertErrorType> errors)
+        {
+            Initialize(filePath, statusProcessing, errors);
+        }
+
+        private void Initialize(string filePath,
+                                StatusProcessing statusProcessing,
+                                IEnumerable<FileConvertErrorType> errors)
         {
             FilePath = filePath;
-            StatusProcessing = statusProcessing;          
+            StatusProcessing = statusProcessing;
+            Errors = errors;
         }
 
         /// <summary>
         /// Путь файла
         /// </summary>
-        public string FilePath { get; }
+        public string FilePath { get; private set; }
 
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; }       
+        public StatusProcessing StatusProcessing { get; private set; }
+
+        /// <summary>
+        /// Список ошибок
+        /// </summary>
+        public IEnumerable<FileConvertErrorType> Errors { get; private set; }
     }
 }

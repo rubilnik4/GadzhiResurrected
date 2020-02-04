@@ -21,7 +21,7 @@ namespace GadzhiModules.Helpers.Converters
                 { StatusProcessingProject.InQueue, "Ожидаем своей очереди" },
                 { StatusProcessingProject.Converting, "Процесс пошел" },
                 { StatusProcessingProject.Receiving, "Возвращаем блудных сынов" },
-                { StatusProcessingProject.Wrighting, "Пишем в папочки" },
+                { StatusProcessingProject.Writing, "Пишем в папочки" },
                 { StatusProcessingProject.End, "Финиш" },
                 { StatusProcessingProject.Error, "Непредвиденные ошибочки" },
             };

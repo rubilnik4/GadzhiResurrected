@@ -166,7 +166,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             var filesStatus = new FilesStatus(_filesInfo?.
                                               Select(fileData => new FileStatus(fileData.FilePath,
-                                                                                StatusProcessing.Error)),
+                                                                                StatusProcessing.Error,
+                                                                                 FileConvertErrorType.AbortOperation)),
                                               StatusProcessingProject.Error);
 
             ChangeFilesStatusAndMarkError(filesStatus);

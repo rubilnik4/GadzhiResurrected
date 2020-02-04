@@ -17,5 +17,6 @@ namespace GadzhiCommon.Enums.FilesConvert
         IncorrectExtension,
         IncorrectDataSource,
         RejectToSave,
+        AbortOperation,
     }
 }

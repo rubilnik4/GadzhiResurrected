@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
@@ -18,7 +19,9 @@ namespace GadzhiWcfHost.Helpers.Converters
         public static async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequest filesDataRequest, IFileSystemOperations fileSystemOperations)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
-                                      ConvertToFileDataServerAndSaveFile(fileDTO, fileSystemOperations));
+                                               ConvertToFileDataServerAndSaveFile(fileDTO, 
+                                                                                  filesDataRequest.ID.ToString(), 
+                                                                                  fileSystemOperations));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
             return new FilesDataServer(filesDataRequest.ID, filesDataServerToConvert);
@@ -27,43 +30,48 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private static async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest, IFileSystemOperations fileSystemOperations)
+        private static async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest,
+                                                                                     string packageGuid,
+                                                                                     IFileSystemOperations fileSystemOperations)
         {
-            FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, fileSystemOperations);
+            FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid, fileSystemOperations);
 
             return new FileDataServer(fileSavedCheck.FilePath,
                                       fileDataRequest.FilePath,
                                       fileDataRequest.ColorPrint,
                                       fileSavedCheck.Errors);
         }
+
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private static async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequest fileDataRequest, IFileSystemOperations fileSystemOperations)
+        private static async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequest fileDataRequest, 
+                                                                         string packageGuid, 
+                                                                         IFileSystemOperations fileSystemOperations)
         {
             var fileSavedCheck = new FileSavedCheck();
 
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = fileSystemOperations.CreateFolderByGuid(FileSystemInformation.ConvertionDirectory);
+                (bool isCreated, string directoryPath) = fileSystemOperations.CreateFolderByName(FileSystemInformation.ConvertionDirectory, packageGuid);
                 if (isCreated)
                 {
-                    fileSavedCheck.FilePath = fileSystemOperations.CreateFilePath(directoryPath, Guid.NewGuid().ToString(), fileDataRequest.FileExtension);
+                    fileSavedCheck.FilePath = fileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(), fileDataRequest.FileExtension);
                     await fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
 
                     fileSavedCheck.IsSaved = true;
                 }
                 else
                 {
-                    fileSavedCheck.Errors.Add(FileConvertErrorType.RejectToSave);
+                    fileSavedCheck.AddError(FileConvertErrorType.RejectToSave);
                 }
             }
             else
             {
                 if (errorsFromValidation != null)
                 {
-                    fileSavedCheck.Errors.AddRange(errorsFromValidation);
+                    fileSavedCheck.AddErrors(errorsFromValidation);
                 }
             }
 

@@ -4,18 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GadzhiWcfHost.Helpers.Converters
+namespace GadzhiCommon.Helpers.FileSystem
 {
     /// <summary>
     /// Информация о файле, статусе сохранения, ошибках
     /// </summary>
     public class FileSavedCheck
     {
+        /// <summary>
+        /// Список ошибок
+        /// </summary>
+        private List<FileConvertErrorType> _errors;
+
         public FileSavedCheck()
         {
             IsSaved = false;
             FilePath = String.Empty;
-            Errors = new List<FileConvertErrorType>();
+            _errors = new List<FileConvertErrorType>();
         }
 
         /// <summary>
@@ -31,6 +36,22 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public List<FileConvertErrorType> Errors { get; set; }
+        public IReadOnlyList<FileConvertErrorType> Errors => _errors;
+
+        /// <summary>
+        /// Добавить ошибку в список
+        /// </summary>      
+        public void AddError(FileConvertErrorType error)
+        {
+            _errors.Add(error);
+        }
+
+        /// <summary>
+        /// Добавить ошибки в список
+        /// </summary>      
+        public void AddErrors(IEnumerable<FileConvertErrorType> errors)
+        {
+            _errors.AddRange(errors);
+        }
     }
 }

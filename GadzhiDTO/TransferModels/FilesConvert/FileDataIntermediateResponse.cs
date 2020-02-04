@@ -29,6 +29,12 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Статус обработки файла
         /// </summary>
         [DataMember]
-        public StatusProcessing StatusProcessing { get; set; }       
+        public StatusProcessing StatusProcessing { get; set; }
+
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        [DataMember]
+        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; set; }
     }
 }
