@@ -30,7 +30,7 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IFileConvertingService, FileConvertingService>()                
                 .RegisterType<IQueueInformation, QueueInformation>()
                 .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
-                .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
+                .RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>()
                 .RegisterSingleton<IFilesDataPackages, FilesDataPackages>()
                 .RegisterSingleton<IApplicationConverting, ApplicationConverting>();
         }

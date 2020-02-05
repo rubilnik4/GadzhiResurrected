@@ -5,6 +5,7 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Implementations.Information;
+using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
@@ -31,11 +32,18 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>
         private IProjectSettings ProjectSettings { get; }
 
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>        
+        private IDialogServiceStandard DialogServiceStandard { get; }
+
         public ConverterClientFilesDataFromDTO(IFileSystemOperations fileSystemOperations,
-                                               IProjectSettings projectSettings)
+                                               IProjectSettings projectSettings,
+                                               IDialogServiceStandard dialogServiceStandard)
         {
             FileSystemOperations = fileSystemOperations;
             ProjectSettings = projectSettings;
+            DialogServiceStandard = dialogServiceStandard;
         }
 
         /// <summary>
@@ -165,9 +173,10 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                 if (isCreated)
                 {
                     fileSavedCheck.FilePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
-                    await FileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataResponse.FileDataSource);
-
-                    fileSavedCheck.IsSaved = true;
+                    await DialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
+                            fileSavedCheck.IsSaved = await FileSystemOperations.
+                                                     UnzipFileAndSave(fileSavedCheck.FilePath, fileDataResponse.FileDataSource),
+                                                                      $"Файл {fileSavedCheck.FilePath} открыт или используется. Повторить попытку сохранения?");
                 }
                 else
                 {

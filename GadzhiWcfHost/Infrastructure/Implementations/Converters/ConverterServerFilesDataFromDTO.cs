@@ -70,9 +70,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
                 if (isCreated)
                 {
                     fileSavedCheck.FilePath = FileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(), fileDataRequest.FileExtension);
-                    await FileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
-
-                    fileSavedCheck.IsSaved = true;
+                    fileSavedCheck.IsSaved = await FileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
                 }
                 else
                 {

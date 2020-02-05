@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Forms;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -20,7 +20,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>    
         public async Task<IEnumerable<string>> OpenFileDialog(bool isMultiselect = false, string filter = "")
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog()
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
             {
                 Multiselect = isMultiselect,
                 Filter = filter,
@@ -64,11 +64,40 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         public bool ShowMessageOkCancel(string messageText)
         {
-            var dialogResul = MessageBox.Show(messageText, "Gadzhi", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            var dialogResult = MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-            return dialogResul == MessageBoxResult.OK ? 
-                   true : 
+            return dialogResult == DialogResult.OK ?
+                   true :
                    false;
+        }
+
+        /// <summary>
+        /// Диалоговое окно с повтором и пропуском
+        /// </summary>  
+        public bool ShowMessageRetryCancel(string messageText)
+        {
+            var dialogResul = MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+
+            return dialogResul == DialogResult.Retry ?
+                   true :
+                   false;
+        }
+
+        /// <summary>
+        /// Обертка для функции с диалоговым окном повтора
+        /// </summary>
+        public async Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string messageText)
+        {
+            bool retry = false;
+            do
+            {
+                retry = false;
+                bool succsess = await asyncFunc();
+                if (!succsess)
+                {
+                    retry = ShowMessageRetryCancel(messageText);
+                }
+            } while (retry);
         }
     }
 }

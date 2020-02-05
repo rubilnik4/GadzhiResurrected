@@ -30,5 +30,15 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Диалоговое окно с подтверждением
         /// </summary>  
         bool ShowMessageOkCancel(string messageText);
+
+        /// <summary>
+        /// Диалоговое окно с повтором и пропуском
+        /// </summary>  
+        bool ShowMessageRetryCancel(string messageText);
+
+        /// <summary>
+        /// Обертка для функции с диалоговым окном повтора
+        /// </summary>
+        Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string messageText);       
     }
 }
