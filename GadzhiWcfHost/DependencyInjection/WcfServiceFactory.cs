@@ -2,7 +2,9 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Implementations;
+using GadzhiWcfHost.Infrastructure.Implementations.Converters;
 using GadzhiWcfHost.Infrastructure.Interfaces;
+using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using GadzhiWcfHost.Services;
@@ -27,6 +29,8 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IFileSystemOperations, FileSystemOperations>()
                 .RegisterType<IFileConvertingService, FileConvertingService>()                
                 .RegisterType<IQueueInformation, QueueInformation>()
+                .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
+                .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
                 .RegisterSingleton<IFilesDataPackages, FilesDataPackages>()
                 .RegisterSingleton<IApplicationConverting, ApplicationConverting>();
         }

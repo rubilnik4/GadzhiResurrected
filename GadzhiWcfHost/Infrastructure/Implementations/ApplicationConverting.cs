@@ -1,7 +1,6 @@
-﻿using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiWcfHost.Helpers.Converters;
+﻿using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces;
+using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using System;
@@ -22,26 +21,25 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Класс пользовательских пакетов на конвертирование
         /// </summary>
-        public IFilesDataPackages FilesDataPackages { get; }
-       
-        /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        private IFilesDataPackages FilesDataPackages { get; }
 
         /// <summary>
-        /// Информация о статусе конвертируемых файлов
-        /// </summary>   
-        private IQueueInformation QueueInformation { get; }
+        /// Конвертер из трансферной модели в серверную
+        /// </summary>     
+        private IConverterServerFilesDataFromDTO ConverterServerFilesDataFromDTO { get; }
 
+        /// <summary>
+        /// Конвертер из серверной модели в трансферную
+        /// </summary>
+        private IConverterServerFilesDataToDTO ConverterServerFilesDataToDTO { get; }
 
         public ApplicationConverting(IFilesDataPackages fileDataPackages,
-                                     IFileSystemOperations fileSystemOperations,
-                                     IQueueInformation queueInformation)
+                                     IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
+                                     IConverterServerFilesDataToDTO converterServerFilesDataToDTO)
         {
             FilesDataPackages = fileDataPackages;
-            FileSystemOperations = fileSystemOperations;
-            QueueInformation = queueInformation;
+            ConverterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
+            ConverterServerFilesDataToDTO = converterServerFilesDataToDTO;
 
             ConvertingUpdaterSubsriptions = new CompositeDisposable();
             ConvertingUpdaterSubsriptions.Add(Observable.
@@ -75,7 +73,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
             //QueueFilesData(filesDataServer);
             //QueueFilesData(filesDataServer1);
             //QueueFilesData(filesDataServer2);
-            FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
+            FilesDataServer filesDataServer = await ConverterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
            
             QueueFilesData(filesDataServer);
             
@@ -98,7 +96,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
             FilesDataServer filesDataServer = FilesDataPackages.GetFilesDataServerByID(filesDataServerID);
 
             FilesDataIntermediateResponse filesDataIntermediateResponse =
-                FilesDataServerToDTOConverter.ConvertFilesToIntermediateResponse(filesDataServer, QueueInformation);
+                ConverterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
 
             return await Task.FromResult(filesDataIntermediateResponse);
         }
@@ -109,8 +107,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         public async Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID)
         {
             FilesDataServer filesDataServer = FilesDataPackages.GetFilesDataServerByID(filesDataServerID);
-            FilesDataResponse filesDataResponse = await FilesDataServerToDTOConverter.ConvertFilesToResponse(filesDataServer, 
-                                                                                                             FileSystemOperations);
+            FilesDataResponse filesDataResponse = await ConverterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
             return filesDataResponse;
         }
 

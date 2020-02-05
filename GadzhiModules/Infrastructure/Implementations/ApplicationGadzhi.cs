@@ -6,16 +6,12 @@ using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System.Windows;
 using GadzhiDTO.Contracts.FilesConvert;
-using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using System.Reactive.Linq;
 using System;
 using GadzhiCommon.Helpers.Dialogs;
 using System.Reactive.Disposables;
-using System.ServiceModel;
-using GadzhiDTO.Healpers;
 using ChannelAdam.ServiceModel;
 using GadzhiModules.Infrastructure.Implementations.Information;
 
@@ -60,8 +56,6 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Параметры приложения
         /// </summary>
         private IProjectSettings ProjectSettings { get; }
-
-
 
         /// <summary>
         /// Класс обертка для отлова ошибок

@@ -1,8 +1,11 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Implementations.Information;
+using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;
@@ -11,14 +14,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Helpers.Converters.DTO
+namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
-    public static class FilesDataFromDTOConverterToClient
+    /// <summary>
+    /// Конвертеры из трансферной модели в локальную
+    /// </summary>  
+    public class ConverterClientFilesDataFromDTO : IConverterClientFilesDataFromDTO
     {
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private IFileSystemOperations FileSystemOperations { get; }
+
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private IProjectSettings ProjectSettings { get; }
+
+        public ConverterClientFilesDataFromDTO(IFileSystemOperations fileSystemOperations,
+                                               IProjectSettings projectSettings)
+        {
+            FileSystemOperations = fileSystemOperations;
+            ProjectSettings = projectSettings;
+        }
+
         /// <summary>
         /// Конвертер пакета информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        public static FilesStatus ConvertToFilesStatusFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
+        public FilesStatus ConvertToFilesStatusFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
             var filesDataStatus = filesDataIntermediateResponse?.
                                   FilesData?.
@@ -36,7 +59,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части перед сохранение
         /// </summary>      
-        public static FilesStatus ConvertToFilesStatus(FilesDataResponse filesDataResponse)
+        public FilesStatus ConvertToFilesStatus(FilesDataResponse filesDataResponse)
         {
             var fileDataStatusResponse = ConvertToFilesStatusFromResponse(filesDataResponse);
             var filesStatus = new FilesStatus(fileDataStatusResponse,
@@ -48,37 +71,33 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части и сохранение файлов
         /// </summary>      
-        public static async Task<FilesStatus> ConvertToFilesStatusAndSaveFiles(FilesDataResponse filesDataResponse,
-                                                                               IFileSystemOperations fileSystemOperations)
+        public async Task<FilesStatus> ConvertToFilesStatusAndSaveFiles(FilesDataResponse filesDataResponse)
         {
-            var fileDataStatusResponse = await ConvertToFilesStatusFromResponseAndSaveFiles(filesDataResponse, fileSystemOperations);
+            var fileDataStatusResponse = await ConvertToFilesStatusFromResponseAndSaveFiles(filesDataResponse);
             var filesStatus = new FilesStatus(fileDataStatusResponse,
                                               StatusProcessingProject.End);
-
             return filesStatus;
         }
 
         /// <summary>
         /// Конвертер пакета информации из основной трансферной модели в класс клиентской части перед сохранением
         /// </summary>      
-        private static IEnumerable<FileStatus> ConvertToFilesStatusFromResponse(FilesDataResponse filesDataResponse)
+        private IEnumerable<FileStatus> ConvertToFilesStatusFromResponse(FilesDataResponse filesDataResponse)
         {
             var filesStatus = filesDataResponse?.
                                   FilesData?.
-                                  Select(fileResponse => ConvertToFileStatusFromResponse(fileResponse));           
+                                  Select(fileResponse => ConvertToFileStatusFromResponse(fileResponse));
             return filesStatus;
         }
 
         /// <summary>
         /// Конвертер пакета информации из основной трансферной модели в класс клиентской части и сохранение файла
         /// </summary>      
-        private static async Task<IEnumerable<FileStatus>> ConvertToFilesStatusFromResponseAndSaveFiles(FilesDataResponse filesDataResponse,
-                                                                                                        IFileSystemOperations fileSystemOperations)
+        private async Task<IEnumerable<FileStatus>> ConvertToFilesStatusFromResponseAndSaveFiles(FilesDataResponse filesDataResponse)
         {
             var filesStatusTask = filesDataResponse?.
-                   FilesData?.
-                   Select(fileResponse => ConvertToFileStatusFromResponseAndSaveFile(fileResponse,
-                                                                                     fileSystemOperations));
+                                  FilesData?.
+                                  Select(fileResponse => ConvertToFileStatusFromResponseAndSaveFile(fileResponse));
             var filesStatus = await Task.WhenAll(filesStatusTask);
             return filesStatus;
         }
@@ -86,7 +105,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        private static FileStatus ConvertToFileStatusFromIntermediateResponse(FileDataIntermediateResponse fileIntermediateResponse)
+        private FileStatus ConvertToFileStatusFromIntermediateResponse(FileDataIntermediateResponse fileIntermediateResponse)
         {
             return new FileStatus(fileIntermediateResponse.FilePath,
                                   fileIntermediateResponse.StatusProcessing,
@@ -96,12 +115,12 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части перед сохранением
         /// </summary>      
-        private static FileStatus ConvertToFileStatusFromResponse(FileDataResponse fileResponse)
-        {           
-            StatusProcessing statusProcessing = fileResponse.StatusProcessing == StatusProcessing.Completed?                                             
+        private FileStatus ConvertToFileStatusFromResponse(FileDataResponse fileResponse)
+        {
+            StatusProcessing statusProcessing = fileResponse.StatusProcessing == StatusProcessing.Completed ?
                                                 StatusProcessing.Writing :
                                                 StatusProcessing.Error;
-            
+
             return new FileStatus(fileResponse.FilePath,
                                   statusProcessing,
                                   fileResponse.FileConvertErrorType);
@@ -110,10 +129,9 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части и сохранение файла
         /// </summary>      
-        private static async Task<FileStatus> ConvertToFileStatusFromResponseAndSaveFile(FileDataResponse fileResponse,
-                                                                                         IFileSystemOperations fileSystemOperations)
+        private async Task<FileStatus> ConvertToFileStatusFromResponseAndSaveFile(FileDataResponse fileResponse)
         {
-            FileSavedCheck fileSavedCheck = await SaveFileFromDTOResponse(fileResponse, fileSystemOperations);
+            FileSavedCheck fileSavedCheck = await SaveFileFromDTOResponse(fileResponse);
 
             StatusProcessing statusProcessing = fileResponse.StatusProcessing == StatusProcessing.Completed &&
                                                 fileSavedCheck.IsSaved ?
@@ -130,7 +148,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private static async Task<FileSavedCheck> SaveFileFromDTOResponse(FileDataResponse fileDataResponse, IFileSystemOperations fileSystemOperations)
+        private async Task<FileSavedCheck> SaveFileFromDTOResponse(FileDataResponse fileDataResponse)
         {
             var fileSavedCheck = new FileSavedCheck();
 
@@ -141,11 +159,13 @@ namespace GadzhiModules.Helpers.Converters.DTO
                 string fileName = Path.GetFileNameWithoutExtension(fileDataResponse.FilePath);
                 string fileExtension = FileHelpers.ExtensionWithoutPoint(Path.GetExtension(fileDataResponse.FilePath));
 
-                (bool isCreated, string directoryPath) = fileSystemOperations.CreateFolderByName(createdDirectoryName, "Converted");
+                (bool isCreated, string directoryPath) = FileSystemOperations.
+                                                         CreateFolderByName(createdDirectoryName,
+                                                                            ProjectSettings.DirectoryForSavingConvertedFiles);
                 if (isCreated)
                 {
-                    fileSavedCheck.FilePath = fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
-                    await fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataResponse.FileDataSource);
+                    fileSavedCheck.FilePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
+                    await FileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataResponse.FileDataSource);
 
                     fileSavedCheck.IsSaved = true;
                 }
@@ -165,7 +185,7 @@ namespace GadzhiModules.Helpers.Converters.DTO
         /// <summary>
         /// Конвертер из трансферной модели информации в клиентскую
         /// </summary>       
-        private static FilesQueueInfo ConvertToFilesQueueInfoFromResponse(FilesQueueInfoResponse filesQueueInfoResponse)
+        private FilesQueueInfo ConvertToFilesQueueInfoFromResponse(FilesQueueInfoResponse filesQueueInfoResponse)
         {
             return new FilesQueueInfo(filesQueueInfoResponse.FilesInQueueCount,
                                       filesQueueInfoResponse.PackagesInQueueCount);

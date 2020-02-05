@@ -1,9 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiModules.Helpers.Converters.DTO;
 using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;
@@ -22,17 +22,24 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Модель конвертируемых файлов
         /// </summary>     
         private IFilesData FilesInfoProject { get; }
+       
+        /// <summary>
+        /// Конвертеры из локальной модели в трансферную
+        /// </summary>  
+        IConverterClientFilesDataToDTO ConverterClientFilesDataToDTO { get; }
 
         /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        /// Конвертеры из трансферной модели в локальную
+        /// </summary>  
+        IConverterClientFilesDataFromDTO ConverterClientFilesDataFromDTO { get; }
 
-        public FileDataProcessingStatusMark(IFilesData filesInfoProject,
-                                            IFileSystemOperations fileSystemOperations)
+        public FileDataProcessingStatusMark(IFilesData filesInfoProject,                                           
+                                            IConverterClientFilesDataToDTO converterClientFilesDataToDTO,
+                                            IConverterClientFilesDataFromDTO converterClientFilesDataFromDTO)
         {
-            FilesInfoProject = filesInfoProject;
-            FileSystemOperations = fileSystemOperations;
+            FilesInfoProject = filesInfoProject;        
+            ConverterClientFilesDataToDTO = converterClientFilesDataToDTO;
+            ConverterClientFilesDataFromDTO = converterClientFilesDataFromDTO;
         }
 
         /// <summary>
@@ -40,7 +47,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public async Task<FilesDataRequest> GetFilesDataToRequest()
         {
-            return await FilesDataClientToDTOConverter.ConvertToFilesDataRequest(FilesInfoProject, FileSystemOperations);
+            return await ConverterClientFilesDataToDTO.ConvertToFilesDataRequest(FilesInfoProject);
         }
 
         /// <summary>
@@ -82,8 +89,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
-            var filesStatusIntermediate = FilesDataFromDTOConverterToClient.
-                                             ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
+            var filesStatusIntermediate = ConverterClientFilesDataFromDTO.
+                                          ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
 
             return Task.FromResult(filesStatusIntermediate);
         }
@@ -93,7 +100,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponse filesDataResponse)
         {
-            var filesStatusResponseBeforeWriting = FilesDataFromDTOConverterToClient.
+            var filesStatusResponseBeforeWriting = ConverterClientFilesDataFromDTO.
                                                    ConvertToFilesStatus(filesDataResponse);
             return Task.FromResult(filesStatusResponseBeforeWriting);
         }
@@ -103,9 +110,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public async Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponse filesDataResponse)
         {
-            var filesStatusResponse = await FilesDataFromDTOConverterToClient.
-                                            ConvertToFilesStatusAndSaveFiles(filesDataResponse,
-                                                                             FileSystemOperations);
+            var filesStatusResponse = await ConverterClientFilesDataFromDTO.
+                                            ConvertToFilesStatusAndSaveFiles(filesDataResponse);
             return filesStatusResponse;
         }
 

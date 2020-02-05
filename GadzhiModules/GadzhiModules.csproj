@@ -134,8 +134,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
-    <Compile Include="Helpers\Converters\DTO\FilesDataFromDTOConverterToClient.cs" />
-    <Compile Include="Helpers\Converters\DTO\FilesDataClientToDTOConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterClientFilesDataFromDTO.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterClientFilesDataToDTO.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Converters\StatusProjectToStringConverter.cs" />
@@ -146,6 +146,8 @@
     <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientFilesDataFromDTO.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientFilesDataToDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
@@ -182,7 +184,9 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helpers\Converters\DTO\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>

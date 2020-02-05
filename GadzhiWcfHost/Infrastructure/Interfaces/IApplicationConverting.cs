@@ -13,12 +13,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
     public interface IApplicationConverting
-    {
-        /// <summary>
-        /// Класс пользовательских пакетов на конвертирование
-        /// </summary>
-        IFilesDataPackages FilesDataPackages { get; }
-
+    { 
         /// <summary>
         /// Поставить файлы в очередь для обработки
         /// </summary>

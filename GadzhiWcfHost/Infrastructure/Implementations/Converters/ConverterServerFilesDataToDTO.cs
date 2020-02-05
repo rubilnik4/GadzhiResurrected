@@ -3,6 +3,7 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Implementations.Information;
+using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,36 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace GadzhiWcfHost.Helpers.Converters
+namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
 {
     /// <summary>
     /// Конвертер из серверной модели в трансферную
     /// </summary>
-    public static class FilesDataServerToDTOConverter
+    public class ConverterServerFilesDataToDTO : IConverterServerFilesDataToDTO
     {
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private IFileSystemOperations FileSystemOperations { get; }
+
+        /// <summary>
+        /// Информация о статусе конвертируемых файлов
+        /// </summary>   
+        private IQueueInformation QueueInformation { get; }
+
+        public ConverterServerFilesDataToDTO(IFileSystemOperations fileSystemOperations,
+                                             IQueueInformation queueInformation)
+        {
+            FileSystemOperations = fileSystemOperations;
+            QueueInformation = queueInformation;
+        }
+
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public static FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer, IQueueInformation queueInformation)
+        public FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
         {
-            FilesQueueInfo filesQueueInfo = queueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
+            FilesQueueInfo filesQueueInfo = QueueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
 
             return new FilesDataIntermediateResponse()
             {
@@ -41,10 +59,10 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        public static async Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer, IFileSystemOperations fileSystemOperations)
+        public async Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer)
         {
             var filesDataToResponseTasks = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-                                                           ConvertFileResponse(fileDataServer, fileSystemOperations));
+                                                           ConvertFileResponse(fileDataServer));
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 
             return new FilesDataResponse()
@@ -56,7 +74,7 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в промежуточную
         /// </summary>
-        private static FileDataIntermediateResponse ConvertFileToIntermediateResponse(FileDataServer fileDataServer)
+        private FileDataIntermediateResponse ConvertFileToIntermediateResponse(FileDataServer fileDataServer)
         {
             return new FileDataIntermediateResponse()
             {
@@ -69,12 +87,12 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в окончательный ответ
         /// </summary>
-        private static async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer, IFileSystemOperations fileSystemOperations)
+        private async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer)
         {
-            var fileDataSource = await fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
+            var fileDataSource = await FileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
 
             return new FileDataResponse()
-            {                
+            {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FileDataSource = fileDataSource,

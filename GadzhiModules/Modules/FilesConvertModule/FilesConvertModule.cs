@@ -23,6 +23,8 @@ using GadzhiModules.Infrastructure.Implementations;
 using ChannelAdam.ServiceModel;
 using Unity.Lifetime;
 using Unity.Injection;
+using GadzhiModules.Infrastructure.Interfaces.Converters;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
@@ -68,6 +70,8 @@ namespace GadzhiModules.Modules.FilesConvertModule
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
             unityContainer.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
+            unityContainer.RegisterType<IConverterClientFilesDataToDTO, ConverterClientFilesDataToDTO>();
+            unityContainer.RegisterType<IConverterClientFilesDataFromDTO, ConverterClientFilesDataFromDTO>();
         }
     }
 }

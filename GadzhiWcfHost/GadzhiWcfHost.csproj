@@ -95,13 +95,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\WcfServiceFactory.cs" />
-    <Compile Include="Helpers\Converters\FilesDataServerToDTOConverter.cs" />
-    <Compile Include="Helpers\Converters\FilesDataFromDTOConverterToServer.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Helpers\FileSystemInformation.cs" />
     <Compile Include="Helpers\ValidateDTOData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\QueueInformation.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IQueueInformation.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FilesDataPackages.cs" />
@@ -113,7 +115,9 @@
       <DependentUpon>FileConvertingService.svc</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helpers\Converters\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">

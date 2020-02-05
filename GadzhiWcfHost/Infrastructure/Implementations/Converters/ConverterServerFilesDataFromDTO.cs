@@ -2,6 +2,8 @@
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiWcfHost.Helpers;
+using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
@@ -9,19 +11,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWcfHost.Helpers.Converters
+namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
 {
-    public static class FilesDataFromDTOConverterToServer
+    /// <summary>
+    /// Конвертер из трансферной модели в серверную
+    /// </summary>      
+    public class ConverterServerFilesDataFromDTO: IConverterServerFilesDataFromDTO
     {
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private IFileSystemOperations FileSystemOperations { get; }
+
+        public ConverterServerFilesDataFromDTO(IFileSystemOperations fileSystemOperations)
+        {
+            FileSystemOperations = fileSystemOperations;
+        }
+
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        public static async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequest filesDataRequest, IFileSystemOperations fileSystemOperations)
+        public async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequest filesDataRequest)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
                                                ConvertToFileDataServerAndSaveFile(fileDTO, 
-                                                                                  filesDataRequest.ID.ToString(), 
-                                                                                  fileSystemOperations));
+                                                                                  filesDataRequest.ID.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
             return new FilesDataServer(filesDataRequest.ID, filesDataServerToConvert);
@@ -30,11 +44,10 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private static async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest,
-                                                                                     string packageGuid,
-                                                                                     IFileSystemOperations fileSystemOperations)
+        private async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest,
+                                                                              string packageGuid)
         {
-            FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid, fileSystemOperations);
+            FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid);
 
             return new FileDataServer(fileSavedCheck.FilePath,
                                       fileDataRequest.FilePath,
@@ -45,20 +58,19 @@ namespace GadzhiWcfHost.Helpers.Converters
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private static async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequest fileDataRequest, 
-                                                                         string packageGuid, 
-                                                                         IFileSystemOperations fileSystemOperations)
+        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequest fileDataRequest, 
+                                                                  string packageGuid)
         {
             var fileSavedCheck = new FileSavedCheck();
 
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = fileSystemOperations.CreateFolderByName(FileSystemInformation.ConvertionDirectory, packageGuid);
+                (bool isCreated, string directoryPath) = FileSystemOperations.CreateFolderByName(FileSystemInformation.ConvertionDirectory, packageGuid);
                 if (isCreated)
                 {
-                    fileSavedCheck.FilePath = fileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(), fileDataRequest.FileExtension);
-                    await fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
+                    fileSavedCheck.FilePath = FileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(), fileDataRequest.FileExtension);
+                    await FileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
 
                     fileSavedCheck.IsSaved = true;
                 }
