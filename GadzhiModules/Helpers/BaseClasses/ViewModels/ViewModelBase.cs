@@ -16,9 +16,14 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
     {
         /// <summary>
         /// Класс обертка для отлова ошибок
-        /// </summary> 
-        [Dependency]
-        public IExecuteAndCatchErrors ExecuteAndCatchErrors { get; set; }
+        /// </summary>       
+        protected IExecuteAndCatchErrors ExecuteAndCatchErrors { get; set; }
+
+        public ViewModelBase(IExecuteAndCatchErrors executeAndCatchErrors)
+        {
+            ExecuteAndCatchErrors = executeAndCatchErrors;
+        }
+
 
         /// <summary>
         /// Индикатор загрузки

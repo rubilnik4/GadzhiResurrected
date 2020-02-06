@@ -8,10 +8,10 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:dd="urn:gong-wpf-dragdrop"     
-        mc:Ignorable="d"       
+        mc:Ignorable="d"              
         xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"
         xmlns:bev="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"   
-        xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"   
+        xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"       
         d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
         >
     <Grid>
@@ -19,15 +19,24 @@
         <Grid.Resources>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
 
-            <conv:StatusProjectVisibilityConverter x:Key="StatusProjectVisibilityConverter"
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                                    TrueValue="Visible" 
-                                                   FalseValue="Collapsed" />
-            <conv:StatusProjectToStringConverter x:Key="StatusProjectToStringConverter"/>
+                                                   FalseValue="Collapsed"/>
 
+            <Brush x:Key="ColorRedAlert">#9b0000</Brush>
+            <Brush x:Key="ColorGreenComplite">#2e7d32</Brush>        
+            
             <Style x:Key="PackIconToolBarStyle" 
                    TargetType="materialDesign:PackIcon">
                 <Setter Property="Width" Value="24" />
                 <Setter Property="Height" Value="24"/>
+            </Style>
+
+            <Style x:Key="PackIconDataGridStyle" 
+                   TargetType="materialDesign:PackIcon">
+                <Setter Property="Width" Value="20" />
+                <Setter Property="Height" Value="20"/>
+                <Setter Property="Margin" Value="0 0 3 0"/>
             </Style>
 
             <Style x:Key="DockPanelStyle" 
@@ -93,7 +102,7 @@
 
         <DataGrid Grid.Row="1"
                   HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"  
+                  VerticalAlignment="Stretch"                  
                   ItemsSource="{Binding FilesDataCollection}"                   
                   SelectionMode="Extended"  
                   SelectionUnit="FullRow"                 
@@ -112,15 +121,38 @@
                 <DataGridTextColumn Header="Тип" 
                                     Binding="{Binding FileType}" 
                                     Width="0.15*"
-                                    IsReadOnly="True"  />
+                                    IsReadOnly="True">
+
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
                 <DataGridTextColumn Header="Имя файла" 
                                     Binding="{Binding FileName}" 
                                     Width="0.4*" 
-                                    IsReadOnly="True"  />
+                                    IsReadOnly="True">
+
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
                 <DataGridTextColumn Header="Путь" 
                                     Binding="{Binding FilePath}" 
                                     Width="*" 
-                                    IsReadOnly="True"  />
+                                    IsReadOnly="True">
+
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
                 <materialDesign:DataGridComboBoxColumn
                                     Header="Цвет печати"
@@ -129,12 +161,39 @@
                                     IsReadOnly="{Binding Path=DataContext.(vm:FilesConvertViewModel.IsConverting), Source={StaticResource ProxyElement}}"
                                     SelectedValueBinding="{Binding ColorPrintName}"
                                     ItemsSourceBinding="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">
+
+                    <materialDesign:DataGridComboBoxColumn.ElementStyle>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                        </Style>
+                    </materialDesign:DataGridComboBoxColumn.ElementStyle>
                 </materialDesign:DataGridComboBoxColumn>
 
-                <DataGridTextColumn Header="Статус" 
-                                    Binding="{Binding StatusProcessingName}" 
-                                    Width="0.35*" 
-                                    IsReadOnly="True"  />
+                <DataGridTemplateColumn Header="Статус"                                  
+                                        Width="0.35*"                                     
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Done"   
+                                                         Style="{StaticResource PackIconDataGridStyle}"
+                                                         Visibility="{Binding IsEndStatus, 
+                                                                      Converter={StaticResource BooleanToVisibilityConverter}}"     
+                                                         Foreground ="{StaticResource ColorGreenComplite}"/>
+                                
+                                <materialDesign:PackIcon Kind="Error"   
+                                                         Style="{StaticResource PackIconDataGridStyle}"
+                                                         Visibility="{Binding IsErrorStatus, 
+                                                                      Converter={StaticResource BooleanToVisibilityConverter}}"     
+                                                         Foreground ="{StaticResource ColorRedAlert}"/>
+                                
+                                <TextBlock Text="{Binding StatusProcessingName}"   
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
             </DataGrid.Columns>
 
             <i:Interaction.Behaviors>
@@ -156,13 +215,13 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock  Grid.Row="0"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Text="{Binding StatusProcessingProjectName}" />
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"
+                                Text="{Binding StatusProcessingProjectName}" />
 
                     <ProgressBar Grid.Row="1"      
-                                 Visibility="{Binding StatusProcessingProject, 
-                                              Converter={StaticResource StatusProjectVisibilityConverter}}"
+                                 Visibility="{Binding  IsConverting, 
+                                              Converter={StaticResource BooleanToVisibilityConverter}}"                                           
                                  IsIndeterminate="{Binding IsIndeterminateProgressBar}"
                                  Value="{Binding PercentageOfComplete, Mode=OneWay}"
                                  MinHeight="0"

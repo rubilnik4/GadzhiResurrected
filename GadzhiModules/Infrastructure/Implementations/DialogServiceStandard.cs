@@ -1,4 +1,5 @@
 ﻿using GadzhiModules.Infrastructure.Interfaces;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
@@ -58,7 +59,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             MessageBox.Show(messageText);
         }
-
+        
         /// <summary>
         /// Диалоговое окно с подтверждением
         /// </summary>  

@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers;
 using GadzhiModules.Infrastructure.Implementations.Information;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public FilesData(List<FileData> files)
         {
             ID = Guid.NewGuid();
+            FilesQueueInfo = new FilesQueueInfo();
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
             _filesInfo = files;
@@ -64,16 +66,32 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public StatusProcessingProject StatusProcessingProject { get; private set; }
 
         /// <summary>
+        /// Информация о количестве файлов в очереди на сервере
+        /// </summary>
+        public FilesQueueInfo FilesQueueInfo { get; private set; }
+
+        /// <summary>
         /// Добавить файл
         /// </summary>
         public void AddFile(FileData file)
         {
-            if (CanFileDataBeAddedtoList(file))
+            AddFiles(new List<FileData>() { file });
+        }
+
+        /// <summary>
+        /// Добавить файлы
+        /// </summary>
+        public void AddFiles(IEnumerable<string> files)
+        {
+            if (files != null)
             {
-                _filesInfo?.Add(file);
-                UpdateFileData(new FilesChange(_filesInfo,
-                                              new List<FileData>() { file },
-                                              ActionType.Add));
+                //ToList обязателен. Иначе данные зачищаются из списка
+                var filesInfo = files?.Select(f => new FileData(f)).
+                                       Where(f => CanFileDataBeAddedtoList(f)).ToList();
+                if (filesInfo != null)
+                {
+                    AddFiles(filesInfo);
+                }
             }
         }
 
@@ -89,25 +107,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
                 if (filesInfo != null)
                 {
                     _filesInfo?.AddRange(filesInfo);
-                    UpdateFileData(new FilesChange(_filesInfo, filesInfo, ActionType.Add));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Добавить файлы
-        /// </summary>
-        public void AddFiles(IEnumerable<string> files)
-        {
-            if (files != null)
-            {
-                //ToList обязателен. Иначе данные зачищаются из списка
-                var filesInfo = files?.Select(f => new FileData(f)).
-                                       Where(f => CanFileDataBeAddedtoList(f)).ToList();
-                if (filesInfo != null)
-                {
-                    _filesInfo?.AddRange(filesInfo);
-                    UpdateFileData(new FilesChange(_filesInfo, filesInfo, ActionType.Add));
+                    bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
+                    UpdateFileData(new FilesChange(_filesInfo,
+                                                   filesInfo,
+                                                   ActionType.Add,
+                                                   isStatusProcessingProjectChanged));
                 }
             }
         }
@@ -118,7 +122,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public void ClearFiles()
         {
             _filesInfo?.Clear();
-            UpdateFileData(new FilesChange(_filesInfo, new List<FileData>(), ActionType.Clear));
+            StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
+            bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
+            UpdateFileData(new FilesChange(_filesInfo,
+                                           new List<FileData>(),
+                                           ActionType.Clear,
+                                           isStatusProcessingProjectChanged));
         }
 
         /// <summary>
@@ -129,18 +138,33 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             if (files != null)
             {
                 _filesInfo?.RemoveAll(f => files?.Contains(f) == true);
-                UpdateFileData(new FilesChange(_filesInfo, files, ActionType.Remove));
+
+                bool isStatusProcessingProjectChanged = false;
+                if (_filesInfo == null || _filesInfo.Count == 0)
+                {
+                    isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
+                }
+                else
+                {
+                    isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
+                }
+
+                UpdateFileData(new FilesChange(_filesInfo,
+                                               files,
+                                               ActionType.Remove,
+                                               isStatusProcessingProjectChanged));
             }
         }
 
         /// <summary>
         /// Измененить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        public void ChangeFilesStatusAndMarkError(FilesStatus filesStatus)
+        public void ChangeFilesStatus(FilesStatus filesStatus)
         {
             if (filesStatus.IsValid)
-            {                       
-                StatusProcessingProject = filesStatus.StatusProcessingProject;
+            {
+                bool isStatusProcessingProjectChanged = SetStatusProcessingProject(filesStatus.StatusProcessingProject);             
+                FilesQueueInfo.ChangeByFileQueueStatus(filesStatus.FilesQueueStatus, StatusProcessingProject);
 
                 //список файлов для изменений c откорректированным статусом
                 var filesDataChanged = filesStatus?.FileStatus.
@@ -154,7 +178,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
                 //формируем данные для отправки изменений
                 var fileChange = new FilesChange(_filesInfo,
                                                  filesDataChanged,
-                                                 ActionType.StatusChange);
+                                                 ActionType.StatusChange,
+                                                 isStatusProcessingProjectChanged);
                 UpdateFileData(fileChange);
             }
         }
@@ -164,13 +189,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// </summary>
         public void ChangeAllFilesStatusAndMarkError()
         {
+            StatusProcessingProject = StatusProcessingProject.Error;
+            FilesQueueInfo = new FilesQueueInfo();
+
             var filesStatus = new FilesStatus(_filesInfo?.
                                               Select(fileData => new FileStatus(fileData.FilePath,
                                                                                 StatusProcessing.Error,
-                                                                                 FileConvertErrorType.AbortOperation)),
+                                                                                FileConvertErrorType.AbortOperation)),
                                               StatusProcessingProject.Error);
 
-            ChangeFilesStatusAndMarkError(filesStatus);
+            ChangeFilesStatus(filesStatus);
         }
 
         /// <summary>
@@ -188,6 +216,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             return file != null &&
                    _filesInfo?.Any(f => f.Equals(file)) == false;
+        }
+
+        private bool SetStatusProcessingProject(StatusProcessingProject statusProcessingProject)
+        {
+            bool isChanged = false;
+            if (StatusProcessingProject != statusProcessingProject)
+            {
+                StatusProcessingProject = statusProcessingProject;
+                isChanged = true;
+            }
+            return isChanged;
         }
     }
 }

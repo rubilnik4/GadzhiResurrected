@@ -37,14 +37,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private IStatusProcessingInformation StatusProcessingInformation { get; }
 
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi,
-                                     IStatusProcessingInformation statusProcessingInformation)
+                                     IStatusProcessingInformation statusProcessingInformation,
+                                     IExecuteAndCatchErrors executeAndCatchErrors)
+            :base(executeAndCatchErrors)
         {
             ApplicationGadzhi = applicationGadzhi;
             StatusProcessingInformation = statusProcessingInformation;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            ApplicationGadzhi.FilesInfoProject.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            ApplicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
@@ -55,9 +57,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private void InitializeDelegateCommands()
         {
             ClearFilesDelegateCommand = new DelegateCommand(
-             ClearFiles,
-             () => !IsLoading).
-             ObservesProperty(() => IsLoading);
+               ClearFiles,
+               () => !IsLoading && !IsConverting).
+               ObservesProperty(() => IsLoading).
+               ObservesProperty(() => IsConverting);
 
             AddFromFilesDelegateCommand = new DelegateCommand(
                async () => await AddFromFiles(),
@@ -150,8 +153,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Статус обработки проекта c процентом выполнения
         /// </summary>
-        public string StatusProcessingProjectName => StatusProcessingInformation.GetStatusProcessingProjectName();       
-
+        public string StatusProcessingProjectName => StatusProcessingInformation.GetStatusProcessingProjectName();
+        
         /// <summary>
         /// Отображать ли процент выполнения для ProgressBar
         /// </summary>
@@ -235,15 +238,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                 {
                     ActionOnTypeAdd(fileChange);
                 }
-                else if (fileChange.ActionType == ActionType.Remove)
+                else if (fileChange.ActionType == ActionType.Remove || fileChange.ActionType == ActionType.Clear)
                 {
                     ActionOnTypeRemove(fileChange);
                 }
-            }
-            else
-            {
-                ActionOnTypeStatusChange(fileChange);
-            }
+            }           
+            ActionOnTypeStatusChange(fileChange);
         }
 
         /// <summary>
@@ -301,13 +301,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             {
                 RaisePropertyChanged(nameof(PercentageOfComplete));
             }
-            if (StatusProcessingInformation.IsStatusProjectChanged)
+            if (filesChange.IsStatusProcessingProjectChanged)
             {
                 RaisePropertyChanged(nameof(IsIndeterminateProgressBar));
-                RaisePropertyChanged(nameof(StatusProcessingProject));
+                RaisePropertyChanged(nameof(StatusProcessingProject));              
             }
+
             //Изменяем процент выполнения в зависимости от типа операции
-            if (StatusProcessingInformation.IsStatusProcessingProjectNameChanged)
+            if (filesChange.IsStatusProcessingProjectChanged || StatusProcessingInformation.HasStatusProcessPercentage)
             {
                 RaisePropertyChanged(nameof(StatusProcessingProjectName));
             }

@@ -24,87 +24,28 @@ namespace GadzhiModules.Infrastructure.Implementations
         public StatusProcessingInformation(IFilesData filesInfoProject)
         {
             FilesInfoProject = filesInfoProject;
-        }
-
-        /// <summary>
-        /// Сбросить информацию о статусе конвертирования на начальные позиции
-        /// </summary>
-        public void ClearFilesDataToInitialValues()
-        {
-            IsConverting = false;
-            IsConvertingChanged = true;
-            FilesQueueInfo = null;
-            IsStatusProjectChanged = true;
-
-            FilesInfoProject.ChangeAllFilesStatusAndMarkError();
-        }
-
-        /// <summary>
-        /// Заполнить параметры исходя из информации о изменениях на сервере
-        /// </summary>
-        public void ChangeFilesDataByStatus(FilesStatus filesStatus)
-        {
-            switch (filesStatus.StatusProcessingProject)
-            {
-                case StatusProcessingProject.Sending:
-                    IsConverting = true;
-                    IsConvertingChanged = true;
-                    FirstFilesCountInQueue = 0;
-                    break;
-                case StatusProcessingProject.InQueue:
-                    if (FirstFilesCountInQueue == 0)
-                    {
-                        FirstFilesCountInQueue = filesStatus.FilesQueueInfo.FilesInQueueCount;
-                    }
-                    break;
-                case StatusProcessingProject.End:
-                    IsConverting = false;
-                    IsConvertingChanged = true;
-                    FirstFilesCountInQueue = 0;
-                    break;
-            }
-
-            FilesQueueInfo = filesStatus.FilesQueueInfo;
-            IsStatusProjectChanged = FilesInfoProject.StatusProcessingProject != filesStatus.StatusProcessingProject;
-
-            FilesInfoProject.ChangeFilesStatusAndMarkError(filesStatus);
-        }
+        }           
 
         /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary 
-        public bool IsConverting { get; private set; }
+        public bool IsConverting => StatusProcessingProjectConverter.ConvertingStatusProcessingProject.
+                                    Contains(FilesInfoProject.StatusProcessingProject);
+
+        private FilesQueueInfo FilesQueueInfo => FilesInfoProject.FilesQueueInfo;
 
         /// <summary>
         /// Изменился ли статус запуска/остановки процесса конвертирования
         /// </summary>
-        public bool IsConvertingChanged { get; private set; }
+        public bool IsConvertingChanged => FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Sending ||
+                                           FilesInfoProject.StatusProcessingProject == StatusProcessingProject.End ||
+                                           FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Error;
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>
         public StatusProcessingProject StatusProcessingProject => FilesInfoProject.StatusProcessingProject;
-
-        /// <summary>
-        /// Изменился ли статус выполнения пакета конвертирования
-        /// </summary>
-        public bool IsStatusProjectChanged { get; private set; }
-
-        /// <summary>
-        /// Изменился ли статус обработки проекта c процентом выполнения
-        /// </summary>
-        public bool IsStatusProcessingProjectNameChanged => IsStatusProjectChanged || HasStatusProcessPercentage;
-
-        /// <summary>
-        /// Информация о количестве файлов в очереди на сервере
-        /// </summary>
-        private FilesQueueInfo FilesQueueInfo { get; set; }
-
-        /// <summary>
-        /// Первоначальное количество файлов в очереди. Для расчета процентов выполнения
-        /// </summary>
-        private int FirstFilesCountInQueue { get; set; }
-
+       
         /// <summary>
         /// Процент выполнения пакета конвертирования
         /// </summary>
@@ -125,10 +66,10 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue)
             {
-                double percentagePerform = 100;
-                if (FirstFilesCountInQueue != 0)
+                double percentagePerform = 0;
+                if (FilesQueueInfo?.FilesInQueueCount != 0 &&FilesQueueInfo?.FilesInQueueCount != 0)
                 {
-                    percentagePerform = ((double?)FilesQueueInfo?.FilesInQueueCount / (double?)FirstFilesCountInQueue) * 100 ?? 0;
+                    percentagePerform = ((double?)FilesQueueInfo?.FilesInQueueCount / (double)FilesQueueInfo?.FirstFilesCountInQueue) * 100 ?? 0;
                 }
                 percentageOfComplete = 100 - percentagePerform;
             }

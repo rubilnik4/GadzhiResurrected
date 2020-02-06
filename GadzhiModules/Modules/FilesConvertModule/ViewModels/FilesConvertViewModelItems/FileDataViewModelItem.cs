@@ -1,4 +1,5 @@
-﻿using GadzhiModules.Helpers.Converters;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using Prism.Mvvm;
 using System;
@@ -55,11 +56,23 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
                                               ConvertStatusProcessingToString(FileData.StatusProcessing);
 
         /// <summary>
+        /// Есть ошибка при конвертировании
+        /// </summary>
+        public bool IsErrorStatus => FileData.StatusProcessing == StatusProcessing.Error;
+
+        /// <summary>
+        /// Завершилось ли конвертирование удачно
+        /// </summary>
+        public bool IsEndStatus => FileData.StatusProcessing == StatusProcessing.End;
+
+        /// <summary>
         /// Обновление статуса обработки через событие
         /// </summary>
         public void UpdateStatusProcessing()
         {
             RaisePropertyChanged(nameof(StatusProcessingName));
+            RaisePropertyChanged(nameof(IsErrorStatus));
+            RaisePropertyChanged(nameof(IsEndStatus));
         }
 
     }

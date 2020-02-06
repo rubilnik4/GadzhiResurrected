@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiModules.Infrastructure.Implementations.Information
+namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information
 {
     /// <summary>
     /// Информация о количестве файлов в очереди на сервере
     /// </summary>
-    public class FilesQueueInfo
+    public class FilesQueueStatus
     {
-        public FilesQueueInfo(int filesInQueueCount, int packagesInQueueCount)
+        public FilesQueueStatus(int filesInQueueCount, int packagesInQueueCount)
         {
             FilesInQueueCount = filesInQueueCount;
             PackagesInQueueCount = packagesInQueueCount;

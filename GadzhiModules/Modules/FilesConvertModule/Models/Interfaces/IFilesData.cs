@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers;
 using GadzhiModules.Infrastructure.Implementations.Information;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         StatusProcessingProject StatusProcessingProject { get; }
 
         /// <summary>
+        /// Информация о количестве файлов в очереди на сервере
+        /// </summary>
+        FilesQueueInfo FilesQueueInfo { get; }
+
+        /// <summary>
         /// Добавить файл
         /// </summary>
         void AddFile(FileData file);
@@ -71,7 +77,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Измененить статус файлов и присвоить при необходимости ошибку
         /// </summary>
-        void ChangeFilesStatusAndMarkError(FilesStatus filesStatus);
+        void ChangeFilesStatus(FilesStatus filesStatus);
 
         /// <summary>
         /// Измененить статус всех файлов и присвоить ошибку

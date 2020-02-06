@@ -1,7 +1,9 @@
 ﻿using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +15,10 @@ namespace GadzhiModules.Infrastructure.Interfaces
     public interface IApplicationGadzhi
     {
         /// <summary>
-        /// Модель конвертируемых файлов
-        /// </summary>       
-        IFilesData FilesInfoProject { get; }
-       
+        /// Подписка на изменение коллекции
+        /// </summary>
+        ISubject<FilesChange> FileDataChange { get; }
+
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>

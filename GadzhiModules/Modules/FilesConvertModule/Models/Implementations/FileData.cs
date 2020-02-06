@@ -2,6 +2,7 @@
 using GadzhiModules.Helpers;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Implementations.Information;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;

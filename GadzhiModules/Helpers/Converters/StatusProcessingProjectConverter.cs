@@ -27,6 +27,19 @@ namespace GadzhiModules.Helpers.Converters
             };
 
         /// <summary>
+        /// Список статусов, находящихся в процессе конвертирования
+        /// </summary>
+        public static IReadOnlyList<StatusProcessingProject> ConvertingStatusProcessingProject =>
+             new List<StatusProcessingProject>()
+             {
+                StatusProcessingProject.Converting,
+                StatusProcessingProject.InQueue,
+                StatusProcessingProject.Receiving,
+                StatusProcessingProject.Sending,
+                StatusProcessingProject.Writing,
+              };
+
+        /// <summary>
         /// Преобразовать статус в наименование
         /// </summary>       
         public static string ConvertStatusProcessingProjectToString(StatusProcessingProject statusProcessingProject)

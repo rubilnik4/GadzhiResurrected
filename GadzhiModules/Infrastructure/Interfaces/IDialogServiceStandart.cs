@@ -24,7 +24,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Информационное сообщение
         /// </summary>   
-        void ShowMessage(string messageText);
+        void ShowMessage(string messageText);       
 
         /// <summary>
         /// Диалоговое окно с подтверждением
@@ -39,6 +39,6 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Обертка для функции с диалоговым окном повтора
         /// </summary>
-        Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string messageText);       
+        Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string messageText);
     }
 }

@@ -23,7 +23,7 @@ namespace GadzhiModules.Helpers.Converters
                 { StatusProcessing.Writing , "Записываем" },
                 { StatusProcessing.End, "Готово" },
                 { StatusProcessing.Error, "Ошибочка" },
-            };
+            };      
 
         /// <summary>
         /// Преобразовать статус в наименование

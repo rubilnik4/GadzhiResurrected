@@ -10,14 +10,14 @@ using System.Windows.Data;
 
 namespace GadzhiModules.Helpers.Wpf.Converters
 {
-    [ValueConversion(typeof(StatusProcessingProject), typeof(Visibility))]
-    public class StatusProjectVisibilityConverter : IValueConverter
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class BoolToVisibilityConverter : IValueConverter
     {
         public Visibility TrueValue { get; set; }
         public Visibility FalseValue { get; set; }
 
-        public StatusProjectVisibilityConverter()
-        {           
+        public BoolToVisibilityConverter()
+        {
             TrueValue = Visibility.Visible;
             FalseValue = Visibility.Collapsed;
         }
@@ -25,14 +25,9 @@ namespace GadzhiModules.Helpers.Wpf.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool flag = false;
-            if (value is StatusProcessingProject statusProcessingProject)
+            if (value is bool isVisible)
             {
-                if (statusProcessingProject != StatusProcessingProject.NeedToLoadFiles &&
-                    statusProcessingProject != StatusProcessingProject.Error &&
-                    statusProcessingProject != StatusProcessingProject.End)
-                {
-                    flag = true;
-                }
+                flag = isVisible;
             }
             return (flag ? TrueValue : FalseValue);
         }

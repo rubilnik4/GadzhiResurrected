@@ -138,12 +138,12 @@
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientFilesDataToDTO.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
-    <Compile Include="Helpers\Wpf\Converters\StatusProjectToStringConverter.cs" />
-    <Compile Include="Helpers\Wpf\Converters\StatusProjectVisibilityConverter.cs" />
+    <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
-    <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\FilesQueueStatus.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientFilesDataFromDTO.cs" />
@@ -153,8 +153,8 @@
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
     <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
-    <Compile Include="Infrastructure\Implementations\Information\FilesStatus.cs" />
-    <Compile Include="Infrastructure\Implementations\Information\FileStatus.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\FilesStatus.cs" />
+    <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\FileStatus.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\ActionType.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\FilesChange.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileData.cs" />

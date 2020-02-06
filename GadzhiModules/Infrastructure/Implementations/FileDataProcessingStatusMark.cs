@@ -5,6 +5,7 @@ using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,7 +129,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             var filesDataUnion = filesNotFound?.Result.FileStatus.Union(filesChangedStatus.Result.FileStatus);
             var filesStatusUnion = new FilesStatus(filesDataUnion,
                                                    filesDataIntermediateResponse.StatusProcessingProject,
-                                                   filesChangedStatus.Result.FilesQueueInfo);
+                                                   filesChangedStatus.Result.FilesQueueStatus);
             return filesStatusUnion;
         }      
     }

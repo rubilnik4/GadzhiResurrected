@@ -14,6 +14,9 @@ using GadzhiCommon.Helpers.Dialogs;
 using System.Reactive.Disposables;
 using ChannelAdam.ServiceModel;
 using GadzhiModules.Infrastructure.Implementations.Information;
+using System.Reactive.Subjects;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -25,7 +28,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        public IFilesData FilesInfoProject { get; }
+        private IFilesData FilesInfoProject { get; }
 
         /// <summary>
         /// Сервис конвертации
@@ -82,6 +85,11 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             StatusProcessingUpdaterSubsriptions = new CompositeDisposable();
         }
+
+        /// <summary>
+        /// Подписка на изменение коллекции
+        /// </summary>
+        public ISubject<FilesChange> FileDataChange => FilesInfoProject.FileDataChange;
 
         /// <summary>
         /// Выполняется ли промежуточный запрос
@@ -155,6 +163,15 @@ namespace GadzhiModules.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Обновить статус конвертирования
+        /// </summary>
+        public void ChangeFilesStatusAndMarkError(FilesStatus filesStatus)
+        {
+
+            FilesInfoProject.ChangeFilesStatus(filesStatus);
+        }
+
+        /// <summary>
         /// Закрыть приложение
         /// </summary>
         public void CloseApplication()
@@ -205,7 +222,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task<FilesDataRequest> PrepareFilesToSending()
         {
             var filesStatusInSending = await FileDataProcessingStatusMark.GetFilesInSending();
-            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusInSending);
+            FilesInfoProject.ChangeFilesStatus(filesStatusInSending);
 
             var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
             return filesDataRequest;
@@ -221,7 +238,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                                                            Operations.
                                                                                            SendFiles(filesDataRequest);
             var filesStatusAfterSending = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
-            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusAfterSending);
+            FilesInfoProject.ChangeFilesStatus(filesStatusAfterSending);
         }
 
         /// <summary>
@@ -247,7 +264,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                                                 Operations.
                                                                                 CheckFilesStatusProcessing(FilesInfoProject.ID);
             FilesStatus filesStatus = await FileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
-            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatus);
+            FilesInfoProject.ChangeFilesStatus(filesStatus);
 
             if (filesDataIntermediateResponse.IsCompleted)
             {
@@ -269,13 +286,13 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                         GetCompleteFiles(FilesInfoProject.ID);
 
             var filesStatusBeforeWrite = await FileDataProcessingStatusMark.
-                                         GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);           
-            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusBeforeWrite);
+                                         GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
+            FilesInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
             var filesStatusWrite = await FileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseAndWritten(filesDataResponse);
 
-            StatusProcessingInformation.ChangeFilesDataByStatus(filesStatusWrite);
+            FilesInfoProject.ChangeFilesStatus(filesStatusWrite);
 
         }
 
@@ -294,7 +311,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             IsIntermediateResponseInProgress = false;
             ClearSubsriptions();
-            StatusProcessingInformation.ClearFilesDataToInitialValues();
+            FilesInfoProject.ChangeAllFilesStatusAndMarkError();
         }
 
         /// <summary>

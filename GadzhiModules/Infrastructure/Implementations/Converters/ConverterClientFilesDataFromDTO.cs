@@ -8,6 +8,7 @@ using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,12 +56,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                   FilesData?.
                                   Select(fileResponse => ConvertToFileStatusFromIntermediateResponse(fileResponse));
 
-            FilesQueueInfo filesQueueInfo = ConvertToFilesQueueInfoFromResponse(filesDataIntermediateResponse?.
+            FilesQueueStatus filesQueueStatus = ConvertToFilesQueueInfoFromResponse(filesDataIntermediateResponse?.
                                                                                 FilesQueueInfo);
 
             var filesStatusIntermediate = new FilesStatus(filesDataStatus,
                                                           filesDataIntermediateResponse.StatusProcessingProject,
-                                                          filesQueueInfo);
+                                                          filesQueueStatus);
             return filesStatusIntermediate;
         }
 
@@ -194,9 +195,9 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер из трансферной модели информации в клиентскую
         /// </summary>       
-        private FilesQueueInfo ConvertToFilesQueueInfoFromResponse(FilesQueueInfoResponse filesQueueInfoResponse)
+        private FilesQueueStatus ConvertToFilesQueueInfoFromResponse(FilesQueueInfoResponse filesQueueInfoResponse)
         {
-            return new FilesQueueInfo(filesQueueInfoResponse.FilesInQueueCount,
+            return new FilesQueueStatus(filesQueueInfoResponse.FilesInQueueCount,
                                       filesQueueInfoResponse.PackagesInQueueCount);
         }
     }

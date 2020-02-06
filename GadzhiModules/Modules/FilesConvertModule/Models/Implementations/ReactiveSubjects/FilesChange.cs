@@ -14,11 +14,13 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
     {
         public FilesChange(IEnumerable<FileData> filesDataProject,
                            IEnumerable<FileData> fileData,
-                           ActionType actionType)
+                           ActionType actionType,
+                           bool isStatusProcessingProjectChanged)
         {
             FilesDataProject = filesDataProject;
             FileData = fileData;
             ActionType = actionType;
+            IsStatusProcessingProjectChanged = isStatusProcessingProjectChanged;
         }
 
         /// <summary>
@@ -35,5 +37,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
         /// Тип действия
         /// </summary>
         public ActionType ActionType { get; }
+
+        /// <summary>
+        /// Изменился ли статус обработки пакета
+        /// </summary>
+        public bool IsStatusProcessingProjectChanged { get; }
     }
 }

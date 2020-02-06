@@ -12,17 +12,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
     /// Класс для получения информации о текущем статусе конвертирования
     /// </summary>
     public interface IStatusProcessingInformation
-    {
-        /// <summary>
-        /// Сбросить информацию о статусе конвертирования на начальные позиции
-        /// </summary>
-        void ClearFilesDataToInitialValues();
-
-        /// <summary>
-        /// Заполнить параметры исходя из информации о изменениях на сервере
-        /// </summary>
-        void ChangeFilesDataByStatus(FilesStatus filesStatus);
-
+    { 
         /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary 
@@ -37,16 +27,6 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Статус выполнения проекта
         /// </summary>
         StatusProcessingProject StatusProcessingProject { get; }
-
-        /// <summary>
-        /// Изменился ли статус выполнения пакета конвертирования
-        /// </summary>
-        bool IsStatusProjectChanged { get; }
-
-        /// <summary>
-        /// Изменился ли статус обработки проекта c процентом выполнения
-        /// </summary>
-        bool IsStatusProcessingProjectNameChanged { get; }
 
         /// <summary>
         /// Процент выполнения пакета конвертирования
