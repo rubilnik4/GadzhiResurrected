@@ -13,7 +13,8 @@ namespace GadzhiDTO.Healpers
     /// </summary>
     public class ClientEndpoints
     {
-        private ClientSection _clientSection = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
+        private readonly ClientSection _clientSection = 
+            ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
 
         /// <summary>
         /// Получить точку подключения через полное имя интерфейса

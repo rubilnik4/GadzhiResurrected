@@ -51,10 +51,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
 
             return new FileDataRequest()
             {
-                ColorPrint = fileData.ColorPrint,
-                FileName = fileData.FileName,
-                FilePath = fileData.FilePath,
-                FileExtension = fileData.FileExtension,
+                ColorPrint = fileData.ColorPrint,               
+                FilePath = fileData.FilePath,              
                 StatusProcessing = fileData.StatusProcessing,
                 FileDataSource = fileDataSource,
             };

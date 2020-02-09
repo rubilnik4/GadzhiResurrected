@@ -28,42 +28,41 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        private IFilesData FilesInfoProject { get; }
+        private readonly IFilesData _filesInfoProject;
 
         /// <summary>
         /// Сервис конвертации
         /// </summary>     
-        private IServiceConsumer<IFileConvertingService> FileConvertingService { get; }
+        private readonly IServiceConsumer<IFileConvertingService> _fileConvertingService;
 
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary>        
-        private IDialogServiceStandard DialogServiceStandard { get; }
+        private readonly IDialogServiceStandard _dialogServiceStandard;
 
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
         /// Текущий статус конвертирования
         /// </summary>        
-        private IStatusProcessingInformation StatusProcessingInformation { get; }
-
+        private readonly IStatusProcessingInformation _statusProcessingInformation;
         /// <summary>
         /// Получение файлов для изменения статуса
         /// </summary>     
-        private IFileDataProcessingStatusMark FileDataProcessingStatusMark { get; }
+        private readonly IFileDataProcessingStatusMark _fileDataProcessingStatusMark;
 
         /// <summary>
         /// Параметры приложения
         /// </summary>
-        private IProjectSettings ProjectSettings { get; }
+        private readonly IProjectSettings _projectSettings;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
         /// </summary>        
-        public IExecuteAndCatchErrors ExecuteAndCatchErrors { get; set; }
+        private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSystemOperations fileSystemOperations,
@@ -74,14 +73,14 @@ namespace GadzhiModules.Infrastructure.Implementations
                                  IExecuteAndCatchErrors executeAndCatchErrors,
                                  IProjectSettings projectSettings)
         {
-            DialogServiceStandard = dialogServiceStandard;
-            FileSystemOperations = fileSystemOperations;
-            FilesInfoProject = filesInfoProject;
-            FileConvertingService = fileConvertingService;
-            FileDataProcessingStatusMark = fileDataProcessingStatusMark;
-            StatusProcessingInformation = statusProcessingInformation;
-            ExecuteAndCatchErrors = executeAndCatchErrors;
-            ProjectSettings = projectSettings;
+            _dialogServiceStandard = dialogServiceStandard;
+            _fileSystemOperations = fileSystemOperations;
+            _filesInfoProject = filesInfoProject;
+            _fileConvertingService = fileConvertingService;
+            _fileDataProcessingStatusMark = fileDataProcessingStatusMark;
+            _statusProcessingInformation = statusProcessingInformation;
+            _executeAndCatchErrors = executeAndCatchErrors;
+            _projectSettings = projectSettings;
 
             StatusProcessingUpdaterSubsriptions = new CompositeDisposable();
         }
@@ -89,7 +88,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange => FilesInfoProject.FileDataChange;
+        public ISubject<FilesChange> FileDataChange => _filesInfoProject.FileDataChange;
 
         /// <summary>
         /// Выполняется ли промежуточный запрос
@@ -106,9 +105,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task AddFromFiles()
         {
-            if (!StatusProcessingInformation.IsConverting)
+            if (!_statusProcessingInformation.IsConverting)
             {
-                var filePaths = await DialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
+                var filePaths = await _dialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
                 await AddFromFilesOrDirectories(filePaths);
             }
         }
@@ -118,9 +117,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>     
         public async Task AddFromFolders()
         {
-            if (!StatusProcessingInformation.IsConverting)
+            if (!_statusProcessingInformation.IsConverting)
             {
-                var directoryPaths = await DialogServiceStandard.OpenFolderDialog(true);
+                var directoryPaths = await _dialogServiceStandard.OpenFolderDialog(true);
                 await AddFromFilesOrDirectories(directoryPaths);
             }
         }
@@ -130,12 +129,12 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths)
         {
-            if (!StatusProcessingInformation.IsConverting)
+            if (!_statusProcessingInformation.IsConverting)
             {
-                var allFilePaths = await FileSystemOperations.GetFilesFromDirectoryAndSubDirectory(fileOrDirectoriesPaths);
+                var allFilePaths = await _fileSystemOperations.GetFilesFromDirectoryAndSubDirectory(fileOrDirectoriesPaths);
                 if (allFilePaths != null && allFilePaths.Any())
                 {
-                    FilesInfoProject.AddFiles(allFilePaths);
+                    _filesInfoProject.AddFiles(allFilePaths);
                 }
             }
         }
@@ -145,9 +144,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         public void ClearFiles()
         {
-            if (!StatusProcessingInformation.IsConverting)
+            if (!_statusProcessingInformation.IsConverting)
             {
-                FilesInfoProject.ClearFiles();
+                _filesInfoProject.ClearFiles();
             }
         }
 
@@ -156,9 +155,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public void RemoveFiles(IEnumerable<FileData> filesToRemove)
         {
-            if (!StatusProcessingInformation.IsConverting)
+            if (!_statusProcessingInformation.IsConverting)
             {
-                FilesInfoProject.RemoveFiles(filesToRemove);
+                _filesInfoProject.RemoveFiles(filesToRemove);
             }
         }
 
@@ -168,7 +167,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public void ChangeFilesStatusAndMarkError(FilesStatus filesStatus)
         {
 
-            FilesInfoProject.ChangeFilesStatus(filesStatus);
+            _filesInfoProject.ChangeFilesStatus(filesStatus);
         }
 
         /// <summary>
@@ -176,9 +175,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public void CloseApplication()
         {
-            if (StatusProcessingInformation.IsConverting)
+            if (_statusProcessingInformation.IsConverting)
             {
-                if (!DialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
+                if (!_dialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
                 {
                     return;
                 }
@@ -194,11 +193,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task ConvertingFiles()
         {
-            if (!StatusProcessingInformation.IsConverting)
+            if (!_statusProcessingInformation.IsConverting)
             {
                 GetReadyPropertiesToConvert();
 
-                if (FilesInfoProject?.FilesInfo?.Any() == true)
+                if (_filesInfoProject?.FilesInfo?.Any() == true)
                 {
                     FilesDataRequest filesDataRequest = await PrepareFilesToSending();
                     if (filesDataRequest.IsValidToSend)
@@ -211,7 +210,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 else
                 {
                     AbortPropertiesConverting();
-                    DialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
+                    _dialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
                 }
             }
         }
@@ -221,10 +220,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>     
         private async Task<FilesDataRequest> PrepareFilesToSending()
         {
-            var filesStatusInSending = await FileDataProcessingStatusMark.GetFilesInSending();
-            FilesInfoProject.ChangeFilesStatus(filesStatusInSending);
+            var filesStatusInSending = await _fileDataProcessingStatusMark.GetFilesInSending();
+            _filesInfoProject.ChangeFilesStatus(filesStatusInSending);
 
-            var filesDataRequest = await FileDataProcessingStatusMark.GetFilesDataToRequest();
+            var filesDataRequest = await _fileDataProcessingStatusMark.GetFilesDataToRequest();
             return filesDataRequest;
         }
 
@@ -234,11 +233,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <returns></returns>
         private async Task SendFilesToConverting(FilesDataRequest filesDataRequest)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
                                                                                            Operations.
                                                                                            SendFiles(filesDataRequest);
-            var filesStatusAfterSending = await FileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
-            FilesInfoProject.ChangeFilesStatus(filesStatusAfterSending);
+            var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
+            _filesInfoProject.ChangeFilesStatus(filesStatusAfterSending);
         }
 
         /// <summary>
@@ -247,9 +246,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         private void SubsribeToIntermediateResponse()
         {
             StatusProcessingUpdaterSubsriptions.Add(Observable.
-                                                    Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToToIntermediateResponse)).
-                                                    TakeWhile(_ => StatusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
-                                                    Subscribe(async _ => await ExecuteAndCatchErrors.
+                                                    Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToToIntermediateResponse)).
+                                                    TakeWhile(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
+                                                    Subscribe(async _ => await _executeAndCatchErrors.
                                                                                ExecuteAndHandleErrorAsync(UpdateStatusProcessing, AbortPropertiesConverting)));
         }
 
@@ -260,11 +259,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             IsIntermediateResponseInProgress = true;
 
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await FileConvertingService.
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
                                                                                 Operations.
-                                                                                CheckFilesStatusProcessing(FilesInfoProject.ID);
-            FilesStatus filesStatus = await FileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
-            FilesInfoProject.ChangeFilesStatus(filesStatus);
+                                                                                CheckFilesStatusProcessing(_filesInfoProject.ID);
+            FilesStatus filesStatus = await _fileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
+            _filesInfoProject.ChangeFilesStatus(filesStatus);
 
             if (filesDataIntermediateResponse.IsCompleted)
             {
@@ -281,18 +280,18 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task GetCompleteFiles()
         {
 
-            FilesDataResponse filesDataResponse = await FileConvertingService.
+            FilesDataResponse filesDataResponse = await _fileConvertingService.
                                                         Operations.
-                                                        GetCompleteFiles(FilesInfoProject.ID);
+                                                        GetCompleteFiles(_filesInfoProject.ID);
 
-            var filesStatusBeforeWrite = await FileDataProcessingStatusMark.
+            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
-            FilesInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
+            _filesInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
-            var filesStatusWrite = await FileDataProcessingStatusMark.
+            var filesStatusWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseAndWritten(filesDataResponse);
 
-            FilesInfoProject.ChangeFilesStatus(filesStatusWrite);
+            _filesInfoProject.ChangeFilesStatus(filesStatusWrite);
 
         }
 
@@ -311,7 +310,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             IsIntermediateResponseInProgress = false;
             ClearSubsriptions();
-            FilesInfoProject.ChangeAllFilesStatusAndMarkError();
+            _filesInfoProject.ChangeAllFilesStatusAndMarkError();
         }
 
         /// <summary>

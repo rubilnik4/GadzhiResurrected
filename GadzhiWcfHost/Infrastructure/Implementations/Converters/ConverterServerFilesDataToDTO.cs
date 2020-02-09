@@ -21,18 +21,18 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
         /// Информация о статусе конвертируемых файлов
         /// </summary>   
-        private IQueueInformation QueueInformation { get; }
+        private readonly IQueueInformation _queueInformation;
 
         public ConverterServerFilesDataToDTO(IFileSystemOperations fileSystemOperations,
                                              IQueueInformation queueInformation)
         {
-            FileSystemOperations = fileSystemOperations;
-            QueueInformation = queueInformation;
+            _fileSystemOperations = fileSystemOperations;
+            _queueInformation = queueInformation;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         /// </summary>       
         public FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
         {
-            FilesQueueInfo filesQueueInfo = QueueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
+            FilesQueueInfo filesQueueInfo = _queueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
 
             return new FilesDataIntermediateResponse()
             {
@@ -89,7 +89,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer)
         {
-            var fileDataSource = await FileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
+            var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
 
             return new FileDataResponse()
             {

@@ -16,11 +16,11 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Класс пользовательских пакетов на конвертирование
         /// </summary>
-        public IFilesDataPackages FilesDataPackages { get; }
+        public readonly IFilesDataPackages _filesDataPackages;
 
         public QueueInformation(IFilesDataPackages filesDataPackages)
         {
-            FilesDataPackages = filesDataPackages;
+            _filesDataPackages = filesDataPackages;
         }
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>        
         private FilesQueueInfo GetQueueInfoUpToIdPackageOrAll(Guid? id = null)
         {
-            int packagesInQueue = FilesDataPackages?.
+            int packagesInQueue = _filesDataPackages?.
                                   FilesDataPackagesToConverting.
                                   Where (package => !package.IsCompleted).
                                   TakeWhile(package => id == null || package.ID != id).
                                   Count() ?? 0;
 
-            int filesInQueue = FilesDataPackages?.
+            int filesInQueue = _filesDataPackages?.
                                FilesDataPackagesToConverting.
                                Where(package => !package.IsCompleted).
                                TakeWhile(package => id == null || package.ID != id).

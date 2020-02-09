@@ -15,11 +15,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary> 
-        private IDialogServiceStandard DialogServiceStandard { get; set; }
+        private readonly IDialogServiceStandard _dialogServiceStandard;
 
         public ExecuteAndCatchErrors(IDialogServiceStandard dialogServiceStandard)
         {
-            DialogServiceStandard = dialogServiceStandard;
+            _dialogServiceStandard = dialogServiceStandard;
         }
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок метода.
@@ -46,7 +46,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             catch (Exception ex)
             {
                 ApplicationAbortionMethod?.Invoke();
-                DialogServiceStandard.ShowMessage(ex.Message);
+                _dialogServiceStandard.ShowMessage(ex.Message);
             }           
         }
 
@@ -78,7 +78,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             catch (Exception ex)
             {
                 ApplicationAbortionMethod?.Invoke();
-                DialogServiceStandard.ShowMessage(ex.Message);
+                _dialogServiceStandard.ShowMessage(ex.Message);
             }          
         }
 

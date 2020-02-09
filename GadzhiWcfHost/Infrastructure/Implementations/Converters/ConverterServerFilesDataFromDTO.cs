@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTO.TransferModels.FilesConvert;
@@ -21,11 +22,11 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        private readonly IFileSystemOperations _fileSystemOperations;
 
         public ConverterServerFilesDataFromDTO(IFileSystemOperations fileSystemOperations)
         {
-            FileSystemOperations = fileSystemOperations;
+            _fileSystemOperations = fileSystemOperations;
         }
 
         /// <summary>
@@ -66,11 +67,13 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = FileSystemOperations.CreateFolderByName(FileSystemInformation.ConvertionDirectory, packageGuid);
+                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(FileSystemInformation.ConvertionDirectory, packageGuid);
                 if (isCreated)
                 {
-                    fileSavedCheck.FilePath = FileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(), fileDataRequest.FileExtension);
-                    fileSavedCheck.IsSaved = await FileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
+                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, 
+                                                                                   Guid.NewGuid().ToString(),
+                                                                                   FileHelpers.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
+                    fileSavedCheck.IsSaved = await _fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
                 }
                 else
                 {

@@ -1,7 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Helpers;
 using GadzhiDTO.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -19,9 +21,12 @@ namespace GadzhiWcfHost.Helpers
         {
             var errors = new List<FileConvertErrorType>();
 
-            bool isValidName = !String.IsNullOrWhiteSpace(fileDataRequest?.FileName);
-            bool isValidExtension = !String.IsNullOrWhiteSpace(fileDataRequest?.FileExtension) &&
-                                    ValidFileExtentions.DocAndDgnFileTypes.Contains(fileDataRequest?.FileExtension);
+            string fileName = Path.GetFileNameWithoutExtension(fileDataRequest?.FilePath);
+            string fileExtension = FileHelpers.ExtensionWithoutPointFromPath(fileDataRequest?.FilePath);
+
+            bool isValidName = !String.IsNullOrWhiteSpace(fileName);
+            bool isValidExtension = !String.IsNullOrWhiteSpace(fileExtension) &&
+                                    ValidFileExtentions.DocAndDgnFileTypes.Contains(fileExtension);          
             bool isValidDataSource = fileDataRequest?.FileDataSource != null;
 
             if (isValidName)
@@ -35,7 +40,7 @@ namespace GadzhiWcfHost.Helpers
             if (isValidDataSource)
             {
                 errors.Add(FileConvertErrorType.IncorrectDataSource);
-            }            
+            }
 
             bool isValid = isValidName && isValidExtension && isValidDataSource;
             return (isValid, errors);

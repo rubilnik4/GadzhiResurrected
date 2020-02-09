@@ -15,19 +15,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     /// </summary>
     [DataContract]
     public class FileDataRequest
-    {
-        /// <summary>
-        /// Расширение файла
-        /// </summary>
-        [DataMember]
-        public string FileExtension { get; set; }
-
-        /// <summary>
-        /// Имя файла
-        /// </summary>
-        [DataMember]
-        public string FileName { get; set; }
-
+    {   
         /// <summary>
         /// Путь файла
         /// </summary>

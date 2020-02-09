@@ -22,25 +22,25 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        private IFilesData FilesInfoProject { get; }
-       
+        private readonly IFilesData _filesInfoProject;
+
         /// <summary>
         /// Конвертеры из локальной модели в трансферную
         /// </summary>  
-        IConverterClientFilesDataToDTO ConverterClientFilesDataToDTO { get; }
+        private readonly IConverterClientFilesDataToDTO _converterClientFilesDataToDTO;
 
         /// <summary>
         /// Конвертеры из трансферной модели в локальную
         /// </summary>  
-        IConverterClientFilesDataFromDTO ConverterClientFilesDataFromDTO { get; }
+        private readonly IConverterClientFilesDataFromDTO _converterClientFilesDataFromDTO;
 
         public FileDataProcessingStatusMark(IFilesData filesInfoProject,                                           
                                             IConverterClientFilesDataToDTO converterClientFilesDataToDTO,
                                             IConverterClientFilesDataFromDTO converterClientFilesDataFromDTO)
         {
-            FilesInfoProject = filesInfoProject;        
-            ConverterClientFilesDataToDTO = converterClientFilesDataToDTO;
-            ConverterClientFilesDataFromDTO = converterClientFilesDataFromDTO;
+            _filesInfoProject = filesInfoProject;        
+            _converterClientFilesDataToDTO = converterClientFilesDataToDTO;
+            _converterClientFilesDataFromDTO = converterClientFilesDataFromDTO;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public async Task<FilesDataRequest> GetFilesDataToRequest()
         {
-            return await ConverterClientFilesDataToDTO.ConvertToFilesDataRequest(FilesInfoProject);
+            return await _converterClientFilesDataToDTO.ConvertToFilesDataRequest(_filesInfoProject);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         public Task<FilesStatus> GetFilesInSending()
         {
-            var filesInSending = FilesInfoProject?.
+            var filesInSending = _filesInfoProject?.
                                  FilesInfo?.
                                  Select(file => new FileStatus(file.FilePath, 
                                                                StatusProcessing.Sending,
@@ -74,7 +74,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest)
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
-            var filesNotFound = FilesInfoProject?.
+            var filesNotFound = _filesInfoProject?.
                                 FilesInfoPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath,
@@ -90,7 +90,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
         {
-            var filesStatusIntermediate = ConverterClientFilesDataFromDTO.
+            var filesStatusIntermediate = _converterClientFilesDataFromDTO.
                                           ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
 
             return Task.FromResult(filesStatusIntermediate);
@@ -101,7 +101,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponse filesDataResponse)
         {
-            var filesStatusResponseBeforeWriting = ConverterClientFilesDataFromDTO.
+            var filesStatusResponseBeforeWriting = _converterClientFilesDataFromDTO.
                                                    ConvertToFilesStatus(filesDataResponse);
             return Task.FromResult(filesStatusResponseBeforeWriting);
         }
@@ -111,7 +111,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>       
         public async Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponse filesDataResponse)
         {
-            var filesStatusResponse = await ConverterClientFilesDataFromDTO.
+            var filesStatusResponse = await _converterClientFilesDataFromDTO.
                                             ConvertToFilesStatusAndSaveFiles(filesDataResponse);
             return filesStatusResponse;
         }

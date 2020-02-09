@@ -29,24 +29,24 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Слой инфраструктуры
         /// </summary>        
-        private IApplicationGadzhi ApplicationGadzhi { get; }
+        private readonly IApplicationGadzhi _applicationGadzhi;
 
         /// <summary>
         /// Текущий статус конвертирования
         /// </summary>        
-        private IStatusProcessingInformation StatusProcessingInformation { get; }
+        private readonly IStatusProcessingInformation _statusProcessingInformation;
 
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi,
                                      IStatusProcessingInformation statusProcessingInformation,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
             :base(executeAndCatchErrors)
         {
-            ApplicationGadzhi = applicationGadzhi;
-            StatusProcessingInformation = statusProcessingInformation;
+            _applicationGadzhi = applicationGadzhi;
+            _statusProcessingInformation = statusProcessingInformation;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            ApplicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            _applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
@@ -136,7 +136,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary 
-        public bool IsConverting => StatusProcessingInformation.IsConverting;
+        public bool IsConverting => _statusProcessingInformation.IsConverting;
 
         /// <summary>
         /// Типы цветов для печати
@@ -148,29 +148,29 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Статус обработки проекта
         /// </summary>
-        public StatusProcessingProject StatusProcessingProject => StatusProcessingInformation.StatusProcessingProject;
+        public StatusProcessingProject StatusProcessingProject => _statusProcessingInformation.StatusProcessingProject;
 
         /// <summary>
         /// Статус обработки проекта c процентом выполнения
         /// </summary>
-        public string StatusProcessingProjectName => StatusProcessingInformation.GetStatusProcessingProjectName();
+        public string StatusProcessingProjectName => _statusProcessingInformation.GetStatusProcessingProjectName();
         
         /// <summary>
         /// Отображать ли процент выполнения для ProgressBar
         /// </summary>
-        public bool IsIndeterminateProgressBar => !StatusProcessingInformation.HasStatusProcessPercentage;
+        public bool IsIndeterminateProgressBar => !_statusProcessingInformation.HasStatusProcessPercentage;
 
         /// <summary>
         /// Процент выполнения для ProgressBar
         /// </summary>
-        public int PercentageOfComplete => StatusProcessingInformation.PercentageOfComplete;
+        public int PercentageOfComplete => _statusProcessingInformation.PercentageOfComplete;
 
         /// <summary>
         /// Очистить список файлов
         /// </summary> 
         private void ClearFiles()
         {
-            ExecuteAndHandleError(ApplicationGadzhi.ClearFiles);
+            ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFiles()
         {
-            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.AddFromFiles);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFolders()
         {
-            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.AddFromFolders);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths)
         {
-            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.AddFromFilesOrDirectories, fileOrDirectoriesPaths);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFilesOrDirectories, fileOrDirectoriesPaths);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
                               OfType<FileDataViewModelItem>().
                               Select(FileVm => FileVm.FileData);
 
-            ExecuteAndHandleError(ApplicationGadzhi.RemoveFiles, removeFiles);
+            ExecuteAndHandleError(_applicationGadzhi.RemoveFiles, removeFiles);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task ConvertingFiles()
         {
-            await ExecuteAndHandleErrorAsync(ApplicationGadzhi.ConvertingFiles, ApplicationGadzhi.AbortPropertiesConverting);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles, _applicationGadzhi.AbortPropertiesConverting);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void CloseApplication()
         {
-            ExecuteAndHandleError(ApplicationGadzhi.CloseApplication);
+            ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
         }
 
         #region FilesInfoUpdate
@@ -297,7 +297,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private void RaiseAfterStatusChange(FilesChange filesChange)
         {
             //необходимо сначала вычислить проценты, затем статус
-            if (StatusProcessingInformation.HasStatusProcessPercentage)
+            if (_statusProcessingInformation.HasStatusProcessPercentage)
             {
                 RaisePropertyChanged(nameof(PercentageOfComplete));
             }
@@ -308,11 +308,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             }
 
             //Изменяем процент выполнения в зависимости от типа операции
-            if (filesChange.IsStatusProcessingProjectChanged || StatusProcessingInformation.HasStatusProcessPercentage)
+            if (filesChange.IsStatusProcessingProjectChanged || _statusProcessingInformation.HasStatusProcessPercentage)
             {
                 RaisePropertyChanged(nameof(StatusProcessingProjectName));
             }
-            if (StatusProcessingInformation.IsConvertingChanged)
+            if (_statusProcessingInformation.IsConvertingChanged)
             {
                 RaisePropertyChanged(nameof(IsConverting));
             }

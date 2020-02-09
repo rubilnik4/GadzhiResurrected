@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiDAL.DependencyInjection;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Implementations.Converters;
@@ -27,12 +28,14 @@ namespace GadzhiWcfHost.DependencyInjection
             // Регистрируем зависимости
             container
                 .RegisterType<IFileSystemOperations, FileSystemOperations>()
-                .RegisterType<IFileConvertingService, FileConvertingService>()                
+                .RegisterType<IFileConvertingService, FileConvertingService>()
                 .RegisterType<IQueueInformation, QueueInformation>()
                 .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
                 .RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>()
                 .RegisterSingleton<IFilesDataPackages, FilesDataPackages>()
                 .RegisterSingleton<IApplicationConverting, ApplicationConverting>();
+
+            GadzhiDALDependencyInjection.ConfigureContainer(container);
         }
 
     }
