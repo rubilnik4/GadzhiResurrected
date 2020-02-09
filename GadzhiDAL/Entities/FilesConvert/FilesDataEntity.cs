@@ -12,20 +12,15 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// </summary>
     public class FilesDataEntity : EntityBase
     {
-       public FilesDataEntity()
+        public FilesDataEntity()
         {
             FilesData = new List<FileDataEntity>();
         }
 
         /// <summary>
-        /// Идентефикатор
-        /// </summary>
-        public virtual int Id { get; protected set; }
-
-        /// <summary>
         /// ID идентефикатор
         /// </summary>        
-        public virtual Guid IdGuid { get; set; }        
+        public virtual Guid IdGuid { get; set; }
 
         /// <summary>
         /// Завершена ли обработка
@@ -40,6 +35,19 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
-        public virtual IList<FileDataEntity> FilesData { get; set; }
+        public virtual IList<FileDataEntity> FilesData { get; protected set; }
+
+        public virtual void AddRangeFilesData(IEnumerable<FileDataEntity> fileDataEntities)
+        {
+            if (fileDataEntities?.Any() == true)
+            {
+                FilesData = fileDataEntities?.Select(fileData =>
+                                             {
+                                                 fileData.FilesDataEntity = this;
+                                                 return fileData;
+                                             })
+                                             .ToList();
+            }
+        }
     }
 }

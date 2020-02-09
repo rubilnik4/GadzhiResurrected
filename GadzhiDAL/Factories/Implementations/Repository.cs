@@ -12,78 +12,87 @@ using System.Threading.Tasks;
 namespace GadzhiDAL.Factories.Implementations
 {
     public class Repository<T> : IRepository<T> where T : EntityBase
-    {
-        protected ISession Session;
+    {       
+        /// <summary>
+        /// Текущая сессия
+        /// </summary>
+        private readonly ISession _session;
 
-        protected Repository(ISession session)
+        public Repository(ISession session)
         {
-            Session = session;
+            _session = session;
         }
 
         public IEnumerable<T> GetAll()
         {
-            return Session.Query<T>().ToList();
+            return _session.Query<T>().ToList();
         }
 
         public IQueryable<T> Query()
         {
-            return Session.Query<T>();
+            return _session.Query<T>();
         }
 
         public IQueryOver<T> QueryOver()
         {
-            return Session.QueryOver<T>();
+            return _session.QueryOver<T>();
         }
 
-        public void Create(T entity)
+        /// <summary>
+        /// Добавить сущность
+        /// </summary>       
+        public void Add(T entity)
         {
-            Session.Save(entity);
+            _session.Save(entity);
         }
 
-        public async Task CreateAsync(T entity)
+        /// <summary>
+        /// Добавить сущность асинхронно
+        /// </summary> 
+        public async Task AddAsync(T entity)
         {
-            await Session.SaveAsync(entity);
+            await _session.SaveAsync(entity);
         }
 
         public void Update(T entity)
         {
-            Session.Update(entity);
+            _session.Update(entity);
         }
 
         public async Task UpdateAsync(T entity)
         {
-            await Session.UpdateAsync(entity);
+            await _session.UpdateAsync(entity);
         }
 
 
         public void Delete(T entity)
         {
-            Session.Delete(entity);
+            _session.Delete(entity);
         }
 
         public async Task DeleteAsync(T entity)
         {
-            await Session.DeleteAsync(entity);
+            await _session.DeleteAsync(entity);
         }
 
         public void Delete(int id)
         {
-            Session.Query<T>().Where(x => x.Id == id).Delete();
+            _session.Query<T>().Where(x => x.Id == id).Delete();
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await Session.Query<T>().Where(x => x.Id == id).DeleteAsync(cancellationToken);
+            await _session.Query<T>().Where(x => x.Id == id).DeleteAsync(cancellationToken);
         }
 
         public T Get(int id)
         {
-            return Session.Get<T>(id);
+            return _session.Get<T>(id);
         }
 
         public async Task<T> GetAsync(int id)
         {
-            return await Session.GetAsync<T>(id);
+            return await _session.GetAsync<T>(id);
         }
     }
 }

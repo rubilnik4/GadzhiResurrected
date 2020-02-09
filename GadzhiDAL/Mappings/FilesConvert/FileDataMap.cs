@@ -21,10 +21,10 @@ namespace GadzhiDAL.Mappings.FilesConvert
             Map(x => x.FilePath);
             Map(x => x.IsCompleted);
             Map(x => x.ColorPrint).CustomType<ColorPrint>();
-            Map(x => x.StatusProcessing).CustomType<StatusProcessing>();
+            //Map(x => x.StatusProcessing).CustomType<StatusProcessing>();
             // HasMany(x => x.FileConvertErrorType).Element("Value");
-            Map(x => x.FileConvertErrorType).CustomType<FileConvertErrorType>(); ;
-            Map(x => x.FileDataSource).CustomType<BinaryBlobType>(); ;            
+            //Map(x => x.FileConvertErrorType).CustomType<FileConvertErrorType>(); ;
+            //Map(x => x.FileDataSource).CustomType<BinaryBlobType>(); ;            
             References(x => x.FilesDataEntity);
         }
     }

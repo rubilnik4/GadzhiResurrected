@@ -11,12 +11,12 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
     public class FileDataEntity: EntityBase
-    {
-        /// <summary>
-        /// Идентефикатор
-        /// </summary>
-        public virtual int Id { get; protected set; }
-      
+    {  
+        public FileDataEntity()
+        {
+
+        }
+
         /// <summary>
         /// Путь файла
         /// </summary>      

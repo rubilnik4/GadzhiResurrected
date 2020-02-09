@@ -16,8 +16,8 @@ namespace GadzhiDAL.Mappings.FilesConvert
         {
             Id(x => x.Id);
             Map(x => x.IsCompleted);
-            Map(x => x.IdGuid).CustomType<GuidType>();
-            Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>();
+            //Map(x => x.IdGuid).CustomType<GuidType>();
+            //Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>();
             HasMany(x => x.FilesData)
                     .Inverse()
                     .Cascade.All();

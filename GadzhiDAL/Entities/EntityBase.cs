@@ -11,6 +11,9 @@ namespace GadzhiDAL.Entities
     /// </summary>
     public abstract class EntityBase
     {
-        public virtual uint Id { get; set; }
+        /// <summary>
+        /// Идентефикатор
+        /// </summary>
+        public virtual uint Id { get; protected set; }
     }
 }

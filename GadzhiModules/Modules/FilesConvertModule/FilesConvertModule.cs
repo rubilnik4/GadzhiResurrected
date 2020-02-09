@@ -64,7 +64,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
 
             unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingService>>((unity) =>
-                      ServiceConsumerFactory.Create<IFileConvertingService>("SQLiteConnectionSettings"));
+                      ServiceConsumerFactory.Create<IFileConvertingService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();

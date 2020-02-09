@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Unity;
+using Unity.Lifetime;
 using Unity.Wcf;
 
 namespace GadzhiWcfHost.DependencyInjection
@@ -32,8 +33,9 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IQueueInformation, QueueInformation>()
                 .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
                 .RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>()
-                .RegisterSingleton<IFilesDataPackages, FilesDataPackages>()
-                .RegisterSingleton<IApplicationConverting, ApplicationConverting>();
+                .RegisterType<IConverterDataAccessFilesDataFromDTO, ConverterDataAccessFilesDataFromDTO>()
+                .RegisterType<IFilesDataPackages, FilesDataPackages>(new HierarchicalLifetimeManager())
+                .RegisterType<IApplicationConverting, ApplicationConverting>(new HierarchicalLifetimeManager());
 
             GadzhiDALDependencyInjection.ConfigureContainer(container);
         }

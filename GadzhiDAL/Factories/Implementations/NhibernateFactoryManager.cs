@@ -3,6 +3,7 @@ using FluentNHibernate.Cfg.Db;
 using GadzhiDAL.Mappings.FilesConvert;
 using Microsoft.Extensions.Configuration;
 using NHibernate;
+using NHibernate.Context;
 using NHibernate.Tool.hbm2ddl;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,12 @@ namespace GadzhiDAL.Factories.Implementations
             get
             {
                 return Fluently.Configure()
-                    .Database(SQLiteConfiguration.Standard.UsingFile("GadzhiDataBase.db"))
+                    //.Database(SQLiteConfiguration.Standard.ConnectionString(
+                    //          c => c.FromConnectionStringWithKey("SQLiteConnectionString"))
+                    //         .ShowSql())
+                    .Database(SQLiteConfiguration.Standard.UsingFile("GadzhiSQLite.db"))
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<FilesDataMap>())
+                    //.CurrentSessionContext(typeof(ThreadStaticSessionContext).FullName)
                     .ExposeConfiguration(c =>
                     {
                         var schema = new SchemaUpdate(c);

@@ -1,4 +1,6 @@
-﻿using GadzhiDTO.TransferModels.FilesConvert;
+﻿using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Services.Implementations;
+using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces;
 using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
 using GadzhiWcfHost.Models.FilesConvert.Implementations;
@@ -33,25 +35,40 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         private readonly IConverterServerFilesDataToDTO _converterServerFilesDataToDTO;
 
-        public ApplicationConverting(IFilesDataPackages fileDataPackages,
-                                     IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
-                                     IConverterServerFilesDataToDTO converterServerFilesDataToDTO)
-        {
-            _filesDataPackages = fileDataPackages;
-            _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
-            _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
+        /// <summary>
+        /// Конвертер из трансферной модели в модель базы данных
+        /// </summary>
+        private readonly IConverterDataAccessFilesDataFromDTO _converterDataAccessFilesDataFromDTO;
 
-            ConvertingUpdaterSubsriptions = new CompositeDisposable();
-            ConvertingUpdaterSubsriptions.Add(Observable.
-                                              Interval(TimeSpan.FromSeconds(10)).
-                                              TakeWhile(_ => !IsConverting).
-                                              Subscribe(async _ => await ConvertingFirstInQueuePackage()));
-        }
+        /// <summary>
+        /// Сервис для добавления и получения данных о конвертируемых пакетах
+        /// </summary>
+        private readonly IFilesDataService _filesDataService;
 
         /// <summary>
         /// Запуск процесса конвертирования
         /// </summary>
-        private CompositeDisposable ConvertingUpdaterSubsriptions { get; }
+        private readonly CompositeDisposable _convertingUpdaterSubsriptions;
+
+        public ApplicationConverting(IFilesDataPackages fileDataPackages,
+                                     IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
+                                     IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
+                                     IConverterDataAccessFilesDataFromDTO converterDataAccessFilesDataFromDTO,
+                                     IFilesDataService filesDataService)
+        {
+            _filesDataPackages = fileDataPackages;
+            _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
+            _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
+            _converterDataAccessFilesDataFromDTO = converterDataAccessFilesDataFromDTO;
+            _filesDataService = filesDataService;
+
+            _convertingUpdaterSubsriptions = new CompositeDisposable
+            {
+                Observable.Interval(TimeSpan.FromSeconds(10)).
+                           TakeWhile(_ => !IsConverting).
+                           Subscribe(async _ => await ConvertingFirstInQueuePackage())
+            };
+        }       
 
         /// <summary>
         /// Запущен ли процесс конвертации
@@ -62,22 +79,14 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
         public async Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest)
-        {
-            //FilesDataServer filesDataServer = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-            //FilesDataServer filesDataServer1 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-            //FilesDataServer filesDataServer2 = await FilesDataFromDTOConverterToServer.ConvertToFilesDataServerAndSaveFile(filesDataRequest, FileSystemOperations);
-
-            //filesDataServer.ID = Guid.NewGuid();
-            //filesDataServer1.ID = Guid.NewGuid();
-
+        {           
+            FilesDataEntity filesDataEntity = _converterDataAccessFilesDataFromDTO.ConvertToFilesDataAccess(filesDataRequest);
+            await _filesDataService.AddFilesDataAsync(filesDataEntity);
             //QueueFilesData(filesDataServer);
-            //QueueFilesData(filesDataServer1);
-            //QueueFilesData(filesDataServer2);
-            FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
-           
-            QueueFilesData(filesDataServer);
-            
-            return await GetIntermediateFilesDataResponseByID(filesDataRequest.ID);
+
+            return null;
+
+
         }
 
         /// <summary>
@@ -128,7 +137,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         public void Dispose()
         {
             //очистить подписки на конвертирование пакетов
-            ConvertingUpdaterSubsriptions?.Dispose();
+            _convertingUpdaterSubsriptions?.Dispose();
         }
     }
 }

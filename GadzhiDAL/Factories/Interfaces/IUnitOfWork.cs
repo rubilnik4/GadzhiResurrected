@@ -37,6 +37,11 @@ namespace GadzhiDAL.Factories.Interfaces
         /// <summary>
         /// Откатить транзакцию асинхронно
         /// </summary>
-        Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken));       
+        Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Получить текущую сессию
+        /// </summary>
+        ISession GetCurrentSession();
     }
 }

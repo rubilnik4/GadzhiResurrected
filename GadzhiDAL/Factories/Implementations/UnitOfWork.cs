@@ -26,16 +26,15 @@ namespace GadzhiDAL.Factories.Implementations
         private ITransaction _transaction;
 
         public UnitOfWork(ISessionFactory sessionFactory)
-        {           
-            ISession session = sessionFactory.OpenSession();        
+        {
+            _session = sessionFactory.OpenSession();        
         }
 
         /// <summary>
         /// Открыть транзакцию
         /// </summary>
         public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-           
+        {           
             _transaction = _session.BeginTransaction(isolationLevel);           
             return _transaction;
         }
@@ -83,7 +82,12 @@ namespace GadzhiDAL.Factories.Implementations
                 await _transaction.RollbackAsync(cancellationToken);             
             }               
         }
-      
+
+        /// <summary>
+        /// Получить текущую сессию
+        /// </summary>
+        public ISession GetCurrentSession() => _session;
+
         /// <summary>
         /// Закрыть соединение
         /// </summary>
@@ -91,7 +95,7 @@ namespace GadzhiDAL.Factories.Implementations
         {
             _transaction?.Dispose();
             _session?.Dispose();
-            GC.SuppressFinalize(this);
-        }
+           // GC.SuppressFinalize(this);
+        }       
     }
 }

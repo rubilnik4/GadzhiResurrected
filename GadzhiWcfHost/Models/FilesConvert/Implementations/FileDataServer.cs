@@ -30,11 +30,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
         {
             string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePathServer);
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);
-            if (String.IsNullOrEmpty(fileType) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePathServer))
-            {
-                throw new ArgumentNullException("Входные параметры FileData имеют пустое значение");
-            }
-
+           
             FileExtension = fileType;
             FileName = fileName;
             FilePathServer = filePathServer;

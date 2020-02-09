@@ -64,6 +64,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>        
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
+        /// <summary>
+        /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
+        /// </summary>
+        private readonly CompositeDisposable _statusProcessingUpdaterSubsriptions;
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSystemOperations fileSystemOperations,
                                  IFilesData filesInfoProject,
@@ -82,7 +86,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             _executeAndCatchErrors = executeAndCatchErrors;
             _projectSettings = projectSettings;
 
-            StatusProcessingUpdaterSubsriptions = new CompositeDisposable();
+            _statusProcessingUpdaterSubsriptions = new CompositeDisposable();
         }
 
         /// <summary>
@@ -93,12 +97,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Выполняется ли промежуточный запрос
         /// </summary 
-        private bool IsIntermediateResponseInProgress { get; set; }
-
-        /// <summary>
-        /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
-        /// </summary>
-        private CompositeDisposable StatusProcessingUpdaterSubsriptions { get; }
+        private bool IsIntermediateResponseInProgress { get; set; }       
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -245,7 +244,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private void SubsribeToIntermediateResponse()
         {
-            StatusProcessingUpdaterSubsriptions.Add(Observable.
+            _statusProcessingUpdaterSubsriptions.Add(Observable.
                                                     Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToToIntermediateResponse)).
                                                     TakeWhile(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                                                     Subscribe(async _ => await _executeAndCatchErrors.
@@ -318,7 +317,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private void ClearSubsriptions()
         {
-            StatusProcessingUpdaterSubsriptions?.Dispose();
+            _statusProcessingUpdaterSubsriptions?.Dispose();
         }
         #endregion
 

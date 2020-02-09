@@ -17,9 +17,15 @@ namespace GadzhiDAL.Factories.Interfaces
 
         IQueryOver<T> QueryOver();
 
-        void Create(T entity);
+        /// <summary>
+        /// Добавить сущность
+        /// </summary>       
+        void Add(T entity);
 
-        Task CreateAsync(T entity);
+        /// <summary>
+        /// Добавить сущность асинхронно
+        /// </summary> 
+        Task AddAsync(T entity);
 
         void Update(T entity);
 
