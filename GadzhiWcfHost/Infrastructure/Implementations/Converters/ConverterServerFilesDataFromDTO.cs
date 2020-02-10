@@ -67,7 +67,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(FileSystemInformation.ConvertionDirectory, packageGuid);
+                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(HostSystemInformation.ConvertionDirectory, packageGuid);
                 if (isCreated)
                 {
                     fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, 

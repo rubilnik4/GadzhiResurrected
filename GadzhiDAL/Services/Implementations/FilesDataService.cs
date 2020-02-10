@@ -11,7 +11,7 @@ namespace GadzhiDAL.Services.Implementations
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах
     /// </summary>
-    public class FilesDataService: IFilesDataService
+    public class FilesDataService : IFilesDataService
     {
         /// <summary>
         /// Класс обертка для управления транзакциями

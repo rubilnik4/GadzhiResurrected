@@ -2,6 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDAL.DependencyInjection;
 using GadzhiDTO.Contracts.FilesConvert;
+using GadzhiWcfHost.Helpers;
 using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Implementations.Converters;
 using GadzhiWcfHost.Infrastructure.Interfaces;
@@ -37,7 +38,7 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IFilesDataPackages, FilesDataPackages>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationConverting, ApplicationConverting>(new HierarchicalLifetimeManager());
 
-            GadzhiDALDependencyInjection.ConfigureContainer(container);
+            GadzhiDALDependencyInjection.ConfigureContainer(container, HostSystemInformation.ApplicationPath);
         }
 
     }

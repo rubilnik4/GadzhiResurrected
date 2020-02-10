@@ -14,10 +14,10 @@ namespace GadzhiDAL.Mappings.FilesConvert
     {
         public FilesDataMap()
         {
-            Id(x => x.Id);
+            Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.IsCompleted);
-            //Map(x => x.IdGuid).CustomType<GuidType>();
-            //Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>();
+            Map(x => x.IdGuid).CustomType<GuidType>();
+            Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>();
             HasMany(x => x.FilesData)
                     .Inverse()
                     .Cascade.All();

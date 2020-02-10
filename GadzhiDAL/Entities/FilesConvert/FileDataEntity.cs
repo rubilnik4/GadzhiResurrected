@@ -14,7 +14,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     {  
         public FileDataEntity()
         {
-
+            FileConvertErrorType = new List<FileConvertErrorType>();
         }
 
         /// <summary>

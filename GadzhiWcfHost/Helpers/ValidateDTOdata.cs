@@ -29,15 +29,15 @@ namespace GadzhiWcfHost.Helpers
                                     ValidFileExtentions.DocAndDgnFileTypes.Contains(fileExtension);          
             bool isValidDataSource = fileDataRequest?.FileDataSource != null;
 
-            if (isValidName)
+            if (!isValidName)
             {
                 errors.Add(FileConvertErrorType.IncorrectFileName);
             }
-            if (isValidExtension)
+            if (!isValidExtension)
             {
                 errors.Add(FileConvertErrorType.IncorrectExtension);
             }
-            if (isValidDataSource)
+            if (!isValidDataSource)
             {
                 errors.Add(FileConvertErrorType.IncorrectDataSource);
             }

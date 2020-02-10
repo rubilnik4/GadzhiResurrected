@@ -14,7 +14,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     {
         public FilesDataEntity()
         {
-            FilesData = new List<FileDataEntity>();
+         //   FilesData = new List<FileDataEntity>();
         }
 
         /// <summary>

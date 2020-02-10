@@ -118,7 +118,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\ConverterDataAccessFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
-    <Compile Include="Helpers\FileSystemInformation.cs" />
+    <Compile Include="Helpers\HostSystemInformation.cs" />
     <Compile Include="Helpers\ValidateDTOData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
