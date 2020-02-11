@@ -115,18 +115,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\WcfServiceFactory.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterDataAccessFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Helpers\HostSystemInformation.cs" />
-    <Compile Include="Helpers\ValidateDTOData.cs" />
-    <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationUploadAndGetConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\QueueInformation.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\IConverterDataAccessFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
-    <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Interfaces\IApplicationUploadAndGetConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IQueueInformation.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FilesDataPackages.cs" />
     <Compile Include="Models\FilesConvert\Implementations\FileDataServer.cs" />

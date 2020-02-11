@@ -12,13 +12,8 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public interface IApplicationConverting
-    { 
-        /// <summary>
-        /// Поставить файлы в очередь для обработки
-        /// </summary>
-        void QueueFilesData(FilesDataServer filesDataServer);
-
+    public interface IApplicationUploadAndGetConverting
+    {
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
@@ -27,7 +22,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseByID(Guid filesDataServerID);
+        Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseById(Guid filesDataServerID);
 
         /// <summary>
         /// Получить отконвертированные файлы

@@ -349,3 +349,5 @@ healthchecksdb
 MigrationBackup/
 
 GadzhiWcfHost/ConvertingDirectory.gitignore/
+
+GadzhiWcfHost/DataBase.gitignore/

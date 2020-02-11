@@ -10,17 +10,25 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FilesDataEntity : EntityBase
+    public class FilesDataEntity : EntityBase<string>
     {
         public FilesDataEntity()
         {
-         //   FilesData = new List<FileDataEntity>();
+            CreationDateTime = DateTime.Now;
+            IsCompleted = false;
+            StatusProcessingProject = StatusProcessingProject.InQueue;
+            FilesData = new List<FileDataEntity>();
         }
 
         /// <summary>
-        /// ID идентефикатор
-        /// </summary>        
-        public virtual Guid IdGuid { get; set; }
+        /// Идентефикатор
+        /// </summary>
+        public override string Id { get; protected set; }
+
+        /// <summary>
+        /// Время создания запроса на конвертирование
+        /// </summary>
+        public virtual DateTime CreationDateTime { get; set; }
 
         /// <summary>
         /// Завершена ли обработка
@@ -37,7 +45,10 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// </summary>       
         public virtual IList<FileDataEntity> FilesData { get; protected set; }
 
-        public virtual void AddRangeFilesData(IEnumerable<FileDataEntity> fileDataEntities)
+        /// <summary>
+        /// Поместить файлы в пакет для конвертирования и присвоить ссылки
+        /// </summary>      
+        public virtual void SetFilesData(IEnumerable<FileDataEntity> fileDataEntities)
         {
             if (fileDataEntities?.Any() == true)
             {
@@ -48,6 +59,18 @@ namespace GadzhiDAL.Entities.FilesConvert
                                              })
                                              .ToList();
             }
+            else
+            {
+                fileDataEntities = new List<FileDataEntity>();
+            }
+        }
+
+        /// <summary>
+        /// Установить идентефикатор
+        /// </summary>        
+        public virtual void SetId(Guid id)
+        {
+            Id = id.ToString();
         }
     }
 }

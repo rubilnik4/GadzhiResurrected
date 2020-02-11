@@ -3,17 +3,16 @@ using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Infrastructure.Interfaces.Converters;
+using GadzhiDTO.Helpers;
 using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiWcfHost.Helpers;
-using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
-using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
+namespace GadzhiDAL.Infrastructure.Implementations.Converters
 {
     /// <summary>
     /// Конвертер из трансферной модели в модель базы данных
@@ -32,13 +31,11 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         {
             var filesDataAccessToConvert = filesDataRequest?.FilesData?.Select(fileDTO =>
                                                ConvertToFileDataAccess(fileDTO));
-            var filesDataEntity = new FilesDataEntity()
-            {
-                IdGuid = filesDataRequest.ID,
-                IsCompleted = false,
-                StatusProcessingProject = StatusProcessingProject.InQueue
-            };
-            filesDataEntity.AddRangeFilesData(filesDataAccessToConvert);
+
+            var filesDataEntity = new FilesDataEntity();
+            filesDataEntity.SetId(filesDataRequest.Id);
+            filesDataEntity.SetFilesData(filesDataAccessToConvert);
+
             return filesDataEntity;
         }
 
@@ -49,15 +46,16 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         {
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
 
-            return new FileDataEntity()
+            var fileDataEntity = new FileDataEntity()
             {
-                IsCompleted = false,
                 ColorPrint = fileDataRequest.ColorPrint,
                 FilePath = fileDataRequest.FilePath,
-                StatusProcessing = StatusProcessing.InQueue,
                 FileDataSource = fileDataRequest.FileDataSource,
-                FileConvertErrorType = errorsFromValidation.ToList(),
             };
+            fileDataEntity.SetFileConvertErrorType(errorsFromValidation);
+
+            return fileDataEntity;
+
         }
     }
 }

@@ -29,14 +29,13 @@ namespace GadzhiWcfHost.DependencyInjection
         {
             // Регистрируем зависимости
             container
-                .RegisterType<IFileSystemOperations, FileSystemOperations>()
+                //.RegisterType<IFileSystemOperations, FileSystemOperations>()
                 .RegisterType<IFileConvertingService, FileConvertingService>()
-                .RegisterType<IQueueInformation, QueueInformation>()
-                .RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
-                .RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>()
-                .RegisterType<IConverterDataAccessFilesDataFromDTO, ConverterDataAccessFilesDataFromDTO>()
-                .RegisterType<IFilesDataPackages, FilesDataPackages>(new HierarchicalLifetimeManager())
-                .RegisterType<IApplicationConverting, ApplicationConverting>(new HierarchicalLifetimeManager());
+                //.RegisterType<IQueueInformation, QueueInformation>()
+                //.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
+                //.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>()              
+                //.RegisterType<IFilesDataPackages, FilesDataPackages>(new HierarchicalLifetimeManager())
+                .RegisterType<IApplicationUploadAndGetConverting, ApplicationUploadAndGetConverting>(new HierarchicalLifetimeManager());
 
             GadzhiDALDependencyInjection.ConfigureContainer(container, HostSystemInformation.ApplicationPath);
         }

@@ -37,7 +37,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
 
             return new FilesDataRequest()
             {
-                ID = filesData.ID,
+                Id = filesData.ID,
                 FilesData = filesRequestEnsuredWithBytes,
             };
         }

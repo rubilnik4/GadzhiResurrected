@@ -15,16 +15,13 @@ using System.Threading.Tasks;
 using Unity;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiDTO.Contracts.FilesConvert;
-using System.ServiceModel.Configuration;
-using System.Configuration;
-using GadzhiDTO.Healpers;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
 using ChannelAdam.ServiceModel;
 using Unity.Lifetime;
-using Unity.Injection;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiDTO.Helpers;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {

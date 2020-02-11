@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace GadzhiDAL.Factories.Interfaces
 {
-    public interface IRepository<T> where T : EntityBase
+    public interface IRepository<T, IdType> where T : EntityBase<IdType>
+                                            where IdType : IEquatable<IdType>
     {
         IEnumerable<T> GetAll();
 
@@ -33,13 +34,28 @@ namespace GadzhiDAL.Factories.Interfaces
 
         void Delete(T entity);
 
-        Task DeleteAsync(int id, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteAsync(IdType id, CancellationToken cancellationToken = default(CancellationToken));
 
-        void Delete(int id);
+        void Delete(IdType id);
 
-        T Get(int id);
+        /// <summary>
+        /// Получить сущность через первичный ключ. Если отсутсвует вернется null
+        /// </summary>      
+        T Get(IdType id);
 
-        Task<T> GetAsync(int id);
+        /// <summary>
+        /// Получить сущность асинхронно через первичный ключ. Если отсутсвует вернется null
+        /// </summary>   
+        Task<T> GetAsync(IdType id);
 
+        /// <summary>
+        /// Получить сущность через первичный ключ. Если отсутсвует вернется exception
+        /// </summary>        
+        T Load(IdType id);
+
+        /// <summary>
+        /// Получить сущность асинхронно через первичный ключ. Если отсутсвует вернется exception
+        /// </summary>   
+        Task<T> LoadAsync(IdType id);
     }
 }

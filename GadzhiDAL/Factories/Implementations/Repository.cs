@@ -11,8 +11,14 @@ using System.Threading.Tasks;
 
 namespace GadzhiDAL.Factories.Implementations
 {
-    public class Repository<T> : IRepository<T> where T : EntityBase
-    {       
+    /// <summary>
+    /// Репозиторий для работы с данными в базе
+    /// </summary>
+    /// <typeparam name="T">Класс в баз данных</typeparam>
+    /// <typeparam name="TKey">Тип ключа в таблице</typeparam>
+    public class Repository<T, IdType> : IRepository<T, IdType> where T : EntityBase<IdType>
+                                                                where IdType : IEquatable<IdType>
+    {
         /// <summary>
         /// Текущая сессия
         /// </summary>
@@ -64,7 +70,6 @@ namespace GadzhiDAL.Factories.Implementations
             await _session.UpdateAsync(entity);
         }
 
-
         public void Delete(T entity)
         {
             _session.Delete(entity);
@@ -75,24 +80,46 @@ namespace GadzhiDAL.Factories.Implementations
             await _session.DeleteAsync(entity);
         }
 
-        public void Delete(int id)
+        public void Delete(IdType id)
         {
-            _session.Query<T>().Where(x => x.Id == id).Delete();
+            _session.Query<T>().Where(x => x.Id.Equals(id)).Delete();
         }
 
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task DeleteAsync(IdType id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _session.Query<T>().Where(x => x.Id == id).DeleteAsync(cancellationToken);
+            await _session.Query<T>().Where(x => x.Id.Equals(id)).DeleteAsync(cancellationToken);
         }
 
-        public T Get(int id)
+        /// <summary>
+        /// Получить сущность через первичный ключ. Если отсутсвует вернется null
+        /// </summary>        
+        public T Get(IdType id)
         {
             return _session.Get<T>(id);
         }
 
-        public async Task<T> GetAsync(int id)
+        /// <summary>
+        /// Получить сущность асинхронно через первичный ключ. Если отсутсвует вернется null
+        /// </summary>   
+        public async Task<T> GetAsync(IdType id)
         {
             return await _session.GetAsync<T>(id);
+        }
+
+        /// <summary>
+        /// Получить сущность через первичный ключ. Если отсутсвует вернется exception
+        /// </summary>        
+        public T Load(IdType id)
+        {
+            return _session.Load<T>(id);
+        }
+
+        /// <summary>
+        /// Получить сущность асинхронно через первичный ключ. Если отсутсвует вернется exception
+        /// </summary>   
+        public async Task<T> LoadAsync(IdType id)
+        {
+            return await _session.LoadAsync<T>(id);
         }
     }
 }

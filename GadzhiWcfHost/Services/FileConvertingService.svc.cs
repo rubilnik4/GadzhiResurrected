@@ -27,9 +27,9 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Сохранение, обработка, подготовка для отправки файлов
         /// </summary>   
-        private readonly IApplicationConverting _applicationConverting;
+        private readonly IApplicationUploadAndGetConverting _applicationConverting;
 
-        public FileConvertingService(IApplicationConverting applicationReceiveAndSend)
+        public FileConvertingService(IApplicationUploadAndGetConverting applicationReceiveAndSend)
         {
             _applicationConverting = applicationReceiveAndSend;
         }
@@ -49,7 +49,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await _applicationConverting.GetIntermediateFilesDataResponseByID(filesDataID);
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await _applicationConverting.GetIntermediateFilesDataResponseById(filesDataID);
 
             return filesDataIntermediateResponse;
         }

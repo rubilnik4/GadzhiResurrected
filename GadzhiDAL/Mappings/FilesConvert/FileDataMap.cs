@@ -15,12 +15,12 @@ namespace GadzhiDAL.Mappings.FilesConvert
         public FileDataMap()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.FilePath);
-            Map(x => x.IsCompleted);
-            Map(x => x.ColorPrint).CustomType<ColorPrint>();
-            Map(x => x.StatusProcessing).CustomType<StatusProcessing>();
-            HasMany(x => x.FileConvertErrorType).Element("ErrorType");          
-            Map(x => x.FileDataSource).CustomType<BinaryBlobType>(); ;            
+            Map(x => x.FilePath).Not.Nullable();
+            Map(x => x.IsCompleted).Not.Nullable();
+            Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
+            Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();
+            HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType");          
+            Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();           
             References(x => x.FilesDataEntity);
         }
     }

@@ -1,5 +1,7 @@
 ﻿using GadzhiDAL.Factories.Implementations;
 using GadzhiDAL.Factories.Interfaces;
+using GadzhiDAL.Infrastructure.Implementations.Converters;
+using GadzhiDAL.Infrastructure.Interfaces.Converters;
 using GadzhiDAL.Services.Implementations;
 using NHibernate;
 using System;
@@ -19,7 +21,7 @@ namespace GadzhiDAL.DependencyInjection
             container
                  //регистрируем фабрику, синглтон
                  .RegisterFactory<ISessionFactory>((unity) =>
-                      NhibernateFactoryManager.Instance(NhibernateFactoryManager.SQLiteConfigurationFactory(applicationPath)), 
+                      NhibernateFactoryManager.Instance(NhibernateFactoryManager.SQLiteConfigurationFactory(applicationPath)),
                                                         new ContainerControlledLifetimeManager())
 
                  // с помощью фабрики открываем сессию
@@ -30,8 +32,10 @@ namespace GadzhiDAL.DependencyInjection
                       unity.Resolve<IUnitOfWork>().GetCurrentSession(), new HierarchicalLifetimeManager())
 
                  // Репозиторий в общем виде
-                 .RegisterType(typeof(IRepository<>), typeof(Repository<>))
+                 .RegisterType(typeof(IRepository<,>), typeof(Repository<,>))
 
+                 .RegisterType<IConverterDataAccessFilesDataFromDTO, ConverterDataAccessFilesDataFromDTO>()
+                 .RegisterType<IConverterDataAccessFilesDataToDTO, ConverterDataAccessFilesDataToDTO>()
                  .RegisterType<IFilesDataService, FilesDataService>();
 
         }

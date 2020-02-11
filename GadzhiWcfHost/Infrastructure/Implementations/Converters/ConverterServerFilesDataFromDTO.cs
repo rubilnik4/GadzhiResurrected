@@ -2,6 +2,7 @@
 using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiDAL.Infrastructure.Implementations;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Helpers;
 using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
@@ -36,10 +37,10 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         {
             var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
                                                ConvertToFileDataServerAndSaveFile(fileDTO, 
-                                                                                  filesDataRequest.ID.ToString()));
+                                                                                  filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServer(filesDataRequest.ID, filesDataServerToConvert);
+            return new FilesDataServer(filesDataRequest.Id, filesDataServerToConvert);
         }
 
         /// <summary>

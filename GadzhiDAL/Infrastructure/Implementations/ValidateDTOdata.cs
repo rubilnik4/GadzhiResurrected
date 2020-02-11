@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace GadzhiWcfHost.Helpers
+namespace GadzhiDAL.Infrastructure.Implementations
 {
     /// <summary>
     /// Класс проверки входных данных
