@@ -1,10 +1,13 @@
-﻿using GadzhiCommonServer.Settings;
+﻿using DependencyInjection.GadzhiConverting;
+using GadzhiConverting.Infrastructure.Implementations;
+using GadzhiConverting.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 
 namespace GadzhiConverting
 {
@@ -12,8 +15,12 @@ namespace GadzhiConverting
     {
         static void Main(string[] args)
         {
-        
-            Console.WriteLine(Settings.DataBasePath);
+            var container = new UnityContainer();
+            BootStrapUnity.Start(container);
+           
+            var applicationConverting = container.Resolve<IApplicationConverting>();
+            applicationConverting.StartConverting();
+
             Console.ReadLine();
         }
     }
