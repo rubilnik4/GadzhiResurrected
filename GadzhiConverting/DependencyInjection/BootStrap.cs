@@ -1,5 +1,7 @@
 ﻿using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
+using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace DependencyInjection.GadzhiConverting
         {
             container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
+            container.RegisterSingleton<IConvertingProject, ConvertingProject>();
         }
     }
 }

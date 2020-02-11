@@ -19,7 +19,16 @@ namespace GadzhiConverting
             BootStrapUnity.Start(container);
            
             var applicationConverting = container.Resolve<IApplicationConverting>();
-            applicationConverting.StartConverting();
+
+            try
+            {
+                applicationConverting.StartConverting();
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                Console.Write(ex.StackTrace);
+            }          
 
             Console.ReadLine();
         }

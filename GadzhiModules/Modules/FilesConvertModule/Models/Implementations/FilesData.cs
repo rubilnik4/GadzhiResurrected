@@ -202,7 +202,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         }
 
         /// <summary>
-        /// Обновленить список файлов
+        /// Обновить список файлов
         /// </summary>
         private void UpdateFileData(FilesChange fileChange)
         {
