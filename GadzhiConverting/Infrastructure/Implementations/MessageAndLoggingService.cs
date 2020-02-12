@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Converters;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Implementations.ReactiveSubjects;
@@ -27,12 +28,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отобразить ошибку
         /// </summary>        
-        public void ShowError(ErrorTypeConverting errorTypeConverting)
+        public void ShowError(FileConvertErrorType fileConvertErrorType,
+                              string fileConvertErrorDescription)
         {
             string messageText = _separator +
                                  "Ошибка | " +
-                                 ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(errorTypeConverting.FileConvertErrorType) + "\n" +
-                                 errorTypeConverting.FileConvertErrorDescription;
+                                 ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(fileConvertErrorType) + "\n" +
+                                 fileConvertErrorDescription;
 
             Console.WriteLine(messageText);
         }

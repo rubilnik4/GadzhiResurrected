@@ -19,9 +19,12 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.FileNotFound , "Файл не найден" },
                 { FileConvertErrorType.IncorrectDataSource , "Некорректный файл данных" },
                 { FileConvertErrorType.IncorrectExtension  , "Некорректное расширение файла" },
-                { FileConvertErrorType.IncorrectFileName , "Неккрректное имя файла" },
+                { FileConvertErrorType.IncorrectFileName , "Некорректное имя файла" },
                 { FileConvertErrorType.NoError , "Ошибка отсутсвует" },
                 { FileConvertErrorType.RejectToSave , "Файл не сохранен" },
+                { FileConvertErrorType.UnknownError, "Неизвестная ошибка" },
+                { FileConvertErrorType.TimeOut, "Время операции вышло" },
+                { FileConvertErrorType.Communication , "Связь с сепрвером прервана" },
             };
 
         /// <summary>

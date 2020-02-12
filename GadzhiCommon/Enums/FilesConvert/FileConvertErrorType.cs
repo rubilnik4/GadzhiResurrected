@@ -18,5 +18,8 @@ namespace GadzhiCommon.Enums.FilesConvert
         IncorrectDataSource,
         RejectToSave,
         AbortOperation,
+        TimeOut,
+        Communication,
+        UnknownError,
     }
 }

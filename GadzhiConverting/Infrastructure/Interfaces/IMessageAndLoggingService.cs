@@ -1,4 +1,5 @@
-﻿using GadzhiConverting.Models.Implementations;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiConverting.Models.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,8 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Отобразить ошибку
         /// </summary>        
-        void ShowError(ErrorTypeConverting errorTypeConverting);
+        void ShowError(FileConvertErrorType fileConvertErrorType,
+                       string fileConvertErrorDescription);
 
         /// <summary>
         /// </summary>        

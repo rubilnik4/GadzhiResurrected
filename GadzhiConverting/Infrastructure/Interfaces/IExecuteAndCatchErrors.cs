@@ -18,13 +18,13 @@ namespace GadzhiConverting.Infrastructure.Interfaces
                                    Action ApplicationBeforeMethod = null,
                                    Action ApplicationFinallyMethod = null);
 
-        /// <summary>
-        ///Отлов ошибок и вызов постметода       
-        /// </summary> 
-        void ExecuteAndHandleError<T1>(Action<T1> function,
-                                       T1 arg1,
-                                       Action ApplicationBeforeMethod = null,
-                                       Action ApplicationFinallyMethod = null);
+        ///// <summary>
+        /////Отлов ошибок и вызов постметода       
+        ///// </summary> 
+        //void ExecuteAndHandleError<T1>(Action<T1> function,
+        //                               T1 arg1,
+        //                               Action ApplicationBeforeMethod = null,
+        //                               Action ApplicationFinallyMethod = null);
 
         /// <summary>
         ///Отлов ошибок и вызов постметода асинхронно     
@@ -33,13 +33,13 @@ namespace GadzhiConverting.Infrastructure.Interfaces
                                         Action ApplicationBeforeMethod = null,
                                         Action ApplicationFinallyMethod = null);
 
-        /// <summary>
-        ///Отлов ошибок и вызов постметода асинхронно     
-        /// </summary> 
-        Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync,
-                                            T1 arg1,
-                                            Action ApplicationBeforeMethod = null,
-                                            Action ApplicationAbortionMethod = null);
+        ///// <summary>
+        /////Отлов ошибок и вызов постметода асинхронно     
+        ///// </summary> 
+        //Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync,
+        //                                    T1 arg1,
+        //                                    Action ApplicationBeforeMethod = null,
+        //                                    Action ApplicationAbortionMethod = null);
 
     }
 }

@@ -122,10 +122,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             bool isDataBaseExist = _fileSystemOperations.IsFileExist(_projectSettings.SQLiteDataBasePath);
             if (!isDataBaseExist)
-            {
-                var errorTypeConverting = new ErrorTypeConverting(FileConvertErrorType.FileNotFound,
-                                                                  $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
-                _messageAndLoggingService.ShowError(errorTypeConverting);
+            {               
+                _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
+                                                    $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
             }
 
             return isDataBaseExist;
