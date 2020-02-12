@@ -31,13 +31,20 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly IConvertingProject _convertingProject;
 
+        /// <summary>
+        /// Класс для отображения изменений и логгирования
+        /// </summary>
+        private readonly IMessageAndLoggingService _messageAndLoggingService;
+
         public ApplicationConverting(IProjectSettings projectSettings,
                                      IFileSystemOperations fileSystemOperations,
-                                     IConvertingProject convertingProject)
+                                     IConvertingProject convertingProject,
+                                     IMessageAndLoggingService messageAndLoggingService)
         {
             _projectSettings = projectSettings;
             _fileSystemOperations = fileSystemOperations;
             _convertingProject = convertingProject;
+            _messageAndLoggingService = messageAndLoggingService;
         }
 
         /// <summary>
@@ -48,8 +55,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             bool isValidStartUpdaParameters = ValidateStartupParameters();
             if (isValidStartUpdaParameters)
             {
-
-            }          
+                _messageAndLoggingService.ShowMessage("Запуск процесса конвертирования...");
+            }
         }
 
         /// <summary>
@@ -62,7 +69,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 var errorTypeConverting = new ErrorTypeConverting(FileConvertErrorType.FileNotFound,
                                                                   $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
-                _convertingProject.AddError(errorTypeConverting);
+                _messageAndLoggingService.ShowError(errorTypeConverting);
             }
 
             return isDataBaseExist;

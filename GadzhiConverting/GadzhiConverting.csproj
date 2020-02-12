@@ -71,6 +71,7 @@
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
+    <Compile Include="Infrastructure\Interfaces\IMessageAndLoggingService.cs" />
     <Compile Include="Models\Implementations\ConvertingProject.cs" />
     <Compile Include="Models\Implementations\ErrorTypeConverting.cs" />
     <Compile Include="Models\Implementations\ReactiveSubjects\ActionType.cs" />

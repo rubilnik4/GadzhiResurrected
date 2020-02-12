@@ -1,4 +1,6 @@
-﻿using GadzhiConverting.Infrastructure.Implementations;
+﻿using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Interfaces;
@@ -21,6 +23,8 @@ namespace DependencyInjection.GadzhiConverting
             container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
             container.RegisterSingleton<IConvertingProject, ConvertingProject>();
+            container.RegisterType<IFileSystemOperations, FileSystemOperations>();
+            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>();
         }
     }
 }
