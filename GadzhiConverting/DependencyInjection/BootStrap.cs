@@ -26,6 +26,7 @@ namespace DependencyInjection.GadzhiConverting
             container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
             container.RegisterSingleton<IConvertingProject, ConvertingProject>();
+            container.RegisterType<IConvertingService, ConvertingService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>();
             container.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();

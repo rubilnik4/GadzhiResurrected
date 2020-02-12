@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Implementations.ReactiveSubjects;
@@ -23,7 +24,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
            
         }
        
-        private readonly string _separator = "------------------------------------------" + "\n";
+        private readonly string _separator = "\n" + "------------------------------------------" + "\n";
 
         /// <summary>
         /// Отобразить ошибку
@@ -44,8 +45,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public void ShowMessage(string message)
         {
-            string messageText = _separator +
-                                 message;
+            string messageText = message;
 
             Console.WriteLine(messageText);
         }

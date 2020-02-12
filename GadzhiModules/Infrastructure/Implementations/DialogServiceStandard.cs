@@ -1,4 +1,6 @@
-﻿using GadzhiModules.Infrastructure.Interfaces;
+﻿using GadzhiCommon.Converters;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Infrastructure.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -59,7 +61,17 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             MessageBox.Show(messageText);
         }
-        
+
+        /// <summary>
+        /// Сообщение об ошибке
+        /// </summary>  
+        public void ShowError(FileConvertErrorType fileConvertErrorType, string fileConvertErrorDescription)
+        {
+            string messageText =  "Ошибка" + "\n" +
+                                  ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(fileConvertErrorType) + "\n" +
+                                  fileConvertErrorDescription;
+        }
+
         /// <summary>
         /// Диалоговое окно с подтверждением
         /// </summary>  

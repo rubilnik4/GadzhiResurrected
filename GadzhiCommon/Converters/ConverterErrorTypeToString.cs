@@ -25,6 +25,8 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.UnknownError, "Неизвестная ошибка" },
                 { FileConvertErrorType.TimeOut, "Время операции вышло" },
                 { FileConvertErrorType.Communication , "Связь с сепрвером прервана" },
+                { FileConvertErrorType.NullReference , "Переменная не задана" },
+                { FileConvertErrorType.ArgumentNullReference , "Аргумент не задан" },
             };
 
         /// <summary>

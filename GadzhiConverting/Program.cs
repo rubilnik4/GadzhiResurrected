@@ -17,18 +17,10 @@ namespace GadzhiConverting
         {
             var container = new UnityContainer();
             BootStrapUnity.Start(container);
-           
+
             var applicationConverting = container.Resolve<IApplicationConverting>();
 
-            try
-            {
-                applicationConverting.StartConverting();
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-                Console.Write(ex.StackTrace);
-            }          
+            applicationConverting.StartConverting();
 
             Console.ReadLine();
         }

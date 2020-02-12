@@ -64,10 +64,60 @@ namespace GadzhiDAL.Services.Implementations
                     filesDataEntity.StatusProcessingProject = StatusProcessingProject.Converting;
                     await _repositoryFilesData.UpdateAsync(filesDataEntity);
                 }
+
+                await _unitOfWork.CommitAsync();
             }
 
             var filesDataRequest = _converterDataAccessFilesDataToDTO.ConvertFilesDataAccessToRequest(filesDataEntity);
             return filesDataRequest;
+        }
+
+        /// <summary>
+        /// Обновить информацию после промежуточного ответа
+        /// </summary>      
+        public async Task UpdateFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse)
+        {
+            if (filesDataIntermediateResponse != null)
+            {
+                using (_unitOfWork.BeginTransaction())
+                {
+                    FilesDataEntity filesDataEntity =
+                        await _repositoryFilesData.LoadAsync(filesDataIntermediateResponse.Id.ToString());
+
+                    if (filesDataEntity != null)
+                    {
+                        filesDataEntity = _converterDataAccessFilesDataFromDTO.
+                                           UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity,
+                                                                                         filesDataIntermediateResponse);               
+                    }
+
+                    await _unitOfWork.CommitAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обновить информацию после окончательного ответа
+        /// </summary>      
+        public async Task UpdateFromResponse(FilesDataResponse filesDataResponse)
+        {
+            if (filesDataResponse != null)
+            {
+                using (_unitOfWork.BeginTransaction())
+                {
+                    FilesDataEntity filesDataEntity =
+                        await _repositoryFilesData.LoadAsync(filesDataResponse.Id.ToString());
+
+                    if (filesDataEntity != null)
+                    {
+                        filesDataEntity = _converterDataAccessFilesDataFromDTO.
+                                           UpdateFilesDataAccessFromResponse(filesDataEntity,
+                                                                             filesDataResponse);                       
+                    }
+
+                    await _unitOfWork.CommitAsync();
+                }
+            }
         }
     }
 }

@@ -68,6 +68,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
         /// </summary>
         private readonly CompositeDisposable _statusProcessingUpdaterSubsriptions;
+
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSystemOperations fileSystemOperations,
                                  IFilesData filesInfoProject,
@@ -246,18 +247,19 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             _statusProcessingUpdaterSubsriptions.Add(Observable.
                                                     Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
-                                                    TakeWhile(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
+                                                    Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                                                     Subscribe(async _ => await _executeAndCatchErrors.
-                                                                               ExecuteAndHandleErrorAsync(UpdateStatusProcessing, AbortPropertiesConverting)));
+                                                                               ExecuteAndHandleErrorAsync(UpdateStatusProcessing, 
+                                                                                                          () => IsIntermediateResponseInProgress = true,
+                                                                                                          AbortPropertiesConverting,
+                                                                                                          () => IsIntermediateResponseInProgress = false)));
         }
 
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task UpdateStatusProcessing()
-        {
-            IsIntermediateResponseInProgress = true;
-
+        {  
             FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
                                                                                 Operations.
                                                                                 CheckFilesStatusProcessing(_filesInfoProject.ID);

@@ -86,12 +86,12 @@ namespace GadzhiDAL.Factories.Interfaces
         /// <summary>
         /// Получить первый объект удовлетворяющий условиям или null
         /// </summary>       
-        T GetFirstOrDefault(Func<T, bool> predicate);
+        T GetFirstOrDefault(Func<T, bool> predicate = null);
 
         /// <summary>
         /// Получить первый объект удовлетворяющий условиям или null асинхронно
         /// </summary>   
-        Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, 
+        Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, 
                                        CancellationToken cancellationToken = default(CancellationToken));
        
         /// <summary>

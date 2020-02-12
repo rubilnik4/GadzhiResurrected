@@ -21,10 +21,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-      
+
         public ConverterServerFilesDataToDTO(IFileSystemOperations fileSystemOperations)
         {
-            _fileSystemOperations = fileSystemOperations;           
+            _fileSystemOperations = fileSystemOperations;
         }
 
         /// <summary>
@@ -32,31 +32,33 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>       
         public FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
         {
-           // FilesQueueInfo filesQueueInfo = _queueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
-
             return new FilesDataIntermediateResponse()
             {
+                Id = filesDataServer.Id,
                 IsCompleted = filesDataServer.IsCompleted,
                 StatusProcessingProject = filesDataServer.StatusProcessingProject,
                 FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-                                                                  ConvertFileToIntermediateResponse(fileDataServer)),               
+                                                                  ConvertFileToIntermediateResponse(fileDataServer)),
             };
         }
 
-        ///// <summary>
-        ///// Конвертировать серверную модель в окончательный ответ
-        ///// </summary>          
-        //public async Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer)
-        //{
-        //    var filesDataToResponseTasks = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-        //                                                   ConvertFileResponse(fileDataServer));
-        //    var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
+        /// <summary>
+        /// Конвертировать серверную модель в окончательный ответ
+        /// </summary>          
+        public async Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer)
+        {
+            var filesDataToResponseTasks = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
+                                                           ConvertFileResponse(fileDataServer));
+            var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 
-        //    return new FilesDataResponse()
-        //    {
-        //        FilesData = filesDataToResponse,
-        //    };
-        //}
+            return new FilesDataResponse()
+            {
+                Id = filesDataServer.Id,
+                IsCompleted = filesDataServer.IsCompleted,
+                StatusProcessingProject = filesDataServer.StatusProcessingProject,
+                FilesData = filesDataToResponse,
+            };
+        }
 
         /// <summary>
         /// Конвертировать файл серверной модели в промежуточную
@@ -67,24 +69,26 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
+                IsCompleted = fileDataServer.IsCompleted,
                 FileConvertErrorType = fileDataServer.FileConvertErrorType,
             };
         }
 
-        ///// <summary>
-        ///// Конвертировать файл серверной модели в окончательный ответ
-        ///// </summary>
-        //private async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer)
-        //{
-        //    var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
+        /// <summary>
+        /// Конвертировать файл серверной модели в окончательный ответ
+        /// </summary>
+        private async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer)
+        {
+            var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
 
-        //    return new FileDataResponse()
-        //    {
-        //        FilePath = fileDataServer.FilePathClient,
-        //        StatusProcessing = fileDataServer.StatusProcessing,
-        //        FileDataSource = fileDataSource,
-        //        FileConvertErrorType = fileDataServer.FileConvertErrorType,
-        //    };
-        //}
+            return new FileDataResponse()
+            {
+                FilePath = fileDataServer.FilePathClient,
+                IsCompleted = fileDataServer.IsCompleted,
+                StatusProcessing = fileDataServer.StatusProcessing,
+                FileDataSource = fileDataSource,
+                FileConvertErrorType = fileDataServer.FileConvertErrorType,
+            };
+        }
     }
 }

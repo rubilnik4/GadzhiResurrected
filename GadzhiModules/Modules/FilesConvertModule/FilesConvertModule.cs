@@ -22,6 +22,8 @@ using Unity.Lifetime;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiDTO.Helpers;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Infrastructure.Implementations;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {

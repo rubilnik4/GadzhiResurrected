@@ -145,18 +145,23 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Получить первый объект удовлетворяющий условиям или null
         /// </summary>       
-        public T GetFirstOrDefault(Func<T,bool> predicate)
-        {
-            return _session.Query<T>().FirstOrDefault(predicate);
+        public T GetFirstOrDefault(Func<T, bool> predicate = null)
+        {           
+            return predicate == null ?
+                   _session.Query<T>().FirstOrDefault() :
+                   _session.Query<T>().FirstOrDefault(predicate);
         }
 
         /// <summary>
         /// Получить первый объект удовлетворяющий условиям или null асинхронно
         /// </summary>   
-        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate,
+        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null,
                                                     CancellationToken cancellationToken = default(CancellationToken))
-        {           
-            return await _session.Query<T>().FirstOrDefaultAsync(predicate, cancellationToken);
+        {
+
+            return predicate == null ?
+                   await _session.Query<T>().FirstOrDefaultAsync(cancellationToken):
+                   await _session.Query<T>().FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
         /// <summary>

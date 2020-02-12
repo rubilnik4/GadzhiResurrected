@@ -21,8 +21,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// <summary>
     /// Инфраструктура для конвертирования файлов
     /// </summary>
-    public class ApplicationConverting : IApplicationConverting
+    public class ApplicationConverting : IApplicationConverting, IDisposable
     {
+        /// <summary>
+        /// Запуск процесса конвертирования
+        /// </summary>
+        private readonly IConvertingService _convertingService;
+
         /// <summary>
         /// Параметры приложения
         /// </summary>
@@ -32,11 +37,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
-
-        /// <summary>
-        /// Основная модель состояния процесса конвертирования
-        /// </summary>
-        private readonly IConvertingProject _convertingProject;
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -49,43 +49,26 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
         /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
-        /// </summary>
-        private readonly IFilesDataServiceServer _filesDataServiceServer;
-
-        /// <summary>
-        /// Конвертер из трансферной модели в серверную
-        /// </summary>     
-        private readonly IConverterServerFilesDataFromDTO _converterServerFilesDataFromDTO;
-
-        /// <summary>
-        /// Конвертер из серверной модели в трансферную
-        /// </summary>
-        private readonly IConverterServerFilesDataToDTO _converterServerFilesDataToDTO;
-
-        public ApplicationConverting(IProjectSettings projectSettings,
-                                     IFileSystemOperations fileSystemOperations,
-                                     IConvertingProject convertingProject,
-                                     IFilesDataServiceServer filesDataServiceServer,
-                                     IMessageAndLoggingService messageAndLoggingService,
-                                     IExecuteAndCatchErrors executeAndCatchErrors,
-                                     IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
-                                     IConverterServerFilesDataToDTO converterServerFilesDataToDTO)
-        {
-            _projectSettings = projectSettings;
-            _fileSystemOperations = fileSystemOperations;
-            _convertingProject = convertingProject;
-            _messageAndLoggingService = messageAndLoggingService;
-            _executeAndCatchErrors = executeAndCatchErrors;
-            _filesDataServiceServer = filesDataServiceServer;
-            _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
-            _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
-        }
-
-        /// <summary>
         /// Запуск процесса конвертирования
         /// </summary>
-        private CompositeDisposable _convertingUpdaterSubsriptions;
+        private readonly CompositeDisposable _convertingUpdaterSubsriptions;
+
+        public ApplicationConverting(IConvertingService convertingService,
+                                     IProjectSettings projectSettings,
+                                     IFileSystemOperations fileSystemOperations,
+                                     IMessageAndLoggingService messageAndLoggingService,
+                                     IExecuteAndCatchErrors executeAndCatchErrors)
+        {
+            _convertingService = convertingService;
+            _projectSettings = projectSettings;
+            _fileSystemOperations = fileSystemOperations;
+            _messageAndLoggingService = messageAndLoggingService;
+            _executeAndCatchErrors = executeAndCatchErrors;
+
+            _convertingUpdaterSubsriptions = new CompositeDisposable();
+        }
+
+
 
         /// <summary>
         /// Запущен ли процесс конвертации
@@ -102,27 +85,25 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 _messageAndLoggingService.ShowMessage("Запуск процесса конвертирования...");
 
-                _convertingUpdaterSubsriptions = new CompositeDisposable
-                {
+                _convertingUpdaterSubsriptions.Add(
                     Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
-                               TakeWhile(_ => !IsConverting).
+                               Where(_ => !IsConverting).
                                Subscribe(async _ =>
                                          await _executeAndCatchErrors.
-                                         ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                    () => IsConverting = false))
-
-                };
+                                         ExecuteAndHandleErrorAsync(_convertingService.ConvertingFirstInQueuePackage,
+                                                                    ApplicationBeforeMethod: () => IsConverting = true,
+                                                                    ApplicationFinallyMethod: () => IsConverting = false)));
             }
         }
 
         /// <summary>
-        /// Проверить параметры запуска, добавить ошибки в модель
+        /// Проверить параметры запуска, добавить ошибки
         /// </summary>
         private bool ValidateStartupParameters()
         {
             bool isDataBaseExist = _fileSystemOperations.IsFileExist(_projectSettings.SQLiteDataBasePath);
             if (!isDataBaseExist)
-            {               
+            {
                 _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
                                                     $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
             }
@@ -130,38 +111,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             return isDataBaseExist;
         }
 
-        /// <summary>
-        /// Получить пакет на конвертирование и запустить процесс
-        /// </summary>        
-        private async Task ConvertingFirstInQueuePackage()
+        public void Dispose()
         {
-            FilesDataRequest filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage();
-            FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
-
-            if (filesDataServer.IsValid)
-            {
-                foreach (var filedata in filesDataServer.FilesDataInfo)
-                {
-                    filedata.StatusProcessing = StatusProcessing.Converting;
-
-                    await Task.Delay(2000);
-
-                    if (filedata.IsValid)
-                    {
-                        filedata.StatusProcessing = StatusProcessing.Completed;
-                    }
-                    else
-                    {
-                        filedata.StatusProcessing = StatusProcessing.Error;
-                    }
-                    filedata.IsCompleted = true;
-                }
-            }
-            else
-            {
-                filesDataServer.IsCompleted = true;
-                filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
-            }
+            _convertingUpdaterSubsriptions?.Dispose();
         }
     }
 }

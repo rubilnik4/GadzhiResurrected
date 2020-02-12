@@ -14,6 +14,12 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     public class FilesDataIntermediateResponse
     {
         /// <summary>
+        /// ID идентефикатор
+        /// </summary>
+        [DataMember]
+        public Guid Id { get; set; }
+
+        /// <summary>
         /// Завершена ли обработка
         /// </summary>
         [DataMember]

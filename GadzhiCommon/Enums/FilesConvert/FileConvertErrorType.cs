@@ -20,6 +20,8 @@ namespace GadzhiCommon.Enums.FilesConvert
         AbortOperation,
         TimeOut,
         Communication,
+        NullReference,
+        ArgumentNullReference,
         UnknownError,
     }
 }

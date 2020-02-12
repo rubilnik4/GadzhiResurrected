@@ -20,5 +20,15 @@ namespace GadzhiDAL.Services.Implementations
         /// Получить первый в очереди пакет на конвертирование в серверной части
         /// </summary>      
         Task<FilesDataRequest> GetFirstInQueuePackage();
+
+        /// <summary>
+        /// Обновить информацию после промежуточного ответа
+        /// </summary>      
+        Task UpdateFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse);
+
+        /// <summary>
+        /// Обновить информацию после окончательного ответа
+        /// </summary>      
+        Task UpdateFromResponse(FilesDataResponse filesDataResponse);
     }
 }

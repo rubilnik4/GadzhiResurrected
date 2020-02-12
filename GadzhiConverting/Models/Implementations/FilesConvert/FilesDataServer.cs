@@ -21,7 +21,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
 
         public FilesDataServer(Guid id, IEnumerable<FileDataServer> filesDataServer)
         {
-            ID = id;
+            Id = id;
 
             _filesDataInfo = new List<FileDataServer>();
             if (filesDataServer != null)
@@ -35,7 +35,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// ID идентефикатор
         /// </summary>
-        public Guid ID { get; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Файлы для конвертирования

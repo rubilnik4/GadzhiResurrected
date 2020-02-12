@@ -20,6 +20,18 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в модель базы данных
         /// </summary>      
-        FilesDataEntity ConvertToFilesDataAccess(FilesDataRequest filesDataRequest);             
+        FilesDataEntity ConvertToFilesDataAccess(FilesDataRequest filesDataRequest);
+
+        /// <summary>
+        /// Обновить модель базы данных на основе промежуточного ответа
+        /// </summary>      
+        FilesDataEntity UpdateFilesDataAccessFromIntermediateResponse(FilesDataEntity filesDataEntity,
+                                                                      FilesDataIntermediateResponse filesDataIntermediateResponse);
+
+        /// <summary>
+        /// Обновить модель базы данных на основе окончательного ответа
+        /// </summary>      
+        FilesDataEntity UpdateFilesDataAccessFromResponse(FilesDataEntity filesDataEntity,
+                                                          FilesDataResponse filesDataResponse);
     }
 }

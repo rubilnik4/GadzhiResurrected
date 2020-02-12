@@ -139,7 +139,6 @@
     <Compile Include="Helpers\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
     <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\FilesQueueStatus.cs" />
@@ -148,7 +147,6 @@
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientFilesDataToDTO.cs" />
-    <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />

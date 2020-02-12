@@ -42,6 +42,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         {
             return new FilesDataResponse()
             {
+                Id = Guid.Parse(filesDataEntity.Id),
                 IsCompleted = filesDataEntity.IsCompleted,
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
                 FilesData = filesDataEntity.FilesData?.Select(fileData =>
@@ -54,12 +55,20 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         /// </summary>          
         public FilesDataRequest ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
         {
-            return new FilesDataRequest()
+            FilesDataRequest filesDataRequest = null;
+
+            if (filesDataEntity != null)
             {
-                Id = Guid.Parse(filesDataEntity.Id),
-                FilesData = filesDataEntity.FilesData?.Select(fileData =>
-                                                              ConvertFileDataAccessToRequest(fileData)),
-            };
+                filesDataRequest = new FilesDataRequest()
+                {
+                    Id = Guid.Parse(filesDataEntity.Id),
+                    
+                    FilesData = filesDataEntity.FilesData?.Select(fileData =>
+                                                                  ConvertFileDataAccessToRequest(fileData)),
+                };
+            }
+
+            return filesDataRequest;
         }
 
         /// <summary>
@@ -71,6 +80,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
+                IsCompleted = fileDataEntity.IsCompleted,
                 FileConvertErrorType = fileDataEntity.FileConvertErrorType,
             };
         }
@@ -84,6 +94,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
+                IsCompleted = fileDataEntity.IsCompleted,
                 FileDataSource = fileDataEntity.FileDataSource,
                 FileConvertErrorType = fileDataEntity.FileConvertErrorType,
             };
@@ -98,7 +109,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                FileDataSource = fileDataEntity.FileDataSource,               
+                FileDataSource = fileDataEntity.FileDataSource,
             };
         }
     }

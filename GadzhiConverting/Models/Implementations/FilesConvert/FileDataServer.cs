@@ -58,6 +58,11 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         public string FilePathServer { get; }
 
         /// <summary>
+        /// Имя файла на клиенте
+        /// </summary>
+        public string FileNameWithExtensionClient => Path.GetFileName(FilePathClient);
+
+        /// <summary>
         /// Путь файла на клиенте
         /// </summary>
         public string FilePathClient { get; }
