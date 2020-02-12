@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWcfHost.Models.FilesConvert.Implementations
+namespace GadzhiConverting.Models.FilesConvert.Implementations
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
@@ -36,6 +36,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
+            StatusProcessing = StatusProcessing.Converting;
 
             _fileConvertErrorType = new List<FileConvertErrorType>();
             _fileConvertErrorType.AddRange(fileConvertErrorType);

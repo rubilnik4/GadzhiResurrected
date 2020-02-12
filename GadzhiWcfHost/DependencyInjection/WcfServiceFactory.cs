@@ -1,14 +1,8 @@
-﻿using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiDAL.DependencyInjection;
+﻿using GadzhiDAL.DependencyInjection;
 using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiWcfHost.Helpers;
 using GadzhiWcfHost.Infrastructure.Implementations;
-using GadzhiWcfHost.Infrastructure.Implementations.Converters;
 using GadzhiWcfHost.Infrastructure.Interfaces;
-using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
-using GadzhiWcfHost.Models.FilesConvert.Implementations;
-using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using GadzhiWcfHost.Services;
 using System;
 using System.Collections.Generic;
@@ -29,15 +23,12 @@ namespace GadzhiWcfHost.DependencyInjection
         {
             // Регистрируем зависимости
             container
-                //.RegisterType<IFileSystemOperations, FileSystemOperations>()
                 .RegisterType<IFileConvertingService, FileConvertingService>()
-                //.RegisterType<IQueueInformation, QueueInformation>()
-                //.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>()
-                //.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>()              
-                //.RegisterType<IFilesDataPackages, FilesDataPackages>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationUploadAndGetConverting, ApplicationUploadAndGetConverting>(new HierarchicalLifetimeManager());
-
-            GadzhiDALDependencyInjection.ConfigureContainer(container, HostSystemInformation.ApplicationPath);
+              
+            GadzhiDALDependencyInjection.ConfigureContainer(container, 
+                                                            HostSystemInformation.DataBasePath,
+                                                            false);
         }
 
     }

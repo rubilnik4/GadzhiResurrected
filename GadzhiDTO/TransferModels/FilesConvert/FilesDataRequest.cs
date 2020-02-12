@@ -12,7 +12,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
     /// </summary>
     [DataContract]
     public class FilesDataRequest
-    {      
+    {
         /// <summary>
         /// ID идентефикатор
         /// </summary>
@@ -28,6 +28,7 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// <summary>
         /// Удовлетворяет ли модель условиям для отправки
         /// </summary>
+        [IgnoreDataMember]
         public bool IsValidToSend => FilesData?.Any() == true;
     }
 }

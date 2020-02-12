@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWcfHost.Models.FilesConvert.Implementations
+namespace GadzhiConverting.Models.FilesConvert.Implementations
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах на серверной части
@@ -30,7 +29,7 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
                 _filesDataInfo.AddRange(filesDataServer);
             }
 
-            StatusProcessingProject = StatusProcessingProject.InQueue;
+            StatusProcessingProject = StatusProcessingProject.Converting;
         }
 
         /// <summary>
@@ -64,5 +63,9 @@ namespace GadzhiWcfHost.Models.FilesConvert.Implementations
             });
         }
 
+        /// <summary>
+        /// Корректна ли модель
+        /// </summary>
+        public bool IsValid => _filesDataInfo?.Any() == true;
     }
 }

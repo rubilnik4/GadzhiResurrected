@@ -66,8 +66,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public void ShowMessage(string message)
         {
-            string messageText = _separator + "\n" +
+            string messageText = _separator +
                                  message;
+
+            Console.WriteLine(messageText);
         }
     }
 }

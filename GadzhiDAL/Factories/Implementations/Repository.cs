@@ -5,6 +5,7 @@ using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,16 +30,17 @@ namespace GadzhiDAL.Factories.Implementations
             _session = session;
         }
 
-        public IEnumerable<T> GetAll()
-        {
-            return _session.Query<T>().ToList();
-        }
-
+        /// <summary>
+        /// Осуществить Linq запрос к базе
+        /// </summary>      
         public IQueryable<T> Query()
         {
             return _session.Query<T>();
         }
 
+        /// <summary>
+        /// Осуществить Nhibernate запрос к базе
+        /// </summary>   
         public IQueryOver<T> QueryOver()
         {
             return _session.QueryOver<T>();
@@ -55,36 +57,54 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Добавить сущность асинхронно
         /// </summary> 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _session.SaveAsync(entity);
+            await _session.SaveAsync(entity, cancellationToken);
         }
 
+        /// <summary>
+        /// Обновить объект
+        /// </summary>   
         public void Update(T entity)
         {
             _session.Update(entity);
         }
 
-        public async Task UpdateAsync(T entity)
+        /// <summary>
+        /// Обновить объект асинхронно
+        /// </summary> 
+        public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _session.UpdateAsync(entity);
+            await _session.UpdateAsync(entity, cancellationToken);
         }
 
+        /// <summary>
+        /// Удалить объект
+        /// </summary> 
         public void Delete(T entity)
         {
             _session.Delete(entity);
         }
 
-        public async Task DeleteAsync(T entity)
+        /// <summary>
+        /// Удалить объект асинхронно
+        /// </summary> 
+        public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _session.DeleteAsync(entity);
+            await _session.DeleteAsync(entity, cancellationToken);
         }
 
+        /// <summary>
+        /// Удалить объект по ключу
+        /// </summary> 
         public void Delete(IdType id)
         {
             _session.Query<T>().Where(x => x.Id.Equals(id)).Delete();
         }
 
+        /// <summary>
+        /// Удалить объект по ключу асинхронно
+        /// </summary> 
         public async Task DeleteAsync(IdType id, CancellationToken cancellationToken = default(CancellationToken))
         {
             await _session.Query<T>().Where(x => x.Id.Equals(id)).DeleteAsync(cancellationToken);
@@ -117,9 +137,42 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Получить сущность асинхронно через первичный ключ. Если отсутсвует вернется exception
         /// </summary>   
-        public async Task<T> LoadAsync(IdType id)
+        public async Task<T> LoadAsync(IdType id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _session.LoadAsync<T>(id);
+            return await _session.LoadAsync<T>(id, cancellationToken);
+        }
+
+        /// <summary>
+        /// Получить первый объект удовлетворяющий условиям или null
+        /// </summary>       
+        public T GetFirstOrDefault(Func<T,bool> predicate)
+        {
+            return _session.Query<T>().FirstOrDefault(predicate);
+        }
+
+        /// <summary>
+        /// Получить первый объект удовлетворяющий условиям или null асинхронно
+        /// </summary>   
+        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate,
+                                                    CancellationToken cancellationToken = default(CancellationToken))
+        {           
+            return await _session.Query<T>().FirstOrDefaultAsync(predicate, cancellationToken);
+        }
+
+        /// <summary>
+        /// Получить все объекты
+        /// </summary>
+        public IEnumerable<T> GetAll()
+        {
+            return _session.Query<T>().ToList();
+        }
+
+        /// <summary>
+        /// Получить все объекты асинхронно
+        /// </summary>
+        public async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _session.Query<T>().ToListAsync(cancellationToken);
         }
     }
 }

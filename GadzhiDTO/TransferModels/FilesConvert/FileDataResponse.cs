@@ -25,8 +25,8 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Путь файла
         /// </summary>
         [DataMember]
-        public string FilePath { get; set; }
-        
+        public string FilePath { get; set; }       
+
         /// <summary>
         /// Файл данных в формате zip GZipStream
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiDAL.Mappings.FilesConvert;
 using Microsoft.Extensions.Configuration;
 using NHibernate;
@@ -31,17 +32,16 @@ namespace GadzhiDAL.Factories.Implementations
             return _lazySessionFactory.Value;
         }
 
-        public static FluentConfiguration SQLiteConfigurationFactory(string applicationPath)
+        public static FluentConfiguration SQLiteConfigurationFactory(string dataBasePath)
         {
-            string folderDataBase = applicationPath + "DataBase.gitignore";
-            if (!Directory.Exists(folderDataBase))
+            string directoryPath = Path.GetDirectoryName(dataBasePath);
+            if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(folderDataBase);
-            }
-            string databasePath = folderDataBase + "\\GadzhiSQLite.db";
+                Directory.CreateDirectory(directoryPath);
+            }           
 
             return Fluently.Configure()
-                .Database(SQLiteConfiguration.Standard.UsingFile(databasePath))
+                .Database(SQLiteConfiguration.Standard.UsingFile(dataBasePath))
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<FilesDataMap>())               
                 .ExposeConfiguration(c =>
                 {

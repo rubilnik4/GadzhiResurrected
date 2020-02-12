@@ -12,6 +12,16 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Путь к файлу базы данных SQLite
         /// </summary>
-       string SQLiteDataBasePath { get; }
+        string SQLiteDataBasePath { get; }
+
+        /// <summary>
+        /// Использовать стандартный путь к базе данных
+        /// </summary>
+        bool UseDefaultSQLiteDataBase { get; }
+
+        /// <summary>
+        /// Папка для конвертирования файлов
+        /// </summary>
+        string ConvertingDirectory { get; }
     }
 }

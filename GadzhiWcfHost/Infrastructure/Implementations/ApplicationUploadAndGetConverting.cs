@@ -1,10 +1,6 @@
-﻿using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Services.Implementations;
+﻿using GadzhiDAL.Services.Implementations;
 using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces;
-using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
-using GadzhiWcfHost.Models.FilesConvert.Implementations;
-using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,47 +16,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
     /// </summary>
     public class ApplicationUploadAndGetConverting : IApplicationUploadAndGetConverting
     {
-        ///// <summary>
-        ///// Класс пользовательских пакетов на конвертирование
-        ///// </summary>
-        //private readonly IFilesDataPackages _filesDataPackages;
-
-        ///// <summary>
-        ///// Конвертер из трансферной модели в серверную
-        ///// </summary>     
-        //private readonly IConverterServerFilesDataFromDTO _converterServerFilesDataFromDTO;
-
-        ///// <summary>
-        ///// Конвертер из серверной модели в трансферную
-        ///// </summary>
-        //private readonly IConverterServerFilesDataToDTO _converterServerFilesDataToDTO;
-
         /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах
+        /// Сервис для добавления и получения данных о конвертируемых пакетах в клиентской части
         /// </summary>
-        private readonly IFilesDataService _filesDataService;
+        private readonly IFilesDataServiceClient _filesDataServiceClient;
 
-        ///// <summary>
-        ///// Запуск процесса конвертирования
-        ///// </summary>
-        //private readonly CompositeDisposable _convertingUpdaterSubsriptions;
-
-        public ApplicationUploadAndGetConverting(IFilesDataService filesDataService)
+        public ApplicationUploadAndGetConverting(IFilesDataServiceClient filesDataService)
         {           
-            _filesDataService = filesDataService;
-
-            //_convertingUpdaterSubsriptions = new CompositeDisposable
-            //{
-            //    Observable.Interval(TimeSpan.FromSeconds(10)).
-            //               TakeWhile(_ => !IsConverting).
-            //               Subscribe(async _ => await ConvertingFirstInQueuePackage())
-            //};
-        }
-
-        ///// <summary>
-        ///// Запущен ли процесс конвертации
-        ///// </summary>
-        //public bool IsConverting { get; private set; }
+            _filesDataServiceClient = filesDataService;          
+        }       
 
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
@@ -77,7 +41,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         private async Task QueueFilesData(FilesDataRequest filesDataRequest)
         {
-            await _filesDataService.QueueFilesData(filesDataRequest);
+            await _filesDataServiceClient.QueueFilesData(filesDataRequest);
         }
 
         /// <summary>
@@ -86,7 +50,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         public async Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseById(Guid filesDataId)
         {
             FilesDataIntermediateResponse filesDataIntermediateResponse =
-                    await _filesDataService.GetIntermediateFilesDataById(filesDataId);
+                    await _filesDataServiceClient.GetIntermediateFilesDataById(filesDataId);
 
             return filesDataIntermediateResponse;
         }
@@ -99,19 +63,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
             //FilesDataServer filesDataServer = _filesDataPackages.GetFilesDataServerByID(filesDataServerID);
             //FilesDataResponse filesDataResponse = await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
             return null;
-        }
-
-        ///// <summary>
-        ///// Конвертировать первый в очереди пакет
-        ///// </summary>
-        //public async Task ConvertingFirstInQueuePackage()
-        //{
-        //    IsConverting = true;
-
-        //    FilesDataServer filesDataServerFirstInQueue = _filesDataPackages.GetFirstUncompliteInQueuePackage();
-        //    await _filesDataPackages.ConvertingFilesDataPackage(filesDataServerFirstInQueue);
-
-        //    IsConverting = false;
-        //}
+        }        
     }
 }

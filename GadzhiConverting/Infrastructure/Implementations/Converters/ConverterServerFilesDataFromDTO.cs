@@ -2,18 +2,18 @@
 using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Interfaces.Converters;
+using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiDAL.Infrastructure.Implementations;
 using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiWcfHost.Helpers;
-using GadzhiWcfHost.Infrastructure.Interfaces.Converters;
-using GadzhiWcfHost.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
+namespace GadzhiConverting.Infrastructure.Implementations.Converters
 {
     /// <summary>
     /// Конвертер из трансферной модели в серверную
@@ -25,9 +25,16 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConverterServerFilesDataFromDTO(IFileSystemOperations fileSystemOperations)
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private readonly IProjectSettings _projectSettings;
+
+        public ConverterServerFilesDataFromDTO(IFileSystemOperations fileSystemOperations,
+                                               IProjectSettings projectSettings)
         {
             _fileSystemOperations = fileSystemOperations;
+            _projectSettings = projectSettings;
         }
 
         /// <summary>
@@ -68,7 +75,8 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Converters
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(HostSystemInformation.ConvertionDirectory, packageGuid);
+                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, 
+                                                                                                  packageGuid);
                 if (isCreated)
                 {
                     fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, 

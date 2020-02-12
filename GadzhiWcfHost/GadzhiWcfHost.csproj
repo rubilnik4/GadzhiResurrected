@@ -50,6 +50,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -115,26 +118,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\WcfServiceFactory.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Helpers\HostSystemInformation.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationUploadAndGetConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Information\FilesQueueInfo.cs" />
-    <Compile Include="Infrastructure\Implementations\QueueInformation.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationUploadAndGetConverting.cs" />
-    <Compile Include="Infrastructure\Interfaces\IQueueInformation.cs" />
-    <Compile Include="Models\FilesConvert\Implementations\FilesDataPackages.cs" />
-    <Compile Include="Models\FilesConvert\Implementations\FileDataServer.cs" />
-    <Compile Include="Models\FilesConvert\Implementations\FilesDataServer.cs" />
-    <Compile Include="Models\FilesConvert\Interfaces\IFilesDataPackages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileConvertingService.svc.cs">
       <DependentUpon>FileConvertingService.svc</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\FilesConvert\Implementations\" />
+    <Folder Include="Models\FilesConvert\Interfaces\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
@@ -145,6 +141,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GadzhiCommonServer\GadzhiCommonServer.csproj">
+      <Project>{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}</Project>
+      <Name>GadzhiCommonServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>

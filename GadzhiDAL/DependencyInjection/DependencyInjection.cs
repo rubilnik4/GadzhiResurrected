@@ -16,12 +16,14 @@ namespace GadzhiDAL.DependencyInjection
 {
     public class GadzhiDALDependencyInjection
     {
-        public static void ConfigureContainer(IUnityContainer container, string applicationPath)
+        public static void ConfigureContainer(IUnityContainer container,
+                                              string dataBasePath,
+                                              bool isServerPart)
         {
             container
                  //регистрируем фабрику, синглтон
                  .RegisterFactory<ISessionFactory>((unity) =>
-                      NhibernateFactoryManager.Instance(NhibernateFactoryManager.SQLiteConfigurationFactory(applicationPath)),
+                      NhibernateFactoryManager.Instance(NhibernateFactoryManager.SQLiteConfigurationFactory(dataBasePath)),
                                                         new ContainerControlledLifetimeManager())
 
                  // с помощью фабрики открываем сессию
@@ -35,9 +37,18 @@ namespace GadzhiDAL.DependencyInjection
                  .RegisterType(typeof(IRepository<,>), typeof(Repository<,>))
 
                  .RegisterType<IConverterDataAccessFilesDataFromDTO, ConverterDataAccessFilesDataFromDTO>()
-                 .RegisterType<IConverterDataAccessFilesDataToDTO, ConverterDataAccessFilesDataToDTO>()
-                 .RegisterType<IFilesDataService, FilesDataService>();
+                 .RegisterType<IConverterDataAccessFilesDataToDTO, ConverterDataAccessFilesDataToDTO>();
 
+            if (isServerPart)
+            {
+                container
+                  .RegisterType<IFilesDataServiceServer, FilesDataServiceServer>();
+            }
+            else
+            {
+                container
+                 .RegisterType<IFilesDataServiceClient, FilesDataServiceClient>();
+            }
         }
     }
 }

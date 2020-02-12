@@ -15,45 +15,57 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
     /// Конвертер из модели базы данных в трансферную
     /// </summary>
     public class ConverterDataAccessFilesDataToDTO : IConverterDataAccessFilesDataToDTO
-    {      
+    {
         public ConverterDataAccessFilesDataToDTO()
         {
-            
+
         }
 
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
         public FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity)
-        {            
+        {
             return new FilesDataIntermediateResponse()
             {
                 IsCompleted = filesDataEntity.IsCompleted,
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
                 FilesData = filesDataEntity.FilesData?.Select(fileData =>
-                                                              ConvertFileAccessToIntermediateResponse(fileData)),               
+                                                              ConvertFileDataAccessToIntermediateResponse(fileData)),
             };
         }
 
-        ///// <summary>
-        ///// Конвертировать серверную модель в окончательный ответ
-        ///// </summary>          
-        //public async Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer)
-        //{
-        //    var filesDataToResponseTasks = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-        //                                                   ConvertFileResponse(fileDataServer));
-        //    var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
-
-        //    return new FilesDataResponse()
-        //    {
-        //        FilesData = filesDataToResponse,
-        //    };
-        //}
+        /// <summary>
+        /// Конвертировать из модели базы данных в основной ответ
+        /// </summary>          
+        public FilesDataResponse ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity)
+        {
+            return new FilesDataResponse()
+            {
+                IsCompleted = filesDataEntity.IsCompleted,
+                StatusProcessingProject = filesDataEntity.StatusProcessingProject,
+                FilesData = filesDataEntity.FilesData?.Select(fileData =>
+                                                              ConvertFileDataAccessToResponse(fileData)),
+            };
+        }
 
         /// <summary>
-        /// Конвертировать файл  модели базы данных в промежуточную
+        /// Конвертировать из модели базы данных в запрос
+        /// </summary>          
+        public FilesDataRequest ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
+        {
+            return new FilesDataRequest()
+            {
+                Id = Guid.Parse(filesDataEntity.Id),
+                FilesData = filesDataEntity.FilesData?.Select(fileData =>
+                                                              ConvertFileDataAccessToRequest(fileData)),
+            };
+        }
+
+        /// <summary>
+        /// Конвертировать файл модели базы данных в промежуточную
         /// </summary>
-        private FileDataIntermediateResponse ConvertFileAccessToIntermediateResponse(FileDataEntity fileDataEntity)
+        private FileDataIntermediateResponse ConvertFileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
         {
             return new FileDataIntermediateResponse()
             {
@@ -63,20 +75,31 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
             };
         }
 
-        ///// <summary>
-        ///// Конвертировать файл серверной модели в окончательный ответ
-        ///// </summary>
-        //private async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer)
-        //{
-        //    var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
+        /// <summary>
+        /// Конвертировать файл модели базы данных в основной ответ
+        /// </summary>
+        private FileDataResponse ConvertFileDataAccessToResponse(FileDataEntity fileDataEntity)
+        {
+            return new FileDataResponse()
+            {
+                FilePath = fileDataEntity.FilePath,
+                StatusProcessing = fileDataEntity.StatusProcessing,
+                FileDataSource = fileDataEntity.FileDataSource,
+                FileConvertErrorType = fileDataEntity.FileConvertErrorType,
+            };
+        }
 
-        //    return new FileDataResponse()
-        //    {
-        //        FilePath = fileDataServer.FilePathClient,
-        //        StatusProcessing = fileDataServer.StatusProcessing,
-        //        FileDataSource = fileDataSource,
-        //        FileConvertErrorType = fileDataServer.FileConvertErrorType,
-        //    };
-        //}
+        /// <summary>
+        /// Конвертировать файл модели базы данных в запрос
+        /// </summary>
+        private FileDataRequest ConvertFileDataAccessToRequest(FileDataEntity fileDataEntity)
+        {
+            return new FileDataRequest()
+            {
+                FilePath = fileDataEntity.FilePath,
+                StatusProcessing = fileDataEntity.StatusProcessing,
+                FileDataSource = fileDataEntity.FileDataSource,               
+            };
+        }
     }
 }

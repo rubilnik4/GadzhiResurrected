@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace GadzhiDAL.Services.Implementations
 {
     /// <summary>
-    /// Сервис для добавления и получения данных о конвертируемых пакетах
+    /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
     /// </summary>
-    public interface IFilesDataService
+    public interface IFilesDataServiceClient
     {
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу

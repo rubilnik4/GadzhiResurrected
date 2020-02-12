@@ -112,8 +112,10 @@
     <Compile Include="Mappings\FilesConvert\FileDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\FilesDataMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Implementations\FilesDataService.cs" />
-    <Compile Include="Services\Interfaces\IFilesDataService.cs" />
+    <Compile Include="Services\Implementations\FilesDataServiceServer.cs" />
+    <Compile Include="Services\Implementations\FilesDataServiceClient.cs" />
+    <Compile Include="Services\Interfaces\IFilesDataServiceServer.cs" />
+    <Compile Include="Services\Interfaces\IFilesDataServiceClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -121,6 +123,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\GadzhiCommonServer\GadzhiCommonServer.csproj">
+      <Project>{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}</Project>
+      <Name>GadzhiCommonServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>

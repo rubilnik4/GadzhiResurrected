@@ -19,6 +19,15 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
         FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity);
-       
+
+        /// <summary>
+        /// Конвертировать из модели базы данных в основной ответ
+        /// </summary>          
+        FilesDataResponse ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);
+
+        /// <summary>
+        /// Конвертировать из модели базы данных в запрос
+        /// </summary>          
+        FilesDataRequest ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity);
     }
 }

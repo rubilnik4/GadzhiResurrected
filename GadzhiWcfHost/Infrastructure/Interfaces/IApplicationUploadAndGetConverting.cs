@@ -1,6 +1,4 @@
 ﻿using GadzhiDTO.TransferModels.FilesConvert;
-using GadzhiWcfHost.Models.FilesConvert.Implementations;
-using GadzhiWcfHost.Models.FilesConvert.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

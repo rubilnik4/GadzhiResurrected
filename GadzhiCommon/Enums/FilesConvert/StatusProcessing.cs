@@ -14,7 +14,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         NotSend,
         Sending,
         InQueue,
-        InProcess,
+        Converting,
         Completed,
         Writing,
         End,

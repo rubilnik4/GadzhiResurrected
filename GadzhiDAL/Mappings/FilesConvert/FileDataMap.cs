@@ -15,7 +15,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
         public FileDataMap()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.FilePath).Not.Nullable();
+            Map(x => x.FilePath).Not.Nullable().Default("");
             Map(x => x.IsCompleted).Not.Nullable();
             Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
             Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();

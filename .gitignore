@@ -351,3 +351,5 @@ MigrationBackup/
 GadzhiWcfHost/ConvertingDirectory.gitignore/
 
 GadzhiWcfHost/DataBase.gitignore/
+
+DataBase.gitignore/

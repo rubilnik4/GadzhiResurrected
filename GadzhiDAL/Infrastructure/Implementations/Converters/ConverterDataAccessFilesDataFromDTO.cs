@@ -43,17 +43,14 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         /// Конвертер информации из трансферной модели в единичный класс базы данных
         /// </summary>      
         private FileDataEntity ConvertToFileDataAccess(FileDataRequest fileDataRequest)
-        {
-            var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
-
+        {          
             var fileDataEntity = new FileDataEntity()
             {
                 ColorPrint = fileDataRequest.ColorPrint,
                 FilePath = fileDataRequest.FilePath,
                 FileDataSource = fileDataRequest.FileDataSource,
             };
-            fileDataEntity.SetFileConvertErrorType(errorsFromValidation);
-
+           
             return fileDataEntity;
 
         }

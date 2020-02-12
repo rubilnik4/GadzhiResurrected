@@ -1,9 +1,12 @@
 ﻿using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Implementations;
+using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Interfaces;
+using GadzhiDAL.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +28,14 @@ namespace DependencyInjection.GadzhiConverting
             container.RegisterSingleton<IConvertingProject, ConvertingProject>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>();
+            container.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
+            container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();
+            container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
+
+            var projectSettings = container.Resolve<IProjectSettings>();
+            GadzhiDALDependencyInjection.ConfigureContainer(container, 
+                                                            projectSettings.SQLiteDataBasePath,
+                                                            true);
         }
     }
 }

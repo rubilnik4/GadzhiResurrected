@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05 - GadzhiConverting", "05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiConverting", "GadzhiConverting\GadzhiConverting.csproj", "{947DB9A9-FE6A-4274-97FD-9568D28595D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiCommonServer", "GadzhiCommonServer\GadzhiCommonServer.csproj", "{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{947DB9A9-FE6A-4274-97FD-9568D28595D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947DB9A9-FE6A-4274-97FD-9568D28595D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947DB9A9-FE6A-4274-97FD-9568D28595D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,9 +86,10 @@ Global
 		{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65} = {8BCF9290-6BC5-4FFE-A645-4B04F2080CF9}
 		{71FC9A9C-F36D-452D-AEA6-D3044C11A656} = {84805F52-E865-4F6D-BD37-1E25824DAFE1}
 		{947DB9A9-FE6A-4274-97FD-9568D28595D7} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
+		{C9FFBC73-5DE1-400B-96D9-44D691D2C68A} = {8BCF9290-6BC5-4FFE-A645-4B04F2080CF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {98F57CE6-3DBD-4E61-8716-023B38EBCE68}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {98F57CE6-3DBD-4E61-8716-023B38EBCE68}
 	EndGlobalSection
 EndGlobal

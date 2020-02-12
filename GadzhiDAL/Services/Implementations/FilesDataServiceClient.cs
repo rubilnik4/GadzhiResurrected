@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace GadzhiDAL.Services.Implementations
 {
     /// <summary>
-    /// Сервис для добавления и получения данных о конвертируемых пакетах
+    /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
     /// </summary>
-    public class FilesDataService : IFilesDataService
+    public class FilesDataServiceClient : IFilesDataServiceClient
     {
         /// <summary>
         /// Класс обертка для управления транзакциями
@@ -36,7 +36,7 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>
         private readonly IConverterDataAccessFilesDataToDTO _converterDataAccessFilesDataToDTO;
 
-        public FilesDataService(IUnitOfWork unitOfWork,
+        public FilesDataServiceClient(IUnitOfWork unitOfWork,
                                 IRepository<FilesDataEntity, string> repositoryFilesData,
                                 IConverterDataAccessFilesDataFromDTO converterDataAccessFilesDataFromDTO,
                                 IConverterDataAccessFilesDataToDTO converterDataAccessFilesDataToDTO)
@@ -87,7 +87,7 @@ namespace GadzhiDAL.Services.Implementations
             };
 
             return filesDataIntermediateResponse;
-        }
+        }       
 
         /// <summary>
         /// Получить данные о количестве пакетов и файлов в очереди на конвертирование
