@@ -25,11 +25,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
-        public void ExecuteAndHandleError(Action method, 
+        public void ExecuteAndHandleError(Action method,
+                                          Action ApplicationBeforeMethod = null,
                                           Action ApplicationFinallyMethod = null)
         {
             try
             {
+                ApplicationBeforeMethod?.Invoke();
                 method();
             }           
             catch (Exception ex)
@@ -46,7 +48,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
         public void ExecuteAndHandleError<T1>(Action<T1> function, 
-                                              T1 arg1, 
+                                              T1 arg1,
+                                              Action ApplicationBeforeMethod = null,
                                               Action ApplicationFinallyMethod = null)
         {
             ExecuteAndHandleError(() => function(arg1), ApplicationFinallyMethod);
@@ -55,11 +58,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        public async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, 
+        public async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
+                                                     Action ApplicationBeforeMethod = null,
                                                      Action ApplicationFinallyMethod = null)
         {            
             try
             {
+                ApplicationBeforeMethod?.Invoke();
                 await asyncMethod();
             }            
             catch (Exception ex)
@@ -76,7 +81,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
         public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, 
-                                                         T1 arg1, 
+                                                         T1 arg1,
+                                                         Action ApplicationBeforeMethod = null,
                                                          Action ApplicationFinallyMethod = null)
         {
             await ExecuteAndHandleErrorAsync(() => functionAsync(arg1), ApplicationFinallyMethod);

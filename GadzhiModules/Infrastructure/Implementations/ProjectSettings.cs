@@ -14,7 +14,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Время через которое осуществляются промежуточные запросы к серверу для проверки статуса файлов
         /// </summary>
-        public int IntervalSecondsToToIntermediateResponse => 2;
+        public int IntervalSecondsToIntermediateResponse => 2;
 
         /// <summary>
         /// Имя папка, куда копируются отконвертированные файлы

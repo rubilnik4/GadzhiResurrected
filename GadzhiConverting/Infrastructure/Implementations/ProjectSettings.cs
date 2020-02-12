@@ -64,5 +64,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
                        SettingsServer.DataBaseNameDefault;
             }
         }
+
+        /// <summary>
+        /// Время через которое осуществляется проверка пакетов на сервере
+        /// </summary>
+        public int IntervalSecondsToServer => 5;
     }
 }

@@ -32,19 +32,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>       
         public FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
         {
-            FilesQueueInfo filesQueueInfo = _queueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
+           // FilesQueueInfo filesQueueInfo = _queueInformation.GetQueueInfoUpToIdPackage(filesDataServer.ID);
 
             return new FilesDataIntermediateResponse()
             {
                 IsCompleted = filesDataServer.IsCompleted,
                 StatusProcessingProject = filesDataServer.StatusProcessingProject,
                 FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-                                                           ConvertFileToIntermediateResponse(fileDataServer)),
-                FilesQueueInfo = new FilesQueueInfoResponse()
-                {
-                    FilesInQueueCount = filesQueueInfo.FilesInQueueCount,
-                    PackagesInQueueCount = filesQueueInfo.PackagesInQueueCount,
-                },
+                                                                  ConvertFileToIntermediateResponse(fileDataServer)),               
             };
         }
 
@@ -63,18 +58,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         //    };
         //}
 
-        ///// <summary>
-        ///// Конвертировать файл серверной модели в промежуточную
-        ///// </summary>
-        //private FileDataIntermediateResponse ConvertFileToIntermediateResponse(FileDataServer fileDataServer)
-        //{
-        //    return new FileDataIntermediateResponse()
-        //    {
-        //        FilePath = fileDataServer.FilePathClient,
-        //        StatusProcessing = fileDataServer.StatusProcessing,
-        //        FileConvertErrorType = fileDataServer.FileConvertErrorType,
-        //    };
-        //}
+        /// <summary>
+        /// Конвертировать файл серверной модели в промежуточную
+        /// </summary>
+        private FileDataIntermediateResponse ConvertFileToIntermediateResponse(FileDataServer fileDataServer)
+        {
+            return new FileDataIntermediateResponse()
+            {
+                FilePath = fileDataServer.FilePathClient,
+                StatusProcessing = fileDataServer.StatusProcessing,
+                FileConvertErrorType = fileDataServer.FileConvertErrorType,
+            };
+        }
 
         ///// <summary>
         ///// Конвертировать файл серверной модели в окончательный ответ

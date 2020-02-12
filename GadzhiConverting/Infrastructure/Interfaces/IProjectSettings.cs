@@ -23,5 +23,10 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// Папка для конвертирования файлов
         /// </summary>
         string ConvertingDirectory { get; }
+
+        /// <summary>
+        /// Время через которое осуществляется проверка пакетов на сервере
+        /// </summary>
+        int IntervalSecondsToServer { get; }
     }
 }

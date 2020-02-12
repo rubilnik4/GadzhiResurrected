@@ -90,7 +90,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запущен ли процесс конвертации
         /// </summary>
-        private ISubject<bool> StartConvering { get; set; }
+        private bool IsConverting { get; set; }
 
         /// <summary>
         /// Запустить процесс конвертирования
@@ -104,15 +104,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
                 _convertingUpdaterSubsriptions = new CompositeDisposable
                 {
-                    StartConvering.TakeWhile(startConvering => startConvering).
-                                   Subscribe(async _ =>
-                                   await _executeAndCatchErrors.
+                    Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
+                               TakeWhile(_ => !IsConverting).
+                               Subscribe(async _ =>
+                                         await _executeAndCatchErrors.
                                          ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                    () => StartConvering.OnNext(true)))
+                                                                    () => IsConverting = false))
 
                 };
-
-                StartConvering.OnNext(true);
             }
         }
 

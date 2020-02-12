@@ -36,7 +36,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
-            StatusProcessing = StatusProcessing.Converting;
+            StatusProcessing = StatusProcessing.InQueue;
 
             _fileConvertErrorType = new List<FileConvertErrorType>();
             _fileConvertErrorType.AddRange(fileConvertErrorType);

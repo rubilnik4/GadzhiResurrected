@@ -15,6 +15,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
         void ExecuteAndHandleError(Action method,
+                                   Action ApplicationBeforeMethod = null,
                                    Action ApplicationFinallyMethod = null);
 
         /// <summary>
@@ -22,12 +23,14 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// </summary> 
         void ExecuteAndHandleError<T1>(Action<T1> function,
                                        T1 arg1,
+                                       Action ApplicationBeforeMethod = null,
                                        Action ApplicationFinallyMethod = null);
 
         /// <summary>
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
         Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
+                                        Action ApplicationBeforeMethod = null,
                                         Action ApplicationFinallyMethod = null);
 
         /// <summary>
@@ -35,6 +38,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// </summary> 
         Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync,
                                             T1 arg1,
+                                            Action ApplicationBeforeMethod = null,
                                             Action ApplicationAbortionMethod = null);
 
     }

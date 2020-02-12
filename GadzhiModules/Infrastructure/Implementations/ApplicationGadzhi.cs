@@ -245,7 +245,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private void SubsribeToIntermediateResponse()
         {
             _statusProcessingUpdaterSubsriptions.Add(Observable.
-                                                    Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToToIntermediateResponse)).
+                                                    Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
                                                     TakeWhile(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                                                     Subscribe(async _ => await _executeAndCatchErrors.
                                                                                ExecuteAndHandleErrorAsync(UpdateStatusProcessing, AbortPropertiesConverting)));
