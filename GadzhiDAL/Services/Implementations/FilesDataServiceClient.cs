@@ -15,17 +15,7 @@ namespace GadzhiDAL.Services.Implementations
     /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
     /// </summary>
     public class FilesDataServiceClient : IFilesDataServiceClient
-    {
-        /// <summary>
-        /// Класс обертка для управления транзакциями
-        /// </summary>
-        private readonly IUnitOfWork _unitOfWork;
-
-        /// <summary>
-        /// Репозиторий для конвертируемых файлов
-        /// </summary>
-        private readonly IRepository<FilesDataEntity, string> _repositoryFilesData;
-
+    {        
         /// <summary>
         /// Конвертер из трансферной модели в модель базы данных
         /// </summary>
@@ -36,13 +26,11 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>
         private readonly IConverterDataAccessFilesDataToDTO _converterDataAccessFilesDataToDTO;
 
-        public FilesDataServiceClient(IUnitOfWork unitOfWork,
-                                IRepository<FilesDataEntity, string> repositoryFilesData,
-                                IConverterDataAccessFilesDataFromDTO converterDataAccessFilesDataFromDTO,
-                                IConverterDataAccessFilesDataToDTO converterDataAccessFilesDataToDTO)
+        public FilesDataServiceClient(
+                                      IConverterDataAccessFilesDataFromDTO converterDataAccessFilesDataFromDTO,
+                                      IConverterDataAccessFilesDataToDTO converterDataAccessFilesDataToDTO)
         {
-            _unitOfWork = unitOfWork;
-            _repositoryFilesData = repositoryFilesData;
+          
             _converterDataAccessFilesDataFromDTO = converterDataAccessFilesDataFromDTO;
             _converterDataAccessFilesDataToDTO = converterDataAccessFilesDataToDTO;
         }

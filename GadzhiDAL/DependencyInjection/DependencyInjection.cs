@@ -34,7 +34,7 @@ namespace GadzhiDAL.DependencyInjection
                  //     unity.Resolve<IUnitOfWork>().GetCurrentSession(), new HierarchicalLifetimeManager())
 
                  // Репозиторий в общем виде
-                 .RegisterType(typeof(IRepository<,>), typeof(Repository<,>))
+                // .RegisterType(typeof(IRepository<,>), typeof(Repository<,>))
 
                  .RegisterType<IConverterDataAccessFilesDataFromDTO, ConverterDataAccessFilesDataFromDTO>()
                  .RegisterType<IConverterDataAccessFilesDataToDTO, ConverterDataAccessFilesDataToDTO>();

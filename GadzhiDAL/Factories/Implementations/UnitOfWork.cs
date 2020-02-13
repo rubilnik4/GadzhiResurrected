@@ -24,33 +24,26 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Сессия для подключения к базе
         /// </summary>
-        private ISession _session;
+        public ISession Session { get; }
 
         /// <summary>
         /// Открываемая транзацкия
         /// </summary>
         private ITransaction _transaction;
 
-        /// <summary>
-        /// Репозиторий для конвертируемых файлов
-        /// </summary>
-        public IRepository<FilesDataEntity, string> _repositoryFilesData { get; set; }
-
         public UnitOfWork(ISessionFactory sessionFactory)
-        {           
-            _sessionFactory = sessionFactory;          
+        {
+            _sessionFactory = sessionFactory;
+            Session = _sessionFactory.OpenSession();
+            BeginTransaction();
         }
 
         /// <summary>
         /// Открыть транзакцию
         /// </summary>
-        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _session = _sessionFactory.OpenSession();
-            _transaction = _session.BeginTransaction(isolationLevel);
-            _repositoryFilesData = new Repository<FilesDataEntity, string>(_session);
-
-            return _transaction;
+        private void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {          
+            _transaction = Session.BeginTransaction(isolationLevel);
         }
 
         /// <summary>
@@ -60,7 +53,7 @@ namespace GadzhiDAL.Factories.Implementations
         {
             if (_transaction != null && _transaction.IsActive)
             {
-                _transaction.Commit();               
+                _transaction.Commit();
             }
         }
 
@@ -71,7 +64,7 @@ namespace GadzhiDAL.Factories.Implementations
         {
             if (_transaction != null && _transaction.IsActive)
             {
-                await _transaction.CommitAsync(cancellationToken);             
+                await _transaction.CommitAsync(cancellationToken);
             }
         }
 
@@ -82,8 +75,8 @@ namespace GadzhiDAL.Factories.Implementations
         {
             if (_transaction != null && _transaction.IsActive)
             {
-                _transaction.Rollback();              
-            }                
+                _transaction.Rollback();
+            }
         }
 
         /// <summary>
@@ -93,14 +86,9 @@ namespace GadzhiDAL.Factories.Implementations
         {
             if (_transaction != null && _transaction.IsActive)
             {
-                await _transaction.RollbackAsync(cancellationToken);             
-            }               
+                await _transaction.RollbackAsync(cancellationToken);
+            }
         }
-
-        /// <summary>
-        /// Получить текущую сессию
-        /// </summary>
-        public ISession GetCurrentSession() => _session;
 
         /// <summary>
         /// Закрыть соединение
@@ -108,8 +96,7 @@ namespace GadzhiDAL.Factories.Implementations
         public void Dispose()
         {
             _transaction?.Dispose();
-            _session?.Dispose();
-           // GC.SuppressFinalize(this);
-        }       
+            Session?.Dispose();          
+        }
     }
 }

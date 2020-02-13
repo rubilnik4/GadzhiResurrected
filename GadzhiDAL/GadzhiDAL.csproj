@@ -100,9 +100,7 @@
     <Compile Include="Factories\Implementations\NhibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\FileDataEntity.cs" />
     <Compile Include="Entities\FilesConvert\FilesDataEntity.cs" />
-    <Compile Include="Factories\Implementations\Repository.cs" />
     <Compile Include="Factories\Implementations\UnitOfWork.cs" />
-    <Compile Include="Factories\Interfaces\IRepository.cs" />
     <Compile Include="Factories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterDataAccessFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterDataAccessFilesDataToDTO.cs" />

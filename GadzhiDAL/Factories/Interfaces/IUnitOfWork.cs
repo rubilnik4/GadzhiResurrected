@@ -16,14 +16,9 @@ namespace GadzhiDAL.Factories.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
-        /// Репозиторий для конвертируемых файлов
+        /// Сессия для подключения к базе
         /// </summary>
-        IRepository<FilesDataEntity, string> _repositoryFilesData { get;set;}
-
-        /// <summary>
-        /// Открыть транзакцию
-        /// </summary>
-        IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+        ISession Session { get; }       
 
         /// <summary>
         /// Подтвердить транзакцию
@@ -43,11 +38,6 @@ namespace GadzhiDAL.Factories.Interfaces
         /// <summary>
         /// Откатить транзакцию асинхронно
         /// </summary>
-        Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Получить текущую сессию
-        /// </summary>
-        ISession GetCurrentSession();
+        Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken));      
     }
 }
