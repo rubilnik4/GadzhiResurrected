@@ -38,12 +38,12 @@ namespace GadzhiDAL.Services.Implementations
         private readonly IConverterDataAccessFilesDataToDTO _converterDataAccessFilesDataToDTO;
 
         public FilesDataServiceServer(IUnitOfWork unitOfWork,
-                                      IRepository<FilesDataEntity, string> repositoryFilesData,
+                                      //IRepository<FilesDataEntity, string> repositoryFilesData,
                                       IConverterDataAccessFilesDataFromDTO converterDataAccessFilesDataFromDTO,
                                       IConverterDataAccessFilesDataToDTO converterDataAccessFilesDataToDTO)
         {
             _unitOfWork = unitOfWork;
-            _repositoryFilesData = repositoryFilesData;
+            //_repositoryFilesData = repositoryFilesData;
             _converterDataAccessFilesDataFromDTO = converterDataAccessFilesDataFromDTO;
             _converterDataAccessFilesDataToDTO = converterDataAccessFilesDataToDTO;
         }
@@ -57,12 +57,11 @@ namespace GadzhiDAL.Services.Implementations
 
             using (_unitOfWork.BeginTransaction())
             {
-                filesDataEntity = await _repositoryFilesData.GetFirstOrDefaultAsync(package => !package.IsCompleted &&
+                filesDataEntity = await _unitOfWork._repositoryFilesData.GetFirstOrDefaultAsync(package => !package.IsCompleted &&
                                                                                                 package.StatusProcessingProject == StatusProcessingProject.InQueue);
                 if (filesDataEntity != null)
                 {
-                    filesDataEntity.StatusProcessingProject = StatusProcessingProject.Converting;
-                    await _repositoryFilesData.UpdateAsync(filesDataEntity);
+                    filesDataEntity.StatusProcessingProject = StatusProcessingProject.Converting;                  
                 }
 
                 await _unitOfWork.CommitAsync();

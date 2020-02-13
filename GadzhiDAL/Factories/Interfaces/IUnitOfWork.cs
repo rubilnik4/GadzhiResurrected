@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using GadzhiDAL.Entities.FilesConvert;
+using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +15,11 @@ namespace GadzhiDAL.Factories.Interfaces
     /// </summary>
     public interface IUnitOfWork : IDisposable
     {
+        /// <summary>
+        /// Репозиторий для конвертируемых файлов
+        /// </summary>
+        IRepository<FilesDataEntity, string> _repositoryFilesData { get;set;}
+
         /// <summary>
         /// Открыть транзакцию
         /// </summary>

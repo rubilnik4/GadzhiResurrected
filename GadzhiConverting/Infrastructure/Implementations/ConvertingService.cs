@@ -185,7 +185,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task QueueIsEmpty()
         {
-            await Task.Delay(15500);
+            await Task.Delay(500);
             _messageAndLoggingService.ShowMessage("Очередь пакетов пуста..." + "\n");
         }
 

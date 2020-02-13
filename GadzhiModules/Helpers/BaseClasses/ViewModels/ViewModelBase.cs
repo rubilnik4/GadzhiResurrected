@@ -42,34 +42,38 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         /// </summary> 
         protected void ExecuteAndHandleError(Action method, Action ApplicationAbortionMethod = null)
         {
-            IsLoading = true;
-            ExecuteAndCatchErrors.ExecuteAndHandleError(method, ApplicationAbortionMethod);
-            IsLoading = false;
+
+            ExecuteAndCatchErrors.ExecuteAndHandleError(method,
+                                                        () => IsLoading = true,
+                                                        ApplicationAbortionMethod,
+                                                        () => IsLoading = false);
+
         }
 
-        public void ExecuteAndHandleError<T1>(Action<T1> function, T1 arg1, Action ApplicationAbortionMethod = null)
-        {
-            ExecuteAndHandleError(() => function(arg1), ApplicationAbortionMethod);
-        }
+        //public void ExecuteAndHandleError<T1>(Action<T1> function, T1 arg1, Action ApplicationAbortionMethod = null)
+        //{
+        //    ExecuteAndHandleError(() => function(arg1), ApplicationAbortionMethod);
+        //}
 
         //https://gist.github.com/ghstahl/7022ee06c1f9a1753a11efb51882740c
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отл5ова ошибок асинхронного метода
         /// </summary> 
         protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action ApplicationAbortionMethod = null)
-        {
-            IsLoading = true;
-            await ExecuteAndCatchErrors.ExecuteAndHandleErrorAsync(asyncMethod, ApplicationAbortionMethod);
-            IsLoading = false;
-
+        {           
+            await ExecuteAndCatchErrors.ExecuteAndHandleErrorAsync(asyncMethod,
+                                                                   () => IsLoading = true,
+                                                                   ApplicationAbortionMethod,
+                                                                   () => IsLoading = false);
+           
         }
 
-        /// <summary>
-        /// Обертка для вызова индикатора загрузки и отлова ошибок асинхронной функции
-        /// </summary> 
-        public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1, Action ApplicationAbortionMethod = null)
-        {
-            await ExecuteAndHandleErrorAsync(() => functionAsync(arg1), ApplicationAbortionMethod);
-        }
+        ///// <summary>
+        ///// Обертка для вызова индикатора загрузки и отлова ошибок асинхронной функции
+        ///// </summary> 
+        //public async Task ExecuteAndHandleErrorAsync<T1>(Func<T1, Task> functionAsync, T1 arg1, Action ApplicationAbortionMethod = null)
+        //{
+        //    await ExecuteAndHandleErrorAsync(() => functionAsync(arg1), ApplicationAbortionMethod);
+        //}
     }
 }

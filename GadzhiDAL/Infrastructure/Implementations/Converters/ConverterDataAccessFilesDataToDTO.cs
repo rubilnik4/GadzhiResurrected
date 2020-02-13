@@ -28,6 +28,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         {
             return new FilesDataIntermediateResponse()
             {
+                Id = Guid.Parse(filesDataEntity.Id),
                 IsCompleted = filesDataEntity.IsCompleted,
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
                 FilesData = filesDataEntity.FilesData?.Select(fileData =>

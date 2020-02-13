@@ -30,8 +30,8 @@ namespace GadzhiDAL.DependencyInjection
                  .RegisterType<IUnitOfWork, UnitOfWork>(new HierarchicalLifetimeManager())
 
                  // подключаем сессию для репозитория
-                 .RegisterFactory<ISession>((unity) =>
-                      unity.Resolve<IUnitOfWork>().GetCurrentSession(), new HierarchicalLifetimeManager())
+                 //.RegisterFactory<ISession>((unity) =>
+                 //     unity.Resolve<IUnitOfWork>().GetCurrentSession(), new HierarchicalLifetimeManager())
 
                  // Репозиторий в общем виде
                  .RegisterType(typeof(IRepository<,>), typeof(Repository<,>))

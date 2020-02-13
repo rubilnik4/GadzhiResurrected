@@ -1,4 +1,5 @@
-﻿using GadzhiDAL.Factories.Interfaces;
+﻿using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Factories.Interfaces;
 using NHibernate;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,11 @@ namespace GadzhiDAL.Factories.Implementations
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         /// <summary>
+        /// Фабрика для создания сессии подключения к БД
+        /// </summary>
+        private readonly ISessionFactory _sessionFactory;
+
+        /// <summary>
         /// Сессия для подключения к базе
         /// </summary>
         private ISession _session;
@@ -25,17 +31,25 @@ namespace GadzhiDAL.Factories.Implementations
         /// </summary>
         private ITransaction _transaction;
 
+        /// <summary>
+        /// Репозиторий для конвертируемых файлов
+        /// </summary>
+        public IRepository<FilesDataEntity, string> _repositoryFilesData { get; set; }
+
         public UnitOfWork(ISessionFactory sessionFactory)
-        {
-            _session = sessionFactory.OpenSession();        
+        {           
+            _sessionFactory = sessionFactory;          
         }
 
         /// <summary>
         /// Открыть транзакцию
         /// </summary>
         public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {           
-            _transaction = _session.BeginTransaction(isolationLevel);           
+        {
+            _session = _sessionFactory.OpenSession();
+            _transaction = _session.BeginTransaction(isolationLevel);
+            _repositoryFilesData = new Repository<FilesDataEntity, string>(_session);
+
             return _transaction;
         }
 

@@ -74,8 +74,6 @@ namespace GadzhiDAL.Services.Implementations
             {
                 filesDataEntity = await _repositoryFilesData.LoadAsync(id.ToString());
                 (filesInQueueCount, packagesInQueueCount) = await GetQueueCount(filesDataEntity);
-
-                await _unitOfWork.CommitAsync();
             }
 
             FilesDataIntermediateResponse filesDataIntermediateResponse = _converterDataAccessFilesDataToDTO.

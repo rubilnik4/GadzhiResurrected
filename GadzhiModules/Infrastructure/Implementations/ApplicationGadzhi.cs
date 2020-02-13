@@ -88,6 +88,8 @@ namespace GadzhiModules.Infrastructure.Implementations
             _projectSettings = projectSettings;
 
             _statusProcessingUpdaterSubsriptions = new CompositeDisposable();
+
+           // SubsribeToIntermediateResponse();
         }
 
         /// <summary>
@@ -195,8 +197,6 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (!_statusProcessingInformation.IsConverting)
             {
-                GetReadyPropertiesToConvert();
-
                 if (_filesInfoProject?.FilesInfo?.Any() == true)
                 {
                     FilesDataRequest filesDataRequest = await PrepareFilesToSending();
@@ -270,9 +270,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             {
                 ClearSubsriptions();
                 await GetCompleteFiles();
-            }
-
-            IsIntermediateResponseInProgress = false;
+            }         
         }
 
         /// <summary>
@@ -294,15 +292,7 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             _filesInfoProject.ChangeFilesStatus(filesStatusWrite);
 
-        }
-
-        /// <summary>
-        /// Обозначить начало конвертации
-        /// </summary>
-        private void GetReadyPropertiesToConvert()
-        {
-            IsIntermediateResponseInProgress = false;
-        }
+        }      
 
         /// <summary>
         /// Сбросить индикаторы конвертации
