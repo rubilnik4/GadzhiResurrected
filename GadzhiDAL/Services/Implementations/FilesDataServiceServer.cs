@@ -2,12 +2,14 @@
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
+using GadzhiDAL.Infrastructure.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters;
 using GadzhiDTO.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Unity;
@@ -32,7 +34,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Конвертер из модели базы данных в трансферную
         /// </summary>
-        private readonly IConverterDataAccessFilesDataToDTO _converterDataAccessFilesDataToDTO;
+        private readonly IConverterDataAccessFilesDataToDTO _converterDataAccessFilesDataToDTO;     
 
         public FilesDataServiceServer(IUnityContainer container,
                                       IConverterDataAccessFilesDataFromDTO converterDataAccessFilesDataFromDTO,
@@ -41,7 +43,7 @@ namespace GadzhiDAL.Services.Implementations
 
             _container = container;
             _converterDataAccessFilesDataFromDTO = converterDataAccessFilesDataFromDTO;
-            _converterDataAccessFilesDataToDTO = converterDataAccessFilesDataToDTO;
+            _converterDataAccessFilesDataToDTO = converterDataAccessFilesDataToDTO;           
         }
 
         /// <summary>
@@ -55,8 +57,7 @@ namespace GadzhiDAL.Services.Implementations
             {
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                   Query<FilesDataEntity>().
-                                                  FirstOrDefaultAsync(package => !package.IsCompleted &&
-                                                                      package.StatusProcessingProject == StatusProcessingProject.InQueue);
+                                                  FirstOrDefaultAsync(ConditionConvertion(identityServerName));
 
                 filesDataEntity?.StartConverting(identityServerName);
                 filesDataRequest = _converterDataAccessFilesDataToDTO.ConvertFilesDataAccessToRequest(filesDataEntity);
@@ -100,11 +101,11 @@ namespace GadzhiDAL.Services.Implementations
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataResponse.Id.ToString());
 
-                  
-                        filesDataEntity = _converterDataAccessFilesDataFromDTO.
-                                           UpdateFilesDataAccessFromResponse(filesDataEntity,
-                                                                             filesDataResponse);
-                   
+
+                    filesDataEntity = _converterDataAccessFilesDataFromDTO.
+                                       UpdateFilesDataAccessFromResponse(filesDataEntity,
+                                                                         filesDataResponse);
+
                     await unitOfWork.CommitAsync();
                 }
             }
@@ -124,6 +125,19 @@ namespace GadzhiDAL.Services.Implementations
 
                 await unitOfWork.CommitAsync();
             }
+        }
+
+        /// <summary>
+        /// Условие при котором пакет берется из очереди на конвертацию
+        /// </summary> 
+        private Expression<Func<FilesDataEntity, bool>> ConditionConvertion(string identityServerName)
+        {
+            return package => !package.IsCompleted &&
+
+                              (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
+
+                               package.StatusProcessingProject == StatusProcessingProject.Converting &&
+                               package.IdentityMachine.IdentityServerName == identityServerName);
         }
     }
 }

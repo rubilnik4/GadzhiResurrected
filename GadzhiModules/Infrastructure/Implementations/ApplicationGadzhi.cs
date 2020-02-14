@@ -200,7 +200,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 if (_filesInfoProject?.FilesInfo?.Any() == true)
                 {
                     FilesDataRequest filesDataRequest = await PrepareFilesToSending();
-                    if (filesDataRequest.IsValidToSend)
+                    if (filesDataRequest.IsValid)
                     {
                         await SendFilesToConverting(filesDataRequest);
 

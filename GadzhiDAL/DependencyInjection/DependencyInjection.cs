@@ -1,6 +1,8 @@
 ﻿using GadzhiDAL.Factories.Implementations;
 using GadzhiDAL.Factories.Interfaces;
+using GadzhiDAL.Infrastructure.Implementations;
 using GadzhiDAL.Infrastructure.Implementations.Converters;
+using GadzhiDAL.Infrastructure.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters;
 using GadzhiDAL.Services.Implementations;
 using NHibernate;
@@ -29,15 +31,8 @@ namespace GadzhiDAL.DependencyInjection
                  // с помощью фабрики открываем сессию
                  .RegisterType<IUnitOfWork, UnitOfWork>()
 
-                 // подключаем сессию для репозитория
-                 //.RegisterFactory<ISession>((unity) =>
-                 //     unity.Resolve<IUnitOfWork>().GetCurrentSession(), new HierarchicalLifetimeManager())
-
-                 // Репозиторий в общем виде
-                // .RegisterType(typeof(IRepository<,>), typeof(Repository<,>))
-
                  .RegisterType<IConverterDataAccessFilesDataFromDTO, ConverterDataAccessFilesDataFromDTO>()
-                 .RegisterType<IConverterDataAccessFilesDataToDTO, ConverterDataAccessFilesDataToDTO>();
+                 .RegisterType<IConverterDataAccessFilesDataToDTO, ConverterDataAccessFilesDataToDTO>();           
 
             if (isServerPart)
             {

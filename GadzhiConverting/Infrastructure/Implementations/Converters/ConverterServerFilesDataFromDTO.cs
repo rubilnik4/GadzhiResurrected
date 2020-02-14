@@ -47,7 +47,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServer(filesDataRequest.Id, filesDataServerToConvert);
+            return new FilesDataServer(filesDataRequest.Id,
+                                       filesDataRequest.AttemptingConvertCount,
+                                       filesDataServerToConvert);
         }
 
         /// <summary>

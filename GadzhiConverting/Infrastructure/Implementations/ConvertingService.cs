@@ -19,6 +19,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ConvertingService : IConvertingService
     {
         /// <summary>
+        ///Контейнер зависимостей
+        /// </summary>
+        private readonly IConvertingFileData _convertingFileData;
+
+        /// <summary>
         /// Параметры приложения
         /// </summary>
         private readonly IProjectSettings _projectSettings;
@@ -44,23 +49,32 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IMessageAndLoggingService _messageAndLoggingService;
 
         /// <summary>
-        /// Идентефикатор конвертируемого пакета
-        /// </summary>
-        private Guid? _idPackage;
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConvertingService(IProjectSettings projectSettings,
+        /// <summary>
+        /// Класс обертка для отлова ошибок
+        /// </summary> 
+        private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
+
+        public ConvertingService(IConvertingFileData convertingFileData,
+                                 IProjectSettings projectSettings,
                                  IFilesDataServiceServer filesDataServiceServer,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
-                                 IMessageAndLoggingService messageAndLoggingService)
+                                 IMessageAndLoggingService messageAndLoggingService,
+                                 IFileSystemOperations fileSystemOperations,
+                                 IExecuteAndCatchErrors executeAndCatchErrors)
         {
+            _convertingFileData = convertingFileData;
             _projectSettings = projectSettings;
             _filesDataServiceServer = filesDataServiceServer;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
             _messageAndLoggingService = messageAndLoggingService;
-
-            _idPackage = null;
+            _fileSystemOperations = fileSystemOperations;
+            _executeAndCatchErrors = executeAndCatchErrors;
         }
 
         /// <summary>
@@ -68,21 +82,23 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public async Task ConvertingFirstInQueuePackage()
         {
-            _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
-
-            FilesDataRequest filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage(_projectSettings.NetworkName);           
-            if (filesDataRequest != null)
+            bool isValidStartUpdaParameters = ValidateStartupParameters();
+            if (isValidStartUpdaParameters)
             {
-                _idPackage = filesDataRequest.Id;
-                FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
+                _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
 
-                await ConvertingPackage(filesDataServer);
-            }
-            else
-            {
-                await QueueIsEmpty();
-            }
+                FilesDataRequest filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage(_projectSettings.NetworkName);
+                if (filesDataRequest != null)
+                {
+                    FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
 
+                    await ConvertingPackage(filesDataServer);
+                }
+                else
+                {
+                    await QueueIsEmpty();
+                }
+            }
         }
 
         /// <summary>
@@ -92,33 +108,47 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             if (filesDataServer.IsValid)
             {
-                _messageAndLoggingService.ShowMessage("\n" + $"Конвертация пакета {filesDataServer.Id.ToString()}");
+                filesDataServer = await ConvertingFilesData(filesDataServer);
 
-                foreach (var fileData in filesDataServer.FilesDataInfo)
-                {
-                    await ConvertingFileData(fileData);
-
-                    await SendIntermediateResponse(filesDataServer);
-                }
-
-                await SendCompleteResponse(filesDataServer);
+                ReplyPackageIsComplete(filesDataServer);
             }
             else
             {
-                ReplyPackageIsEmpty(filesDataServer);
+                ReplyPackageIsInvalid(filesDataServer);
             }
+
+            await SendResponse(filesDataServer);
         }
 
         #region Response
         /// <summary>
         /// Сообщить о пустом/некорректном пакете
         /// </summary>
-        private void ReplyPackageIsEmpty(FilesDataServer filesDataServer)
+        private void ReplyPackageIsInvalid(FilesDataServer filesDataServer)
         {
-            _messageAndLoggingService.ShowMessage("Файлы для конвертации не обнаружены");
+            if (!filesDataServer.IsValidByFileData)
+            {
+                _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
+                                                    "Файлы для конвертации не обнаружены");
+            }
+            else if (!filesDataServer.IsValidByAttemptingCount)
+            {
+                _messageAndLoggingService.ShowError(FileConvertErrorType.AttemptingCount,
+                                                    "Превышено количество попыток конвертирования пакета");
+                filesDataServer.SetErrorToAllUncompletedFiles();
+            }
 
             filesDataServer.IsCompleted = true;
+            filesDataServer.StatusProcessingProject = StatusProcessingProject.Error;
+        }
+
+        /// <summary>
+        /// Сообщить об отконвертированном пакете
+        /// </summary>
+        private void ReplyPackageIsComplete(FilesDataServer filesDataServer)
+        {
             filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
+            filesDataServer.IsCompleted = true;
         }
 
         /// <summary>
@@ -135,11 +165,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отправить окончательный ответ
         /// </summary>
-        private async Task SendCompleteResponse(FilesDataServer filesDataServer)
+        private async Task SendResponse(FilesDataServer filesDataServer)
         {
-            filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
-            filesDataServer.IsCompleted = true;
-
             _messageAndLoggingService.ShowMessage($"Отправка данных в базу...");
 
             FilesDataResponse filesDataResponse =
@@ -151,49 +178,25 @@ namespace GadzhiConverting.Infrastructure.Implementations
         }
         #endregion
 
-        #region converting
         /// <summary>
-        /// Конвертировать файл
+        /// Конвертировать пакет
         /// </summary>
-        private async Task ConvertingFileData(FileDataServer fileDataServer)
+        private async Task<FilesDataServer> ConvertingFilesData(FilesDataServer filesDataServer)
         {
-            fileDataServer = FileDataStartConvering(fileDataServer);
+            _messageAndLoggingService.ShowMessage("\n" + $"Конвертация пакета {filesDataServer.Id.ToString()}");
 
-            await Task.Delay(2000);
-
-            fileDataServer = FileDataEndConvering(fileDataServer);
-        }
-
-        /// <summary>
-        /// Начать конвертирование файла
-        /// </summary>
-        private FileDataServer FileDataStartConvering(FileDataServer fileDataServer)
-        {
-            _messageAndLoggingService.ShowMessage($"Конвертация файла {fileDataServer.FileNameWithExtensionClient}");
-
-            fileDataServer.StatusProcessing = StatusProcessing.Converting;
-
-            return fileDataServer;
-        }
-
-        /// <summary>
-        /// Закончить конвертирование файла
-        /// </summary>
-        private FileDataServer FileDataEndConvering(FileDataServer fileDataServer)
-        {
-            fileDataServer.IsCompleted = true;
-            if (fileDataServer.IsValid)
+            foreach (var fileData in filesDataServer.FilesDataInfo)
             {
-                fileDataServer.StatusProcessing = StatusProcessing.Completed;
-            }
-            else
-            {
-                fileDataServer.StatusProcessing = StatusProcessing.Error;
-            }
+                while (!fileData.IsCompleted && fileData.IsValidByAttemptingCount)
+                {
+                    await _executeAndCatchErrors.ExecuteAndHandleErrorAsync(() => _convertingFileData.Converting(fileData),
+                                                                            () => fileData.AttemptingConvertCount += 1);
+                }
 
-            return fileDataServer;
+                await SendIntermediateResponse(filesDataServer);
+            }
+            return filesDataServer;
         }
-        #endregion
 
         /// <summary>
         /// Сообщить об отсутсвии пакетов на конвертирование
@@ -204,5 +207,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _messageAndLoggingService.ShowMessage("Очередь пакетов пуста..." + "\n");
         }
 
+        /// <summary>
+        /// Проверить параметры запуска, добавить ошибки
+        /// </summary>
+        private bool ValidateStartupParameters()
+        {
+            bool isDataBaseExist = _fileSystemOperations.IsFileExist(_projectSettings.SQLiteDataBasePath);
+            if (!isDataBaseExist)
+            {
+                _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
+                                                    $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
+            }
+
+            return isDataBaseExist;
+        }
     }
 }

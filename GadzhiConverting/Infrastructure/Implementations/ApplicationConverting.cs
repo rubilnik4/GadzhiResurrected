@@ -15,7 +15,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
-using Unity;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -27,17 +26,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         ///Контейнер зависимостей
         /// </summary>
-        private readonly IUnityContainer _container;
+        private readonly IConvertingService _convertingService;
 
         /// <summary>
         /// Параметры приложения
         /// </summary>
-        private readonly IProjectSettings _projectSettings;
-
-        /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private readonly IFileSystemOperations _fileSystemOperations;
+        private readonly IProjectSettings _projectSettings;       
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -54,15 +48,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly CompositeDisposable _convertingUpdaterSubsriptions;
 
-        public ApplicationConverting(IUnityContainer container,
-                                     IProjectSettings projectSettings,
-                                     IFileSystemOperations fileSystemOperations,
+        public ApplicationConverting(IConvertingService convertingService,
+                                     IProjectSettings projectSettings,                                    
                                      IMessageAndLoggingService messageAndLoggingService,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
         {
-            _container = container;
-            _projectSettings = projectSettings;
-            _fileSystemOperations = fileSystemOperations;
+            _convertingService = convertingService;
+            _projectSettings = projectSettings;          
             _messageAndLoggingService = messageAndLoggingService;
             _executeAndCatchErrors = executeAndCatchErrors;
 
@@ -81,37 +73,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         public void StartConverting()
         {
-            bool isValidStartUpdaParameters = ValidateStartupParameters();
-            if (isValidStartUpdaParameters)
-            {
-                _messageAndLoggingService.ShowMessage("Запуск процесса конвертирования...");
+            _messageAndLoggingService.ShowMessage("Запуск процесса конвертирования...");
 
-                _convertingUpdaterSubsriptions.Add(
-                    Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
-                               Where(_ => !IsConverting).
-                               Subscribe(async _ =>
-                                         await _executeAndCatchErrors.
-                                         ExecuteAndHandleErrorAsync(_container.Resolve<IConvertingService>().ConvertingFirstInQueuePackage,
-                                                                    ApplicationBeforeMethod: () => IsConverting = true,
-                                                                    ApplicationFinallyMethod: () => IsConverting = false)));
-            }
-
-            Console.ReadLine();
-        }
-
-        /// <summary>
-        /// Проверить параметры запуска, добавить ошибки
-        /// </summary>
-        private bool ValidateStartupParameters()
-        {
-            bool isDataBaseExist = _fileSystemOperations.IsFileExist(_projectSettings.SQLiteDataBasePath);
-            if (!isDataBaseExist)
-            {
-                _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
-                                                    $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
-            }
-
-            return isDataBaseExist;
+            _convertingUpdaterSubsriptions.Add(
+                Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
+                           Where(_ => !IsConverting).
+                           Subscribe(async _ =>
+                                     await _executeAndCatchErrors.
+                                     ExecuteAndHandleErrorAsync(_convertingService.ConvertingFirstInQueuePackage,
+                                                                ApplicationBeforeMethod: () => IsConverting = true,
+                                                                ApplicationFinallyMethod: () => IsConverting = false)));
         }
 
         public void Dispose()

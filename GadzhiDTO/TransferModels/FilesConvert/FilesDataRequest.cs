@@ -26,6 +26,12 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         public string IdentityName { get; set; }
 
         /// <summary>
+        /// Количество попыток конвертирования
+        /// </summary>   
+        [DataMember]
+        public int AttemptingConvertCount { get; set; }
+
+        /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
@@ -35,6 +41,6 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         /// Удовлетворяет ли модель условиям для отправки
         /// </summary>
         [IgnoreDataMember]
-        public bool IsValidToSend => FilesData?.Any() == true;
+        public bool IsValid => FilesData?.Any() == true;
     }
 }

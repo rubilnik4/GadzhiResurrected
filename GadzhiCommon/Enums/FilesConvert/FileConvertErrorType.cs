@@ -22,6 +22,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         Communication,
         NullReference,
         ArgumentNullReference,
+        AttemptingCount,
         UnknownError,
     }
 }

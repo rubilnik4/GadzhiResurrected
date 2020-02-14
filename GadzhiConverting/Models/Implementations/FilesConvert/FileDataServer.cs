@@ -88,9 +88,32 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         public bool IsCompleted { get; set; }
 
         /// <summary>
+        /// Количество попыток конвертирования
+        /// </summary>      
+        public int AttemptingConvertCount { get; set; }
+
+        /// <summary>
         /// Корректна ли модель
         /// </summary>
-        public bool IsValid => FileConvertErrorType == null || FileConvertErrorType.Count == 0;
+        public bool IsValid => IsValidByErrorType && IsValidByAttemptingCount;
+
+        /// <summary>
+        /// Присутствуют ли ошибки конвертирования
+        /// </summary>
+        public bool IsValidByErrorType => FileConvertErrorType == null || FileConvertErrorType.Count == 0;
+
+        /// <summary>
+        /// Не превышает ли количество попыток конвертирования
+        /// </summary>
+        public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
+
+        /// <summary>
+        /// Добавить ошибку
+        /// </summary>
+        public void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType)
+        {
+            _fileConvertErrorType.Add(fileConvertErrorType);
+        }
 
         public bool Equals(FileDataServer other)
         {

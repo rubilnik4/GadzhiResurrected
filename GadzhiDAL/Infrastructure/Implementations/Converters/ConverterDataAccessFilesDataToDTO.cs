@@ -75,9 +75,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
                 return new FilesDataRequest()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
-
-                    FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToRequest(fileData)).
-                                                           ToList(),
+                    AttemptingConvertCount = filesDataEntity.IdentityMachine.AttemptingConvertCount,
+                    FilesData = filesDataEntity.FilesData?.
+                                                Select(fileData => ConvertFileDataAccessToRequest(fileData)).
+                                                ToList(),
                 };
             }
 

@@ -19,9 +19,12 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// </summary>
         private List<FileDataServer> _filesDataInfo;
 
-        public FilesDataServer(Guid id, IEnumerable<FileDataServer> filesDataServer)
+        public FilesDataServer(Guid id,
+                               int attemptingConvertCount,
+                               IEnumerable<FileDataServer> filesDataServer)
         {
             Id = id;
+            AttemptingConvertCount = attemptingConvertCount;
 
             _filesDataInfo = new List<FileDataServer>();
             if (filesDataServer != null)
@@ -48,6 +51,11 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         public bool IsCompleted { get; set; }
 
         /// <summary>
+        /// Количество попыток конвертирования
+        /// </summary>      
+        public int AttemptingConvertCount { get; }
+
+        /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
         public StatusProcessingProject StatusProcessingProject { get; set; }
@@ -55,17 +63,31 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Изменить статус обработки для всех файлов
         /// </summary>
-        public void SetStatusToAllFiles(StatusProcessing statusProcessing)
+        public void SetErrorToAllUncompletedFiles()
         {
-            _filesDataInfo?.ForEach(file =>
+            var uncompletedFiles = _filesDataInfo?.Where(file => !file.IsCompleted);
+            foreach (var file in uncompletedFiles)
             {
-                file.StatusProcessing = statusProcessing;
-            });
+                file.StatusProcessing = StatusProcessing.Error;
+                file.AddFileConvertErrorType(FileConvertErrorType.UnknownError);
+                file.IsCompleted = true;
+            }           
         }
 
         /// <summary>
         /// Корректна ли модель
         /// </summary>
-        public bool IsValid => _filesDataInfo?.Any() == true;
+        public bool IsValid => IsValidByFileData && 
+                               IsValidByAttemptingCount;
+
+        /// <summary>
+        /// Присутствуют ли файлы для конвертации
+        /// </summary>
+        public bool IsValidByFileData => _filesDataInfo?.Any() == true;
+
+        /// <summary>
+        /// Не превышает ли количество попыток конвертирования
+        /// </summary>
+        public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
     }
 }

@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="DependencyInjection\BootStrap.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />
+    <Compile Include="Infrastructure\Interfaces\IConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />

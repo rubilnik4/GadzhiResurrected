@@ -123,8 +123,7 @@ namespace GadzhiDAL.Services.Implementations
         {
             var filesDataTask = unityOfWork.Session.Query<FilesDataEntity>().
                                                     Where(package => filesDataEntity != null &&
-                                                                     !package.IsCompleted &&
-                                                                     package.StatusProcessingProject == StatusProcessingProject.InQueue &&
+                                                                     !package.IsCompleted &&                                                                   
                                                                      package.CreationDateTime < filesDataEntity.CreationDateTime);
 
             int packagesInQueueCount = await filesDataTask?.CountAsync();

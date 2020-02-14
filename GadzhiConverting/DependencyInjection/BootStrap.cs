@@ -27,9 +27,10 @@ namespace DependencyInjection.GadzhiConverting
             container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
             container.RegisterSingleton<IConvertingProject, ConvertingProject>();
-            container.RegisterType<IConvertingService, ConvertingService>();
-            container.RegisterType<IFileSystemOperations, FileSystemOperations>();
-            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>();
+            container.RegisterType<IConvertingService, ConvertingService>(new HierarchicalLifetimeManager());
+            container.RegisterType<IConvertingFileData, ConvertingFileData>(new HierarchicalLifetimeManager());
+            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>(new HierarchicalLifetimeManager());
+            container.RegisterType<IFileSystemOperations, FileSystemOperations>();           
             container.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
             container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();

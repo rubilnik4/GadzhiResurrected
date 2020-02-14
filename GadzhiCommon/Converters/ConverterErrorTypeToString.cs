@@ -27,6 +27,7 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.Communication , "Связь с сервером прервана" },
                 { FileConvertErrorType.NullReference , "Переменная не задана" },
                 { FileConvertErrorType.ArgumentNullReference , "Аргумент не задан" },
+                { FileConvertErrorType.AttemptingCount , "Превышено число попыток" },
             };
 
         /// <summary>
