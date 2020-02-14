@@ -1,6 +1,4 @@
-﻿using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Factories.Interfaces;
-using GadzhiDTO.TransferModels.FilesConvert;
+﻿using GadzhiDTO.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +20,11 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID
         /// </summary>       
-        Task<FilesDataIntermediateResponse> GetIntermediateFilesDataById(Guid id);
+        Task<FilesDataIntermediateResponse> GetFilesDataIntermediateResponseById(Guid id);
+
+        /// <summary>
+        /// Получить окончательный пакет отконвертированных файлов по номеру ID
+        /// </summary>       
+        Task<FilesDataResponse> GetFilesDataResponseById(Guid id);
     }
 }

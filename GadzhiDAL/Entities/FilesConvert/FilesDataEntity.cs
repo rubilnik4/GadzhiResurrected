@@ -31,6 +31,11 @@ namespace GadzhiDAL.Entities.FilesConvert
         public virtual DateTime CreationDateTime { get; set; }
 
         /// <summary>
+        /// Идентефикация пользователя
+        /// </summary>
+        public virtual string IdentityName { get; set; }
+
+        /// <summary>
         /// Завершена ли обработка
         /// </summary>
         public virtual bool IsCompleted { get; set; }

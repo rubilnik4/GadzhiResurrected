@@ -16,6 +16,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
         {
             Id(x => x.Id);
             Map(x => x.CreationDateTime).Not.Nullable();
+            Map(x => x.IdentityName).Not.Nullable().Default("");
             Map(x => x.IsCompleted).Not.Nullable();            
             Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>().Not.Nullable();
             HasMany(x => x.FilesData)

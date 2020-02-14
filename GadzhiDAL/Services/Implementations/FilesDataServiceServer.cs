@@ -55,7 +55,7 @@ namespace GadzhiDAL.Services.Implementations
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                   Query<FilesDataEntity>().
                                                   FirstOrDefaultAsync(package => !package.IsCompleted &&
-                                                                       package.StatusProcessingProject == StatusProcessingProject.InQueue);
+                                                                      package.StatusProcessingProject == StatusProcessingProject.InQueue);
                 if (filesDataEntity != null)
                 {
                     filesDataEntity.StatusProcessingProject = StatusProcessingProject.Converting;

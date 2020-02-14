@@ -234,8 +234,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task SendFilesToConverting(FilesDataRequest filesDataRequest)
         {
             FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
-                                                                                           Operations.
-                                                                                           SendFiles(filesDataRequest);
+                                                                                 Operations.
+                                                                                 SendFiles(filesDataRequest);
             var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
             _filesInfoProject.ChangeFilesStatus(filesStatusAfterSending);
         }

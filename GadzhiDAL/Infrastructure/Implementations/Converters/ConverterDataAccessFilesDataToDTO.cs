@@ -2,6 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Infrastructure.Interfaces.Converters;
+using GadzhiDAL.Models.Implementations;
 using GadzhiDTO.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Web;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters
 {
+    // Внимательно проверять на ленивую загрузку ToList()
     /// <summary>
     /// Конвертер из модели базы данных в трансферную
     /// </summary>
@@ -24,18 +26,28 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        public FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity)
+        public FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity, 
+                                                                                          FilesQueueInfo filesQueueInfo)
         {
             return new FilesDataIntermediateResponse()
             {
                 Id = Guid.Parse(filesDataEntity.Id),
                 IsCompleted = filesDataEntity.IsCompleted,
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                FilesData = filesDataEntity.FilesData?.Select(fileData =>
-                                                              ConvertFileDataAccessToIntermediateResponse(fileData)),
-            };
+                FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData)).
+                                                       ToList(),
+                FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
+        };
         }
 
+        private FilesQueueInfoResponse ConvertFilesQueueInfoToResponse(FilesQueueInfo filesQueueInfo)
+        {
+            return new FilesQueueInfoResponse()
+            {
+                FilesInQueueCount = filesQueueInfo?.FilesInQueueCount ?? 0,
+                PackagesInQueueCount = filesQueueInfo?.PackagesInQueueCount ?? 0,
+            };
+        }
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
@@ -46,8 +58,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
                 Id = Guid.Parse(filesDataEntity.Id),
                 IsCompleted = filesDataEntity.IsCompleted,
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                FilesData = filesDataEntity.FilesData?.Select(fileData =>
-                                                              ConvertFileDataAccessToResponse(fileData)),
+                FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToResponse(fileData)).
+                                                       ToList(),
             };
         }
 
@@ -64,8 +76,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
                     
-                    FilesData = filesDataEntity.FilesData?.Select(fileData =>
-                                                                  ConvertFileDataAccessToRequest(fileData)),
+                    FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToRequest(fileData)).
+                                                           ToList(),
                 };
             }
 
@@ -82,7 +94,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 IsCompleted = fileDataEntity.IsCompleted,
-                FileConvertErrorType = fileDataEntity.FileConvertErrorType,
+                FileConvertErrorType = fileDataEntity.FileConvertErrorType.
+                                                      ToList(),
             };
         }
 
@@ -97,7 +110,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 IsCompleted = fileDataEntity.IsCompleted,
                 FileDataSource = fileDataEntity.FileDataSource,
-                FileConvertErrorType = fileDataEntity.FileConvertErrorType,
+                FileConvertErrorType = fileDataEntity.FileConvertErrorType.
+                                                      ToList(),
             };
         }
 

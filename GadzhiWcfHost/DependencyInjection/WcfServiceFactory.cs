@@ -24,9 +24,10 @@ namespace GadzhiWcfHost.DependencyInjection
             // Регистрируем зависимости
             container
                 .RegisterType<IFileConvertingService, FileConvertingService>()
+                .RegisterType<IAuthentication, Authentication>()
                 .RegisterType<IApplicationUploadAndGetConverting, ApplicationUploadAndGetConverting>(new HierarchicalLifetimeManager());
-              
-            GadzhiDALDependencyInjection.ConfigureContainer(container, 
+
+            GadzhiDALDependencyInjection.ConfigureContainer(container,
                                                             HostSystemInformation.DataBasePath,
                                                             false);
         }

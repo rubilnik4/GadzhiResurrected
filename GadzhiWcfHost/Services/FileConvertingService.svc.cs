@@ -45,7 +45,7 @@ namespace GadzhiWcfHost.Services
         }
 
         /// <summary>
-        /// Проверить статус файлов
+        /// Проверить статус файлов по Id номеру
         /// </summary>      
         public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID)
         {
@@ -55,7 +55,7 @@ namespace GadzhiWcfHost.Services
         }
 
         /// <summary>
-        /// Отправить отконвертированные файлы
+        /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
         public async Task<FilesDataResponse> GetCompleteFiles(Guid filesDataID)
         {

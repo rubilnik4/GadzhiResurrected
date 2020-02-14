@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Models.Implementations;
 using GadzhiDTO.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity);
+        FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
+                                                                                   FilesQueueInfo filesQueueInfo);
 
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ

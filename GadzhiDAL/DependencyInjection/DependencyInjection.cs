@@ -27,7 +27,7 @@ namespace GadzhiDAL.DependencyInjection
                                                         new ContainerControlledLifetimeManager())
 
                  // с помощью фабрики открываем сессию
-                 .RegisterType<IUnitOfWork, UnitOfWork>(new HierarchicalLifetimeManager())
+                 .RegisterType<IUnitOfWork, UnitOfWork>()
 
                  // подключаем сессию для репозитория
                  //.RegisterFactory<ISession>((unity) =>

@@ -20,6 +20,12 @@ namespace GadzhiDTO.TransferModels.FilesConvert
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Идентефикация пользователя
+        /// </summary>
+        [DataMember]
+        public string IdentityName { get; set; }
+
+        /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]

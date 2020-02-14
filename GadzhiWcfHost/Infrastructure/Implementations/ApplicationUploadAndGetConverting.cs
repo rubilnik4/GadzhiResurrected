@@ -21,9 +21,16 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         private readonly IFilesDataServiceClient _filesDataServiceClient;
 
-        public ApplicationUploadAndGetConverting(IFilesDataServiceClient filesDataService)
+        /// <summary>
+        /// Идентефикация пользователя
+        /// </summary>
+        private readonly IAuthentication _authentication;
+
+        public ApplicationUploadAndGetConverting(IFilesDataServiceClient filesDataService,
+                                                  IAuthentication authentication)
         {           
-            _filesDataServiceClient = filesDataService;          
+            _filesDataServiceClient = filesDataService;
+            _authentication = authentication;
         }       
 
         /// <summary>
@@ -31,6 +38,8 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         public async Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest)
         {
+            filesDataRequest = _authentication.AuthenticateFilesData(filesDataRequest);
+
             await QueueFilesData(filesDataRequest);
 
             return await GetIntermediateFilesDataResponseById(filesDataRequest.Id);
@@ -45,24 +54,25 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Получить промежуточный ответ о состоянии конвертируемых файлов
+        /// Получить промежуточный ответ о состоянии конвертируемых файлов по Id номеру
         /// </summary>
         public async Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseById(Guid filesDataId)
-        {
+        {          
             FilesDataIntermediateResponse filesDataIntermediateResponse =
-                    await _filesDataServiceClient.GetIntermediateFilesDataById(filesDataId);
+                    await _filesDataServiceClient.GetFilesDataIntermediateResponseById(filesDataId);
 
             return filesDataIntermediateResponse;
         }
 
         /// <summary>
-        /// Получить отконвертированные файлы
+        /// Получить отконвертированные файлы по Id номеру
         /// </summary>
-        public async Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID)
-        {
-            //FilesDataServer filesDataServer = _filesDataPackages.GetFilesDataServerByID(filesDataServerID);
-            //FilesDataResponse filesDataResponse = await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
-            return null;
+        public async Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataId)
+        {         
+            FilesDataResponse filesDataResponse =
+                   await _filesDataServiceClient.GetFilesDataResponseById(filesDataId);
+
+            return filesDataResponse;
         }        
     }
 }

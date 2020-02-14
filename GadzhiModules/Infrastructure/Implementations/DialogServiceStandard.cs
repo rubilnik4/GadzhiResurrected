@@ -70,6 +70,8 @@ namespace GadzhiModules.Infrastructure.Implementations
             string messageText =  "Ошибка" + "\n" +
                                   ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(fileConvertErrorType) + "\n" +
                                   fileConvertErrorDescription;
+
+            MessageBox.Show(messageText);
         }
 
         /// <summary>
