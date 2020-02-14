@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters;
@@ -56,11 +57,9 @@ namespace GadzhiDAL.Services.Implementations
                                                   Query<FilesDataEntity>().
                                                   FirstOrDefaultAsync(package => !package.IsCompleted &&
                                                                       package.StatusProcessingProject == StatusProcessingProject.InQueue);
-                if (filesDataEntity != null)
-                {
-                    filesDataEntity.StatusProcessingProject = StatusProcessingProject.Converting;
-                    filesDataRequest = _converterDataAccessFilesDataToDTO.ConvertFilesDataAccessToRequest(filesDataEntity);
-                }
+
+                filesDataEntity?.StartConverting();
+                filesDataRequest = _converterDataAccessFilesDataToDTO.ConvertFilesDataAccessToRequest(filesDataEntity);
 
                 await unitOfWork.CommitAsync();
             }
@@ -80,12 +79,9 @@ namespace GadzhiDAL.Services.Implementations
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataIntermediateResponse.Id.ToString());
 
-                    if (filesDataEntity != null)
-                    {
-                        filesDataEntity = _converterDataAccessFilesDataFromDTO.
-                                           UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity,
-                                                                                         filesDataIntermediateResponse);
-                    }
+                    filesDataEntity = _converterDataAccessFilesDataFromDTO.
+                                       UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity,
+                                                                                     filesDataIntermediateResponse);
 
                     await unitOfWork.CommitAsync();
                 }
@@ -104,15 +100,29 @@ namespace GadzhiDAL.Services.Implementations
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataResponse.Id.ToString());
 
-                    if (filesDataEntity != null)
-                    {
+                  
                         filesDataEntity = _converterDataAccessFilesDataFromDTO.
                                            UpdateFilesDataAccessFromResponse(filesDataEntity,
                                                                              filesDataResponse);
-                    }
-
+                   
                     await unitOfWork.CommitAsync();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>       
+        public async Task AbortConvertingById(Guid id)
+        {
+            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
+            {
+                FilesDataEntity filesDataEntity = await unitOfWork.Session.
+                                                  LoadAsync<FilesDataEntity>(id.ToString());
+
+                filesDataEntity?.AbortConverting(ClientServer.Server);
+
+                await unitOfWork.CommitAsync();
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommonServer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,32 @@ namespace GadzhiDAL.Entities.FilesConvert
         public virtual void SetId(Guid id)
         {
             Id = id.ToString();
+        }
+
+        /// <summary>
+        /// Присовить статус конвертирования
+        /// </summary>
+        public virtual void StartConverting()
+        {
+            StatusProcessingProject = StatusProcessingProject.Converting;
+        }
+
+        /// <summary>
+        /// Присовить статус отмены конвертирования
+        /// </summary>
+        public virtual void AbortConverting(ClientServer сlientServer)
+        {
+            switch (сlientServer)
+            {
+                case ClientServer.Client:
+                    IsCompleted = true;
+                    StatusProcessingProject = StatusProcessingProject.Error;
+                    break;
+                case ClientServer.Server:
+                    IsCompleted = false;
+                    StatusProcessingProject = StatusProcessingProject.InQueue;
+                    break;
+            }   
         }
     }
 }

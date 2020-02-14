@@ -34,6 +34,13 @@ namespace GadzhiDTO.Contracts.FilesConvert
         [OperationContract(IsInitiating = false,
                            IsTerminating = true)]
         Task<FilesDataResponse> GetCompleteFiles(Guid filesDataID);
+
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>   
+        [OperationContract(IsInitiating = false,
+                          IsTerminating = true)]
+        Task AbortConvertingById(Guid id);       
     }
 }
 

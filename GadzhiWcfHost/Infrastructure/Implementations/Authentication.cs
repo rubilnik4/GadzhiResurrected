@@ -12,9 +12,25 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
     /// </summary>
     public class Authentication: IAuthentication
     {
+        /// <summary>
+        /// Идентефикатор пакета
+        /// </summary>
+        public Guid Id { get; private set; }
+
+        /// <summary>
+        /// Идентефикатор пользователя
+        /// </summary>
+        public string IdentityName { get; }
+
+        /// <summary>
+        /// Закрыта ли сессия
+        /// </summary>
+        public bool IsClosed { get; set; }
+
         public Authentication()
         {
-
+            IdentityName = GetIdentityName();
+            IsClosed = false;
         }
 
         /// <summary>
@@ -24,7 +40,8 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         {
             if (filesDataRequest != null)
             {
-                filesDataRequest.IdentityName = GetIdentityName();
+                Id = filesDataRequest.Id;
+                filesDataRequest.IdentityName = IdentityName;
             }
 
             return filesDataRequest;

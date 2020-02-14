@@ -32,7 +32,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 
         public FilesData(List<FileData> files)
         {
-            ID = Guid.NewGuid();
+            Id = Guid.NewGuid();
             FilesQueueInfo = new FilesQueueInfo();
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
@@ -43,7 +43,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// ID идентефикатор
         /// </summary>    
-        public Guid ID { get; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Подписка на изменение коллекции

@@ -47,9 +47,9 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Проверить статус файлов по Id номеру
         /// </summary>      
-        public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid filesDataID)
+        public async Task<FilesDataIntermediateResponse> CheckFilesStatusProcessing(Guid id)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await _applicationConverting.GetIntermediateFilesDataResponseById(filesDataID);
+            FilesDataIntermediateResponse filesDataIntermediateResponse = await _applicationConverting.GetIntermediateFilesDataResponseById(id);
 
             return filesDataIntermediateResponse;
         }
@@ -57,12 +57,19 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
-        public async Task<FilesDataResponse> GetCompleteFiles(Guid filesDataID)
+        public async Task<FilesDataResponse> GetCompleteFiles(Guid id)
         {
-            FilesDataResponse filesDataResponse = await _applicationConverting.GetFilesDataResponseByID(filesDataID);
+            FilesDataResponse filesDataResponse = await _applicationConverting.GetFilesDataResponseByID(id);
 
             return filesDataResponse;
         }
 
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>       
+        public async Task AbortConvertingById(Guid id)
+        {
+            await _applicationConverting.AbortConvertingById(id);
+        }
     }
 }

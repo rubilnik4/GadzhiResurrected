@@ -12,7 +12,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
     /// <summary>
     /// Слой приложения, инфраструктура
     /// </summary>
-    public interface IApplicationGadzhi
+    public interface IApplicationGadzhi: IDisposable
     {
         /// <summary>
         /// Подписка на изменение коллекции

@@ -30,5 +30,10 @@ namespace GadzhiDAL.Services.Implementations
         /// Обновить информацию после окончательного ответа
         /// </summary>      
         Task UpdateFromResponse(FilesDataResponse filesDataResponse);
+
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>       
+        Task AbortConvertingById(Guid id);        
     }
 }

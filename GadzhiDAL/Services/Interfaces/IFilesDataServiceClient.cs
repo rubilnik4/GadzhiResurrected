@@ -26,5 +26,10 @@ namespace GadzhiDAL.Services.Implementations
         /// Получить окончательный пакет отконвертированных файлов по номеру ID
         /// </summary>       
         Task<FilesDataResponse> GetFilesDataResponseById(Guid id);
+
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>       
+        Task AbortConvertingById(Guid id); 
     }
 }

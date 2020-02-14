@@ -22,7 +22,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// ID идентефикатор
         /// </summary>    
-        Guid ID { get; }
+        Guid Id { get; }
 
         /// <summary>
         /// Подписка на изменение коллекции

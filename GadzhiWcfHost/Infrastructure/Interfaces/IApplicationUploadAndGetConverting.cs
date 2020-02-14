@@ -26,5 +26,10 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
         /// Получить отконвертированные файлы
         /// </summary>
         Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID);
+
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>       
+        Task AbortConvertingById(Guid id);
     }
 }

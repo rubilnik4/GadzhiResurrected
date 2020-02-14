@@ -26,41 +26,43 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        public FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity, 
+        public FilesDataIntermediateResponse ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
                                                                                           FilesQueueInfo filesQueueInfo)
         {
-            return new FilesDataIntermediateResponse()
+            if (filesDataEntity != null)
             {
-                Id = Guid.Parse(filesDataEntity.Id),
-                IsCompleted = filesDataEntity.IsCompleted,
-                StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData)).
-                                                       ToList(),
-                FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
-        };
+                return new FilesDataIntermediateResponse()
+                {
+                    Id = Guid.Parse(filesDataEntity.Id),
+                    IsCompleted = filesDataEntity.IsCompleted,
+                    StatusProcessingProject = filesDataEntity.StatusProcessingProject,
+                    FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData)).
+                                                           ToList(),
+                    FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
+                };
+            }
+
+            return null;
         }
 
-        private FilesQueueInfoResponse ConvertFilesQueueInfoToResponse(FilesQueueInfo filesQueueInfo)
-        {
-            return new FilesQueueInfoResponse()
-            {
-                FilesInQueueCount = filesQueueInfo?.FilesInQueueCount ?? 0,
-                PackagesInQueueCount = filesQueueInfo?.PackagesInQueueCount ?? 0,
-            };
-        }
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
         public FilesDataResponse ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity)
         {
-            return new FilesDataResponse()
+            if (filesDataEntity != null)
             {
-                Id = Guid.Parse(filesDataEntity.Id),
-                IsCompleted = filesDataEntity.IsCompleted,
-                StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToResponse(fileData)).
-                                                       ToList(),
-            };
+                return new FilesDataResponse()
+                {
+                    Id = Guid.Parse(filesDataEntity.Id),
+                    IsCompleted = filesDataEntity.IsCompleted,
+                    StatusProcessingProject = filesDataEntity.StatusProcessingProject,
+                    FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToResponse(fileData)).
+                                                           ToList(),
+                };
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -68,20 +70,18 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
         /// </summary>          
         public FilesDataRequest ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
         {
-            FilesDataRequest filesDataRequest = null;
-
             if (filesDataEntity != null)
             {
-                filesDataRequest = new FilesDataRequest()
+                return new FilesDataRequest()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
-                    
+
                     FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToRequest(fileData)).
                                                            ToList(),
                 };
             }
 
-            return filesDataRequest;
+            return null;
         }
 
         /// <summary>
@@ -125,6 +125,18 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 FileDataSource = fileDataEntity.FileDataSource,
+            };
+        }
+
+        /// <summary>
+        /// Конвертировать информацию о количестве файлов в очереди
+        /// </summary>        
+        private FilesQueueInfoResponse ConvertFilesQueueInfoToResponse(FilesQueueInfo filesQueueInfo)
+        {
+            return new FilesQueueInfoResponse()
+            {
+                FilesInQueueCount = filesQueueInfo?.FilesInQueueCount ?? 0,
+                PackagesInQueueCount = filesQueueInfo?.PackagesInQueueCount ?? 0,
             };
         }
     }

@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters;
@@ -69,14 +70,11 @@ namespace GadzhiDAL.Services.Implementations
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                   LoadAsync<FilesDataEntity>(id.ToString());
 
-                if (filesDataEntity != null)
-                {
-                    FilesQueueInfo filesQueueInfo = await GetQueueCount(unitOfWork, filesDataEntity);
+                FilesQueueInfo filesQueueInfo = await GetQueueCount(unitOfWork, filesDataEntity);
 
-                    filesDataIntermediateResponse = _converterDataAccessFilesDataToDTO.
-                                                    ConvertFilesDataAccessToIntermediateResponse(filesDataEntity,
-                                                                                                 filesQueueInfo);
-                }
+                filesDataIntermediateResponse = _converterDataAccessFilesDataToDTO.
+                                                ConvertFilesDataAccessToIntermediateResponse(filesDataEntity,
+                                                                                             filesQueueInfo);
             }
 
             return filesDataIntermediateResponse;
@@ -93,14 +91,28 @@ namespace GadzhiDAL.Services.Implementations
             {
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                   LoadAsync<FilesDataEntity>(id.ToString());
-                if (filesDataEntity != null)
-                {
-                    filesDataResponse = _converterDataAccessFilesDataToDTO.
-                                        ConvertFilesDataAccessToResponse(filesDataEntity);
-                }
+
+                filesDataResponse = _converterDataAccessFilesDataToDTO.
+                                        ConvertFilesDataAccessToResponse(filesDataEntity);              
             }
 
             return filesDataResponse;
+        }
+
+        /// <summary>
+        /// Отмена операции по номеру ID
+        /// </summary>       
+        public async Task AbortConvertingById(Guid id)
+        {
+            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
+            {
+                FilesDataEntity filesDataEntity = await unitOfWork.Session.
+                                                  LoadAsync<FilesDataEntity>(id.ToString());
+
+                filesDataEntity?.AbortConverting(ClientServer.Client);
+
+                await unitOfWork.CommitAsync();
+            }
         }
 
         /// <summary>

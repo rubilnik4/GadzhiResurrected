@@ -18,6 +18,7 @@ using System.Reactive.Subjects;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 
+
 namespace GadzhiModules.Infrastructure.Implementations
 {
     /// <summary>
@@ -183,8 +184,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 {
                     return;
                 }
-            }
-
+            }          
             Application.Current.Shutdown();
         }
 
@@ -262,7 +262,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {  
             FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
                                                                                 Operations.
-                                                                                CheckFilesStatusProcessing(_filesInfoProject.ID);
+                                                                                CheckFilesStatusProcessing(_filesInfoProject.Id);
             FilesStatus filesStatus = await _fileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             _filesInfoProject.ChangeFilesStatus(filesStatus);
 
@@ -281,7 +281,7 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             FilesDataResponse filesDataResponse = await _fileConvertingService.
                                                         Operations.
-                                                        GetCompleteFiles(_filesInfoProject.ID);
+                                                        GetCompleteFiles(_filesInfoProject.Id);
 
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
@@ -292,7 +292,18 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             _filesInfoProject.ChangeFilesStatus(filesStatusWrite);
 
-        }      
+        }
+
+        /// <summary>
+        /// Отмена операции
+        /// </summary>
+        private async Task AbortConverting()
+        {
+            if (_statusProcessingInformation?.IsConverting == true)
+            {
+                await _fileConvertingService?.Operations?.AbortConvertingById(_filesInfoProject.Id);
+            }           
+        }
 
         /// <summary>
         /// Сбросить индикаторы конвертации
@@ -300,8 +311,12 @@ namespace GadzhiModules.Infrastructure.Implementations
         public void AbortPropertiesConverting()
         {
             IsIntermediateResponseInProgress = false;
+
+            //не дожидаться завершения операции
+            AbortConverting().ConfigureAwait(false);                                 
+
             ClearSubsriptions();
-            _filesInfoProject.ChangeAllFilesStatusAndMarkError();
+            _filesInfoProject?.ChangeAllFilesStatusAndMarkError();
         }
 
         /// <summary>
@@ -315,7 +330,8 @@ namespace GadzhiModules.Infrastructure.Implementations
 
         public void Dispose()
         {
-            ClearSubsriptions();
+            AbortPropertiesConverting();
         }
+
     }
 }

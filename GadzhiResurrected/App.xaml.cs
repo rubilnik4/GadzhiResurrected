@@ -18,6 +18,7 @@ using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Implementations;
+using System.ComponentModel;
 
 namespace GadzhiResurrected
 {
@@ -31,9 +32,19 @@ namespace GadzhiResurrected
         /// </summary>       
         protected override Window CreateShell()
         {
+            PrismApplication.Current.Exit += new ExitEventHandler(MainWindow_Closing);
+
             return Container.Resolve<MainView>();
         }
-      
+
+        /// <summary>
+        /// Закрываем сессию на сервер при закрытии программы
+        /// </summary>       
+        void MainWindow_Closing(object sender, ExitEventArgs e)
+        {
+            Container.Resolve<IApplicationGadzhi>()?.Dispose();
+        }
+
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {          
             IUnityContainer unityContainer = containerRegistry.GetContainer();
