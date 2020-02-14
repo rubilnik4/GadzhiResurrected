@@ -19,6 +19,12 @@ namespace GadzhiDAL.Entities.FilesConvert
             IsCompleted = false;
             StatusProcessingProject = StatusProcessingProject.InQueue;
             FilesData = new List<FileDataEntity>();
+            IdentityMachine = new IdentityMachine()
+            {
+                AttemptingConvertCount = 0,
+                IdentityLocalName = "",
+                IdentityServerName = "",
+            };
         }
 
         /// <summary>
@@ -30,12 +36,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// Время создания запроса на конвертирование
         /// </summary>
         public virtual DateTime CreationDateTime { get; set; }
-
-        /// <summary>
-        /// Идентефикация пользователя
-        /// </summary>
-        public virtual string IdentityName { get; set; }
-
+        
         /// <summary>
         /// Завершена ли обработка
         /// </summary>
@@ -45,6 +46,11 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// Статус выполнения проекта
         /// </summary>      
         public virtual StatusProcessingProject StatusProcessingProject { get; set; }
+
+        /// <summary>
+        /// Идентефикация устройства
+        /// </summary>
+        public virtual IdentityMachine IdentityMachine { get; set; }
 
         /// <summary>
         /// Данные о отконвертированных файлах
@@ -82,9 +88,11 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Присовить статус конвертирования
         /// </summary>
-        public virtual void StartConverting()
+        public virtual void StartConverting(string identityServerName)
         {
             StatusProcessingProject = StatusProcessingProject.Converting;
+            IdentityMachine.AttemptingConvertCount += 1;
+            IdentityMachine.IdentityServerName = identityServerName;
         }
 
         /// <summary>
@@ -102,7 +110,7 @@ namespace GadzhiDAL.Entities.FilesConvert
                     IsCompleted = false;
                     StatusProcessingProject = StatusProcessingProject.InQueue;
                     break;
-            }   
+            }
         }
     }
 }

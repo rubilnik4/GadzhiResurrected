@@ -15,6 +15,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -24,9 +25,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ApplicationConverting : IApplicationConverting, IDisposable
     {
         /// <summary>
-        /// Запуск процесса конвертирования
+        ///Контейнер зависимостей
         /// </summary>
-        private readonly IConvertingService _convertingService;
+        private readonly IUnityContainer _container;
 
         /// <summary>
         /// Параметры приложения
@@ -53,13 +54,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly CompositeDisposable _convertingUpdaterSubsriptions;
 
-        public ApplicationConverting(IConvertingService convertingService,
+        public ApplicationConverting(IUnityContainer container,
                                      IProjectSettings projectSettings,
                                      IFileSystemOperations fileSystemOperations,
                                      IMessageAndLoggingService messageAndLoggingService,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
         {
-            _convertingService = convertingService;
+            _container = container;
             _projectSettings = projectSettings;
             _fileSystemOperations = fileSystemOperations;
             _messageAndLoggingService = messageAndLoggingService;
@@ -90,10 +91,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                Where(_ => !IsConverting).
                                Subscribe(async _ =>
                                          await _executeAndCatchErrors.
-                                         ExecuteAndHandleErrorAsync(_convertingService.ConvertingFirstInQueuePackage,
+                                         ExecuteAndHandleErrorAsync(_container.Resolve<IConvertingService>().ConvertingFirstInQueuePackage,
                                                                     ApplicationBeforeMethod: () => IsConverting = true,
                                                                     ApplicationFinallyMethod: () => IsConverting = false)));
             }
+
+            Console.ReadLine();
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
     /// <summary>
     /// Инфраструктура для конвертирования файлов
     /// </summary>
-    public interface IApplicationConverting
+    public interface IApplicationConverting: IDisposable
     {
         /// <summary>
         /// Запустить процесс конвертирования

@@ -28,5 +28,15 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// Время через которое осуществляется проверка пакетов на сервере
         /// </summary>
         int IntervalSecondsToServer { get; }
+
+        /// <summary>
+        /// Получить хэш код приложения
+        /// </summary>
+        int ApplicationHashCode { get; }
+
+        /// <summary>
+        /// Получить имя компьютера
+        /// </summary>
+        string NetworkName { get; }
     }
 }

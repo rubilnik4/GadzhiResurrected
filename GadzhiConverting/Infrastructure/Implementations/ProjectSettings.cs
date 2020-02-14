@@ -59,7 +59,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 string applicationPath = Environment.CurrentDirectory;
                 var directoryPath = new DirectoryInfo(applicationPath);
                 var gadzhiPath = directoryPath.Parent.Parent.Parent.FullName;
-                return gadzhiPath + "\\"+
+                return gadzhiPath + "\\" +
                        SettingsServer.DataBaseDirectoryDefault + "\\" +
                        SettingsServer.DataBaseNameDefault;
             }
@@ -69,5 +69,27 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Время через которое осуществляется проверка пакетов на сервере
         /// </summary>
         public int IntervalSecondsToServer => 5;
+
+        /// <summary>
+        /// Получить хэш код приложения
+        /// </summary>
+        public int ApplicationHashCode
+        {
+            get
+            {
+                int hashCode = 17;
+                hashCode = hashCode * 31 + Environment.CurrentDirectory.GetHashCode();
+                hashCode = hashCode * 31 + Environment.UserDomainName.GetHashCode();
+                hashCode = hashCode * 31 + Environment.UserName.GetHashCode();
+
+                return hashCode;
+            }
+        }
+
+        /// <summary>
+        /// Получить имя компьютера
+        /// </summary>
+        public string NetworkName => Environment.UserDomainName +"\\" + Environment.MachineName;
+      
     }
 }

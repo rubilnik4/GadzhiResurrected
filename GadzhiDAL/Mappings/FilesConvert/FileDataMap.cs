@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace GadzhiDAL.Mappings.FilesConvert
 {
+    /// <summary>
+    /// Структура в БД для конвертируемого файла
+    /// </summary>
     public class FileDataMap : ClassMap<FileDataEntity>
     {
         public FileDataMap()

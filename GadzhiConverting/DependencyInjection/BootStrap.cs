@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity;
+using Unity.Lifetime;
 
 namespace DependencyInjection.GadzhiConverting
 {
@@ -21,7 +22,7 @@ namespace DependencyInjection.GadzhiConverting
     /// </summary>
     public static class BootStrapUnity
     {
-        public static void Start(UnityContainer container)
+        public static void Start(IUnityContainer container)
         {
             container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
@@ -37,6 +38,7 @@ namespace DependencyInjection.GadzhiConverting
             GadzhiDALDependencyInjection.ConfigureContainer(container, 
                                                             projectSettings.SQLiteDataBasePath,
                                                             true);
+           
         }
     }
 }

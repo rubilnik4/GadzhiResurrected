@@ -34,7 +34,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters
 
             var filesDataEntity = new FilesDataEntity();
             filesDataEntity.SetId(filesDataRequest.Id);
-            filesDataEntity.IdentityName = filesDataRequest.IdentityName;
+            filesDataEntity.IdentityMachine.IdentityLocalName = filesDataRequest.IdentityName;
             filesDataEntity.SetFilesData(filesDataAccessToConvert);
 
             return filesDataEntity;

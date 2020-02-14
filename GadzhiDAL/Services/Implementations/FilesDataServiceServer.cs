@@ -47,7 +47,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>      
-        public async Task<FilesDataRequest> GetFirstInQueuePackage()
+        public async Task<FilesDataRequest> GetFirstInQueuePackage(string identityServerName)
         {
             FilesDataRequest filesDataRequest = null;
 
@@ -58,7 +58,7 @@ namespace GadzhiDAL.Services.Implementations
                                                   FirstOrDefaultAsync(package => !package.IsCompleted &&
                                                                       package.StatusProcessingProject == StatusProcessingProject.InQueue);
 
-                filesDataEntity?.StartConverting();
+                filesDataEntity?.StartConverting(identityServerName);
                 filesDataRequest = _converterDataAccessFilesDataToDTO.ConvertFilesDataAccessToRequest(filesDataEntity);
 
                 await unitOfWork.CommitAsync();

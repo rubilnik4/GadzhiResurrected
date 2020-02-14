@@ -19,6 +19,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ConvertingService : IConvertingService
     {
         /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private readonly IProjectSettings _projectSettings;
+
+        /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
         /// </summary>
         private readonly IFilesDataServiceServer _filesDataServiceServer;
@@ -38,15 +43,24 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly IMessageAndLoggingService _messageAndLoggingService;
 
-        public ConvertingService(IFilesDataServiceServer filesDataServiceServer,
+        /// <summary>
+        /// Идентефикатор конвертируемого пакета
+        /// </summary>
+        private Guid? _idPackage;
+
+        public ConvertingService(IProjectSettings projectSettings,
+                                 IFilesDataServiceServer filesDataServiceServer,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
                                  IMessageAndLoggingService messageAndLoggingService)
         {
+            _projectSettings = projectSettings;
             _filesDataServiceServer = filesDataServiceServer;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
             _messageAndLoggingService = messageAndLoggingService;
+
+            _idPackage = null;
         }
 
         /// <summary>
@@ -56,9 +70,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
 
-            FilesDataRequest filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage();
+            FilesDataRequest filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage(_projectSettings.NetworkName);           
             if (filesDataRequest != null)
             {
+                _idPackage = filesDataRequest.Id;
                 FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
 
                 await ConvertingPackage(filesDataServer);
