@@ -6,9 +6,11 @@ using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
-using GadzhiConverting.Models.Implementations;
-using GadzhiConverting.Models.Interfaces;
 using GadzhiDTOServer.Contracts.FilesConvert;
+using GadzhiMicrostation.Infrastructure.Implementations;
+using GadzhiMicrostation.Infrastructure.Interface;
+using GadzhiMicrostation.Microstation.Implementations;
+using GadzhiMicrostation.Microstation.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,11 +32,10 @@ namespace DependencyInjection.GadzhiConverting
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
 
             container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();           
-            container.RegisterSingleton<IProjectSettings, ProjectSettings>();
-            container.RegisterSingleton<IConvertingProject, ConvertingProject>();
+            container.RegisterSingleton<IProjectSettings, ProjectSettings>();          
             container.RegisterType<IConvertingService, ConvertingService>(new HierarchicalLifetimeManager());
             container.RegisterType<IConvertingFileData, ConvertingFileData>(new HierarchicalLifetimeManager());
-            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>(new HierarchicalLifetimeManager());
+            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>(new HierarchicalLifetimeManager());           
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) =>
                       ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
@@ -43,7 +44,9 @@ namespace DependencyInjection.GadzhiConverting
             container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
 
-           
+            //microstation
+            container.RegisterType<IConvertingFileMicrostation, ConvertingFileMicrostation>(new HierarchicalLifetimeManager());
+            container.RegisterType<IApplicationMicrostation, ApplicationMicrostation>(new HierarchicalLifetimeManager());
         }
     }
 }

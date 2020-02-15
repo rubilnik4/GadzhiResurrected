@@ -1,6 +1,4 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiConverting.Models.FilesConvert.Implementations;
+﻿using GadzhiConverting.Models.FilesConvert.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

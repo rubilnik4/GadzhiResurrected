@@ -1,10 +1,6 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiConverting.Infrastructure.Interfaces;
-using GadzhiConverting.Models.Implementations;
-using GadzhiConverting.Models.Implementations.ReactiveSubjects;
-using GadzhiConverting.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

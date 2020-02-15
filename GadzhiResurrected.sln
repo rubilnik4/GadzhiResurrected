@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiDTOClient", "GadzhiDT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiDTOServer", "GadzhiDTOServer\GadzhiDTOServer.csproj", "{B327C2A7-14EA-44B0-B3CE-6E4309B12771}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiMicrostation", "GadzhiMicrostation\GadzhiMicrostation.csproj", "{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{B327C2A7-14EA-44B0-B3CE-6E4309B12771}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B327C2A7-14EA-44B0-B3CE-6E4309B12771}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B327C2A7-14EA-44B0-B3CE-6E4309B12771}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,9 +100,10 @@ Global
 		{C9FFBC73-5DE1-400B-96D9-44D691D2C68A} = {8BCF9290-6BC5-4FFE-A645-4B04F2080CF9}
 		{DE167026-7A41-4B2C-8F2A-00EA175E891E} = {F416117F-1C73-4708-9C1F-81EACF67A65D}
 		{B327C2A7-14EA-44B0-B3CE-6E4309B12771} = {F416117F-1C73-4708-9C1F-81EACF67A65D}
+		{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {98F57CE6-3DBD-4E61-8716-023B38EBCE68}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal

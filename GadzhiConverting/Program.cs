@@ -1,6 +1,7 @@
 ﻿using DependencyInjection.GadzhiConverting;
 using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
+using GadzhiMicrostation.Infrastructure.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,9 +19,11 @@ namespace GadzhiConverting
             var container = new UnityContainer();
             BootStrapUnity.Start(container);
 
-            var applicationConverting = container.Resolve<IApplicationConverting>();
+            var micro = container.Resolve<IConvertingFileMicrostation>();
+            micro.ConvertingFile("C:\\visual\\dwgToDgN\\testConverted\\01.dgn");
+            //var applicationConverting = container.Resolve<IApplicationConverting>();
 
-            applicationConverting.StartConverting();
+            //applicationConverting.StartConverting();
 
             Console.ReadLine();
         }
