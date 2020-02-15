@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace GadzhiDTOClient.Contracts.FilesConvert
 {
     /// <summary>
-    /// Сервис для конвертирования файлов.Контракт используется и клиентской и серверной частью
+    /// Сервис для конвертирования файлов.Контракт используется клиентской частью
     /// </summary>
     [ServiceContract(SessionMode = SessionMode.Required)]
-    public interface IFileConvertingServiceClient
+    public interface IFileConvertingClientService
     {
         /// <summary>
         /// Отправить файлы для конвертирования

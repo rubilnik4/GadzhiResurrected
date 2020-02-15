@@ -1,6 +1,6 @@
 ﻿using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiWcfHost.Infrastructure.Interfaces;
+using GadzhiWcfHost.Infrastructure.Interfaces.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,21 +13,21 @@ namespace GadzhiWcfHost.Services
 {
     //Обязательно сверять путь с файлом App.config
     /// <summary>
-    /// Сервис для конвертирования файлов. Контракт используется и клиентской и серверной частью
+    /// Сервис для конвертирования файлов. Контракт используется клиентской частью
     /// </summary>   
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession,
                      ConcurrencyMode = ConcurrencyMode.Multiple,
                      IncludeExceptionDetailInFaults = true)]
-    public class FileConvertingServiceClient : IFileConvertingServiceClient
+    public class FileConvertingClientService : IFileConvertingClientService
     {
         /// <summary>
         /// Сохранение, обработка, подготовка для отправки файлов
         /// </summary>   
-        private readonly IApplicationUploadAndGetConverting _applicationConverting;
+        private readonly IApplicationClientConverting _applicationClientConverting;
 
-        public FileConvertingServiceClient(IApplicationUploadAndGetConverting applicationReceiveAndSend)
+        public FileConvertingClientService(IApplicationClientConverting applicationClientConverting)
         {
-            _applicationConverting = applicationReceiveAndSend;
+            _applicationClientConverting = applicationClientConverting;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponseClient> SendFiles(FilesDataRequestClient filesDataRequest)
         {
-            var filesDataIntermediateResponse = await _applicationConverting.QueueFilesDataAndGetResponse(filesDataRequest);
+            var filesDataIntermediateResponse = await _applicationClientConverting.QueueFilesDataAndGetResponse(filesDataRequest);
 
             return filesDataIntermediateResponse;
         }
@@ -45,7 +45,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid id)
         {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _applicationConverting.GetIntermediateFilesDataResponseById(id);
+            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _applicationClientConverting.GetIntermediateFilesDataResponseById(id);
 
             return filesDataIntermediateResponse;
         }
@@ -55,7 +55,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>      
         public async Task<FilesDataResponseClient> GetCompleteFiles(Guid id)
         {
-            FilesDataResponseClient filesDataResponse = await _applicationConverting.GetFilesDataResponseByID(id);
+            FilesDataResponseClient filesDataResponse = await _applicationClientConverting.GetFilesDataResponseByID(id);
 
             return filesDataResponse;
         }
@@ -65,7 +65,7 @@ namespace GadzhiWcfHost.Services
         /// </summary>       
         public async Task AbortConvertingById(Guid id)
         {
-            await _applicationConverting.AbortConvertingById(id);
+            await _applicationClientConverting.AbortConvertingById(id);
         }
     }
 }

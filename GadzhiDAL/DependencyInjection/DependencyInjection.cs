@@ -33,22 +33,18 @@ namespace GadzhiDAL.DependencyInjection
                                                         new ContainerControlledLifetimeManager())
 
                  // с помощью фабрики открываем сессию
-                 .RegisterType<IUnitOfWork, UnitOfWork>(); 
+                 .RegisterType<IUnitOfWork, UnitOfWork>()
+           
+                 //регистрация клиенской части
+                 .RegisterType<IConverterDataAccessFilesDataFromDTOServer, ConverterDataAccessFilesDataFromDTOServer>()
+                 .RegisterType<IConverterDataAccessFilesDataToDTOServer, ConverterDataAccessFilesDataToDTOServer>()               
+                 .RegisterType<IFilesDataServerService, FilesDataServerService>()
 
-            if (isServerPart)
-            {
-                container
-                  .RegisterType<IConverterDataAccessFilesDataFromDTOServer, ConverterDataAccessFilesDataFromDTOServer>()
-                  .RegisterType<IConverterDataAccessFilesDataToDTOServer, ConverterDataAccessFilesDataToDTOServer>()               
-                  .RegisterType<IFilesDataServiceServer, FilesDataServiceServer>();
-            }
-            else
-            {
-                container
+                 //регистрация серверной части
                  .RegisterType<IConverterDataAccessFilesDataFromDTOClient, ConverterDataAccessFilesDataFromDTOClient>()
                  .RegisterType<IConverterDataAccessFilesDataToDTOClient, ConverterDataAccessFilesDataToDTOClient>()
-                 .RegisterType<IFilesDataServiceClient, FilesDataServiceClient>();
-            }
+                 .RegisterType<IFilesDataClientService, FilesDataClientService>();
+           
         }
     }
 }

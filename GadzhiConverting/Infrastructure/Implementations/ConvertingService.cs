@@ -1,9 +1,10 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using ChannelAdam.ServiceModel;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.FilesConvert.Implementations;
-using GadzhiDAL.Services.Implementations;
+using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
-        /// </summary>
-        private readonly IFilesDataServiceServer _filesDataServiceServer;
+        /// </summary>     
+        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
 
         /// <summary>
         /// Конвертер из трансферной модели в серверную
@@ -60,7 +61,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         public ConvertingService(IConvertingFileData convertingFileData,
                                  IProjectSettings projectSettings,
-                                 IFilesDataServiceServer filesDataServiceServer,
+                                 IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
                                  IMessageAndLoggingService messageAndLoggingService,
@@ -69,7 +70,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _convertingFileData = convertingFileData;
             _projectSettings = projectSettings;
-            _filesDataServiceServer = filesDataServiceServer;
+            _fileConvertingServerService = fileConvertingServerService;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
             _messageAndLoggingService = messageAndLoggingService;
@@ -87,7 +88,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
 
-                FilesDataRequestServer filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage(_projectSettings.NetworkName);
+                FilesDataRequestServer filesDataRequest = await _fileConvertingServerService.
+                                                                 Operations.
+                                                                 GetFirstInQueuePackage(_projectSettings.NetworkName);
                 if (filesDataRequest != null)
                 {
                     FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
@@ -159,7 +162,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             FilesDataIntermediateResponseServer filesDataIntermediateResponse =
                 _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
 
-            await _filesDataServiceServer.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
+            await _fileConvertingServerService.
+                   Operations.
+                   UpdateFromIntermediateResponse(filesDataIntermediateResponse);
         }
 
         /// <summary>
@@ -172,7 +177,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             FilesDataResponseServer filesDataResponse =
                 await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
 
-            await _filesDataServiceServer.UpdateFromResponse(filesDataResponse);
+            await _fileConvertingServerService.
+                   Operations.
+                   UpdateFromResponse(filesDataResponse);
 
             _messageAndLoggingService.ShowMessage($"Конвертация пакета закончена" + "\n");
         }

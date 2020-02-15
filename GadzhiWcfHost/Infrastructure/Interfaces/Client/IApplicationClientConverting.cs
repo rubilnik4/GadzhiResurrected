@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace GadzhiWcfHost.Infrastructure.Interfaces
+namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
 {
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public interface IApplicationUploadAndGetConverting
+    public interface IApplicationClientConverting
     {
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ

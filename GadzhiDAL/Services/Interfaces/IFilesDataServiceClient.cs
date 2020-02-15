@@ -10,7 +10,7 @@ namespace GadzhiDAL.Services.Implementations
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
     /// </summary>
-    public interface IFilesDataServiceClient
+    public interface IFilesDataClientService
     {
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу

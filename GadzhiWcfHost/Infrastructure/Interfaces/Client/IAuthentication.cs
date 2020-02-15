@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations
+namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
     /// <summary>
     /// Идентефикация пользователя

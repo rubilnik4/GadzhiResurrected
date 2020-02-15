@@ -176,7 +176,6 @@
     <Compile Include="Modules\FilesConvertModule\Views\FilesConvertView.xaml.cs">
       <DependentUpon>FilesConvertView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Implementations\DialogServiceStandard.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationGadzhi.cs" />

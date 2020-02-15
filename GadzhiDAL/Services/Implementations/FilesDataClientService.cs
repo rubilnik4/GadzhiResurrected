@@ -17,7 +17,7 @@ namespace GadzhiDAL.Services.Implementations
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
     /// </summary>
-    public class FilesDataServiceClient : IFilesDataServiceClient
+    public class FilesDataClientService : IFilesDataClientService
     {
         /// <summary>
         ///Контейнер зависимостей
@@ -34,7 +34,7 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>
         private readonly IConverterDataAccessFilesDataToDTOClient _converterDataAccessFilesDataToDTOClient;
 
-        public FilesDataServiceClient(IUnityContainer container,
+        public FilesDataClientService(IUnityContainer container,
                                       IConverterDataAccessFilesDataFromDTOClient converterDataAccessFilesDataFromDTOClient,
                                       IConverterDataAccessFilesDataToDTOClient converterDataAccessFilesDataToDTOClient)
         {

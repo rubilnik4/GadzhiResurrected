@@ -6,7 +6,7 @@ using System.ServiceModel.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiDTOClient.Helpers
+namespace GadzhiCommon.Helpers.Wcf
 {
     /// <summary>
     /// Класс для получения точек подключения

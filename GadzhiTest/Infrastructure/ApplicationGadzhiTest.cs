@@ -28,7 +28,7 @@ namespace GadzhiTest
         /// <summary>
         /// Сервис конвертирования. Пустой класс
         /// </summary>
-        Mock<IServiceConsumer<IFileConvertingServiceClient>> MockFileConvertingService;
+        Mock<IServiceConsumer<IFileConvertingClientService>> MockFileConvertingService;
 
         /// <summary>
         /// Получение файлов для изменения статуса. Пустой класс
@@ -54,7 +54,7 @@ namespace GadzhiTest
         public void ApplicationGadzhiTestInitialize()
         {
             MockDialogServiceStandard = new Mock<IDialogServiceStandard>();
-            MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingServiceClient>>();
+            MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingClientService>>();
             MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();
             MockExecuteAndCatchErrors = new Mock<IExecuteAndCatchErrors>();
             MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();

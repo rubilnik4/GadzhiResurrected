@@ -1,6 +1,7 @@
 ﻿using GadzhiDAL.Services.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces;
+using GadzhiWcfHost.Infrastructure.Interfaces.Client;
 using Microsoft.VisualStudio.Threading;
 using System;
 using System.Collections.Generic;
@@ -10,27 +11,27 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations
+namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public class ApplicationUploadAndGetConverting : IApplicationUploadAndGetConverting, IAsyncDisposable
+    public class ApplicationClientConverting : IApplicationClientConverting, IAsyncDisposable
     {
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в клиентской части
         /// </summary>
-        private readonly IFilesDataServiceClient _filesDataServiceClient;
+        private readonly IFilesDataClientService _filesDataClientService;
 
         /// <summary>
         /// Идентефикация пользователя
         /// </summary>
         private readonly IAuthentication _authentication;
 
-        public ApplicationUploadAndGetConverting(IFilesDataServiceClient filesDataService,
+        public ApplicationClientConverting(IFilesDataClientService filesDataClientService,
                                                   IAuthentication authentication)
         {
-            _filesDataServiceClient = filesDataService;
+            _filesDataClientService = filesDataClientService;
             _authentication = authentication;
         }
 
@@ -51,7 +52,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// </summary>
         private async Task QueueFilesData(FilesDataRequestClient filesDataRequest)
         {
-            await _filesDataServiceClient.QueueFilesData(filesDataRequest);
+            await _filesDataClientService.QueueFilesData(filesDataRequest);
         }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         public async Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId)
         {
             FilesDataIntermediateResponseClient filesDataIntermediateResponse =
-                    await _filesDataServiceClient.GetFilesDataIntermediateResponseById(filesDataId);
+                    await _filesDataClientService.GetFilesDataIntermediateResponseById(filesDataId);
 
             return filesDataIntermediateResponse;
         }
@@ -71,7 +72,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         public async Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataId)
         {
             FilesDataResponseClient filesDataResponse =
-                   await _filesDataServiceClient.GetFilesDataResponseById(filesDataId);
+                   await _filesDataClientService.GetFilesDataResponseById(filesDataId);
 
             return filesDataResponse;
         }
@@ -83,7 +84,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         {
             if (!_authentication.IsClosed)
             {
-                await _filesDataServiceClient?.AbortConvertingById(id);
+                await _filesDataClientService?.AbortConvertingById(id);
                 _authentication.IsClosed = true;
             }
         }       

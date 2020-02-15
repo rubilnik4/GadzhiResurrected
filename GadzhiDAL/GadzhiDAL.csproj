@@ -132,8 +132,8 @@
     <Compile Include="Mappings\FilesConvert\IdentityMachineMap.cs" />
     <Compile Include="Models\Implementations\FilesQueueInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Implementations\FilesDataServiceServer.cs" />
-    <Compile Include="Services\Implementations\FilesDataServiceClient.cs" />
+    <Compile Include="Services\Implementations\FilesDataServerService.cs" />
+    <Compile Include="Services\Implementations\FilesDataClientService.cs" />
     <Compile Include="Services\Interfaces\IFilesDataServiceServer.cs" />
     <Compile Include="Services\Interfaces\IFilesDataServiceClient.cs" />
   </ItemGroup>

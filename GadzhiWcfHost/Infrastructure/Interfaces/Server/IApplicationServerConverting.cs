@@ -1,35 +1,36 @@
-﻿using GadzhiDTOServer.TransferModels.FilesConvert;
+﻿using GadzhiDTOClient.TransferModels.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
 {
     /// <summary>
-    /// Сервис для добавления и получения данных о конвертируемых пакетах серверной части
+    /// Класс для отправки пакетов на сервер
     /// </summary>
-    public interface IFilesDataServerService
+    public interface IApplicationServerConverting
     {
         /// <summary>
-        /// Получить первый в очереди пакет на конвертирование в серверной части
-        /// </summary>      
+        /// Получить первый в очереди пакет на конвертирование
+        /// </summary>          
         Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName);
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
-        /// </summary>      
+        /// </summary> 
         Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
-        /// </summary>      
+        /// </summary>        
         Task UpdateFromResponse(FilesDataResponseServer filesDataResponse);
 
         /// <summary>
         /// Отмена операции по номеру ID
-        /// </summary>       
-        Task AbortConvertingById(Guid id);        
+        /// </summary>         
+        Task AbortConvertingById(Guid id);
     }
 }

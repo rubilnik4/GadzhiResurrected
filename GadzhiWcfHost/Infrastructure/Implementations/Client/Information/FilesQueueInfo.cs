@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations.Information
+namespace GadzhiWcfHost.Infrastructure.Implementations.Information.Client
 {
     /// <summary>
     /// Информация о количестве файлов в очереди 

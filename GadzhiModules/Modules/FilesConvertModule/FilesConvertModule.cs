@@ -20,8 +20,8 @@ using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiDTOClient.Helpers;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiCommon.Helpers.Wcf;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
@@ -58,10 +58,10 @@ namespace GadzhiModules.Modules.FilesConvertModule
             IUnityContainer unityContainer = containerRegistry.GetContainer();
 
             var clientEndpoints = new ClientEndpoints();
-            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServiceClient));
+            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));
 
-            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingServiceClient>>((unity) =>
-                      ServiceConsumerFactory.Create<IFileConvertingServiceClient>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
+            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingClientService>>((unity) =>
+                      ServiceConsumerFactory.Create<IFileConvertingClientService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();

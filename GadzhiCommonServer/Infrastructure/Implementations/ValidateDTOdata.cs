@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers;
+using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using System;
 using System.Collections.Generic;

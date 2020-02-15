@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiCommon.Helpers
+namespace GadzhiCommon.Helpers.FileSystem
 {
     public static class FileHelpers
     {
