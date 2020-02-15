@@ -10,10 +10,10 @@ using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.IO;
-using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Implementations;
 using ChannelAdam.ServiceModel;
+using GadzhiDTOClient.Contracts.FilesConvert;
 
 namespace GadzhiTest
 {
@@ -28,7 +28,7 @@ namespace GadzhiTest
         /// <summary>
         /// Сервис конвертирования. Пустой класс
         /// </summary>
-        Mock<IServiceConsumer<IFileConvertingService>> MockFileConvertingService;
+        Mock<IServiceConsumer<IFileConvertingServiceClient>> MockFileConvertingService;
 
         /// <summary>
         /// Получение файлов для изменения статуса. Пустой класс
@@ -54,7 +54,7 @@ namespace GadzhiTest
         public void ApplicationGadzhiTestInitialize()
         {
             MockDialogServiceStandard = new Mock<IDialogServiceStandard>();
-            MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingService>>();
+            MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingServiceClient>>();
             MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();
             MockExecuteAndCatchErrors = new Mock<IExecuteAndCatchErrors>();
             MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();

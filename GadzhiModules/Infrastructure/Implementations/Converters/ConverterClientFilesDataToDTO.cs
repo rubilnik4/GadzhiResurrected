@@ -1,5 +1,5 @@
 ﻿using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
@@ -29,13 +29,13 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
-        public async Task<FilesDataRequest> ConvertToFilesDataRequest(IFilesData filesData)
+        public async Task<FilesDataRequestClient> ConvertToFilesDataRequest(IFilesData filesData)
         {
             var filesRequestExist = await Task.WhenAll(filesData.FilesInfo?.Where(file => FileSystemOperations.IsFileExist(file.FilePath))?.
                                                                                     Select(file => ConvertToFileDataRequest(file)));
             var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
 
-            return new FilesDataRequest()
+            return new FilesDataRequestClient()
             {
                 Id = filesData.Id,
                 FilesData = filesRequestEnsuredWithBytes,
@@ -45,11 +45,11 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
-        private async Task<FileDataRequest> ConvertToFileDataRequest(FileData fileData)
+        private async Task<FileDataRequestClient> ConvertToFileDataRequest(FileData fileData)
         {
             byte[] fileDataSource = await FileSystemOperations.ConvertFileToByteAndZip(fileData.FilePath);
 
-            return new FileDataRequest()
+            return new FileDataRequestClient()
             {
                 ColorPrint = fileData.ColorPrint,               
                 FilePath = fileData.FilePath,              

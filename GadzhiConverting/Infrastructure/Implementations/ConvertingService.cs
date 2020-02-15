@@ -4,7 +4,7 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiDAL.Services.Implementations;
-using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +87,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
 
-                FilesDataRequest filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage(_projectSettings.NetworkName);
+                FilesDataRequestServer filesDataRequest = await _filesDataServiceServer.GetFirstInQueuePackage(_projectSettings.NetworkName);
                 if (filesDataRequest != null)
                 {
                     FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
@@ -156,7 +156,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task SendIntermediateResponse(FilesDataServer filesDataServer)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse =
+            FilesDataIntermediateResponseServer filesDataIntermediateResponse =
                 _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
 
             await _filesDataServiceServer.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
@@ -169,7 +169,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _messageAndLoggingService.ShowMessage($"Отправка данных в базу...");
 
-            FilesDataResponse filesDataResponse =
+            FilesDataResponseServer filesDataResponse =
                 await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
 
             await _filesDataServiceServer.UpdateFromResponse(filesDataResponse);

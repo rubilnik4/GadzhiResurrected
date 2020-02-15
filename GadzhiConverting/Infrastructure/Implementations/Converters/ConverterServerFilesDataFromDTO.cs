@@ -2,11 +2,12 @@
 using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
+using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.FilesConvert.Implementations;
-using GadzhiDAL.Infrastructure.Implementations;
-using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        public async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequest filesDataRequest)
+        public async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
                                                ConvertToFileDataServerAndSaveFile(fileDTO, 
@@ -55,7 +56,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequest fileDataRequest,
+        private async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest,
                                                                               string packageGuid)
         {
             FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid);
@@ -69,12 +70,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequest fileDataRequest, 
+        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequestServer fileDataRequest, 
                                                                   string packageGuid)
         {
             var fileSavedCheck = new FileSavedCheck();
-
-            var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid(fileDataRequest);
+            
+            var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid((FileDataRequestBase)fileDataRequest);
             if (isValid)
             {
                 (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, 

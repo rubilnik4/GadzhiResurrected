@@ -1,5 +1,5 @@
 ﻿using GadzhiConverting.Models.FilesConvert.Implementations;
-using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +16,11 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer);
+        FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer);
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer);
+        Task<FilesDataResponseServer> ConvertFilesToResponse(FilesDataServer filesDataServer);
     }
 }

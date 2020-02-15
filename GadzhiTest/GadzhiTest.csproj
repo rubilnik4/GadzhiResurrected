@@ -105,9 +105,9 @@
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GadzhiDTO\GadzhiDTO.csproj">
+    <ProjectReference Include="..\GadzhiDTOClient\GadzhiDTOClient.csproj">
       <Project>{DE167026-7A41-4B2C-8F2A-00EA175E891E}</Project>
-      <Name>GadzhiDTO</Name>
+      <Name>GadzhiDTOClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiModules\GadzhiModules.csproj">
       <Project>{C0EC27FF-7373-45D7-B399-0C6AFE0E8BF4}</Project>

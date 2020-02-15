@@ -43,8 +43,14 @@
   <ItemGroup>
     <Compile Include="Enums\ClientServer.cs" />
     <Compile Include="Infrastructure\Implementations\SettingsServer.cs" />
+    <Compile Include="Infrastructure\Implementations\ValidateDTOdata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
+      <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
+      <Name>GadzhiCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -119,11 +119,14 @@
     <Compile Include="Entities\FilesConvert\FilesDataEntity.cs" />
     <Compile Include="Factories\Implementations\UnitOfWork.cs" />
     <Compile Include="Factories\Interfaces\IUnitOfWork.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterDataAccessFilesDataFromDTO.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterDataAccessFilesDataToDTO.cs" />
-    <Compile Include="Infrastructure\Implementations\ValidateDTOdata.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\IConverterDataAccessFilesDataFromDTO.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\IConverterDataAccessFilesDataToDTO.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterDataAccessFilesDataFromDTOClient.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterDataAccessFilesDataToDTOClient.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterDataAccessFilesDataToDTOServer.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterDataAccessFilesDataFromDTOServer.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataToDTOClient.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataFromDTOClient.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataFromDTOServer.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataToDTOServer.cs" />
     <Compile Include="Mappings\FilesConvert\FileDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\FilesDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\IdentityMachineMap.cs" />
@@ -148,9 +151,13 @@
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GadzhiDTO\GadzhiDTO.csproj">
+    <ProjectReference Include="..\GadzhiDTOClient\GadzhiDTOClient.csproj">
       <Project>{DE167026-7A41-4B2C-8F2A-00EA175E891E}</Project>
-      <Name>GadzhiDTO</Name>
+      <Name>GadzhiDTOClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOServer\GadzhiDTOServer.csproj">
+      <Project>{B327C2A7-14EA-44B0-B3CE-6E4309B12771}</Project>
+      <Name>GadzhiDTOServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

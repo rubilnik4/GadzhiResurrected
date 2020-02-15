@@ -129,9 +129,9 @@
       <Project>{71FC9A9C-F36D-452D-AEA6-D3044C11A656}</Project>
       <Name>GadzhiDAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GadzhiDTO\GadzhiDTO.csproj">
-      <Project>{DE167026-7A41-4B2C-8F2A-00EA175E891E}</Project>
-      <Name>GadzhiDTO</Name>
+    <ProjectReference Include="..\GadzhiDTOServer\GadzhiDTOServer.csproj">
+      <Project>{b327c2a7-14ea-44b0-b3ce-6e4309b12771}</Project>
+      <Name>GadzhiDTOServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

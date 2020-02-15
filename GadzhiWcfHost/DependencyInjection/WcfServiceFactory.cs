@@ -1,5 +1,5 @@
 ﻿using GadzhiDAL.DependencyInjection;
-using GadzhiDTO.Contracts.FilesConvert;
+using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiWcfHost.Helpers;
 using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Interfaces;
@@ -23,7 +23,7 @@ namespace GadzhiWcfHost.DependencyInjection
         {
             // Регистрируем зависимости
             container
-                .RegisterType<IFileConvertingService, FileConvertingService>()
+                .RegisterType<IFileConvertingServiceClient, FileConvertingServiceClient>()
                 .RegisterType<IAuthentication, Authentication>()
                 .RegisterType<IApplicationUploadAndGetConverting, ApplicationUploadAndGetConverting>(new HierarchicalLifetimeManager());
 

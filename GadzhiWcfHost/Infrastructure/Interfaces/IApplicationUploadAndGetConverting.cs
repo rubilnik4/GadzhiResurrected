@@ -1,4 +1,4 @@
-﻿using GadzhiDTO.TransferModels.FilesConvert;
+﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,17 +15,17 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
-        Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest);
+        Task<FilesDataIntermediateResponseClient> QueueFilesDataAndGetResponse(FilesDataRequestClient filesDataRequest);
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseById(Guid filesDataServerID);
+        Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerID);
 
         /// <summary>
         /// Получить отконвертированные файлы
         /// </summary>
-        Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataServerID);
+        Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataServerID);
 
         /// <summary>
         /// Отмена операции по номеру ID

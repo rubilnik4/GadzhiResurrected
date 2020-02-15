@@ -2,7 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.FilesConvert.Implementations;
-using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-
         public ConverterServerFilesDataToDTO(IFileSystemOperations fileSystemOperations)
         {
             _fileSystemOperations = fileSystemOperations;
@@ -30,9 +29,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public FilesDataIntermediateResponse ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
+        public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
         {
-            return new FilesDataIntermediateResponse()
+            return new FilesDataIntermediateResponseServer()
             {
                 Id = filesDataServer.Id,
                 IsCompleted = filesDataServer.IsCompleted,
@@ -45,13 +44,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        public async Task<FilesDataResponse> ConvertFilesToResponse(FilesDataServer filesDataServer)
+        public async Task<FilesDataResponseServer> ConvertFilesToResponse(FilesDataServer filesDataServer)
         {
             var filesDataToResponseTasks = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
                                                            ConvertFileResponse(fileDataServer));
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 
-            return new FilesDataResponse()
+            return new FilesDataResponseServer()
             {
                 Id = filesDataServer.Id,
                 IsCompleted = filesDataServer.IsCompleted,
@@ -63,9 +62,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в промежуточную
         /// </summary>
-        private FileDataIntermediateResponse ConvertFileToIntermediateResponse(FileDataServer fileDataServer)
+        private FileDataIntermediateResponseServer ConvertFileToIntermediateResponse(FileDataServer fileDataServer)
         {
-            return new FileDataIntermediateResponse()
+            return new FileDataIntermediateResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
@@ -77,11 +76,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в окончательный ответ
         /// </summary>
-        private async Task<FileDataResponse> ConvertFileResponse(FileDataServer fileDataServer)
+        private async Task<FileDataResponseServer> ConvertFileResponse(FileDataServer fileDataServer)
         {
             var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataServer.FilePathServer);
 
-            return new FileDataResponse()
+            return new FileDataResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
                 IsCompleted = fileDataServer.IsCompleted,

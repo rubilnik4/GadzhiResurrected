@@ -1,4 +1,4 @@
-﻿using GadzhiDTO.TransferModels.FilesConvert;
+﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
@@ -18,7 +18,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        Task<FilesDataRequest> GetFilesDataToRequest();
+        Task<FilesDataRequestClient> GetFilesDataToRequest();
 
         /// <summary>
         /// Назначить всем файлам статус к отправке
@@ -28,27 +28,27 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequest> fileDataRequest);
+        Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest);
 
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponse fileDataResponse);
+        Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponseClient fileDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponse filesDataResponse);       
+        Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponseClient filesDataResponse);       
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponse filesDataResponse);
+        Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponseClient filesDataResponse);
        
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequest filesDataRequest,
-                                                                  FilesDataIntermediateResponse filesDataIntermediateResponse);        
+        Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequestClient filesDataRequest,
+                                                                  FilesDataIntermediateResponseClient filesDataIntermediateResponse);        
     }
 }

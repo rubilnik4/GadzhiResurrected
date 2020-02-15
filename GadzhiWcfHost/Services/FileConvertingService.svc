@@ -1,5 +1,0 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" 
-                Service="GadzhiWcfHost.Services.FileConvertingService" 
-                CodeBehind="FileConvertingService.svc.cs" 
-                Factory="GadzhiWcfHost.DependencyInjection.WcfServiceFactory"
-    %>

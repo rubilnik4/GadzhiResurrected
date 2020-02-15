@@ -1,5 +1,4 @@
-﻿using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiDTO.TransferModels.FilesConvert;
+﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Collections.Generic;
@@ -18,6 +17,6 @@ namespace GadzhiModules.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
-        Task<FilesDataRequest> ConvertToFilesDataRequest(IFilesData filesData); 
+        Task<FilesDataRequestClient> ConvertToFilesDataRequest(IFilesData filesData); 
     }
 }

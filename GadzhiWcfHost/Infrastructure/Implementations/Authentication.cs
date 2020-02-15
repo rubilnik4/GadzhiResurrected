@@ -1,4 +1,4 @@
-﻿using GadzhiDTO.TransferModels.FilesConvert;
+﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Добавить данные о пользователе для запроса на конвертацию
         /// </summary>        
-        public FilesDataRequest AuthenticateFilesData(FilesDataRequest filesDataRequest)
+        public FilesDataRequestClient AuthenticateFilesData(FilesDataRequestClient filesDataRequest)
         {
             if (filesDataRequest != null)
             {

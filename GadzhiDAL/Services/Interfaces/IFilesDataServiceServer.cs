@@ -1,8 +1,4 @@
-﻿using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Factories.Interfaces;
-using GadzhiDAL.Infrastructure.Interfaces.Converters;
-using GadzhiDTO.TransferModels.FilesConvert;
-using NHibernate.Linq;
+﻿using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +15,17 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование в серверной части
         /// </summary>      
-        Task<FilesDataRequest> GetFirstInQueuePackage(string identityServerName);
+        Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName);
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary>      
-        Task UpdateFromIntermediateResponse(FilesDataIntermediateResponse filesDataIntermediateResponse);
+        Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>      
-        Task UpdateFromResponse(FilesDataResponse filesDataResponse);
+        Task UpdateFromResponse(FilesDataResponseServer filesDataResponse);
 
         /// <summary>
         /// Отмена операции по номеру ID

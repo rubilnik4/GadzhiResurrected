@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,6 +57,12 @@
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\IMessageAndLoggingService.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataResponseBase.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FilesDataIntermediateResponseBase.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FilesDataRequestBase.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FilesDataResponseBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

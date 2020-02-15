@@ -1,5 +1,5 @@
 ﻿using GadzhiDAL.Services.Implementations;
-using GadzhiDTO.TransferModels.FilesConvert;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces;
 using Microsoft.VisualStudio.Threading;
 using System;
@@ -37,7 +37,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
-        public async Task<FilesDataIntermediateResponse> QueueFilesDataAndGetResponse(FilesDataRequest filesDataRequest)
+        public async Task<FilesDataIntermediateResponseClient> QueueFilesDataAndGetResponse(FilesDataRequestClient filesDataRequest)
         {
             filesDataRequest = _authentication.AuthenticateFilesData(filesDataRequest);
 
@@ -49,7 +49,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Поставить файлы в очередь для обработки
         /// </summary>
-        private async Task QueueFilesData(FilesDataRequest filesDataRequest)
+        private async Task QueueFilesData(FilesDataRequestClient filesDataRequest)
         {
             await _filesDataServiceClient.QueueFilesData(filesDataRequest);
         }
@@ -57,9 +57,9 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по Id номеру
         /// </summary>
-        public async Task<FilesDataIntermediateResponse> GetIntermediateFilesDataResponseById(Guid filesDataId)
+        public async Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse =
+            FilesDataIntermediateResponseClient filesDataIntermediateResponse =
                     await _filesDataServiceClient.GetFilesDataIntermediateResponseById(filesDataId);
 
             return filesDataIntermediateResponse;
@@ -68,9 +68,9 @@ namespace GadzhiWcfHost.Infrastructure.Implementations
         /// <summary>
         /// Получить отконвертированные файлы по Id номеру
         /// </summary>
-        public async Task<FilesDataResponse> GetFilesDataResponseByID(Guid filesDataId)
+        public async Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataId)
         {
-            FilesDataResponse filesDataResponse =
+            FilesDataResponseClient filesDataResponse =
                    await _filesDataServiceClient.GetFilesDataResponseById(filesDataId);
 
             return filesDataResponse;

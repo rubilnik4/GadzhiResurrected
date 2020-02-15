@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System.Windows;
-using GadzhiDTO.Contracts.FilesConvert;
-using GadzhiDTO.TransferModels.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using System.Reactive.Linq;
 using System;
@@ -17,7 +15,8 @@ using GadzhiModules.Infrastructure.Implementations.Information;
 using System.Reactive.Subjects;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-
+using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -34,7 +33,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Сервис конвертации
         /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingService> _fileConvertingService;
+        private readonly IServiceConsumer<IFileConvertingServiceClient> _fileConvertingServiceClient;
 
         /// <summary>
         /// Стандартные диалоговые окна
@@ -73,7 +72,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSystemOperations fileSystemOperations,
                                  IFilesData filesInfoProject,
-                                 IServiceConsumer<IFileConvertingService> fileConvertingService,
+                                 IServiceConsumer<IFileConvertingServiceClient> fileConvertingServiceClient,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation,
                                  IExecuteAndCatchErrors executeAndCatchErrors,
@@ -82,7 +81,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             _dialogServiceStandard = dialogServiceStandard;
             _fileSystemOperations = fileSystemOperations;
             _filesInfoProject = filesInfoProject;
-            _fileConvertingService = fileConvertingService;
+            _fileConvertingServiceClient = fileConvertingServiceClient;
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark;
             _statusProcessingInformation = statusProcessingInformation;
             _executeAndCatchErrors = executeAndCatchErrors;
@@ -199,7 +198,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             {
                 if (_filesInfoProject?.FilesInfo?.Any() == true)
                 {
-                    FilesDataRequest filesDataRequest = await PrepareFilesToSending();
+                    FilesDataRequestClient filesDataRequest = await PrepareFilesToSending();
                     if (filesDataRequest.IsValid)
                     {
                         await SendFilesToConverting(filesDataRequest);
@@ -218,7 +217,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Подготовить данные к отправке
         /// </summary>     
-        private async Task<FilesDataRequest> PrepareFilesToSending()
+        private async Task<FilesDataRequestClient> PrepareFilesToSending()
         {
             var filesStatusInSending = await _fileDataProcessingStatusMark.GetFilesInSending();
             _filesInfoProject.ChangeFilesStatus(filesStatusInSending);
@@ -231,9 +230,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Отправить файлы для конвертации
         /// </summary>
         /// <returns></returns>
-        private async Task SendFilesToConverting(FilesDataRequest filesDataRequest)
+        private async Task SendFilesToConverting(FilesDataRequestClient filesDataRequest)
         {
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
+            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _fileConvertingServiceClient.
                                                                                  Operations.
                                                                                  SendFiles(filesDataRequest);
             var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
@@ -259,8 +258,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task UpdateStatusProcessing()
-        {  
-            FilesDataIntermediateResponse filesDataIntermediateResponse = await _fileConvertingService.
+        {
+            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _fileConvertingServiceClient.
                                                                                 Operations.
                                                                                 CheckFilesStatusProcessing(_filesInfoProject.Id);
             FilesStatus filesStatus = await _fileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
@@ -279,7 +278,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task GetCompleteFiles()
         {
 
-            FilesDataResponse filesDataResponse = await _fileConvertingService.
+            FilesDataResponseClient filesDataResponse = await _fileConvertingServiceClient.
                                                         Operations.
                                                         GetCompleteFiles(_filesInfoProject.Id);
 
@@ -301,7 +300,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (_statusProcessingInformation?.IsConverting == true)
             {
-                await _fileConvertingService?.Operations?.AbortConvertingById(_filesInfoProject.Id);
+                await _fileConvertingServiceClient?.Operations?.AbortConvertingById(_filesInfoProject.Id);
             }           
         }
 

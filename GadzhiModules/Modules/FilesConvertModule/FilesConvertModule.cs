@@ -1,7 +1,5 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Models;
-using GadzhiModules.Modules.FilesConvertModule.ViewModels;
+﻿using GadzhiModules.Modules.FilesConvertModule.ViewModels;
 using GadzhiModules.Modules.FilesConvertModule.Views;
-using GadzhiModules.Infrastructure;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
@@ -14,16 +12,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiDTO.Contracts.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
 using ChannelAdam.ServiceModel;
 using Unity.Lifetime;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Infrastructure.Implementations.Converters;
-using GadzhiDTO.Helpers;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiDTOClient.Helpers;
+using GadzhiDTOClient.Contracts.FilesConvert;
 
 namespace GadzhiModules.Modules.FilesConvertModule
 {
@@ -60,10 +58,10 @@ namespace GadzhiModules.Modules.FilesConvertModule
             IUnityContainer unityContainer = containerRegistry.GetContainer();
 
             var clientEndpoints = new ClientEndpoints();
-            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingService));
+            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServiceClient));
 
-            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingService>>((unity) =>
-                      ServiceConsumerFactory.Create<IFileConvertingService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
+            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingServiceClient>>((unity) =>
+                      ServiceConsumerFactory.Create<IFileConvertingServiceClient>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();
