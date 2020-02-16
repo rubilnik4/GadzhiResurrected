@@ -10,6 +10,9 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// </summary>
     public interface IModelMicrostation
     {
-
+        /// <summary>
+        /// Найти штампы в модели
+        /// </summary>    
+        IEnumerable<IStamp> FindStamps();
     }
 }

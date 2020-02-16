@@ -39,15 +39,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Microstation\CellElementExtations.cs" />
+    <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
+    <Compile Include="Infrastructure\Implementations\ErrorMessagingMicrostation.cs" />
+    <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrorsMicrostation.cs" />
+    <Compile Include="Infrastructure\Implementations\FileSystemOperationsMicrostation.cs" />
+    <Compile Include="Infrastructure\Implementations\LoggerMicrostation.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFileMicrostation.cs" />
+    <Compile Include="Infrastructure\Interfaces\IErrorMessagingMicrostation.cs" />
+    <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrorsMicrostation.cs" />
+    <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
+    <Compile Include="Infrastructure\Interfaces\ILoggerMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
+    <Compile Include="Models\Enum\ElementAttributes.cs" />
     <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Stamp.cs" />
     <Compile Include="Microstation\Implementations\ModelMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\IApplicationMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\IModelMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\IDesignFileMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\IStamp.cs" />
+    <Compile Include="Models\Enum\ColorPrint.cs" />
+    <Compile Include="Models\Enum\ErrorMicrostationType.cs" />
+    <Compile Include="Models\Implementations\ErrorMicrostation.cs" />
+    <Compile Include="Models\Implementations\FileDataMicrostation.cs" />
+    <Compile Include="Models\Implementations\MicrostationProject.cs" />
+    <Compile Include="Models\Implementations\ProjectMicrostationSettings.cs" />
+    <Compile Include="Models\Interfaces\IMicrostationProject.cs" />
+    <Compile Include="Models\Interfaces\IProjectMicrostationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,8 +83,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converting\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

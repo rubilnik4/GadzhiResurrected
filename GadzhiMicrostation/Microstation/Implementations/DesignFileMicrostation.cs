@@ -23,6 +23,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
         }
 
         /// <summary>
+        /// Загрузился ли файл
+        /// </summary>
+        public bool IsDesingFileValid => _designFileMicrostation != null;
+
+        /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
         public IEnumerable<IModelMicrostation> ModelsMicrostation
@@ -35,6 +40,12 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 }
             }
         }
+
+        /// <summary>
+        /// Найти все штампы во всех моделях и листах
+        /// </summary>       
+        public IEnumerable<IStamp> FindAllStamps() =>
+               ModelsMicrostation.SelectMany(model => model.FindStamps());
 
     }
 }

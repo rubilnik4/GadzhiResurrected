@@ -2,6 +2,8 @@
 using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiMicrostation.Infrastructure.Interface;
+using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Models.Implementations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +22,11 @@ namespace GadzhiConverting
             BootStrapUnity.Start(container);
 
             var micro = container.Resolve<IConvertingFileMicrostation>();
-            micro.ConvertingFile("C:\\visual\\dwgToDgN\\testConverted\\01.dgn");
+            micro.ConvertingFile(new FileDataMicrostation ("C:\\visual\\dwgToDgN\\testConverted\\01.dgn",
+                                                           "C:\\visual\\dwgToDgN\\testConverted\\01.dgn",
+                                                            GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));
+
+            var microError = container.Resolve<IErrorMessagingMicrostation>();
             //var applicationConverting = container.Resolve<IApplicationConverting>();
 
             //applicationConverting.StartConverting();

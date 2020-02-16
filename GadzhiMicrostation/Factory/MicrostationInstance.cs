@@ -17,7 +17,7 @@ namespace GadzhiMicrostation.Factory
             var microstationapplication = applicationObjectConnector.Application;
 
             SetPropertiesToApplication(microstationapplication);
-
+           
             return microstationapplication;
         }
 

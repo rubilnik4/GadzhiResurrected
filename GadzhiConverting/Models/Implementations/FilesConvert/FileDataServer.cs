@@ -26,7 +26,10 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
 
         }
 
-        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+        public FileDataServer(string filePathServer, 
+                              string filePathClient, 
+                              ColorPrint colorPrint, 
+                              IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
             string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePathServer);
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);

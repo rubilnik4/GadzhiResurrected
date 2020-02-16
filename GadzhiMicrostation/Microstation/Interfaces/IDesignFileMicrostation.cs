@@ -11,8 +11,18 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     public interface IDesignFileMicrostation
     {
         /// <summary>
+        /// Загрузился ли файл
+        /// </summary>
+        bool IsDesingFileValid { get; }
+
+        /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
         IEnumerable<IModelMicrostation> ModelsMicrostation { get; }
+
+        /// <summary>
+        /// Найти все штампы во всех моделях и листах
+        /// </summary>       
+        IEnumerable<IStamp> FindAllStamps();
     }
 }

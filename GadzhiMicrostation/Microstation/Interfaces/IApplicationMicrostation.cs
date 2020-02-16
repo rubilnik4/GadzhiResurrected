@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiMicrostation.Infrastructure.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// Класс для работы с приложением Microstation
     /// </summary>
     public interface IApplicationMicrostation
-    {
+    {       
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>

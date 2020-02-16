@@ -1,5 +1,9 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interface;
+using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,27 +21,70 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>
         private readonly IApplicationMicrostation _applicationMicrostation;
 
-        public ConvertingFileMicrostation(IApplicationMicrostation applicationMicrostation)
+        /// <summary>
+        /// Сервис работы с ошибками
+        /// </summary>
+        private readonly IErrorMessagingMicrostation _errorMessagingMicrostation;
+
+        /// <summary>
+        /// Модель хранения данных конвертации
+        /// </summary>
+        private readonly IMicrostationProject _microstationProject;
+
+        public ConvertingFileMicrostation(IApplicationMicrostation applicationMicrostation,
+                                          IErrorMessagingMicrostation errorMessagingMicrostation,
+                                          IMicrostationProject microstationProject)
         {
             _applicationMicrostation = applicationMicrostation;
+            _errorMessagingMicrostation = errorMessagingMicrostation;
+            _microstationProject = microstationProject;
         }
 
         /// <summary>
-        /// Конвертировать файл
+        /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        public void ConvertingFile(string filePath)
+        public void ConvertingFile(FileDataMicrostation fileDataMicrostation)
         {
+            _microstationProject.SetInitialFileData(fileDataMicrostation);
+
             if (_applicationMicrostation.IsApplicationValid)
             {
-                _applicationMicrostation.OpenDesignFile(filePath);
+                _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
+
+                var desingFile = _applicationMicrostation.ActiveDesignFile;
+                if (desingFile.IsDesingFileValid)
+                {
+                    FindStampsInDesingFile(desingFile);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
+        /// </summary>       
+        private void FindStampsInDesingFile(IDesignFileMicrostation desingFile)
+        {
+            var stamps = desingFile.FindAllStamps();
+            if (stamps.Any())
+            {
+                foreach (var stamp in stamps)
+                {
+                    ConvertingStamp(stamp);
+                }
             }
             else
             {
-
+                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.StampNotFound,
+                                                     $"Штапы в файле {_microstationProject.FileDataMicrostation.FileName} не найдены"));
             }
-          
+        }
 
-         
+        /// <summary>
+        /// Обработка штампа
+        /// </summary>       
+        private void ConvertingStamp(IStamp stamp)
+        {
+
         }
     }
 }
