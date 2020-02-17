@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Infrastructure.Interface;
+﻿using GadzhiMicrostation.Infrastructure.Implementations.Converting;
+using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Models.Enum;
@@ -69,7 +70,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             {
                 foreach (var stamp in stamps)
                 {
-                    ConvertingStamp(stamp);
+                    StampProcessing.ConvertingStamp(stamp);
                 }
             }
             else
@@ -79,12 +80,6 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             }
         }
 
-        /// <summary>
-        /// Обработка штампа
-        /// </summary>       
-        private void ConvertingStamp(IStamp stamp)
-        {
-
-        }
+      
     }
 }

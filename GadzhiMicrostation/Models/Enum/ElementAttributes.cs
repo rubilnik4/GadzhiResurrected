@@ -10,7 +10,7 @@ namespace GadzhiMicrostation.Models.Enum
     /// </summary>
     public enum ElementAttributes
     {
-       AttributesArray = 33452, // Массив с аттрибутами
+       AttributesArray = 33452, //Массив с аттрибутами
        ControlName = 3426, // Имя элемента
     }
 }

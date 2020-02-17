@@ -39,10 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Microstation\ElementExtensions.cs" />
+    <Compile Include="Extensions\Microstation\ElementAttributeExtensions.cs" />
+    <Compile Include="Extensions\Microstation\ElementConvertingExtensions.cs" />
+    <Compile Include="Extensions\String\StringExtensions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\StampProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ErrorMessagingMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrorsMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperationsMicrostation.cs" />
@@ -54,10 +57,20 @@
     <Compile Include="Infrastructure\Interfaces\ILoggerMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostation.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
-    <Compile Include="Microstation\Implementations\ElementMicrostation.cs" />
-    <Compile Include="Microstation\Interfaces\IElementMicrostation.cs" />
-    <Compile Include="Models\Collections\StampChanges.cs" />
-    <Compile Include="Models\Collections\StampPersonSignature.cs" />
+    <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\StampContainer\StampMainContainer.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\IElementMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\ITextNodeElementMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\ITextElementMicrostation.cs" />
+    <Compile Include="Models\StampCollections\StampApprovals.cs" />
+    <Compile Include="Models\StampCollections\StampBaseField.cs" />
+    <Compile Include="Models\StampCollections\StampChange.cs" />
+    <Compile Include="Models\StampCollections\StampChanges.cs" />
+    <Compile Include="Models\StampCollections\StampMain.cs" />
+    <Compile Include="Models\StampCollections\StampApproval.cs" />
+    <Compile Include="Models\StampCollections\StampPersonSignature.cs" />
     <Compile Include="Models\Enum\ElementAttributes.cs" />
     <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Stamp.cs" />
@@ -68,13 +81,14 @@
     <Compile Include="Microstation\Interfaces\IStamp.cs" />
     <Compile Include="Models\Enum\ColorPrint.cs" />
     <Compile Include="Models\Enum\ErrorMicrostationType.cs" />
-    <Compile Include="Models\Collections\StampElement.cs" />
+    <Compile Include="Models\StampCollections\StampElement.cs" />
     <Compile Include="Models\Implementations\ErrorMicrostation.cs" />
     <Compile Include="Models\Implementations\FileDataMicrostation.cs" />
     <Compile Include="Models\Implementations\MicrostationProject.cs" />
     <Compile Include="Models\Implementations\ProjectMicrostationSettings.cs" />
     <Compile Include="Models\Interfaces\IMicrostationProject.cs" />
     <Compile Include="Models\Interfaces\IProjectMicrostationSettings.cs" />
+    <Compile Include="Models\StampCollections\StampPersonSignatures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,5 +10,9 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// </summary>
     public interface IStamp
     {
+        /// <summary>
+        /// Вписать текстовые поля в рамки
+        /// </summary>
+        void CompressFieldsRanges();
     }
 }

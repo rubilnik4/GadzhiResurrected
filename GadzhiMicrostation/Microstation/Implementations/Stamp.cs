@@ -1,6 +1,9 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -32,7 +35,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
             FillDataFields();
         }
 
-        
         /// <summary>
         /// Заполнить поля данных
         /// </summary>
@@ -40,7 +42,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             if (_stampCellElement != null)
             {
-
                 ElementEnumerator elementEnumerator = _stampCellElement.GetSubElements();
 
                 while (elementEnumerator.MoveNext())
@@ -49,16 +50,68 @@ namespace GadzhiMicrostation.Microstation.Implementations
                     if (element.IsTextElement || element.IsTextNodeElement)
                     {
                         string controlName = element.GetAttributeControlName();
-                        //if (!String.IsNullOrEmpty(controlName))
-                        //{
 
-                        //}
-                        //if (StampElement.ContainField(controlName))
-                        //{
-                        //    _stampFields.Add(StampElement.GetNameInCorrectCase(controlName), 
-                        //                     new ElementMicrostation(element));
-                        //}                       
-                    } 
+                        if (StampElement.ContainControlName(controlName))
+                        {
+                            AddElementToDictionary(controlName, element);
+                        }
+                        else
+                        {
+                            FillFormat(element);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Найти и заполнить поле формат
+        /// </summary>
+        private void FillFormat(Element element)
+        {
+            if (element.IsTextElement)
+            {
+                string textOfElement = element.AsTextElement.Text;
+                if (StampMain.IsFormatField(textOfElement))
+                {
+                    AddElementToDictionary(StampMain.Format, element);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Добавить элемент в словарь
+        /// </summary>       
+        private void AddElementToDictionary(string controlName, Element element)
+        {
+            if (element.IsTextElement)
+            {
+                _stampFields.Add(controlName,
+                                 new TextElementMicrostation(element.AsTextElement));
+            }
+            else if (element.IsTextNodeElement)
+            {
+                _stampFields.Add(controlName,
+                                 new TextNodeElementMicrostation(element.AsTextNodeElement));
+            }
+            else
+            {
+                _stampFields.Add(controlName,
+                                 new ElementMicrostation(element));
+            }
+
+        }
+
+        /// <summary>
+        /// Вписать текстовые поля в рамки
+        /// </summary>
+        public void CompressFieldsRanges()
+        {
+            foreach (var element in _stampFields.Values)
+            {
+                if (element.IsTextElementMicrostation())
+                {
+
                 }
             }
         }
