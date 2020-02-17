@@ -22,9 +22,10 @@ namespace GadzhiConverting
             BootStrapUnity.Start(container);
 
             var micro = container.Resolve<IConvertingFileMicrostation>();
-            micro.ConvertingFile(new FileDataMicrostation ("C:\\visual\\dwgToDgN\\testConverted\\01.dgn",
-                                                           "C:\\visual\\dwgToDgN\\testConverted\\01.dgn",
-                                                            GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));
+            string dir = Environment.CurrentDirectory + "\\01.dgn";
+            micro.ConvertingFile(new FileDataMicrostation(dir,
+                                                          dir,
+                                                          GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));
 
             var microError = container.Resolve<IErrorMessagingMicrostation>();
             //var applicationConverting = container.Resolve<IApplicationConverting>();

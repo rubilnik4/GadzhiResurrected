@@ -33,8 +33,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
 
                 elementScanCriteria.ExcludeAllTypes();
                 elementScanCriteria.IncludeType(MsdElementType.msdElementTypeCellHeader);
-                // sc.IncludeType(MsdElementType.msdElementTypeCellLibraryHeader)
-
+               
                 ElementEnumerator elementEnumerator = _modelMicrostation.Scan(elementScanCriteria);
 
                 while (elementEnumerator.MoveNext())

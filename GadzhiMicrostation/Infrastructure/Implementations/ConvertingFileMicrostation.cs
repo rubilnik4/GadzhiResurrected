@@ -64,7 +64,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>       
         private void FindStampsInDesingFile(IDesignFileMicrostation desingFile)
         {
-            var stamps = desingFile.FindAllStamps();
+            var stamps = desingFile.Stamps;
             if (stamps.Any())
             {
                 foreach (var stamp in stamps)

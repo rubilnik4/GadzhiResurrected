@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces;
+﻿using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Models.Enum;
 using MicroStationDGN;
 using System;
@@ -18,13 +19,20 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private readonly CellElement _stampCellElement;
 
+        /// <summary>
+        /// Доступные поля в Штампе
+        /// </summary>
+        private IDictionary<string, IElementMicrostation> _stampFields;
+
         public Stamp(CellElement stampCellElement)
         {
             _stampCellElement = stampCellElement;
+            _stampFields = new Dictionary<string, IElementMicrostation>();
 
             FillDataFields();
         }
 
+        
         /// <summary>
         /// Заполнить поля данных
         /// </summary>
@@ -34,22 +42,23 @@ namespace GadzhiMicrostation.Microstation.Implementations
             {
 
                 ElementEnumerator elementEnumerator = _stampCellElement.GetSubElements();
+
                 while (elementEnumerator.MoveNext())
                 {
                     var element = (Element)elementEnumerator.Current;
-                    if (element.IsTextNodeElement || element.IsTextElement)
+                    if (element.IsTextElement || element.IsTextNodeElement)
                     {
-                        string controlName = AttributesElementsMicrostation.
-                                             GetAttributeById(element, ElementAttributes.ControlName);
+                        string controlName = element.GetAttributeControlName();
+                        //if (!String.IsNullOrEmpty(controlName))
+                        //{
 
-                        if (controlName.ToUpper().Contains ("G_E_OBJNAME_1"))
-                        {
-
-                        }
-                        //var textNodeElement = (TextNodeElement)element;
-                        //switch (textNodeElement.na)
-
-                    }
+                        //}
+                        //if (StampElement.ContainField(controlName))
+                        //{
+                        //    _stampFields.Add(StampElement.GetNameInCorrectCase(controlName), 
+                        //                     new ElementMicrostation(element));
+                        //}                       
+                    } 
                 }
             }
         }

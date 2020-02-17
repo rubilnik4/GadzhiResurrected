@@ -18,11 +18,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
-        IEnumerable<IModelMicrostation> ModelsMicrostation { get; }
+        IList<IModelMicrostation> ModelsMicrostation { get; }
 
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        IEnumerable<IStamp> FindAllStamps();
+        IList<IStamp> Stamps { get; }
     }
 }

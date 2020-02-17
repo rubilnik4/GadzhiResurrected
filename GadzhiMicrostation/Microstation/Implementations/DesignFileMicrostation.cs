@@ -30,22 +30,24 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
-        public IEnumerable<IModelMicrostation> ModelsMicrostation
+        public IList<IModelMicrostation> ModelsMicrostation
         {
             get
             {
+                List<IModelMicrostation> modelsMicrostation = new List<IModelMicrostation>();
                 foreach (ModelReference model in _designFileMicrostation.Models)
                 {
-                    yield return new ModelMicrostation(model);
+                    modelsMicrostation.Add(new ModelMicrostation(model));
                 }
+                return modelsMicrostation;
             }
         }
 
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        public IEnumerable<IStamp> FindAllStamps() =>
-               ModelsMicrostation.SelectMany(model => model.FindStamps());
+        public IList<IStamp> Stamps => ModelsMicrostation.SelectMany(model => model.FindStamps()).
+                                                          ToList();
 
     }
 }

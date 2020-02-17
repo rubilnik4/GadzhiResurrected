@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Microstation\CellElementExtations.cs" />
+    <Compile Include="Extensions\Microstation\ElementExtensions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
@@ -54,6 +54,10 @@
     <Compile Include="Infrastructure\Interfaces\ILoggerMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostation.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\ElementMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\IElementMicrostation.cs" />
+    <Compile Include="Models\Collections\StampChanges.cs" />
+    <Compile Include="Models\Collections\StampPersonSignature.cs" />
     <Compile Include="Models\Enum\ElementAttributes.cs" />
     <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Stamp.cs" />
@@ -64,6 +68,7 @@
     <Compile Include="Microstation\Interfaces\IStamp.cs" />
     <Compile Include="Models\Enum\ColorPrint.cs" />
     <Compile Include="Models\Enum\ErrorMicrostationType.cs" />
+    <Compile Include="Models\Collections\StampElement.cs" />
     <Compile Include="Models\Implementations\ErrorMicrostation.cs" />
     <Compile Include="Models\Implementations\FileDataMicrostation.cs" />
     <Compile Include="Models\Implementations\MicrostationProject.cs" />
