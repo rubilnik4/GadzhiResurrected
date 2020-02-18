@@ -51,6 +51,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             if (_applicationMicrostation.IsApplicationValid)
             {
                 _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
+                _applicationMicrostation.SaveDesignFile(_microstationProject.CreateDngSavePath());
 
                 var desingFile = _applicationMicrostation.ActiveDesignFile;
                 if (desingFile.IsDesingFileValid)

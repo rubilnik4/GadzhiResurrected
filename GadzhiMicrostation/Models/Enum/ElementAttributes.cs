@@ -11,6 +11,9 @@ namespace GadzhiMicrostation.Models.Enum
     public enum ElementAttributes
     {
        AttributesArray = 33452, //Массив с аттрибутами
-       ControlName = 3426, // Имя элемента
+
+       Range = 3401, //Размеры элемента в стандартных единицах
+
+       ControlName = 3426, //Имя элемента
     }
 }

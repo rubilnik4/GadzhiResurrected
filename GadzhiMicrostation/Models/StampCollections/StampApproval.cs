@@ -14,34 +14,34 @@ namespace GadzhiMicrostation.Models.StampCollections
                              string responsiblePerson,
                              string date)
         {
-            departmentApproval = DepartmentApproval;
-            responsiblePerson = ResponsiblePerson;
-            date = Date;
+            DepartmentApproval = new StampBaseField(departmentApproval, isVertical: true);
+            ResponsiblePerson = new StampBaseField(responsiblePerson, isVertical: true);
+            Date = new StampBaseField(date, isVertical: true);
         }
 
         /// <summary>
         /// Отдел согласования
         /// </summary>
-        public string DepartmentApproval { get; }
+        public StampBaseField DepartmentApproval { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public string ResponsiblePerson { get; }
+        public StampBaseField ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public string Date { get; }
+        public StampBaseField Date { get; }
 
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<string> StampControlNamesApproval => new HashSet<string>()
+        public HashSet<StampBaseField> StampControlNamesApproval => new HashSet<StampBaseField>()
         {
             DepartmentApproval,
             ResponsiblePerson,
-            Date,            
+            Date,
         };
     }
 }

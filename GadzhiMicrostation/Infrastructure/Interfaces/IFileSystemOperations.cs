@@ -43,6 +43,11 @@ namespace GadzhiMicrostation.Infrastructure.Interface
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       
-        string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension);      
+        string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension);
+
+        /// <summary>
+        /// Создать поддиректорию
+        /// </summary>     
+        string CreateFolderByName(string startingPath, string folderName);
     }
 }

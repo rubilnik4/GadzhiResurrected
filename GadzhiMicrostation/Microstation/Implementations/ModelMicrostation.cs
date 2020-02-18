@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces;
+﻿using GadzhiMicrostation.Microstation.Implementations.Units;
+using GadzhiMicrostation.Microstation.Interfaces;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,23 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public ModelMicrostation(ModelReference modelMicrostation)
         {
             _modelMicrostation = modelMicrostation;
+
+
         }
+
+        /// <summary>
+        /// Коэффициенты преобразования координат в текущие
+        /// </summary>
+        public UnitsMicrostation UnitsMicrostation => new UnitsMicrostation(_modelMicrostation.get_MasterUnit().UnitsPerBaseNumerator,
+                                                                            _modelMicrostation.get_MasterUnit().UnitsPerBaseDenominator,
+                                                                            _modelMicrostation.get_SubUnit().UnitsPerBaseNumerator,
+                                                                            _modelMicrostation.get_SubUnit().UnitsPerBaseDenominator,
+                                                                            _modelMicrostation.UORsPerStorageUnit);
+
+        /// <summary>
+        /// Коэффициент преобразования координат в текущие относительно родительского элемента
+        /// </summary>
+        public double UnitScale => UnitsMicrostation.Global;
 
         /// <summary>
         /// Найти штампы в модели
@@ -33,7 +50,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
 
                 elementScanCriteria.ExcludeAllTypes();
                 elementScanCriteria.IncludeType(MsdElementType.msdElementTypeCellHeader);
-               
+
                 ElementEnumerator elementEnumerator = _modelMicrostation.Scan(elementScanCriteria);
 
                 while (elementEnumerator.MoveNext())
@@ -45,7 +62,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                         !cellElementName.Contains("STAMP_AUDIT") &&
                         !cellElementName.Contains("STAMP_ISM"))
                     {
-                        yield return new Stamp(cellElement);
+                        yield return new Stamp(cellElement, this);
                     }
                 }
             }

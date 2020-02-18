@@ -1,5 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations;
+using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -36,6 +38,17 @@ namespace GadzhiMicrostation.Extensions.Microstation
         public static string GetNameInCorrectCase(string field)
         {
             return field?.Trim()?.ToUpper();
+        }
+
+        /// <summary>
+        /// Получить размеры ячейки элемента в стандартных координатах
+        /// </summary>
+        public static RangeMicrostation GetAttributeRange(this Element element, bool isVertical)
+        {
+            string rangeInString = AttributesElementsMicrostation.GetAttributeById(element, ElementAttributes.Range);
+            IList<string> rangeListInString = StampAdditionalParameters.SeparateAttributeValue(rangeInString);
+
+            return new RangeMicrostation(rangeListInString, isVertical);
         }
     }
 }

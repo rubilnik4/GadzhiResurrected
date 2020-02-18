@@ -1,5 +1,4 @@
-﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -31,9 +30,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampContainer
             get
             {
                 IElementMicrostation elementMicrostation = null;
-                _stampFields?.TryGetValue(StampMain.Format, out elementMicrostation);
+                _stampFields?.TryGetValue(StampMain.Format.Name, out elementMicrostation);
 
-                return elementMicrostation?.AsTextElementMicrostation()?.Text ?? 
+                return elementMicrostation?.AsTextElementMicrostation?.Text ?? 
                        String.Empty;
             }
         }

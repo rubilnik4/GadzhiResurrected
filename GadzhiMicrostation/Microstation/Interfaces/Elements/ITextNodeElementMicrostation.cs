@@ -9,5 +9,9 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
   /// </summary>
     public interface ITextNodeElementMicrostation : IElementMicrostation
     {
+        /// <summary>
+        /// Вписать текстовое поле в рамку
+        /// </summary>
+        void CompressRange();
     }
 }

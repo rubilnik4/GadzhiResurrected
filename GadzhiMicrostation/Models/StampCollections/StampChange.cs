@@ -11,48 +11,48 @@ namespace GadzhiMicrostation.Models.StampCollections
     public class StampChange
     {
         public StampChange(string numberChange,
-                            string numberOfPlots,
-                            string typeOfChange,
-                            string documentChange,                          
-                            string dataChange)
+                           string numberOfPlots,
+                           string typeOfChange,
+                           string documentChange,
+                           string dataChange)
         {
-            NumberChange = numberChange;
-            NumberOfPlots = numberOfPlots;
-            TypeOfChange = typeOfChange;
-            DocumentChange = documentChange;        
-            DataChange = dataChange;
+            NumberChange = new StampBaseField(numberChange, isNeedCompress: false);
+            NumberOfPlots = new StampBaseField(numberOfPlots, isNeedCompress: false);
+            TypeOfChange = new StampBaseField(typeOfChange);
+            DocumentChange = new StampBaseField(documentChange);
+            DataChange = new StampBaseField(dataChange);
         }
 
         /// <summary>
         /// Номер изменения
         /// </summary>
-        public string NumberChange { get; }
+        public StampBaseField NumberChange { get; }
 
         /// <summary>
         /// Количество участков
         /// </summary>
-        public string NumberOfPlots { get; }
+        public StampBaseField NumberOfPlots { get; }
 
         /// <summary>
         /// Тип изменения
         /// </summary>
-        public string TypeOfChange { get; }
+        public StampBaseField TypeOfChange { get; }
 
         /// <summary>
         /// Номер докумета
         /// </summary>
-        public string DocumentChange { get; }      
+        public StampBaseField DocumentChange { get; }
 
         /// <summary>
         /// Дата изменения
         /// </summary>
-        public string DataChange { get; }
+        public StampBaseField DataChange { get; }
 
 
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<string> StampControlNamesChange => new HashSet<string>()
+        public HashSet<StampBaseField> StampControlNamesChange => new HashSet<StampBaseField>()
         {
             NumberChange,
             NumberOfPlots,

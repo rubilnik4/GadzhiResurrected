@@ -42,11 +42,11 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей с изменениями
         /// </summary>
-        public HashSet<string> StampControlNamesApprovals
+        public HashSet<StampBaseField> StampControlNamesApprovals
         {
             get
             {
-                var stampControlNamesApprovals = new HashSet<string>();
+                var stampControlNamesApprovals = new HashSet<StampBaseField>();
 
                 stampControlNamesApprovals.UnionWith(StampApprovalsFirst.StampControlNamesApproval);
                 stampControlNamesApprovals.UnionWith(StampApprovalsSecond.StampControlNamesApproval);

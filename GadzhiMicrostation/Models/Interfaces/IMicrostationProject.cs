@@ -35,5 +35,10 @@ namespace GadzhiMicrostation.Models.Interfaces
         /// Записать исходные данные для конвертации
         /// </summary>      
         void SetInitialFileData(FileDataMicrostation fileDataMicrostation);
+
+        /// <summary>
+        /// Создать путь для сохранения отконвертированного файла
+        /// </summary>        
+        string CreateDngSavePath();
     }
 }

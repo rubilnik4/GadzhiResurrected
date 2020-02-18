@@ -40,11 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Microstation\ElementAttributeExtensions.cs" />
-    <Compile Include="Extensions\Microstation\ElementConvertingExtensions.cs" />
     <Compile Include="Extensions\String\StringExtensions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\DwgProcessing.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\PdfProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\StampProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ErrorMessagingMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrorsMicrostation.cs" />
@@ -58,12 +59,19 @@
     <Compile Include="Microstation\Implementations\ApplicationMicrostation.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Elements\TextBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\StampContainer\StampMainContainer.cs" />
+    <Compile Include="Microstation\Implementations\Units\UnitTypes.cs" />
+    <Compile Include="Microstation\Implementations\Units\UnitsNumeratorDenominator.cs" />
+    <Compile Include="Microstation\Implementations\Units\UnitsMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\IElementMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\IOwnerContainer.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextElementMicrostation.cs" />
+    <Compile Include="Models\Coordinates\PointMicrostaion.cs" />
+    <Compile Include="Models\Coordinates\RangeMicrostation.cs" />
     <Compile Include="Models\StampCollections\StampApprovals.cs" />
     <Compile Include="Models\StampCollections\StampBaseField.cs" />
     <Compile Include="Models\StampCollections\StampChange.cs" />
@@ -89,6 +97,7 @@
     <Compile Include="Models\Interfaces\IMicrostationProject.cs" />
     <Compile Include="Models\Interfaces\IProjectMicrostationSettings.cs" />
     <Compile Include="Models\StampCollections\StampPersonSignatures.cs" />
+    <Compile Include="Models\StampCollections\StampAdditionalParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

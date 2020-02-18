@@ -1,6 +1,8 @@
-﻿using GadzhiMicrostation.Models.Interfaces;
+﻿using GadzhiMicrostation.Infrastructure.Interface;
+using GadzhiMicrostation.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -26,11 +28,31 @@ namespace GadzhiMicrostation.Models.Implementations
         /// </summary>
         public FileDataMicrostation FileDataMicrostation { get; private set; }
 
-        public MicrostationProject(IProjectMicrostationSettings projectMicrostationSettings)
+        /// <summary>
+        /// Проверка состояния папок и файлов, архивация, сохранение
+        /// </summary>
+        private readonly IFileSystemOperationsMicrostation _fileSystemOperationsMicrostation;
+
+        public MicrostationProject(IProjectMicrostationSettings projectMicrostationSettings,
+                                   IFileSystemOperationsMicrostation fileSystemOperationsMicrostation)
         {
             _errorsMicrostation = new List<ErrorMicrostation>();
+            _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
 
             ProjectMicrostationSettings = projectMicrostationSettings;
+        }
+
+        /// <summary>
+        /// Создать путь для сохранения отконвертированного файла
+        /// </summary>        
+        public string CreateDngSavePath()
+        {
+            string fileFolderServer = Path.GetDirectoryName(FileDataMicrostation?.FilePathServer);
+            string fileFolderSave = _fileSystemOperationsMicrostation.CreateFolderByName(fileFolderServer, "DGN");
+            return _fileSystemOperationsMicrostation.CombineFilePath(fileFolderSave, 
+                                                                     FileDataMicrostation?.FileName, 
+                                                                     FileDataMicrostation?.FileExtension);
+                      
         }
 
         /// <summary>

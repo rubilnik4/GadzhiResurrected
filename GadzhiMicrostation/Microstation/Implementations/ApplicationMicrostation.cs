@@ -93,8 +93,18 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ApplicationMicrostationProperty.OpenDesignFile(filePath, false),
                                                       errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
                                                                                                $"Ошибка открытия файла {filePath}"));
-            }
-          ;
+            };
+        }
+
+        /// <summary>
+        /// Сохранить файл
+        /// </summary>
+        public void SaveDesignFile(string filePath)
+        {
+            _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ApplicationMicrostationProperty.ActiveDesignFile.SaveAs(filePath, true),
+                                                  errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                                                                                           $"Ошибка сохранения файла {filePath}"),
+                                                  ApplicationCatchMethod: () => ApplicationMicrostationProperty.ActiveDesignFile.Close());
         }
 
         /// <summary>

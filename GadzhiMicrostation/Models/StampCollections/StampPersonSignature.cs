@@ -11,36 +11,36 @@ namespace GadzhiMicrostation.Models.StampCollections
     public class StampPersonSignature
     {
         public StampPersonSignature(string actionType,
-                              string responsiblePerson,                              
+                              string responsiblePerson,
                               string date)
         {
-            ActionType = actionType;
-            ResponsiblePerson = responsiblePerson;          
-            Date = date;
+            ActionType = new StampBaseField(actionType, isNeedCompress: false);
+            ResponsiblePerson = new StampBaseField(responsiblePerson);
+            Date = new StampBaseField(date);
         }
 
         /// <summary>
         /// Тип действия
         /// </summary>
-        public string ActionType { get; }
+        public StampBaseField ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public string ResponsiblePerson { get; }
-       
+        public StampBaseField ResponsiblePerson { get; }
+
         /// <summary>
         /// Дата
         /// </summary>
-        public string Date { get; }
+        public StampBaseField Date { get; }
 
         /// <summary>
         /// Список всех полей в строке с ответсвенным лицом и подписью
         /// </summary>
-        public HashSet<string> StampPersonSignatureFields => new HashSet<string>()
+        public HashSet<StampBaseField> StampPersonSignatureFields => new HashSet<StampBaseField>()
         {
             ActionType,
-            ResponsiblePerson,            
+            ResponsiblePerson,
             Date,
         };
     }

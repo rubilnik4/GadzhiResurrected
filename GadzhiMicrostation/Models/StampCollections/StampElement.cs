@@ -33,7 +33,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей
         /// </summary>
-        private static HashSet<string> _stampControlNames
+        private static IDictionary<string, StampBaseField> _stampBaseParameters
         {
             get
             {
@@ -42,19 +42,20 @@ namespace GadzhiMicrostation.Models.StampCollections
                 stampControlNames.UnionWith(StampChanges.StampControlNamesChanges);
                 stampControlNames.UnionWith(StampApprovals.StampControlNamesApprovals);
 
-                return stampControlNames;
+                return stampControlNames.ToDictionary(p => p.Name);
             }
         }
 
+        private static HashSet<String> StampControlNames => new HashSet<string>(_stampBaseParameters.Keys);
 
         /// <summary>
         /// Содержится ли поле в списке Штампа
         /// </summary>       
         public static bool ContainControlName(string controlName)
-        {           
+        {
             if (!String.IsNullOrEmpty(controlName))
             {
-                if (_stampControlNames.Contains(controlName))
+                if (StampControlNames.Contains(controlName))
                 {
                     return true;
                 }
@@ -62,6 +63,9 @@ namespace GadzhiMicrostation.Models.StampCollections
             return false;
         }
 
-       
+        /// <summary>
+        /// Получить список параметров по имени элемента
+        /// </summary>
+        public static StampBaseField GetBaseParametersByControlName(string controlName) => _stampBaseParameters[controlName];
     }
 }

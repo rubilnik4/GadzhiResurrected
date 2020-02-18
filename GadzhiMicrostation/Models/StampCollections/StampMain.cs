@@ -19,51 +19,55 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Основной шифр
         /// </summary>
-        public static string FullCode => "G_E_FULLCODE_1";
+        public static StampBaseField FullCode => new StampBaseField("G_E_FULLCODE_1");
 
         /// <summary>
         /// Наименование проекта
         /// </summary>
-        public static string ProjectName => "G_E_PRNAME_1";
+        public static StampBaseField ProjectName => new StampBaseField("G_E_PRNAME_1");
 
         /// <summary>
         /// Наименование объекта
         /// </summary>
-        public static string ObjectName => "G_E_OBJNAME_1";
+        public static StampBaseField ObjectName => new StampBaseField("G_E_OBJNAME_1");
 
         /// <summary>
         /// Наименование листа
         /// </summary>
-        public static string SheetName => "G_E_LISTNAME_1";
+        public static StampBaseField SheetName => new StampBaseField("G_E_LISTNAME_1");
 
         /// <summary>
         /// Стадия проекта
         /// </summary>
-        public static string ProjectStage => "G_E_STADY_1";
+        public static StampBaseField ProjectStage => new StampBaseField("G_E_STADY_1",
+                                                                        isNeedCompress: false);
 
         /// <summary>
         /// Текущий лист
         /// </summary>
-        public static string CurrentSheet => "G_E_LISTNUM_1";
+        public static StampBaseField CurrentSheet => new StampBaseField("G_E_LISTNUM_1", 
+                                                                        isNeedCompress: false);
 
         /// <summary>
         /// Всего листов
         /// </summary>
-        public static string TotalSheet => "G_E_LISTOV_1";
+        public static StampBaseField TotalSheet => new StampBaseField("G_E_LISTOV_1", 
+                                                                      isNeedCompress: false);
 
         /// <summary>
         /// Формат
         /// </summary>
-        public static string Format => "Format";
+        public static StampBaseField Format => new StampBaseField("Format", 
+                                                                  isNeedCompress: false);
 
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public static HashSet<string> StampMainFields
+        public static HashSet<StampBaseField> StampMainFields
         {
             get
             {
-                var stampFields = new HashSet<string>()
+                var stampFields = new HashSet<StampBaseField>()
                 {
                     FullCode,
                     ProjectName,
@@ -72,6 +76,7 @@ namespace GadzhiMicrostation.Models.StampCollections
                     ProjectStage,
                     CurrentSheet,
                     TotalSheet,
+                    Format,
                 };
 
                 return stampFields;

@@ -55,5 +55,24 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// Получить вложенные файлы
         /// </summary>       
         public IEnumerable<string> GetFiles(string filePath) => Directory.GetFiles(filePath);
+
+        /// <summary>
+        /// Создать поддиректорию
+        /// </summary>     
+        public string CreateFolderByName(string startingPath, string folderName)
+        {           
+            if (!startingPath.EndsWith("\\"))
+            {
+                startingPath += "\\";
+            }
+            string createdPath = startingPath + folderName + "\\";
+
+            if (!String.IsNullOrEmpty(startingPath))
+            {
+                Directory.CreateDirectory(createdPath);               
+            }
+
+            return createdPath;
+        }
     }
 }

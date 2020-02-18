@@ -25,5 +25,10 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// Открыть файл
         /// </summary>       
         void OpenDesignFile(string filePath);
+
+        /// <summary>
+        /// Сохранить файл
+        /// </summary>       
+        void SaveDesignFile(string filePath);
     }
 }

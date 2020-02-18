@@ -15,7 +15,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
     /// <summary>
     /// Штамп
     /// </summary>
-    public class Stamp : IStamp
+    public class Stamp : ElementMicrostation, IStamp
     {
         /// <summary>
         /// Экземпляр ячейки Microstation определяющей штамп
@@ -23,17 +23,36 @@ namespace GadzhiMicrostation.Microstation.Implementations
         private readonly CellElement _stampCellElement;
 
         /// <summary>
+        /// Родительский элемент
+        /// </summary>
+        private readonly IModelMicrostation _ownerModelMicrostation;
+
+        /// <summary>
         /// Доступные поля в Штампе
         /// </summary>
         private IDictionary<string, IElementMicrostation> _stampFields;
 
-        public Stamp(CellElement stampCellElement)
+        public Stamp(CellElement stampCellElement,
+                     IModelMicrostation ownerModelMicrostation)
+            :base((Element)stampCellElement, ownerModelMicrostation)
         {
             _stampCellElement = stampCellElement;
+            _ownerModelMicrostation = ownerModelMicrostation;
+
             _stampFields = new Dictionary<string, IElementMicrostation>();
 
             FillDataFields();
         }
+
+        /// <summary>
+        /// Масштаб штампа
+        /// </summary>
+        private double Scale => _stampCellElement.Scale.X;
+
+        /// <summary>
+        /// Коэффициент преобразования координат в текущие относительно коэффициента сжатия штампа
+        /// </summary>
+        public override double UnitScale => Scale * _ownerModelMicrostation.UnitsMicrostation.Global;
 
         /// <summary>
         /// Заполнить поля данных
@@ -74,7 +93,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 string textOfElement = element.AsTextElement.Text;
                 if (StampMain.IsFormatField(textOfElement))
                 {
-                    AddElementToDictionary(StampMain.Format, element);
+                    AddElementToDictionary(StampMain.Format.Name, element);
                 }
             }
         }
@@ -84,21 +103,24 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>       
         private void AddElementToDictionary(string controlName, Element element)
         {
+            StampBaseField stampBaseField = StampElement.GetBaseParametersByControlName(controlName);
+
             if (element.IsTextElement)
             {
                 _stampFields.Add(controlName,
-                                 new TextElementMicrostation(element.AsTextElement));
+                                 new TextElementMicrostation(element.AsTextElement,
+                                                             this,
+                                                             stampBaseField.IsNeedCompress,
+                                                             stampBaseField.IsVertical));
             }
             else if (element.IsTextNodeElement)
             {
                 _stampFields.Add(controlName,
-                                 new TextNodeElementMicrostation(element.AsTextNodeElement));
-            }
-            else
-            {
-                _stampFields.Add(controlName,
-                                 new ElementMicrostation(element));
-            }
+                                 new TextNodeElementMicrostation(element.AsTextNodeElement,
+                                                                 this,
+                                                                 stampBaseField.IsNeedCompress,
+                                                                 stampBaseField.IsVertical));
+            }          
 
         }
 
@@ -109,11 +131,17 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             foreach (var element in _stampFields.Values)
             {
-                if (element.IsTextElementMicrostation())
+                if (element.IsTextElementMicrostation)
                 {
-
+                    element.AsTextElementMicrostation.CompressRange();
+                }
+                else if(element.IsTextNodeElementMicrostation)
+                {
+                    element.AsTextNodeElementMicrostation.CompressRange();
+                  //_stampCellElement.ReplaceCurrentElement(element);
                 }
             }
+            _stampCellElement.Rewrite();
         }
     }
 }

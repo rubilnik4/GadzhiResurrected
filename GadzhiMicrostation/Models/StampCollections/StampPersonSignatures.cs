@@ -66,11 +66,11 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей с ответсвенным лицом и подписью
         /// </summary>
-        public HashSet<string> StampFieldsPersonSignatures
+        public HashSet<StampBaseField> StampFieldsPersonSignatures
         {
             get
             {
-                var stampFields = new HashSet<string>();
+                var stampFields = new HashSet<StampBaseField>();
 
                 stampFields.UnionWith(DeveloperPerson.StampPersonSignatureFields);
                 stampFields.UnionWith(HeadLeaderPerson.StampPersonSignatureFields);
