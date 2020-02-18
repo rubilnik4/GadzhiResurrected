@@ -13,6 +13,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     public interface IElementMicrostation: IOwnerContainer
     {  
         /// <summary>
+        /// Идентефикатор элемента
+        /// </summary>
+        long Id { get; }
+
+        /// <summary>
         /// Является ли базовый элемент Microstation текстовым
         /// </summary>       
         bool IsTextElementMicrostation { get; }

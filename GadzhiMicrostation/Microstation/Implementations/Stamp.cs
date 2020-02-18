@@ -34,7 +34,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
 
         public Stamp(CellElement stampCellElement,
                      IModelMicrostation ownerModelMicrostation)
-            :base((Element)stampCellElement, ownerModelMicrostation)
+            : base((Element)stampCellElement, ownerModelMicrostation)
         {
             _stampCellElement = stampCellElement;
             _ownerModelMicrostation = ownerModelMicrostation;
@@ -120,7 +120,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                                                  this,
                                                                  stampBaseField.IsNeedCompress,
                                                                  stampBaseField.IsVertical));
-            }          
+            }
 
         }
 
@@ -135,13 +135,30 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 {
                     element.AsTextElementMicrostation.CompressRange();
                 }
-                else if(element.IsTextNodeElementMicrostation)
+                else if (element.IsTextNodeElementMicrostation)
                 {
-                    element.AsTextNodeElementMicrostation.CompressRange();
-                  //_stampCellElement.ReplaceCurrentElement(element);
+                    if (element.AsTextNodeElementMicrostation.CompressRange())
+                    {
+                        FindAndChangeSubElement(element.Id);
+                    }
                 }
             }
-            _stampCellElement.Rewrite();
+        }
+
+        /// <summary>
+        /// Найти и изменить вложенный в штамп элемент. Только для внешних операций типа Scale, Move
+        /// </summary>
+        private void FindAndChangeSubElement(long Id)
+        {
+            while (_stampCellElement.MoveToNextElement(true))
+            {
+                var elementCurrent = _stampCellElement.CopyCurrentElement();
+                if (elementCurrent.IsTextNodeElement && elementCurrent.ID64 == Id)
+                {
+                    _stampCellElement.ReplaceCurrentElement(elementCurrent);
+                    break;
+                }
+            }
         }
     }
 }

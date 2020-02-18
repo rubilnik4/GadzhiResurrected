@@ -29,38 +29,61 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             : base((Element)textNodeElement, ownerElementMicrostation, isNeedCompress, isVertical)
         {
             _textNodeElement = textNodeElement;
-        }        
+        }
 
         /// <summary>
         /// Вписать текстовое поле в рамку
         /// </summary>
-        public void CompressRange()
+        public bool CompressRange()
         {
+            bool isComressed = false;
+
             if (IsNeedCompress == true)
             {
                 double scaleX = 1;
                 double scaleY = 1;
 
-                if (_textNodeElement.TextLine[1].ToLower().Contains( "обустройство"))
+                if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatioTextNode < Width)
                 {
-
+                    scaleX = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatioTextNode;
                 }
 
-                if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatio < Width)
+                if (HeightAttributeInUnits * StampAdditionalParameters.CompressionRatioTextNode < Height &&
+                    _textNodeElement.TextLinesCount > 1) // коррекция высоты при многострочном элементе
                 {
-                    scaleX = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatio;
-                }
-                if (HeightAttributeInUnits * StampAdditionalParameters.CompressionRatio < Height)
-                {
-                    scaleY = (HeightAttributeInUnits / Height) * StampAdditionalParameters.CompressionRatio;
+                    scaleY = (HeightAttributeInUnits / Height) * StampAdditionalParameters.CompressionRatioTextNode;
                 }
 
                 if (scaleX != 1 || scaleY != 1)
                 {
-                    _textNodeElement.ScaleAll(_textNodeElement.Origin, scaleX, scaleY, 1);                    
-                    _textNodeElement.Rewrite();                    
+                    ChangeTextElementsInNode(textElement =>
+                    {
+                        textElement.ScaleAll(_textNodeElement.Origin, scaleX, scaleY, 1);
+                    });
+
+                    isComressed = true;
                 }
             }
+
+            return isComressed;
+        }
+
+        /// <summary>
+        /// Присвоить параметры всем текстовым элементам
+        /// </summary>       
+        private void ChangeTextElementsInNode(Action<TextElement> changeTextElement)
+        {
+            if (changeTextElement != null)
+            {
+                ElementEnumerator elementEnumerator = _textNodeElement.GetSubElements();
+                while (elementEnumerator.MoveNext())
+                {
+                    TextElement textElement = (TextElement)elementEnumerator.Current;
+                    changeTextElement.Invoke(textElement);
+                    textElement.Rewrite();
+                }
+            }
+
         }
     }
 }

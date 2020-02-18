@@ -46,17 +46,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Вписать текстовый элемент в рамку
         /// </summary>
-        public void CompressRange()
+        public bool CompressRange()
         {
+            bool isComressed = false;
+
             if (IsNeedCompress == true)
             {
-                if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatio < Width)
+                if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatioText < Width)
                 {
-                    double compressionLevel = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatio;
+                    double compressionLevel = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatioText;
                     _textElement.TextStyle.Width *= compressionLevel;
                     _textElement.Rewrite();
+
+                    isComressed = true;
                 }
             }
+
+            return isComressed;
         }
     }
 }

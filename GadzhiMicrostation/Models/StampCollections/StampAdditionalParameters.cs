@@ -29,6 +29,11 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Коэффициент сжатия текстовых элементов в штампе
         /// </summary>
-        public static double CompressionRatio => 0.9d;
+        public static double CompressionRatioText => 0.9d;
+
+        /// <summary>
+        /// Коэффициент сжатия текстовых полей в штампе
+        /// </summary>
+        public static double CompressionRatioTextNode => 0.97d;
     }
 }

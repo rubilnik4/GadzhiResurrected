@@ -22,7 +22,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             _modelMicrostation = modelMicrostation;
 
-
         }
 
         /// <summary>

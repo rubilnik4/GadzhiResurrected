@@ -22,13 +22,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Родительский элемент
         /// </summary>
         private readonly IOwnerContainer _ownerContainer;
-       
+
         public ElementMicrostation(Element element,
                                    IOwnerContainer ownerContainer)
         {
             _element = element;
             _ownerContainer = ownerContainer;
         }
+
+        /// <summary>
+        /// Идентефикатор элемента
+        /// </summary>
+        public long Id => _element.ID64;
 
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно родительского элемента

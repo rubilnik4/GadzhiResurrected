@@ -12,6 +12,6 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// <summary>
         /// Вписать текстовое поле в рамку
         /// </summary>
-        void CompressRange();
+        bool CompressRange();
     }
 }
