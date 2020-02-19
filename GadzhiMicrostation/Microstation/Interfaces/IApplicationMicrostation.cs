@@ -24,11 +24,22 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Открыть файл
         /// </summary>       
-        void OpenDesignFile(string filePath);
+        IDesignFileMicrostation OpenDesignFile(string filePath);
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        void CloseApplication();      
 
         /// <summary>
         /// Сохранить файл
         /// </summary>       
         void SaveDesignFile(string filePath);
+
+
+        /// <summary>
+        /// Закрыть файл
+        /// </summary>
+        void CloseDesignFile();
     }
 }

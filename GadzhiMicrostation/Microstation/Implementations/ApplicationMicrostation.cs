@@ -5,6 +5,7 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
+using Microsoft.Practices.Unity;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
     /// </summary>
     public class ApplicationMicrostation : IApplicationMicrostation
     {
+        /// <summary>
+        /// Контейнер для инверсии зависимости
+        /// </summary>
+        private readonly IUnityContainer _container;
+
         /// <summary>
         /// Сервис работы с ошибками
         /// </summary>
@@ -39,11 +45,13 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
-        public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
+        public ApplicationMicrostation(IUnityContainer container,
+                                       IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
                                        IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
                                        IErrorMessagingMicrostation errorMessagingMicrostation,
                                        IMicrostationProject microstationProject)
         {
+            _container = container;
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
             _errorMessagingMicrostation = errorMessagingMicrostation;
@@ -53,47 +61,56 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private Application _applicationMicrostation;
+        private Application _application;
 
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private Application ApplicationMicrostationProperty
+        private Application Application
         {
             get
             {
-                if (_applicationMicrostation == null)
+                if (_application == null)
                 {
-                    _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => _applicationMicrostation = MicrostationInstance.Instance(),
+                    _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => _application = MicrostationInstance.Instance(),
                                                           errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.ApplicationLoad,
                                                                                                    "Ошибка загрузки приложения Microstation"));
                 }
-                return _applicationMicrostation;
+                return _application;
             }
         }
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>
-        public bool IsApplicationValid => ApplicationMicrostationProperty != null;
+        public bool IsApplicationValid => Application != null;
 
         /// <summary>
         /// Текущий файл Microstation
         /// </summary>
         public IDesignFileMicrostation ActiveDesignFile =>
-               new DesignFileMicrostation(ApplicationMicrostationProperty.ActiveDesignFile);
+            _container.Resolve<IDesignFileMicrostation>(new ParameterOverride(typeof(DesignFile), _application.ActiveDesignFile));
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        public void CloseApplication()
+        {
+            _application.Quit();
+        }
 
         /// <summary>
         /// Открыть файл
         /// </summary>
-        public void OpenDesignFile(string filePath)
+        public IDesignFileMicrostation OpenDesignFile(string filePath)
         {
             if (IsDesingFileValidAndSetErrors(filePath))
             {
-                _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ApplicationMicrostationProperty.OpenDesignFile(filePath, false),
+                _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => Application.OpenDesignFile(filePath, false),
                                                       errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
                                                                                                $"Ошибка открытия файла {filePath}"));
             };
+            return ActiveDesignFile;
         }
 
         /// <summary>
@@ -101,10 +118,21 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         public void SaveDesignFile(string filePath)
         {
-            _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ApplicationMicrostationProperty.ActiveDesignFile.SaveAs(filePath, true),
+            _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ActiveDesignFile.SaveAs(filePath),
                                                   errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
                                                                                            $"Ошибка сохранения файла {filePath}"),
-                                                  ApplicationCatchMethod: () => ApplicationMicrostationProperty.ActiveDesignFile.Close());
+                                                  ApplicationCatchMethod: () => ActiveDesignFile.Close());
+        }
+
+        /// <summary>
+        /// Закрыть файл
+        /// </summary>
+        public void CloseDesignFile()
+        {
+            _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ActiveDesignFile.CloseWithSaving(),
+                                                  errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                                                                                           $"Ошибка закрытия файла {ActiveDesignFile.FullName}"),
+                                                  ApplicationCatchMethod: () => ActiveDesignFile.Close());
         }
 
         /// <summary>

@@ -1,10 +1,12 @@
-﻿using GadzhiMicrostation.Infrastructure.Implementations.Converting;
+﻿using GadzhiMicrostation.DependencyInjection.BootStrapMicrostation;
+using GadzhiMicrostation.Infrastructure.Implementations.Converting;
 using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,11 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
     /// </summary>
     public class ConvertingFileMicrostation : IConvertingFileMicrostation
     {
+        /// <summary>
+        /// Контейнер для инверсии зависимости
+        /// </summary>
+        private readonly IUnityContainer _container;
+
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
@@ -32,13 +39,14 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
-        public ConvertingFileMicrostation(IApplicationMicrostation applicationMicrostation,
-                                          IErrorMessagingMicrostation errorMessagingMicrostation,
-                                          IMicrostationProject microstationProject)
+        public ConvertingFileMicrostation()
         {
-            _applicationMicrostation = applicationMicrostation;
-            _errorMessagingMicrostation = errorMessagingMicrostation;
-            _microstationProject = microstationProject;
+            _container = new UnityContainer();
+            BootStrapUnityMicrostation.Start(_container);
+
+            _applicationMicrostation = _container.Resolve<IApplicationMicrostation>();
+            _errorMessagingMicrostation = _container.Resolve<IErrorMessagingMicrostation>();
+            _microstationProject = _container.Resolve<IMicrostationProject>();
         }
 
         /// <summary>
@@ -58,6 +66,8 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 {
                     FindStampsInDesingFile(desingFile);
                 }
+
+                _applicationMicrostation.CloseDesignFile();
             }
         }
 
@@ -81,6 +91,6 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             }
         }
 
-      
+
     }
 }

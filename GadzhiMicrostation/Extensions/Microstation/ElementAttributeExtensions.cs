@@ -18,9 +18,9 @@ namespace GadzhiMicrostation.Extensions.Microstation
         /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>       
-        public static string GetAttributeById(this Element element, ElementAttributes elementAttributes)
+        public static string GetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute)
         {
-            string controlName = AttributesElementsMicrostation.GetAttributeById(element, ElementAttributes.ControlName);
+            string controlName = AttributesElementsMicrostation.GetAttributeById(element, elementAttribute);
             return GetNameInCorrectCase(controlName);
         }
 
@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Extensions.Microstation
         /// </summary>
         public static string GetAttributeControlName(this Element element)
         {
-            return AttributesElementsMicrostation.GetAttributeById(element, ElementAttributes.ControlName);
+            return AttributesElementsMicrostation.GetAttributeById(element, ElementMicrostationAttributes.ControlName);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace GadzhiMicrostation.Extensions.Microstation
         /// </summary>
         public static RangeMicrostation GetAttributeRange(this Element element, bool isVertical)
         {
-            string rangeInString = AttributesElementsMicrostation.GetAttributeById(element, ElementAttributes.Range);
+            string rangeInString = AttributesElementsMicrostation.GetAttributeById(element, ElementMicrostationAttributes.Range);
             IList<string> rangeListInString = StampAdditionalParameters.SeparateAttributeValue(rangeInString);
 
             return new RangeMicrostation(rangeListInString, isVertical);

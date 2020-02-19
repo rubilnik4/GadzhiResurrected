@@ -15,11 +15,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить значение аттрибута через его ID номер
         /// </summary>       
-        public static string GetAttributeById(Element element, ElementAttributes attributeId)
+        public static string GetAttributeById(Element element, ElementMicrostationAttributes attributeId)
         {
             string attributeName = String.Empty;
 
-            var dataBlocks = element?.GetUserAttributeData((int)ElementAttributes.AttributesArray).
+            var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
                                       Cast<DataBlock>();
           
             foreach (var datablock in dataBlocks)

@@ -31,6 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,9 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DependencyInjection\BootStrapUnityMicrostation.cs" />
     <Compile Include="Extensions\Microstation\ElementAttributeExtensions.cs" />
     <Compile Include="Extensions\String\StringExtensions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
+    <Compile Include="Extensions\Type\TypeNameDependency.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\DwgProcessing.cs" />
@@ -62,7 +73,8 @@
     <Compile Include="Microstation\Implementations\Elements\TextBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
-    <Compile Include="Microstation\Implementations\StampContainer\StampMainContainer.cs" />
+    <Compile Include="Microstation\Implementations\StampFeatures\SignaturesStamp.cs" />
+    <Compile Include="Microstation\Implementations\StampFeatures\StampMainFields.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitTypes.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsNumeratorDenominator.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsMicrostation.cs" />
@@ -70,8 +82,11 @@
     <Compile Include="Microstation\Interfaces\Elements\IOwnerContainer.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextElementMicrostation.cs" />
-    <Compile Include="Models\Coordinates\PointMicrostaion.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\ITextBaseElementMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\StampFeatures\ISignaturesStamp.cs" />
+    <Compile Include="Models\Coordinates\PointMicrostation.cs" />
     <Compile Include="Models\Coordinates\RangeMicrostation.cs" />
+    <Compile Include="Models\Enum\ElementMicrostationType.cs" />
     <Compile Include="Models\StampCollections\StampApprovals.cs" />
     <Compile Include="Models\StampCollections\StampBaseField.cs" />
     <Compile Include="Models\StampCollections\StampChange.cs" />
@@ -79,7 +94,7 @@
     <Compile Include="Models\StampCollections\StampMain.cs" />
     <Compile Include="Models\StampCollections\StampApproval.cs" />
     <Compile Include="Models\StampCollections\StampPersonSignature.cs" />
-    <Compile Include="Models\Enum\ElementAttributes.cs" />
+    <Compile Include="Models\Enum\ElementMicrostationAttributes.cs" />
     <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Stamp.cs" />
     <Compile Include="Microstation\Implementations\ModelMicrostation.cs" />
@@ -111,6 +126,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

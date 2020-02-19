@@ -8,7 +8,7 @@ namespace GadzhiMicrostation.Models.Coordinates
     /// <summary>
     /// Координатная точка
     /// </summary>
-    public class PointMicrostaion
+    public class PointMicrostation
     {
         /// <summary>
         /// Координата X
@@ -25,24 +25,30 @@ namespace GadzhiMicrostation.Models.Coordinates
         /// </summary>
         public double Z { get; }
 
-        public PointMicrostaion()
+        public PointMicrostation()
             :this (0,0,0)
         {
 
         }
 
-        public PointMicrostaion(double x, double y)
+        public PointMicrostation(double x, double y)
         {
             X = x;
             Y = y;
             Z = 0;
         }
 
-        public PointMicrostaion(double x, double y, double z)
+        public PointMicrostation(double x, double y, double z)
         {
             X = x;
             Y = y;
             Z = z;
         }
+
+        /// <summary>
+        /// Операция умножения
+        /// </summary>       
+        public static PointMicrostation operator * (PointMicrostation pointMicrostation, double factor) => 
+            new PointMicrostation(pointMicrostation.X * factor , pointMicrostation.Y * factor, pointMicrostation.Z * factor);
     }
 }

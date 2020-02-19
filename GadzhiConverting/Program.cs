@@ -1,8 +1,6 @@
-﻿using DependencyInjection.GadzhiConverting;
-using GadzhiConverting.Infrastructure.Implementations;
-using GadzhiConverting.Infrastructure.Interfaces;
+﻿
+using GadzhiConverting.DependencyInjection.GadzhiConverting;
 using GadzhiMicrostation.Infrastructure.Interface;
-using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using System;
 using System.Collections.Generic;
@@ -27,7 +25,10 @@ namespace GadzhiConverting
                                                           dir,
                                                           GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));
 
-            var microError = container.Resolve<IErrorMessagingMicrostation>();
+            //var microError = container.Resolve<IErrorMessagingMicrostation>();
+            //var applicationMicrostation = container.Resolve<IApplicationMicrostation>();
+            //applicationMicrostation.CloseApplication();
+
             //var applicationConverting = container.Resolve<IApplicationConverting>();
 
             //applicationConverting.StartConverting();

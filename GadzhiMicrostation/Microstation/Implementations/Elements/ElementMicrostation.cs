@@ -59,5 +59,32 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Преобразование базового элемента Microstation в текстовым полем
         /// </summary>       
         public ITextNodeElementMicrostation AsTextNodeElementMicrostation => (ITextNodeElementMicrostation)this;
+
+        /// <summary>
+        /// Тип элемента Microstation
+        /// </summary>
+        public ElementMicrostationType ElementType
+        {
+            get
+            {
+                ElementMicrostationType elementType = ElementMicrostationType.Element;
+
+                if (IsTextElementMicrostation)
+                {
+                    elementType = ElementMicrostationType.TextElement;
+                }
+                else if (IsTextNodeElementMicrostation)
+                {
+                    elementType = ElementMicrostationType.TextNodeElement;
+                }
+
+                return elementType;
+            }
+        }
+
+        /// <summary>
+        /// Получить значение аттрибута по его Id номеру
+        /// </summary>       
+        public string GetAttributeById(ElementMicrostationAttributes elementAttributes) => _element.GetAttributeById(elementAttributes);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -13,11 +14,13 @@ namespace GadzhiMicrostation.Factory
         /// </summary>        
         internal static Application Instance()
         {
+            KillAllPreviousProcess();
+
             var applicationObjectConnector = new ApplicationObjectConnector();
             var microstationapplication = applicationObjectConnector.Application;
-
+          
             SetPropertiesToApplication(microstationapplication);
-           
+
             return microstationapplication;
         }
 
@@ -29,8 +32,20 @@ namespace GadzhiMicrostation.Factory
             microstationapplication.SetCExpressionValue("userPrefsP->extFlags.immediatelySaveChanges", 1); //сохранять изменения
             microstationapplication.SetCExpressionValue("userPrefsP->extFlags.fileDesignOnExit", 0); //отключить диалоговые окна
             microstationapplication.SetCExpressionValue("userPrefsP->extFlags.compressOnExit", 1); //сжать при выходе
-            
+
             microstationapplication.Visible = true;
+        }
+
+        private static void KillAllPreviousProcess()
+        {
+            var microstationProcesses = Process.GetProcesses().
+                                                Where(process => process.ProcessName.
+                                                                         ToLower().
+                                                                         Contains("ustation"));
+            foreach (var microstationProcess in microstationProcesses)
+            {
+                microstationProcess.Kill();
+            }
         }
     }
 }

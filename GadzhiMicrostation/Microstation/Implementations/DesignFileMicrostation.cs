@@ -15,17 +15,22 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Экземпляр файла
         /// </summary>
-        private readonly DesignFile _designFileMicrostation;
+        private readonly DesignFile _designFile;
 
-        public DesignFileMicrostation(DesignFile designFileMicrostation)
+        public DesignFileMicrostation(DesignFile designFile)
         {
-            _designFileMicrostation = designFileMicrostation;
+            _designFile = designFile;
         }
+
+        /// <summary>
+        /// Путь к файлу
+        /// </summary>
+        public string FullName => _designFile?.FullName;
 
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
-        public bool IsDesingFileValid => _designFileMicrostation != null;
+        public bool IsDesingFileValid => _designFile != null;
 
         /// <summary>
         /// Модели и листы в текущем файле
@@ -35,7 +40,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             get
             {
                 List<IModelMicrostation> modelsMicrostation = new List<IModelMicrostation>();
-                foreach (ModelReference model in _designFileMicrostation.Models)
+                foreach (ModelReference model in _designFile.Models)
                 {
                     modelsMicrostation.Add(new ModelMicrostation(model));
                 }
@@ -49,5 +54,28 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public IList<IStamp> Stamps => ModelsMicrostation.SelectMany(model => model.FindStamps()).
                                                           ToList();
 
+        /// <summary>
+        /// Сохранить файл
+        /// </summary>
+        public void Save() => _designFile.Save();
+
+        /// <summary>
+        /// Сохранить файл
+        /// </summary>
+        public void SaveAs(string filePath) => _designFile.SaveAs(filePath, true);
+
+        /// <summary>
+        /// Закрыть файл файл
+        /// </summary>
+        public void Close() => _designFile.Close();
+
+        /// <summary>
+        /// Закрыть файл файл
+        /// </summary>
+        public void CloseWithSaving()
+        {
+            Save();
+            Close();
+        }
     }
 }

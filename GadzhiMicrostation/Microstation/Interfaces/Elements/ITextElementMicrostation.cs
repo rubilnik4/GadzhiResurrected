@@ -8,7 +8,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Текстовый элемент типа Microstation
     /// </summary>
-    public interface ITextElementMicrostation : IElementMicrostation
+    public interface ITextElementMicrostation : ITextBaseElementMicrostation
     {
         /// <summary>
         /// Текст элемента

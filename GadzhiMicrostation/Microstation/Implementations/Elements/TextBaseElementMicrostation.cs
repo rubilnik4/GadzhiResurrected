@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Базовый класс для текстовыйх полей
     /// </summary>
-    public abstract class TextBaseElementMicrostation : ElementMicrostation
+    public abstract class TextBaseElementMicrostation : ElementMicrostation, ITextBaseElementMicrostation
     {
         /// <summary>
         /// Экземпляр элемента Microstation
@@ -43,27 +43,37 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
-        protected RangeMicrostation RangeAttribute => _element.GetAttributeRange(IsVertical);
+        private RangeMicrostation RangeAttribute => _element.GetAttributeRange(IsVertical);
 
         /// <summary>
         /// Ширина ячейки элемента в стандартно заданных координатах
         /// </summary>
-        protected double WidthAttribute => RangeAttribute.Width;
+        private double WidthAttribute => RangeAttribute.Width;
 
         /// <summary>
         /// Высота ячейки элемента в стандартно заданных координатах
         /// </summary>
-        protected double HeightAttribute => RangeAttribute.Height;
+        private double HeightAttribute => RangeAttribute.Height;
+
+        /// <summary>
+        /// Расположение элемента с учетом поворота в стандартно заданных координатах
+        /// </summary>
+        public PointMicrostation OriginPointWithRotationAttribute => RangeAttribute.OriginPointWithRotation;
 
         /// <summary>
         /// Ширина ячейки элемента в текущих координатах
         /// </summary>
-        protected double WidthAttributeInUnits => WidthAttribute * UnitScale;
+        public double WidthAttributeInUnits => WidthAttribute * UnitScale;
 
         /// <summary>
         /// Высота ячейки элемента в текущих координатах
         /// </summary>
-        protected double HeightAttributeInUnits => HeightAttribute * UnitScale;
+        public double HeightAttributeInUnits => HeightAttribute * UnitScale;
+
+        /// <summary>
+        /// Расположение элемента с учетом поворота в текущих координатах
+        /// </summary>
+        public PointMicrostation OriginPointWithRotationAttributeInUnits => OriginPointWithRotationAttribute * UnitScale;
 
         /// <summary>
         /// Ширина элемента

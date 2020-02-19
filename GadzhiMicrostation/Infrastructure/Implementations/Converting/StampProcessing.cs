@@ -16,7 +16,9 @@ namespace GadzhiMicrostation.Infrastructure.Implementations.Converting
         /// </summary>       
         public static void ConvertingStamp(IStamp stamp)
         {
-            stamp.CompressFieldsRanges();
+            //stamp.CompressFieldsRanges();
+
+            stamp.InsertSignatures();
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
+using GadzhiMicrostation.Microstation.Implementations.StampFeatures;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Microstation.Interfaces.StampFeatures;
 using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.StampCollections;
+using Microsoft.Practices.Unity;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -32,6 +35,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private IDictionary<string, IElementMicrostation> _stampFields;
 
+        /// <summary>
+        /// Класс для работы с подписями
+        /// </summary>      
+        private readonly ISignaturesStamp _signaturesStamp;
+
         public Stamp(CellElement stampCellElement,
                      IModelMicrostation ownerModelMicrostation)
             : base((Element)stampCellElement, ownerModelMicrostation)
@@ -40,6 +48,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
             _ownerModelMicrostation = ownerModelMicrostation;
 
             _stampFields = new Dictionary<string, IElementMicrostation>();
+
+            _signaturesStamp = new SignaturesStamp(this);
 
             FillDataFields();
         }
@@ -53,6 +63,67 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Коэффициент преобразования координат в текущие относительно коэффициента сжатия штампа
         /// </summary>
         public override double UnitScale => Scale * _ownerModelMicrostation.UnitsMicrostation.Global;
+
+        /// <summary>
+        /// Найти элементы в словаре штампа по ключам
+        /// </summary>
+        public IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldSearch,
+                                                                           ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
+                                                 fieldSearch?.Where(_stampFields.ContainsKey).
+                                                 Select(fieldName => _stampFields[fieldName]).
+                                                 Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
+                                                                    fieldName.ElementType == elementMicrostationType);
+
+        /// <summary>
+        /// Найти элемент в словаре штампа по ключам
+        /// </summary>
+        public IElementMicrostation FindElementInStampFields(string fieldSearch)
+        {
+            if (_stampFields.ContainsKey(fieldSearch))
+            {
+                return _stampFields[fieldSearch];
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Вписать текстовые поля в рамки
+        /// </summary>
+        public void CompressFieldsRanges()
+        {
+            foreach (var element in _stampFields.Values)
+            {
+                switch (element.ElementType)
+                {
+                    case ElementMicrostationType.TextElement:
+                        element.AsTextElementMicrostation.CompressRange();
+                        break;
+                    case ElementMicrostationType.TextNodeElement:
+                        if (element.AsTextNodeElementMicrostation.CompressRange())
+                        {
+                            FindAndChangeSubElement(element.Id);
+                        }
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Вставить подписи
+        /// </summary>
+        public void InsertSignatures()
+        {
+            _signaturesStamp.InsertSignatures();
+        }
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        public void DeleteSignatures()
+        {
+            _signaturesStamp.DeleteSignatures();
+        }
 
         /// <summary>
         /// Заполнить поля данных
@@ -125,27 +196,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
         }
 
         /// <summary>
-        /// Вписать текстовые поля в рамки
-        /// </summary>
-        public void CompressFieldsRanges()
-        {
-            foreach (var element in _stampFields.Values)
-            {
-                if (element.IsTextElementMicrostation)
-                {
-                    element.AsTextElementMicrostation.CompressRange();
-                }
-                else if (element.IsTextNodeElementMicrostation)
-                {
-                    if (element.AsTextNodeElementMicrostation.CompressRange())
-                    {
-                        FindAndChangeSubElement(element.Id);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Найти и изменить вложенный в штамп элемент. Только для внешних операций типа Scale, Move
         /// </summary>
         private void FindAndChangeSubElement(long Id)
@@ -153,7 +203,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             while (_stampCellElement.MoveToNextElement(true))
             {
                 var elementCurrent = _stampCellElement.CopyCurrentElement();
-                if (elementCurrent.IsTextNodeElement && elementCurrent.ID64 == Id)
+                if (elementCurrent.ID64 == Id)
                 {
                     _stampCellElement.ReplaceCurrentElement(elementCurrent);
                     break;

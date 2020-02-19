@@ -11,6 +11,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     public interface IDesignFileMicrostation
     {
         /// <summary>
+        /// Путь к файлу
+        /// </summary>
+        string FullName { get; }
+
+        /// <summary>
         /// Загрузился ли файл
         /// </summary>
         bool IsDesingFileValid { get; }
@@ -24,5 +29,25 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
         IList<IStamp> Stamps { get; }
+
+        /// <summary>
+        /// Сохранить файл
+        /// </summary>
+        void Save();
+
+        /// <summary>
+        /// Сохранить файл как
+        /// </summary>
+        void SaveAs(string filePath);
+
+        /// <summary>
+        /// Закрыть файл файл
+        /// </summary>
+        void Close();
+
+        /// <summary>
+        /// Закрыть файл файл
+        /// </summary>
+        void CloseWithSaving();
     }
 }
