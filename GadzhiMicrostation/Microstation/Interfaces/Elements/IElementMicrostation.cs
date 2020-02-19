@@ -45,6 +45,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>    
-        string GetAttributeById(ElementMicrostationAttributes elementAttributes);        
+        string GetAttributeById(ElementMicrostationAttributes elementAttributes);
+
+        /// <summary>
+        /// Получить идентефикатор личности
+        /// </summary>    
+        string GetAttributePersonId();
     }
 }

@@ -59,20 +59,48 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        public string CreateFolderByName(string startingPath, string folderName)
-        {           
+        public string CreateFolderByName(string startingPath, string folderName = "")
+        {
             if (!startingPath.EndsWith("\\"))
             {
                 startingPath += "\\";
             }
-            string createdPath = startingPath + folderName + "\\";
+            if (!String.IsNullOrEmpty(folderName) && !folderName.EndsWith("\\"))
+            {
+                folderName += "\\";
+            }
+            string createdPath = startingPath + folderName;
 
             if (!String.IsNullOrEmpty(startingPath))
             {
-                Directory.CreateDirectory(createdPath);               
+                Directory.CreateDirectory(createdPath);
             }
 
             return createdPath;
+        }
+
+        /// <summary>
+        /// Распаковать файл из двоичного вида и сохранить
+        /// </summary>   
+        public bool SaveFileFromByte(string filePath, byte[] fileByte)
+        {
+            bool succsess = false;
+
+            //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
+            try
+            {
+                if (!String.IsNullOrEmpty (filePath) && fileByte != null)
+                {
+                    File.WriteAllBytes(filePath, fileByte);
+
+                    succsess = true;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return succsess;
         }
     }
 }

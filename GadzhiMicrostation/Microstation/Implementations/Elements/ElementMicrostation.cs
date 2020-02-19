@@ -23,11 +23,17 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         private readonly IOwnerContainer _ownerContainer;
 
+        /// <summary>
+        /// Класс для работы с приложением Microstation
+        /// </summary>
+        public IApplicationMicrostation ApplicationMicrostation { get; }
+
         public ElementMicrostation(Element element,
                                    IOwnerContainer ownerContainer)
         {
             _element = element;
             _ownerContainer = ownerContainer;
+            ApplicationMicrostation = _ownerContainer.ApplicationMicrostation;
         }
 
         /// <summary>
@@ -85,6 +91,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>       
-        public string GetAttributeById(ElementMicrostationAttributes elementAttributes) => _element.GetAttributeById(elementAttributes);
+        public string GetAttributeById(ElementMicrostationAttributes elementAttributes) =>
+            _element.GetAttributeById(elementAttributes);
+
+        /// <summary>
+        /// Получить идентефикатор личности
+        /// </summary>    
+        public string GetAttributePersonId() => _element.GetAttributePersonId();
     }
 }

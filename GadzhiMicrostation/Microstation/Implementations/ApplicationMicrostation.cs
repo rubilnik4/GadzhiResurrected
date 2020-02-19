@@ -2,9 +2,11 @@
 using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
+using GadzhiMicrostation.Models.StampCollections;
 using Microsoft.Practices.Unity;
 using MicroStationDGN;
 using System;
@@ -43,7 +45,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Модель хранения данных конвертации
         /// </summary>
-        private readonly IMicrostationProject _microstationProject;
+        private readonly IMicrostationProject _microstationProject;  
 
         public ApplicationMicrostation(IUnityContainer container,
                                        IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
@@ -55,7 +57,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
             _errorMessagingMicrostation = errorMessagingMicrostation;
-            _microstationProject = microstationProject;
+            _microstationProject = microstationProject;         
         }
 
         /// <summary>
@@ -85,11 +87,13 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         public bool IsApplicationValid => Application != null;
 
+        #region DesingFile
         /// <summary>
         /// Текущий файл Microstation
         /// </summary>
         public IDesignFileMicrostation ActiveDesignFile =>
-            _container.Resolve<IDesignFileMicrostation>(new ParameterOverride(typeof(DesignFile), _application.ActiveDesignFile));
+            new DesignFileMicrostation(_application.ActiveDesignFile, this);
+
 
         /// <summary>
         /// Закрыть приложение
@@ -164,5 +168,57 @@ namespace GadzhiMicrostation.Microstation.Implementations
 
             return isValid;
         }
+        #endregion
+
+        #region commands
+
+        /// <summary>
+        /// Создать ячейку на освнове шаблона в библиотеке
+        /// </summary>       
+        public void CreateCellElementFromLibrary(string cellName,
+                                                  PointMicrostation origin)
+        {
+            _application.CreateCellElement2(cellName,
+                                            _application.Point3dFromXY(origin.X, origin.Y),
+                                            _application.Point3dFromXY(1, 1),
+                                            false,
+                                            _application.Matrix3dIdentity());
+        }
+
+        /// <summary>
+        /// Создать ячейку на основе шаблона в библиотеке
+        /// </summary>       
+        public void CreateSignatureFromLibrary(string cellName,
+                                               PointMicrostation origin)
+        {
+            AttachLibrary(StampAdditionalParameters.SignatureLibraryPath);
+            CreateCellElementFromLibrary(cellName, origin);
+            DetachLibrary();
+        }
+
+        /// <summary>
+        /// Подключить библиотеку
+        /// </summary>      
+        private void AttachLibrary(string libraryPath)
+        {
+            if (_fileSystemOperationsMicrostation.IsFileExist(libraryPath))
+            {
+                _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath);
+            }
+            else
+            {
+                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
+                                                                        $"Файл библиотеки {libraryPath} не найден"));
+            }
+        }
+
+        /// <summary>
+        /// Отключить библиотеку
+        /// </summary>      
+        private void DetachLibrary()
+        {
+            _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
+        }
+        #endregion
     }
 }

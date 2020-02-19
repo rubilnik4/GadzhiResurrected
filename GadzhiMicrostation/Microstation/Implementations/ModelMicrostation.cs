@@ -18,10 +18,16 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private readonly ModelReference _modelMicrostation;
 
-        public ModelMicrostation(ModelReference modelMicrostation)
+        /// <summary>
+        /// Класс для работы с приложением Microstation
+        /// </summary>
+        public IApplicationMicrostation ApplicationMicrostation { get; }
+
+        public ModelMicrostation(ModelReference modelMicrostation,
+                                 IApplicationMicrostation applicationMicrostation)
         {
             _modelMicrostation = modelMicrostation;
-
+            ApplicationMicrostation = applicationMicrostation;
         }
 
         /// <summary>

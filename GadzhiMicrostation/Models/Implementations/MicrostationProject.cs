@@ -1,5 +1,6 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Models.Interfaces;
+using GadzhiMicrostation.Models.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,6 +41,7 @@ namespace GadzhiMicrostation.Models.Implementations
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
 
             ProjectMicrostationSettings = projectMicrostationSettings;
+            PutResourcesToDataFolder();
         }
 
         /// <summary>
@@ -49,10 +51,26 @@ namespace GadzhiMicrostation.Models.Implementations
         {
             string fileFolderServer = Path.GetDirectoryName(FileDataMicrostation?.FilePathServer);
             string fileFolderSave = _fileSystemOperationsMicrostation.CreateFolderByName(fileFolderServer, "DGN");
-            return _fileSystemOperationsMicrostation.CombineFilePath(fileFolderSave, 
-                                                                     FileDataMicrostation?.FileName, 
+            return _fileSystemOperationsMicrostation.CombineFilePath(fileFolderSave,
+                                                                     FileDataMicrostation?.FileName,
                                                                      FileDataMicrostation?.FileExtension);
-                      
+
+        }
+
+        /// <summary>
+        /// Скопировать ресурсы
+        /// </summary>        
+        public void PutResourcesToDataFolder()
+        {
+            _fileSystemOperationsMicrostation.CreateFolderByName(StampAdditionalParameters.MicrostationDataFolder);
+            if (_fileSystemOperationsMicrostation.IsDirectoryExist(StampAdditionalParameters.MicrostationDataFolder))
+            {
+                _fileSystemOperationsMicrostation.SaveFileFromByte(StampAdditionalParameters.SignatureLibraryPath,
+                                                                   Properties.Resources.Signature);
+                _fileSystemOperationsMicrostation.SaveFileFromByte(StampAdditionalParameters.StampLibraryPath,
+                                                                 Properties.Resources.Stamp);
+
+            }
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using GadzhiMicrostation.Models.Enum;
+﻿using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -21,9 +23,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
 
             var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
                                       Cast<DataBlock>();
-          
+
             foreach (var datablock in dataBlocks)
-            {               
+            {
                 string attributeNameFromDataBlock = "";
                 short attributeIdFromDataBlock = 0;
 
@@ -37,7 +39,30 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 }
             }
 
-            return attributeName;
+            return GetNameInCorrectCase(attributeName);
         }
+
+        /// <summary>
+        /// Получить размеры ячейки элемента в стандартных координатах
+        /// </summary>
+        public static RangeMicrostation GetAttributeRange(Element element, bool isVertical)
+        {
+            string rangeInString = GetAttributeById(element, ElementMicrostationAttributes.Range);
+            IList<string> rangeListInString = StampAdditionalParameters.SeparateAttributeValue(rangeInString);
+
+            return new RangeMicrostation(rangeListInString, isVertical);
+        }
+
+        /// <summary>
+        /// Получить идентефикатор личности
+        /// </summary>
+        public static string GetAttributePersonId(Element element) =>
+             GetAttributeById(element, ElementMicrostationAttributes.PersonId).
+             Trim('{', '}');
+
+        /// <summary>
+        /// Получить имя поля в корректном написании
+        /// </summary>
+        private static string GetNameInCorrectCase(string field) => field?.Trim()?.ToUpper();
     }
 }

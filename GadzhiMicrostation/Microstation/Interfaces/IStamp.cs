@@ -10,7 +10,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// <summary>
     /// Штамп
     /// </summary>
-    public interface IStamp
+    public interface IStamp: IElementMicrostation
     {
         /// <summary>
         /// Найти элементы в словаре штампа по ключам

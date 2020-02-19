@@ -52,7 +52,6 @@
     <Compile Include="Extensions\Microstation\ElementAttributeExtensions.cs" />
     <Compile Include="Extensions\String\StringExtensions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
-    <Compile Include="Extensions\Type\TypeNameDependency.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\DwgProcessing.cs" />
@@ -65,7 +64,7 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingFileMicrostation.cs" />
     <Compile Include="Infrastructure\Interfaces\IErrorMessagingMicrostation.cs" />
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrorsMicrostation.cs" />
-    <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
+    <Compile Include="Infrastructure\Interfaces\FileSystemOperationsMicrostation.cs" />
     <Compile Include="Infrastructure\Interfaces\ILoggerMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostation.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
@@ -114,6 +113,11 @@
     <Compile Include="Models\StampCollections\StampPersonSignatures.cs" />
     <Compile Include="Models\StampCollections\StampAdditionalParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MicroStationDGN">
@@ -128,6 +132,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Signature.cel" />
+    <None Include="Resources\Stamp.cel" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

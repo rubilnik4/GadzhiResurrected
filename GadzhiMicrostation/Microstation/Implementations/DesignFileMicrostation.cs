@@ -17,9 +17,16 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private readonly DesignFile _designFile;
 
-        public DesignFileMicrostation(DesignFile designFile)
+        /// <summary>
+        /// Класс для работы с приложением Microstation
+        /// </summary>
+        public IApplicationMicrostation ApplicationMicrostation { get;}
+
+        public DesignFileMicrostation(DesignFile designFile,
+                                      IApplicationMicrostation applicationMicrostation)
         {
             _designFile = designFile;
+            ApplicationMicrostation = applicationMicrostation;
         }
 
         /// <summary>
@@ -42,7 +49,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 List<IModelMicrostation> modelsMicrostation = new List<IModelMicrostation>();
                 foreach (ModelReference model in _designFile.Models)
                 {
-                    modelsMicrostation.Add(new ModelMicrostation(model));
+                    modelsMicrostation.Add(new ModelMicrostation(model, ApplicationMicrostation));
                 }
                 return modelsMicrostation;
             }

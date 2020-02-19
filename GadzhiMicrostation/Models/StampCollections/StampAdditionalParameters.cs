@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace GadzhiMicrostation.Models.StampCollections
@@ -35,5 +37,21 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// Коэффициент сжатия текстовых полей в штампе
         /// </summary>
         public static double CompressionRatioTextNode => 0.97d;
+
+        /// <summary>
+        /// Папка с ресурсами и библиотеками
+        /// </summary>
+        public static string MicrostationDataFolder => AppDomain.CurrentDomain.BaseDirectory + "MicrostationData\\";
+
+        /// <summary>
+        /// Имя библиотеки с подписями
+        /// </summary>
+        public static string SignatureLibraryPath => MicrostationDataFolder + "Signature.cel";
+       
+        /// <summary>
+        /// Имя библиотеки со штампами
+        /// </summary>
+        public static string StampLibraryPath => MicrostationDataFolder + "Stamp.cel";
+
     }
 }

@@ -18,37 +18,25 @@ namespace GadzhiMicrostation.Extensions.Microstation
         /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>       
-        public static string GetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute)
-        {
-            string controlName = AttributesElementsMicrostation.GetAttributeById(element, elementAttribute);
-            return GetNameInCorrectCase(controlName);
-        }
+        public static string GetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute) =>
+           AttributesElementsMicrostation.GetAttributeById(element, elementAttribute);
 
         /// <summary>
         /// Получить имя элемента из аттрибутов
         /// </summary>
-        public static string GetAttributeControlName(this Element element)
-        {
-            return AttributesElementsMicrostation.GetAttributeById(element, ElementMicrostationAttributes.ControlName);
-        }
-
-        /// <summary>
-        /// Получить имя поля в корректном написании
-        /// </summary>
-        public static string GetNameInCorrectCase(string field)
-        {
-            return field?.Trim()?.ToUpper();
-        }
+        public static string GetAttributeControlName(this Element element) =>
+             AttributesElementsMicrostation.GetAttributeById(element, ElementMicrostationAttributes.ControlName);
 
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах
         /// </summary>
-        public static RangeMicrostation GetAttributeRange(this Element element, bool isVertical)
-        {
-            string rangeInString = AttributesElementsMicrostation.GetAttributeById(element, ElementMicrostationAttributes.Range);
-            IList<string> rangeListInString = StampAdditionalParameters.SeparateAttributeValue(rangeInString);
+        public static RangeMicrostation GetAttributeRange(this Element element, bool isVertical) =>
+             AttributesElementsMicrostation.GetAttributeRange(element, isVertical);
 
-            return new RangeMicrostation(rangeListInString, isVertical);
-        }
+        /// <summary>
+        /// Получить идентефикатор личности
+        /// </summary>
+        public static string GetAttributePersonId(this Element element) =>
+              AttributesElementsMicrostation.GetAttributePersonId(element);
     }
 }

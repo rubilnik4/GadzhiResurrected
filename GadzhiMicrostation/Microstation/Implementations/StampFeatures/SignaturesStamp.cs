@@ -14,16 +14,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampFeatures
     /// <summary>
     /// Класс для работы с подписями
     /// </summary>
-    public class SignaturesStamp: ISignaturesStamp
+    public class SignaturesStamp : ISignaturesStamp
     {
         /// <summary>
         /// Штамп
         /// </summary>
         private readonly IStamp _stamp;
 
+        /// <summary>
+        /// Класс для работы с приложением Microstation
+        /// </summary>
+        private readonly IApplicationMicrostation _applicationMicrostation;
+
         public SignaturesStamp(IStamp stamp)
         {
             _stamp = stamp;
+            _applicationMicrostation = _stamp.ApplicationMicrostation;
         }
 
         /// <summary>
@@ -44,7 +50,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampFeatures
             foreach (var signature in signatureRowFound)
             {
                 RangeMicrostation signatureRange = GetSignatureRange(signature.Person, signature.Date);
-                string personId = signature.Person.GetAttributeById(ElementMicrostationAttributes.PersonId);
+                string personId = signature.Person.GetAttributePersonId();
+
+                _applicationMicrostation.CreateSignatureFromLibrary(personId, signatureRange.OriginPointWithRotation);
             }
         }
 

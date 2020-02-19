@@ -23,5 +23,30 @@ namespace GadzhiMicrostation.Extensions.String
             return stringOriginal;
         }
 
+        /// <summary>
+        /// Сделать первую букву заглавной
+        /// </summary>        
+        public static string FirstCharToUpper(this string input)
+        {
+            switch (input)
+            {
+                case null: return "";
+                case "": return "";
+                default: return input.First().ToString().ToUpper() + input.Substring(1);
+            }
+        }
+
+        /// <summary>
+        /// Сделать первую букву маленькой
+        /// </summary>        
+        public static string FirstCharToLower(this string input)
+        {
+            switch (input)
+            {
+                case null: return "";
+                case "": return  "";
+                default: return input.First().ToString().ToLower() + input.Substring(1);
+            }
+        }
     }
 }
