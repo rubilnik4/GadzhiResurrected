@@ -1,5 +1,7 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces;
+﻿using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 using System;
@@ -9,7 +11,7 @@ using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
-    public class TextNodeElementMicrostation : TextBaseElementMicrostation, ITextNodeElementMicrostation
+    public class TextNodeElementMicrostation : RangeBaseElementMicrostation, ITextNodeElementMicrostation
     {
         /// <summary>
         /// Экземпляр текстового элемента Microstation
@@ -32,34 +34,54 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Координаты текстового поля
+        /// </summary>
+        public override PointMicrostation Origin => _textNodeElement.Origin.ToPointMicrostation();
+
+        /// <summary>
+        /// Переместить текстовое поле
+        /// </summary>
+        public override void Move(PointMicrostation offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Масштабировать текстовое поле
+        /// </summary>
+        public override void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
+        {
+            ChangeTextElementsInNode(textElement =>
+            {
+                textElement.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
+            });
+        }       
+
+        /// <summary>
         /// Вписать текстовое поле в рамку
         /// </summary>
-        public bool CompressRange()
+        public override bool CompressRange()
         {
             bool isComressed = false;
 
             if (IsNeedCompress == true)
             {
-                double scaleX = 1;
-                double scaleY = 1;
+                var scaleFactor = new PointMicrostation(1, 1, 1);
 
                 if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatioTextNode < Width)
                 {
-                    scaleX = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatioTextNode;
+                    scaleFactor.X = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatioTextNode;
                 }
 
                 if (HeightAttributeInUnits * StampAdditionalParameters.CompressionRatioTextNode < Height &&
                     _textNodeElement.TextLinesCount > 1) // коррекция высоты при многострочном элементе
                 {
-                    scaleY = (HeightAttributeInUnits / Height) * StampAdditionalParameters.CompressionRatioTextNode;
+                    scaleFactor.Y = (HeightAttributeInUnits / Height) * StampAdditionalParameters.CompressionRatioTextNode;
                 }
 
-                if (scaleX != 1 || scaleY != 1)
+                if (scaleFactor.X != 1 || scaleFactor.Y != 1)
                 {
-                    ChangeTextElementsInNode(textElement =>
-                    {
-                        textElement.ScaleAll(_textNodeElement.Origin, scaleX, scaleY, 1);
-                    });
+                    ScaleAll(Origin, scaleFactor);
 
                     isComressed = true;
                 }

@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations.StampPartial;
 using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using MicroStationDGN;
 using System;
@@ -15,6 +16,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
     /// </summary>
     public class ModelMicrostation : IModelMicrostation
     {
+       
+
         /// <summary>
         /// Экземпляр модели или листа
         /// </summary>
@@ -25,12 +28,22 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
 
+        /// <summary>
+        /// Модель или лист в файле. Ссылка для иерархических элементов
+        /// </summary>
+        IModelMicrostation IOwnerContainerMicrostation.ModelMicrostation => this;
+
         public ModelMicrostation(ModelReference modelMicrostation,
                                  IApplicationMicrostation applicationMicrostation)
-        {
+        {           
             _modelMicrostation = modelMicrostation;
-            ApplicationMicrostation = applicationMicrostation;          
+            ApplicationMicrostation = applicationMicrostation;
         }
+
+        /// <summary>
+        /// Порядковый идентефикационный номер
+        /// </summary>
+        public string IdName => _modelMicrostation.Name;
 
         /// <summary>
         /// Коэффициенты преобразования координат в текущие

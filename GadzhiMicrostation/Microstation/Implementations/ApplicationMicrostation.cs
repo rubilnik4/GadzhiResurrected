@@ -25,11 +25,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
     public class ApplicationMicrostation : IApplicationMicrostation
     {
         /// <summary>
-        /// Контейнер для инверсии зависимости
-        /// </summary>
-        private readonly IUnityContainer _container;
-
-        /// <summary>
         /// Сервис работы с ошибками
         /// </summary>
         private readonly IExecuteAndCatchErrorsMicrostation _executeAndCatchErrorsMicrostation;
@@ -49,13 +44,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
-        public ApplicationMicrostation(IUnityContainer container,
-                                       IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
+        public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
                                        IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
                                        IErrorMessagingMicrostation errorMessagingMicrostation,
                                        IMicrostationProject microstationProject)
         {
-            _container = container;
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
             _errorMessagingMicrostation = errorMessagingMicrostation;
@@ -178,8 +171,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
         public ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
-                                                                     PointMicrostation origin,
-                                                                     IModelMicrostation modelMicrostation)
+                                                                     PointMicrostation origin,                                                                    
+                                                                     IModelMicrostation modelMicrostation,
+                                                                     Action<ICellElementMicrostation> additionalParametrs = null)
         {
             CellElement cellElement = _application.CreateCellElement2(cellName,
                                              _application.Point3dFromXY(origin.X, origin.Y),
@@ -187,21 +181,24 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                              false,
                                              _application.Matrix3dIdentity());
 
-            ModelReference mm = null;            
-            _application.ActiveDesignFile.Models[mm];
+            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation);
+            additionalParametrs?.Invoke(cellElementMicrostation);
 
-            return new CellElementMicrostation(cellElement, modelMicrostation);
+            _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
+
+            return cellElementMicrostation;
         }
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         public ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
-                                                                   PointMicrostation origin,
-                                                                   IModelMicrostation modelMicrostation)
+                                                                   PointMicrostation origin,                                                                
+                                                                   IModelMicrostation modelMicrostation,
+                                                                   Action<ICellElementMicrostation> additionalParametrs = null)
         {
             AttachLibrary(StampAdditionalParameters.SignatureLibraryPath);
-            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation);
+            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParametrs);
             DetachLibrary();
 
             return cellElementMicrostation;

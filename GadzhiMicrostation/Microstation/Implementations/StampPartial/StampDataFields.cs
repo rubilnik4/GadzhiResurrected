@@ -38,9 +38,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         private void FillDataFields()
         {
             var subTextElements = GetSubElements().Where(subElement => subElement.ElementType == ElementMicrostationType.TextElement ||
-                                                         subElement.ElementType == ElementMicrostationType.TextNodeElement);
+                                                                       subElement.ElementType == ElementMicrostationType.TextNodeElement);
             foreach (var subElement in subTextElements)
-            {               
+            {
                 if (StampElement.ContainControlName(subElement.AttributeControlName))
                 {
                     AddElementToDictionary(subElement);
@@ -49,7 +49,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                 {
                     FillFormat(subElement);
                 }
-            }         
+            }
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             if (element.IsTextElementMicrostation)
             {
-                var textElement = element.AsTextElementMicrostation;             
+                var textElement = element.AsTextElementMicrostation;
                 if (StampMain.IsFormatField(textElement.Text))
                 {
                     textElement.AttributeControlName = StampMain.Format.Name;
@@ -105,7 +105,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                         break;
                     case ElementMicrostationType.TextNodeElement:
                         if (element.AsTextNodeElementMicrostation.CompressRange())
-                        {
+                        {                          
                             FindAndChangeSubElement(element.Id);
                         }
                         break;
@@ -129,15 +129,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
 
                 _stampFields.Add(element.AttributeControlName, textElement);
             }
-            else if (element.IsTextElementMicrostation)
+            else if (element.IsTextNodeElementMicrostation)
             {
-                var textnodeElement = element.AsTextElementMicrostation;
+                var textnodeElement = element.AsTextNodeElementMicrostation;
                 textnodeElement.IsNeedCompress = stampBaseField.IsNeedCompress;
                 textnodeElement.IsVertical = stampBaseField.IsVertical;
 
                 _stampFields.Add(element.AttributeControlName, textnodeElement);
             }
 
-        }        
+        }
     }
 }

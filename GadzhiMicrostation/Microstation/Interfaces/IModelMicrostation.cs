@@ -12,7 +12,12 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// Модель или лист в файле
     /// </summary>
     public interface IModelMicrostation: IOwnerContainerMicrostation
-    { 
+    {
+        /// <summary>
+        /// Порядковый идентефикационный номер
+        /// </summary>
+        string IdName { get; }
+
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    

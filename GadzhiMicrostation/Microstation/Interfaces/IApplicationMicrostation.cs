@@ -47,12 +47,18 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
-        ICellElementMicrostation CreateCellElementFromLibrary(string cellName, PointMicrostation origin);
+        ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
+                                                              PointMicrostation origin,                                                              
+                                                              IModelMicrostation modelMicrostation,
+                                                              Action<ICellElementMicrostation> additionalParametrs = null);
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        ICellElementMicrostation CreateSignatureFromLibrary(string cellName, PointMicrostation origin);
+        ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
+                                                              PointMicrostation origin,                                                             
+                                                              IModelMicrostation modelMicrostation,
+                                                              Action<ICellElementMicrostation> additionalParametrs = null);
         
     }
 }

@@ -15,7 +15,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Текстовый элемент типа Microstation
     /// </summary>
-    public class TextElementMicrostation : TextBaseElementMicrostation, ITextElementMicrostation
+    public class TextElementMicrostation : RangeBaseElementMicrostation, ITextElementMicrostation
     {
         /// <summary>
         /// Экземпляр текстового элемента Microstation
@@ -44,9 +44,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public string Text => _textElement?.Text;
 
         /// <summary>
+        /// Координаты текстового элемента
+        /// </summary>
+        public override PointMicrostation Origin => _textElement.get_Origin().ToPointMicrostation();
+
+        /// <summary>
         /// Вписать текстовый элемент в рамку
         /// </summary>
-        public bool CompressRange()
+        public override bool CompressRange()
         {
             bool isComressed = false;
 

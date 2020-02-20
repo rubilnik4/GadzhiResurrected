@@ -1,4 +1,6 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Coordinates;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Элемент ячейки типа Microstation
     /// </summary>
-    public class CellElementMicrostation : ElementMicrostation, ICellElementMicrostation
+    public class CellElementMicrostation : RangeBaseElementMicrostation, ICellElementMicrostation
     {
         /// <summary>
         /// Экземпляр ячейки Microstation определяющей штамп
@@ -19,7 +21,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
         public CellElementMicrostation(CellElement cellElement,
                                        IOwnerContainerMicrostation ownerContainerMicrostation)
-            : base((Element)cellElement, ownerContainerMicrostation)
+            : base((Element)cellElement, ownerContainerMicrostation, false, false)
         {
             _cellElement = cellElement;
         }
@@ -33,6 +35,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Коэффициент преобразования координат в текущие относительно коэффициента сжатия штампа
         /// </summary>
         public override double UnitScale => Scale * _ownerContainerMicrostation.UnitScale;
+
+        /// <summary>
+        /// Координаты базовой точки
+        /// </summary>
+        public override PointMicrostation Origin => _cellElement.Origin.ToPointMicrostation();
 
         /// <summary>
         /// Заполнить поля данных
@@ -76,6 +83,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Вписать ячейку в рамку
+        /// </summary>
+        public override bool CompressRange()
+        {
+            throw new NotImplementedException();
         }
     }
 }

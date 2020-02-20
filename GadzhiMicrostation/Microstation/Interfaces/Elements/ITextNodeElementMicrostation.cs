@@ -7,7 +7,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 { /// <summary>
   /// Текстовое поле типа Microstation
   /// </summary>
-    public interface ITextNodeElementMicrostation : ITextBaseElementMicrostation
+    public interface ITextNodeElementMicrostation : IRangeBaseElementMicrostation
     {
         /// <summary>
         /// Вписать текстовое поле в рамку

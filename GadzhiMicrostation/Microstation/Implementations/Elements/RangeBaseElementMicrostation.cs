@@ -10,9 +10,9 @@ using System.Text;
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
     /// <summary>
-    /// Базовый класс для текстовыйх полей
+    /// Базовый класс для элементов находящихся в рамке
     /// </summary>
-    public abstract class TextBaseElementMicrostation : ElementMicrostation, ITextBaseElementMicrostation
+    public abstract class RangeBaseElementMicrostation : ElementMicrostation, IRangeBaseElementMicrostation
     {
         /// <summary>
         /// Экземпляр элемента Microstation
@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public bool IsVertical { get; set; }
 
-        public TextBaseElementMicrostation(Element element,
+        public RangeBaseElementMicrostation(Element element,
                                            IOwnerContainerMicrostation ownerContainerMicrostation,
                                            bool isNeedCompress,
                                            bool isVertical)
@@ -39,6 +39,16 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             IsNeedCompress = isNeedCompress;
             IsVertical = isVertical;
         }
+
+        /// <summary>
+        /// Координаты текстового элемента
+        /// </summary>
+        public abstract PointMicrostation Origin { get; }
+
+        /// <summary>
+        /// Нижняя левая точка
+        /// </summary>
+        public PointMicrostation LowLeftPoint => _element.Range.Low.ToPointMicrostation();
 
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
@@ -78,17 +88,20 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Ширина элемента
         /// </summary>
-        protected double Width => !IsVertical ?
-                                Math.Abs(_element.Range.High.X - _element.Range.Low.X) :
-                                Math.Abs(_element.Range.High.Y - _element.Range.Low.Y);
+        public double Width => !IsVertical ?
+                                  Math.Abs(_element.Range.High.X - _element.Range.Low.X) :
+                                  Math.Abs(_element.Range.High.Y - _element.Range.Low.Y);
 
         /// <summary>
         /// Высота элемента
         /// </summary>
-        protected double Height => !IsVertical ?
+        public double Height => !IsVertical ?
                                    Math.Abs(_element.Range.High.Y - _element.Range.Low.Y) :
                                    Math.Abs(_element.Range.High.X - _element.Range.Low.X);
 
-
+        /// <summary>
+        /// Вписать элемент в рамку
+        /// </summary>
+        public abstract bool CompressRange();
     }
 }

@@ -2,6 +2,7 @@
 using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
 using MicroStationDGN;
 using System;
@@ -106,6 +107,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
                 return elementType;
             }
+        }
+
+        /// <summary>
+        /// Переместить элемент
+        /// </summary>
+        public virtual void Move(PointMicrostation offset)
+        {
+            _element.Move(offset.ToPoint3d());
+        }
+
+        /// <summary>
+        /// Масштабировать элемент
+        /// </summary>
+        public virtual void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
+        {           
+            _element.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
         }
 
         /// <summary>

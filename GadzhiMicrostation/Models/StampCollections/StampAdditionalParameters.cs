@@ -11,7 +11,27 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// Дополнительные параметры штампа
     /// </summary>
     public static class StampAdditionalParameters
-    {
+    { 
+        /// <summary>
+        /// Папка с ресурсами и библиотеками
+        /// </summary>
+        public static string MicrostationDataFolder => AppDomain.CurrentDomain.BaseDirectory + "MicrostationData\\";
+
+        /// <summary>
+        /// Имя библиотеки с подписями
+        /// </summary>
+        public static string SignatureLibraryPath => MicrostationDataFolder + "Signature.cel";
+       
+        /// <summary>
+        /// Имя библиотеки со штампами
+        /// </summary>
+        public static string StampLibraryPath => MicrostationDataFolder + "Stamp.cel";
+
+        /// <summary>
+        /// Маркер подписи в аттритубах
+        /// </summary>
+        public static string SignatureAttributeMarker => "NameSig";
+
         /// <summary>
         /// Символ разделяющий параметры внутри аттрибута
         /// </summary>
@@ -39,19 +59,8 @@ namespace GadzhiMicrostation.Models.StampCollections
         public static double CompressionRatioTextNode => 0.97d;
 
         /// <summary>
-        /// Папка с ресурсами и библиотеками
+        /// Коэффициент сдвига ячейки подписи от базовой точки к нижнему левому углу
         /// </summary>
-        public static string MicrostationDataFolder => AppDomain.CurrentDomain.BaseDirectory + "MicrostationData\\";
-
-        /// <summary>
-        /// Имя библиотеки с подписями
-        /// </summary>
-        public static string SignatureLibraryPath => MicrostationDataFolder + "Signature.cel";
-       
-        /// <summary>
-        /// Имя библиотеки со штампами
-        /// </summary>
-        public static string StampLibraryPath => MicrostationDataFolder + "Stamp.cel";
-
+        public static double SignatureRatioMoveFromOriginToLow => 0.8d;
     }
 }

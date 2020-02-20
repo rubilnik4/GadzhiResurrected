@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="DependencyInjection\BootStrapUnityMicrostation.cs" />
     <Compile Include="Extensions\Microstation\ElementAttributeExtensions.cs" />
+    <Compile Include="Extensions\Microstation\PointExtensions.cs" />
     <Compile Include="Extensions\String\StringExtensions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
-    <Compile Include="Microstation\Implementations\Elements\TextBaseElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Elements\RangeBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\StampPartial\SignaturesStamp.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Microstation\Interfaces\Elements\IOwnerContainerMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextElementMicrostation.cs" />
-    <Compile Include="Microstation\Interfaces\Elements\ITextBaseElementMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\IRangeBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\StampPartial\ISignaturesStamp.cs" />
     <Compile Include="Microstation\Interfaces\StampPartial\IStampDataFields.cs" />
     <Compile Include="Models\Coordinates\PointMicrostation.cs" />

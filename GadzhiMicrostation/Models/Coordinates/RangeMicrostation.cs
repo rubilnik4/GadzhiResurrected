@@ -13,12 +13,12 @@ namespace GadzhiMicrostation.Models.Coordinates
         /// <summary>
         /// Координаты верхнего левого угла
         /// </summary>
-        private readonly PointMicrostation _highLeftPoint;
+        private PointMicrostation _highLeftPoint;
 
         /// <summary>
         /// Координаты правого нижнего угла
         /// </summary>
-        private readonly PointMicrostation _lowRightPoint;
+        private PointMicrostation _lowRightPoint;
 
         /// <summary>
         /// Вертикальное расположение
@@ -34,7 +34,7 @@ namespace GadzhiMicrostation.Models.Coordinates
 
         public RangeMicrostation(PointMicrostation highLeftPoint,
                                  PointMicrostation lowRightPoint,
-                                 bool isVertical)        
+                                 bool isVertical)
         {
             _highLeftPoint = highLeftPoint;
             _lowRightPoint = lowRightPoint;
@@ -60,16 +60,16 @@ namespace GadzhiMicrostation.Models.Coordinates
         /// Ширина
         /// </summary>
         public double Width => !IsVertical ?
-                               Math.Abs(_highLeftPoint?.X - _lowRightPoint.X ?? 0):
+                               Math.Abs(_highLeftPoint?.X - _lowRightPoint.X ?? 0) :
                                Math.Abs(_highLeftPoint?.Y - _lowRightPoint.Y ?? 0);
 
         /// <summary>
         /// Высота
         /// </summary>
-        public double Height => !IsVertical ? 
-                                Math.Abs(_highLeftPoint?.Y - _lowRightPoint.Y ?? 0):
-                                Math.Abs(_highLeftPoint?.X- _lowRightPoint.X ?? 0);
-      
+        public double Height => !IsVertical ?
+                                Math.Abs(_highLeftPoint?.Y - _lowRightPoint.Y ?? 0) :
+                                Math.Abs(_highLeftPoint?.X - _lowRightPoint.X ?? 0);
+
 
         /// <summary>
         /// Корректны ли значения координат
@@ -78,10 +78,34 @@ namespace GadzhiMicrostation.Models.Coordinates
                                Width > 0 && Height > 0;
 
         /// <summary>
-        /// точка вставки элемента с учетом поворота
+        /// Точка вставки элемента с учетом поворота
         /// </summary>
         public PointMicrostation OriginPointWithRotation => !IsVertical ?
-                                                            _highLeftPoint :
-                                                            new PointMicrostation(_highLeftPoint.X, _lowRightPoint.Y, 0);
+                                                            new PointMicrostation(_highLeftPoint.X, _lowRightPoint.Y, 0) :
+                                                            _lowRightPoint;
+
+        /// <summary>
+        /// Центральная точка
+        /// </summary>
+        public PointMicrostation OriginCenter =>
+            new PointMicrostation(_highLeftPoint.X + Math.Abs(_highLeftPoint.X - _lowRightPoint.X) / 2,
+                                  _highLeftPoint.Y - Math.Abs(_highLeftPoint.Y - _lowRightPoint.Y) / 2,
+                                  0);
+
+        /// <summary>
+        /// Сдвиг по координатам
+        /// </summary>       
+        public RangeMicrostation Offset(PointMicrostation offset)
+        {
+            return new RangeMicrostation(_highLeftPoint + offset, _lowRightPoint + offset, IsVertical);
+        }
+
+        /// <summary>
+        /// Масштабирование
+        /// </summary>       
+        public RangeMicrostation Scale(double scaleFactor)
+        {
+            return new RangeMicrostation(_highLeftPoint * scaleFactor, _lowRightPoint * scaleFactor, IsVertical);
+        }
     }
 }

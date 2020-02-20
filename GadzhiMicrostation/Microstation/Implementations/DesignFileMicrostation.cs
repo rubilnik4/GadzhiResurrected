@@ -48,8 +48,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
             get
             {
                 List<IModelMicrostation> modelsMicrostation = new List<IModelMicrostation>();
-                foreach (ModelReference model in _designFile.Models)
+                foreach (ModelReference model in _designFile.Models)               
                 {
+                    
                     modelsMicrostation.Add(new ModelMicrostation(model, ApplicationMicrostation));
                 }
                 return modelsMicrostation;

@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations.Units;
+using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Тип элемента Microstation
         /// </summary>
         ElementMicrostationType ElementType { get; }
+
+        /// <summary>
+        /// Переместить элемент
+        /// </summary>
+        void Move(PointMicrostation origin);   
+
+        /// <summary>
+        /// Масштабировать элемент
+        /// </summary>
+        void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);        
 
         /// <summary>
         /// Получить значение аттрибута по его Id номеру
