@@ -15,6 +15,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     public interface ITextBaseElementMicrostation : IElementMicrostation
     {
         /// <summary>
+        /// Необходимо ли сжатие в рамке
+        /// </summary>
+        bool IsNeedCompress { get; set; }
+
+        /// <summary>
+        /// Вертикальное расположение
+        /// </summary>
+        bool IsVertical { get; set; }
+
+        /// <summary>
         /// Ширина ячейки элемента в текущих координатах
         /// </summary>
         double WidthAttributeInUnits { get; }

@@ -19,27 +19,45 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>       
         public static string GetAttributeById(Element element, ElementMicrostationAttributes attributeId)
         {
-            string attributeName = String.Empty;
-
+            string attributeValue = String.Empty;
             var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
                                       Cast<DataBlock>();
 
-            foreach (var datablock in dataBlocks)
+            foreach (var dataBlock in dataBlocks)
             {
-                string attributeNameFromDataBlock = "";
+                string attributeValueFromDataBlock = "";
                 short attributeIdFromDataBlock = 0;
 
-                datablock.CopyString(ref attributeNameFromDataBlock, false);
-                datablock.CopyInteger(ref attributeIdFromDataBlock, false);
+                DataBlockReadWriteOperation(dataBlock, ref attributeValueFromDataBlock, ref attributeIdFromDataBlock, DataBlockOperationType.Read);
 
                 if (attributeIdFromDataBlock == (int)attributeId)
                 {
-                    attributeName = attributeNameFromDataBlock;
+                    attributeValue = attributeValueFromDataBlock;
                     break;
                 }
             }
 
-            return GetNameInCorrectCase(attributeName);
+            return GetAttributeNameInCorrectCase(attributeValue);
+        }
+
+        /// <summary>
+        /// Записать значение аттрибута через его ID номер
+        /// </summary>       
+        public static void SetAttributeById(Element element,
+                                            ElementMicrostationAttributes attributeId,
+                                            string attributeValue)
+        {
+            if (!String.IsNullOrEmpty(attributeValue))
+            {
+                attributeValue = GetAttributeNameInCorrectCase(attributeValue);
+
+                bool isAttributeFound = DataBlockCheckAttributeAndWriteIfExist(element, attributeId, attributeValue);
+
+                if (!isAttributeFound)
+                {
+                    DataBlockAddNewAttribute(element, attributeId, attributeValue);
+                }
+            }
         }
 
         /// <summary>
@@ -56,6 +74,18 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить идентефикатор личности
         /// </summary>
+        public static string GetAttributeControlName(Element element) =>
+             GetAttributeById(element, ElementMicrostationAttributes.ControlName);
+
+        /// <summary>
+        /// Записать идентефикатор личности
+        /// </summary>
+        public static void SetAttributeControlName(Element element, string controlName) =>
+             SetAttributeById(element, ElementMicrostationAttributes.ControlName, controlName);
+
+        /// <summary>
+        /// Получить идентефикатор личности
+        /// </summary>
         public static string GetAttributePersonId(Element element) =>
              GetAttributeById(element, ElementMicrostationAttributes.PersonId).
              Trim('{', '}');
@@ -63,6 +93,62 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить имя поля в корректном написании
         /// </summary>
-        private static string GetNameInCorrectCase(string field) => field?.Trim()?.ToUpper();
+        private static string GetAttributeNameInCorrectCase(string field) => field?.Trim()?.ToUpper();
+
+        /// <summary>
+        /// Прочитать/записать данные в блок
+        /// </summary>      
+        private static void DataBlockReadWriteOperation(DataBlock dataBlock,
+                                                        ref string attributeValueFromDataBlock,
+                                                        ref short attributeIdFromDataBlock,
+                                                        DataBlockOperationType dataBlockOperationType)
+        {
+            dataBlock.CopyString(ref attributeValueFromDataBlock, Convert.ToBoolean(dataBlockOperationType));
+            dataBlock.CopyInteger(ref attributeIdFromDataBlock, Convert.ToBoolean(dataBlockOperationType));
+        }
+
+        /// <summary>
+        /// Проверить блок и записать аттрибут при наличии
+        /// </summary>
+        private static bool DataBlockCheckAttributeAndWriteIfExist(Element element,
+                                                                   ElementMicrostationAttributes attributeId,
+                                                                   string attributeValue)
+        {
+            bool isAttributeFound = false;
+
+            var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
+                                      Cast<DataBlock>();
+
+            foreach (var dataBlock in dataBlocks)
+            {
+                string attributeValueFromDataBlock = "";
+                short attributeIdFromDataBlock = 0;
+
+                DataBlockReadWriteOperation(dataBlock, ref attributeValueFromDataBlock, ref attributeIdFromDataBlock, DataBlockOperationType.Read);
+
+                if (attributeIdFromDataBlock == (short)attributeId && 
+                    attributeValueFromDataBlock != attributeValue)
+                {
+                    DataBlockReadWriteOperation(dataBlock, ref attributeValue, ref attributeIdFromDataBlock, DataBlockOperationType.Write);
+
+                    isAttributeFound = true;
+                    break;
+                }
+            }
+
+            return isAttributeFound;
+        }
+
+        private static void DataBlockAddNewAttribute(Element element,
+                                                     ElementMicrostationAttributes attributeId,
+                                                     string attributeValue)
+        {
+            DataBlock dataBlock = new DataBlock();
+            short attributeIdToDataBlock = (short)attributeId;
+
+            DataBlockReadWriteOperation(dataBlock, ref attributeValue, ref attributeIdToDataBlock, DataBlockOperationType.Write);
+
+            element?.AddUserAttributeData((int)ElementMicrostationAttributes.AttributesArray, dataBlock);
+        }
     }
 }

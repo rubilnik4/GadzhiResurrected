@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiMicrostation.Microstation.Interfaces.StampFeatures
+namespace GadzhiMicrostation.Microstation.Interfaces.StampPartial
 {
     /// <summary>
     /// Класс для работы с подписями

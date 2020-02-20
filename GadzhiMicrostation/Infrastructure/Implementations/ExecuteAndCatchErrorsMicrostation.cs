@@ -38,7 +38,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 applicationBeforeMethod?.Invoke();
                 method();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 applicationCatchMethod?.Invoke();
 

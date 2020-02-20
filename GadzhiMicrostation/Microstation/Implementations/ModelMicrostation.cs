@@ -1,5 +1,7 @@
-﻿using GadzhiMicrostation.Microstation.Implementations.Units;
+﻿using GadzhiMicrostation.Microstation.Implementations.StampPartial;
+using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -33,7 +35,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Коэффициенты преобразования координат в текущие
         /// </summary>
-        public UnitsMicrostation UnitsMicrostation => new UnitsMicrostation(_modelMicrostation.get_MasterUnit().UnitsPerBaseNumerator,
+        private UnitsMicrostation UnitsMicrostation => new UnitsMicrostation(_modelMicrostation.get_MasterUnit().UnitsPerBaseNumerator,
                                                                             _modelMicrostation.get_MasterUnit().UnitsPerBaseDenominator,
                                                                             _modelMicrostation.get_SubUnit().UnitsPerBaseNumerator,
                                                                             _modelMicrostation.get_SubUnit().UnitsPerBaseDenominator,

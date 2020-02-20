@@ -22,10 +22,22 @@ namespace GadzhiMicrostation.Extensions.Microstation
            AttributesElementsMicrostation.GetAttributeById(element, elementAttribute);
 
         /// <summary>
+        /// Записать значение аттрибута по его Id номеру
+        /// </summary>       
+        public static void SetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute, string attributeValue) =>
+           AttributesElementsMicrostation.SetAttributeById(element, elementAttribute, attributeValue);
+
+        /// <summary>
         /// Получить имя элемента из аттрибутов
         /// </summary>
         public static string GetAttributeControlName(this Element element) =>
-             AttributesElementsMicrostation.GetAttributeById(element, ElementMicrostationAttributes.ControlName);
+             AttributesElementsMicrostation.GetAttributeControlName(element);
+
+        /// <summary>
+        /// Записать имя элемента из аттрибутов
+        /// </summary>
+        public static void SetAttributeControlName(this Element element, string controlName) =>
+             AttributesElementsMicrostation.SetAttributeControlName(element, controlName);
 
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах

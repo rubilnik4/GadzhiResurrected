@@ -157,9 +157,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Arrange     
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
             FilesData filesInfoProject = new FilesData(files);
-            var filesToAdd = DefaultFileData.FileDataToTestFourPositions;
-            
-            int filesCountExpected = files.Count;
+            var filesToAdd = DefaultFileData.FileDataToTestFourPositions; 
 
             // Act  
             filesInfoProject.AddFiles(filesToAdd);

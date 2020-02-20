@@ -170,7 +170,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         }
         #endregion
 
-        #region commands
+        #region Commands
 
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке

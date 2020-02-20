@@ -10,8 +10,8 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Элемент типа Microstation
     /// </summary>
-    public interface IElementMicrostation: IOwnerContainer
-    {  
+    public interface IElementMicrostation : IOwnerContainerMicrostation
+    {
         /// <summary>
         /// Идентефикатор элемента
         /// </summary>
@@ -48,8 +48,18 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         string GetAttributeById(ElementMicrostationAttributes elementAttributes);
 
         /// <summary>
+        /// Записать значение аттрибута по его Id номеру
+        /// </summary>       
+        void SetAttributeById(ElementMicrostationAttributes elementAttributes, string attributeValue);
+
+        /// <summary>
+        /// Получить имя элемента из аттрибутов
+        /// </summary>
+        string AttributeControlName { get; set; }
+
+        /// <summary>
         /// Получить идентефикатор личности
         /// </summary>    
-        string GetAttributePersonId();
+        string AttributePersonId { get; }
     }
 }

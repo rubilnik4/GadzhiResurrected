@@ -8,7 +8,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Родительский элемент
     /// </summary>
-    public interface IOwnerContainer
+    public interface IOwnerContainerMicrostation
     {
         /// <summary>
         /// Класс для работы с приложением Microstation

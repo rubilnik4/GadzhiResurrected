@@ -22,18 +22,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Необходимо ли сжатие в рамке
         /// </summary>
-        protected bool IsNeedCompress { get; }
+        public bool IsNeedCompress { get; set; }
 
         /// <summary>
         /// Вертикальное расположение
         /// </summary>
-        protected bool IsVertical { get; }
+        public bool IsVertical { get; set; }
 
         public TextBaseElementMicrostation(Element element,
-                                           IElementMicrostation ownerElementMicrostation,
+                                           IOwnerContainerMicrostation ownerContainerMicrostation,
                                            bool isNeedCompress,
                                            bool isVertical)
-            : base(element, ownerElementMicrostation)
+            : base(element, ownerContainerMicrostation)
         {
             _element = element;
             IsNeedCompress = isNeedCompress;

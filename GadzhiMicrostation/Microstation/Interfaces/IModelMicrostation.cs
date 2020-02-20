@@ -1,5 +1,6 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,8 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// <summary>
     /// Модель или лист в файле
     /// </summary>
-    public interface IModelMicrostation: IOwnerContainer
-    {
-        /// <summary>
-        /// Коэффициенты преобразования координат в текущие
-        /// </summary>
-        UnitsMicrostation UnitsMicrostation { get; }
-
+    public interface IModelMicrostation: IOwnerContainerMicrostation
+    { 
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    

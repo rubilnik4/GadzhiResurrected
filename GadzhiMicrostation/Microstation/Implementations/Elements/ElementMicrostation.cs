@@ -11,7 +11,7 @@ using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
-    public abstract class ElementMicrostation : IElementMicrostation
+    public class ElementMicrostation : IElementMicrostation
     {
         /// <summary>
         /// Экземпляр элемента Microstation
@@ -21,7 +21,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Родительский элемент
         /// </summary>
-        private readonly IOwnerContainer _ownerContainer;
+        protected readonly IOwnerContainerMicrostation _ownerContainerMicrostation;
 
         /// <summary>
         /// Класс для работы с приложением Microstation
@@ -29,11 +29,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public IApplicationMicrostation ApplicationMicrostation { get; }
 
         public ElementMicrostation(Element element,
-                                   IOwnerContainer ownerContainer)
+                                   IOwnerContainerMicrostation ownerContainerMicrostation)
         {
             _element = element;
-            _ownerContainer = ownerContainer;
-            ApplicationMicrostation = _ownerContainer.ApplicationMicrostation;
+            _ownerContainerMicrostation = ownerContainerMicrostation;
+            ApplicationMicrostation = _ownerContainerMicrostation.ApplicationMicrostation;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно родительского элемента
         /// </summary>
-        public virtual double UnitScale => _ownerContainer.UnitScale;
+        public virtual double UnitScale => _ownerContainerMicrostation.UnitScale;
 
         /// <summary>
         /// Является ли базовый элемент Microstation текстовым
@@ -95,8 +95,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             _element.GetAttributeById(elementAttributes);
 
         /// <summary>
+        /// Записать значение аттрибута по его Id номеру
+        /// </summary>       
+        public void SetAttributeById(ElementMicrostationAttributes elementAttributes, string attributeValue) =>
+            _element.SetAttributeById(elementAttributes, attributeValue);
+
+        /// <summary>
+        /// Имя элемента из аттрибутов
+        /// </summary>
+        public string AttributeControlName
+        {
+            get => _element.GetAttributeControlName();
+            set => _element.SetAttributeControlName(value);
+        }
+
+        /// <summary>
         /// Получить идентефикатор личности
         /// </summary>    
-        public string GetAttributePersonId() => _element.GetAttributePersonId();
+        public string AttributePersonId => _element.GetAttributePersonId();
     }
 }

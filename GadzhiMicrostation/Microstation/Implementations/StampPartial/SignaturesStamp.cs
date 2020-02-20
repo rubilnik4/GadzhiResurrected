@@ -1,37 +1,19 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Microstation.Interfaces.StampFeatures;
+﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiMicrostation.Microstation.Implementations.StampFeatures
+namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
 {
     /// <summary>
-    /// Класс для работы с подписями
+    /// Подкласс штампа для работы с подписями
     /// </summary>
-    public class SignaturesStamp : ISignaturesStamp
-    {
-        /// <summary>
-        /// Штамп
-        /// </summary>
-        private readonly IStamp _stamp;
-
-        /// <summary>
-        /// Класс для работы с приложением Microstation
-        /// </summary>
-        private readonly IApplicationMicrostation _applicationMicrostation;
-
-        public SignaturesStamp(IStamp stamp)
-        {
-            _stamp = stamp;
-            _applicationMicrostation = _stamp.ApplicationMicrostation;
-        }
-
+    public partial class Stamp : ISignaturesStamp
+    {      
         /// <summary>
         /// Вставить подписи
         /// </summary>
@@ -42,17 +24,17 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampFeatures
             var signatureRowFound = signatureRowSearch?.Select(row =>
                                     new
                                     {
-                                        Person = _stamp.FindElementInStampFields(row.ResponsiblePerson.Name).AsTextElementMicrostation,
-                                        Date = _stamp.FindElementInStampFields(row.Date.Name).AsTextElementMicrostation,
+                                        Person = FindElementInStampFields(row.ResponsiblePerson.Name).AsTextElementMicrostation,
+                                        Date = FindElementInStampFields(row.Date.Name).AsTextElementMicrostation,
                                     }).
                                 Where(row => row.Person != null && row.Date != null);
 
             foreach (var signature in signatureRowFound)
             {
                 RangeMicrostation signatureRange = GetSignatureRange(signature.Person, signature.Date);
-                string personId = signature.Person.GetAttributePersonId();
+                string personId = signature.Person.AttributePersonId;
 
-                _applicationMicrostation.CreateSignatureFromLibrary(personId, signatureRange.OriginPointWithRotation);
+                ApplicationMicrostation.CreateSignatureFromLibrary(personId, signatureRange.OriginPointWithRotation);
             }
         }
 
