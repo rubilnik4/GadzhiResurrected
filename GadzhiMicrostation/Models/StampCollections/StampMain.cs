@@ -57,7 +57,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Формат
         /// </summary>
-        public static StampBaseField Format => new StampBaseField("Format", 
+        public static StampBaseField Format => new StampBaseField("FORMAT", 
                                                                   isNeedCompress: false);
 
         /// <summary>

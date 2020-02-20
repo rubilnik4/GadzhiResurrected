@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                  IApplicationMicrostation applicationMicrostation)
         {
             _modelMicrostation = modelMicrostation;
-            ApplicationMicrostation = applicationMicrostation;
+            ApplicationMicrostation = applicationMicrostation;          
         }
 
         /// <summary>

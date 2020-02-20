@@ -21,19 +21,23 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             string attributeValue = String.Empty;
             var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
-                                      Cast<DataBlock>();
-
-            foreach (var dataBlock in dataBlocks)
+                                      Cast<DataBlock>().
+                                      ToList();
+            //поиск с обратного конца из-за возможных накоплений атрибутов
+            if (dataBlocks != null)
             {
-                string attributeValueFromDataBlock = "";
-                short attributeIdFromDataBlock = 0;
-
-                DataBlockReadWriteOperation(dataBlock, ref attributeValueFromDataBlock, ref attributeIdFromDataBlock, DataBlockOperationType.Read);
-
-                if (attributeIdFromDataBlock == (int)attributeId)
+                for (int i = dataBlocks.Count - 1; i >= 0; i--)
                 {
-                    attributeValue = attributeValueFromDataBlock;
-                    break;
+                    string attributeValueFromDataBlock = "";
+                    short attributeIdFromDataBlock = 0;
+
+                    DataBlockReadWriteOperation(dataBlocks[i], ref attributeValueFromDataBlock, ref attributeIdFromDataBlock, DataBlockOperationType.Read);
+
+                    if (attributeIdFromDataBlock == (int)attributeId)
+                    {
+                        attributeValue = attributeValueFromDataBlock;
+                        break;
+                    }
                 }
             }
 
@@ -114,25 +118,26 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                                                    ElementMicrostationAttributes attributeId,
                                                                    string attributeValue)
         {
-            bool isAttributeFound = false;
-
+            bool isAttributeFound = false;        
             var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
-                                      Cast<DataBlock>();
+                                      Cast<DataBlock>().
+                                      ToList();
 
-            foreach (var dataBlock in dataBlocks)
+            for (int i = dataBlocks.Count - 1; i >= 0; i--)
             {
                 string attributeValueFromDataBlock = "";
                 short attributeIdFromDataBlock = 0;
 
-                DataBlockReadWriteOperation(dataBlock, ref attributeValueFromDataBlock, ref attributeIdFromDataBlock, DataBlockOperationType.Read);
+                DataBlockReadWriteOperation(dataBlocks[i], ref attributeValueFromDataBlock, ref attributeIdFromDataBlock, DataBlockOperationType.Read);
 
-                if (attributeIdFromDataBlock == (short)attributeId && 
+                if (attributeIdFromDataBlock == (short)attributeId &&
                     attributeValueFromDataBlock != attributeValue)
                 {
-                    DataBlockReadWriteOperation(dataBlock, ref attributeValue, ref attributeIdFromDataBlock, DataBlockOperationType.Write);
-
-                    isAttributeFound = true;
-                    break;
+                    //аттрибуты не удаляются, а копятся. Не самое лучшее решение. Избегать установки аттрибутов                    
+                    element.DeleteUserAttributeData(attributeIdFromDataBlock, (short)i);
+                    DataBlockAddNewAttribute(element, attributeId, attributeValue);
+                
+                    isAttributeFound = true;                   
                 }
             }
 

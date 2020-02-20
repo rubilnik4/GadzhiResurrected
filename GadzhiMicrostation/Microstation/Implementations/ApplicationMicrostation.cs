@@ -1,7 +1,9 @@
 ﻿using GadzhiMicrostation.Factory;
 using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.Implementations;
@@ -45,7 +47,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Модель хранения данных конвертации
         /// </summary>
-        private readonly IMicrostationProject _microstationProject;  
+        private readonly IMicrostationProject _microstationProject;
 
         public ApplicationMicrostation(IUnityContainer container,
                                        IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
@@ -57,7 +59,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
             _errorMessagingMicrostation = errorMessagingMicrostation;
-            _microstationProject = microstationProject;         
+            _microstationProject = microstationProject;
         }
 
         /// <summary>
@@ -175,25 +177,34 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
-        public void CreateCellElementFromLibrary(string cellName,
-                                                  PointMicrostation origin)
+        public ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
+                                                                     PointMicrostation origin,
+                                                                     IModelMicrostation modelMicrostation)
         {
-            _application.CreateCellElement2(cellName,
-                                            _application.Point3dFromXY(origin.X, origin.Y),
-                                            _application.Point3dFromXY(1, 1),
-                                            false,
-                                            _application.Matrix3dIdentity());
+            CellElement cellElement = _application.CreateCellElement2(cellName,
+                                             _application.Point3dFromXY(origin.X, origin.Y),
+                                             _application.Point3dFromXY(1, 1),
+                                             false,
+                                             _application.Matrix3dIdentity());
+
+            ModelReference mm = null;            
+            _application.ActiveDesignFile.Models[mm];
+
+            return new CellElementMicrostation(cellElement, modelMicrostation);
         }
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        public void CreateSignatureFromLibrary(string cellName,
-                                               PointMicrostation origin)
+        public ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
+                                                                   PointMicrostation origin,
+                                                                   IModelMicrostation modelMicrostation)
         {
             AttachLibrary(StampAdditionalParameters.SignatureLibraryPath);
-            CreateCellElementFromLibrary(cellName, origin);
+            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation);
             DetachLibrary();
+
+            return cellElementMicrostation;
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
     /// Подкласс штампа для работы с подписями
     /// </summary>
     public partial class Stamp : ISignaturesStamp
-    {      
+    {
         /// <summary>
         /// Вставить подписи
         /// </summary>
@@ -34,7 +34,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                 RangeMicrostation signatureRange = GetSignatureRange(signature.Person, signature.Date);
                 string personId = signature.Person.AttributePersonId;
 
-                ApplicationMicrostation.CreateSignatureFromLibrary(personId, signatureRange.OriginPointWithRotation);
+                ICellElementMicrostation cellElementMicrostation = ApplicationMicrostation.CreateSignatureFromLibrary(personId, signatureRange.OriginPointWithRotation);
+                // ModelMicrostation.
             }
         }
 

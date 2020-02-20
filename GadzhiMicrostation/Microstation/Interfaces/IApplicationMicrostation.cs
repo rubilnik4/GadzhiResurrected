@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using System;
 using System.Collections.Generic;
@@ -46,12 +47,12 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
-        void CreateCellElementFromLibrary(string cellName, PointMicrostation origin);
+        ICellElementMicrostation CreateCellElementFromLibrary(string cellName, PointMicrostation origin);
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        void CreateSignatureFromLibrary(string cellName, PointMicrostation origin);
+        ICellElementMicrostation CreateSignatureFromLibrary(string cellName, PointMicrostation origin);
         
     }
 }

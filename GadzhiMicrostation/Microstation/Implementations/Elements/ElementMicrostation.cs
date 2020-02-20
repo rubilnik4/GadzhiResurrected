@@ -11,7 +11,7 @@ using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
-    public class ElementMicrostation : IElementMicrostation
+    public abstract class ElementMicrostation : IElementMicrostation
     {
         /// <summary>
         /// Экземпляр элемента Microstation
@@ -28,12 +28,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
 
+        /// <summary>
+        /// Модель или лист в файле
+        /// </summary>
+        public IModelMicrostation ModelMicrostation { get; }
+
         public ElementMicrostation(Element element,
                                    IOwnerContainerMicrostation ownerContainerMicrostation)
         {
             _element = element;
             _ownerContainerMicrostation = ownerContainerMicrostation;
             ApplicationMicrostation = _ownerContainerMicrostation.ApplicationMicrostation;
+            ModelMicrostation = _ownerContainerMicrostation.ModelMicrostation;
         }
 
         /// <summary>
@@ -57,6 +63,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public bool IsTextNodeElementMicrostation => this is ITextNodeElementMicrostation;
 
         /// <summary>
+        /// Является ли базовый элемент Microstation ячейкой
+        /// </summary>       
+        public bool IsCellElementMicrostation => this is ICellElementMicrostation;
+
+        /// <summary>
         /// Преобразование базового элемента Microstation в текстовый элемент
         /// </summary>       
         public ITextElementMicrostation AsTextElementMicrostation => (ITextElementMicrostation)this;
@@ -65,6 +76,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Преобразование базового элемента Microstation в текстовым полем
         /// </summary>       
         public ITextNodeElementMicrostation AsTextNodeElementMicrostation => (ITextNodeElementMicrostation)this;
+
+        /// <summary>
+        /// Преобразование базового элемента Microstation в ячейку
+        /// </summary>       
+        public ICellElementMicrostation AsCellElementMicrostation => (ICellElementMicrostation)this;
 
         /// <summary>
         /// Тип элемента Microstation
@@ -82,6 +98,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                 else if (IsTextNodeElementMicrostation)
                 {
                     elementType = ElementMicrostationType.TextNodeElement;
+                }
+                else if (IsCellElementMicrostation)
+                {
+                    elementType = ElementMicrostationType.CellElement;
                 }
 
                 return elementType;

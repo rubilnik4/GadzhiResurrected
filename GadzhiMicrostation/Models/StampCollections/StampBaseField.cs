@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Models.StampCollections
                               bool isNeedCompress = true,
                               bool isVertical = false)
         {
-            Name = name;
+            Name = name?.ToUpper();
             IsNeedCompress = isNeedCompress;
             IsVertical = isVertical;
         }

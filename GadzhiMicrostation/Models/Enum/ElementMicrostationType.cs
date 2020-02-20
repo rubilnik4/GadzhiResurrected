@@ -12,6 +12,7 @@ namespace GadzhiMicrostation.Models.Enum
     {
         Element,
         TextElement,
-        TextNodeElement
+        TextNodeElement,
+        CellElement
     }
 }

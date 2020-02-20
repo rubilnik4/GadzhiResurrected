@@ -46,7 +46,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                 while (elementEnumerator.MoveNext())
                 {
                     var element = (Element)elementEnumerator.Current;
-                    yield return new ElementMicrostation(element, this);                   
+                    if (element.IsTextElement)
+                    {
+                        yield return new TextElementMicrostation((TextElement)element, this);
+                    }
+                    else if (element.IsTextNodeElement)
+                    {
+                        yield return new TextNodeElementMicrostation((TextNodeElement)element, this);
+                    }
+                    else if (element.IsCellElement)
+                    {
+                        yield return new CellElementMicrostation((CellElement)element, this);
+                    }
                 }
             }
         }

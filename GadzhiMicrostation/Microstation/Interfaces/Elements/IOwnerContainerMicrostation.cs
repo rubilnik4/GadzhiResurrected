@@ -16,6 +16,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         IApplicationMicrostation ApplicationMicrostation { get; }
 
         /// <summary>
+        /// Модель или лист в файле
+        /// </summary>
+        IModelMicrostation ModelMicrostation { get; }
+
+        /// <summary>
         /// Коэффициент преобразования координат в текущие относительно родительского элемента
         /// </summary>
         double UnitScale { get; }
