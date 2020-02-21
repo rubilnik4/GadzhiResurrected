@@ -40,8 +40,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public void DeleteSignaturesPrevious()
         {
-            var signaturesElements = GetSubElements().Where(subElement => subElement.ElementType == ElementMicrostationType.CellElement);
+            var signaturesElements = OwnerContainerMicrostation.ModelMicrostation.
+                                     GetModelElementsMicrostation().Where(subElement => 
+                                            subElement.ElementType == ElementMicrostationType.CellElement);
 
+           foreach (var signature in signaturesElements)
+            {
+                signature.Remove();
+            }
         }
 
         /// <summary>

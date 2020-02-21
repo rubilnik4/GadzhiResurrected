@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Helpers.Converters
 {
-    public static class ConverterErrorTypeToString
+    public static class ConvertErrorTypeToString
     {
         /// <summary>
         /// Словарь типов ошибок в строком значении

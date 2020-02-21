@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Extensions.StringAdditional;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace GadzhiMicrostation.Models.StampCollections
 {
@@ -88,5 +89,17 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// </summary>      
         public static string GetFormatFromField(string fieldText) =>
              fieldText?.TrimSubstring("Формат").Trim();
+
+        /// <summary>
+        /// Определить яляется ли строка названием ячейки штампа
+        /// </summary>       
+        public static bool IsStampName(string name)
+        {
+            string cellElementName = name.ToUpper(CultureInfo.CurrentCulture);
+
+            return cellElementName.StartsWith("STAMP", StringComparison.Ordinal) &&
+                   !cellElementName.Contains("STAMP_AUDIT") &&
+                   !cellElementName.Contains("STAMP_ISM");
+        }
     }
 }

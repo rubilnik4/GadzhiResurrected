@@ -114,9 +114,20 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             _fileConvertErrorType.Add(fileConvertErrorType);
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is FileDataServer fileDataServer &&
+                   Equals(fileDataServer);
+        }
+
         public bool Equals(FileDataServer other)
         {
-            return FilePathServer == other.FilePathServer;
+            return FilePathServer == other?.FilePathServer;
+        }
+
+        public override int GetHashCode()
+        {
+           return -1576186305 + FilePathServer.GetHashCode();
         }
     }
 }

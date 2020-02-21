@@ -32,8 +32,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         private void FillDataFields()
         {
-            var subTextElements = GetSubElements().Where(subElement => subElement.ElementType == ElementMicrostationType.TextElement ||
-                                                                       subElement.ElementType == ElementMicrostationType.TextNodeElement);
+            var subTextElements = GetSubElements()?.Where(subElement => subElement.ElementType == ElementMicrostationType.TextElement ||
+                                                                        subElement.ElementType == ElementMicrostationType.TextNodeElement);
             foreach (var subElement in subTextElements)
             {
                 if (StampElement.ContainControlName(subElement.AttributeControlName))
@@ -101,7 +101,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                     case ElementMicrostationType.TextNodeElement:
                         if (element.AsTextNodeElementMicrostation.CompressRange())
                         {
-                            FindAndChangeSubElement(element.Id);
+                            FindAndChangeSubElement(element.Id);                           
                         }
                         break;
                 }

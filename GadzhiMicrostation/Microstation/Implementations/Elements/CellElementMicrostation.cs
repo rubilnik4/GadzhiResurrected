@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using MicroStationDGN;
@@ -23,6 +24,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         {
             CellElement = cellElement;
         }
+
+        /// <summary>
+        /// Имя ячейки
+        /// </summary>
+        public string Name => CellElement.Name;
 
         /// <summary>
         /// Масштаб штампа
@@ -50,19 +56,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
                 while (elementEnumerator.MoveNext())
                 {
-                    var element = (Element)elementEnumerator.Current;
-                    if (element.IsTextElement)
+                    var microstationElement = ConvertMicrostationElements.ConvertToMicrostationElement((Element)elementEnumerator.Current, this);
+                    if (microstationElement != null)
                     {
-                        yield return new TextElementMicrostation((TextElement)element, this);
+                        yield return microstationElement;
                     }
-                    else if (element.IsTextNodeElement)
-                    {
-                        yield return new TextNodeElementMicrostation((TextNodeElement)element, this);
-                    }
-                    else if (element.IsCellElement)
-                    {
-                        yield return new CellElementMicrostation((CellElement)element, this);
-                    }
+
                 }
             }
         }

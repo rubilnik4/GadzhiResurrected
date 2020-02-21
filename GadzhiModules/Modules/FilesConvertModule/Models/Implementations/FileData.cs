@@ -69,12 +69,30 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// </summary>
         public void ChangeByFileStatus(FileStatus fileStatus)
         {
-            StatusProcessing = fileStatus.StatusProcessing; ;
+            if (fileStatus != null)
+            {
+                StatusProcessing = fileStatus.StatusProcessing;
+            }
+           else
+            {
+                throw new ArgumentNullException(nameof(fileStatus));
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is FileData fileData &&
+                   Equals(fileData);
         }
 
         public bool Equals(FileData other)
         {
-            return FilePath == other.FilePath;
+            return other?.FilePath == FilePath;
+        }
+
+        public override int GetHashCode()
+        {
+            return 1230029444 + FilePath.GetHashCode();
         }
     }
 }

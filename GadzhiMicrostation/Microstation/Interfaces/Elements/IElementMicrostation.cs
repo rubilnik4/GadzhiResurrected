@@ -49,6 +49,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);
 
         /// <summary>
+        /// Удалить текущий элемент
+        /// </summary>
+        void Remove();
+
+        /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>    
         string GetAttributeById(ElementMicrostationAttributes elementAttributes);

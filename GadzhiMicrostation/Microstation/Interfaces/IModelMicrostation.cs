@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
+using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
@@ -26,9 +27,24 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         double UnitScale { get; }
 
         /// <summary>
+        /// Найти элементы в модели по типу
+        /// </summary>       
+        IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation);
+
+        /// <summary>
+        /// Найти элементы в модели по типам
+        /// </summary>       
+        IEnumerable<IElementMicrostation> GetModelElementsMicrostation(IEnumerable<ElementMicrostationType> includeTypesMicrostation = null);
+
+        /// <summary>
         /// Найти штампы в модели
         /// </summary>    
         IEnumerable<IStamp> FindStamps();
+
+        /// <summary>
+        /// Удалить элемент
+        /// </summary>      
+        void RemoveElement(long id);
 
         /// <summary>
         /// Преобразовать к виду родительского элемента

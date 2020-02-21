@@ -18,7 +18,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             if(errorMicrostation != null)
             {
                 string messageText = "Ошибка | " +
-                                 ConverterErrorTypeToString.ConvertErrorMicrostationTypeToString(errorMicrostation.ErrorMicrostationType) + "\n" +
+                                 ConvertErrorTypeToString.ConvertErrorMicrostationTypeToString(errorMicrostation.ErrorMicrostationType) + "\n" +
                                  errorMicrostation.ErrorDescription;
 
                 Console.WriteLine(messageText);

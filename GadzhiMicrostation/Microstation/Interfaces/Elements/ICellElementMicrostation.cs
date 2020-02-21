@@ -5,6 +5,9 @@
     /// </summary>
     public interface ICellElementMicrostation : IRangeBaseElementMicrostation
     {
-
+        /// <summary>
+        /// Имя ячейки
+        /// </summary>
+        string Name { get; }
     }
 }

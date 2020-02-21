@@ -122,6 +122,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Удалить текущий элемент
+        /// </summary>
+        public void Remove()
+        {         
+            ModelMicrostation.RemoveElement(Id);
+        }
+
+        /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>       
         public string GetAttributeById(ElementMicrostationAttributes elementAttributes) =>
