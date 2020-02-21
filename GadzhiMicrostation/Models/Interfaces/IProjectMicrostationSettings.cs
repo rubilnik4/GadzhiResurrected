@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Models.Interfaces
 {
@@ -13,6 +10,6 @@ namespace GadzhiMicrostation.Models.Interfaces
         /// <summary>
         /// Список допустимых расширений для конвертации
         /// </summary>
-        IList<string> AllowedFileTypes { get; }      
+        IList<string> AllowedFileTypes { get; }
     }
 }

@@ -1,12 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
-using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Extensions.Microstation
 {

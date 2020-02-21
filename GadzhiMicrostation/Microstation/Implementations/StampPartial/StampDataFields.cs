@@ -1,14 +1,9 @@
-﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.StampCollections;
-using MicroStationDGN;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
 {
@@ -105,7 +100,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                         break;
                     case ElementMicrostationType.TextNodeElement:
                         if (element.AsTextNodeElementMicrostation.CompressRange())
-                        {                          
+                        {
                             FindAndChangeSubElement(element.Id);
                         }
                         break;

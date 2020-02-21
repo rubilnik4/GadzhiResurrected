@@ -1,12 +1,10 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace GadzhiCommonServer.Infrastructure.Implementations
 {
@@ -27,7 +25,7 @@ namespace GadzhiCommonServer.Infrastructure.Implementations
 
             bool isValidName = !String.IsNullOrWhiteSpace(fileName);
             bool isValidExtension = !String.IsNullOrWhiteSpace(fileExtension) &&
-                                    ValidFileExtentions.DocAndDgnFileTypes.Contains(fileExtension);          
+                                    ValidFileExtentions.DocAndDgnFileTypes.Contains(fileExtension);
             bool isValidDataSource = fileDataRequest?.FileDataSource != null;
 
             if (!isValidName)

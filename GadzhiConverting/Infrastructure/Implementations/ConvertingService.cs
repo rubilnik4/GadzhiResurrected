@@ -7,9 +7,6 @@ using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -17,7 +14,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// <summary>
     /// Запуск процесса конвертирования
     /// </summary>
-    public class ConvertingService : IConvertingService
+    public class ConvertingService : IConvertingService, IDisposable
     {
         /// <summary>
         ///Контейнер зависимостей
@@ -59,6 +56,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary> 
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
+        /// <summary>
+        /// Идентефикатор конвертируемого пакета
+        /// </summary>
+        private Guid? _idPackage;
+
         public ConvertingService(IConvertingFileData convertingFileData,
                                  IProjectSettings projectSettings,
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
@@ -76,6 +78,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _messageAndLoggingService = messageAndLoggingService;
             _fileSystemOperations = fileSystemOperations;
             _executeAndCatchErrors = executeAndCatchErrors;
+
+            _idPackage = null;
         }
 
         /// <summary>
@@ -94,6 +98,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 if (filesDataRequest != null)
                 {
                     FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
+                    _idPackage = filesDataServer.Id;
 
                     await ConvertingPackage(filesDataServer);
                 }
@@ -181,7 +186,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
                    Operations.
                    UpdateFromResponse(filesDataResponse);
 
-            _messageAndLoggingService.ShowMessage($"Конвертация пакета закончена" + "\n");
+            _messageAndLoggingService.ShowMessage($"Конвертация пакета закончена");
+        }
+
+        private async Task AbortConverting(bool isDispose)
+        {
+            _messageAndLoggingService.ShowMessage($"Отмена выполнения конвертирования");
+
+            if (_idPackage.HasValue)
+            {
+                await _fileConvertingServerService?.Operations.AbortConvertingById(_idPackage.Value);
+            }
+            if (isDispose)
+            {
+                _fileConvertingServerService?.Dispose();
+            }
         }
         #endregion
 
@@ -211,7 +230,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private async Task QueueIsEmpty()
         {
             await Task.Delay(500);
-            _messageAndLoggingService.ShowMessage("Очередь пакетов пуста..." + "\n");
+            _messageAndLoggingService.ShowMessage("Очередь пакетов пуста...");
         }
 
         /// <summary>
@@ -228,5 +247,33 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             return isDataBaseExist;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+                AbortConverting(true).ConfigureAwait(false);
+
+                disposedValue = true;
+            }
+        }
+
+        ~ConvertingService()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

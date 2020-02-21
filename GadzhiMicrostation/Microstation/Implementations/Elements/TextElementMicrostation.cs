@@ -1,14 +1,8 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -35,7 +29,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             : base((Element)textElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
             _textElement = textElement;
-
         }
 
         /// <summary>

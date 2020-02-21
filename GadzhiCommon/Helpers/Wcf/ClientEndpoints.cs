@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.ServiceModel.Configuration;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiCommon.Helpers.Wcf
 {
@@ -13,7 +10,7 @@ namespace GadzhiCommon.Helpers.Wcf
     /// </summary>
     public class ClientEndpoints
     {
-        private readonly ClientSection _clientSection = 
+        private readonly ClientSection _clientSection =
             ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
 
         /// <summary>

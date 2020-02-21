@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace GadzhiMicrostation.Models.StampCollections
 {
@@ -11,7 +8,7 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// Дополнительные параметры штампа
     /// </summary>
     public static class StampAdditionalParameters
-    { 
+    {
         /// <summary>
         /// Папка с ресурсами и библиотеками
         /// </summary>
@@ -21,7 +18,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// Имя библиотеки с подписями
         /// </summary>
         public static string SignatureLibraryPath => MicrostationDataFolder + "Signature.cel";
-       
+
         /// <summary>
         /// Имя библиотеки со штампами
         /// </summary>

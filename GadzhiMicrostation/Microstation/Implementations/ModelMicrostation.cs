@@ -1,13 +1,11 @@
-﻿using GadzhiMicrostation.Microstation.Implementations.StampPartial;
+﻿using GadzhiMicrostation.Microstation.Implementations.Elements;
+using GadzhiMicrostation.Microstation.Implementations.StampPartial;
 using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using MicroStationDGN;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -16,7 +14,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
     /// </summary>
     public class ModelMicrostation : IModelMicrostation
     {
-       
+
 
         /// <summary>
         /// Экземпляр модели или листа
@@ -28,14 +26,10 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
 
-        /// <summary>
-        /// Модель или лист в файле. Ссылка для иерархических элементов
-        /// </summary>
-        IModelMicrostation IOwnerContainerMicrostation.ModelMicrostation => this;
 
         public ModelMicrostation(ModelReference modelMicrostation,
                                  IApplicationMicrostation applicationMicrostation)
-        {           
+        {
             _modelMicrostation = modelMicrostation;
             ApplicationMicrostation = applicationMicrostation;
         }
@@ -82,10 +76,18 @@ namespace GadzhiMicrostation.Microstation.Implementations
                         !cellElementName.Contains("STAMP_AUDIT") &&
                         !cellElementName.Contains("STAMP_ISM"))
                     {
-                        yield return new Stamp(cellElement, this);
+                        yield return new Stamp(cellElement, ToOwnerContainerMicrostation());
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Преобразовать к виду родительского элемента
+        /// </summary>      
+        public IOwnerContainerMicrostation ToOwnerContainerMicrostation()
+        {
+            return new OwnerContainerMicrostation(this);
         }
     }
 }

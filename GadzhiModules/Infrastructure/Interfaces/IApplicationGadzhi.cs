@@ -2,9 +2,7 @@
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Interfaces
@@ -12,7 +10,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
     /// <summary>
     /// Слой приложения, инфраструктура
     /// </summary>
-    public interface IApplicationGadzhi: IDisposable
+    public interface IApplicationGadzhi : IDisposable
     {
         /// <summary>
         /// Подписка на изменение коллекции
@@ -58,6 +56,6 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Сбросить индикаторы конвертации
         /// </summary>
-        void AbortPropertiesConverting();      
+        Task AbortPropertiesConverting(bool isDispose = false);
     }
 }

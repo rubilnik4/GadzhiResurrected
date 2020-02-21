@@ -1,16 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
-using GadzhiModules.Helpers;
-using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
@@ -76,7 +69,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// </summary>
         public void ChangeByFileStatus(FileStatus fileStatus)
         {
-            StatusProcessing = fileStatus.StatusProcessing;          ;
+            StatusProcessing = fileStatus.StatusProcessing; ;
         }
 
         public bool Equals(FileData other)

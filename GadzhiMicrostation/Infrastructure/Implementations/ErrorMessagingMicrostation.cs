@@ -1,22 +1,19 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Infrastructure.Implementations
 {
     /// <summary>
     /// Сообщения об ошибках
     /// </summary>
-    public class ErrorMessagingMicrostation: IErrorMessagingMicrostation
+    public class ErrorMessagingMicrostation : IErrorMessagingMicrostation
     {
         /// <summary>
         /// Модель хранения данных конвертации
         /// </summary>
-        private readonly  IMicrostationProject _microstationProject;
+        private readonly IMicrostationProject _microstationProject;
 
         /// <summary>
         /// Отображение системных сообщений

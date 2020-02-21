@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
-using GadzhiModules.Modules.FilesConvertModule.Models;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+﻿using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace GadzhiTest.Modules.FilesConvertModule.Model
 {
@@ -18,7 +16,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange     
             string filePath = "C:\\folder\\firstName.doc";
-            var fileDataFirst = new FileData(filePath);          
+            var fileDataFirst = new FileData(filePath);
 
             // Assert   
             Assert.AreEqual(fileDataFirst.FileName, "firstName");

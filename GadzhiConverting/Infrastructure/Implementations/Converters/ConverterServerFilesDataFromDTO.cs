@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Helpers;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
@@ -9,9 +8,7 @@ using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -19,7 +16,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// <summary>
     /// Конвертер из трансферной модели в серверную
     /// </summary>      
-    public class ConverterServerFilesDataFromDTO: IConverterServerFilesDataFromDTO
+    public class ConverterServerFilesDataFromDTO : IConverterServerFilesDataFromDTO
     {
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -44,7 +41,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         public async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
-                                               ConvertToFileDataServerAndSaveFile(fileDTO, 
+                                               ConvertToFileDataServerAndSaveFile(fileDTO,
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
@@ -70,19 +67,19 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequestServer fileDataRequest, 
+        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequestServer fileDataRequest,
                                                                   string packageGuid)
         {
             var fileSavedCheck = new FileSavedCheck();
-            
+
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid((FileDataRequestBase)fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, 
+                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory,
                                                                                                   packageGuid);
                 if (isCreated)
                 {
-                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, 
+                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath,
                                                                                    Guid.NewGuid().ToString(),
                                                                                    FileHelpers.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
                     fileSavedCheck.IsSaved = await _fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);

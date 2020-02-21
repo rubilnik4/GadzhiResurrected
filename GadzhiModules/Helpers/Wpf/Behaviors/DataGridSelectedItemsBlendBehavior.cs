@@ -1,13 +1,5 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Models;
-using Microsoft.Xaml.Behaviors;
-using System;
+﻿using Microsoft.Xaml.Behaviors;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -41,5 +33,5 @@ namespace GadzhiModules.Helpers.Wpf.Behaviors
             get { return (IList)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); }
         }
-    }   
+    }
 }

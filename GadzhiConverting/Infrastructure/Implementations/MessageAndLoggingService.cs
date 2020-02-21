@@ -2,10 +2,6 @@
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -14,12 +10,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// </summary>
     public class MessageAndLoggingService : IMessageAndLoggingService
     {
-      
+
         public MessageAndLoggingService()
         {
-           
+
         }
-       
+
         private readonly string _separator = "\n" + "------------------------------------------" + "\n";
 
         /// <summary>
@@ -41,7 +37,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public void ShowMessage(string message)
         {
-            string messageText = message;
+            string messageText = message + "\n";
 
             Console.WriteLine(messageText);
         }

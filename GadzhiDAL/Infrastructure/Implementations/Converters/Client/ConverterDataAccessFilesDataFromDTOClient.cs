@@ -1,11 +1,7 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
 {
@@ -39,7 +35,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Конвертер информации из трансферной модели в единичный класс базы данных
         /// </summary>      
         private FileDataEntity ConvertToFileDataAccess(FileDataRequestClient fileDataRequest)
-        {           
+        {
             return new FileDataEntity()
             {
                 ColorPrint = fileDataRequest.ColorPrint,
@@ -47,6 +43,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FileDataSource = fileDataRequest.FileDataSource,
             };
         }
-      
+
     }
 }

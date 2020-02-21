@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+﻿using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiTest.Modules.FilesConvertModule.Model
 {
@@ -78,7 +77,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         /// <summary>
         /// Проверка при добавлении списка с пустыми полями
         /// </summary>
-        [TestMethod]       
+        [TestMethod]
         public void AddFiles_ByIEnumerableFileData_AddListWithNull_NoException()
         {
             // Arrange     
@@ -157,7 +156,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Arrange     
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
             FilesData filesInfoProject = new FilesData(files);
-            var filesToAdd = DefaultFileData.FileDataToTestFourPositions; 
+            var filesToAdd = DefaultFileData.FileDataToTestFourPositions;
 
             // Act  
             filesInfoProject.AddFiles(filesToAdd);

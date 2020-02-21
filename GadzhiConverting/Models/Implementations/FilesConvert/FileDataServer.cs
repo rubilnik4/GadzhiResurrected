@@ -2,11 +2,7 @@
 using GadzhiCommon.Helpers.FileSystem;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiConverting.Models.FilesConvert.Implementations
 {
@@ -26,14 +22,14 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
 
         }
 
-        public FileDataServer(string filePathServer, 
-                              string filePathClient, 
-                              ColorPrint colorPrint, 
+        public FileDataServer(string filePathServer,
+                              string filePathClient,
+                              ColorPrint colorPrint,
                               IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
             string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePathServer);
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);
-           
+
             FileExtension = fileType;
             FileName = fileName;
             FilePathServer = filePathServer;

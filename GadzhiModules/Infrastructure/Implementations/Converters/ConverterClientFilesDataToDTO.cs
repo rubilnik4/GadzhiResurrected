@@ -2,11 +2,7 @@
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
@@ -14,7 +10,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
     /// <summary>
     /// Конвертеры из локальной модели в трансферную
     /// </summary>  
-    public class ConverterClientFilesDataToDTO: IConverterClientFilesDataToDTO
+    public class ConverterClientFilesDataToDTO : IConverterClientFilesDataToDTO
     {
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -25,7 +21,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         {
             FileSystemOperations = fileSystemOperations;
         }
-       
+
         /// <summary>
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
@@ -51,8 +47,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
 
             return new FileDataRequestClient()
             {
-                ColorPrint = fileData.ColorPrint,               
-                FilePath = fileData.FilePath,              
+                ColorPrint = fileData.ColorPrint,
+                FilePath = fileData.FilePath,
                 StatusProcessing = fileData.StatusProcessing,
                 FileDataSource = fileDataSource,
             };

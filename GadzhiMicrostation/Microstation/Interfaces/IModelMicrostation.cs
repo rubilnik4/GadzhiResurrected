@@ -1,17 +1,13 @@
-﻿using GadzhiMicrostation.Microstation.Implementations.Units;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
 {
     /// <summary>
     /// Модель или лист в файле
     /// </summary>
-    public interface IModelMicrostation: IOwnerContainerMicrostation
+    public interface IModelMicrostation
     {
         /// <summary>
         /// Порядковый идентефикационный номер
@@ -19,8 +15,23 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         string IdName { get; }
 
         /// <summary>
+        /// Класс для работы с приложением Microstation
+        /// </summary>
+        IApplicationMicrostation ApplicationMicrostation { get; }
+
+        /// <summary>
+        /// Коэффициент преобразования координат в текущие относительно родительского элемента
+        /// </summary>
+        double UnitScale { get; }
+
+        /// <summary>
         /// Найти штампы в модели
         /// </summary>    
         IEnumerable<IStamp> FindStamps();
+
+        /// <summary>
+        /// Преобразовать к виду родительского элемента
+        /// </summary>      
+        IOwnerContainerMicrostation ToOwnerContainerMicrostation();
     }
 }

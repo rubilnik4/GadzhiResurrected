@@ -1,15 +1,9 @@
 ﻿using GadzhiDAL.Services.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiWcfHost.Infrastructure.Interfaces;
 using GadzhiWcfHost.Infrastructure.Interfaces.Client;
 using Microsoft.VisualStudio.Threading;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
@@ -84,14 +78,17 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         {
             if (!_authentication.IsClosed)
             {
-                await _filesDataClientService?.AbortConvertingById(id);
+                if (_authentication.Id != Guid.Empty)
+                {
+                    await _filesDataClientService?.AbortConvertingById(id);
+                }
                 _authentication.IsClosed = true;
             }
-        }       
+        }
 
         public async Task DisposeAsync()
         {
-            await AbortConvertingById(_authentication.Id);            
+            await AbortConvertingById(_authentication.Id);
         }
     }
 }

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Helpers.Converters
 {
@@ -23,7 +21,7 @@ namespace GadzhiModules.Helpers.Converters
                 { StatusProcessing.Writing , "Записываем" },
                 { StatusProcessing.End, "Готово" },
                 { StatusProcessing.Error, "Ошибочка" },
-            };      
+            };
 
         /// <summary>
         /// Преобразовать статус в наименование

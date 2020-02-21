@@ -1,11 +1,6 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Client
 {
@@ -23,6 +18,6 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
-        FilesDataResponseClient ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);      
+        FilesDataResponseClient ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);
     }
 }

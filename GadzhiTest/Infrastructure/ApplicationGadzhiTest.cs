@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ChannelAdam.ServiceModel;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Infrastructure.Implementations;
-using ChannelAdam.ServiceModel;
-using GadzhiDTOClient.Contracts.FilesConvert;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GadzhiTest
 {

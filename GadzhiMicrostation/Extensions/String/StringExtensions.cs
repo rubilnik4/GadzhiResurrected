@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace GadzhiMicrostation.Extensions.String
 {
@@ -14,7 +11,7 @@ namespace GadzhiMicrostation.Extensions.String
         /// Удалить часть строки
         /// </summary>       
         public static string TrimSubstring(this string stringOriginal, string substring)
-        {            
+        {
             if (substring != null && substring.Length > 0 &&
                 stringOriginal?.StartsWith(substring) == true)
             {
@@ -44,7 +41,7 @@ namespace GadzhiMicrostation.Extensions.String
             switch (input)
             {
                 case null: return "";
-                case "": return  "";
+                case "": return "";
                 default: return input.First().ToString().ToLower() + input.Substring(1);
             }
         }

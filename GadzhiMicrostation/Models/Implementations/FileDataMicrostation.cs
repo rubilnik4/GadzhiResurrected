@@ -1,9 +1,5 @@
 ﻿using GadzhiMicrostation.Models.Enum;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 
 namespace GadzhiMicrostation.Models.Implementations
@@ -13,18 +9,18 @@ namespace GadzhiMicrostation.Models.Implementations
     /// </summary>
     public class FileDataMicrostation
     {
-        public FileDataMicrostation(string filePathServer, 
-                                    string filePathClient, 
+        public FileDataMicrostation(string filePathServer,
+                                    string filePathClient,
                                     ColorPrint colorPrint)
         {
-            string fileType = Path.GetExtension(filePathServer).Trim ('.');
+            string fileType = Path.GetExtension(filePathServer).Trim('.');
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);
-           
+
             FileExtension = fileType;
             FileName = fileName;
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
-            ColorPrint = colorPrint;           
+            ColorPrint = colorPrint;
         }
 
         /// <summary>
@@ -55,6 +51,6 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; }  
+        public ColorPrint ColorPrint { get; }
     }
 }

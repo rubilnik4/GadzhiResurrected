@@ -1,29 +1,27 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using System.Windows;
-using GadzhiCommon.Infrastructure.Interfaces;
-using System.Reactive.Linq;
-using System;
+﻿using ChannelAdam.ServiceModel;
 using GadzhiCommon.Helpers.Dialogs;
-using System.Reactive.Disposables;
-using ChannelAdam.ServiceModel;
-using GadzhiModules.Infrastructure.Implementations.Information;
-using System.Reactive.Subjects;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
+using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
+using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
     /// <summary>
     /// Слой приложения, инфраструктура
     /// </summary>
-    public class ApplicationGadzhi : IApplicationGadzhi, IDisposable
+    public sealed class ApplicationGadzhi : IApplicationGadzhi, IDisposable
     {
         /// <summary>
         /// Модель конвертируемых файлов
@@ -89,7 +87,7 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             _statusProcessingUpdaterSubsriptions = new CompositeDisposable();
 
-           // SubsribeToIntermediateResponse();
+            // SubsribeToIntermediateResponse();
         }
 
         /// <summary>
@@ -100,7 +98,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Выполняется ли промежуточный запрос
         /// </summary 
-        private bool IsIntermediateResponseInProgress { get; set; }       
+        private bool IsIntermediateResponseInProgress { get; set; }
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -183,7 +181,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 {
                     return;
                 }
-            }          
+            }
             Application.Current.Shutdown();
         }
 
@@ -208,7 +206,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 }
                 else
                 {
-                    AbortPropertiesConverting();
+                    await AbortPropertiesConverting(false);
                     _dialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
                 }
             }
@@ -248,9 +246,9 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                     Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
                                                     Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                                                     Subscribe(async _ => await _executeAndCatchErrors.
-                                                                               ExecuteAndHandleErrorAsync(UpdateStatusProcessing, 
+                                                                               ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
                                                                                                           () => IsIntermediateResponseInProgress = true,
-                                                                                                          AbortPropertiesConverting,
+                                                                                                          async () => await AbortPropertiesConverting(false),
                                                                                                           () => IsIntermediateResponseInProgress = false)));
         }
 
@@ -269,7 +267,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             {
                 ClearSubsriptions();
                 await GetCompleteFiles();
-            }         
+            }
         }
 
         /// <summary>
@@ -301,21 +299,32 @@ namespace GadzhiModules.Infrastructure.Implementations
             if (_statusProcessingInformation?.IsConverting == true)
             {
                 await _fileConvertingClientService?.Operations?.AbortConvertingById(_filesInfoProject.Id);
-            }           
+            }
         }
 
         /// <summary>
         /// Сбросить индикаторы конвертации
         /// </summary>
-        public void AbortPropertiesConverting()
+        public async Task AbortPropertiesConverting(bool isDispose = false)
         {
             IsIntermediateResponseInProgress = false;
 
-            //не дожидаться завершения операции
-            AbortConverting().ConfigureAwait(false);                                 
+            await AbortPropertiesConvertingUnmanage(isDispose);
 
             ClearSubsriptions();
             _filesInfoProject?.ChangeAllFilesStatusAndMarkError();
+        }
+
+        /// <summary>
+        /// Сбросить индикаторы конвертации неуправляемые ресурсы
+        /// </summary>
+        public async Task AbortPropertiesConvertingUnmanage(bool isDispose)
+        {
+            await AbortConverting();
+            if (isDispose)
+            {
+                _fileConvertingClientService?.Dispose();
+            }
         }
 
         /// <summary>
@@ -327,10 +336,32 @@ namespace GadzhiModules.Infrastructure.Implementations
         }
         #endregion
 
-        public void Dispose()
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_statusProcessingUpdaterSubsriptions")]
+        void Dispose(bool disposing)
         {
-            AbortPropertiesConverting();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    AbortPropertiesConverting(true).ConfigureAwait(false);
+                }
+                AbortPropertiesConvertingUnmanage(true).ConfigureAwait(false);
+                disposedValue = true;
+            }
         }
 
+        ~ApplicationGadzhi()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion      
     }
 }

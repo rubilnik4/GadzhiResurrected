@@ -1,8 +1,4 @@
 ﻿using GadzhiMicrostation.Models.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Infrastructure.Interfaces
 {
@@ -19,6 +15,6 @@ namespace GadzhiMicrostation.Infrastructure.Interfaces
         /// <summary>
         /// Отобразить сообщение
         /// </summary>
-        void ShowMessage(string message); 
+        void ShowMessage(string message);
     }
 }

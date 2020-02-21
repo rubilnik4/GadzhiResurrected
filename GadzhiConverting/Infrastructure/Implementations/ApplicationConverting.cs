@@ -1,20 +1,16 @@
 ﻿using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
     /// <summary>
     /// Инфраструктура для конвертирования файлов
     /// </summary>
-    public class ApplicationConverting : IApplicationConverting, IDisposable
+    public sealed class ApplicationConverting : IApplicationConverting, IDisposable
     {
         /// <summary>
         ///Контейнер зависимостей
@@ -24,7 +20,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Параметры приложения
         /// </summary>
-        private readonly IProjectSettings _projectSettings;       
+        private readonly IProjectSettings _projectSettings;
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -42,12 +38,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly CompositeDisposable _convertingUpdaterSubsriptions;
 
         public ApplicationConverting(IConvertingService convertingService,
-                                     IProjectSettings projectSettings,                                    
+                                     IProjectSettings projectSettings,
                                      IMessageAndLoggingService messageAndLoggingService,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
         {
             _convertingService = convertingService;
-            _projectSettings = projectSettings;          
+            _projectSettings = projectSettings;
             _messageAndLoggingService = messageAndLoggingService;
             _executeAndCatchErrors = executeAndCatchErrors;
 
@@ -78,9 +74,27 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                 ApplicationFinallyMethod: () => IsConverting = false)));
         }
 
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_convertingUpdaterSubsriptions")]
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _convertingUpdaterSubsriptions?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            _convertingUpdaterSubsriptions?.Dispose();
+            Dispose(true);
         }
+        #endregion       
     }
 }

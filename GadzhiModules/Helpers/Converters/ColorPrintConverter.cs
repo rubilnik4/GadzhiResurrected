@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Helpers.Converters
 {
@@ -23,11 +21,11 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать цветовое значение в наименование цвета
         /// </summary>       
-        public static string ConvertColorPrintToString (ColorPrint colorPrint)
+        public static string ConvertColorPrintToString(ColorPrint colorPrint)
         {
             string colorPrintString = String.Empty;
             ColorPrintToString?.TryGetValue(colorPrint, out colorPrintString);
-           
+
             return colorPrintString;
         }
 
@@ -36,8 +34,8 @@ namespace GadzhiModules.Helpers.Converters
         /// </summary>       
         public static ColorPrint ConvertStringToColorPrint(string colorPrint)
         {
-            ColorPrint colorPrintOut = ColorPrintToString?.FirstOrDefault(color => color.Value == colorPrint).Key ?? 
-                                                           ColorPrint.BlackAndWhite;             
+            ColorPrint colorPrintOut = ColorPrintToString?.FirstOrDefault(color => color.Value == colorPrint).Key ??
+                                                           ColorPrint.BlackAndWhite;
 
             return colorPrintOut;
         }

@@ -6,9 +6,7 @@ using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
@@ -92,7 +90,7 @@ namespace GadzhiDAL.Services.Implementations
                                                   LoadAsync<FilesDataEntity>(id.ToString());
 
                 filesDataResponse = _converterDataAccessFilesDataToDTOClient.
-                                        ConvertFilesDataAccessToResponse(filesDataEntity);              
+                                        ConvertFilesDataAccessToResponse(filesDataEntity);
             }
 
             return filesDataResponse;
@@ -122,7 +120,7 @@ namespace GadzhiDAL.Services.Implementations
         {
             var filesDataTask = unityOfWork.Session.Query<FilesDataEntity>().
                                                     Where(package => filesDataEntity != null &&
-                                                                     !package.IsCompleted &&                                                                   
+                                                                     !package.IsCompleted &&
                                                                      package.CreationDateTime < filesDataEntity.CreationDateTime);
 
             int packagesInQueueCount = await filesDataTask?.CountAsync();

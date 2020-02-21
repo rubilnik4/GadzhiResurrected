@@ -1,10 +1,5 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Interfaces.Converters
@@ -29,6 +24,6 @@ namespace GadzhiModules.Infrastructure.Interfaces.Converters
         /// Конвертер пакета информации из трансферной модели в класс клиентской части и сохранение файлов
         /// </summary>      
         Task<FilesStatus> ConvertToFilesStatusAndSaveFiles(FilesDataResponseClient filesDataResponse);
-        
+
     }
 }

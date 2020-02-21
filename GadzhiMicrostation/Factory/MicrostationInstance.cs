@@ -1,9 +1,6 @@
 ﻿using MicroStationDGN;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Factory
 {
@@ -18,7 +15,7 @@ namespace GadzhiMicrostation.Factory
 
             var applicationObjectConnector = new ApplicationObjectConnector();
             var microstationapplication = applicationObjectConnector.Application;
-          
+
             SetPropertiesToApplication(microstationapplication);
 
             return microstationapplication;

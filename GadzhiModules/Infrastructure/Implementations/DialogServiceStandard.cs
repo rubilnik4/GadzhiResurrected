@@ -1,13 +1,10 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -67,7 +64,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         public void ShowError(FileConvertErrorType fileConvertErrorType, string fileConvertErrorDescription)
         {
-            string messageText =  "Ошибка" + "\n" +
+            string messageText = "Ошибка" + "\n" +
                                   ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(fileConvertErrorType) + "\n" +
                                   fileConvertErrorDescription;
 

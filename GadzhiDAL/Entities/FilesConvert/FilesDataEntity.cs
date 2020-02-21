@@ -3,8 +3,6 @@ using GadzhiCommonServer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDAL.Entities.FilesConvert
 {
@@ -36,7 +34,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// Время создания запроса на конвертирование
         /// </summary>
         public virtual DateTime CreationDateTime { get; set; }
-        
+
         /// <summary>
         /// Завершена ли обработка
         /// </summary>

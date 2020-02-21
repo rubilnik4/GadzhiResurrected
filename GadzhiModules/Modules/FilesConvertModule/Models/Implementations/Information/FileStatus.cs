@@ -1,9 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information
 {
@@ -14,7 +10,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Inform
     {
         public FileStatus(string filePath,
                           StatusProcessing statusProcessing,
-                          FileConvertErrorType error)           
+                          FileConvertErrorType error)
         {
             var errors = new List<FileConvertErrorType>();
             if (error != FileConvertErrorType.NoError)

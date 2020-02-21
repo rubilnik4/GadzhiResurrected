@@ -1,8 +1,6 @@
 ﻿using GadzhiCommon.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Interfaces
@@ -10,7 +8,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
     /// <summary>
     /// Стандартные диалоговые окна
     /// </summary>
-    public interface IDialogServiceStandard: IMessageAndLoggingService
+    public interface IDialogServiceStandard : IMessageAndLoggingService
     {
         /// <summary>
         /// Выбор файлов
@@ -20,7 +18,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Выбор папки
         /// </summary>     
-        Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect);           
+        Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect);
 
         /// <summary>
         /// Диалоговое окно с подтверждением

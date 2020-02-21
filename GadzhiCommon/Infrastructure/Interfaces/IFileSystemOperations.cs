@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GadzhiCommon.Infrastructure.Interfaces
@@ -34,7 +31,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        IEnumerable<string> GetDirectories(string directoryPath);        
+        IEnumerable<string> GetDirectories(string directoryPath);
 
         /// <summary>
         /// Получить вложенные файлы
@@ -69,6 +66,6 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName);  
+        (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName);
     }
 }

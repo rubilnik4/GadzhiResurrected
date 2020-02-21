@@ -1,9 +1,4 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 
 namespace GadzhiMicrostation.Infrastructure.Implementations.Converting
 {

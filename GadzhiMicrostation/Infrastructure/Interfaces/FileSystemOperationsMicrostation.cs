@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Infrastructure.Interface
 {
@@ -33,13 +30,13 @@ namespace GadzhiMicrostation.Infrastructure.Interface
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        IEnumerable<string> GetDirectories(string directoryPath);        
+        IEnumerable<string> GetDirectories(string directoryPath);
 
         /// <summary>
         /// Получить вложенные файлы
         /// </summary>        
         IEnumerable<string> GetFiles(string filePath);
-       
+
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       

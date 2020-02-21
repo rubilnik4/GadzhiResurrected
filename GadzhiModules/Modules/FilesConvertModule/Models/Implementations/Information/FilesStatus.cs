@@ -1,9 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information
 {
@@ -16,7 +13,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Inform
                            StatusProcessingProject statusProcessingProject,
                            FilesQueueStatus filesQueueStatus = null)
         {
-            FileStatus = fileData;         
+            FileStatus = fileData;
             StatusProcessingProject = statusProcessingProject;
             FilesQueueStatus = filesQueueStatus;
         }

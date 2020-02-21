@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GadzhiDAL.Models.Implementations
+﻿namespace GadzhiDAL.Models.Implementations
 {
     /// <summary>
     /// Информация о количестве файлов в очереди до текущего пакета

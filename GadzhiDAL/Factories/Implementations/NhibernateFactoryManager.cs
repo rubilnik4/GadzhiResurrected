@@ -1,17 +1,10 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiDAL.Mappings.FilesConvert;
-using Microsoft.Extensions.Configuration;
 using NHibernate;
-using NHibernate.Context;
 using NHibernate.Tool.hbm2ddl;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDAL.Factories.Implementations
 {
@@ -38,11 +31,11 @@ namespace GadzhiDAL.Factories.Implementations
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
-            }           
+            }
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(dataBasePath))
-                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<FilesDataMap>())               
+                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<FilesDataMap>())
                 .ExposeConfiguration(c =>
                 {
                     var schema = new SchemaUpdate(c);

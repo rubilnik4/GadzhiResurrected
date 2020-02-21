@@ -5,7 +5,6 @@ using MicroStationDGN;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -118,7 +117,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                                                    ElementMicrostationAttributes attributeId,
                                                                    string attributeValue)
         {
-            bool isAttributeFound = false;        
+            bool isAttributeFound = false;
             var dataBlocks = element?.GetUserAttributeData((int)ElementMicrostationAttributes.AttributesArray).
                                       Cast<DataBlock>().
                                       ToList();
@@ -136,8 +135,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
                     //аттрибуты не удаляются, а копятся. Не самое лучшее решение. Избегать установки аттрибутов                    
                     element.DeleteUserAttributeData(attributeIdFromDataBlock, (short)i);
                     DataBlockAddNewAttribute(element, attributeId, attributeValue);
-                
-                    isAttributeFound = true;                   
+
+                    isAttributeFound = true;
                 }
             }
 

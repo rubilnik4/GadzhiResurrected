@@ -1,8 +1,5 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiDAL.Services.Implementations
@@ -30,6 +27,6 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        Task AbortConvertingById(Guid id); 
+        Task AbortConvertingById(Guid id);
     }
 }

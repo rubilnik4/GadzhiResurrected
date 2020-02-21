@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Infrastructure.Implementations
 {
@@ -89,7 +86,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
             try
             {
-                if (!String.IsNullOrEmpty (filePath) && fileByte != null)
+                if (!String.IsNullOrEmpty(filePath) && fileByte != null)
                 {
                     File.WriteAllBytes(filePath, fileByte);
 

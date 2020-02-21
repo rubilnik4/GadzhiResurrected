@@ -6,10 +6,7 @@ using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
@@ -33,7 +30,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Конвертер из модели базы данных в трансферную
         /// </summary>
-        private readonly IConverterDataAccessFilesDataToDTOServer _converterDataAccessFilesDataToDTOServer;     
+        private readonly IConverterDataAccessFilesDataToDTOServer _converterDataAccessFilesDataToDTOServer;
 
         public FilesDataServerService(IUnityContainer container,
                                       IConverterDataAccessFilesDataFromDTOServer converterDataAccessFilesDataFromDTOServer,
@@ -42,7 +39,7 @@ namespace GadzhiDAL.Services.Implementations
 
             _container = container;
             _converterDataAccessFilesDataFromDTOServer = converterDataAccessFilesDataFromDTOServer;
-            _converterDataAccessFilesDataToDTOServer = converterDataAccessFilesDataToDTOServer;           
+            _converterDataAccessFilesDataToDTOServer = converterDataAccessFilesDataToDTOServer;
         }
 
         /// <summary>

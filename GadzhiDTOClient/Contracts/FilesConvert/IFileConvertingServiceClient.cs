@@ -1,9 +1,6 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiDTOClient.Contracts.FilesConvert
@@ -40,7 +37,7 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// </summary>   
         [OperationContract(IsInitiating = false,
                           IsTerminating = true)]
-        Task AbortConvertingById(Guid id);       
+        Task AbortConvertingById(Guid id);
     }
 }
 

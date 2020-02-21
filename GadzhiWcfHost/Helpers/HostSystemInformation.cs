@@ -1,9 +1,5 @@
 ﻿using GadzhiCommonServer.Infrastructure.Implementations;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 
 namespace GadzhiWcfHost.Helpers
 {
@@ -15,7 +11,7 @@ namespace GadzhiWcfHost.Helpers
             {
                 string hostPath = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
                 var directoryPath = new DirectoryInfo(hostPath);
-                string dataBasePath = directoryPath.Parent.FullName + "\\" + 
+                string dataBasePath = directoryPath.Parent.FullName + "\\" +
                                       SettingsServer.DataBaseDirectoryDefault + "\\" +
                                       SettingsServer.DataBaseNameDefault;
                 return dataBasePath;

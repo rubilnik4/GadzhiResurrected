@@ -2,15 +2,11 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.FilesConvert.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
-    public class ConvertingFileData: IConvertingFileData
+    public class ConvertingFileData : IConvertingFileData
     {
         /// <summary>
         /// Класс для отображения изменений и логгирования

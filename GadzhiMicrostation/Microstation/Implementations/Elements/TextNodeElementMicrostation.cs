@@ -1,13 +1,9 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -55,7 +51,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             {
                 textElement.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
             });
-        }       
+        }
 
         /// <summary>
         /// Вписать текстовое поле в рамку

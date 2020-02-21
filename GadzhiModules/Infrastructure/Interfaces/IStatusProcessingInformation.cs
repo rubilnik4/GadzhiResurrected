@@ -1,10 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Infrastructure.Implementations.Information;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Interfaces
 {
@@ -12,7 +6,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
     /// Класс для получения информации о текущем статусе конвертирования
     /// </summary>
     public interface IStatusProcessingInformation
-    { 
+    {
         /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary 

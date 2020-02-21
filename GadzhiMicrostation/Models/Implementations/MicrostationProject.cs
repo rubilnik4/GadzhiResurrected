@@ -1,11 +1,8 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Models.Interfaces;
 using GadzhiMicrostation.Models.StampCollections;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Models.Implementations
 {

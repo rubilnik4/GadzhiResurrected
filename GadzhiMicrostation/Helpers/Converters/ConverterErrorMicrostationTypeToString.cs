@@ -1,8 +1,6 @@
 ﻿using GadzhiMicrostation.Models.Enum;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Helpers.Converters
 {
@@ -16,7 +14,7 @@ namespace GadzhiMicrostation.Helpers.Converters
             {
                 { ErrorMicrostationType.ApplicationLoad , "Ошибка загрузки приложения" },
                 { ErrorMicrostationType.DesingFileOpen , "Некорректный файл" },
-                { ErrorMicrostationType.UnknownError, "Неизвестная ошибка" },              
+                { ErrorMicrostationType.UnknownError, "Неизвестная ошибка" },
                 { ErrorMicrostationType.NullReference , "Переменная не задана" },
                 { ErrorMicrostationType.ArgumentNullReference , "Аргумент не задан" },
                 { ErrorMicrostationType.FileNotFound , "Файл не найден" },

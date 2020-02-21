@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiCommon.Infrastructure.Implementations
@@ -41,7 +40,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);      
+        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
@@ -144,8 +143,8 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>     
         public (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName)
         {
-            bool isCreated = false;          
-            if (!startingPath.EndsWith ("\\"))
+            bool isCreated = false;
+            if (!startingPath.EndsWith("\\"))
             {
                 startingPath += "\\";
             }

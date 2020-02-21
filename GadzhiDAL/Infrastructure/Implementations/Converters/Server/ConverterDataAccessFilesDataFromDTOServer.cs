@@ -1,11 +1,7 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
 {
@@ -18,7 +14,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         {
 
         }
-        
+
         /// <summary>
         /// Обновить модель базы данных на основе промежуточного ответа
         /// </summary>      
@@ -53,7 +49,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 filesDataEntity.IsCompleted = filesDataResponse.IsCompleted;
                 filesDataEntity.StatusProcessingProject = filesDataResponse.StatusProcessingProject;
-             
+
                 foreach (var fileDataAccess in filesDataEntity.FilesData)
                 {
                     FileDataResponseServer fileData = filesDataResponse.FilesData?.
@@ -64,7 +60,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                 }
             }
             return filesDataEntity;
-        }      
+        }
 
         /// <summary>
         /// Обновить модель файла данных на основе промежуточного ответа
@@ -93,7 +89,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                 fileDataEntity.IsCompleted = fileDataResponse.IsCompleted;
                 fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
                 fileDataEntity.SetFileConvertErrorType(fileDataResponse.FileConvertErrorType);
-                fileDataEntity.FileDataSource = fileDataResponse.FileDataSource;                          
+                fileDataEntity.FileDataSource = fileDataResponse.FileDataSource;
             }
 
             return fileDataEntity;

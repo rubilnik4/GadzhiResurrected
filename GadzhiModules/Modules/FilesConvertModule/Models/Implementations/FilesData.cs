@@ -1,28 +1,28 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Helpers;
 using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
-    public class FilesData : IFilesData
+    public class FilesData : IFilesData, IDisposable
     {
         /// <summary>
         /// Список файлов для обработки
         /// </summary>
         private List<FileData> _filesInfo;
+
+        /// <summary>
+        /// Подписка на изменение коллекции
+        /// </summary>
+        public readonly Subject<FilesChange> _fileDataChange;
 
         public FilesData()
             : this(new List<FileData>())
@@ -37,7 +37,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
             _filesInfo = files;
-            FileDataChange = new Subject<FilesChange>();
+            _fileDataChange = new Subject<FilesChange>();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange { get; }
+        public ISubject<FilesChange> FileDataChange => _fileDataChange;
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -163,7 +163,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             if (filesStatus.IsValid)
             {
-                bool isStatusProcessingProjectChanged = SetStatusProcessingProject(filesStatus.StatusProcessingProject);             
+                bool isStatusProcessingProjectChanged = SetStatusProcessingProject(filesStatus.StatusProcessingProject);
                 FilesQueueInfo.ChangeByFileQueueStatus(filesStatus.FilesQueueStatus, StatusProcessingProject);
 
                 //список файлов для изменений c откорректированным статусом
@@ -228,5 +228,29 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             }
             return isChanged;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _fileDataChange.Dispose();
+                }
+
+                _filesInfo = null;
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

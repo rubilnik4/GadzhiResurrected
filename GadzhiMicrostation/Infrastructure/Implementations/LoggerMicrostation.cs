@@ -2,9 +2,6 @@
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Infrastructure.Implementations
 {
@@ -18,7 +15,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>       
         public void ShowError(ErrorMicrostation errorMicrostation)
         {
-            string messageText =  "Ошибка | " +
+            string messageText = "Ошибка | " +
                                   ConverterErrorTypeToString.ConvertErrorMicrostationTypeToString(errorMicrostation.ErrorMicrostationType) + "\n" +
                                   errorMicrostation.ErrorDescription;
 

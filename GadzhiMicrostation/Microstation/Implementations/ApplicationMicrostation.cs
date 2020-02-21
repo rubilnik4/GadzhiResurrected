@@ -9,13 +9,9 @@ using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
 using GadzhiMicrostation.Models.StampCollections;
-using Microsoft.Practices.Unity;
 using MicroStationDGN;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -171,7 +167,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
         public ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
-                                                                     PointMicrostation origin,                                                                    
+                                                                     PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
                                                                      Action<ICellElementMicrostation> additionalParametrs = null)
         {
@@ -181,7 +177,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                              false,
                                              _application.Matrix3dIdentity());
 
-            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation);
+            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation.ToOwnerContainerMicrostation());
             additionalParametrs?.Invoke(cellElementMicrostation);
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
@@ -193,7 +189,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         public ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
-                                                                   PointMicrostation origin,                                                                
+                                                                   PointMicrostation origin,
                                                                    IModelMicrostation modelMicrostation,
                                                                    Action<ICellElementMicrostation> additionalParametrs = null)
         {

@@ -1,10 +1,5 @@
-﻿using GadzhiDAL.Entities.FilesConvert;
-using NHibernate;
+﻿using NHibernate;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +13,7 @@ namespace GadzhiDAL.Factories.Interfaces
         /// <summary>
         /// Сессия для подключения к базе
         /// </summary>
-        ISession Session { get; }       
+        ISession Session { get; }
 
         /// <summary>
         /// Подтвердить транзакцию
@@ -38,6 +33,6 @@ namespace GadzhiDAL.Factories.Interfaces
         /// <summary>
         /// Откатить транзакцию асинхронно
         /// </summary>
-        Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken));      
+        Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken));
     }
 }

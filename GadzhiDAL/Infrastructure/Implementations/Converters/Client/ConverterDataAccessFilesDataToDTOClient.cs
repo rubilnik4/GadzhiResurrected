@@ -3,10 +3,7 @@ using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
 {
@@ -60,7 +57,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             }
 
             return null;
-        }              
+        }
 
         /// <summary>
         /// Конвертировать файл модели базы данных в промежуточную
@@ -92,7 +89,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                                                       ToList(),
             };
         }
-      
+
         /// <summary>
         /// Конвертировать информацию о количестве файлов в очереди
         /// </summary>        

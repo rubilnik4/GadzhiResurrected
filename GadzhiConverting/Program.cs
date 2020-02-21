@@ -1,39 +1,53 @@
-﻿
-using GadzhiConverting.DependencyInjection.GadzhiConverting;
+﻿using GadzhiConverting.DependencyInjection.GadzhiConverting;
+using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiMicrostation.Infrastructure.Interface;
+using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity;
 
 namespace GadzhiConverting
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            var container = new UnityContainer();
-            BootStrapUnity.Start(container);
+        private static readonly IUnityContainer _container = new UnityContainer();
 
-            var micro = container.Resolve<IConvertingFileMicrostation>();
+        static void Main()
+        {
+            NativeMethods._handler += new NativeMethods.EventHandler(Handler);
+            NativeMethods.SetConsoleCtrlHandler(NativeMethods._handler, true);
+
+            BootStrapUnity.Start(_container);
+
+            var micro = _container.Resolve<IConvertingFileMicrostation>();
             string dir = Environment.CurrentDirectory + "\\01.dgn";
             micro.ConvertingFile(new FileDataMicrostation(dir,
                                                           dir,
-                                                          GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));
-
-            //var microError = container.Resolve<IErrorMessagingMicrostation>();
-            //var applicationMicrostation = container.Resolve<IApplicationMicrostation>();
-            //applicationMicrostation.CloseApplication();
-
-            //var applicationConverting = container.Resolve<IApplicationConverting>();
+                                                          GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));            
+           
+            //var applicationConverting = _container.Resolve<IApplicationConverting>();
 
             //applicationConverting.StartConverting();
-
             Console.ReadLine();
         }
+
+        private static bool Handler(NativeMethods.CtrlType sig)
+        {
+            switch (sig)
+            {
+                case NativeMethods.CtrlType.CTRL_C_EVENT:
+                case NativeMethods.CtrlType.CTRL_LOGOFF_EVENT:
+                case NativeMethods.CtrlType.CTRL_SHUTDOWN_EVENT:
+                case NativeMethods.CtrlType.CTRL_CLOSE_EVENT:
+                default:
+                    {
+                        _container.Dispose();
+                        return false;
+                    }
+            }
+        }
     }
+
+
 }

@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GadzhiDAL.Entities.FilesConvert
+﻿namespace GadzhiDAL.Entities.FilesConvert
 {
     /// <summary>
     /// Идентефикация устройства
     /// </summary>
-    public class IdentityMachine 
+    public class IdentityMachine
     {
         public IdentityMachine()
         {
 
         }
-       
+
         /// <summary>
         /// Идентефикация имени локального пользователя
         /// </summary>

@@ -1,11 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiCommon.Helpers.Dialogs
 {
@@ -16,7 +12,7 @@ namespace GadzhiCommon.Helpers.Dialogs
         /// </summary>
         public static readonly string DocAndDgn = "Files|*.doc;*.docx;*.dgn";
 
-     
+
 
         /// <summary>
         /// Входит ли расшерение в список

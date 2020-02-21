@@ -1,9 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDAL.Entities.FilesConvert
 {
@@ -12,6 +9,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// </summary>
     public class FileDataEntity : EntityBase<int>
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FileDataEntity()
         {
             StatusProcessing = StatusProcessing.InQueue;

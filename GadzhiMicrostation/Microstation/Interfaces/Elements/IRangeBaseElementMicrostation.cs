@@ -1,11 +1,4 @@
-﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Coordinates;
-using MicroStationDGN;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using GadzhiMicrostation.Models.Coordinates;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {

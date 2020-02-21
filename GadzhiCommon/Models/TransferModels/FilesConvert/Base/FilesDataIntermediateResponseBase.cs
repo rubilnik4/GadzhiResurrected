@@ -1,11 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
 {
@@ -30,6 +25,6 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
         /// Статус выполнения проекта
         /// </summary>
         [DataMember]
-        public StatusProcessingProject StatusProcessingProject { get; set; }       
+        public StatusProcessingProject StatusProcessingProject { get; set; }
     }
 }

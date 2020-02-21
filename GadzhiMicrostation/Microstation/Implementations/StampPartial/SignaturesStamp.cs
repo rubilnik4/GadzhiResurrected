@@ -3,9 +3,7 @@ using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
 {
@@ -52,11 +50,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             RangeMicrostation signatureRange = GetSignatureRange(Origin, person, date);
 
-            ICellElementMicrostation cellElementMicrostation =
-                ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
-                                                                   signatureRange.OriginPointWithRotation,
-                                                                   _ownerContainerMicrostation.ModelMicrostation,
-                                                                   GetAdditionalParametersToSignature(signatureRange));
+            // ICellElementMicrostation cellElementMicrostation =
+            ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
+                                                               signatureRange.OriginPointWithRotation,
+                                                               _ownerContainerMicrostation.ModelMicrostation,
+                                                               GetAdditionalParametersToSignature(signatureRange));
         }
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты

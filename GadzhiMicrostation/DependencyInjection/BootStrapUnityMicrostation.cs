@@ -24,7 +24,7 @@ namespace GadzhiMicrostation.DependencyInjection.BootStrapMicrostation
             container.RegisterType<IFileSystemOperationsMicrostation, FileSystemOperationsMicrostation>();
 
             container.RegisterType<IApplicationMicrostation, ApplicationMicrostation>(new HierarchicalLifetimeManager());
-            container.RegisterType<IDesignFileMicrostation, DesignFileMicrostation>(new HierarchicalLifetimeManager());           
+            container.RegisterType<IDesignFileMicrostation, DesignFileMicrostation>(new HierarchicalLifetimeManager());
         }
     }
 }

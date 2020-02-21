@@ -1,10 +1,6 @@
-﻿using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
 {
@@ -12,7 +8,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     /// Класс для работы с приложением Microstation
     /// </summary>
     public interface IApplicationMicrostation
-    {       
+    {
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>
@@ -31,7 +27,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        void CloseApplication();      
+        void CloseApplication();
 
         /// <summary>
         /// Сохранить файл
@@ -48,7 +44,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
         ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
-                                                              PointMicrostation origin,                                                              
+                                                              PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
                                                               Action<ICellElementMicrostation> additionalParametrs = null);
 
@@ -56,9 +52,9 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
-                                                              PointMicrostation origin,                                                             
+                                                              PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
                                                               Action<ICellElementMicrostation> additionalParametrs = null);
-        
+
     }
 }

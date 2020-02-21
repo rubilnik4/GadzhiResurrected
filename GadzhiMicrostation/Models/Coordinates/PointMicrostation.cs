@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GadzhiMicrostation.Models.Coordinates
+﻿namespace GadzhiMicrostation.Models.Coordinates
 {
     /// <summary>
     /// Координатная точка

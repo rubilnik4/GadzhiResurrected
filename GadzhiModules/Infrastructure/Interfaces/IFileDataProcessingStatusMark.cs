@@ -1,11 +1,6 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiModules.Infrastructure.Implementations.Information;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Interfaces
@@ -38,17 +33,17 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponseClient filesDataResponse);       
+        Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponseClient filesDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
         Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponseClient filesDataResponse);
-       
+
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
         Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequestClient filesDataRequest,
-                                                                  FilesDataIntermediateResponseClient filesDataIntermediateResponse);        
+                                                                  FilesDataIntermediateResponseClient filesDataIntermediateResponse);
     }
 }

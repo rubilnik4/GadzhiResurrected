@@ -1,9 +1,6 @@
 ﻿using GadzhiMicrostation.Extensions.String;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace GadzhiMicrostation.Models.StampCollections
 {
@@ -45,19 +42,19 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Текущий лист
         /// </summary>
-        public static StampBaseField CurrentSheet => new StampBaseField("G_E_LISTNUM_1", 
+        public static StampBaseField CurrentSheet => new StampBaseField("G_E_LISTNUM_1",
                                                                         isNeedCompress: false);
 
         /// <summary>
         /// Всего листов
         /// </summary>
-        public static StampBaseField TotalSheet => new StampBaseField("G_E_LISTOV_1", 
+        public static StampBaseField TotalSheet => new StampBaseField("G_E_LISTOV_1",
                                                                       isNeedCompress: false);
 
         /// <summary>
         /// Формат
         /// </summary>
-        public static StampBaseField Format => new StampBaseField("FORMAT", 
+        public static StampBaseField Format => new StampBaseField("FORMAT",
                                                                   isNeedCompress: false);
 
         /// <summary>

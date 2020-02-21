@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Models.StampCollections
 {
@@ -50,7 +47,7 @@ namespace GadzhiMicrostation.Models.StampCollections
 
                 stampControlNamesApprovals.UnionWith(StampApprovalsFirst.StampControlNamesApproval);
                 stampControlNamesApprovals.UnionWith(StampApprovalsSecond.StampControlNamesApproval);
-                stampControlNamesApprovals.UnionWith(StampApprovalsThird.StampControlNamesApproval);               
+                stampControlNamesApprovals.UnionWith(StampApprovalsThird.StampControlNamesApproval);
 
                 return stampControlNamesApprovals;
             }

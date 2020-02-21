@@ -1,13 +1,5 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiDTOClient.TransferModels.FilesConvert
 {
@@ -15,7 +7,7 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     /// Класс содержащий данные о конвертируемом файле для клиента
     /// </summary>
     [DataContract]
-    public class FileDataResponseClient: FileDataResponseBase
+    public class FileDataResponseClient : FileDataResponseBase
     {
 
     }

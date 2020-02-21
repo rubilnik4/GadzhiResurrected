@@ -1,32 +1,31 @@
 ﻿using GadzhiDAL.Services.Implementations;
-using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
-using GadzhiWcfHost.Infrastructure.Interfaces;
 using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using Microsoft.VisualStudio.Threading;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Server
 {
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public class ApplicationServerConverting : IApplicationServerConverting
+    public class ApplicationServerConverting : IApplicationServerConverting, IAsyncDisposable
     {
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
         /// </summary>
-        private readonly IFilesDataServerService _filesDataServerService;       
+        private readonly IFilesDataServerService _filesDataServerService;
+
+        /// <summary>
+        /// Идентификатор пакета
+        /// </summary>
+        private Guid _idPackage;
 
         public ApplicationServerConverting(IFilesDataServerService filesDataServerService)
         {
-            _filesDataServerService = filesDataServerService;          
+            _filesDataServerService = filesDataServerService;
+            _idPackage = Guid.Empty;
         }
 
         /// <summary>
@@ -34,7 +33,9 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// </summary>           
         public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)
         {
-            return await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
+            FilesDataRequestServer filesDataRequestServer = await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
+            _idPackage = filesDataRequestServer.Id;
+            return filesDataRequestServer;
         }
 
         /// <summary>
@@ -58,7 +59,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// </summary>
         public async Task AbortConvertingById(Guid id)
         {
-            await _filesDataServerService.AbortConvertingById(id);
+            if (id != Guid.Empty)
+            {
+                await _filesDataServerService.AbortConvertingById(id);
+            }
+        }
+
+        public async Task DisposeAsync()
+        {
+            await AbortConvertingById(_idPackage);
         }
     }
 }

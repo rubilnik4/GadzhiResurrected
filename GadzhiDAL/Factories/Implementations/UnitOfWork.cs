@@ -1,11 +1,7 @@
-﻿using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Factories.Interfaces;
+﻿using GadzhiDAL.Factories.Interfaces;
 using NHibernate;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +10,7 @@ namespace GadzhiDAL.Factories.Implementations
     /// <summary>
     /// Класс обертка для управления транзакциями
     /// </summary>
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public sealed class UnitOfWork : IUnitOfWork, IDisposable
     {
         /// <summary>
         /// Фабрика для создания сессии подключения к БД
@@ -42,7 +38,7 @@ namespace GadzhiDAL.Factories.Implementations
         /// Открыть транзакцию
         /// </summary>
         private void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {          
+        {
             _transaction = Session.BeginTransaction(isolationLevel);
         }
 
@@ -60,7 +56,7 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Подтвердить транзакцию асинхронно
         /// </summary>
-        public async Task CommitAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
             if (_transaction != null && _transaction.IsActive)
             {
@@ -82,7 +78,7 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Откатить транзакцию асинхронно
         /// </summary>
-        public async Task RollbackAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task RollbackAsync(CancellationToken cancellationToken = default)
         {
             if (_transaction != null && _transaction.IsActive)
             {
@@ -90,13 +86,34 @@ namespace GadzhiDAL.Factories.Implementations
             }
         }
 
-        /// <summary>
-        /// Закрыть соединение
-        /// </summary>
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+
+                _transaction?.Dispose();
+                Session?.Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        ~UnitOfWork()
+        {
+            Dispose(false);
+        }
+
         public void Dispose()
         {
-            _transaction?.Dispose();
-            Session?.Dispose();          
+            Dispose(true);
         }
+        #endregion
     }
 }

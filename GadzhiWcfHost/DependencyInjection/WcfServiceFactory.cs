@@ -2,17 +2,11 @@
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiWcfHost.Helpers;
-using GadzhiWcfHost.Infrastructure.Implementations;
 using GadzhiWcfHost.Infrastructure.Implementations.Client;
 using GadzhiWcfHost.Infrastructure.Implementations.Server;
-using GadzhiWcfHost.Infrastructure.Interfaces;
 using GadzhiWcfHost.Infrastructure.Interfaces.Client;
 using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using GadzhiWcfHost.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Unity;
 using Unity.Lifetime;
 using Unity.Wcf;

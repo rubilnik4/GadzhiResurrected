@@ -1,6 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
@@ -8,7 +7,6 @@ using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Informatio
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Implementations
@@ -33,11 +31,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         private readonly IConverterClientFilesDataFromDTO _converterClientFilesDataFromDTO;
 
-        public FileDataProcessingStatusMark(IFilesData filesInfoProject,                                           
+        public FileDataProcessingStatusMark(IFilesData filesInfoProject,
                                             IConverterClientFilesDataToDTO converterClientFilesDataToDTO,
                                             IConverterClientFilesDataFromDTO converterClientFilesDataFromDTO)
         {
-            _filesInfoProject = filesInfoProject;        
+            _filesInfoProject = filesInfoProject;
             _converterClientFilesDataToDTO = converterClientFilesDataToDTO;
             _converterClientFilesDataFromDTO = converterClientFilesDataFromDTO;
         }
@@ -57,7 +55,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             var filesInSending = _filesInfoProject?.
                                  FilesInfo?.
-                                 Select(file => new FileStatus(file.FilePath, 
+                                 Select(file => new FileStatus(file.FilePath,
                                                                StatusProcessing.Sending,
                                                                FileConvertErrorType.IncorrectFileName));
 
@@ -130,6 +128,6 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                    filesDataIntermediateResponse.StatusProcessingProject,
                                                    filesChangedStatus.Result.FilesQueueStatus);
             return filesStatusUnion;
-        }      
+        }
     }
 }

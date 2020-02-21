@@ -1,11 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiConverting.Models.FilesConvert.Implementations
 {
@@ -71,13 +67,13 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
                 file.StatusProcessing = StatusProcessing.Error;
                 file.AddFileConvertErrorType(FileConvertErrorType.UnknownError);
                 file.IsCompleted = true;
-            }           
+            }
         }
 
         /// <summary>
         /// Корректна ли модель
         /// </summary>
-        public bool IsValid => IsValidByFileData && 
+        public bool IsValid => IsValidByFileData &&
                                IsValidByAttemptingCount;
 
         /// <summary>

@@ -8,16 +8,14 @@ using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
 using Microsoft.Practices.Unity;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Infrastructure.Implementations
 {
     /// <summary>
     /// Обработка и конвертирование файла DGN
     /// </summary>
-    public class ConvertingFileMicrostation : IConvertingFileMicrostation
+    public sealed class ConvertingFileMicrostation : IConvertingFileMicrostation, IDisposable
     {
         /// <summary>
         /// Контейнер для инверсии зависимости
@@ -91,6 +89,14 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             }
         }
 
+        /// <summary>
+        /// Освободить элементы
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_container")]
+        public void Dispose()
+        {
+            _container?.Dispose();
+        }
 
     }
 }

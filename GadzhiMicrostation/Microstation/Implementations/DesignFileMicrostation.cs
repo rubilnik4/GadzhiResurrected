@@ -1,10 +1,8 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using MicroStationDGN;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -21,7 +19,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        public IApplicationMicrostation ApplicationMicrostation { get;}
+        public IApplicationMicrostation ApplicationMicrostation { get; }
 
         public DesignFileMicrostation(DesignFile designFile,
                                       IApplicationMicrostation applicationMicrostation)
@@ -48,9 +46,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
             get
             {
                 List<IModelMicrostation> modelsMicrostation = new List<IModelMicrostation>();
-                foreach (ModelReference model in _designFile.Models)               
+                foreach (ModelReference model in _designFile.Models)
                 {
-                    
+
                     modelsMicrostation.Add(new ModelMicrostation(model, ApplicationMicrostation));
                 }
                 return modelsMicrostation;

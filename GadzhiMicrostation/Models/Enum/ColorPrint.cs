@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GadzhiMicrostation.Models.Enum
+﻿namespace GadzhiMicrostation.Models.Enum
 {
     /// <summary>
     /// Типы цветов для печати
@@ -14,5 +9,5 @@ namespace GadzhiMicrostation.Models.Enum
         BlackAndWhite,
         GrayScale,
         Color,
-    }    
+    }
 }

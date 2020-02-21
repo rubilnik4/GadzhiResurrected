@@ -4,10 +4,7 @@ using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -24,7 +21,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public StatusProcessingInformation(IFilesData filesInfoProject)
         {
             FilesInfoProject = filesInfoProject;
-        }           
+        }
 
         /// <summary>
         /// Индикатор конвертирования файлов
@@ -45,7 +42,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Статус выполнения проекта
         /// </summary>
         public StatusProcessingProject StatusProcessingProject => FilesInfoProject.StatusProcessingProject;
-       
+
         /// <summary>
         /// Процент выполнения пакета конвертирования
         /// </summary>
@@ -67,7 +64,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue)
             {
                 double percentagePerform = 0;
-                if (FilesQueueInfo?.FilesInQueueCount != 0 &&FilesQueueInfo?.FilesInQueueCount != 0)
+                if (FilesQueueInfo?.FilesInQueueCount != 0 && FilesQueueInfo?.FilesInQueueCount != 0)
                 {
                     percentagePerform = ((double?)FilesQueueInfo?.FilesInQueueCount / (double)FilesQueueInfo?.FirstFilesCountInQueue) * 100 ?? 0;
                 }

@@ -1,24 +1,16 @@
-﻿using GadzhiModules.Modules.FilesConvertModule;
-using GadzhiModules.Infrastructure;
+﻿using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Implementations;
+using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Modules.FilesConvertModule;
 using GadzhiResurrected.ViewModels;
 using GadzhiResurrected.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Unity;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using Unity;
-using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Infrastructure.Implementations;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Infrastructure.Implementations;
-using System.ComponentModel;
 
 namespace GadzhiResurrected
 {
@@ -46,13 +38,13 @@ namespace GadzhiResurrected
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {          
+        {
             IUnityContainer unityContainer = containerRegistry.GetContainer();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
             unityContainer.RegisterSingleton<IProjectSettings, ProjectSettings>();
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
             unityContainer.RegisterType<IMessageAndLoggingService, DialogServiceStandard>();
-            unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();          
+            unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
         }
 
         /// <summary>

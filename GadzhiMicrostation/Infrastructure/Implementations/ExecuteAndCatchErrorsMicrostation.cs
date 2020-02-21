@@ -1,10 +1,7 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Models.Enum;
 using GadzhiMicrostation.Models.Implementations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 
 namespace GadzhiMicrostation.Infrastructure.Implementations

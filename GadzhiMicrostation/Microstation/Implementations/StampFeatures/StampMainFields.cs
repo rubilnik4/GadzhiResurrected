@@ -1,9 +1,6 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.StampFeatures
 {
@@ -27,6 +24,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampFeatures
         /// </summary>
         public string Format => _stamp.FindElementInStampFields(StampMain.Format.Name)?.
                                        AsTextElementMicrostation?.Text ??
-                                String.Empty;      
+                                String.Empty;
     }
 }

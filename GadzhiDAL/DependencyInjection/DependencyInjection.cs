@@ -1,20 +1,11 @@
 ﻿using GadzhiDAL.Factories.Implementations;
 using GadzhiDAL.Factories.Interfaces;
-using GadzhiDAL.Infrastructure.Implementations;
-using GadzhiDAL.Infrastructure.Implementations.Converters;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Client;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
-using GadzhiDAL.Infrastructure.Interfaces;
-using GadzhiDAL.Infrastructure.Interfaces.Converters;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDAL.Services.Implementations;
 using NHibernate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity;
 using Unity.Lifetime;
 
@@ -34,17 +25,17 @@ namespace GadzhiDAL.DependencyInjection
 
                  // с помощью фабрики открываем сессию
                  .RegisterType<IUnitOfWork, UnitOfWork>()
-           
+
                  //регистрация клиенской части
                  .RegisterType<IConverterDataAccessFilesDataFromDTOServer, ConverterDataAccessFilesDataFromDTOServer>()
-                 .RegisterType<IConverterDataAccessFilesDataToDTOServer, ConverterDataAccessFilesDataToDTOServer>()               
+                 .RegisterType<IConverterDataAccessFilesDataToDTOServer, ConverterDataAccessFilesDataToDTOServer>()
                  .RegisterType<IFilesDataServerService, FilesDataServerService>()
 
                  //регистрация серверной части
                  .RegisterType<IConverterDataAccessFilesDataFromDTOClient, ConverterDataAccessFilesDataFromDTOClient>()
                  .RegisterType<IConverterDataAccessFilesDataToDTOClient, ConverterDataAccessFilesDataToDTOClient>()
                  .RegisterType<IFilesDataClientService, FilesDataClientService>();
-           
+
         }
     }
 }

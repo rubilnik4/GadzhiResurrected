@@ -1,16 +1,13 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Web;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
     /// <summary>
     /// Идентефикация пользователя
     /// </summary>
-    public class Authentication: IAuthentication
+    public class Authentication : IAuthentication
     {
         /// <summary>
         /// Идентефикатор пакета
@@ -45,12 +42,12 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
             }
 
             return filesDataRequest;
-        }           
+        }
 
         /// <summary>
         /// Получить имя пользователя и домен
         /// </summary>      
         private string GetIdentityName() => OperationContext.Current.
-                   ServiceSecurityContext.PrimaryIdentity.Name;       
+                   ServiceSecurityContext.PrimaryIdentity.Name;
     }
 }

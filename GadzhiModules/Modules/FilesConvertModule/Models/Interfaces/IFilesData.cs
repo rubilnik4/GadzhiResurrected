@@ -1,16 +1,10 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Helpers;
 using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
@@ -38,7 +32,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// Пути конвертируемых файлов
         /// </summary>     
         IEnumerable<string> FilesInfoPath { get; }
-        
+
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>

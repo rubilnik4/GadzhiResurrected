@@ -2,30 +2,21 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems;
 using GongSolutions.Wpf.DragDrop;
 using Helpers.GadzhiModules.BaseClasses.ViewModels;
 using Prism.Commands;
-using Prism.Mvvm;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Threading;
-using Unity;
 
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
-    public class FilesConvertViewModel : ViewModelBase, IDropTarget
+    public class FilesConvertViewModel : ViewModelBase, IDropTarget, IDisposable
     {
         /// <summary>
         /// Слой инфраструктуры
@@ -37,6 +28,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
 
+        /// <summary>
+        /// Подписка на обновление модели
+        /// </summary>
+        private readonly IDisposable fileDataChangeSubscribe;
+
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi,
                                      IStatusProcessingInformation statusProcessingInformation,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
@@ -47,7 +43,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            _applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            fileDataChangeSubscribe = _applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
@@ -215,7 +211,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private async Task ConvertingFiles()
         {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles, _applicationGadzhi.AbortPropertiesConverting);
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
+                                            async () => await _applicationGadzhi.AbortPropertiesConverting());
         }
 
         /// <summary>
@@ -327,24 +324,48 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         public void DragOver(IDropInfo dropInfo)
         {
             dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-
-            var dataObject = dropInfo.Data as IDataObject;
-            if (dataObject != null && dataObject.GetDataPresent(DataFormats.FileDrop))
+            if (dropInfo.Data is IDataObject dataObject)
             {
-                dropInfo.Effects = DragDropEffects.Copy;
+                if (dataObject != null && dataObject.GetDataPresent(DataFormats.FileDrop))
+                {
+                    dropInfo.Effects = DragDropEffects.Copy;
+                }
             }
         }
 
         public void Drop(IDropInfo dropInfo)
         {
-            var dataObject = dropInfo.Data as DataObject;
-            if (dataObject != null && dataObject.ContainsFileDropList())
+            if (dropInfo.Data is DataObject dataObject)
             {
-                var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
-                Task.FromResult(AddFromFilesAndFolders(filePaths));
+                if (dataObject != null && dataObject.ContainsFileDropList())
+                {
+                    var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
+                    Task.FromResult(AddFromFilesAndFolders(filePaths));
+                }
             }
-
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    fileDataChangeSubscribe?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 
 }

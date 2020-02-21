@@ -1,10 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
 {
@@ -13,7 +9,7 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
     /// <summary>
     [DataContract]
     public abstract class FileDataIntermediateResponseBase
-    { 
+    {
         public FileDataIntermediateResponseBase()
         {
             FileConvertErrorType = new List<FileConvertErrorType>();

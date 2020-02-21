@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
 {
@@ -14,6 +10,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
         /// </summary>        
-        Task ConvertingFirstInQueuePackage();       
+        Task ConvertingFirstInQueuePackage();
     }
 }

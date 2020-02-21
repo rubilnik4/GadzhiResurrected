@@ -1,14 +1,9 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enum;
 using MicroStationDGN;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -121,7 +116,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Масштабировать элемент
         /// </summary>
         public virtual void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
-        {           
+        {
             _element.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
         }
 

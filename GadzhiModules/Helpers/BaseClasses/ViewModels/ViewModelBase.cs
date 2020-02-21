@@ -1,15 +1,7 @@
 ﻿using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiModules.Infrastructure;
-using GadzhiModules.Infrastructure.Interfaces;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
-using Unity;
 
 namespace Helpers.GadzhiModules.BaseClasses.ViewModels
 {
@@ -53,12 +45,12 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         /// Обертка для вызова индикатора загрузки и отл5ова ошибок асинхронного метода
         /// </summary> 
         protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action ApplicationAbortionMethod = null)
-        {           
+        {
             await ExecuteAndCatchErrors.ExecuteAndHandleErrorAsync(asyncMethod,
                                                                    () => IsLoading = true,
                                                                    ApplicationAbortionMethod,
                                                                    () => IsLoading = false);
-           
+
         }
     }
 }

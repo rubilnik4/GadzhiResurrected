@@ -1,10 +1,6 @@
 ﻿using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiDTOServer.TransferModels.FilesConvert;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace GadzhiConverting.Infrastructure.Interfaces.Converters
 {

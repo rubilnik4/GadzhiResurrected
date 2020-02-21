@@ -9,16 +9,6 @@ using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Infrastructure.Implementations;
 using GadzhiMicrostation.Infrastructure.Interface;
-using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Microstation.Implementations;
-using GadzhiMicrostation.Microstation.Interfaces;
-using GadzhiMicrostation.Models.Implementations;
-using GadzhiMicrostation.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity;
 using Unity.Lifetime;
 

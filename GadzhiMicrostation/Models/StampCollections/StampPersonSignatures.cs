@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GadzhiMicrostation.Models.StampCollections
 {
@@ -87,7 +85,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей с ответсвенным лицом и подписью
         /// </summary>
-        public HashSet<StampBaseField> StampFieldsPersonSignatures => 
+        public HashSet<StampBaseField> StampFieldsPersonSignatures =>
             new HashSet<StampBaseField>(StampRowPersonSignatures?.
                                         SelectMany(rowPerson => rowPerson.StampPersonSignatureFields));
 

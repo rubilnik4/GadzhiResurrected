@@ -1,13 +1,9 @@
 ﻿using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -89,7 +85,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Получить имя компьютера
         /// </summary>
-        public string NetworkName => Environment.UserDomainName +"\\" + Environment.MachineName;
-      
+        public string NetworkName => Environment.UserDomainName + "\\" + Environment.MachineName;
+
     }
 }
