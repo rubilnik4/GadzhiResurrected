@@ -5,12 +5,8 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// <summary>
     /// Поля штампа с согласованием
     /// </summary>
-    public class StampApprovals
-    {
-        public StampApprovals()
-        {
-        }
-
+    public static class StampApprovals
+    {  
         /// <summary>
         /// Согласование 1
         /// </summary>
@@ -39,18 +35,15 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей с изменениями
         /// </summary>
-        public HashSet<StampBaseField> StampControlNamesApprovals
+        public static HashSet<StampBaseField> GetStampControlNamesApprovals()
         {
-            get
-            {
-                var stampControlNamesApprovals = new HashSet<StampBaseField>();
+            var stampControlNamesApprovals = new HashSet<StampBaseField>();
 
-                stampControlNamesApprovals.UnionWith(StampApprovalsFirst.StampControlNamesApproval);
-                stampControlNamesApprovals.UnionWith(StampApprovalsSecond.StampControlNamesApproval);
-                stampControlNamesApprovals.UnionWith(StampApprovalsThird.StampControlNamesApproval);
+            stampControlNamesApprovals.UnionWith(StampApprovalsFirst.StampControlNamesApproval);
+            stampControlNamesApprovals.UnionWith(StampApprovalsSecond.StampControlNamesApproval);
+            stampControlNamesApprovals.UnionWith(StampApprovalsThird.StampControlNamesApproval);
 
-                return stampControlNamesApprovals;
-            }
+            return stampControlNamesApprovals;
         }
     }
 }

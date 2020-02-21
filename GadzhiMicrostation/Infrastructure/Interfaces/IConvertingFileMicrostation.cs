@@ -1,6 +1,6 @@
 ﻿using GadzhiMicrostation.Models.Implementations;
 
-namespace GadzhiMicrostation.Infrastructure.Interface
+namespace GadzhiMicrostation.Infrastructure.Interfaces
 {
 
     /// <summary>
@@ -8,7 +8,9 @@ namespace GadzhiMicrostation.Infrastructure.Interface
     /// </summary>
     public interface IConvertingFileMicrostation
     {
-
+        /// <summary>
+        /// Запустить конвертацию. Инициировать начальные значения
+        /// </summary> 
         void ConvertingFile(FileDataMicrostation fileDataMicrostation);
     }
 }

@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Extensions.String;
+﻿using GadzhiMicrostation.Extensions.StringAdditional;
 using System;
 using System.Collections.Generic;
 
@@ -7,12 +7,8 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// <summary>
     /// Основные поля штампа
     /// </summary>
-    public class StampMain
+    public static class StampMain
     {
-        public StampMain()
-        {
-        }
-
         /// <summary>
         /// Основной шифр
         /// </summary>
@@ -60,11 +56,8 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public static HashSet<StampBaseField> StampMainFields
-        {
-            get
-            {
-                var stampFields = new HashSet<StampBaseField>()
+        public static HashSet<StampBaseField> GetStampMainFields() =>
+                new HashSet<StampBaseField>()
                 {
                     FullCode,
                     ProjectName,
@@ -76,9 +69,6 @@ namespace GadzhiMicrostation.Models.StampCollections
                     Format,
                 };
 
-                return stampFields;
-            }
-        }
 
         /// <summary>
         /// Проверка, является ли поле указателем формата
@@ -86,7 +76,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         public static bool IsFormatField(string fieldText)
         {
             if (!String.IsNullOrEmpty(fieldText) &&
-                fieldText.StartsWith("Формат"))
+                fieldText.StartsWith("Формат", StringComparison.Ordinal))
             {
                 return true;
             }
@@ -97,17 +87,6 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// Получить формат штампа
         /// </summary>      
         public static string GetFormatFromField(string fieldText) =>
-             fieldText.TrimSubstring("Формат").Trim();
-
-        // {
-        //string format = String.Empty;
-
-        //if (!String.IsNullOrEmpty(fieldText))
-        //{
-        //    format = Regex.Match(fieldText, @"\d+").Value;
-        //}
-
-        //return format;
-        // }
+             fieldText?.TrimSubstring("Формат").Trim();
     }
 }

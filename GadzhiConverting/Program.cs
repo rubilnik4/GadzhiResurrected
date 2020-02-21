@@ -1,8 +1,5 @@
 ﻿using GadzhiConverting.DependencyInjection.GadzhiConverting;
-using GadzhiConverting.Infrastructure.Interfaces;
-using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using System;
 using Unity;
@@ -24,7 +21,7 @@ namespace GadzhiConverting
             string dir = Environment.CurrentDirectory + "\\01.dgn";
             micro.ConvertingFile(new FileDataMicrostation(dir,
                                                           dir,
-                                                          GadzhiMicrostation.Models.Enum.ColorPrint.BlackAndWhite));            
+                                                          GadzhiMicrostation.Models.Enums.ColorPrint.BlackAndWhite));            
            
             //var applicationConverting = _container.Resolve<IApplicationConverting>();
 

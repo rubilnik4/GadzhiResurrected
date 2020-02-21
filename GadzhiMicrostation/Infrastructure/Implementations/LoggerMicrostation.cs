@@ -15,11 +15,14 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>       
         public void ShowError(ErrorMicrostation errorMicrostation)
         {
-            string messageText = "Ошибка | " +
-                                  ConverterErrorTypeToString.ConvertErrorMicrostationTypeToString(errorMicrostation.ErrorMicrostationType) + "\n" +
-                                  errorMicrostation.ErrorDescription;
+            if(errorMicrostation != null)
+            {
+                string messageText = "Ошибка | " +
+                                 ConverterErrorTypeToString.ConvertErrorMicrostationTypeToString(errorMicrostation.ErrorMicrostationType) + "\n" +
+                                 errorMicrostation.ErrorDescription;
 
-            Console.WriteLine(messageText);
+                Console.WriteLine(messageText);
+            }           
         }
 
         /// <summary>

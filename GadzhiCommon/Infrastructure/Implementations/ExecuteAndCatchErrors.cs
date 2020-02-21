@@ -84,19 +84,19 @@ namespace GadzhiCommon.Infrastructure.Implementations
         {
             var fileConvertErrorType = FileConvertErrorType.UnknownError;
 
-            if (ex is NullReferenceException nullReferenceException)
+            if (ex is NullReferenceException)
             {
                 fileConvertErrorType = FileConvertErrorType.NullReference;
             }
-            else if (ex is ArgumentNullException argumentNullException)
+            else if (ex is ArgumentNullException)
             {
                 fileConvertErrorType = FileConvertErrorType.ArgumentNullReference;
             }
-            else if (ex is TimeoutException timeoutException)
+            else if (ex is TimeoutException)
             {
                 fileConvertErrorType = FileConvertErrorType.TimeOut;
             }
-            else if (ex is CommunicationException communicationException)
+            else if (ex is CommunicationException)
             {
                 fileConvertErrorType = FileConvertErrorType.Communication;
             }

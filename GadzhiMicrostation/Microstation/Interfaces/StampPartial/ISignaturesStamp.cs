@@ -12,8 +12,13 @@
         void InsertSignatures();
 
         /// <summary>
-        /// Удалить подписи
+        /// Удалить предыдущие подписи
         /// </summary>
-        void DeleteSignatures();
+        void DeleteSignaturesPrevious();
+
+        /// <summary>
+        /// Удалить текущие подписи
+        /// </summary>
+        void DeleteSignaturesInserted();
     }
 }

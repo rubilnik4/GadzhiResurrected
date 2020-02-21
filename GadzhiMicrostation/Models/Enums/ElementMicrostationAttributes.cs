@@ -1,8 +1,11 @@
-﻿namespace GadzhiMicrostation.Models.Enum
+﻿using System;
+
+namespace GadzhiMicrostation.Models.Enums
 {
     /// <summary>
     /// Списки аттрибутов для элементов Microstation
     /// </summary>
+    [Flags]
     public enum ElementMicrostationAttributes
     {
         AttributesArray = 33452, //Массив с аттрибутами

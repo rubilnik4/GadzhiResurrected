@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace GadzhiMicrostation.Models.Coordinates
@@ -46,7 +47,7 @@ namespace GadzhiMicrostation.Models.Coordinates
             IsVertical = isVertical;
             if (pointsAttribute?.Count == 6) //включая z координаты
             {
-                IList<double> points = pointsAttribute?.Select(p => Double.Parse(p)).ToList();
+                IList<double> points = pointsAttribute?.Select(p => Double.Parse(p, CultureInfo.CurrentCulture)).ToList();
                 if (points?.Count == pointsAttribute.Count)
                 {
                     _highLeftPoint = new PointMicrostation(points[0], points[1], points[2]);
@@ -59,15 +60,15 @@ namespace GadzhiMicrostation.Models.Coordinates
         /// Ширина
         /// </summary>
         public double Width => !IsVertical ?
-                               Math.Abs(_highLeftPoint?.X - _lowRightPoint.X ?? 0) :
-                               Math.Abs(_highLeftPoint?.Y - _lowRightPoint.Y ?? 0);
+                               Math.Abs(_highLeftPoint.X - _lowRightPoint.X) :
+                               Math.Abs(_highLeftPoint.Y - _lowRightPoint.Y);
 
         /// <summary>
         /// Высота
         /// </summary>
         public double Height => !IsVertical ?
-                                Math.Abs(_highLeftPoint?.Y - _lowRightPoint.Y ?? 0) :
-                                Math.Abs(_highLeftPoint?.X - _lowRightPoint.X ?? 0);
+                                Math.Abs(_highLeftPoint.Y - _lowRightPoint.Y) :
+                                Math.Abs(_highLeftPoint.X - _lowRightPoint.X);
 
 
         /// <summary>
@@ -94,17 +95,15 @@ namespace GadzhiMicrostation.Models.Coordinates
         /// <summary>
         /// Сдвиг по координатам
         /// </summary>       
-        public RangeMicrostation Offset(PointMicrostation offset)
-        {
-            return new RangeMicrostation(_highLeftPoint + offset, _lowRightPoint + offset, IsVertical);
-        }
+        public RangeMicrostation Offset(PointMicrostation offset) =>      
+             new RangeMicrostation(_highLeftPoint.Add(offset), _lowRightPoint.Add(offset), IsVertical);
+       
 
         /// <summary>
         /// Масштабирование
         /// </summary>       
-        public RangeMicrostation Scale(double scaleFactor)
-        {
-            return new RangeMicrostation(_highLeftPoint * scaleFactor, _lowRightPoint * scaleFactor, IsVertical);
-        }
+        public RangeMicrostation Scale(double scaleFactor)=>        
+             new RangeMicrostation(_highLeftPoint.Multiply(scaleFactor), _lowRightPoint.Multiply(scaleFactor), IsVertical);
+       
     }
 }

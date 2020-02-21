@@ -1,5 +1,4 @@
-﻿using GadzhiMicrostation.Infrastructure.Interface;
-using GadzhiMicrostation.Infrastructure.Interfaces;
+﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using System;
 
@@ -35,7 +34,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 applicationBeforeMethod?.Invoke();
                 method();
             }
-            catch (Exception)
+            catch
             {
                 applicationCatchMethod?.Invoke();
 

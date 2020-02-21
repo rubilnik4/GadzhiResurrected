@@ -5,12 +5,8 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// <summary>
     /// Поля штампа с изменениями
     /// </summary>
-    public class StampChanges
-    {
-        public StampChanges()
-        {
-        }
-
+    public static class StampChanges
+    {  
         /// <summary>
         /// Изменение 1
         /// </summary>
@@ -54,19 +50,16 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список всех полей с изменениями
         /// </summary>
-        public HashSet<StampBaseField> StampControlNamesChanges
+        public static HashSet<StampBaseField> GetStampControlNamesChanges()
         {
-            get
-            {
-                var stampControlNames = new HashSet<StampBaseField>();
+            var stampControlNames = new HashSet<StampBaseField>();
 
-                stampControlNames.UnionWith(StampChangesFirst.StampControlNamesChange);
-                stampControlNames.UnionWith(StampChangesSecond.StampControlNamesChange);
-                stampControlNames.UnionWith(StampChangesThird.StampControlNamesChange);
-                stampControlNames.UnionWith(StampChangesForth.StampControlNamesChange);
+            stampControlNames.UnionWith(StampChangesFirst.StampControlNamesChange);
+            stampControlNames.UnionWith(StampChangesSecond.StampControlNamesChange);
+            stampControlNames.UnionWith(StampChangesThird.StampControlNamesChange);
+            stampControlNames.UnionWith(StampChangesForth.StampControlNamesChange);
 
-                return stampControlNames;
-            }
+            return stampControlNames;
         }
     }
 }

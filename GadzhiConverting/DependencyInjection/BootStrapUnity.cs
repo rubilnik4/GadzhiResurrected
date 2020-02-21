@@ -8,7 +8,7 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Infrastructure.Implementations;
-using GadzhiMicrostation.Infrastructure.Interface;
+using GadzhiMicrostation.Infrastructure.Interfaces;
 using Unity;
 using Unity.Lifetime;
 
@@ -38,14 +38,7 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
 
             //microstation
-            container.RegisterType<IConvertingFileMicrostation, ConvertingFileMicrostation>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IApplicationMicrostation, ApplicationMicrostation>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IMicrostationProject, MicrostationProject>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IErrorMessagingMicrostation, ErrorMessagingMicrostation>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IProjectMicrostationSettings, ProjectMicrostationSettings>(new HierarchicalLifetimeManager());
-            //container.RegisterType<ILoggerMicrostation, LoggerMicrostation>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IExecuteAndCatchErrorsMicrostation, ExecuteAndCatchErrorsMicrostation>();
-            //container.RegisterType<IFileSystemOperationsMicrostation, FileSystemOperationsMicrostation>();         
+            container.RegisterType<IConvertingFileMicrostation, ConvertingFileMicrostation>(new HierarchicalLifetimeManager());            
         }
     }
 }

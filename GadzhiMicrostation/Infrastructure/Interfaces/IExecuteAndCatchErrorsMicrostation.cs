@@ -1,7 +1,7 @@
 ﻿using GadzhiMicrostation.Models.Implementations;
 using System;
 
-namespace GadzhiMicrostation.Infrastructure.Interface
+namespace GadzhiMicrostation.Infrastructure.Interfaces
 {
     /// <summary>
     /// Класс обертка для отлова ошибок

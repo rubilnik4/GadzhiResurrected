@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Infrastructure.Interface;
+﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +43,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>       
         public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
         {
-            extension = extension.TrimStart('.');
+            extension = extension?.TrimStart('.');
 
             return directoryPath + fileNameWithoutExtension + "." + extension;
         }
@@ -58,11 +58,11 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>     
         public string CreateFolderByName(string startingPath, string folderName = "")
         {
-            if (!startingPath.EndsWith("\\"))
+            if (!startingPath?.EndsWith("\\", StringComparison.Ordinal) == true)
             {
                 startingPath += "\\";
             }
-            if (!String.IsNullOrEmpty(folderName) && !folderName.EndsWith("\\"))
+            if (!String.IsNullOrEmpty(folderName) && !folderName.EndsWith("\\", StringComparison.Ordinal))
             {
                 folderName += "\\";
             }
@@ -93,7 +93,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                     succsess = true;
                 }
             }
-            catch (Exception)
+            finally
             {
 
             }

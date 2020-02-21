@@ -1,4 +1,4 @@
-﻿namespace GadzhiMicrostation.Models.Enum
+﻿namespace GadzhiMicrostation.Models.Enums
 {
     /// <summary>
     /// Тип операции при чтении/записи блока

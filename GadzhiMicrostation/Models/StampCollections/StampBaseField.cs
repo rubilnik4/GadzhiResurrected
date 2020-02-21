@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace GadzhiMicrostation.Models.StampCollections
 {
@@ -11,7 +12,7 @@ namespace GadzhiMicrostation.Models.StampCollections
                               bool isNeedCompress = true,
                               bool isVertical = false)
         {
-            Name = name?.ToUpper();
+            Name = name?.ToUpper(CultureInfo.CurrentCulture);
             IsNeedCompress = isNeedCompress;
             IsVertical = isVertical;
         }

@@ -76,8 +76,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         #region IDisposable Support
         private bool disposedValue = false;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_convertingUpdaterSubsriptions")]
+       
         void Dispose(bool disposing)
         {
             if (!disposedValue)

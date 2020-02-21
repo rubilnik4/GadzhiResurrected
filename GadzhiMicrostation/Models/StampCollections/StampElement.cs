@@ -8,44 +8,24 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// Поля составляющие штамп
     /// </summary>
     public static class StampElement
-    {
-        /// <summary>
-        /// Основные поля штампа
-        /// </summary>
-        public static StampMain StampMain => new StampMain();
-
-        /// <summary>
-        /// Поля штампа с ответсвенным лицом и подписью
-        /// </summary>
-        public static StampPersonSignatures StampPersonSignatures => new StampPersonSignatures();
-
-        /// <summary>
-        /// Поля штампа с изменениями
-        /// </summary>
-        public static StampChanges StampChanges => new StampChanges();
-
-        /// <summary>
-        /// Поля штампа с согласованием
-        /// </summary>
-        public static StampApprovals StampApprovals => new StampApprovals();
-
+    {  
         /// <summary>
         /// Список всех полей
         /// </summary>
-        private static IDictionary<string, StampBaseField> _stampBaseParameters
+        private static IDictionary<string, StampBaseField> StampBaseParameters
         {
             get
             {
-                var stampControlNames = StampMain.StampMainFields;
-                stampControlNames.UnionWith(StampPersonSignatures.StampFieldsPersonSignatures);
-                stampControlNames.UnionWith(StampChanges.StampControlNamesChanges);
-                stampControlNames.UnionWith(StampApprovals.StampControlNamesApprovals);
+                var stampControlNames = StampMain.GetStampMainFields();
+                stampControlNames.UnionWith(StampPersonSignatures.GetStampFieldsPersonSignatures());
+                stampControlNames.UnionWith(StampChanges.GetStampControlNamesChanges());
+                stampControlNames.UnionWith(StampApprovals.GetStampControlNamesApprovals());
 
                 return stampControlNames.ToDictionary(p => p.Name);
             }
         }
 
-        private static HashSet<String> StampControlNames => new HashSet<string>(_stampBaseParameters.Keys);
+        private static HashSet<String> StampControlNames => new HashSet<string>(StampBaseParameters.Keys);
 
         /// <summary>
         /// Содержится ли поле в списке Штампа
@@ -65,6 +45,6 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Получить список параметров по имени элемента
         /// </summary>
-        public static StampBaseField GetBaseParametersByControlName(string controlName) => _stampBaseParameters[controlName];
+        public static StampBaseField GetBaseParametersByControlName(string controlName) => StampBaseParameters[controlName];
     }
 }

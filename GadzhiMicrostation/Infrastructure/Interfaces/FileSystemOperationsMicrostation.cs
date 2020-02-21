@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GadzhiMicrostation.Infrastructure.Interface
+namespace GadzhiMicrostation.Infrastructure.Interfaces
 {
     /// <summary>
     /// Проверка состояния папок и файлов

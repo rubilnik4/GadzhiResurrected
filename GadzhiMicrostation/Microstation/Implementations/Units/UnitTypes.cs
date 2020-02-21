@@ -1,8 +1,11 @@
-﻿namespace GadzhiMicrostation.Microstation.Implementations.Units
+﻿using System;
+
+namespace GadzhiMicrostation.Microstation.Implementations.Units
 {
     /// <summary>
     /// Тип измерения координат
     /// </summary>
+    [Flags]
     public enum UnitTypes
     {
         Kilometers,

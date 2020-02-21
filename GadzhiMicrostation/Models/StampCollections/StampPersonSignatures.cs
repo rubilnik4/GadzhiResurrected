@@ -6,13 +6,8 @@ namespace GadzhiMicrostation.Models.StampCollections
     /// <summary>
     /// Поля штампа с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignatures
-    {
-        public StampPersonSignatures()
-        {
-
-        }
-
+    public static class StampPersonSignatures
+    {   
         /// <summary>
         /// Разработчик
         /// </summary>
@@ -65,11 +60,9 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Список строк с ответсвенным лицом и подписью
         /// </summary>
-        public HashSet<StampPersonSignature> StampRowPersonSignatures
+        public static HashSet<StampPersonSignature> GetStampRowPersonSignatures()
         {
-            get
-            {
-                var stampFields = new HashSet<StampPersonSignature>()
+            return new HashSet<StampPersonSignature>()
                 {
                     DeveloperPerson,
                     HeadLeaderPerson,
@@ -78,15 +71,13 @@ namespace GadzhiMicrostation.Models.StampCollections
                     NormControlPerson,
                     GipPerson
                 };
-                return stampFields;
-            }
         }
 
         /// <summary>
         /// Список всех полей с ответсвенным лицом и подписью
         /// </summary>
-        public HashSet<StampBaseField> StampFieldsPersonSignatures =>
-            new HashSet<StampBaseField>(StampRowPersonSignatures?.
+        public static HashSet<StampBaseField> GetStampFieldsPersonSignatures() =>
+            new HashSet<StampBaseField>(GetStampRowPersonSignatures()?.
                                         SelectMany(rowPerson => rowPerson.StampPersonSignatureFields));
 
 

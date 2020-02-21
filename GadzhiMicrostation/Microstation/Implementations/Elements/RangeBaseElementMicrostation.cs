@@ -80,7 +80,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Расположение элемента с учетом поворота в текущих координатах
         /// </summary>
-        public PointMicrostation OriginPointWithRotationAttributeInUnits => OriginPointWithRotationAttribute * UnitScale;
+        public PointMicrostation OriginPointWithRotationAttributeInUnits => OriginPointWithRotationAttribute.Multiply(UnitScale);
 
         /// <summary>
         /// Ширина элемента

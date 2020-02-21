@@ -15,38 +15,38 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Экземпляр ячейки Microstation определяющей штамп
         /// </summary>
-        protected readonly CellElement _cellElement;
+        protected CellElement CellElement { get; private set; }
 
         public CellElementMicrostation(CellElement cellElement,
                                        IOwnerContainerMicrostation ownerContainerMicrostation)
             : base((Element)cellElement, ownerContainerMicrostation, false, false)
         {
-            _cellElement = cellElement;
+            CellElement = cellElement;
         }
 
         /// <summary>
         /// Масштаб штампа
         /// </summary>
-        private double Scale => _cellElement.Scale.X;
+        private double Scale => CellElement.Scale.X;
 
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно коэффициента сжатия штампа
         /// </summary>
-        public override double UnitScale => Scale * _ownerContainerMicrostation.UnitScale;
+        public override double UnitScale => Scale * OwnerContainerMicrostation.UnitScale;
 
         /// <summary>
         /// Координаты базовой точки
         /// </summary>
-        public override PointMicrostation Origin => _cellElement.Origin.ToPointMicrostation();
+        public override PointMicrostation Origin => CellElement.Origin.ToPointMicrostation();
 
         /// <summary>
         /// Заполнить поля данных
         /// </summary>
         protected IEnumerable<IElementMicrostation> GetSubElements()
         {
-            if (_cellElement != null)
+            if (CellElement != null)
             {
-                ElementEnumerator elementEnumerator = _cellElement.GetSubElements();
+                ElementEnumerator elementEnumerator = CellElement.GetSubElements();
 
                 while (elementEnumerator.MoveNext())
                 {
@@ -72,12 +72,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         protected void FindAndChangeSubElement(long Id)
         {
-            while (_cellElement.MoveToNextElement(true))
+            while (CellElement.MoveToNextElement(true))
             {
-                var elementCurrent = _cellElement.CopyCurrentElement();
+                var elementCurrent = CellElement.CopyCurrentElement();
                 if (elementCurrent.ID64 == Id)
                 {
-                    _cellElement.ReplaceCurrentElement(elementCurrent);
+                    CellElement.ReplaceCurrentElement(elementCurrent);
                     break;
                 }
             }

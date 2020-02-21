@@ -1,9 +1,10 @@
 ﻿using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace GadzhiMicrostation.Microstation.Implementations
@@ -96,7 +97,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить имя поля в корректном написании
         /// </summary>
-        private static string GetAttributeNameInCorrectCase(string field) => field?.Trim()?.ToUpper();
+        private static string GetAttributeNameInCorrectCase(string field) => field?.Trim()?.ToUpper(CultureInfo.CurrentCulture);
 
         /// <summary>
         /// Прочитать/записать данные в блок
@@ -106,8 +107,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                                         ref short attributeIdFromDataBlock,
                                                         DataBlockOperationType dataBlockOperationType)
         {
-            dataBlock.CopyString(ref attributeValueFromDataBlock, Convert.ToBoolean(dataBlockOperationType));
-            dataBlock.CopyInteger(ref attributeIdFromDataBlock, Convert.ToBoolean(dataBlockOperationType));
+            dataBlock.CopyString(ref attributeValueFromDataBlock, Convert.ToBoolean(dataBlockOperationType, CultureInfo.CurrentCulture));
+            dataBlock.CopyInteger(ref attributeIdFromDataBlock, Convert.ToBoolean(dataBlockOperationType, CultureInfo.CurrentCulture));
         }
 
         /// <summary>

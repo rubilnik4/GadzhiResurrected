@@ -1,6 +1,6 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations;
 using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
 
 namespace GadzhiMicrostation.Extensions.Microstation

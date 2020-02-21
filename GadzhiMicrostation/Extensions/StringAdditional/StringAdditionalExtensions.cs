@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
-namespace GadzhiMicrostation.Extensions.String
+namespace GadzhiMicrostation.Extensions.StringAdditional
 {
     /// <summary>
     /// Методы расширения для строк
     /// </summary>
-    public static class StringExtensions
+    public static class StringAdditionalExtensions
     {
         /// <summary>
         /// Удалить часть строки
@@ -13,7 +17,7 @@ namespace GadzhiMicrostation.Extensions.String
         public static string TrimSubstring(this string stringOriginal, string substring)
         {
             if (substring != null && substring.Length > 0 &&
-                stringOriginal?.StartsWith(substring) == true)
+                stringOriginal?.StartsWith(substring, StringComparison.Ordinal) == true)
             {
                 return stringOriginal.Remove(substring.Length);
             }
@@ -29,7 +33,9 @@ namespace GadzhiMicrostation.Extensions.String
             {
                 case null: return "";
                 case "": return "";
-                default: return input.First().ToString().ToUpper() + input.Substring(1);
+                default:
+                    return input.First().ToString(CultureInfo.CurrentCulture).
+                                         ToUpper(CultureInfo.CurrentCulture) + input.Substring(1);
             }
         }
 
@@ -42,8 +48,13 @@ namespace GadzhiMicrostation.Extensions.String
             {
                 case null: return "";
                 case "": return "";
-                default: return input.First().ToString().ToLower() + input.Substring(1);
+                default:
+                    return input.First().ToString(CultureInfo.CurrentCulture).
+                                         ToLower(CultureInfo.CurrentCulture) + input.Substring(1);
             }
         }
     }
+
+
+
 }

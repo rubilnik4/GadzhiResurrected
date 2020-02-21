@@ -1,9 +1,8 @@
 ﻿using GadzhiMicrostation.DependencyInjection.BootStrapMicrostation;
-using GadzhiMicrostation.Infrastructure.Implementations.Converting;
-using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
 using Microsoft.Practices.Unity;
@@ -79,7 +78,9 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             {
                 foreach (var stamp in stamps)
                 {
-                    StampProcessing.ConvertingStamp(stamp);
+                    stamp.CompressFieldsRanges();
+                    stamp.InsertSignatures();
+                    stamp.DeleteSignaturesPrevious();
                 }
             }
             else
@@ -91,8 +92,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
         /// <summary>
         /// Освободить элементы
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_container")]
+        /// </summary>      
         public void Dispose()
         {
             _container?.Dispose();

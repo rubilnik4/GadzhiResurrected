@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Models.Enum;
+﻿using GadzhiMicrostation.Models.Enums;
 
 namespace GadzhiMicrostation.Models.Implementations
 {

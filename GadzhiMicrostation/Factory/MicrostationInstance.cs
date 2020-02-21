@@ -1,5 +1,6 @@
 ﻿using MicroStationDGN;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace GadzhiMicrostation.Factory
@@ -37,7 +38,7 @@ namespace GadzhiMicrostation.Factory
         {
             var microstationProcesses = Process.GetProcesses().
                                                 Where(process => process.ProcessName.
-                                                                         ToLower().
+                                                                         ToLower(CultureInfo.CurrentCulture).
                                                                          Contains("ustation"));
             foreach (var microstationProcess in microstationProcesses)
             {

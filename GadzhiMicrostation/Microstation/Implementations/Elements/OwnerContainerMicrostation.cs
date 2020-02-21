@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
@@ -25,7 +26,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
         public OwnerContainerMicrostation(IModelMicrostation modelMicrostation)
         {
-            ApplicationMicrostation = modelMicrostation.ApplicationMicrostation;
+            ApplicationMicrostation = modelMicrostation?.ApplicationMicrostation;
             ModelMicrostation = modelMicrostation;
             UnitScale = modelMicrostation.UnitScale;
         }

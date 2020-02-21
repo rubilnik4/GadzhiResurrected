@@ -1,4 +1,6 @@
-﻿namespace GadzhiMicrostation.Microstation.Interfaces.Elements
+﻿using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
+
+namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {
     /// <summary>
     /// Родительский элемент

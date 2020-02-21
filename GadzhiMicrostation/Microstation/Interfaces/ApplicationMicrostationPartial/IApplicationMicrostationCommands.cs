@@ -1,45 +1,14 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace GadzhiMicrostation.Microstation.Interfaces
+namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
 {
-    /// <summary>
-    /// Класс для работы с приложением Microstation
-    /// </summary>
-    public interface IApplicationMicrostation
+    public interface  IApplicationMicrostationCommands
     {
-        /// <summary>
-        /// Загрузилась ли оболочка Microstation
-        /// </summary>
-        bool IsApplicationValid { get; }
-
-        /// <summary>
-        /// Текущий файл Microstation
-        /// </summary>
-        IDesignFileMicrostation ActiveDesignFile { get; }
-
-        /// <summary>
-        /// Открыть файл
-        /// </summary>       
-        IDesignFileMicrostation OpenDesignFile(string filePath);
-
-        /// <summary>
-        /// Закрыть приложение
-        /// </summary>
-        void CloseApplication();
-
-        /// <summary>
-        /// Сохранить файл
-        /// </summary>       
-        void SaveDesignFile(string filePath);
-
-
-        /// <summary>
-        /// Закрыть файл
-        /// </summary>
-        void CloseDesignFile();
-
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
@@ -55,6 +24,5 @@ namespace GadzhiMicrostation.Microstation.Interfaces
                                                               PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
                                                               Action<ICellElementMicrostation> additionalParametrs = null);
-
     }
 }

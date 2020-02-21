@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using MicroStationDGN;
 using System.Collections.Generic;

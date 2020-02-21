@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Models.Enum;
+﻿using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace GadzhiMicrostation.Helpers.Converters
         /// <summary>
         /// Словарь типов ошибок в строком значении
         /// </summary>
-        public static IDictionary<ErrorMicrostationType, string> ErrorMicrostationTypeToString =
+        public static IDictionary<ErrorMicrostationType, string> ErrorMicrostationTypeToString =>
             new Dictionary<ErrorMicrostationType, string>
             {
                 { ErrorMicrostationType.ApplicationLoad , "Ошибка загрузки приложения" },

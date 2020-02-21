@@ -1,5 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.StampPartial

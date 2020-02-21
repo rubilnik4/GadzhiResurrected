@@ -337,9 +337,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         #endregion
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_statusProcessingUpdaterSubsriptions")]
+        private bool disposedValue = false;
+      
         void Dispose(bool disposing)
         {
             if (!disposedValue)

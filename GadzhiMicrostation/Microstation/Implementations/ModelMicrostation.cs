@@ -2,10 +2,13 @@
 using GadzhiMicrostation.Microstation.Implementations.StampPartial;
 using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using MicroStationDGN;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -70,9 +73,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 while (elementEnumerator.MoveNext())
                 {
                     CellElement cellElement = (CellElement)elementEnumerator.Current;
-                    string cellElementName = cellElement.Name.ToUpper();
+                    string cellElementName = cellElement.Name.ToUpper(CultureInfo.CurrentCulture);
 
-                    if (cellElementName.StartsWith("STAMP") &&
+                    if (cellElementName.StartsWith("STAMP", StringComparison.Ordinal) &&
                         !cellElementName.Contains("STAMP_AUDIT") &&
                         !cellElementName.Contains("STAMP_ISM"))
                     {

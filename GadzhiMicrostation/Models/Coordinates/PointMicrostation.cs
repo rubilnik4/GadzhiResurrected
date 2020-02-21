@@ -1,9 +1,11 @@
-﻿namespace GadzhiMicrostation.Models.Coordinates
+﻿using System;
+
+namespace GadzhiMicrostation.Models.Coordinates
 {
     /// <summary>
     /// Координатная точка
     /// </summary>
-    public class PointMicrostation
+    public struct PointMicrostation : IEquatable<PointMicrostation>
     {
         /// <summary>
         /// Координата X
@@ -19,12 +21,6 @@
         /// Координата Z
         /// </summary>
         public double Z { get; set; }
-
-        public PointMicrostation()
-            : this(0, 0, 0)
-        {
-
-        }
 
         public PointMicrostation(double x, double y)
         {
@@ -43,19 +39,51 @@
         /// <summary>
         /// Операция сложения с другой точкой
         /// </summary>       
-        public static PointMicrostation operator +(PointMicrostation pointMicrostation, PointMicrostation addition) =>
-            new PointMicrostation(pointMicrostation.X + addition.X, pointMicrostation.Y + addition.Y, pointMicrostation.Z + addition.Z);
+        public PointMicrostation Add(PointMicrostation point) =>
+            new PointMicrostation(this.X + point.X, this.Y + point.Y, this.Z + point.Z);
 
         /// <summary>
         /// Операция вычитания с другой точкой
-        /// </summary>       
-        public static PointMicrostation operator -(PointMicrostation pointMicrostation, PointMicrostation addition) =>
-            new PointMicrostation(pointMicrostation.X - addition.X, pointMicrostation.Y - addition.Y, pointMicrostation.Z - addition.Z);
+        /// </summary>   
+        public PointMicrostation Subtract(PointMicrostation point) =>
+            new PointMicrostation(this.X - point.X, this.Y - point.Y, this.Z - point.Z);
 
         /// <summary>
         /// Операция умножения
         /// </summary>       
-        public static PointMicrostation operator *(PointMicrostation pointMicrostation, double factor) =>
-            new PointMicrostation(pointMicrostation.X * factor, pointMicrostation.Y * factor, pointMicrostation.Z * factor);
+        public PointMicrostation Multiply(double factor) =>
+            new PointMicrostation(this.X * factor, this.Y * factor, this.Z * factor);
+
+        public override bool Equals(object obj)
+        {
+            return Equals((PointMicrostation)obj);
+        }
+
+        public bool Equals(PointMicrostation other)
+        {           
+            return other.X == X && other.Y == Y && other.Z == Z;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 17;
+            hashCode = hashCode * 31 + X.GetHashCode();
+            hashCode = hashCode * 31 + Y.GetHashCode();
+            hashCode = hashCode * 31 + Z.GetHashCode();
+
+            return hashCode;
+        }
+
+        public static bool operator ==(PointMicrostation left, PointMicrostation right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PointMicrostation left, PointMicrostation right)
+        {
+            return !(left == right);
+        }
+
+
     }
 }

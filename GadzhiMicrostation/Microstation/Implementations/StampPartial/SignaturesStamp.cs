@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
 using System.Linq;
@@ -17,10 +18,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public void InsertSignatures()
         {
-            var signatureRowSearch = StampElement.StampPersonSignatures.StampRowPersonSignatures.
+            var signatureRowSearch = StampPersonSignatures.GetStampRowPersonSignatures().
                                                 Select(field => field);
-            var signatureRowFound =
-                signatureRowSearch?.
+            var signatureRowFound =signatureRowSearch?.
                 Select(row =>
                     new
                     {
@@ -36,9 +36,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         }
 
         /// <summary>
-        /// Удалить подписи
+        /// Удалить предыдущие подписи
         /// </summary>
-        public void DeleteSignatures()
+        public void DeleteSignaturesPrevious()
+        {
+            var signaturesElements = GetSubElements().Where(subElement => subElement.ElementType == ElementMicrostationType.CellElement);
+
+        }
+
+        /// <summary>
+        /// Удалить текущие подписи
+        /// </summary>
+        public void DeleteSignaturesInserted()
         {
 
         }
@@ -53,7 +62,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             // ICellElementMicrostation cellElementMicrostation =
             ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
                                                                signatureRange.OriginPointWithRotation,
-                                                               _ownerContainerMicrostation.ModelMicrostation,
+                                                               OwnerContainerMicrostation.ModelMicrostation,
                                                                GetAdditionalParametersToSignature(signatureRange));
         }
 
@@ -85,14 +94,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             return new Action<ICellElementMicrostation>(cellElement =>
             {
-                PointMicrostation differenceBetweenOriginAndLowLeft = (cellElement.Origin - cellElement.LowLeftPoint) * StampAdditionalParameters.SignatureRatioMoveFromOriginToLow;
+                PointMicrostation differenceBetweenOriginAndLowLeft = cellElement.Origin.Subtract(cellElement.LowLeftPoint).
+                                                                                         Multiply(StampAdditionalParameters.SignatureRatioMoveFromOriginToLow);
                 cellElement.Move(differenceBetweenOriginAndLowLeft);
 
                 cellElement.ScaleAll(cellElement.LowLeftPoint,
                                      new PointMicrostation(signatureRange.Width / cellElement.Width * StampAdditionalParameters.CompressionRatioText,
                                                            signatureRange.Height / cellElement.Height * StampAdditionalParameters.CompressionRatioText));
 
-                cellElement.SetAttributeById(Models.Enum.ElementMicrostationAttributes.Signature, StampAdditionalParameters.SignatureAttributeMarker);
+                cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampAdditionalParameters.SignatureAttributeMarker);
             });
         }
     }

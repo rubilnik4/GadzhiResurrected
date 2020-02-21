@@ -1,5 +1,5 @@
 ﻿using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Enums;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {

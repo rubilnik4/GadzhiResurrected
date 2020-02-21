@@ -1,8 +1,9 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
@@ -17,7 +18,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Родительский элемент
         /// </summary>
-        protected readonly IOwnerContainerMicrostation _ownerContainerMicrostation;
+        protected IOwnerContainerMicrostation OwnerContainerMicrostation { get; private set; }
 
         /// <summary>
         /// Класс для работы с приложением Microstation
@@ -33,9 +34,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                                    IOwnerContainerMicrostation ownerContainerMicrostation)
         {
             _element = element;
-            _ownerContainerMicrostation = ownerContainerMicrostation;
-            ApplicationMicrostation = _ownerContainerMicrostation.ApplicationMicrostation;
-            ModelMicrostation = _ownerContainerMicrostation.ModelMicrostation;
+            OwnerContainerMicrostation = ownerContainerMicrostation;
+            ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
+            ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно родительского элемента
         /// </summary>
-        public virtual double UnitScale => _ownerContainerMicrostation.UnitScale;
+        public virtual double UnitScale => OwnerContainerMicrostation.UnitScale;
 
         /// <summary>
         /// Является ли базовый элемент Microstation текстовым

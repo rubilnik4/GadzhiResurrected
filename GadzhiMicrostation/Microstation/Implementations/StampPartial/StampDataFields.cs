@@ -1,6 +1,6 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using GadzhiMicrostation.Models.Enum;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.StampCollections;
 using System.Collections.Generic;
 using System.Linq;

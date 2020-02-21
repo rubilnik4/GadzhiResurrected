@@ -11,6 +11,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// </summary>
     public class FilesDataEntity : EntityBase<string>
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FilesDataEntity()
         {
             CreationDateTime = DateTime.Now;

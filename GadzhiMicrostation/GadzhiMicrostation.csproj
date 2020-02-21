@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,6 +17,8 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,13 +58,11 @@
     <Compile Include="DependencyInjection\BootStrapUnityMicrostation.cs" />
     <Compile Include="Extensions\Microstation\ElementAttributeExtensions.cs" />
     <Compile Include="Extensions\Microstation\PointExtensions.cs" />
-    <Compile Include="Extensions\String\StringExtensions.cs" />
+    <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
-    <Compile Include="Infrastructure\Implementations\Converting\DwgProcessing.cs" />
-    <Compile Include="Infrastructure\Implementations\Converting\PdfProcessing.cs" />
-    <Compile Include="Infrastructure\Implementations\Converting\StampProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ErrorMessagingMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrorsMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperationsMicrostation.cs" />
@@ -67,7 +72,9 @@
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrorsMicrostation.cs" />
     <Compile Include="Infrastructure\Interfaces\FileSystemOperationsMicrostation.cs" />
     <Compile Include="Infrastructure\Interfaces\ILoggerMicrostation.cs" />
-    <Compile Include="Microstation\Implementations\ApplicationMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationCommands.cs" />
+    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationDesingFile.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
@@ -81,6 +88,8 @@
     <Compile Include="Microstation\Implementations\Units\UnitTypes.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsNumeratorDenominator.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationCommands.cs" />
+    <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationDesingFile.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ICellElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\IElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\IOwnerContainerMicrostation.cs" />
@@ -91,8 +100,8 @@
     <Compile Include="Microstation\Interfaces\StampPartial\IStampDataFields.cs" />
     <Compile Include="Models\Coordinates\PointMicrostation.cs" />
     <Compile Include="Models\Coordinates\RangeMicrostation.cs" />
-    <Compile Include="Models\Enum\DataBlockOperationType.cs" />
-    <Compile Include="Models\Enum\ElementMicrostationType.cs" />
+    <Compile Include="Models\Enums\DataBlockOperationType.cs" />
+    <Compile Include="Models\Enums\ElementMicrostationType.cs" />
     <Compile Include="Models\StampCollections\StampApprovals.cs" />
     <Compile Include="Models\StampCollections\StampBaseField.cs" />
     <Compile Include="Models\StampCollections\StampChange.cs" />
@@ -100,16 +109,16 @@
     <Compile Include="Models\StampCollections\StampMain.cs" />
     <Compile Include="Models\StampCollections\StampApproval.cs" />
     <Compile Include="Models\StampCollections\StampPersonSignature.cs" />
-    <Compile Include="Models\Enum\ElementMicrostationAttributes.cs" />
+    <Compile Include="Models\Enums\ElementMicrostationAttributes.cs" />
     <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
     <Compile Include="Microstation\Implementations\StampPartial\Stamp.cs" />
     <Compile Include="Microstation\Implementations\ModelMicrostation.cs" />
-    <Compile Include="Microstation\Interfaces\IApplicationMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\IModelMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\IDesignFileMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\StampPartial\IStamp.cs" />
-    <Compile Include="Models\Enum\ColorPrint.cs" />
-    <Compile Include="Models\Enum\ErrorMicrostationType.cs" />
+    <Compile Include="Models\Enums\ColorPrint.cs" />
+    <Compile Include="Models\Enums\ErrorMicrostationType.cs" />
     <Compile Include="Models\StampCollections\StampElement.cs" />
     <Compile Include="Models\Implementations\ErrorMicrostation.cs" />
     <Compile Include="Models\Implementations\FileDataMicrostation.cs" />
@@ -149,5 +158,26 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
 </Project>

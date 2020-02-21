@@ -1,8 +1,9 @@
 ﻿using GadzhiMicrostation.Infrastructure.Implementations;
-using GadzhiMicrostation.Infrastructure.Interface;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Implementations;
+using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
 using Microsoft.Practices.Unity;

@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Infrastructure.Interface;
+﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Interfaces;
 using GadzhiMicrostation.Models.StampCollections;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Ошибки конвертации
         /// </summary>
-        private List<ErrorMicrostation> _errorsMicrostation;
+        private readonly List<ErrorMicrostation> _errorsMicrostation;
 
         /// <summary>
         /// Параметры конвертации
