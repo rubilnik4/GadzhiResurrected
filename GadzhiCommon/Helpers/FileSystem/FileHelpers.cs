@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 
 namespace GadzhiCommon.Helpers.FileSystem
 {
@@ -9,7 +10,7 @@ namespace GadzhiCommon.Helpers.FileSystem
         /// </summary>      
         public static string ExtensionWithoutPoint(string extension)
         {
-            return extension?.ToLower().TrimStart('.');
+            return extension?.ToLower(CultureInfo.CurrentCulture).TrimStart('.');
         }
 
         /// <summary>

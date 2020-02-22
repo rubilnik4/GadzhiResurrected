@@ -23,15 +23,15 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
         {
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
-
-            container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();
+           
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
-            container.RegisterType<IConvertingService, ConvertingService>(new HierarchicalLifetimeManager());
-            container.RegisterType<IConvertingFileData, ConvertingFileData>(new HierarchicalLifetimeManager());
-            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>(new HierarchicalLifetimeManager());
+            container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();
+            container.RegisterType<IApplicationConverting, ApplicationConverting>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IConvertingService, ConvertingService>(new ContainerControlledLifetimeManager());             
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) =>
                       ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
+            container.RegisterType<IMessageAndLoggingService, MessageAndLoggingService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
             container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();

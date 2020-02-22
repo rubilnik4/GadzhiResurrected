@@ -14,7 +14,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// <summary>
     /// Запуск процесса конвертирования
     /// </summary>
-    public class ConvertingService : IConvertingService, IDisposable
+    public class ConvertingService : IConvertingService
     {
         /// <summary>
         ///Контейнер зависимостей
@@ -273,6 +273,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
         #endregion
     }

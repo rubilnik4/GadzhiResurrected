@@ -9,7 +9,7 @@ namespace GadzhiCommon.Converters
         /// <summary>
         /// Словарь типов ошибок в строком значении
         /// </summary>
-        public static IReadOnlyDictionary<FileConvertErrorType, string> ErrorTypeToString =
+        public static IReadOnlyDictionary<FileConvertErrorType, string> ErrorTypeToString =>
             new Dictionary<FileConvertErrorType, string>
             {
                 { FileConvertErrorType.AbortOperation , "Отмена операции" },

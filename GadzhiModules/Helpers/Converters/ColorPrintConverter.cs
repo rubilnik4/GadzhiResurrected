@@ -10,7 +10,7 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Словарь цвета печати в строком значении
         /// </summary>
-        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintToString =
+        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintToString =>
             new Dictionary<ColorPrint, string>
             {
                 { ColorPrint.BlackAndWhite, "Черно-белый" },

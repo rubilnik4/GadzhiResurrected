@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
     /// <summary>
     /// Обработка и конвертирование файла DGN
     /// </summary>
-    public sealed class ConvertingFileMicrostation : IConvertingFileMicrostation, IDisposable
+    public sealed class ConvertingFileMicrostation : IConvertingFileMicrostation
     {
         /// <summary>
         /// Контейнер для инверсии зависимости

@@ -10,7 +10,7 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Словарь статуса обработки в строком значении
         /// </summary>
-        public static IReadOnlyDictionary<StatusProcessing, string> StatusProcessingToString =
+        public static IReadOnlyDictionary<StatusProcessing, string> StatusProcessingToString =>
             new Dictionary<StatusProcessing, string>
             {
                 { StatusProcessing.NotSend, "На старте" },

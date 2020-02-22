@@ -63,9 +63,9 @@ namespace GadzhiTest
         /// <summary>
         /// Инициализация класса поиска файлов
         /// <summary>
-        private Mock<IFileSystemOperations> mockFileSystemOperationsFill(IEnumerable<string> subDirectoryPath = null,
-                                                IEnumerable<string> filesInSubDirectory = null,
-                                                string subfolderGetFiles = null)
+        private Mock<IFileSystemOperations> MockFileSystemOperationsFill(IEnumerable<string> subDirectoryPath = null,
+                                                                         IEnumerable<string> filesInSubDirectory = null,
+                                                                         string subfolderGetFiles = null)
         {
             var mockFileSeach = new Mock<IFileSystemOperations>();
             var fileSeachImplementation = new FileSystemOperations();
@@ -92,7 +92,7 @@ namespace GadzhiTest
         public async Task AddFromFilesOrDirectories_AddTwoPositions()
         {
             // Arrange
-            Mock<IFileSystemOperations> mockFileSystemOperations = mockFileSystemOperationsFill();
+            Mock<IFileSystemOperations> mockFileSystemOperations = MockFileSystemOperationsFill();
 
             var mockFileInfoProject = new Mock<IFilesData>();
             IEnumerable<string> filesPathOut = new List<string>();
@@ -109,7 +109,7 @@ namespace GadzhiTest
                                                           MockProjectSettings.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
-            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
+            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath[DefaultFileData.FileDataToTestOnlyPath.Count - 1];
 
             // Act  
             await applicationGadzhi.AddFromFilesOrDirectories(files);
@@ -120,6 +120,8 @@ namespace GadzhiTest
                                        "Ошибка вызова метода AddFiles");
             Assert.AreEqual(filesPathOut.Count(), 2);
             Assert.AreEqual(filesPathOut.Last(), fileLastExpected);
+
+            applicationGadzhi?.Dispose();
         }
 
         /// <summary>    
@@ -139,7 +141,7 @@ namespace GadzhiTest
             var filesInSubDirectory = new List<string>(DefaultFileData.FileDataToTestOnlyPath.
                 Select(path => Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "Sub" + Path.GetExtension(path)));
 
-            Mock<IFileSystemOperations> mockFileSeach = mockFileSystemOperationsFill(subDirectoryPath, filesInSubDirectory, subfolderGetFiles);
+            Mock<IFileSystemOperations> mockFileSeach = MockFileSystemOperationsFill(subDirectoryPath, filesInSubDirectory, subfolderGetFiles);
 
             var mockFileInfoProject = new Mock<IFilesData>();
             IEnumerable<string> filesPathOut = new List<string>();
@@ -171,6 +173,8 @@ namespace GadzhiTest
             Assert.AreEqual(filesPathOut.Count(), 4);
             Assert.AreEqual(filesPathOut.First(), fileFirstExpected);
             Assert.AreEqual(filesPathOut.Last(), fileLastExpected);
+
+            applicationGadzhi?.Dispose();
         }
 
         /// <summary>    
@@ -180,7 +184,7 @@ namespace GadzhiTest
         public async Task AddFromFilesOrDirectories_AddNull_NoException()
         {
             // Arrange            
-            Mock<IFileSystemOperations> mockFileSeach = mockFileSystemOperationsFill();
+            Mock<IFileSystemOperations> mockFileSeach = MockFileSystemOperationsFill();
             var mockFileInfoProject = new Mock<IFilesData>();
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
@@ -193,7 +197,7 @@ namespace GadzhiTest
                                                           MockProjectSettings.Object);
 
             IEnumerable<string> files = null;
-            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
+            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath[DefaultFileData.FileDataToTestOnlyPath.Count - 1];
 
             try
             {
@@ -205,11 +209,13 @@ namespace GadzhiTest
                                            Times.Exactly(0),
                                            "Ошибочно вызван метод AddFiles");
             }
-            catch (Exception ex)
+            catch (ArgumentNullException ex)
             {
                 // Assert 
                 Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
             }
+
+            applicationGadzhi?.Dispose();
         }
 
         /// <summary>    
@@ -219,7 +225,7 @@ namespace GadzhiTest
         public async Task AddFromFilesOrDirectories_AddListWithNull_NoException()
         {
             // Arrange             
-            Mock<IFileSystemOperations> mockFileSeach = mockFileSystemOperationsFill();
+            Mock<IFileSystemOperations> mockFileSeach = MockFileSystemOperationsFill();
             var mockFileInfoProject = new Mock<IFilesData>();
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
@@ -232,7 +238,7 @@ namespace GadzhiTest
                                                           MockProjectSettings.Object);
 
             IEnumerable<string> files = new List<string> { null };
-            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath.Last();
+            var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath[DefaultFileData.FileDataToTestOnlyPath.Count - 1];
 
             try
             {
@@ -244,11 +250,13 @@ namespace GadzhiTest
                                            Times.Exactly(0),
                                            "Ошибочно вызван метод AddFiles");
             }
-            catch (Exception ex)
+            catch (ArgumentNullException ex)
             {
                 // Assert 
                 Assert.Fail("Ошибку необходимо игнорировать: " + ex.Message);
             }
+
+            applicationGadzhi?.Dispose();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public List<FileConvertErrorType> _fileConvertErrorType;
+        private readonly List<FileConvertErrorType> _fileConvertErrorType;
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
               : this(filePathServer, filePathClient, colorPrint, new List<FileConvertErrorType>())
@@ -37,8 +37,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             ColorPrint = colorPrint;
             StatusProcessing = StatusProcessing.InQueue;
 
-            _fileConvertErrorType = new List<FileConvertErrorType>();
-            _fileConvertErrorType.AddRange(fileConvertErrorType);
+            _fileConvertErrorType = new List<FileConvertErrorType>(fileConvertErrorType);           
         }
 
         /// <summary>

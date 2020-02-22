@@ -27,7 +27,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<FilesDataRequestClient> ConvertToFilesDataRequest(IFilesData filesData)
         {
-            var filesRequestExist = await Task.WhenAll(filesData.FilesInfo?.Where(file => FileSystemOperations.IsFileExist(file.FilePath))?.
+            var filesRequestExist = await Task.WhenAll(filesData?.FilesInfo?.Where(file => FileSystemOperations.IsFileExist(file.FilePath))?.
                                                                                     Select(file => ConvertToFileDataRequest(file)));
             var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
 

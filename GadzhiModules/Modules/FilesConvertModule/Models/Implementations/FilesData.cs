@@ -22,7 +22,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public readonly Subject<FilesChange> _fileDataChange;
+        private readonly Subject<FilesChange> _fileDataChange;
 
         public FilesData()
             : this(new List<FileData>())
@@ -161,7 +161,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// </summary>
         public void ChangeFilesStatus(FilesStatus filesStatus)
         {
-            if (filesStatus.IsValid)
+            if (filesStatus?.IsValid == true)
             {
                 bool isStatusProcessingProjectChanged = SetStatusProcessingProject(filesStatus.StatusProcessingProject);
                 FilesQueueInfo.ChangeByFileQueueStatus(filesStatus.FilesQueueStatus, StatusProcessingProject);

@@ -11,11 +11,10 @@ using Unity.Lifetime;
 
 namespace GadzhiDAL.DependencyInjection
 {
-    public class GadzhiDALDependencyInjection
+    public static class GadzhiDALDependencyInjection
     {
         public static void ConfigureContainer(IUnityContainer container,
-                                              string dataBasePath,
-                                              bool isServerPart)
+                                              string dataBasePath)
         {
             container
                  //регистрируем фабрику, синглтон

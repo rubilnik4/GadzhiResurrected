@@ -2,6 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>       
         public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
         {
-            extension = extension.TrimStart('.');
+            extension = extension?.TrimStart('.');
 
             return directoryPath + fileNameWithoutExtension + "." + extension;
         }
@@ -104,7 +105,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
-        public async Task<bool> UnzipFileAndSave(string filePath, byte[] fileBinary)
+        public async Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileBinary)
         {
             bool succsess = false;
 
@@ -113,7 +114,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             {
                 if (fileBinary != null)
                 {
-                    using (MemoryStream input = new MemoryStream(fileBinary))
+                    using (MemoryStream input = new MemoryStream(fileBinary.ToArray()))
                     using (GZipStream zip = new GZipStream(input, CompressionMode.Decompress))
                     using (FileStream output = File.Create(filePath))
                     {
@@ -123,7 +124,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                     succsess = true;
                 }
             }
-            catch (Exception)
+            finally
             {
 
             }
@@ -144,7 +145,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName)
         {
             bool isCreated = false;
-            if (!startingPath.EndsWith("\\"))
+            if (startingPath?.EndsWith("\\",  StringComparison.Ordinal) == false)
             {
                 startingPath += "\\";
             }
@@ -157,14 +158,6 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
 
             return (isCreated, createdPath);
-        }
-
-        /// <summary>
-        /// Заменить запрещенные символы в пути файла
-        /// </summary>       
-        private string ReplaceInvalidChars(string filename)
-        {
-            return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
-        }
+        }        
     }
 }

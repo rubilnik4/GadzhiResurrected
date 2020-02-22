@@ -38,17 +38,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>     
         public async Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect = false)
         {
-            var commonOpenFileDialog = new CommonOpenFileDialog()
+            using (var commonOpenFileDialog = new CommonOpenFileDialog() { IsFolderPicker = true, Multiselect = isMultiselect })
             {
-                IsFolderPicker = true,
-                Multiselect = isMultiselect,
-            };
-
-            if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                return await Task.FromResult(commonOpenFileDialog.FileNames);
+                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    return await Task.FromResult(commonOpenFileDialog.FileNames);
+                }
+                return await Task.FromResult(new List<string>());
             }
-            return await Task.FromResult(new List<string>());
         }
 
         /// <summary>

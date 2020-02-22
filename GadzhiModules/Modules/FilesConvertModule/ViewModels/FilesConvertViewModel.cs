@@ -43,7 +43,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            fileDataChangeSubscribe = _applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            fileDataChangeSubscribe = _applicationGadzhi?.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
@@ -322,10 +322,10 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Реализация Drag&Drop для ссылки на файлы
         /// </summary>       
         public void DragOver(IDropInfo dropInfo)
-        {
-            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-            if (dropInfo.Data is IDataObject dataObject)
+        {         
+            if (dropInfo?.Data is IDataObject dataObject)
             {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
                 if (dataObject != null && dataObject.GetDataPresent(DataFormats.FileDrop))
                 {
                     dropInfo.Effects = DragDropEffects.Copy;
@@ -335,7 +335,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
         public void Drop(IDropInfo dropInfo)
         {
-            if (dropInfo.Data is DataObject dataObject)
+            if (dropInfo?.Data is DataObject dataObject)
             {
                 if (dataObject != null && dataObject.ContainsFileDropList())
                 {

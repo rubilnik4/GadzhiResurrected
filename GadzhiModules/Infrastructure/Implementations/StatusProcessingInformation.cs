@@ -75,8 +75,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 double numberOfComplete = FilesInfoProject.
                                           FilesInfo.Count(file => file.StatusProcessing == StatusProcessing.Completed ||
                                                                   file.StatusProcessing == StatusProcessing.Error);
-                double numberTotal = FilesInfoProject.
-                                     FilesInfo.Count();
+                double numberTotal = FilesInfoProject.FilesInfo.Count;
 
                 percentageOfComplete = (numberOfComplete / numberTotal) * 100;
             }

@@ -18,7 +18,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             string fileName = Path.GetFileNameWithoutExtension(filePath);
             if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentNullException("Входные параметры FileData имеют пустое значение");
+                throw new ArgumentNullException(nameof(filePath));
             }
 
             FileExtension = fileExtension;

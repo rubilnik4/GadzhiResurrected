@@ -119,13 +119,13 @@ namespace GadzhiModules.Infrastructure.Implementations
         public async Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequestClient filesDataRequest,
                                                                                FilesDataIntermediateResponseClient filesDataIntermediateResponse)
         {
-            var filesNotFound = GetFilesNotFound(filesDataRequest.FilesData);
+            var filesNotFound = GetFilesNotFound(filesDataRequest?.FilesData);
             var filesChangedStatus = GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             await Task.WhenAll(filesNotFound, filesChangedStatus);
 
             var filesDataUnion = filesNotFound?.Result.FileStatus.Union(filesChangedStatus.Result.FileStatus);
             var filesStatusUnion = new FilesStatus(filesDataUnion,
-                                                   filesDataIntermediateResponse.StatusProcessingProject,
+                                                   filesDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
                                                    filesChangedStatus.Result.FilesQueueStatus);
             return filesStatusUnion;
         }

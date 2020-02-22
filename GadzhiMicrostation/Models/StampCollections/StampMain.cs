@@ -95,7 +95,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// </summary>       
         public static bool IsStampName(string name)
         {
-            string cellElementName = name.ToUpper(CultureInfo.CurrentCulture);
+            string cellElementName = name?.ToUpper(CultureInfo.CurrentCulture);
 
             return cellElementName.StartsWith("STAMP", StringComparison.Ordinal) &&
                    !cellElementName.Contains("STAMP_AUDIT") &&

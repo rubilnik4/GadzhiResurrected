@@ -30,7 +30,7 @@ namespace GadzhiDAL.Factories.Implementations
         public UnitOfWork(ISessionFactory sessionFactory)
         {
             _sessionFactory = sessionFactory;
-            Session = _sessionFactory.OpenSession();
+            Session = _sessionFactory?.OpenSession();
             BeginTransaction();
         }
 
@@ -113,6 +113,7 @@ namespace GadzhiDAL.Factories.Implementations
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
         #endregion
     }

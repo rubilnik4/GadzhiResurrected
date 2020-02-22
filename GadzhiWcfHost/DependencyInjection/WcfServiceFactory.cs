@@ -29,8 +29,7 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
 
             GadzhiDALDependencyInjection.ConfigureContainer(container,
-                                                            HostSystemInformation.DataBasePath,
-                                                            false);
+                                                            HostSystemInformation.DataBasePath);
         }
 
     }

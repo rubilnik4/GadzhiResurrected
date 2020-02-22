@@ -165,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\WcfServiceFactory.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\HostSystemInformation.cs" />
     <Compile Include="Infrastructure\Implementations\Client\ApplicationClientConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Client\Authentication.cs" />

@@ -18,11 +18,18 @@ namespace GadzhiDAL.Factories.Implementations
 
         public static ISessionFactory Instance(FluentConfiguration config)
         {
-            if (_lazySessionFactory != null && _lazySessionFactory.IsValueCreated)
-                return _lazySessionFactory.Value;
+            if (config != null)
+            {
+                if (_lazySessionFactory != null && _lazySessionFactory.IsValueCreated)
+                    return _lazySessionFactory.Value;
 
-            _lazySessionFactory = new Lazy<ISessionFactory>(config.BuildSessionFactory);
-            return _lazySessionFactory.Value;
+                _lazySessionFactory = new Lazy<ISessionFactory>(config.BuildSessionFactory);
+                return _lazySessionFactory.Value;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
         }
 
         public static FluentConfiguration SQLiteConfigurationFactory(string dataBasePath)

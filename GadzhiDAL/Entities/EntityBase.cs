@@ -5,11 +5,11 @@ namespace GadzhiDAL.Entities
     /// <summary>
     /// Базовый класс для сущностей
     /// </summary>
-    public abstract class EntityBase<IdType> where IdType : IEquatable<IdType>
+    public abstract class EntityBase<TIdType> where TIdType : IEquatable<TIdType>
     {
         /// <summary>
         /// Идентефикатор
         /// </summary>
-        public abstract IdType Id { get; protected set; }
+        public abstract TIdType Id { get; protected set; }
     }
 }

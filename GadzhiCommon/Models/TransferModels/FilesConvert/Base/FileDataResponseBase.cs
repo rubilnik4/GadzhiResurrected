@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
 {
@@ -12,6 +13,6 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
         /// Файл данных в формате zip GZipStream
         /// </summary>
         [DataMember]
-        public byte[] FileDataSource { get; set; }
+        public IList<byte> FileDataSource { get; set; }
     }
 }

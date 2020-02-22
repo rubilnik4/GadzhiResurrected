@@ -10,7 +10,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public class ApplicationServerConverting : IApplicationServerConverting, IAsyncDisposable
+    public class ApplicationServerConverting : IApplicationServerConverting
     {
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
@@ -65,9 +65,26 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
             }
         }
 
-        public async Task DisposeAsync()
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
         {
-            await AbortConvertingById(_idPackage);
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    AbortConvertingById(_idPackage).ConfigureAwait(false);
+                }
+
+                disposedValue = true;
+            }
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

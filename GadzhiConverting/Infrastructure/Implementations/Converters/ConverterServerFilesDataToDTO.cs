@@ -2,6 +2,7 @@
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiDTOServer.TransferModels.FilesConvert;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,14 +28,21 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>       
         public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(FilesDataServer filesDataServer)
         {
-            return new FilesDataIntermediateResponseServer()
+            if (filesDataServer != null)
             {
-                Id = filesDataServer.Id,
-                IsCompleted = filesDataServer.IsCompleted,
-                StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-                                                                  ConvertFileToIntermediateResponse(fileDataServer)),
-            };
+                return new FilesDataIntermediateResponseServer()
+                {
+                    Id = filesDataServer.Id,
+                    IsCompleted = filesDataServer.IsCompleted,
+                    StatusProcessingProject = filesDataServer.StatusProcessingProject,
+                    FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
+                                                                      ConvertFileToIntermediateResponse(fileDataServer)),
+                };
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(filesDataServer));
+            }
         }
 
         /// <summary>
@@ -42,7 +50,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>          
         public async Task<FilesDataResponseServer> ConvertFilesToResponse(FilesDataServer filesDataServer)
         {
-            var filesDataToResponseTasks = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
+            var filesDataToResponseTasks = filesDataServer?.FilesDataInfo?.Select(fileDataServer =>
                                                            ConvertFileResponse(fileDataServer));
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 

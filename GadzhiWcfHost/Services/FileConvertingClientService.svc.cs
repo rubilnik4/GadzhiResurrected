@@ -1,6 +1,7 @@
 ﻿using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces.Client;
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -63,5 +64,28 @@ namespace GadzhiWcfHost.Services
         {
             await _applicationClientConverting.AbortConvertingById(id);
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _applicationClientConverting.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {            
+            Dispose(true);          
+        }
+        #endregion
+
+
     }
 }

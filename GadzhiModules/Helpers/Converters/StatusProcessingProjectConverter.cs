@@ -10,7 +10,7 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Словарь статуса обработки проекта в строком значении
         /// </summary>
-        public static IReadOnlyDictionary<StatusProcessingProject, string> StatusProcessingProjectToString =
+        public static IReadOnlyDictionary<StatusProcessingProject, string> StatusProcessingProjectToString =>
             new Dictionary<StatusProcessingProject, string>
             {
                 { StatusProcessingProject.NeedToLoadFiles, "Перетащите барахлишко на экран" },

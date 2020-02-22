@@ -10,7 +10,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// <summary>
     /// Инфраструктура для конвертирования файлов
     /// </summary>
-    public sealed class ApplicationConverting : IApplicationConverting, IDisposable
+    public sealed class ApplicationConverting : IApplicationConverting
     {
         /// <summary>
         ///Контейнер зависимостей
@@ -86,6 +86,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                     _convertingUpdaterSubsriptions?.Dispose();
                 }
 
+                _convertingService.Dispose();
+
                 disposedValue = true;
             }
         }
@@ -93,6 +95,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
         #endregion       
     }

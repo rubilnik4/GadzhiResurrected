@@ -89,6 +89,7 @@
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
     <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />
     <Compile Include="Helpers\FileSystem\FileHelpers.cs" />

@@ -1,4 +1,5 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public interface IApplicationClientConverting
+    public interface IApplicationClientConverting: IDisposable
     {
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ

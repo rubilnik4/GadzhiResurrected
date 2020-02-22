@@ -24,7 +24,7 @@ namespace GadzhiModules.Helpers.Wpf.Behaviors
             SelectedItems = array;
         }
 
-        public static readonly DependencyProperty SelectedItemsProperty =
+        public static DependencyProperty SelectedItemsProperty =>
             DependencyProperty.Register("SelectedItems", typeof(IList), typeof(DataGridSelectedItemsBlendBehavior),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 

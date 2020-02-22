@@ -32,7 +32,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void FileData_Equals_True()
         {
             // Arrange     
-            string filePath = DefaultFileData.FileDataToTestOnlyPath.First();
+            string filePath = DefaultFileData.FileDataToTestOnlyPath[0];
             var fileDataFirst = new FileData(filePath);
             var fileDataSecond = new FileData(filePath);
 

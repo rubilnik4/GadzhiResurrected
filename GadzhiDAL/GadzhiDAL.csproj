@@ -143,6 +143,7 @@
     <Compile Include="Entities\FilesConvert\FilesDataEntity.cs" />
     <Compile Include="Factories\Implementations\UnitOfWork.cs" />
     <Compile Include="Factories\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterDataAccessFilesDataFromDTOClient.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterDataAccessFilesDataToDTOClient.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterDataAccessFilesDataToDTOServer.cs" />

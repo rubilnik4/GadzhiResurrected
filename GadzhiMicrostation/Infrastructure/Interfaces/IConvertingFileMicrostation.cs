@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Models.Implementations;
+using System;
 
 namespace GadzhiMicrostation.Infrastructure.Interfaces
 {
@@ -6,7 +7,7 @@ namespace GadzhiMicrostation.Infrastructure.Interfaces
     /// <summary>
     /// Обработка и конвертирование файла DGN
     /// </summary>
-    public interface IConvertingFileMicrostation
+    public interface IConvertingFileMicrostation: IDisposable
     {
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения

@@ -2,6 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.FilesConvert.Implementations;
+using System;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -23,13 +24,20 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         public async Task<FileDataServer> Converting(FileDataServer fileDataServer)
         {
-            fileDataServer = FileDataStartConverting(fileDataServer);
+            if (fileDataServer != null)
+            {
+                fileDataServer = FileDataStartConverting(fileDataServer);
 
-            await FileDataConverting(fileDataServer);
+                await FileDataConverting(fileDataServer);
 
-            fileDataServer = FileDataEndConverting(fileDataServer);
+                fileDataServer = FileDataEndConverting(fileDataServer);
 
-            return fileDataServer;
+                return fileDataServer;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(fileDataServer));
+            }
         }
 
         /// <summary>

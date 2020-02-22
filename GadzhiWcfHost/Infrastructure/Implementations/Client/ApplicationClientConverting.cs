@@ -10,7 +10,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public class ApplicationClientConverting : IApplicationClientConverting, IAsyncDisposable
+    public class ApplicationClientConverting : IApplicationClientConverting
     {
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в клиентской части
@@ -86,9 +86,26 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
             }
         }
 
-        public async Task DisposeAsync()
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
         {
-            await AbortConvertingById(_authentication.Id);
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    AbortConvertingById(_authentication.Id).ConfigureAwait(false);
+                }
+            
+                disposedValue = true;
+            }
         }
+        
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

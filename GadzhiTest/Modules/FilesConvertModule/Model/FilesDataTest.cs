@@ -26,6 +26,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             // Assert 
             Assert.AreEqual(filesInfoProject.FilesInfo.Count, 1);
             Assert.AreSame(filesInfoProject.FilesInfo[filesInfoProject.FilesInfo.Count - 1], file);
+
+            filesInfoProject?.Dispose();
         }
 
         /// <summary>

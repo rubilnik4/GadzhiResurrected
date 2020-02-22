@@ -45,7 +45,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Файл данных в формате zip GZipStream
         /// </summary>      
-        public virtual byte[] FileDataSource { get; set; }
+        public virtual IList<byte> FileDataSource { get;  set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
