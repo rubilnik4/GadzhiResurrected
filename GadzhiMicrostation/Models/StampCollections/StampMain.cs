@@ -70,6 +70,10 @@ namespace GadzhiMicrostation.Models.StampCollections
                     Format,
                 };
 
+        /// <summary>
+        /// Маркер подписи в аттритубах
+        /// </summary>
+        public static string SignatureAttributeMarker => "NameSig";
 
         /// <summary>
         /// Проверка, является ли поле указателем формата

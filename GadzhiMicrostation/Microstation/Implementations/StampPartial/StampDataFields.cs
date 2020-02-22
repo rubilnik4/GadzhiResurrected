@@ -96,7 +96,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                 switch (element.ElementType)
                 {
                     case ElementMicrostationType.TextElement:
-                        element.AsTextElementMicrostation.CompressRange();
+                        element.AsTextElementMicrostation.CompressRange();                      
                         break;
                     case ElementMicrostationType.TextNodeElement:
                         if (element.AsTextNodeElementMicrostation.CompressRange())

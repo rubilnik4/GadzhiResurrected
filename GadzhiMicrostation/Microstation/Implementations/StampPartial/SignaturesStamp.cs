@@ -4,6 +4,7 @@ using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
@@ -13,6 +14,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
     /// </summary>
     public partial class Stamp : ISignaturesStamp
     {
+        private IEnumerable<ICellElementMicrostation> _insertedSignatures;
+
         /// <summary>
         /// Вставить подписи
         /// </summary>
@@ -28,11 +31,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                         Date = FindElementInStampFields(row.Date.Name).AsTextElementMicrostation,
                     }).
                 Where(row => row.Person != null && row.Date != null);
-
-            foreach (var signature in signatureRowFound)
-            {
-                InsertSignature(signature.Person, signature.Date);
-            }
+           
+            _insertedSignatures = signatureRowFound?.
+                                  Select(signature => InsertSignature(signature.Person, signature.Date));
         }
 
         /// <summary>
@@ -41,8 +42,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         public void DeleteSignaturesPrevious()
         {
             var signaturesElements = OwnerContainerMicrostation.ModelMicrostation.
-                                     GetModelElementsMicrostation().Where(subElement => 
-                                            subElement.ElementType == ElementMicrostationType.CellElement);
+                                     GetModelElementsMicrostation(ElementMicrostationType.CellElement).
+                                     Where(element => element.AttributeControlName == StampMain.SignatureAttributeMarker);
 
            foreach (var signature in signaturesElements)
             {
@@ -55,18 +56,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public void DeleteSignaturesInserted()
         {
-
+            if (_insertedSignatures != null)
+            {
+                foreach(var signature in _insertedSignatures)
+                {
+                    signature.Remove();
+                }
+            }
         }
 
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        private void InsertSignature(ITextElementMicrostation person, ITextElementMicrostation date)
+        private ICellElementMicrostation InsertSignature(ITextElementMicrostation person, ITextElementMicrostation date)
         {
             RangeMicrostation signatureRange = GetSignatureRange(Origin, person, date);
-
-            // ICellElementMicrostation cellElementMicrostation =
-            ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
+          
+           return ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
                                                                signatureRange.OriginPointWithRotation,
                                                                OwnerContainerMicrostation.ModelMicrostation,
                                                                GetAdditionalParametersToSignature(signatureRange));
@@ -108,7 +114,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                                      new PointMicrostation(signatureRange.Width / cellElement.Width * StampAdditionalParameters.CompressionRatioText,
                                                            signatureRange.Height / cellElement.Height * StampAdditionalParameters.CompressionRatioText));
 
-                cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampAdditionalParameters.SignatureAttributeMarker);
+                cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampMain.SignatureAttributeMarker);
             });
         }
     }

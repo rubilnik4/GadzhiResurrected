@@ -22,12 +22,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Имя библиотеки со штампами
         /// </summary>
-        public static string StampLibraryPath => MicrostationDataFolder + "Stamp.cel";
-
-        /// <summary>
-        /// Маркер подписи в аттритубах
-        /// </summary>
-        public static string SignatureAttributeMarker => "NameSig";
+        public static string StampLibraryPath => MicrostationDataFolder + "Stamp.cel";      
 
         /// <summary>
         /// Символ разделяющий параметры внутри аттрибута

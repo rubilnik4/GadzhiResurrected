@@ -79,8 +79,10 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 foreach (var stamp in stamps)
                 {
                     stamp.CompressFieldsRanges();
-                    stamp.InsertSignatures();
+
                     stamp.DeleteSignaturesPrevious();
+                    stamp.InsertSignatures();
+                    stamp.DeleteSignaturesInserted();
                 }
             }
             else
