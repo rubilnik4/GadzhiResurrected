@@ -45,5 +45,18 @@ namespace GadzhiMicrostation.Models.StampCollections
 
             return stampControlNamesApprovals;
         }
+
+        /// <summary>
+        /// Список строк с согласующим лицом и подписью
+        /// </summary>
+        public static HashSet<StampApproval> GetStampRowApprovalSignatures()
+        {
+            return new HashSet<StampApproval>()
+                {
+                    StampApprovalsFirst,
+                    StampApprovalsSecond,
+                    StampApprovalsThird,                   
+                };
+        }
     }
 }
