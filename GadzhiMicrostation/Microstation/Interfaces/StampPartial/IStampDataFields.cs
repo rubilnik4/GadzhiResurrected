@@ -7,9 +7,14 @@ namespace GadzhiMicrostation.Microstation.Interfaces.StampPartial
     public interface IStampDataFields
     {
         /// <summary>
+        /// Формат штампа
+        /// </summary>
+        string PaperSize { get; }
+
+        /// <summary>
         /// Найти элементы в словаре штампа по ключам
         /// </summary>
-        IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldSearch,
+        IEnumerable <IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldSearch,
                                                                     ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element);
 
         /// <summary>

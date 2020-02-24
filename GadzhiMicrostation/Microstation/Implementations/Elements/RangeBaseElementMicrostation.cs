@@ -38,7 +38,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
-        /// Координаты текстового элемента
+        /// Координаты точки вставки
         /// </summary>
         public abstract PointMicrostation Origin { get; }
 
@@ -46,6 +46,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Нижняя левая точка
         /// </summary>
         public PointMicrostation LowLeftPoint => _element.Range.Low.ToPointMicrostation();
+
+        /// <summary>
+        /// Размеры ячейки элемента в текущих координатах
+        /// </summary>
+        public RangeMicrostation Range => new RangeMicrostation(_element.Range.Low.ToPointMicrostation(),
+                                                                 _element.Range.High.ToPointMicrostation(), IsVertical);
 
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах

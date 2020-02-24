@@ -48,6 +48,11 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>       
         public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
         {
+            if (directoryPath?.EndsWith("\\", StringComparison.Ordinal) == false)
+            {
+                directoryPath += "\\";
+            }
+
             extension = extension?.TrimStart('.');
 
             return directoryPath + fileNameWithoutExtension + "." + extension;

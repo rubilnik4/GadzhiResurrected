@@ -1,4 +1,6 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
+using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
@@ -47,5 +49,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// Закрыть файл файл
         /// </summary>
         void CloseWithSaving();
+
+        /// <summary>
+        /// Создать пдф по координатам и формату
+        /// </summary>
+        void CreatePdfByStamp(IStamp stamp);
+
+        /// <summary>
+        /// Создать пдф по координатам и формату
+        /// </summary>
+        void CreatePdf(string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
+                       double printScale, ColorPrint colorPrint);
     }
 }

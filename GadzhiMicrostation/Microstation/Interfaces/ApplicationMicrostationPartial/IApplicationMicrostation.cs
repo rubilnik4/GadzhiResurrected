@@ -1,5 +1,6 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Interfaces;
 using System;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
@@ -7,8 +8,9 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public interface IApplicationMicrostation : IApplicationMicrostationDesingFile, IApplicationMicrostationCommands
-    {
+    public interface IApplicationMicrostation : IApplicationMicrostationDesingFile, IApplicationMicrostationCommands, 
+                                                IApplicationMicrostationPrinting, IDisposable
+    {  
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>

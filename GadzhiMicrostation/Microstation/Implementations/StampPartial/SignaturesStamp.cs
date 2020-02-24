@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
     /// </summary>
     public partial class Stamp : ISignaturesStamp
     {
-        private IEnumerable<ICellElementMicrostation> _insertedSignatures;
+        private IList<ICellElementMicrostation> _insertedSignatures;
 
         /// <summary>
         /// Вставить подписи
@@ -23,7 +23,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             var signatureRowSearch = StampPersonSignatures.GetStampRowPersonSignatures().
                                                 Select(field => field);
-            var signatureRowFound =signatureRowSearch?.
+            var signatureRowFound = signatureRowSearch?.
                 Select(row =>
                     new
                     {
@@ -31,9 +31,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                         Date = FindElementInStampFields(row.Date.Name).AsTextElementMicrostation,
                     }).
                 Where(row => row.Person != null && row.Date != null);
-           
-            _insertedSignatures = signatureRowFound?.
-                                  Select(signature => InsertSignature(signature.Person, signature.Date));
+
+            var insertedSignatures = new List<ICellElementMicrostation>();
+            foreach (var signature in signatureRowFound)
+            {
+                var insertedSignature = InsertSignature(signature.Person, signature.Date);
+                insertedSignatures.Add(insertedSignature);
+            }
+            _insertedSignatures = insertedSignatures;
         }
 
         /// <summary>
@@ -45,7 +50,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                                      GetModelElementsMicrostation(ElementMicrostationType.CellElement).
                                      Where(element => element.AttributeControlName == StampMain.SignatureAttributeMarker);
 
-           foreach (var signature in signaturesElements)
+            foreach (var signature in signaturesElements)
             {
                 signature.Remove();
             }
@@ -58,7 +63,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             if (_insertedSignatures != null)
             {
-                foreach(var signature in _insertedSignatures)
+                foreach (var signature in _insertedSignatures)
                 {
                     signature.Remove();
                 }
@@ -71,11 +76,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         private ICellElementMicrostation InsertSignature(ITextElementMicrostation person, ITextElementMicrostation date)
         {
             RangeMicrostation signatureRange = GetSignatureRange(Origin, person, date);
-          
-           return ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
-                                                               signatureRange.OriginPointWithRotation,
-                                                               OwnerContainerMicrostation.ModelMicrostation,
-                                                               GetAdditionalParametersToSignature(signatureRange));
+
+            return ApplicationMicrostation.CreateSignatureFromLibrary(person.AttributePersonId,
+                                                                signatureRange.OriginPointWithRotation,
+                                                                OwnerContainerMicrostation.ModelMicrostation,
+                                                                GetAdditionalParametersToSignature(signatureRange));
         }
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты
@@ -86,13 +91,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                                                     ITextElementMicrostation personField,
                                                     ITextElementMicrostation dateField)
         {
-            PointMicrostation leftHeightPoint = new PointMicrostation(personField.OriginPointWithRotationAttributeInUnits.X + personField.WidthAttributeInUnits,
-                                                                      personField.OriginPointWithRotationAttributeInUnits.Y + dateField.HeightAttributeInUnits);
+            PointMicrostation lowLeftPoint = new PointMicrostation(personField.OriginPointWithRotationAttributeInUnits.X + personField.WidthAttributeInUnits,
+                                                                   personField.OriginPointWithRotationAttributeInUnits.Y);
 
-            PointMicrostation lowRightPoint = new PointMicrostation(dateField.OriginPointWithRotationAttributeInUnits.X,
-                                                                    dateField.OriginPointWithRotationAttributeInUnits.Y);
+            PointMicrostation highRightPoint = new PointMicrostation(dateField.OriginPointWithRotationAttributeInUnits.X,
+                                                                     dateField.OriginPointWithRotationAttributeInUnits.Y + dateField.HeightAttributeInUnits);
 
-            var signatureRangeInCellCoordinates = new RangeMicrostation(leftHeightPoint, lowRightPoint, false);
+            var signatureRangeInCellCoordinates = new RangeMicrostation(lowLeftPoint, highRightPoint, false);
             var signatureRangeInModelCoordinates = signatureRangeInCellCoordinates.Scale(UnitScale).
                                                                                    Offset(stampOrigin);
             // левая нижняя точка

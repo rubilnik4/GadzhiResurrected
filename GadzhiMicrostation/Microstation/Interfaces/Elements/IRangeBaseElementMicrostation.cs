@@ -23,6 +23,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         PointMicrostation Origin { get; }
 
         /// <summary>
+        /// Размеры ячейки элемента в текущих координатах
+        /// </summary>
+        RangeMicrostation Range { get; }
+
+        /// <summary>
         /// Нижняя левая точка
         /// </summary>
         PointMicrostation LowLeftPoint { get; }

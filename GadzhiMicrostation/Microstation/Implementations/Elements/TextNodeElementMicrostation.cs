@@ -51,6 +51,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             {
                 textElement.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
             });
+            /// необходимо сжатие самого элемента контейнера
+            _textNodeElement.ScaleAll(Origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
+            _textNodeElement.Rewrite();
         }
 
         /// <summary>
@@ -77,8 +80,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
                 if (scaleFactor.X != 1 || scaleFactor.Y != 1)
                 {
-                    ScaleAll(Origin, scaleFactor);
-
+                    ScaleAll(Origin, scaleFactor);                   
                     isComressed = true;
                 }
             }

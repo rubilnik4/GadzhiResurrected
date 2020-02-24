@@ -23,6 +23,7 @@ namespace GadzhiMicrostation.DependencyInjection.BootStrapMicrostation
             container.RegisterType<ILoggerMicrostation, LoggerMicrostation>(new HierarchicalLifetimeManager());
             container.RegisterType<IExecuteAndCatchErrorsMicrostation, ExecuteAndCatchErrorsMicrostation>();
             container.RegisterType<IFileSystemOperationsMicrostation, FileSystemOperationsMicrostation>();
+            container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
             container.RegisterType<IApplicationMicrostation, ApplicationMicrostation>(new HierarchicalLifetimeManager());
             container.RegisterType<IDesignFileMicrostation, DesignFileMicrostation>(new HierarchicalLifetimeManager());

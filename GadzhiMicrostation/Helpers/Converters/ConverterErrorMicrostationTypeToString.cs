@@ -20,6 +20,10 @@ namespace GadzhiMicrostation.Helpers.Converters
                 { ErrorMicrostationType.FileNotFound , "Файл не найден" },
                 { ErrorMicrostationType.IncorrectExtension , "Некорректное расширение" },
                 { ErrorMicrostationType.StampNotFound , "Штампы не найдены" },
+                { ErrorMicrostationType.RangeNotValid , "Некорректный диапазон" },
+                { ErrorMicrostationType.PrinterNotInstall , "Принтер не установлен" },
+                { ErrorMicrostationType.PaperSizeNotFound  , "Формат принтера не найден" },
+                { ErrorMicrostationType.PdfPrintingError  , "Ошибка печати PDF" },
             };
 
         /// <summary>

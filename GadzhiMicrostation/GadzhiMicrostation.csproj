@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -61,6 +62,9 @@
     <Compile Include="Extensions\Microstation\PointExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\NativeMethods .cs" />
+    <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
+    <Compile Include="Infrastructure\Interfaces\IPdfCreatorService.cs" />
     <Compile Include="Microstation\Converters\ConvertElementMicrostationTypes.cs" />
     <Compile Include="Helpers\Converters\ConverterErrorMicrostationTypeToString.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileMicrostation.cs" />
@@ -78,6 +82,9 @@
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationCommands.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationDesingFile.cs" />
+    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationPrinting.cs" />
+    <Compile Include="Microstation\Implementations\Elements\ElementMicrostationPair.cs" />
+    <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationPrinting.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
@@ -86,7 +93,6 @@
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\StampPartial\SignaturesStamp.cs" />
-    <Compile Include="Microstation\Implementations\StampFeatures\StampMainFields.cs" />
     <Compile Include="Microstation\Implementations\StampPartial\StampDataFields.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitTypes.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsNumeratorDenominator.cs" />
@@ -105,12 +111,16 @@
     <Compile Include="Models\Coordinates\RangeMicrostation.cs" />
     <Compile Include="Models\Enums\DataBlockOperationType.cs" />
     <Compile Include="Models\Enums\ElementMicrostationType.cs" />
+    <Compile Include="Models\Enums\FileExtentionType.cs" />
+    <Compile Include="Models\Implementations\PrinterInformation.cs" />
+    <Compile Include="Models\Implementations\PrintersInformation.cs" />
     <Compile Include="Models\StampCollections\StampApprovals.cs" />
     <Compile Include="Models\StampCollections\StampBaseField.cs" />
     <Compile Include="Models\StampCollections\StampChange.cs" />
     <Compile Include="Models\StampCollections\StampChanges.cs" />
     <Compile Include="Models\StampCollections\StampMain.cs" />
     <Compile Include="Models\StampCollections\StampApproval.cs" />
+    <Compile Include="Models\Enums\OrientationType.cs" />
     <Compile Include="Models\StampCollections\StampPersonSignature.cs" />
     <Compile Include="Models\Enums\ElementMicrostationAttributes.cs" />
     <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
@@ -144,6 +154,24 @@
       <VersionMajor>8</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="PDFCreator">
+      <Guid>{1CE9DC08-9FBC-45C6-8A7C-4FE1E208A613}</Guid>
+      <VersionMajor>7</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBA">
+      <Guid>{000204EF-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>9</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>

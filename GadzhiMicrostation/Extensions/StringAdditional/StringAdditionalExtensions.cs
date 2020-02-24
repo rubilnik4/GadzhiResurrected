@@ -17,9 +17,9 @@ namespace GadzhiMicrostation.Extensions.StringAdditional
         public static string TrimSubstring(this string stringOriginal, string substring)
         {
             if (substring != null && substring.Length > 0 &&
-                stringOriginal?.StartsWith(substring, StringComparison.Ordinal) == true)
-            {
-                return stringOriginal.Remove(substring.Length);
+                stringOriginal?.StartsWith(substring, StringComparison.OrdinalIgnoreCase) == true)
+            {             
+                return stringOriginal.Remove(0, substring.Length)?.Trim();
             }
             return stringOriginal;
         }

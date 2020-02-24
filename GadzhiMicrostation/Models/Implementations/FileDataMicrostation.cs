@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Models.Enums;
+using System;
 using System.IO;
 
 
@@ -13,14 +14,21 @@ namespace GadzhiMicrostation.Models.Implementations
                                     string filePathClient,
                                     ColorPrint colorPrint)
         {
-            string fileType = Path.GetExtension(filePathServer).Trim('.');
-            string fileName = Path.GetFileNameWithoutExtension(filePathServer);
+            if (!String.IsNullOrEmpty(filePathServer))
+            {
+                string fileType = Path.GetExtension(filePathServer).Trim('.');
+                string fileName = Path.GetFileNameWithoutExtension(filePathServer);
 
-            FileExtension = fileType;
-            FileName = fileName;
-            FilePathServer = filePathServer;
-            FilePathClient = filePathClient;
-            ColorPrint = colorPrint;
+                FileExtension = fileType;
+                FileName = fileName;
+                FilePathServer = filePathServer;
+                FilePathClient = filePathClient;
+                ColorPrint = colorPrint;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(filePathServer));
+            }
         }
 
         /// <summary>

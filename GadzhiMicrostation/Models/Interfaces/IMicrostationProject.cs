@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Models.Implementations;
+﻿using GadzhiMicrostation.Models.Enums;
+using GadzhiMicrostation.Models.Implementations;
 using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Models.Interfaces
@@ -8,6 +9,11 @@ namespace GadzhiMicrostation.Models.Interfaces
     /// </summary>
     public interface IMicrostationProject
     {
+        /// <summary>
+        /// Записать исходные данные для конвертации
+        /// </summary>      
+        void SetInitialFileData(FileDataMicrostation fileDataMicrostation, PrintersInformation printersInformation);
+
         /// <summary>
         /// Ошибки конвертации
         /// </summary>
@@ -24,18 +30,18 @@ namespace GadzhiMicrostation.Models.Interfaces
         FileDataMicrostation FileDataMicrostation { get; }
 
         /// <summary>
+        /// Список используемых принтеров
+        /// </summary>
+        PrintersInformation PrintersInformation { get; }
+
+        /// <summary>
         /// Добавить ошибку
         /// </summary>   
         void AddError(ErrorMicrostation errorMicrostation);
 
         /// <summary>
-        /// Записать исходные данные для конвертации
-        /// </summary>      
-        void SetInitialFileData(FileDataMicrostation fileDataMicrostation);
-
-        /// <summary>
-        /// Создать путь для сохранения отконвертированного файла
+        /// Создать путь для сохранения отконвертированных файлов
         /// </summary>        
-        string CreateDngSavePath();
+        string CreateFileSavePath(string fileName, FileExtentionType fileExtentionType);
     }
 }

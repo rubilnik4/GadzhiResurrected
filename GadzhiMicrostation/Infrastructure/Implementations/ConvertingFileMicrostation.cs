@@ -49,14 +49,15 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        public void ConvertingFile(FileDataMicrostation fileDataMicrostation)
+        public void ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformation printersInformation)
         {
-            _microstationProject.SetInitialFileData(fileDataMicrostation);
+            _microstationProject.SetInitialFileData(fileDataMicrostation, printersInformation);
 
             if (_applicationMicrostation.IsApplicationValid)
             {
                 _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
-                _applicationMicrostation.SaveDesignFile(_microstationProject.CreateDngSavePath());
+                _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                                                                                                FileExtentionType.dgn));
 
                 var desingFile = _applicationMicrostation.ActiveDesignFile;
                 if (desingFile.IsDesingFileValid)
@@ -82,6 +83,9 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
                     stamp.DeleteSignaturesPrevious();
                     stamp.InsertSignatures();
+
+                    desingFile.CreatePdfByStamp(stamp);
+
                     stamp.DeleteSignaturesInserted();
                 }
             }
@@ -98,6 +102,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         public void Dispose()
         {
             _container?.Dispose();
+            _applicationMicrostation?.Dispose();
         }
 
     }

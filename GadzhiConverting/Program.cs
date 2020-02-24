@@ -19,10 +19,13 @@ namespace GadzhiConverting
 
             var micro = _container.Resolve<IConvertingFileMicrostation>();
             string dir = Environment.CurrentDirectory + "\\01.dgn";
+
+            var pdfPrinter = new PrinterInformation("PDFCreator", "GTNG");
             micro.ConvertingFile(new FileDataMicrostation(dir,
                                                           dir,
-                                                          GadzhiMicrostation.Models.Enums.ColorPrint.BlackAndWhite));            
-           
+                                                          GadzhiMicrostation.Models.Enums.ColorPrint.BlackAndWhite),
+                                 new PrintersInformation(pdfPrinter));
+
             //var applicationConverting = _container.Resolve<IApplicationConverting>();
 
             //applicationConverting.StartConverting();

@@ -48,7 +48,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Заполнить поля данных
         /// </summary>
-        protected IEnumerable<IElementMicrostation> GetSubElements()
+        protected IEnumerable<ElementMicrostationPair> GetSubElements()
         {
             if (CellElement != null)
             {
@@ -59,7 +59,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                     var microstationElement = ConvertMicrostationElements.ConvertToMicrostationElement((Element)elementEnumerator.Current, this);
                     if (microstationElement != null)
                     {
-                        yield return microstationElement;
+                        yield return new ElementMicrostationPair(microstationElement, (Element)elementEnumerator.Current);
                     }
 
                 }
@@ -69,14 +69,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Найти и изменить вложенный в штамп элемент. Только для внешних операций типа Scale, Move
         /// </summary>
-        protected void FindAndChangeSubElement(long Id)
+        protected void FindAndChangeSubElement(Element element)
         {
+            CellElement.ResetElementEnumeration();
             while (CellElement.MoveToNextElement(true))
             {
                 var elementCurrent = CellElement.CopyCurrentElement();
-                if (elementCurrent.ID64 == Id)
-                {
-                    CellElement.ReplaceCurrentElement(elementCurrent);
+                if (elementCurrent.ID64 == element?.ID64)
+                {                   
+                    CellElement.ReplaceCurrentElement(element);
                     break;
                 }
             }

@@ -51,7 +51,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Формат
         /// </summary>
-        public static StampBaseField Format => new StampBaseField("FORMAT",
+        public static StampBaseField PaperSize => new StampBaseField("FORMAT",
                                                                   isNeedCompress: false);
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace GadzhiMicrostation.Models.StampCollections
                     ProjectStage,
                     CurrentSheet,
                     TotalSheet,
-                    Format,
+                    PaperSize,
                 };
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Получить формат штампа
         /// </summary>      
-        public static string GetFormatFromField(string fieldText) =>
-             fieldText?.TrimSubstring("Формат").Trim();
+        public static string GetPaperSizeFromField(string fieldText) =>
+             fieldText?.TrimSubstring("Формат")?.Trim();
 
         /// <summary>
         /// Определить яляется ли строка названием ячейки штампа

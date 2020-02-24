@@ -36,15 +36,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
+        /// <summary>
+        /// Управление печатью пдф
+        /// </summary>
+        private readonly IPdfCreatorService _pdfCreatorService;
+
         public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
                                        IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
                                        IErrorMessagingMicrostation errorMessagingMicrostation,
-                                       IMicrostationProject microstationProject)
+                                       IMicrostationProject microstationProject,
+                                       IPdfCreatorService pdfCreatorService)
         {
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
             _errorMessagingMicrostation = errorMessagingMicrostation;
             _microstationProject = microstationProject;
+            _pdfCreatorService = pdfCreatorService;
         }
 
         /// <summary>
@@ -78,7 +85,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Текущий файл Microstation
         /// </summary>
         public IDesignFileMicrostation ActiveDesignFile =>
-            new DesignFileMicrostation(_application.ActiveDesignFile, this);
+            new DesignFileMicrostation(_application.ActiveDesignFile, this, _microstationProject);
 
         /// <summary>
         /// Закрыть приложение
@@ -86,9 +93,31 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         public void CloseApplication()
         {
             _application.Quit();
-        }       
+        }
 
- 
-      
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _pdfCreatorService.Dispose();
+                }               
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
+
+
+
     }
 }

@@ -1,7 +1,9 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Microstation.Implementations.Elements;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.StampCollections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,28 +17,41 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// <summary>
         /// Доступные поля в Штампе
         /// </summary>
-        private IDictionary<string, IElementMicrostation> _stampFields;
+        private IDictionary<string, ElementMicrostationPair> _stampFields;
 
         /// <summary>
         /// Инициализировать данные
         /// </summary>
         private void InitialStampDataFields()
         {
-            _stampFields = new Dictionary<string, IElementMicrostation>();
+            _stampFields = new Dictionary<string, ElementMicrostationPair>();
 
             FillDataFields();
         }
+
+        /// <summary>
+        /// Доступные поля в штампе в формате обертки
+        /// </summary>
+        private IDictionary<string, IElementMicrostation> _stampFieldsWrapper =>
+            _stampFields.ToDictionary(pair => pair.Key,
+                                      pair => pair.Value.ElementWrapper);
+
+        /// <summary>
+        /// Формат штампа
+        /// </summary>
+        public string PaperSize => StampMain.GetPaperSizeFromField(_stampFieldsWrapper[StampMain.PaperSize.Name]?.AsTextElementMicrostation?.Text) ??
+                                   String.Empty;
 
         /// <summary>
         /// Заполнить поля данных
         /// </summary>
         private void FillDataFields()
         {
-            var subTextElements = GetSubElements()?.Where(subElement => subElement.ElementType == ElementMicrostationType.TextElement ||
-                                                                        subElement.ElementType == ElementMicrostationType.TextNodeElement);
+            var subTextElements = GetSubElements()?.Where(subElement => subElement.ElementWrapper.ElementType == ElementMicrostationType.TextElement ||
+                                                                        subElement.ElementWrapper.ElementType == ElementMicrostationType.TextNodeElement);
             foreach (var subElement in subTextElements)
             {
-                if (StampElement.ContainControlName(subElement.AttributeControlName))
+                if (StampElement.ContainControlName(subElement.ElementWrapper.AttributeControlName))
                 {
                     AddElementToDictionary(subElement);
                 }
@@ -50,15 +65,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// <summary>
         /// Найти и заполнить поле формат
         /// </summary>
-        private void FillFormat(IElementMicrostation element)
+        private void FillFormat(ElementMicrostationPair elementPair)
         {
-            if (element.IsTextElementMicrostation)
+            if (elementPair.ElementWrapper.IsTextElementMicrostation)
             {
-                var textElement = element.AsTextElementMicrostation;
+                var textElement = elementPair.ElementWrapper.AsTextElementMicrostation;
                 if (StampMain.IsFormatField(textElement.Text))
                 {
-                    textElement.AttributeControlName = StampMain.Format.Name;
-                    AddElementToDictionary(textElement);
+                    textElement.AttributeControlName = StampMain.PaperSize.Name;
+                    AddElementToDictionary(elementPair);
                 }
             }
         }
@@ -70,7 +85,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             if (_stampFields.ContainsKey(fieldSearch))
             {
-                return _stampFields[fieldSearch];
+                return _stampFieldsWrapper[fieldSearch];
             }
 
             return null;
@@ -81,8 +96,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldSearch,
                                                                            ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
-                                                 fieldSearch?.Where(_stampFields.ContainsKey).
-                                                 Select(fieldName => _stampFields[fieldName]).
+                                                 fieldSearch?.Where(_stampFieldsWrapper.ContainsKey).
+                                                 Select(fieldName => _stampFieldsWrapper[fieldName]).
                                                  Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
                                                                     fieldName.ElementType == elementMicrostationType);
 
@@ -91,46 +106,47 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public void CompressFieldsRanges()
         {
-            foreach (var element in _stampFields.Values)
+            foreach (var elementPair in _stampFields.Values)
             {
-                switch (element.ElementType)
+                switch (elementPair.ElementWrapper.ElementType)
                 {
                     case ElementMicrostationType.TextElement:
-                        element.AsTextElementMicrostation.CompressRange();                      
+                        elementPair.ElementWrapper.AsTextElementMicrostation.CompressRange();
                         break;
                     case ElementMicrostationType.TextNodeElement:
-                        if (element.AsTextNodeElementMicrostation.CompressRange())
+                        if (elementPair.ElementWrapper.AsTextNodeElementMicrostation.CompressRange())
                         {
-                            FindAndChangeSubElement(element.Id);                           
+                            FindAndChangeSubElement(elementPair.ElementOriginal);
                         }
                         break;
                 }
             }
-        }
 
+            double dd = CellElement.Range.High.X;
+        }
 
         /// <summary>
         /// Добавить элемент в словарь
         /// </summary>       
-        private void AddElementToDictionary(IElementMicrostation element)
+        private void AddElementToDictionary(ElementMicrostationPair elementPair)
         {
-            StampBaseField stampBaseField = StampElement.GetBaseParametersByControlName(element.AttributeControlName);
+            StampBaseField stampBaseField = StampElement.GetBaseParametersByControlName(elementPair.ElementWrapper.AttributeControlName);
 
-            if (element.IsTextElementMicrostation)
+            if (elementPair.ElementWrapper.IsTextElementMicrostation)
             {
-                var textElement = element.AsTextElementMicrostation;
+                var textElement = elementPair.ElementWrapper.AsTextElementMicrostation;
                 textElement.IsNeedCompress = stampBaseField.IsNeedCompress;
                 textElement.IsVertical = stampBaseField.IsVertical;
 
-                _stampFields.Add(element.AttributeControlName, textElement);
+                _stampFields.Add(elementPair.ElementWrapper.AttributeControlName, elementPair);
             }
-            else if (element.IsTextNodeElementMicrostation)
+            else if (elementPair.ElementWrapper.IsTextNodeElementMicrostation)
             {
-                var textnodeElement = element.AsTextNodeElementMicrostation;
+                var textnodeElement = elementPair.ElementWrapper.AsTextNodeElementMicrostation;
                 textnodeElement.IsNeedCompress = stampBaseField.IsNeedCompress;
                 textnodeElement.IsVertical = stampBaseField.IsVertical;
 
-                _stampFields.Add(element.AttributeControlName, textnodeElement);
+                _stampFields.Add(elementPair.ElementWrapper.AttributeControlName, elementPair);
             }
 
         }

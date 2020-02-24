@@ -1,6 +1,8 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
+using GadzhiMicrostation.Models.Enums;
+using GadzhiMicrostation.Models.StampCollections;
 using MicroStationDGN;
 
 namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
@@ -17,5 +19,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             InitialStampDataFields();
         }
 
+        /// <summary>
+        /// Тип расположения штапа
+        /// </summary>
+        public OrientationType Orientation => Width >= Height ?
+                                               OrientationType.Horizontal :
+                                               OrientationType.Vertical;
     }
 }
