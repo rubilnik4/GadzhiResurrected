@@ -23,8 +23,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             var mainRowSignatures = InsertMainRowSignatures();
 
-            IEnumerable<ICellElementMicrostation> changesSignatures = null;
-            if (!String.IsNullOrEmpty(mainRowSignatures?.FirstOrDefault().Name))
+            IEnumerable<ICellElementMicrostation> changesSignatures = new List<ICellElementMicrostation>();
+            if (!String.IsNullOrEmpty(mainRowSignatures?.FirstOrDefault()?.Name))
             {
                 changesSignatures = InsertChangesSignatures(mainRowSignatures?.FirstOrDefault().Name);
             }
@@ -82,7 +82,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             foreach (var signature in signatureRowFound)
             {
                 var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person, signature.Date);
-                insertedMainRowSignatures.Add(insertedSignature);
+                if (insertedSignature != null)
+                {
+                    insertedMainRowSignatures.Add(insertedSignature);
+                }
             }
 
             return insertedMainRowSignatures;
@@ -102,13 +105,16 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                         Date = FindElementInStampFields(row.DateChange.Name).AsTextElementMicrostation,
                     }).
                 Where(row => row.DocumentChange != null && row.Date != null &&
-                      !String.IsNullOrEmpty(row.DocumentChange.Text));
+                      !String.IsNullOrEmpty(row.DocumentChange.Text.Trim()));
 
             var insertedMainRowSignatures = new List<ICellElementMicrostation>();
             foreach (var signature in signatureRowFound)
             {
                 var insertedSignature = InsertSignature(personId, signature.DocumentChange, signature.Date);
-                insertedMainRowSignatures.Add(insertedSignature);
+                if (insertedSignature != null)
+                {
+                    insertedMainRowSignatures.Add(insertedSignature);
+                }
             }
 
             return insertedMainRowSignatures;
@@ -133,7 +139,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             foreach (var signature in signatureRowFound)
             {
                 var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person, signature.Date);
-                insertedMainRowSignatures.Add(insertedSignature);
+                if (insertedSignature != null)
+                {
+                    insertedMainRowSignatures.Add(insertedSignature);
+                }
             }
 
             return insertedMainRowSignatures;

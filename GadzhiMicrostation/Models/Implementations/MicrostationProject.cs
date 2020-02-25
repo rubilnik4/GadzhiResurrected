@@ -122,18 +122,12 @@ namespace GadzhiMicrostation.Models.Implementations
             {
                 case FileExtentionType.dgn:
                     fileFolderSave = DgnFilesFolder;
-                    break;
-                case FileExtentionType.docx:
-                    fileFolderSave = DocFilesFolder;
-                    break;
-                case FileExtentionType.xlsx:
-                    fileFolderSave = XlsFilesFolder;
-                    break;
+                    break;  
                 case FileExtentionType.pdf:
                     fileFolderSave = PdfFilesFolder;
                     break;
                 case FileExtentionType.dwg:
-                    fileFolderSave = XlsFilesFolder;
+                    fileFolderSave = DwgFilesFolder;
                     break;
             }
 
@@ -144,12 +138,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// Папка для сохранения файлов DGN
         /// </summary>
         private string DgnFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DGN";
-
-        /// <summary>
-        /// Папка для сохранения файлов DOC
-        /// </summary>
-        private string DocFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DOC";
-
+       
         /// <summary>
         /// Папка для сохранения файлов PDF
         /// </summary>
@@ -158,12 +147,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Папка для сохранения файлов DWG
         /// </summary>
-        private string DwgFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DWG";
-
-        /// <summary>
-        /// Папка для сохранения файлов XLS
-        /// </summary>
-        private string XlsFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\XLS";
+        private string DwgFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DWG";       
 
         /// <summary>
         /// Создать пути для сохранения файлов

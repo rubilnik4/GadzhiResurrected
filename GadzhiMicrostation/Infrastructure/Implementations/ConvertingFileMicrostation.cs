@@ -62,8 +62,10 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 var desingFile = _applicationMicrostation.ActiveDesignFile;
                 if (desingFile.IsDesingFileValid)
                 {
-                    FindStampsInDesingFile(desingFile);
+                    CreatePdfInDesingFIle(desingFile);
                 }
+
+                desingFile.CreateDWG();
 
                 _applicationMicrostation.CloseDesignFile();
             }
@@ -72,7 +74,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
         /// </summary>       
-        private void FindStampsInDesingFile(IDesignFileMicrostation desingFile)
+        private void CreatePdfInDesingFIle(IDesignFileMicrostation desingFile)
         {
             var stamps = desingFile.Stamps;
             if (stamps.Any())

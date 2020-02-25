@@ -25,7 +25,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                      IModelMicrostation modelMicrostation,
                                                                      Action<ICellElementMicrostation> additionalParametrs = null)
         {
-            if (String.IsNullOrEmpty (cellName))
+            if (!String.IsNullOrEmpty(cellName))
             {
                 CellElement cellElement = _application.CreateCellElement2(cellName,
                                                             _application.Point3dFromXY(origin.X, origin.Y),

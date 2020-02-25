@@ -133,5 +133,15 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 ApplicationMicrostation.PrintPdfCommand();
             }
         }
+
+        /// <summary>
+        /// Создать файл типа DWG
+        /// </summary>
+        public void CreateDWG()
+        {
+            _designFile.SaveAs(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName, 
+                                                                       FileExtentionType.dwg), true,
+                               MsdDesignFileFormat.msdDesignFileFormatDWG);
+        }
     }
 }

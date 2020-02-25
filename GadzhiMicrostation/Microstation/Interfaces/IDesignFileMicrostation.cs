@@ -60,5 +60,10 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// </summary>
         void CreatePdf(string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
                        double printScale, ColorPrint colorPrint);
+
+        /// <summary>
+        /// Создать файл типа DWG
+        /// </summary>
+        void CreateDWG();
     }
 }

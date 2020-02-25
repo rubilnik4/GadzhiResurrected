@@ -61,22 +61,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Ширина элемента в учетом поворота в текущих координатах
         /// </summary>
-        protected double WidthWithRotation => IsVertical ? Range.Width : Range.Height;
+        protected double WidthWithRotation => !IsVertical ? Range.Width : Range.Height;
 
         /// <summary>
         /// Ширина элемента в учетом поворота в текущих координатах
         /// </summary>
-        protected double HeightWithRotation => IsVertical ? Range.Height : Range.Width;
+        protected double HeightWithRotation => !IsVertical ? Range.Height : Range.Width;
 
         /// <summary>
         /// Ширина элемента в учетом поворота в стандартно заданных координатах
         /// </summary>
-        protected double WidthAttributeWithRotationInUnits => IsVertical ? Range.Width : Range.Height;
+        protected double WidthAttributeWithRotationInUnits => !IsVertical ? RangeAttributeInUnits.Width : RangeAttributeInUnits.Height;
 
         /// <summary>
         /// Ширина элемента в учетом поворота в стандартно заданных координатах
         /// </summary>
-        protected double HeightAttributeWithRotationInUnits => IsVertical ? Range.Height : Range.Width;
+        protected double HeightAttributeWithRotationInUnits => !IsVertical ? RangeAttributeInUnits.Height : RangeAttributeInUnits.Width;
 
         /// <summary>
         /// Вписать элемент в рамку
