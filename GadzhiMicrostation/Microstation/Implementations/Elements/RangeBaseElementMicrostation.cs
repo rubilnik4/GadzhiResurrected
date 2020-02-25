@@ -43,64 +43,40 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public abstract PointMicrostation Origin { get; }
 
         /// <summary>
-        /// Нижняя левая точка
-        /// </summary>
-        public PointMicrostation LowLeftPoint => _element.Range.Low.ToPointMicrostation();
-
-        /// <summary>
         /// Размеры ячейки элемента в текущих координатах
         /// </summary>
         public RangeMicrostation Range => new RangeMicrostation(_element.Range.Low.ToPointMicrostation(),
-                                                                 _element.Range.High.ToPointMicrostation(), IsVertical);
+                                                                 _element.Range.High.ToPointMicrostation());
 
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
-        private RangeMicrostation RangeAttribute => _element.GetAttributeRange(IsVertical);
+        private RangeMicrostation RangeAttribute => _element.GetAttributeRange();
 
         /// <summary>
-        /// Ширина ячейки элемента в стандартно заданных координатах
+        /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
-        private double WidthAttribute => RangeAttribute.Width;
+        public RangeMicrostation RangeAttributeInUnits => RangeAttribute.Scale(UnitScale);
 
         /// <summary>
-        /// Высота ячейки элемента в стандартно заданных координатах
+        /// Ширина элемента в учетом поворота в текущих координатах
         /// </summary>
-        private double HeightAttribute => RangeAttribute.Height;
+        protected double WidthWithRotation => IsVertical ? Range.Width : Range.Height;
 
         /// <summary>
-        /// Расположение элемента с учетом поворота в стандартно заданных координатах
+        /// Ширина элемента в учетом поворота в текущих координатах
         /// </summary>
-        public PointMicrostation OriginPointWithRotationAttribute => RangeAttribute.OriginPointWithRotation;
+        protected double HeightWithRotation => IsVertical ? Range.Height : Range.Width;
 
         /// <summary>
-        /// Ширина ячейки элемента в текущих координатах
+        /// Ширина элемента в учетом поворота в стандартно заданных координатах
         /// </summary>
-        public double WidthAttributeInUnits => WidthAttribute * UnitScale;
+        protected double WidthAttributeWithRotationInUnits => IsVertical ? Range.Width : Range.Height;
 
         /// <summary>
-        /// Высота ячейки элемента в текущих координатах
+        /// Ширина элемента в учетом поворота в стандартно заданных координатах
         /// </summary>
-        public double HeightAttributeInUnits => HeightAttribute * UnitScale;
-
-        /// <summary>
-        /// Расположение элемента с учетом поворота в текущих координатах
-        /// </summary>
-        public PointMicrostation OriginPointWithRotationAttributeInUnits => OriginPointWithRotationAttribute.Multiply(UnitScale);
-
-        /// <summary>
-        /// Ширина элемента
-        /// </summary>
-        public double Width => !IsVertical ?
-                                  Math.Abs(_element.Range.High.X - _element.Range.Low.X) :
-                                  Math.Abs(_element.Range.High.Y - _element.Range.Low.Y);
-
-        /// <summary>
-        /// Высота элемента
-        /// </summary>
-        public double Height => !IsVertical ?
-                                   Math.Abs(_element.Range.High.Y - _element.Range.Low.Y) :
-                                   Math.Abs(_element.Range.High.X - _element.Range.Low.X);
+        protected double HeightAttributeWithRotationInUnits => IsVertical ? Range.Height : Range.Width;
 
         /// <summary>
         /// Вписать элемент в рамку

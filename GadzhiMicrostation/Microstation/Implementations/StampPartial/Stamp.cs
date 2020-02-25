@@ -22,8 +22,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// <summary>
         /// Тип расположения штапа
         /// </summary>
-        public OrientationType Orientation => Width >= Height ?
-                                               OrientationType.Horizontal :
-                                               OrientationType.Vertical;
+        public OrientationType Orientation => Range.Width >= Range.Height ?
+                                              OrientationType.Horizontal :
+                                              OrientationType.Vertical;
     }
 }

@@ -18,25 +18,34 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     {
 
         /// <summary>
-        /// Создать ячейку на освнове шаблона в библиотеке
+        /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         public ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
                                                                      PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
                                                                      Action<ICellElementMicrostation> additionalParametrs = null)
         {
-            CellElement cellElement = _application.CreateCellElement2(cellName,
-                                             _application.Point3dFromXY(origin.X, origin.Y),
-                                             _application.Point3dFromXY(1, 1),
-                                             false,
-                                             _application.Matrix3dIdentity());
+            if (String.IsNullOrEmpty (cellName))
+            {
+                CellElement cellElement = _application.CreateCellElement2(cellName,
+                                                            _application.Point3dFromXY(origin.X, origin.Y),
+                                                            _application.Point3dFromXY(1, 1),
+                                                            false,
+                                                            _application.Matrix3dIdentity());
 
-            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerContainerMicrostation());
-            additionalParametrs?.Invoke(cellElementMicrostation);
+                var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerContainerMicrostation());
+                additionalParametrs?.Invoke(cellElementMicrostation);
 
-            _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
+                _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
-            return cellElementMicrostation;
+                return cellElementMicrostation;
+            }
+            else
+            {
+                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.ArgumentNullReference,
+                                                                       $"Идентефикатор библиотечного элемента не задан"));
+                return null;
+            }
         }
 
         /// <summary>

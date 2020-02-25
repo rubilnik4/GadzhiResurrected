@@ -44,6 +44,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         void Move(PointMicrostation origin);
 
         /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        void Rotate(PointMicrostation origin, double degree);
+
+        /// <summary>
         /// Масштабировать элемент
         /// </summary>
         void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);

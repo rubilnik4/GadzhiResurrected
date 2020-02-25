@@ -43,6 +43,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        public override void Rotate(PointMicrostation origin, double degree)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Масштабировать текстовое поле
         /// </summary>
         public override void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
@@ -67,15 +75,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             {
                 var scaleFactor = new PointMicrostation(1, 1, 1);
 
-                if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatioTextNode < Width)
+                if (WidthAttributeWithRotationInUnits * StampAdditionalParameters.CompressionRatioTextNode < WidthWithRotation)
                 {
-                    scaleFactor.X = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatioTextNode;
+                    scaleFactor.X = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampAdditionalParameters.CompressionRatioTextNode;
                 }
 
-                if (HeightAttributeInUnits * StampAdditionalParameters.CompressionRatioTextNode < Height &&
-                    _textNodeElement.TextLinesCount > 1) // коррекция высоты при многострочном элементе
+                if (HeightAttributeWithRotationInUnits * StampAdditionalParameters.CompressionRatioTextNode < HeightWithRotation &&
+                    _textNodeElement.TextLinesCount > 1) // коррекция высоты только при многострочном элементе
                 {
-                    scaleFactor.Y = (HeightAttributeInUnits / Height) * StampAdditionalParameters.CompressionRatioTextNode;
+                    scaleFactor.Y = (HeightAttributeWithRotationInUnits / HeightWithRotation) * StampAdditionalParameters.CompressionRatioTextNode;
                 }
 
                 if (scaleFactor.X != 1 || scaleFactor.Y != 1)

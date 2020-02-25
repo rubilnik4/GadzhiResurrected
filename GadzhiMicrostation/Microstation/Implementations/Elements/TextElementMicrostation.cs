@@ -50,9 +50,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
             if (IsNeedCompress == true)
             {
-                if (WidthAttributeInUnits * StampAdditionalParameters.CompressionRatioText < Width)
+                if (WidthAttributeWithRotationInUnits * StampAdditionalParameters.CompressionRatioText < WidthWithRotation)
                 {
-                    double compressionLevel = (WidthAttributeInUnits / Width) * StampAdditionalParameters.CompressionRatioText;
+                    double compressionLevel = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampAdditionalParameters.CompressionRatioText;
                     _textElement.TextStyle.Width *= compressionLevel;
                     _textElement.Rewrite();
 

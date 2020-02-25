@@ -67,12 +67,12 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах
         /// </summary>
-        public static RangeMicrostation GetAttributeRange(Element element, bool isVertical)
+        public static RangeMicrostation GetAttributeRange(Element element)
         {
             string rangeInString = GetAttributeById(element, ElementMicrostationAttributes.Range);
             IList<string> rangeListInString = StampAdditionalParameters.SeparateAttributeValue(rangeInString);
 
-            return new RangeMicrostation(rangeListInString, isVertical);
+            return new RangeMicrostation(rangeListInString);
         }
 
         /// <summary>

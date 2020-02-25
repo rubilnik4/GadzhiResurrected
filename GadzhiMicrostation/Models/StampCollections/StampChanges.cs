@@ -40,7 +40,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Изменение 4
         /// </summary>
-        public static StampChange StampChangesForth =>
+        public static StampChange StampChangesFourth =>
             new StampChange("G_E_S_11",
                             "G_E_S_12",
                             "G_E_S_13",
@@ -57,9 +57,23 @@ namespace GadzhiMicrostation.Models.StampCollections
             stampControlNames.UnionWith(StampChangesFirst.StampControlNamesChange);
             stampControlNames.UnionWith(StampChangesSecond.StampControlNamesChange);
             stampControlNames.UnionWith(StampChangesThird.StampControlNamesChange);
-            stampControlNames.UnionWith(StampChangesForth.StampControlNamesChange);
+            stampControlNames.UnionWith(StampChangesFourth.StampControlNamesChange);
 
             return stampControlNames;
+        }
+
+        /// <summary>
+        /// Список строк с изменениями
+        /// </summary>
+        public static HashSet<StampChange> GetStampRowChangesSignatures()
+        {
+            return new HashSet<StampChange>()
+                {
+                    StampChangesFirst,
+                    StampChangesSecond,
+                    StampChangesThird,
+                    StampChangesFourth
+                };
         }
     }
 }

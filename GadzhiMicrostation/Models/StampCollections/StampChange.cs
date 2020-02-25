@@ -17,7 +17,7 @@ namespace GadzhiMicrostation.Models.StampCollections
             NumberOfPlots = new StampBaseField(numberOfPlots, isNeedCompress: false);
             TypeOfChange = new StampBaseField(typeOfChange);
             DocumentChange = new StampBaseField(documentChange);
-            DataChange = new StampBaseField(dataChange);
+            DateChange = new StampBaseField(dataChange);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace GadzhiMicrostation.Models.StampCollections
         /// <summary>
         /// Дата изменения
         /// </summary>
-        public StampBaseField DataChange { get; }
+        public StampBaseField DateChange { get; }
 
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace GadzhiMicrostation.Models.StampCollections
             NumberOfPlots,
             TypeOfChange,
             DocumentChange,
-            DataChange,
+            DateChange,
         };
     }
 }

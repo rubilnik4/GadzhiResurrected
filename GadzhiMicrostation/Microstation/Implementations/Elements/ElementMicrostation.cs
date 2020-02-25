@@ -115,6 +115,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        public virtual void Rotate(PointMicrostation origin, double degree)
+        {
+            _element.RotateAboutZ(origin.ToPoint3d(), degree * (Math.PI / 180));
+        }
+
+        /// <summary>
         /// Масштабировать элемент
         /// </summary>
         public virtual void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)

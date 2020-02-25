@@ -28,34 +28,9 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         RangeMicrostation Range { get; }
 
         /// <summary>
-        /// Нижняя левая точка
+        /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
-        PointMicrostation LowLeftPoint { get; }
-
-        /// <summary>
-        /// Ширина ячейки элемента в текущих координатах
-        /// </summary>
-        double WidthAttributeInUnits { get; }
-
-        /// <summary>
-        /// Высота ячейки элемента в текущих координатах
-        /// </summary>
-        double HeightAttributeInUnits { get; }
-
-        /// <summary>
-        /// Расположение элемента в текущих координатах. Левая нижняя точка
-        /// </summary>
-        PointMicrostation OriginPointWithRotationAttributeInUnits { get; }
-
-        /// <summary>
-        /// Ширина элемента
-        /// </summary>
-        double Width { get; }
-
-        /// <summary>
-        /// Высота элемента
-        /// </summary>
-        double Height { get; }
+        RangeMicrostation RangeAttributeInUnits { get; }
 
         /// <summary>
         /// Вписать элемент в рамку

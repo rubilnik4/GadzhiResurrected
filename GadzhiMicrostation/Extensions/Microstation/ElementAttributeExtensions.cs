@@ -37,8 +37,8 @@ namespace GadzhiMicrostation.Extensions.Microstation
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах
         /// </summary>
-        public static RangeMicrostation GetAttributeRange(this Element element, bool isVertical) =>
-             AttributesElementsMicrostation.GetAttributeRange(element, isVertical);
+        public static RangeMicrostation GetAttributeRange(this Element element) =>
+             AttributesElementsMicrostation.GetAttributeRange(element);
 
         /// <summary>
         /// Получить идентефикатор личности
