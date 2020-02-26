@@ -34,7 +34,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)
         {
             FilesDataRequestServer filesDataRequestServer = await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
-            _idPackage = filesDataRequestServer.Id;
+            _idPackage = filesDataRequestServer?.Id ?? Guid.Empty;
             return filesDataRequestServer;
         }
 

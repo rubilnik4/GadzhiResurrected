@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Interfaces;
 using System;
@@ -20,6 +21,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// Текущий файл Microstation
         /// </summary>
         IDesignFileMicrostation ActiveDesignFile { get; }
+
+        /// <summary>
+        /// Сервис работы с ошибками
+        /// </summary>
+        IErrorMessagingMicrostation ErrorMessagingMicrostation { get; }
+
+        /// <summary>
+        /// Отображение системных сообщений
+        /// </summary>
+        ILoggerMicrostation LoggerMicrostation { get; }
 
         /// <summary>
         /// Закрыть приложение

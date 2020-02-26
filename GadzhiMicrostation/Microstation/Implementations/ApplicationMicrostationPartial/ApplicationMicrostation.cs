@@ -29,7 +29,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Сервис работы с ошибками
         /// </summary>
-        private readonly IErrorMessagingMicrostation _errorMessagingMicrostation;
+        public IErrorMessagingMicrostation ErrorMessagingMicrostation { get; }
+
+        /// <summary>
+        /// Отображение системных сообщений
+        /// </summary>
+        public  ILoggerMicrostation LoggerMicrostation { get; }
 
         /// <summary>
         /// Модель хранения данных конвертации
@@ -44,12 +49,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
                                        IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
                                        IErrorMessagingMicrostation errorMessagingMicrostation,
+                                       ILoggerMicrostation loggerMicrostation,
                                        IMicrostationProject microstationProject,
                                        IPdfCreatorService pdfCreatorService)
         {
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
-            _errorMessagingMicrostation = errorMessagingMicrostation;
+            ErrorMessagingMicrostation = errorMessagingMicrostation;
+            LoggerMicrostation = loggerMicrostation;
             _microstationProject = microstationProject;
             _pdfCreatorService = pdfCreatorService;
         }

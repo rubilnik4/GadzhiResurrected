@@ -24,7 +24,7 @@ namespace GadzhiModules.Helpers.Wpf.Behaviors
             SelectedItems = array;
         }
 
-        public static DependencyProperty SelectedItemsProperty =>
+        private static DependencyProperty SelectedItemsProperty =
             DependencyProperty.Register("SelectedItems", typeof(IList), typeof(DataGridSelectedItemsBlendBehavior),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
@@ -33,5 +33,6 @@ namespace GadzhiModules.Helpers.Wpf.Behaviors
             get { return (IList)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); }
         }
+
     }
 }

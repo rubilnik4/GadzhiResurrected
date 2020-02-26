@@ -51,19 +51,13 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         void CloseWithSaving();
 
         /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        void CreatePdfByStamp(IStamp stamp);
-
-        /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        void CreatePdf(string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
-                       double printScale, ColorPrintMicrostation colorPrint);
+        /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
+        /// </summary>       
+        void CreatePdfInDesingFile(string filePath);
 
         /// <summary>
         /// Создать файл типа DWG
         /// </summary>
-        void CreateDWG();
+        void CreateDwgFile(string filePath);
     }
 }

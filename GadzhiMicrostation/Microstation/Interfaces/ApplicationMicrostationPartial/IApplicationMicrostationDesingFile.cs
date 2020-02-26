@@ -21,6 +21,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         void SaveDesignFile(string filePath);
 
         /// <summary>
+        /// Сохранить файл PDF
+        /// </summary>
+        void CreatePdfFile(string filePath);
+
+        /// <summary>
+        /// Создать файл типа DWG
+        /// </summary>
+        void CreateDwgFile(string filePath);
+
+        /// <summary>
         /// Закрыть файл
         /// </summary>
         void CloseDesignFile();

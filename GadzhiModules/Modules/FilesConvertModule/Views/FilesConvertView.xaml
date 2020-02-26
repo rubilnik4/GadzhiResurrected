@@ -24,8 +24,8 @@
                                                    FalseValue="Collapsed"/>
 
             <Brush x:Key="ColorRedAlert">#9b0000</Brush>
-            <Brush x:Key="ColorGreenComplite">#2e7d32</Brush>        
-            
+            <Brush x:Key="ColorGreenComplite">#2e7d32</Brush>
+
             <Style x:Key="PackIconToolBarStyle" 
                    TargetType="materialDesign:PackIcon">
                 <Setter Property="Width" Value="24" />
@@ -180,13 +180,13 @@
                                                          Visibility="{Binding IsEndStatus, 
                                                                       Converter={StaticResource BooleanToVisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorGreenComplite}"/>
-                                
+
                                 <materialDesign:PackIcon Kind="Error"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
                                                          Visibility="{Binding IsErrorStatus, 
                                                                       Converter={StaticResource BooleanToVisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorRedAlert}"/>
-                                
+
                                 <TextBlock Text="{Binding StatusProcessingName}"   
                                            VerticalAlignment="Center"/>
                             </StackPanel>

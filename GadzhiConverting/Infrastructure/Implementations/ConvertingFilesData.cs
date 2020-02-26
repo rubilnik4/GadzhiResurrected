@@ -78,8 +78,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 if (fileDataServer.FileExtensionType == FileExtensions.dgn)
                 {
-                    _convertingFileMicrostation.ConvertingFile(ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
-                                                               ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+                    FileDataMicrostation convertedFileDataMicrostation = _convertingFileMicrostation.ConvertingFile(
+                                                                                    ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
+                                                                                    ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
                 }
                 else if (fileDataServer.FileExtensionType == FileExtensions.docx)
                 {

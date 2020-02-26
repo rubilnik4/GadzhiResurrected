@@ -51,6 +51,6 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        bool PrintPdfCommand();
+        bool PrintPdfCommand(string filePath);
     }
 }

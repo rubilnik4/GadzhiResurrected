@@ -32,6 +32,11 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         private readonly IErrorMessagingMicrostation _errorMessagingMicrostation;
 
         /// <summary>
+        /// Отображение системных сообщений
+        /// </summary>
+        private readonly ILoggerMicrostation _loggerMicrostation;
+
+        /// <summary>
         /// Модель хранения данных конвертации
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
@@ -43,60 +48,39 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
             _applicationMicrostation = _container.Resolve<IApplicationMicrostation>();
             _errorMessagingMicrostation = _container.Resolve<IErrorMessagingMicrostation>();
+            _loggerMicrostation = _container.Resolve<ILoggerMicrostation>();
             _microstationProject = _container.Resolve<IMicrostationProject>();
         }
 
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        public void ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation)
+        public FileDataMicrostation ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation)
         {
             _microstationProject.SetInitialFileData(fileDataMicrostation, printersInformation);
 
             if (_applicationMicrostation.IsApplicationValid)
             {
+                _loggerMicrostation.ShowMessage("Загрузка файла Microstation");
                 _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
                 _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                                                                                                 FileExtentionType.dgn));
 
-                var desingFile = _applicationMicrostation.ActiveDesignFile;
-                if (desingFile.IsDesingFileValid)
-                {
-                    CreatePdfInDesingFIle(desingFile);
-                }
+                _loggerMicrostation.ShowMessage("Создание файлов PDF");
+                _applicationMicrostation.CreatePdfFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                                                                                            FileExtentionType.pdf));
 
-                desingFile.CreateDWG();
+                _loggerMicrostation.ShowMessage("Создание файла DWG");
+                _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                                                                                                FileExtentionType.dwg));
 
                 _applicationMicrostation.CloseDesignFile();
             }
+
+            return _microstationProject.FileDataMicrostation;
         }
 
-        /// <summary>
-        /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
-        /// </summary>       
-        private void CreatePdfInDesingFIle(IDesignFileMicrostation desingFile)
-        {
-            var stamps = desingFile.Stamps;
-            if (stamps.Any())
-            {
-                foreach (var stamp in stamps)
-                {
-                    stamp.CompressFieldsRanges();
 
-                    stamp.DeleteSignaturesPrevious();
-                    stamp.InsertSignatures();
-
-                    desingFile.CreatePdfByStamp(stamp);
-
-                    stamp.DeleteSignaturesInserted();
-                }
-            }
-            else
-            {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.StampNotFound,
-                                                     $"Штапы в файле {_microstationProject.FileDataMicrostation.FileName} не найдены"));
-            }
-        }
 
         /// <summary>
         /// Освободить элементы

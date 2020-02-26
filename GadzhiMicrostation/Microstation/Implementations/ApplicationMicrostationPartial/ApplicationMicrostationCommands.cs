@@ -42,7 +42,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.ArgumentNullReference,
+                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.ArgumentNullReference,
                                                                        $"Идентефикатор библиотечного элемента не задан"));
                 return null;
             }
@@ -74,7 +74,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
+                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
                                                                         $"Файл библиотеки {libraryPath} не найден"));
             }
         }

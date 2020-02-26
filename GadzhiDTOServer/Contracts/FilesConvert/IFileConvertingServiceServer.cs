@@ -29,7 +29,7 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// Обновить информацию после окончательного ответа
         /// </summary>  
         [OperationContract(IsInitiating = false,
-                           IsTerminating = true)]
+                           IsTerminating = false)]
         Task UpdateFromResponse(FilesDataResponseServer filesDataResponse);
 
         /// <summary>

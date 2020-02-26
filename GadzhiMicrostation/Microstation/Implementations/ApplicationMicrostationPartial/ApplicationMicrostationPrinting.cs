@@ -34,13 +34,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 }
                 else
                 {
-                    _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
+                    ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
                                                                       $"Не удалось установить принтер {printerInformation?.PrinterName}"));
                 }
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
+                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
                                                                         $"Принтер {printerInformation?.PrinterName} не установлен в системе"));
             }
 
@@ -89,7 +89,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
+                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
                                                                            "Диапазон печати задан некорректно"));
                 return false;
             }
@@ -113,7 +113,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
+                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
                                                                           $"Формат печати {drawSize} не найден"));
                 return false;
             }
@@ -162,12 +162,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        public bool PrintPdfCommand()
+        public bool PrintPdfCommand(string filePath)
         {
-            return _pdfCreatorService.PrintPdfWithExecuteAction(
-                          _microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-                                                                  FileExtentionType.pdf),
-                          PrintCommand);
+            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintCommand);
         }
 
         private string GetPrinterPaperSize(string drawFormat, string prefixSearchPaperSize)

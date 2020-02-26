@@ -90,7 +90,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>
         public ObservableCollection<FileDataViewModelItem> FilesDataCollection { get; }
 
+        /// <summary>
+        /// Выделенные строки
+        /// </summary>
         private IList<object> _selectedFilesData = new List<object>();
+
         /// <summary>
         /// Выделенные строки
         /// </summary>

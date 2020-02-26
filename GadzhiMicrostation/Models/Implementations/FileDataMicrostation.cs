@@ -1,7 +1,9 @@
 ﻿using GadzhiMicrostation.Models.Enums;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-
+using System.Linq;
 
 namespace GadzhiMicrostation.Models.Implementations
 {
@@ -10,10 +12,17 @@ namespace GadzhiMicrostation.Models.Implementations
     /// </summary>
     public class FileDataMicrostation
     {
+        /// <summary>
+        /// Пути отконвертированных файлов
+        /// </summary>
+        private IDictionary<string, FileExtentionType> _convertedFilePathes;
+
         public FileDataMicrostation(string filePathServer,
                                     string filePathClient,
                                     ColorPrintMicrostation colorPrint)
         {
+            _convertedFilePathes = new Dictionary<string, FileExtentionType>();
+
             if (!String.IsNullOrEmpty(filePathServer))
             {
                 string fileType = Path.GetExtension(filePathServer).Trim('.');
@@ -60,5 +69,26 @@ namespace GadzhiMicrostation.Models.Implementations
         /// Цвет печати
         /// </summary>
         public ColorPrintMicrostation ColorPrint { get; }
+
+        /// <summary>
+        /// Пути отконвертированных файлов
+        /// </summary>
+        public IDictionary<string, FileExtentionType> ConvertedFilePathes =>
+            _convertedFilePathes.ToDictionary(pair => pair.Key, pair => pair.Value);
+
+        /// <summary>
+        /// Добавить путь к отконвертированному файлу
+        /// </summary>
+        public void AddConvertedFilePath(string convertedFilePath, FileExtentionType convertedFileExtension)
+        {
+            if (!String.IsNullOrEmpty(convertedFilePath))
+            {
+                ConvertedFilePathes?.Add(convertedFilePath, convertedFileExtension);
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(convertedFilePath));
+            }
+        }
     }
 }

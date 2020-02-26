@@ -10,9 +10,7 @@ namespace GadzhiMicrostation.Models.Enums
     /// </summary>
     public enum FileExtentionType
     {
-        dgn,
-        docx,
-        xlsx,
+        dgn,           
         pdf,
         dwg
     }

@@ -2,6 +2,7 @@
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using MicroStationDGN;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
-    public partial class ApplicationMicrostation: IApplicationMicrostationCommands
+    public partial class ApplicationMicrostation : IApplicationMicrostationCommands
     {
 
         /// <summary>
@@ -33,10 +34,51 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public void SaveDesignFile(string filePath)
         {
-            _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ActiveDesignFile.SaveAs(filePath),
+            if (ActiveDesignFile.IsDesingFileValid)
+            {
+                _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() =>
+                                                                     {
+                                                                         ActiveDesignFile.SaveAs(filePath);
+                                                                         _microstationProject.FileDataMicrostation.AddConvertedFilePath(filePath, FileExtentionType.dgn);
+                                                                     },
                                                   errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
-                                                                                           $"Ошибка сохранения файла {filePath}"),
+                                                                                           $"Ошибка сохранения файла DGN {filePath}"),
                                                   ApplicationCatchMethod: () => ActiveDesignFile.Close());
+            }
+        }
+
+        /// <summary>
+        /// Сохранить файл PDF
+        /// </summary>
+        public void CreatePdfFile(string filePath)
+        {
+            if (ActiveDesignFile.IsDesingFileValid)
+            {
+                _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() =>
+                                                                        {
+                                                                            ActiveDesignFile.CreatePdfInDesingFile(filePath);
+                                                                            _microstationProject.FileDataMicrostation.AddConvertedFilePath(filePath, FileExtentionType.pdf);
+                                                                        },
+                                                  errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                                                                                           $"Ошибка сохранения файла PDF {filePath}"));
+            }
+        }
+
+        /// <summary>
+        /// Создать файл типа DWG
+        /// </summary>
+        public void CreateDwgFile(string filePath)
+        {
+            if (ActiveDesignFile.IsDesingFileValid)
+            {
+                _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() =>
+                                                                        {
+                                                                            ActiveDesignFile.CreateDwgFile(filePath);
+                                                                            _microstationProject.FileDataMicrostation.AddConvertedFilePath(filePath, FileExtentionType.dwg);
+                                                                        },
+                                                  errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                                                                                           $"Ошибка сохранения файла DWG {filePath}"));
+            }
         }
 
         /// <summary>
@@ -44,10 +86,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public void CloseDesignFile()
         {
-            _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ActiveDesignFile.CloseWithSaving(),
+            if (ActiveDesignFile.IsDesingFileValid)
+            {
+                _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => ActiveDesignFile.CloseWithSaving(),
                                                   errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
                                                                                            $"Ошибка закрытия файла {ActiveDesignFile.FullName}"),
                                                   ApplicationCatchMethod: () => ActiveDesignFile.Close());
+            }
         }
 
         /// <summary>
@@ -67,17 +112,17 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 }
                 else
                 {
-                    _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.IncorrectExtension,
+                    ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.IncorrectExtension,
                                                                           $"Расширение файла {filePath} не соответствует типу .dgn"));
                 }
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
+                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
                                                                            $"Файл {filePath} не найден"));
             }
 
             return isValid;
-        }      
+        }
     }
 }
