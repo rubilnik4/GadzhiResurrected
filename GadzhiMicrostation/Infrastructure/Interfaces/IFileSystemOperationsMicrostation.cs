@@ -35,7 +35,7 @@ namespace GadzhiMicrostation.Infrastructure.Interfaces
         /// <summary>
         /// Получить вложенные файлы
         /// </summary>        
-        IEnumerable<string> GetFiles(string filePath);
+        IEnumerable<string> GetFiles(string filePath);       
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению

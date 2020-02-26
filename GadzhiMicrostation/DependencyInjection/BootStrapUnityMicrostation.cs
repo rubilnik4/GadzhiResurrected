@@ -18,8 +18,7 @@ namespace GadzhiMicrostation.DependencyInjection.BootStrapMicrostation
         public static void Start(IUnityContainer container)
         {
             container.RegisterType<IMicrostationProject, MicrostationProject>(new HierarchicalLifetimeManager());
-            container.RegisterType<IErrorMessagingMicrostation, ErrorMessagingMicrostation>(new HierarchicalLifetimeManager());
-            container.RegisterType<IProjectMicrostationSettings, ProjectMicrostationSettings>(new HierarchicalLifetimeManager());
+            container.RegisterType<IErrorMessagingMicrostation, ErrorMessagingMicrostation>(new HierarchicalLifetimeManager());          
             container.RegisterType<ILoggerMicrostation, LoggerMicrostation>(new HierarchicalLifetimeManager());
             container.RegisterType<IExecuteAndCatchErrorsMicrostation, ExecuteAndCatchErrorsMicrostation>();
             container.RegisterType<IFileSystemOperationsMicrostation, FileSystemOperationsMicrostation>();

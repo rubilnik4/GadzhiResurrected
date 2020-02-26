@@ -119,7 +119,7 @@
                   >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" 
-                                    Binding="{Binding FileType}" 
+                                    Binding="{Binding FileExtension}" 
                                     Width="0.15*"
                                     IsReadOnly="True">
 

@@ -5,6 +5,7 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.FilesData;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             return fileDataServer;
         }
-
+         
         /// <summary>
         /// Конвертировать файл
         /// </summary>
@@ -76,13 +77,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             if (fileDataServer.IsValidByAttemptingCount)
             {
-                if (fileDataServer.FileExtensionType == FileExtensions.dgn)
+                if (fileDataServer.FileExtensionType == FileExtension.dgn)
                 {
                     FileDataMicrostation convertedFileDataMicrostation = _convertingFileMicrostation.ConvertingFile(
-                                                                                    ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
-                                                                                    ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+                                                                                ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
+                                                                                ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+                    fileDataServer = ConverterFileDataServerFromMicrostation.UpdateFileDataServerFromMicrostation(fileDataServer, convertedFileDataMicrostation);
+
+
                 }
-                else if (fileDataServer.FileExtensionType == FileExtensions.docx)
+                else if (fileDataServer.FileExtensionType == FileExtension.docx)
                 {
                     await Task.Delay(2000);
 

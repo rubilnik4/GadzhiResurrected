@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using GadzhiCommonServer.Infrastructure.Implementations;
@@ -81,7 +82,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 {
                     fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath,
                                                                                    Guid.NewGuid().ToString(),
-                                                                                   FileHelpers.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
+                                                                                   FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
                     fileSavedCheck.IsSaved = await _fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
                 }
                 else

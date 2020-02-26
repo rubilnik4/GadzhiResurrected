@@ -20,7 +20,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileType => FileData.FileExtension;
+        public string FileExtension => FileData.FileExtension.ToString();
 
         /// <summary>
         /// Имя файла

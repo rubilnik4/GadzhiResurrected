@@ -4,6 +4,7 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;

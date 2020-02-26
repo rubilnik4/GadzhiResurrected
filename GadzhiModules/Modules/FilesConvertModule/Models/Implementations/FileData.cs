@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
@@ -14,14 +15,22 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
     {
         public FileData(string filePath)
         {
-            string fileExtension = FileHelpers.ExtensionWithoutPointFromPath(filePath);
+            string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
             string fileName = Path.GetFileNameWithoutExtension(filePath);
             if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
+            
+            if (Enum.TryParse(fileExtension, out FileExtension fileExtensiontype))
+            {
+                FileExtension = fileExtensiontype;
+            }
+            else
+            {
+                throw new FormatException(nameof(fileExtension));
+            }
 
-            FileExtension = fileExtension;
             FileName = fileName;
             FilePath = filePath;
 
@@ -37,7 +46,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileExtension { get; }
+        public FileExtension FileExtension { get; }
 
         /// <summary>
         /// Имя файла
@@ -73,7 +82,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             {
                 StatusProcessing = fileStatus.StatusProcessing;
             }
-           else
+            else
             {
                 throw new ArgumentNullException(nameof(fileStatus));
             }

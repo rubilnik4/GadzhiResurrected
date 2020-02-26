@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace GadzhiMicrostation.Infrastructure.Implementations
@@ -10,6 +11,20 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
     /// </summary>
     public class FileSystemOperationsMicrostation : IFileSystemOperationsMicrostation
     {
+        /// <summary>
+        /// Убрать точку из расширения файла и привести к нижнему регистру
+        /// </summary>      
+        public static string ExtensionWithoutPoint(string extension) =>
+            extension?.ToLower(CultureInfo.CurrentCulture).TrimStart('.');
+
+        /// <summary>
+        /// Взять расширение. Убрать точку из расширения файла и привести к нижнему регистру
+        /// </summary>      
+        public static string ExtensionWithoutPointFromPath(string path)
+        {
+            string extensionWithPoint = Path.GetExtension(path);
+            return ExtensionWithoutPoint(extensionWithPoint);
+        }
 
         /// <summary>
         /// Является ли путь папкой
@@ -36,7 +51,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
+        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);       
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению

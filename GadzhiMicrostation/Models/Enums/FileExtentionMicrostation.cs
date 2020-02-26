@@ -8,7 +8,7 @@ namespace GadzhiMicrostation.Models.Enums
     /// <summary>
     /// Типы расширений для сохранения фалов
     /// </summary>
-    public enum FileExtentionType
+    public enum FileExtentionMicrostation
     {
         dgn,           
         pdf,

@@ -10,11 +10,11 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// <summary>
         /// Список допустимых расширений для конвертации
         /// </summary>
-        public static IReadOnlyDictionary<string, FileExtensions> DocAndDgnFileTypes => new Dictionary<string, FileExtensions>()
+        public static IReadOnlyDictionary<string, FileExtension> DocAndDgnFileTypes => new Dictionary<string, FileExtension>()
         {
-            { "doc", FileExtensions.docx},
-            { "docx", FileExtensions.docx},
-            { "dgn", FileExtensions.dgn},           
+            { "doc", FileExtension.docx},
+            { "docx", FileExtension.docx},
+            { "dgn", FileExtension.dgn},           
         };
     }
 }

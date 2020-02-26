@@ -18,7 +18,7 @@ namespace GadzhiMicrostation.Extensions.StringAdditional
         {
             if (substring != null && substring.Length > 0 &&
                 stringOriginal?.StartsWith(substring, StringComparison.OrdinalIgnoreCase) == true)
-            {             
+            {
                 return stringOriginal.Remove(0, substring.Length)?.Trim();
             }
             return stringOriginal;
@@ -53,6 +53,12 @@ namespace GadzhiMicrostation.Extensions.StringAdditional
                                          ToLower(CultureInfo.CurrentCulture) + input.Substring(1);
             }
         }
+
+        /// <summary>
+        /// Содержит ли подстроку без учета регистар
+        /// </summary>        
+        public static bool ContainsIgnoreCase(this string input, string substring) =>
+            input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
     }
 
 

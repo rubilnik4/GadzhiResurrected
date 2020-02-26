@@ -4,6 +4,8 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.FilesData;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using GadzhiMicrostation.Models.Interfaces;
 using Microsoft.Practices.Unity;
 using System;
@@ -24,12 +26,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        private readonly IApplicationMicrostation _applicationMicrostation;
-
-        /// <summary>
-        /// Сервис работы с ошибками
-        /// </summary>
-        private readonly IErrorMessagingMicrostation _errorMessagingMicrostation;
+        private readonly IApplicationMicrostation _applicationMicrostation;      
 
         /// <summary>
         /// Отображение системных сообщений
@@ -46,8 +43,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             _container = new UnityContainer();
             BootStrapUnityMicrostation.Start(_container);
 
-            _applicationMicrostation = _container.Resolve<IApplicationMicrostation>();
-            _errorMessagingMicrostation = _container.Resolve<IErrorMessagingMicrostation>();
+            _applicationMicrostation = _container.Resolve<IApplicationMicrostation>();         
             _loggerMicrostation = _container.Resolve<ILoggerMicrostation>();
             _microstationProject = _container.Resolve<IMicrostationProject>();
         }
@@ -64,15 +60,15 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 _loggerMicrostation.ShowMessage("Загрузка файла Microstation");
                 _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
                 _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-                                                                                                FileExtentionType.dgn));
+                                                                                                FileExtentionMicrostation.dgn));
 
                 _loggerMicrostation.ShowMessage("Создание файлов PDF");
                 _applicationMicrostation.CreatePdfFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-                                                                                            FileExtentionType.pdf));
+                                                                                            FileExtentionMicrostation.pdf));
 
                 _loggerMicrostation.ShowMessage("Создание файла DWG");
                 _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-                                                                                                FileExtentionType.dwg));
+                                                                                                FileExtentionMicrostation.dwg));
 
                 _applicationMicrostation.CloseDesignFile();
             }

@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

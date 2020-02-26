@@ -1,5 +1,7 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Enums;
+using GadzhiMicrostation.Models.Implementations.FilesData;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using GadzhiMicrostation.Models.Interfaces;
 using GadzhiMicrostation.Models.StampCollections;
 using System;
@@ -12,17 +14,7 @@ namespace GadzhiMicrostation.Models.Implementations
     /// Модель хранения данных конвертации
     /// </summary>
     public class MicrostationProject : IMicrostationProject
-    {
-        /// <summary>
-        /// Ошибки конвертации
-        /// </summary>
-        private readonly List<ErrorMicrostation> _errorsMicrostation;
-
-        /// <summary>
-        /// Параметры конвертации
-        /// </summary>
-        public IProjectMicrostationSettings ProjectMicrostationSettings { get; }
-
+    { 
         /// <summary>
         /// Класс для хранения информации о конвертируемом файле типа DGN
         /// </summary>
@@ -38,13 +30,10 @@ namespace GadzhiMicrostation.Models.Implementations
         /// </summary>
         private readonly IFileSystemOperationsMicrostation _fileSystemOperationsMicrostation;
 
-        public MicrostationProject(IProjectMicrostationSettings projectMicrostationSettings,
-                                   IFileSystemOperationsMicrostation fileSystemOperationsMicrostation)
-        {
-            _errorsMicrostation = new List<ErrorMicrostation>();
+        public MicrostationProject(IFileSystemOperationsMicrostation fileSystemOperationsMicrostation)
+        {           
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
 
-            ProjectMicrostationSettings = projectMicrostationSettings;
             PutResourcesToDataFolder();
         }
 
@@ -71,22 +60,9 @@ namespace GadzhiMicrostation.Models.Implementations
         }
 
         /// <summary>
-        /// Ошибки конвертации
-        /// </summary>
-        public IEnumerable<ErrorMicrostation> ErrorsMicrostation => _errorsMicrostation;
-
-        /// <summary>
-        /// Добавить ошибку
-        /// </summary>   
-        public void AddError(ErrorMicrostation errorMicrostation)
-        {
-            _errorsMicrostation.Add(errorMicrostation);
-        }
-
-        /// <summary>
         /// Создать путь для сохранения отконвертированных файлов
         /// </summary>        
-        public string CreateFileSavePath(string fileName, FileExtentionType fileExtentionType)
+        public string CreateFileSavePath(string fileName, FileExtentionMicrostation fileExtentionType)
         {
             string fileFolderSave = FileExtensionToSaveFolder(fileExtentionType);
 
@@ -114,19 +90,19 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Папка для сохранения по типу фала
         /// </summary>      
-        private string FileExtensionToSaveFolder(FileExtentionType fileExtentionType)
+        private string FileExtensionToSaveFolder(FileExtentionMicrostation fileExtentionType)
         {
             string fileFolderSave = String.Empty;
 
             switch (fileExtentionType)
             {
-                case FileExtentionType.dgn:
+                case FileExtentionMicrostation.dgn:
                     fileFolderSave = DgnFilesFolder;
                     break;  
-                case FileExtentionType.pdf:
+                case FileExtentionMicrostation.pdf:
                     fileFolderSave = PdfFilesFolder;
                     break;
-                case FileExtentionType.dwg:
+                case FileExtentionMicrostation.dwg:
                     fileFolderSave = DwgFilesFolder;
                     break;
             }

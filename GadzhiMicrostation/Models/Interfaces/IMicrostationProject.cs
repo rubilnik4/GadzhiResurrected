@@ -1,5 +1,7 @@
 ﻿using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.FilesData;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Models.Interfaces
@@ -13,17 +15,7 @@ namespace GadzhiMicrostation.Models.Interfaces
         /// Записать исходные данные для конвертации
         /// </summary>      
         void SetInitialFileData(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation);
-
-        /// <summary>
-        /// Ошибки конвертации
-        /// </summary>
-        IEnumerable<ErrorMicrostation> ErrorsMicrostation { get; }
-
-        /// <summary>
-        /// Параметры конвертации
-        /// </summary>
-        IProjectMicrostationSettings ProjectMicrostationSettings { get; }
-
+       
         /// <summary>
         /// Класс для хранения информации о конвертируемом файле типа DGN
         /// </summary>
@@ -35,13 +27,8 @@ namespace GadzhiMicrostation.Models.Interfaces
         PrintersInformationMicrostation PrintersInformation { get; }
 
         /// <summary>
-        /// Добавить ошибку
-        /// </summary>   
-        void AddError(ErrorMicrostation errorMicrostation);
-
-        /// <summary>
         /// Создать путь для сохранения отконвертированных файлов
         /// </summary>        
-        string CreateFileSavePath(string fileName, FileExtentionType fileExtentionType);
+        string CreateFileSavePath(string fileName, FileExtentionMicrostation fileExtentionType);
     }
 }

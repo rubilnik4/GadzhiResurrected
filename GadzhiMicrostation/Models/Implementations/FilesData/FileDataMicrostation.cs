@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GadzhiMicrostation.Infrastructure.Implementations;
 
-namespace GadzhiMicrostation.Models.Implementations
+namespace GadzhiMicrostation.Models.Implementations.FilesData
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле типа DGN
@@ -15,20 +16,35 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        private IDictionary<string, FileExtentionType> _convertedFilePathes;
+        private readonly IList<ConvertedFileDataMicrostation> _convertedFileDataMicrostation;
+
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        private readonly IList<ErrorMicrostationType> _fileConvertErrorTypes;
 
         public FileDataMicrostation(string filePathServer,
                                     string filePathClient,
                                     ColorPrintMicrostation colorPrint)
         {
-            _convertedFilePathes = new Dictionary<string, FileExtentionType>();
+            _convertedFileDataMicrostation = new List<ConvertedFileDataMicrostation>();
+            _fileConvertErrorTypes = new List<ErrorMicrostationType>();
 
             if (!String.IsNullOrEmpty(filePathServer))
             {
-                string fileType = Path.GetExtension(filePathServer).Trim('.');
+                string fileExtention = FileSystemOperationsMicrostation.ExtensionWithoutPointFromPath(filePathServer);
                 string fileName = Path.GetFileNameWithoutExtension(filePathServer);
 
-                FileExtension = fileType;
+                var fileExtensionType = Enum.Parse(typeof(FileExtentionMicrostation), fileExtention, true);
+                if (fileExtensionType is FileExtentionMicrostation)
+                {
+                    FileExtension = (FileExtentionMicrostation)fileExtensionType;
+                }
+                else
+                {
+                    throw new FormatException(nameof(fileExtention));
+                }
+
                 FileName = fileName;
                 FilePathServer = filePathServer;
                 FilePathClient = filePathClient;
@@ -43,7 +59,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileExtension { get; }
+        public FileExtentionMicrostation FileExtension { get; }
 
         /// <summary>
         /// Имя файла
@@ -73,22 +89,34 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        public IDictionary<string, FileExtentionType> ConvertedFilePathes =>
-            _convertedFilePathes.ToDictionary(pair => pair.Key, pair => pair.Value);
+        public IEnumerable<ConvertedFileDataMicrostation> ConvertedFileDataMicrostation => _convertedFileDataMicrostation;
+
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        public IEnumerable<ErrorMicrostationType> FileConvertErrorTypes => _fileConvertErrorTypes;
 
         /// <summary>
         /// Добавить путь к отконвертированному файлу
         /// </summary>
-        public void AddConvertedFilePath(string convertedFilePath, FileExtentionType convertedFileExtension)
+        public void AddConvertedFilePath(ConvertedFileDataMicrostation convertedFileDataMicrostation)
         {
-            if (!String.IsNullOrEmpty(convertedFilePath))
+            if (convertedFileDataMicrostation != null)
             {
-                ConvertedFilePathes?.Add(convertedFilePath, convertedFileExtension);
+                _convertedFileDataMicrostation.Add(convertedFileDataMicrostation);
             }
             else
             {
-                throw new ArgumentNullException(nameof(convertedFilePath));
+                throw new ArgumentNullException(nameof(convertedFileDataMicrostation));
             }
+        }
+
+        /// <summary>
+        /// Добавить ошибку конвертации
+        /// </summary>
+        public void AddFileConvertErrorType(ErrorMicrostationType errorMicrostationType)
+        {
+            _fileConvertErrorTypes.Add(errorMicrostationType);
         }
     }
 }

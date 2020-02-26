@@ -1,8 +1,11 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Implementations.Printers;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.FilesData;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +24,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         public static FileDataMicrostation FileDataServerToMicrostation(FileDataServer fileDataServer) =>
             fileDataServer != null ?
-            new FileDataMicrostation(fileDataServer.FilePathServer, fileDataServer.FilePathClient, ConvertColorPrint(fileDataServer.ColorPrint)) :
+            new FileDataMicrostation(fileDataServer.FilePathServer, fileDataServer.FilePathClient, 
+                                     ConvertColorPrint(fileDataServer.ColorPrint)) :
             throw new ArgumentNullException(nameof(fileDataServer));
 
         /// <summary>
@@ -33,18 +37,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать типы цвета печати
         /// </summary>       
-        private static ColorPrintMicrostation ConvertColorPrint(ColorPrint colorPrint)
-        {
-            if (Enum.TryParse(colorPrint.ToString(), out ColorPrintMicrostation colorPrintMicrostation))
-            {
-                return colorPrintMicrostation;
-            }
-            else
-            {
-                throw new FormatException(nameof(colorPrint));
-            }
-        }
+        private static ColorPrintMicrostation ConvertColorPrint(ColorPrint colorPrint) =>      
+            Enum.TryParse(colorPrint.ToString(), out ColorPrintMicrostation colorPrintMicrostation) ?
+            colorPrintMicrostation :            
+            throw new FormatException(nameof(colorPrint));
 
+        /// <summary>
+        /// Преобразовать параметры принтера
+        /// </summary>       
         private static PrinterInformationMicrostation  PrinterServerToMicrostation(PrinterInformation printerInformation) =>
            new PrinterInformationMicrostation(printerInformation.Name, printerInformation.PrefixSearchPaperSize);
     }

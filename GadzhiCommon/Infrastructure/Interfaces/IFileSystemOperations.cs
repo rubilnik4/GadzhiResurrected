@@ -41,7 +41,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущей папке       
         /// </summary>    
-        Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);
+        Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);      
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
@@ -66,6 +66,6 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName);
+        (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName);        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Implementations.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
 {

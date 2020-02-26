@@ -130,6 +130,7 @@
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerToMicrostation.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerFromMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
@@ -142,10 +143,11 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\ConvertedFileDataServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilesDataServer.cs" />
-    <Compile Include="Models\Implementations\PrinterInformation.cs" />
-    <Compile Include="Models\Implementations\PrintersInformation.cs" />
+    <Compile Include="Models\Implementations\Printers\PrinterInformation.cs" />
+    <Compile Include="Models\Implementations\Printers\PrintersInformation.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -188,17 +190,6 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="VBA">
-      <Guid>{000204EF-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>6</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>9</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

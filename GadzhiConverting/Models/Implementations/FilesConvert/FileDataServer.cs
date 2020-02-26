@@ -1,5 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,8 +18,8 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        private readonly List<FileConvertErrorType> _fileConvertErrorType;
-
+        private readonly List<FileConvertErrorType> _fileConvertErrorTypes;
+       
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
               : this(filePathServer, filePathClient, colorPrint, new List<FileConvertErrorType>())
         {
@@ -29,7 +31,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
                               ColorPrint colorPrint,
                               IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
-            string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePathServer);
+            string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);
 
             if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
@@ -43,7 +45,8 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             ColorPrint = colorPrint;
             StatusProcessing = StatusProcessing.InQueue;
 
-            _fileConvertErrorType = new List<FileConvertErrorType>(fileConvertErrorType);
+            _fileConvertErrorTypes = new List<FileConvertErrorType>(fileConvertErrorType);
+            ConvertedFileDataServer = new List<ConvertedFileDataServer>();
         }
 
         /// <summary>
@@ -54,7 +57,8 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtensions FileExtensionType => ValidFileExtentions.DocAndDgnFileTypes[FileExtension.ToLower(CultureInfo.CurrentCulture)];
+        public FileExtension FileExtensionType => 
+            ValidFileExtentions.DocAndDgnFileTypes[FileExtension.ToLower(CultureInfo.CurrentCulture)];
 
         /// <summary>
         /// Имя файла
@@ -87,9 +91,14 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         public StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
+        /// Путь и тип отковенртированных файлов
+        /// </summary>
+        public IEnumerable<ConvertedFileDataServer> ConvertedFileDataServer { get; set; }
+
+        /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public IReadOnlyList<FileConvertErrorType> FileConvertErrorType => _fileConvertErrorType;
+        public IReadOnlyList<FileConvertErrorType> FileConvertErrorTypes => _fileConvertErrorTypes;        
 
         /// <summary>
         /// Завершена ли обработка файла
@@ -109,7 +118,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Присутствуют ли ошибки конвертирования
         /// </summary>
-        public bool IsValidByErrorType => FileConvertErrorType == null || FileConvertErrorType.Count == 0;
+        public bool IsValidByErrorType => FileConvertErrorTypes == null || FileConvertErrorTypes.Count == 0;
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования
@@ -121,7 +130,15 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// </summary>
         public void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType)
         {
-            _fileConvertErrorType.Add(fileConvertErrorType);
+            _fileConvertErrorTypes.Add(fileConvertErrorType);
+        }
+
+        /// <summary>
+        /// Добавить ошибки
+        /// </summary>
+        public void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes)
+        {
+            _fileConvertErrorTypes.AddRange(fileConvertErrorTypes);
         }
 
         public override bool Equals(object obj)

@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
@@ -20,25 +21,25 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
         /// Параметры приложения
         /// </summary>
-        private IProjectSettings ProjectSettings { get; }
+        private readonly IProjectSettings _projectSettings;
 
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary>        
-        private IDialogServiceStandard DialogServiceStandard { get; }
+        private readonly IDialogServiceStandard _dialogServiceStandard;
 
         public ConverterClientFilesDataFromDTO(IFileSystemOperations fileSystemOperations,
                                                IProjectSettings projectSettings,
                                                IDialogServiceStandard dialogServiceStandard)
         {
-            FileSystemOperations = fileSystemOperations;
-            ProjectSettings = projectSettings;
-            DialogServiceStandard = dialogServiceStandard;
+            _fileSystemOperations = fileSystemOperations;
+            _projectSettings = projectSettings;
+            _dialogServiceStandard = dialogServiceStandard;
         }
 
         /// <summary>
@@ -160,16 +161,16 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             {
                 string createdDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
                 string fileName = Path.GetFileNameWithoutExtension(fileDataResponse.FilePath);
-                string fileExtension = FileHelpers.ExtensionWithoutPoint(Path.GetExtension(fileDataResponse.FilePath));
+                string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataResponse.FilePath));
 
-                (bool isCreated, string directoryPath) = FileSystemOperations.
+                (bool isCreated, string directoryPath) = _fileSystemOperations.
                                                          CreateFolderByName(createdDirectoryName,
-                                                                            ProjectSettings.DirectoryForSavingConvertedFiles);
+                                                                            _projectSettings.DirectoryForSavingConvertedFiles);
                 if (isCreated)
                 {
-                    fileSavedCheck.FilePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
-                    await DialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
-                            fileSavedCheck.IsSaved = await FileSystemOperations.
+                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
+                    await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
+                            fileSavedCheck.IsSaved = await _fileSystemOperations.
                                                      UnzipFileAndSave(fileSavedCheck.FilePath, fileDataResponse.FileDataSource),
                                                                       $"Файл {fileSavedCheck.FilePath} открыт или используется. Повторить попытку сохранения?");
                 }

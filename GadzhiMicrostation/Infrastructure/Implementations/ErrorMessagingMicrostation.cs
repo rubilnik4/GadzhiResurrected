@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
 using System.Collections.Generic;
@@ -25,22 +26,18 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         {
             _microstationProject = microstationProject;
             _loggerMicrostation = loggerMicrostation;
-        }
-
-        /// <summary>
-        /// Получить список ошибок
-        /// </summary>
-        public IEnumerable<ErrorMicrostation> ErrorsMicrostation => _microstationProject.ErrorsMicrostation;
-
+        }       
 
         /// <summary>
         /// Добавить ошибку
         /// </summary>      
         public void AddError(ErrorMicrostation errorMicrostation)
         {
-            _microstationProject.AddError(errorMicrostation);
-            _loggerMicrostation.ShowError(errorMicrostation);
-
+            if (errorMicrostation != null)
+            {
+                _microstationProject.FileDataMicrostation.AddFileConvertErrorType(errorMicrostation.ErrorMicrostationType);
+                _loggerMicrostation.ShowError(errorMicrostation);
+            }
         }
     }
 }

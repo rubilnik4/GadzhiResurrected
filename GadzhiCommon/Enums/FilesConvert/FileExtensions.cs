@@ -8,9 +8,8 @@ namespace GadzhiCommon.Enums.FilesConvert
 {
     /// <summary>
     /// Типы допустимых расширений
-    /// </summary>
-    [Flags]
-    public enum FileExtensions
+    /// </summary>   
+    public enum FileExtension
     {
         dgn,
         docx,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiMicrostation.Models.Implementations
+namespace GadzhiMicrostation.Models.Implementations.Printers
 {
     /// <summary>
     /// Параметры принтера

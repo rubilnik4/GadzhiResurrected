@@ -15,6 +15,21 @@ namespace GadzhiCommon.Infrastructure.Implementations
     /// </summary>
     public class FileSystemOperations : IFileSystemOperations
     {
+        /// <summary>
+        /// Убрать точку из расширения файла и привести к нижнему регистру
+        /// </summary>      
+        public static string ExtensionWithoutPoint(string extension) =>
+            extension?.ToLower(CultureInfo.CurrentCulture).TrimStart('.');
+
+
+        /// <summary>
+        /// Взять расширение. Убрать точку из расширения файла и привести к нижнему регистру
+        /// </summary>      
+        public static string ExtensionWithoutPointFromPath(string path)
+        {
+            string extensionWithPoint = Path.GetExtension(path);
+            return ExtensionWithoutPoint(extensionWithPoint);
+        }
 
         /// <summary>
         /// Является ли путь папкой
@@ -41,7 +56,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
+        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);       
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению

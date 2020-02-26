@@ -15,11 +15,11 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private IFileSystemOperations FileSystemOperations { get; }
+        private readonly IFileSystemOperations _fileSystemOperations;
 
         public ConverterClientFilesDataToDTO(IFileSystemOperations fileSystemOperations)
         {
-            FileSystemOperations = fileSystemOperations;
+            _fileSystemOperations = fileSystemOperations;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<FilesDataRequestClient> ConvertToFilesDataRequest(IFilesData filesData)
         {
-            var filesRequestExist = await Task.WhenAll(filesData?.FilesInfo?.Where(file => FileSystemOperations.IsFileExist(file.FilePath))?.
+            var filesRequestExist = await Task.WhenAll(filesData?.FilesInfo?.Where(file => _fileSystemOperations.IsFileExist(file.FilePath))?.
                                                                                     Select(file => ConvertToFileDataRequest(file)));
             var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
 
@@ -43,7 +43,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         private async Task<FileDataRequestClient> ConvertToFileDataRequest(FileData fileData)
         {
-            byte[] fileDataSource = await FileSystemOperations.ConvertFileToByteAndZip(fileData.FilePath);
+            byte[] fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileData.FilePath);
 
             return new FileDataRequestClient()
             {

@@ -1,4 +1,6 @@
 ﻿using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.FilesData;
+using GadzhiMicrostation.Models.Implementations.Printers;
 using System;
 
 namespace GadzhiMicrostation.Infrastructure.Interfaces

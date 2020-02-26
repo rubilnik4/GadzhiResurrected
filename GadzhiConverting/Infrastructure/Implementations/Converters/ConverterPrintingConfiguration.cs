@@ -1,5 +1,6 @@
 ﻿using GadzhiConverting.Configuration;
 using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Implementations.Printers;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;

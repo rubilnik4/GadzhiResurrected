@@ -73,7 +73,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 IsCompleted = fileDataServer.IsCompleted,
-                FileConvertErrorType = fileDataServer.FileConvertErrorType,
+                FileConvertErrorType = fileDataServer.FileConvertErrorTypes,
             };
         }
 
@@ -90,7 +90,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 IsCompleted = fileDataServer.IsCompleted,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FileDataSource = fileDataSource,
-                FileConvertErrorType = fileDataServer.FileConvertErrorType,
+                FileConvertErrorType = fileDataServer.FileConvertErrorTypes,
             };
         }
     }

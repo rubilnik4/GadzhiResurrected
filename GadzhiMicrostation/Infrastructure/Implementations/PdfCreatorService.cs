@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Infrastructure.Interfaces;
+﻿using GadzhiMicrostation.Extensions.StringAdditional;
+using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
 using System;
@@ -20,7 +21,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// Сервис работы с ошибками
         /// </summary>
         private readonly IErrorMessagingMicrostation _errorMessagingMicrostation;
-
+        
         /// <summary>
         /// Библиотека Pdf Creator
         /// </summary>
@@ -61,10 +62,10 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
             if (_pdfCreator.cStart("/NoProcessingAtStartup", false))
             {
-                string extension = Path.GetExtension(filePath);
+                string fileExtension = FileSystemOperationsMicrostation.ExtensionWithoutPointFromPath(filePath);
 
-                if (!String.IsNullOrEmpty(filePath) || !String.IsNullOrEmpty(extension) ||
-                    extension.Trim('.').ToLower(CultureInfo.CurrentCulture) != "pdf")
+                if (!String.IsNullOrEmpty(filePath) || !String.IsNullOrEmpty(fileExtension) ||
+                    FileExtentionMicrostation.pdf.ToString().ContainsIgnoreCase(fileExtension))
                 {
                     _pdfCreator.cOptions = GetPdfPrinterOptions(filePath);
                     _pdfCreator.cClearCache();

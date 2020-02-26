@@ -2,6 +2,7 @@
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Implementations.Printers;
 using System;
 using System.Configuration;
 using System.IO;
