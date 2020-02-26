@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Models.Interfaces
         /// <summary>
         /// Записать исходные данные для конвертации
         /// </summary>      
-        void SetInitialFileData(FileDataMicrostation fileDataMicrostation, PrintersInformation printersInformation);
+        void SetInitialFileData(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation);
 
         /// <summary>
         /// Ошибки конвертации
@@ -32,7 +32,7 @@ namespace GadzhiMicrostation.Models.Interfaces
         /// <summary>
         /// Список используемых принтеров
         /// </summary>
-        PrintersInformation PrintersInformation { get; }
+        PrintersInformationMicrostation PrintersInformation { get; }
 
         /// <summary>
         /// Добавить ошибку

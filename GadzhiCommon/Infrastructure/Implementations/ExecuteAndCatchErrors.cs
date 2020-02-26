@@ -92,6 +92,10 @@ namespace GadzhiCommon.Infrastructure.Implementations
             {
                 fileConvertErrorType = FileConvertErrorType.ArgumentNullReference;
             }
+            else if (ex is FormatException)
+            {
+                fileConvertErrorType = FileConvertErrorType.FormatException;
+            }
             else if (ex is TimeoutException)
             {
                 fileConvertErrorType = FileConvertErrorType.TimeOut;

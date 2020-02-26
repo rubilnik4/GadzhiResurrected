@@ -2,7 +2,9 @@
 using GadzhiCommon.Helpers.FileSystem;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace GadzhiConverting.Models.FilesConvert.Implementations
 {
@@ -30,6 +32,10 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             string fileType = FileHelpers.ExtensionWithoutPointFromPath(filePathServer);
             string fileName = Path.GetFileNameWithoutExtension(filePathServer);
 
+            if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
+            {
+                throw new KeyNotFoundException(nameof(filePathServer));
+            }
             FileExtension = fileType;
             FileName = fileName;
             FilePathServer = filePathServer;
@@ -37,13 +43,18 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             ColorPrint = colorPrint;
             StatusProcessing = StatusProcessing.InQueue;
 
-            _fileConvertErrorType = new List<FileConvertErrorType>(fileConvertErrorType);           
+            _fileConvertErrorType = new List<FileConvertErrorType>(fileConvertErrorType);
         }
 
         /// <summary>
         /// Расширение файла
         /// </summary>
         public string FileExtension { get; }
+
+        /// <summary>
+        /// Тип расширения файла
+        /// </summary>
+        public FileExtensions FileExtensionType => ValidFileExtentions.DocAndDgnFileTypes[FileExtension.ToLower(CultureInfo.CurrentCulture)];
 
         /// <summary>
         /// Имя файла
@@ -126,7 +137,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
 
         public override int GetHashCode()
         {
-           return -1576186305 + FilePathServer.GetHashCode();
+            return -1576186305 + FilePathServer.GetHashCode();
         }
     }
 }

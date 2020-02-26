@@ -49,7 +49,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        public void ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformation printersInformation)
+        public void ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation)
         {
             _microstationProject.SetInitialFileData(fileDataMicrostation, printersInformation);
 

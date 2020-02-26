@@ -12,6 +12,6 @@ namespace GadzhiMicrostation.Infrastructure.Interfaces
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary> 
-        void ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformation printersInformation);
+        void ConvertingFile(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation);
     }
 }

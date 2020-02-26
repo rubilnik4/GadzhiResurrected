@@ -12,6 +12,9 @@ namespace GadzhiConverting.Configuration
     /// </summary>
     public class RegisterPrintersInformationSection : ConfigurationSection
     {
+        /// <summary>
+        /// Имя секции в конфигурационном файле
+        /// </summary>
         private static string _sectionName => "PrintersInformationsSection";
 
         public static RegisterPrintersInformationSection GetConfig()
@@ -19,7 +22,10 @@ namespace GadzhiConverting.Configuration
             return (RegisterPrintersInformationSection)ConfigurationManager.GetSection(_sectionName) ?? new RegisterPrintersInformationSection();
         }
 
-        [ConfigurationProperty(nameof(PrintersInformationCollection))]      
-        public PrintersPdfCollection PrintersInformationCollection => this[nameof(PrintersInformationCollection)] as PrintersPdfCollection;  
+        /// <summary>
+        /// Коллекция PDF принтеров
+        /// </summary>
+        [ConfigurationProperty(nameof(PrintersPdfCollection))]
+        public PrintersPdfCollection PrintersPdfCollection => this[nameof(PrintersPdfCollection)] as PrintersPdfCollection;
     }
 }

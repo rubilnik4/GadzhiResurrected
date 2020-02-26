@@ -1,8 +1,12 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.FilesConvert.Implementations;
+using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiMicrostation.Models.Implementations;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -14,9 +18,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly IMessageAndLoggingService _messageAndLoggingService;
 
-        public ConvertingFileData(IMessageAndLoggingService messageAndLoggingService)
+        /// <summary>
+        /// Обработка и конвертирование файла DGN
+        /// </summary>
+        private readonly IConvertingFileMicrostation _convertingFileMicrostation;
+
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private readonly IProjectSettings _projectSettings;
+
+        public ConvertingFileData(IMessageAndLoggingService messageAndLoggingService, IConvertingFileMicrostation convertingFileMicrostation, IProjectSettings projectSettings)
         {
             _messageAndLoggingService = messageAndLoggingService;
+            _convertingFileMicrostation = convertingFileMicrostation;
+            _projectSettings = projectSettings;
         }
 
         /// <summary>
@@ -57,11 +73,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task<FileDataServer> FileDataConverting(FileDataServer fileDataServer)
         {
-            await Task.Delay(2000);
 
             if (fileDataServer.IsValidByAttemptingCount)
             {
+                if (fileDataServer.FileExtensionType == FileExtensions.dgn)
+                {
+                    _convertingFileMicrostation.ConvertingFile(ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
+                                                               ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+                }
+                else if (fileDataServer.FileExtensionType == FileExtensions.docx)
+                {
+                    await Task.Delay(2000);
 
+                }
             }
             else
             {

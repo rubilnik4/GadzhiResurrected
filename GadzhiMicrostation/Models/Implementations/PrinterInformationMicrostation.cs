@@ -8,14 +8,14 @@ namespace GadzhiMicrostation.Models.Implementations
     /// <summary>
     /// Параметры принтера
     /// </summary>
-    public class PrinterInformation
+    public class PrinterInformationMicrostation
     {
-        public PrinterInformation(string printerName)
+        public PrinterInformationMicrostation(string printerName)
             : this(printerName, null)
         {
         }
 
-        public PrinterInformation(string printerName, string prefixSearchPaperSize)
+        public PrinterInformationMicrostation(string printerName, string prefixSearchPaperSize)
         {
             if (!String.IsNullOrEmpty (printerName))
             {

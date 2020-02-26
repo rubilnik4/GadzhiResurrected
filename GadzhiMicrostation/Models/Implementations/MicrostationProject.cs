@@ -31,7 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Список используемых принтеров
         /// </summary>
-        public PrintersInformation PrintersInformation { get; private set; }
+        public PrintersInformationMicrostation PrintersInformation { get; private set; }
 
         /// <summary>
         /// Проверка состояния папок и файлов, архивация, сохранение
@@ -51,7 +51,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Записать исходные данные для конвертации
         /// </summary>      
-        public void SetInitialFileData(FileDataMicrostation fileDataMicrostation, PrintersInformation printersInformation)
+        public void SetInitialFileData(FileDataMicrostation fileDataMicrostation, PrintersInformationMicrostation printersInformation)
         {
             if (fileDataMicrostation != null && printersInformation != null)
             {

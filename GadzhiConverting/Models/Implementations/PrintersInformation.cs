@@ -19,6 +19,6 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Список принтеров для печати PDF
         /// </summary>
-        public IList<PrinterInformation> PrintersPdf{ get; set; }
+        public IEnumerable<PrinterInformation> PrintersPdf{ get; set; }
     }
 }

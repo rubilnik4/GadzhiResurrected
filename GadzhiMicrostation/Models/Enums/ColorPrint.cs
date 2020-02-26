@@ -3,7 +3,7 @@
     /// <summary>
     /// Типы цветов для печати
     /// </summary>
-    public enum ColorPrint
+    public enum ColorPrintMicrostation
     {
 
         BlackAndWhite,

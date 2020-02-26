@@ -2,6 +2,7 @@
 using GadzhiConverting.Models.Implementations;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,26 +19,21 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             var printersInformation = new PrintersInformation();
 
             var config = RegisterPrintersInformationSection.GetConfig();
-            foreach (var printers in config.PrintersInformationCollection)
-            {
-                if (printers is PrintersPdfCollection printersPdf)
-                {
-                    foreach (PrinterInformationElement printer in printersPdf)
-                    {
-                        ToPrinterInformation(printer);
-                    }
-                    Select(printer => );
-                }
-            }
 
-            return printersInformation;
+            var systemPrinters = PrinterSettings.InstalledPrinters.Cast<string>();
+           
+            return new PrintersInformation()
+            {
+                PrintersPdf = config.PrintersPdfCollection.Where(printer => systemPrinters?.Contains(printer.Name, StringComparer.OrdinalIgnoreCase) == true).
+                                                           Select(printer => ToPrinterInformation(printer)),
+            };
         }
 
         /// <summary>
         /// Преобразовать элемент конфигурационного файла в модель о принтере
         /// </summary>       
         private static PrinterInformation ToPrinterInformation(PrinterInformationElement printerInformationElement) =>
-             new PrinterInformation(printerInformationElement?.Name);
+             new PrinterInformation(printerInformationElement?.Name, printerInformationElement?.PrefixSearchPaperSize);
 
     }
 }

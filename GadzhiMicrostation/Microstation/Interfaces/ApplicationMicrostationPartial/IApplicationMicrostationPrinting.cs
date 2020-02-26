@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        bool SetDefaultPrinter(PrinterInformation printerInformation);
+        bool SetDefaultPrinter(PrinterInformationMicrostation printerInformation);
 
         /// <summary>
         /// Установить тип поворота
@@ -41,7 +41,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Установить цвет печати
         /// </summary>       
-        void SetPrintColor(ColorPrint colorPrint);
+        void SetPrintColor(ColorPrintMicrostation colorPrint);
 
         /// <summary>
         /// Команда печати

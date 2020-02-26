@@ -117,7 +117,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Создать пдф по координатам и формату
         /// </summary>
         public void CreatePdf(string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
-                              double printScale, ColorPrint colorPrint)
+                              double printScale, ColorPrintMicrostation colorPrint)
         {
             bool isPrinterSet = ApplicationMicrostation.SetDefaultPrinter(_microstationProject.
                                                                           PrintersInformation.PdfPrinter);

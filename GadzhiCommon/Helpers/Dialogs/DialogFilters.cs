@@ -20,7 +20,7 @@ namespace GadzhiCommon.Helpers.Dialogs
         public static bool IsInDocAndDgnFileTypes(string path)
         {
             string extensionWithoutPoint = FileHelpers.ExtensionWithoutPoint(Path.GetExtension(path));
-            return ValidFileExtentions.DocAndDgnFileTypes?.Contains(extensionWithoutPoint) == true;
+            return ValidFileExtentions.DocAndDgnFileTypes?.Keys.Contains(extensionWithoutPoint) == true;
         }
     }
 }

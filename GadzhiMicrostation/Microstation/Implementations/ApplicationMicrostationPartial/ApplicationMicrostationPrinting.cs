@@ -22,25 +22,26 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        public bool SetDefaultPrinter(PrinterInformation printerInformation)
+        public bool SetDefaultPrinter(PrinterInformationMicrostation printerInformation)
         {
             bool success = false;
-            if (PrinterSettings.InstalledPrinters.Cast<string>().Contains(printerInformation?.PrinterName))
+            if (PrinterSettings.InstalledPrinters?.Cast<string>()?.Contains(printerInformation?.PrinterName, 
+                                                                          StringComparer.OrdinalIgnoreCase) == true)
             {
-                if (NativeMethods.SetDefaultPrinter(printerInformation.PrinterName))
+                if (NativeMethods.SetDefaultPrinter(printerInformation?.PrinterName))
                 {
                     success = true;
                 }
                 else
                 {
                     _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
-                                                                      $"Не удалось установить принтер {printerInformation.PrinterName}"));
+                                                                      $"Не удалось установить принтер {printerInformation?.PrinterName}"));
                 }
             }
             else
             {
                 _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
-                                                                        $"Принтер {printerInformation.PrinterName} не установлен в системе"));
+                                                                        $"Принтер {printerInformation?.PrinterName} не установлен в системе"));
             }
 
             return success;
@@ -132,18 +133,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить цвет печати
         /// </summary>       
-        public void SetPrintColor(ColorPrint colorPrint)
+        public void SetPrintColor(ColorPrintMicrostation colorPrint)
         {
             string colorCommand = String.Empty;
             switch (colorPrint)
             {
-                case ColorPrint.BlackAndWhite:
+                case ColorPrintMicrostation.BlackAndWhite:
                     colorCommand = "monochrome";
                     break;
-                case ColorPrint.GrayScale:
+                case ColorPrintMicrostation.GrayScale:
                     colorCommand = "grayscale";
                     break;
-                case ColorPrint.Color:
+                case ColorPrintMicrostation.Color:
                     colorCommand = "color";
                     break;
             }

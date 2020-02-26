@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Models.Implementations
     {
         public FileDataMicrostation(string filePathServer,
                                     string filePathClient,
-                                    ColorPrint colorPrint)
+                                    ColorPrintMicrostation colorPrint)
         {
             if (!String.IsNullOrEmpty(filePathServer))
             {
@@ -59,6 +59,6 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; }
+        public ColorPrintMicrostation ColorPrint { get; }
     }
 }

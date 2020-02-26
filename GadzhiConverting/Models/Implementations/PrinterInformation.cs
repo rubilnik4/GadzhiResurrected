@@ -11,11 +11,17 @@ namespace GadzhiConverting.Models.Implementations
     /// </summary>
     public class PrinterInformation
     {
-        public PrinterInformation(string name)
+        public PrinterInformation(string printerName)
+           : this(printerName, null)
+        {
+        }
+
+        public PrinterInformation(string name, string prefixSearchPaperSize)
         {
             if (!String.IsNullOrWhiteSpace(name))
             {
                 Name = name;
+                PrefixSearchPaperSize = prefixSearchPaperSize;
             }
             else
             {
@@ -27,5 +33,10 @@ namespace GadzhiConverting.Models.Implementations
         /// Имя принтера
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Параметр поиска форматов печати
+        /// </summary>
+        public string PrefixSearchPaperSize { get; }
     }
 }

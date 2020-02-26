@@ -11,8 +11,11 @@ namespace GadzhiConverting.Configuration
     /// Конфигурационный файл. Параметры принтеров
     /// </summary>
     [ConfigurationCollection(typeof(PrintersPdfCollection), AddItemName = nameof(PrinterInformationElement))]
-    public class PrintersPdfCollection : ConfigurationElementCollection
+    public class PrintersPdfCollection : ConfigurationElementCollection, IEnumerable<PrinterInformationElement>
     {
+        /// <summary>
+        /// Получить элемент по индексу
+        /// </summary>       
         public PrinterInformationElement this[int index]
         {
             get => base.BaseGet(index) as PrinterInformationElement;           
@@ -26,6 +29,9 @@ namespace GadzhiConverting.Configuration
             }
         }
 
+        /// <summary>
+        /// Получить элемент по ключу
+        /// </summary>    
         public new PrinterInformationElement this[string responseString]
         {
             get =>  (PrinterInformationElement)BaseGet(responseString); 
@@ -41,6 +47,17 @@ namespace GadzhiConverting.Configuration
 
         protected override ConfigurationElement CreateNewElement() => new PrinterInformationElement();
         
-        protected override object GetElementKey(ConfigurationElement element) => ((PrinterInformationElement)element)?.Name;       
+        protected override object GetElementKey(ConfigurationElement element) => ((PrinterInformationElement)element)?.Name;
+
+        /// <summary>
+        /// Linq интерфейс
+        /// </summary>  
+        public new IEnumerator<PrinterInformationElement> GetEnumerator()
+        {
+            foreach (var key in this.BaseGetAllKeys())
+            {
+                yield return (PrinterInformationElement)BaseGet(key);
+            }
+        }
     }
 }

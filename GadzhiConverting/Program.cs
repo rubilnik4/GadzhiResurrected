@@ -1,4 +1,5 @@
 ﻿using GadzhiConverting.DependencyInjection.GadzhiConverting;
+using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations;
 using System;
@@ -17,18 +18,18 @@ namespace GadzhiConverting
 
             BootStrapUnity.Start(_container);          
 
-            var micro = _container.Resolve<IConvertingFileMicrostation>();
-            string dir = Environment.CurrentDirectory + "\\01.dgn";
+            //var micro = _container.Resolve<IConvertingFileMicrostation>();
+            //string dir = Environment.CurrentDirectory + "\\01.dgn";
 
-            var pdfPrinter = new PrinterInformation("PDFCreator", "GTNG");
-            micro.ConvertingFile(new FileDataMicrostation(dir,
-                                                          dir,
-                                                          GadzhiMicrostation.Models.Enums.ColorPrint.BlackAndWhite),
-                                 new PrintersInformation(pdfPrinter));
+            //var pdfPrinter = new PrinterInformation("PDFCreator", "GTNG");
+            //micro.ConvertingFile(new FileDataMicrostation(dir,
+            //                                              dir,
+            //                                              GadzhiMicrostation.Models.Enums.ColorPrint.BlackAndWhite),
+            //                     new PrintersInformation(pdfPrinter));
 
-            //var applicationConverting = _container.Resolve<IApplicationConverting>();
+            var applicationConverting = _container.Resolve<IApplicationConverting>();
+            applicationConverting.StartConverting();
 
-            //applicationConverting.StartConverting();
             Console.ReadLine();
         }
 

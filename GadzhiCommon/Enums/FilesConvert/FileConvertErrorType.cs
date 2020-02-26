@@ -16,6 +16,7 @@
         Communication,
         NullReference,
         ArgumentNullReference,
+        FormatException,
         AttemptingCount,
         UnknownError,
     }

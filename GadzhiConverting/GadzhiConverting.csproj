@@ -72,6 +72,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
@@ -128,6 +129,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerToMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />

@@ -8,9 +8,9 @@ namespace GadzhiMicrostation.Models.Implementations
     /// <summary>
     /// Список используемых принтеров
     /// </summary>
-    public class PrintersInformation
+    public class PrintersInformationMicrostation
     {
-        public PrintersInformation(PrinterInformation pdfPrinter)
+        public PrintersInformationMicrostation(PrinterInformationMicrostation pdfPrinter)
         {
             PdfPrinter = pdfPrinter;
         }
@@ -18,6 +18,6 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Принтер для печати PDF
         /// </summary>
-        public PrinterInformation PdfPrinter { get; }
+        public PrinterInformationMicrostation PdfPrinter { get; }
     }
 }

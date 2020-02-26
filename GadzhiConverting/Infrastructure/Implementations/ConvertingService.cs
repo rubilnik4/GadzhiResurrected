@@ -87,25 +87,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public async Task ConvertingFirstInQueuePackage()
         {
-            bool isValidStartUpdaParameters = ValidateStartupParameters();
-            if (isValidStartUpdaParameters)
+            _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
+
+            FilesDataRequestServer filesDataRequest = await _fileConvertingServerService.
+                                                             Operations.
+                                                             GetFirstInQueuePackage(_projectSettings.NetworkName);
+            if (filesDataRequest != null)
             {
-                _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
+                FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
+                _idPackage = filesDataServer.Id;
 
-                FilesDataRequestServer filesDataRequest = await _fileConvertingServerService.
-                                                                 Operations.
-                                                                 GetFirstInQueuePackage(_projectSettings.NetworkName);
-                if (filesDataRequest != null)
-                {
-                    FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
-                    _idPackage = filesDataServer.Id;
-
-                    await ConvertingPackage(filesDataServer);
-                }
-                else
-                {
-                    await QueueIsEmpty();
-                }
+                await ConvertingPackage(filesDataServer);
+            }
+            else
+            {
+                await QueueIsEmpty();
             }
         }
 
@@ -231,21 +227,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             await Task.Delay(500);
             _messageAndLoggingService.ShowMessage("Очередь пакетов пуста...");
-        }
-
-        /// <summary>
-        /// Проверить параметры запуска, добавить ошибки
-        /// </summary>
-        private bool ValidateStartupParameters()
-        {
-            bool isDataBaseExist = _fileSystemOperations.IsFileExist(_projectSettings.SQLiteDataBasePath);
-            if (!isDataBaseExist)
-            {
-                _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
-                                                    $"Файл базы данных {_projectSettings.SQLiteDataBasePath} не найден");
-            }
-
-            return isDataBaseExist;
         }
 
         #region IDisposable Support

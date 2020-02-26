@@ -25,7 +25,7 @@ namespace GadzhiCommonServer.Infrastructure.Implementations
 
             bool isValidName = !String.IsNullOrWhiteSpace(fileName);
             bool isValidExtension = !String.IsNullOrWhiteSpace(fileExtension) &&
-                                    ValidFileExtentions.DocAndDgnFileTypes.Contains(fileExtension);
+                                    ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileExtension, StringComparer.OrdinalIgnoreCase);
             bool isValidDataSource = fileDataRequest?.FileDataSource != null;
 
             if (!isValidName)
