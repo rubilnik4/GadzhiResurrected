@@ -19,6 +19,9 @@ namespace GadzhiDAL.Mappings.FilesConvert
             Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();
             HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType");
             Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();
+            HasMany(x => x.FileDataSourceEntity)
+                    .Inverse()
+                    .Cascade.All();
             References(x => x.FilesDataEntity);
         }
     }

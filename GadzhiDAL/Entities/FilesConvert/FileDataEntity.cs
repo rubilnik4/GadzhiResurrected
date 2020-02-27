@@ -8,8 +8,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
     public class FileDataEntity : EntityBase<int>
-    {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    {       
         public FileDataEntity()
         {
             StatusProcessing = StatusProcessing.InQueue;
@@ -43,14 +42,19 @@ namespace GadzhiDAL.Entities.FilesConvert
         public virtual bool IsCompleted { get; set; }
 
         /// <summary>
+        /// Конвертируемый Файл данных в формате zip GZipStream
+        /// </summary>       
+        public virtual IList<byte> FileDataSource { get; set; }
+
+        /// <summary>
         /// Файл данных в формате zip GZipStream
         /// </summary>      
-        public virtual IList<byte> FileDataSource { get;  set; }
+        public virtual IList<FileDataSourceEntity> FileDataSourceEntity { get; protected set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public virtual IList<FileConvertErrorType> FileConvertErrorType { get; protected set; }
+        public virtual IList<FileConvertErrorType> FileConvertErrorType { get; set; }
 
         /// <summary>
         /// Ссылка на родительский класс
@@ -58,18 +62,18 @@ namespace GadzhiDAL.Entities.FilesConvert
         public virtual FilesDataEntity FilesDataEntity { get; set; }
 
         /// <summary>
-        /// Отметить ошибки
+        /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
-        public virtual void SetFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorType)
+        public virtual void SetConvertedFileDataEntity(IEnumerable<FileDataSourceEntity> fileDataSourceEntity)
         {
-            if (fileConvertErrorType?.Any() == true)
+            if (fileDataSourceEntity != null)
             {
-                FileConvertErrorType = fileConvertErrorType.ToList();
+                foreach (var fileData in fileDataSourceEntity)
+                {
+                    fileData.FileDataEntity = this;
+                }
             }
-            else
-            {
-                FileConvertErrorType = new List<FileConvertErrorType>();
-            }
+            FileDataSourceEntity = fileDataSourceEntity?.ToList();
         }
     }
 }

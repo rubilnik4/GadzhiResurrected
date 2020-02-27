@@ -10,9 +10,9 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// <summary>
     /// Отконвертированный файл серверной части
     /// </summary>
-    public class ConvertedFileDataServer
+    public class FileDataSourceServer
     {
-        public ConvertedFileDataServer(string filePath, FileExtension fileExtensionType)
+        public FileDataSourceServer(string filePath, FileExtension fileExtensionType)
         {
             if (!String.IsNullOrWhiteSpace(filePath))
             {

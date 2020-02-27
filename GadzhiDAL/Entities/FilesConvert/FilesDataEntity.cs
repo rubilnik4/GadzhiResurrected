@@ -10,8 +10,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
     public class FilesDataEntity : EntityBase<string>
-    {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    {       
         public FilesDataEntity()
         {
             CreationDateTime = DateTime.Now;
@@ -61,19 +60,14 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// </summary>      
         public virtual void SetFilesData(IEnumerable<FileDataEntity> fileDataEntities)
         {
-            if (fileDataEntities?.Any() == true)
+            if (fileDataEntities != null)
             {
-                FilesData = fileDataEntities?.Select(fileData =>
-                                             {
-                                                 fileData.FilesDataEntity = this;
-                                                 return fileData;
-                                             })
-                                             .ToList();
-            }
-            else
-            {
-                fileDataEntities = new List<FileDataEntity>();
-            }
+                foreach (var fileData in fileDataEntities)
+                {
+                    fileData.FilesDataEntity = this;
+                }
+            }  
+            FilesData = fileDataEntities?.ToList();           
         }
 
         /// <summary>

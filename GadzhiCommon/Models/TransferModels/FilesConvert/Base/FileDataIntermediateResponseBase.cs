@@ -9,12 +9,7 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
     /// <summary>
     [DataContract]
     public abstract class FileDataIntermediateResponseBase
-    {
-        public FileDataIntermediateResponseBase()
-        {
-            FileConvertErrorType = new List<FileConvertErrorType>();
-        }
-
+    {       
         /// <summary>
         /// Путь файла
         /// </summary>

@@ -2,9 +2,8 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
-using GadzhiConverting.Models.FilesConvert.Implementations;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Implementations.FilesData;
 using System;
 using System.Linq;

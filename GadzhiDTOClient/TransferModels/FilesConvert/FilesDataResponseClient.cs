@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace GadzhiDTOClient.TransferModels.FilesConvert
@@ -15,5 +16,6 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         /// </summary>
         [DataMember]
         public IEnumerable<FileDataResponseClient> FilesData { get; set; }
+        
     }
 }

@@ -1,14 +1,12 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiConverting.Models.Implementations.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace GadzhiConverting.Models.FilesConvert.Implementations
+namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
@@ -46,7 +44,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             StatusProcessing = StatusProcessing.InQueue;
 
             _fileConvertErrorTypes = new List<FileConvertErrorType>(fileConvertErrorType);
-            ConvertedFileDataServer = new List<ConvertedFileDataServer>();
+            FileDataSourceServer = new List<FileDataSourceServer>();
         }
 
         /// <summary>
@@ -94,7 +92,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Путь и тип отковенртированных файлов
         /// </summary>
-        public IEnumerable<ConvertedFileDataServer> ConvertedFileDataServer { get; set; }
+        public IEnumerable<FileDataSourceServer> FileDataSourceServer { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла

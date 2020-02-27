@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GadzhiConverting.Models.FilesConvert.Implementations
+namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах на серверной части
@@ -13,7 +13,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        private List<FileDataServer> _filesDataInfo;
+        private readonly List<FileDataServer> _filesDataInfo;
 
         public FilesDataServer(Guid id,
                                int attemptingConvertCount,

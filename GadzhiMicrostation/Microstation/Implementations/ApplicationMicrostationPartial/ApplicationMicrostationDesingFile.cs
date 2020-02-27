@@ -44,7 +44,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 {
                     ActiveDesignFile.SaveAs(filePath);
                     _microstationProject.FileDataMicrostation.
-                        AddConvertedFilePath(new ConvertedFileDataMicrostation(filePath, FileExtentionMicrostation.dgn));
+                        AddConvertedFilePath(new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.dgn));
                 },
                 errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.FileNotSaved,
                                                          $"Ошибка сохранения файла DGN {filePath}"),
@@ -63,7 +63,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                     {
                         ActiveDesignFile.CreatePdfInDesingFile(filePath);
                         _microstationProject.FileDataMicrostation.
-                            AddConvertedFilePath(new ConvertedFileDataMicrostation(filePath, FileExtentionMicrostation.pdf));
+                            AddConvertedFilePath(new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf));
                     },
                     errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                              $"Ошибка сохранения файла PDF {filePath}"));
@@ -81,7 +81,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                     {
                         ActiveDesignFile.CreateDwgFile(filePath);
                         _microstationProject.FileDataMicrostation.
-                            AddConvertedFilePath(new ConvertedFileDataMicrostation(filePath, FileExtentionMicrostation.dwg));
+                            AddConvertedFilePath(new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.dwg));
                     },
                     errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DwgCreatingError,
                                                               $"Ошибка сохранения файла DWG {filePath}"));

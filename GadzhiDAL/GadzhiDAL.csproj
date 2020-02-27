@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="DependencyInjection\DependencyInjection.cs" />
     <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Entities\FilesConvert\FileDataSourceEntity.cs" />
     <Compile Include="Entities\FilesConvert\IdentityMachine.cs" />
     <Compile Include="Factories\Implementations\NhibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\FileDataEntity.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataFromDTOClient.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataFromDTOServer.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataToDTOServer.cs" />
+    <Compile Include="Mappings\FilesConvert\FileDataSourceMap.cs" />
     <Compile Include="Mappings\FilesConvert\FileDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\FilesDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\IdentityMachineMap.cs" />

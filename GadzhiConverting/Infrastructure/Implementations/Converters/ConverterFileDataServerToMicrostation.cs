@@ -1,9 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiConverting.Models.FilesConvert.Implementations;
-using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Implementations.Printers;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Implementations.FilesData;
 using GadzhiMicrostation.Models.Implementations.Printers;
 using System;

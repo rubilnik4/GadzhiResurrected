@@ -100,6 +100,7 @@
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\IMessageAndLoggingService.cs" />
+    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataSourceResponseBase.cs" />
     <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
     <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
     <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataResponseBase.cs" />

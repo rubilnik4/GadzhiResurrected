@@ -143,7 +143,7 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\ConvertedFileDataServer.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilesDataServer.cs" />
     <Compile Include="Models\Implementations\Printers\PrinterInformation.cs" />

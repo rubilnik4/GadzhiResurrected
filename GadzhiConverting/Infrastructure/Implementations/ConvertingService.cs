@@ -3,7 +3,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
-using GadzhiConverting.Models.FilesConvert.Implementations;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
@@ -138,10 +138,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             else if (!filesDataServer.IsValidByAttemptingCount)
             {
                 _messageAndLoggingService.ShowError(FileConvertErrorType.AttemptingCount,
-                                                    "Превышено количество попыток конвертирования пакета");
-                filesDataServer.SetErrorToAllUncompletedFiles();
+                                                    "Превышено количество попыток конвертирования пакета");               
             }
-
+            filesDataServer.SetErrorToAllUncompletedFiles();
             filesDataServer.IsCompleted = true;
             filesDataServer.StatusProcessingProject = StatusProcessingProject.Error;
         }

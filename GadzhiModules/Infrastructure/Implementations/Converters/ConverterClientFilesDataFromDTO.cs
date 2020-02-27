@@ -7,6 +7,7 @@ using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -128,52 +129,58 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         private async Task<FileStatus> ConvertToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse)
         {
-            FileSavedCheck fileSavedCheck = await SaveFileFromDTOResponse(fileResponse);         
-            var fileConvertErrorTypes = fileResponse.FileConvertErrorType?.Union(fileSavedCheck.Errors);
+            var fileConvertSavedErrorType = await SaveFilesDataSourceFromDTOResponse(fileResponse);
+            var fileConvertErrorTypes = fileResponse.FileConvertErrorType?.Union(fileConvertSavedErrorType)?.
+                                                                           Where(error => error != FileConvertErrorType.NoError);
 
-            return new FileStatus(fileResponse.FilePath,
-                                  StatusProcessing.End,
-                                  fileConvertErrorTypes);
+            return new FileStatus(fileResponse.FilePath, StatusProcessing.End, fileConvertErrorTypes);
         }
 
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private async Task<FileSavedCheck> SaveFileFromDTOResponse(FileDataResponseClient fileDataResponse)
+        private async Task<IEnumerable<FileConvertErrorType>> SaveFilesDataSourceFromDTOResponse(FileDataResponseClient fileDataResponse)
         {
-            var fileSavedCheck = new FileSavedCheck();
-
-            bool isValidDataSource = fileDataResponse.FileDataSource != null;
-            if (isValidDataSource)
+            if (fileDataResponse.FileDataSourceResponseClient != null)
             {
-                string createdDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
-                string fileName = Path.GetFileNameWithoutExtension(fileDataResponse.FilePath);
-                string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataResponse.FilePath));
+                string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
+                string convertingDirectoryName = Path.Combine(fileDirectoryName, _projectSettings.DirectoryForSavingConvertedFiles);
 
-                (bool isCreated, string directoryPath) = _fileSystemOperations.
-                                                         CreateFolderByName(createdDirectoryName,
-                                                                            _projectSettings.DirectoryForSavingConvertedFiles);
-                if (isCreated)
-                {
-                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
-                    await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
-                            fileSavedCheck.IsSaved = await _fileSystemOperations.
-                                                     UnzipFileAndSave(fileSavedCheck.FilePath, fileDataResponse.FileDataSource),
-                                                                      $"Файл {fileSavedCheck.FilePath} открыт или используется. Повторить попытку сохранения?");
-                }
-                else
-                {
-                    fileSavedCheck.AddError(FileConvertErrorType.RejectToSave);
-                }
+                var fileConvertErrorTypeTasks = fileDataResponse.FileDataSourceResponseClient?.
+                                                Select(fileData => SaveFileDataSourceFromDTOResponse(fileData, convertingDirectoryName));
+                return await Task.WhenAll(fileConvertErrorTypeTasks);
             }
             else
             {
-                fileSavedCheck.AddError(FileConvertErrorType.IncorrectDataSource);
+                return new List<FileConvertErrorType>() { FileConvertErrorType.IncorrectDataSource };
             }
-
-            return fileSavedCheck;
         }
 
+        /// <summary>
+        /// Сохранить файл из трансферной модели на жесткий диск
+        /// </summary>      
+        private async Task<FileConvertErrorType> SaveFileDataSourceFromDTOResponse(FileDataSourceResponseClient fileDataSourceResponseClient,
+                                                                                   string convertingDirectoryName)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(fileDataSourceResponseClient.FilePath);
+            string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FilePath));
+
+            string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName,
+                                                                                              fileExtension.ToUpper(CultureInfo.CurrentCulture));
+            if (!string.IsNullOrWhiteSpace(directoryPath))
+            {
+                string filePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
+                await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
+                        await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource),
+                                                                     $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
+            }
+            else
+            {
+                return FileConvertErrorType.RejectToSave;
+            }
+
+            return FileConvertErrorType.NoError;
+        }
         /// <summary>
         /// Конвертер из трансферной модели информации в клиентскую
         /// </summary>       

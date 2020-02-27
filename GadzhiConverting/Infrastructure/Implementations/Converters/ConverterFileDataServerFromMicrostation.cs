@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiConverting.Models.FilesConvert.Implementations;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
@@ -24,8 +23,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         {
             if (fileDataServer != null && fileDataMicrostation != null)
             {
-                fileDataServer.ConvertedFileDataServer = fileDataMicrostation.ConvertedFileDataMicrostation.
-                                                         Select(fileData => ConvertingFileDataFromMicrostation(fileData));
+                fileDataServer.FileDataSourceServer = fileDataMicrostation.FileDataSourceMicrostation.
+                                                         Select(fileData => ConvertingFileDataSourceFromMicrostation(fileData));
 
                 fileDataServer.AddRangeFileConvertErrorType(fileDataMicrostation.FileConvertErrorTypes.
                                                             Select(error => ConvertingFileErrorTypes(error)));
@@ -36,9 +35,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать информацию о отконвертированных чертежах из мдуля Microstation в серверную часть
         /// </summary>        
-        private static ConvertedFileDataServer ConvertingFileDataFromMicrostation(ConvertedFileDataMicrostation сonvertedFileDataMicrostation) =>
-            new ConvertedFileDataServer(сonvertedFileDataMicrostation.FilePath,
-                                        ConvertingFileExtension(сonvertedFileDataMicrostation.FileExtentionMicrostation));
+        private static FileDataSourceServer ConvertingFileDataSourceFromMicrostation(FileDataSourceMicrostation fileDataSourceMicrostation) =>
+            new FileDataSourceServer(fileDataSourceMicrostation.FilePath,
+                                        ConvertingFileExtension(fileDataSourceMicrostation.FileExtentionMicrostation));
 
         /// <summary>
         /// Преобразование расширений типов файлов  

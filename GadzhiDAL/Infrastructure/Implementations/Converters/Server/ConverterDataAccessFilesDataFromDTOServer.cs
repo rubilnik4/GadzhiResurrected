@@ -72,7 +72,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 fileDataEntity.IsCompleted = fileDataIntermediateResponse.IsCompleted;
                 fileDataEntity.StatusProcessing = fileDataIntermediateResponse.StatusProcessing;
-                fileDataEntity.SetFileConvertErrorType(fileDataIntermediateResponse.FileConvertErrorType);
+                fileDataEntity.FileConvertErrorType = fileDataIntermediateResponse.FileConvertErrorType.ToList();
             }
 
             return fileDataEntity;
@@ -88,11 +88,22 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 fileDataEntity.IsCompleted = fileDataResponse.IsCompleted;
                 fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
-                fileDataEntity.SetFileConvertErrorType(fileDataResponse.FileConvertErrorType);
-                fileDataEntity.FileDataSource = fileDataResponse.FileDataSource;
+                fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorType.ToList();
+                fileDataEntity.SetConvertedFileDataEntity(fileDataResponse.FileDataSourceResponseServer?.
+                                                          Select(fileData => ToFileDataSourceAccess(fileData)));
             }
 
             return fileDataEntity;
         }
+
+        /// <summary>
+        /// Обновить модель файла данных на основе окончательного ответа
+        /// </summary>      
+        public FileDataSourceEntity ToFileDataSourceAccess(FileDataSourceResponseServer fileDataSourceResponseServer) =>
+            new FileDataSourceEntity()
+            {
+                FilePath = fileDataSourceResponseServer?.FilePath,
+                FileDataSource = fileDataSourceResponseServer?.FileDataSource,
+            };
     }
 }

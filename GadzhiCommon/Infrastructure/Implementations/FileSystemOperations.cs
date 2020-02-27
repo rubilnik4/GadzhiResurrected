@@ -154,7 +154,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Создать поддиректорию и присвоить идентефикатор
         /// </summary>     
-        public (bool isCreated, string path) CreateFolderByGuid(string startingPath)
+        public string CreateFolderByGuid(string startingPath)
         {
             return CreateFolderByName(startingPath, Guid.NewGuid().ToString());
         }
@@ -162,7 +162,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        public (bool isCreated, string path) CreateFolderByName(string startingPath, string folderName)
+        public string CreateFolderByName(string startingPath, string folderName)
         {
             bool isCreated = false;
             if (startingPath?.EndsWith("\\",  StringComparison.Ordinal) == false)
@@ -177,7 +177,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 isCreated = true;
             }
 
-            return (isCreated, createdPath);
+            return isCreated ? createdPath : null;
         }        
     }
 }

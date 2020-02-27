@@ -84,7 +84,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 IsCompleted = fileDataEntity.IsCompleted,
-                FileDataSource = fileDataEntity.FileDataSource,
+                FileDataSourceResponseClient = fileDataEntity.FileDataSourceEntity.Select(fileData => ConvertFileDataSourceResponse(fileData)),
                 FileConvertErrorType = fileDataEntity.FileConvertErrorType.
                                                       ToList(),
             };
@@ -99,6 +99,18 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 FilesInQueueCount = filesQueueInfo?.FilesInQueueCount ?? 0,
                 PackagesInQueueCount = filesQueueInfo?.PackagesInQueueCount ?? 0,
+            };
+        }
+
+        /// <summary>
+        /// Конвертировать информацию о готовых файлах
+        /// </summary>        
+        private FileDataSourceResponseClient ConvertFileDataSourceResponse(FileDataSourceEntity fileDataSourceEntity)
+        {
+            return new FileDataSourceResponseClient()
+            {
+                FilePath = fileDataSourceEntity?.FilePath,
+                FileDataSource = fileDataSourceEntity?.FileDataSource,
             };
         }
     }

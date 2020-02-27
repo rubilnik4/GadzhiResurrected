@@ -9,9 +9,9 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
     /// <summary>
     /// Отконвертированный файл модуля Microstation
     /// </summary>
-    public class ConvertedFileDataMicrostation
+    public class FileDataSourceMicrostation
     {
-        public ConvertedFileDataMicrostation(string filePath, FileExtentionMicrostation fileExtentionMicrostation)
+        public FileDataSourceMicrostation(string filePath, FileExtentionMicrostation fileExtentionMicrostation)
         {
             if (!String.IsNullOrEmpty(filePath))
             {

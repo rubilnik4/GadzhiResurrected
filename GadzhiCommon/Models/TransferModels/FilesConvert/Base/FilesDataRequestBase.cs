@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base

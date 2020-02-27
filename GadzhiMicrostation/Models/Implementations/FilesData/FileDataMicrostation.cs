@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        private readonly IList<ConvertedFileDataMicrostation> _convertedFileDataMicrostation;
+        private readonly IList<FileDataSourceMicrostation> _fileDataSourceMicrostationn;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
                                     string filePathClient,
                                     ColorPrintMicrostation colorPrint)
         {
-            _convertedFileDataMicrostation = new List<ConvertedFileDataMicrostation>();
+            _fileDataSourceMicrostationn = new List<FileDataSourceMicrostation>();
             _fileConvertErrorTypes = new List<ErrorMicrostationType>();
 
             if (!String.IsNullOrEmpty(filePathServer))
@@ -89,7 +89,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        public IEnumerable<ConvertedFileDataMicrostation> ConvertedFileDataMicrostation => _convertedFileDataMicrostation;
+        public IEnumerable<FileDataSourceMicrostation> FileDataSourceMicrostation => _fileDataSourceMicrostationn;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -99,15 +99,15 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Добавить путь к отконвертированному файлу
         /// </summary>
-        public void AddConvertedFilePath(ConvertedFileDataMicrostation convertedFileDataMicrostation)
+        public void AddConvertedFilePath(FileDataSourceMicrostation fileDataSourceMicrostation)
         {
-            if (convertedFileDataMicrostation != null)
+            if (fileDataSourceMicrostation != null)
             {
-                _convertedFileDataMicrostation.Add(convertedFileDataMicrostation);
+                _fileDataSourceMicrostationn.Add(fileDataSourceMicrostation);
             }
             else
             {
-                throw new ArgumentNullException(nameof(convertedFileDataMicrostation));
+                throw new ArgumentNullException(nameof(fileDataSourceMicrostation));
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
@@ -8,7 +9,7 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
     /// Класс содержащий данные о отконвертированных файлах
     /// </summary>
     [DataContract]
-    public class FilesDataResponseBase
+    public abstract class FilesDataResponseBase
     {
         /// <summary>
         /// ID идентефикатор
@@ -26,6 +27,6 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
         /// Статус выполнения проекта
         /// </summary>
         [DataMember]
-        public StatusProcessingProject StatusProcessingProject { get; set; }
+        public StatusProcessingProject StatusProcessingProject { get; set; }       
     }
 }

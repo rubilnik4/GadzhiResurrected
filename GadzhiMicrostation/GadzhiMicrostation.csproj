@@ -112,7 +112,7 @@
     <Compile Include="Models\Enums\DataBlockOperationType.cs" />
     <Compile Include="Models\Enums\ElementMicrostationType.cs" />
     <Compile Include="Models\Enums\FileExtentionMicrostation.cs" />
-    <Compile Include="Models\Implementations\FilesData\ConvertedFileDataMicrostation.cs" />
+    <Compile Include="Models\Implementations\FilesData\FileDataSourceMicrostation.cs" />
     <Compile Include="Models\Implementations\Printers\PrinterInformationMicrostation.cs" />
     <Compile Include="Models\Implementations\Printers\PrintersInformationMicrostation.cs" />
     <Compile Include="Models\StampCollections\StampApprovals.cs" />

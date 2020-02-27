@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="Contracts\FilesConvert\IFileConvertingServiceServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransferModels\FilesConvert\FileDataSourceResponseServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponseServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequestServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataResponseServer.cs" />

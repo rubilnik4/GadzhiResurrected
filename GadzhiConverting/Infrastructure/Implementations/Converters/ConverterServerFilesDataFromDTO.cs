@@ -6,7 +6,7 @@ using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
 using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
-using GadzhiConverting.Models.FilesConvert.Implementations;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Linq;
@@ -68,21 +68,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
         /// </summary>      
-        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequestServer fileDataRequest,
-                                                                  string packageGuid)
+        private async Task<FileSavedCheck> SaveFileFromDTORequest(FileDataRequestServer fileDataRequest, string packageGuid)
         {
             var fileSavedCheck = new FileSavedCheck();
 
             var (isValid, errorsFromValidation) = ValidateDTOData.IsFileDataRequestValid((FileDataRequestBase)fileDataRequest);
             if (isValid)
             {
-                (bool isCreated, string directoryPath) = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory,
-                                                                                                  packageGuid);
-                if (isCreated)
+                string directoryPath = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, packageGuid);
+                if (!String.IsNullOrWhiteSpace(directoryPath))
                 {
-                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath,
-                                                                                   Guid.NewGuid().ToString(),
-                                                                                   FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
+                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(),
+                                                                                    FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
                     fileSavedCheck.IsSaved = await _fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
                 }
                 else
