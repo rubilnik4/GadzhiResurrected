@@ -3,6 +3,7 @@ using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,7 +37,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                     IsCompleted = filesDataServer.IsCompleted,
                     StatusProcessingProject = filesDataServer.StatusProcessingProject,
                     FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
-                                                                      ConvertFileToIntermediateResponse(fileDataServer)),
+                                ConvertFileToIntermediateResponse(fileDataServer)).ToList(),
                 };
             }
             else
@@ -104,7 +105,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
 
             return new FileDataSourceResponseServer()
             {
-                FilePath = fileDataSourceServer.FilePath,
+                FileName = Path.GetFileName(fileDataSourceServer.FilePath),
                 FileDataSource = fileDataSource,
             };
         }

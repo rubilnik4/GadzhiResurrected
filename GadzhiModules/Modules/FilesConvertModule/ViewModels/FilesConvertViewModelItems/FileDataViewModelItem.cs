@@ -63,7 +63,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// <summary>
         /// Ошибка отсуствует
         /// </summary>
-        public bool IsCriticalError => IsEndStatus &&  FileData.StatusError == StatusError.NoError;
+        public bool IsCriticalError => IsEndStatus &&  FileData.StatusError == StatusError.CriticalError;
 
         /// <summary>
         /// Завершилось ли конвертирование удачно

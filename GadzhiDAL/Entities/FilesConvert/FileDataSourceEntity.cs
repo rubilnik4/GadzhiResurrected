@@ -17,9 +17,9 @@ namespace GadzhiDAL.Entities.FilesConvert
         public override int Id { get; protected set; }
 
         /// <summary>
-        /// Путь файла
+        /// Имя и расширение файла
         /// </summary>       
-        public virtual string FilePath { get; set; }
+        public virtual string FileName { get; set; }
 
         /// <summary>
         /// Файл данных в формате zip GZipStream

@@ -162,8 +162,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<FileConvertErrorType> SaveFileDataSourceFromDTOResponse(FileDataSourceResponseClient fileDataSourceResponseClient,
                                                                                    string convertingDirectoryName)
         {
-            string fileName = Path.GetFileNameWithoutExtension(fileDataSourceResponseClient.FilePath);
-            string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FilePath));
+            string fileName = Path.GetFileNameWithoutExtension(fileDataSourceResponseClient.FileName);
+            string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FileName));
 
             string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName,
                                                                                               fileExtension.ToUpper(CultureInfo.CurrentCulture));

@@ -30,8 +30,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                     Id = Guid.Parse(filesDataEntity.Id),
                     IsCompleted = filesDataEntity.IsCompleted,
                     StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                    FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData)).
-                                                           ToList(),
+                    FilesData = filesDataEntity.FilesData?.Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData)).ToList(),
                     FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
                 };
             }
@@ -69,8 +68,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 IsCompleted = fileDataEntity.IsCompleted,
-                FileConvertErrorType = fileDataEntity.FileConvertErrorType.
-                                                      ToList(),
+                FileConvertErrorType = fileDataEntity.FileConvertErrorType.ToList(),
             };
         }
 
@@ -84,9 +82,9 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 IsCompleted = fileDataEntity.IsCompleted,
-                FileDataSourceResponseClient = fileDataEntity.FileDataSourceEntity.Select(fileData => ConvertFileDataSourceResponse(fileData)),
-                FileConvertErrorType = fileDataEntity.FileConvertErrorType.
-                                                      ToList(),
+                FileDataSourceResponseClient = fileDataEntity.FileDataSourceEntity.
+                                               Select(fileData => ConvertFileDataSourceResponse(fileData)).ToList(),
+                FileConvertErrorType = fileDataEntity.FileConvertErrorType.ToList(),
             };
         }
 
@@ -109,7 +107,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         {
             return new FileDataSourceResponseClient()
             {
-                FilePath = fileDataSourceEntity?.FilePath,
+                FileName = fileDataSourceEntity?.FileName,
                 FileDataSource = fileDataSourceEntity?.FileDataSource,
             };
         }

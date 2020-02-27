@@ -14,7 +14,7 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         /// Промежуточные данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IEnumerable<FileDataIntermediateResponseClient> FilesData { get; set; }
+        public IList<FileDataIntermediateResponseClient> FilesData { get; set; }
 
         /// <summary>
         /// Информация о количестве файлов в очереди до текущего пакета

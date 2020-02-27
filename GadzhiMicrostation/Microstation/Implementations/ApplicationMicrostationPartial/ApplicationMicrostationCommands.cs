@@ -17,29 +17,24 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
 {
     public partial class ApplicationMicrostation : IApplicationMicrostationCommands
     {
+        /// <summary>
+        /// Кэшированная библиотека элементов
+        /// </summary>
+        private IList<LibraryElement> _cachLibraryElements;
 
         /// <summary>
-        /// Создать ячейку на основе шаблона в библиотеке
+        /// Создать ячейку на основе шаблона в библиотеке и проверить наличие такой в библиотеке
         /// </summary>       
         public ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
                                                                      PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
-                                                                     Action<ICellElementMicrostation> additionalParametrs = null)
+                                                                     Action<ICellElementMicrostation> additionalParametrs = null,
+                                                                     string cellDescription = null)
         {
-            if (!String.IsNullOrEmpty(cellName) && IsCellContainsInLibrary(cellName))
+            string cellNameOriginalyOrFoundByDescription = ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription);
+            if (!String.IsNullOrEmpty(cellNameOriginalyOrFoundByDescription))
             {
-                CellElement cellElement = _application.CreateCellElement2(cellName,
-                                                            _application.Point3dFromXY(origin.X, origin.Y),
-                                                            _application.Point3dFromXY(1, 1),
-                                                            false,
-                                                            _application.Matrix3dIdentity());
-
-                var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerContainerMicrostation());
-                additionalParametrs?.Invoke(cellElementMicrostation);
-
-                _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
-
-                return cellElementMicrostation;
+                return CreateCellElementFromLibraryWithoutCheck(cellName, origin, modelMicrostation, additionalParametrs);
             }
             else
             {
@@ -60,8 +55,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         {
             AttachLibrary(StampAdditionalParameters.SignatureLibraryPath);
            
-            string cellNameOriginalyOrFoundByDescription = ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription);
-            var cellElementMicrostation = CreateCellElementFromLibrary(cellNameOriginalyOrFoundByDescription, origin, modelMicrostation, additionalParametrs);
+            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParametrs);
 
             DetachLibrary();
 
@@ -71,11 +65,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Подключить библиотеку
         /// </summary>      
-        private void AttachLibrary(string libraryPath)
+        public void AttachLibrary(string libraryPath)
         {
             if (_fileSystemOperationsMicrostation.IsFileExist(libraryPath))
             {
                 _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath);
+                _cachLibraryElements = CachingLibraryElements();
             }
             else
             {
@@ -87,9 +82,33 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Отключить библиотеку
         /// </summary>      
-        private void DetachLibrary()
+        public void DetachLibrary()
         {
             _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
+            _cachLibraryElements = null;
+        }
+
+
+        /// <summary>
+        /// Создать ячейку на основе шаблона в библиотеке
+        /// </summary>       
+        private ICellElementMicrostation CreateCellElementFromLibraryWithoutCheck(string cellName,
+                                                                     PointMicrostation origin,
+                                                                     IModelMicrostation modelMicrostation,
+                                                                     Action<ICellElementMicrostation> additionalParametrs = null)
+        {
+            CellElement cellElement = _application.CreateCellElement2(cellName,
+                                                        _application.Point3dFromXY(origin.X, origin.Y),
+                                                        _application.Point3dFromXY(1, 1),
+                                                        false,
+                                                        _application.Matrix3dIdentity());
+
+            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerContainerMicrostation());
+            additionalParametrs?.Invoke(cellElementMicrostation);
+
+            _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
+
+            return cellElementMicrostation;
         }
 
         /// <summary>
@@ -98,54 +117,60 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         private string ChangeCellNameByDescriptionIfNotFoundInLibrary(string cellName, string cellDescription)
         {
             string originallyOrChangedCellName = null;
-            if (IsCellContainsInLibrary(cellName))
+            bool isCellContainsInLibrary = IsCellContainsInLibrary(cellName);
+            if (isCellContainsInLibrary)
             {
                 originallyOrChangedCellName = cellName;
             }
-            else if (!IsCellContainsInLibrary(cellName) && !String.IsNullOrEmpty(cellDescription))
+            else if (!isCellContainsInLibrary && !String.IsNullOrEmpty(cellDescription))
             {
                 originallyOrChangedCellName = FindCellNameByDescription(cellDescription) ?? cellName;
             }
 
             return originallyOrChangedCellName;
         }
+
+        /// <summary>
+        /// Кэшировать элементы
+        /// </summary>
+        private IList<LibraryElement> CachingLibraryElements()
+        {
+            CellInformation cellInformation;
+            CellInformationEnumerator сellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
+            сellInformationEnumerator.Reset();
+
+            var cachingLibraryElements = new List<LibraryElement>();
+            while (сellInformationEnumerator.MoveNext())
+            {
+                cellInformation = сellInformationEnumerator.Current;
+                cachingLibraryElements.Add(new LibraryElement(cellInformation.Name, cellInformation.Description));
+            }
+
+            return cachingLibraryElements;
+        }
+
         /// <summary>
         /// Содержится ли текущая ячейка в библиотеке 
-        /// </summary>
+        /// </summary>       
         private bool IsCellContainsInLibrary(string cellName)
         {
-            if (String.IsNullOrEmpty(cellName))
+            if (!String.IsNullOrEmpty(cellName))
             {
-                CellInformation cellInformation;
-                CellInformationEnumerator сellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
-                сellInformationEnumerator.Reset();
-                while (сellInformationEnumerator.MoveNext())
-                {
-                    cellInformation = сellInformationEnumerator.Current;
-                    if (cellInformation.Name.Equals(cellName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return true;
-                    }
-                }
+                return _cachLibraryElements?.Any(libraryElement =>
+                        libraryElement.Name.ContainsIgnoreCase(cellName)) == true;
             }
             return false;
         }
 
         /// <summary>
-        /// Содержится ли текущая ячейка в библиотеке 
+        /// Найти замену имени ячейки по описанию
         /// </summary>
         private string FindCellNameByDescription(string cellDescription)
         {
-            CellInformation cellInformation;
-            CellInformationEnumerator сellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
-            сellInformationEnumerator.Reset();
-            while (сellInformationEnumerator.MoveNext())
+            if (!String.IsNullOrEmpty(cellDescription))
             {
-                cellInformation = сellInformationEnumerator.Current;
-                if (cellInformation.Description.ContainsIgnoreCase(cellDescription))
-                {
-                    return cellInformation.Name;
-                }
+                return _cachLibraryElements?.FirstOrDefault(libraryElement =>
+                            libraryElement.Description.ContainsIgnoreCase(cellDescription)).Name;
             }
             return null;
         }

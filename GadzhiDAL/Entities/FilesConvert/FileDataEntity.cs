@@ -14,6 +14,7 @@ namespace GadzhiDAL.Entities.FilesConvert
             StatusProcessing = StatusProcessing.InQueue;
             IsCompleted = false;
             FileConvertErrorType = new List<FileConvertErrorType>();
+            FileDataSourceEntity = new List<FileDataSourceEntity>();
         }
 
         /// <summary>
@@ -64,16 +65,13 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
-        public virtual void SetConvertedFileDataEntity(IEnumerable<FileDataSourceEntity> fileDataSourceEntity)
-        {
-            if (fileDataSourceEntity != null)
+        public virtual void SetConvertedFileDataEntity(IEnumerable<FileDataSourceEntity> filesDataSourceEntity)
+        {            
+            FileDataSourceEntity = filesDataSourceEntity?.Select(fileDataSourceEntity =>
             {
-                foreach (var fileData in fileDataSourceEntity)
-                {
-                    fileData.FileDataEntity = this;
-                }
-            }
-            FileDataSourceEntity = fileDataSourceEntity?.ToList();
+                fileDataSourceEntity.FileDataEntity = this;
+                return fileDataSourceEntity;
+            })?.ToList();
         }
     }
 }

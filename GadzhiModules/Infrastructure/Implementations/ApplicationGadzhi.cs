@@ -264,9 +264,9 @@ namespace GadzhiModules.Infrastructure.Implementations
             _filesInfoProject.ChangeFilesStatus(filesStatus);
 
             if (filesDataIntermediateResponse.IsCompleted)
-            {
-                ClearSubsriptions();
+            {                
                 await GetCompleteFiles();
+                ClearSubsriptions();
             }
         }
 
@@ -275,10 +275,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private async Task GetCompleteFiles()
         {
-
             FilesDataResponseClient filesDataResponse = await _fileConvertingClientService.
-                                                        Operations.
-                                                        GetCompleteFiles(_filesInfoProject.Id);
+                                                        Operations.GetCompleteFiles(_filesInfoProject.Id);
 
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
@@ -297,7 +295,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task AbortConverting()
         {
             if (_statusProcessingInformation?.IsConverting == true)
-            {
+            {               
                 await _fileConvertingClientService?.Operations?.AbortConvertingById(_filesInfoProject.Id);
             }
         }

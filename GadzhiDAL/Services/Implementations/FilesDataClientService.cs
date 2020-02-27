@@ -70,8 +70,7 @@ namespace GadzhiDAL.Services.Implementations
                 FilesQueueInfo filesQueueInfo = await GetQueueCount(unitOfWork, filesDataEntity);
 
                 filesDataIntermediateResponse = _converterDataAccessFilesDataToDTOClient.
-                                                ConvertFilesDataAccessToIntermediateResponse(filesDataEntity,
-                                                                                             filesQueueInfo);
+                                                ConvertFilesDataAccessToIntermediateResponse(filesDataEntity, filesQueueInfo);
             }
 
             return filesDataIntermediateResponse;

@@ -10,22 +10,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// </summary>
     public class MessageAndLoggingService : IMessageAndLoggingService
     {
-
-        public MessageAndLoggingService()
-        {
-
-        }
-
-        private readonly string _separator = "\n" + "------------------------------------------" + "\n";
-
         /// <summary>
         /// Отобразить ошибку
         /// </summary>        
         public void ShowError(FileConvertErrorType fileConvertErrorType,
                               string fileConvertErrorDescription)
         {
-            string messageText = _separator +
-                                 "Ошибка | " +
+            string messageText = "Ошибка | " +
                                  ConverterErrorType.FileErrorTypeToString(fileConvertErrorType) + "\n" +
                                  fileConvertErrorDescription;
 
@@ -37,7 +28,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public void ShowMessage(string message)
         {
-            string messageText = message + "\n";
+            string messageText = message;
 
             Console.WriteLine(messageText);
         }

@@ -13,7 +13,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
         public FileDataSourceMap()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.FilePath).Not.Nullable().Default("");
+            Map(x => x.FileName).Not.Nullable().Default("");
             Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();
             References(x => x.FileDataEntity);
         }

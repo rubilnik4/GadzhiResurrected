@@ -21,6 +21,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public void InsertSignatures()
         {
+            ApplicationMicrostation.AttachLibrary(StampAdditionalParameters.SignatureLibraryPath);
+
             var mainRowSignatures = InsertMainRowSignatures();
 
             IEnumerable<ICellElementMicrostation> changesSignatures = new List<ICellElementMicrostation>();
@@ -31,8 +33,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             }
             var approvalSignatures = InsertApprovalSignatures();
 
-            _insertedSignatures = mainRowSignatures?.Union(changesSignatures)?.
-                                                     Union(approvalSignatures);
+            _insertedSignatures = mainRowSignatures?.Union(changesSignatures)?.Union(approvalSignatures);
+
+            ApplicationMicrostation.DetachLibrary();
         }
 
         /// <summary>
@@ -156,11 +159,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             RangeMicrostation signatureRange = GetSignatureRange(Origin, previousField, nextField);
 
-            return ApplicationMicrostation.CreateSignatureFromLibrary(personId,
-                                                                      signatureRange.OriginPoint,
-                                                                      OwnerContainerMicrostation.ModelMicrostation,
-                                                                      GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
-                                                                      personName);
+            return ApplicationMicrostation.CreateCellElementFromLibrary(personId,
+                                                                        signatureRange.OriginPoint,
+                                                                        OwnerContainerMicrostation.ModelMicrostation,
+                                                                        GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
+                                                                        personName);
         }
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты

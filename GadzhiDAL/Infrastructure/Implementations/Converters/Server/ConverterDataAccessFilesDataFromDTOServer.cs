@@ -102,7 +102,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         public FileDataSourceEntity ToFileDataSourceAccess(FileDataSourceResponseServer fileDataSourceResponseServer) =>
             new FileDataSourceEntity()
             {
-                FilePath = fileDataSourceResponseServer?.FilePath,
+                FileName = fileDataSourceResponseServer?.FileName,
                 FileDataSource = fileDataSourceResponseServer?.FileDataSource,
             };
     }

@@ -15,7 +15,8 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
                                                               PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
-                                                              Action<ICellElementMicrostation> additionalParametrs = null);
+                                                              Action<ICellElementMicrostation> additionalParametrs = null,
+                                                              string cellDescription = null);
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
@@ -25,5 +26,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
                                                               IModelMicrostation modelMicrostation,
                                                               Action<ICellElementMicrostation> additionalParametrs = null,
                                                               string cellDescription = null);
+
+        /// <summary>
+        /// Подключить библиотеку
+        /// </summary>      
+        void AttachLibrary(string libraryPath);
+
+        /// <summary>
+        /// Отключить библиотеку
+        /// </summary>      
+        void DetachLibrary();
+       
     }
 }

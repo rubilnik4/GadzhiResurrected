@@ -9,6 +9,7 @@ using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,8 +79,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 string directoryPath = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, packageGuid);
                 if (!String.IsNullOrWhiteSpace(directoryPath))
                 {
-                    fileSavedCheck.FilePath = _fileSystemOperations.CombineFilePath(directoryPath, Guid.NewGuid().ToString(),
-                                                                                    FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest.FilePath));
+                    fileSavedCheck.FilePath = Path.Combine(directoryPath, Path.GetFileName(fileDataRequest.FilePath));
                     fileSavedCheck.IsSaved = await _fileSystemOperations.UnzipFileAndSave(fileSavedCheck.FilePath, fileDataRequest.FileDataSource);
                 }
                 else

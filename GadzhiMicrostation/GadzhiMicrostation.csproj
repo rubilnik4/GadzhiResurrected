@@ -84,6 +84,7 @@
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationDesingFile.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationPrinting.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostationPair.cs" />
+    <Compile Include="Microstation\Implementations\Elements\LibraryElement.cs" />
     <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationPrinting.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />

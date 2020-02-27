@@ -15,6 +15,6 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         /// Информация об отконвертированных файлах в клиентской части
         /// </summary>
         [DataMember]
-        public IEnumerable<FileDataSourceResponseClient> FileDataSourceResponseClient { get; set; }        
+        public IList<FileDataSourceResponseClient> FileDataSourceResponseClient { get; set; }        
     }
 }

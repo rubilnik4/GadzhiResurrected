@@ -21,7 +21,7 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IEnumerable<FileDataRequestClient> FilesData { get; set; }
+        public IList<FileDataRequestClient> FilesData { get; set; }
 
         /// <summary>
         /// Удовлетворяет ли модель условиям для отправки

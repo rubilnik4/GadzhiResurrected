@@ -10,7 +10,7 @@ namespace GadzhiDAL.Entities.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
     public class FilesDataEntity : EntityBase<string>
-    {       
+    {
         public FilesDataEntity()
         {
             CreationDateTime = DateTime.Now;
@@ -59,15 +59,12 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
         public virtual void SetFilesData(IEnumerable<FileDataEntity> fileDataEntities)
-        {
-            if (fileDataEntities != null)
+        {           
+            FilesData = fileDataEntities?.Select(fileDataEntity =>
             {
-                foreach (var fileData in fileDataEntities)
-                {
-                    fileData.FilesDataEntity = this;
-                }
-            }  
-            FilesData = fileDataEntities?.ToList();           
+                fileDataEntity.FilesDataEntity = this;
+                return fileDataEntity;
+            })?.ToList();
         }
 
         /// <summary>

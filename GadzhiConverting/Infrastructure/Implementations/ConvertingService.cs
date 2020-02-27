@@ -204,7 +204,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task<FilesDataServer> ConvertingFilesData(FilesDataServer filesDataServer)
         {
-            _messageAndLoggingService.ShowMessage("\n" + $"Конвертация пакета {filesDataServer.Id.ToString()}");
+            _messageAndLoggingService.ShowMessage($"Конвертация пакета {filesDataServer.Id.ToString()}");
 
             foreach (var fileData in filesDataServer.FilesDataInfo)
             {
