@@ -26,7 +26,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             string messageText = _separator +
                                  "Ошибка | " +
-                                 ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(fileConvertErrorType) + "\n" +
+                                 ConverterErrorType.FileErrorTypeToString(fileConvertErrorType) + "\n" +
                                  fileConvertErrorDescription;
 
             Console.WriteLine(messageText);

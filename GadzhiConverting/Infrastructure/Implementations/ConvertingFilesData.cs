@@ -68,7 +68,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             return fileDataServer;
         }
-         
+
         /// <summary>
         /// Конвертировать файл
         /// </summary>
@@ -79,12 +79,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 if (fileDataServer.FileExtensionType == FileExtension.dgn)
                 {
-                    FileDataMicrostation convertedFileDataMicrostation = _convertingFileMicrostation.ConvertingFile(
-                                                                                ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
-                                                                                ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
-                    fileDataServer = ConverterFileDataServerFromMicrostation.UpdateFileDataServerFromMicrostation(fileDataServer, convertedFileDataMicrostation);
-
-
+                    fileDataServer = await ConvertFileDataMicrostation(fileDataServer);
                 }
                 else if (fileDataServer.FileExtensionType == FileExtension.docx)
                 {
@@ -103,19 +98,27 @@ namespace GadzhiConverting.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Конвертировать файл типа Microstation
+        /// </summary>      
+        private async Task<FileDataServer> ConvertFileDataMicrostation(FileDataServer fileDataServer)
+        {
+            return await Task.Run(() =>
+            {
+                FileDataMicrostation convertedFileDataMicrostation = _convertingFileMicrostation.ConvertingFile(
+                                                                               ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
+                                                                               ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+                return ConverterFileDataServerFromMicrostation.UpdateFileDataServerFromMicrostation(fileDataServer, convertedFileDataMicrostation);
+            });
+
+        }
+
+        /// <summary>
         /// Закончить конвертирование файла
         /// </summary>
         private FileDataServer FileDataEndConverting(FileDataServer fileDataServer)
         {
             fileDataServer.IsCompleted = true;
-            if (fileDataServer.IsValid)
-            {
-                fileDataServer.StatusProcessing = StatusProcessing.Completed;
-            }
-            else
-            {
-                fileDataServer.StatusProcessing = StatusProcessing.Error;
-            }
+            fileDataServer.StatusProcessing = StatusProcessing.CompletedConverting;          
 
             return fileDataServer;
         }

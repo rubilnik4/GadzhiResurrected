@@ -119,33 +119,20 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части перед сохранением
         /// </summary>      
-        private FileStatus ConvertToFileStatusFromResponse(FileDataResponseClient fileResponse)
-        {
-            StatusProcessing statusProcessing = fileResponse.StatusProcessing == StatusProcessing.Completed ?
-                                                StatusProcessing.Writing :
-                                                StatusProcessing.Error;
+        private FileStatus ConvertToFileStatusFromResponse(FileDataResponseClient fileResponse) =>
+             new FileStatus(fileResponse.FilePath, StatusProcessing.Writing, fileResponse.FileConvertErrorType);
 
-            return new FileStatus(fileResponse.FilePath,
-                                  statusProcessing,
-                                  fileResponse.FileConvertErrorType);
-        }
 
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части и сохранение файла
         /// </summary>      
         private async Task<FileStatus> ConvertToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse)
         {
-            FileSavedCheck fileSavedCheck = await SaveFileFromDTOResponse(fileResponse);
-
-            StatusProcessing statusProcessing = fileResponse.StatusProcessing == StatusProcessing.Completed &&
-                                                fileSavedCheck.IsSaved ?
-                                                StatusProcessing.End :
-                                                StatusProcessing.Error;
-
+            FileSavedCheck fileSavedCheck = await SaveFileFromDTOResponse(fileResponse);         
             var fileConvertErrorTypes = fileResponse.FileConvertErrorType?.Union(fileSavedCheck.Errors);
 
             return new FileStatus(fileResponse.FilePath,
-                                  statusProcessing,
+                                  StatusProcessing.End,
                                   fileConvertErrorTypes);
         }
 

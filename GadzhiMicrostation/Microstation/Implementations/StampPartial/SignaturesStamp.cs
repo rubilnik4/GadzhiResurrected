@@ -26,7 +26,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             IEnumerable<ICellElementMicrostation> changesSignatures = new List<ICellElementMicrostation>();
             if (!String.IsNullOrEmpty(mainRowSignatures?.FirstOrDefault()?.Name))
             {
-                changesSignatures = InsertChangesSignatures(mainRowSignatures?.FirstOrDefault().Name);
+                var firstMainRowSignature = mainRowSignatures?.FirstOrDefault();
+                changesSignatures = InsertChangesSignatures(firstMainRowSignature?.Name, firstMainRowSignature?.Description);
             }
             var approvalSignatures = InsertApprovalSignatures();
 
@@ -81,7 +82,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             var insertedMainRowSignatures = new List<ICellElementMicrostation>();
             foreach (var signature in signatureRowFound)
             {
-                var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person, signature.Date);
+                var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person.Text, signature.Person, signature.Date);
                 if (insertedSignature != null)
                 {
                     insertedMainRowSignatures.Add(insertedSignature);
@@ -94,7 +95,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// <summary>
         /// Вставить и получить подписи из штампа замены
         /// </summary>
-        private IEnumerable<ICellElementMicrostation> InsertChangesSignatures(string personId)
+        private IEnumerable<ICellElementMicrostation> InsertChangesSignatures(string personId, string personName)
         {
             var signatureRowSearch = StampChanges.GetStampRowChangesSignatures();
             var signatureRowFound = signatureRowSearch?.
@@ -110,7 +111,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             var insertedMainRowSignatures = new List<ICellElementMicrostation>();
             foreach (var signature in signatureRowFound)
             {
-                var insertedSignature = InsertSignature(personId, signature.DocumentChange, signature.Date);
+                var insertedSignature = InsertSignature(personId, personName, signature.DocumentChange, signature.Date);
                 if (insertedSignature != null)
                 {
                     insertedMainRowSignatures.Add(insertedSignature);
@@ -138,7 +139,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
             var insertedMainRowSignatures = new List<ICellElementMicrostation>();
             foreach (var signature in signatureRowFound)
             {
-                var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person, signature.Date);
+                var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person.Text, signature.Person, signature.Date);
                 if (insertedSignature != null)
                 {
                     insertedMainRowSignatures.Add(insertedSignature);
@@ -151,14 +152,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        private ICellElementMicrostation InsertSignature(string personId, ITextElementMicrostation previousField, ITextElementMicrostation nextField)
+        private ICellElementMicrostation InsertSignature(string personId, string personName, ITextElementMicrostation previousField, ITextElementMicrostation nextField)
         {
             RangeMicrostation signatureRange = GetSignatureRange(Origin, previousField, nextField);
 
             return ApplicationMicrostation.CreateSignatureFromLibrary(personId,
                                                                       signatureRange.OriginPoint,
                                                                       OwnerContainerMicrostation.ModelMicrostation,
-                                                                      GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical));
+                                                                      GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
+                                                                      personName);
         }
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты

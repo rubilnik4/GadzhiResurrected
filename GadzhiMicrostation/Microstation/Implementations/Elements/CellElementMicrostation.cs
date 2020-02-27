@@ -31,6 +31,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public string Name => CellElement.Name;
 
         /// <summary>
+        /// Имя ячейки
+        /// </summary>
+        public string Description => CellElement.Description;
+
+        /// <summary>
         /// Масштаб штампа
         /// </summary>
         private double Scale => CellElement.Scale.X;

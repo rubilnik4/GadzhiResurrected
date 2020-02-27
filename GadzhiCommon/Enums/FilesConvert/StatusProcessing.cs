@@ -9,9 +9,8 @@
         Sending,
         InQueue,
         Converting,
-        Completed,
+        CompletedConverting,
         Writing,
         End,
-        Error,
     }
 }

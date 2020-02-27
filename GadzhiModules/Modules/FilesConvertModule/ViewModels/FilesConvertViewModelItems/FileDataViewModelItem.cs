@@ -51,23 +51,35 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
                                               ConvertStatusProcessingToString(FileData.StatusProcessing);
 
         /// <summary>
-        /// Есть ошибка при конвертировании
+        /// Ошибка отсуствует
         /// </summary>
-        public bool IsErrorStatus => FileData.StatusProcessing == StatusProcessing.Error;
+        public bool IsNoError => IsEndStatus && FileData.StatusError == StatusError.NoError;
+
+        /// <summary>
+        /// Информационная ошибка
+        /// </summary>
+        public bool IsInformaticalError => IsEndStatus &&  FileData.StatusError == StatusError.InformationError;
+
+        /// <summary>
+        /// Ошибка отсуствует
+        /// </summary>
+        public bool IsCriticalError => IsEndStatus &&  FileData.StatusError == StatusError.NoError;
 
         /// <summary>
         /// Завершилось ли конвертирование удачно
         /// </summary>
-        public bool IsEndStatus => FileData.StatusProcessing == StatusProcessing.End;
+        private bool IsEndStatus => FileData.StatusProcessing == StatusProcessing.End;
 
         /// <summary>
         /// Обновление статуса обработки через событие
         /// </summary>
         public void UpdateStatusProcessing()
         {
-            RaisePropertyChanged(nameof(StatusProcessingName));
-            RaisePropertyChanged(nameof(IsErrorStatus));
+            RaisePropertyChanged(nameof(StatusProcessingName));            
             RaisePropertyChanged(nameof(IsEndStatus));
+            RaisePropertyChanged(nameof(IsNoError));
+            RaisePropertyChanged(nameof(IsInformaticalError));
+            RaisePropertyChanged(nameof(IsCriticalError));
         }
 
     }

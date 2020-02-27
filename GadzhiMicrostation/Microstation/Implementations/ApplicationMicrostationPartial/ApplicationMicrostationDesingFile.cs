@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             {
                 _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(
                     () => Application.OpenDesignFile(filePath, false),
-                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.FileNotOpen,
                                                              $"Ошибка открытия файла {filePath}"));
             };
             return ActiveDesignFile;
@@ -46,7 +46,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                     _microstationProject.FileDataMicrostation.
                         AddConvertedFilePath(new ConvertedFileDataMicrostation(filePath, FileExtentionMicrostation.dgn));
                 },
-                errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.FileNotSaved,
                                                          $"Ошибка сохранения файла DGN {filePath}"),
                 ApplicationCatchMethod: () => ActiveDesignFile.Close());
             }
@@ -65,7 +65,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                         _microstationProject.FileDataMicrostation.
                             AddConvertedFilePath(new ConvertedFileDataMicrostation(filePath, FileExtentionMicrostation.pdf));
                     },
-                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                              $"Ошибка сохранения файла PDF {filePath}"));
             }
         }
@@ -83,7 +83,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                         _microstationProject.FileDataMicrostation.
                             AddConvertedFilePath(new ConvertedFileDataMicrostation(filePath, FileExtentionMicrostation.dwg));
                     },
-                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DwgCreatingError,
                                                               $"Ошибка сохранения файла DWG {filePath}"));
             }
         }
@@ -97,7 +97,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             {
                 _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(
                     () => ActiveDesignFile.CloseWithSaving(),
-                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.DesingFileOpen,
+                    errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.FileNotSaved,
                                                              $"Ошибка закрытия файла {ActiveDesignFile.FullName}"),
                     ApplicationCatchMethod: () => ActiveDesignFile.Close());
             }

@@ -5,17 +5,20 @@
     /// </summary>
     public enum ErrorMicrostationType
     {
-        ApplicationLoad,
-        DesingFileOpen,
+        ApplicationNotLoad,
+        FileNotOpen,
+        FileNotSaved,
         StampNotFound,
         FileNotFound,
         RangeNotValid,
         PrinterNotInstall,
         PaperSizeNotFound,
         PdfPrintingError,
+        DwgCreatingError,
+        SignatureNotFound,
         IncorrectExtension,
-        UnknownError,
+        ArgumentNullReference,
         NullReference,
-        ArgumentNullReference
+        UnknownError,    
     }
 }

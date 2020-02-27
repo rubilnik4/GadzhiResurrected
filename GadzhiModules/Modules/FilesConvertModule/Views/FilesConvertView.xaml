@@ -22,9 +22,10 @@
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                                    TrueValue="Visible" 
                                                    FalseValue="Collapsed"/>
-
-            <Brush x:Key="ColorRedAlert">#9b0000</Brush>
+          
             <Brush x:Key="ColorGreenComplite">#2e7d32</Brush>
+            <Brush x:Key="ColorYellowInformation">#ffa500</Brush>
+            <Brush x:Key="ColorRedAlert">#9b0000</Brush>
 
             <Style x:Key="PackIconToolBarStyle" 
                    TargetType="materialDesign:PackIcon">
@@ -177,13 +178,19 @@
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="Done"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
-                                                         Visibility="{Binding IsEndStatus, 
+                                                         Visibility="{Binding IsNoError, 
                                                                       Converter={StaticResource BooleanToVisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorGreenComplite}"/>
-
+                                
+                                <materialDesign:PackIcon Kind="Information"   
+                                                         Style="{StaticResource PackIconDataGridStyle}"
+                                                         Visibility="{Binding IsInformaticalError, 
+                                                                      Converter={StaticResource BooleanToVisibilityConverter}}"      
+                                                         Foreground ="{StaticResource ColorYellowInformation}"/>
+                                
                                 <materialDesign:PackIcon Kind="Error"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
-                                                         Visibility="{Binding IsErrorStatus, 
+                                                         Visibility="{Binding IsCriticalError, 
                                                                       Converter={StaticResource BooleanToVisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorRedAlert}"/>
 

@@ -90,6 +90,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
         /// </summary>
         public StatusProcessing StatusProcessing { get; set; }
 
+
         /// <summary>
         /// Путь и тип отковенртированных файлов
         /// </summary>

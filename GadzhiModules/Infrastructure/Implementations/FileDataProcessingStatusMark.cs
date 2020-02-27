@@ -75,7 +75,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                 FilesInfoPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath,
-                                                                  StatusProcessing.Error,
+                                                                  StatusProcessing.End,
                                                                   FileConvertErrorType.FileNotFound));
             var filesStatusInSendind = new FilesStatus(filesNotFound,
                                                        StatusProcessingProject.Sending);

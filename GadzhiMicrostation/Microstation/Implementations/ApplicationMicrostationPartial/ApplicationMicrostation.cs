@@ -76,7 +76,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 if (_application == null)
                 {
                     _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => _application = MicrostationInstance.Instance(),
-                                                          errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.ApplicationLoad,
+                                                          errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.ApplicationNotLoad,
                                                                                                    "Ошибка загрузки приложения Microstation"));
                 }
                 return _application;

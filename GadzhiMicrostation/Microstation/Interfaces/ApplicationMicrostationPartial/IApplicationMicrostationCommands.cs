@@ -23,6 +23,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
                                                               PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
-                                                              Action<ICellElementMicrostation> additionalParametrs = null);
+                                                              Action<ICellElementMicrostation> additionalParametrs = null,
+                                                              string cellDescription = null);
     }
 }

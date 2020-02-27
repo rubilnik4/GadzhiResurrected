@@ -17,10 +17,9 @@ namespace GadzhiModules.Helpers.Converters
                 { StatusProcessing.Sending, "Отправляем" },
                 { StatusProcessing.InQueue, "В очереди" },
                 { StatusProcessing.Converting, "Крутим-вертим" },
-                { StatusProcessing.Completed, "Удачненько" },
+                { StatusProcessing.CompletedConverting, "Удачненько" },
                 { StatusProcessing.Writing , "Записываем" },
                 { StatusProcessing.End, "Готово" },
-                { StatusProcessing.Error, "Ошибочка" },
             };
 
         /// <summary>

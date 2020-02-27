@@ -12,18 +12,21 @@ namespace GadzhiMicrostation.Helpers.Converters
         public static IDictionary<ErrorMicrostationType, string> ErrorMicrostationTypeToString =>
             new Dictionary<ErrorMicrostationType, string>
             {
-                { ErrorMicrostationType.ApplicationLoad , "Ошибка загрузки приложения" },
-                { ErrorMicrostationType.DesingFileOpen , "Некорректный файл" },
-                { ErrorMicrostationType.UnknownError, "Неизвестная ошибка" },
-                { ErrorMicrostationType.NullReference , "Переменная не задана" },
-                { ErrorMicrostationType.ArgumentNullReference , "Аргумент не задан" },
-                { ErrorMicrostationType.FileNotFound , "Файл не найден" },
-                { ErrorMicrostationType.IncorrectExtension , "Некорректное расширение" },
+                { ErrorMicrostationType.ApplicationNotLoad , "Ошибка загрузки приложения" },
+                { ErrorMicrostationType.FileNotOpen , "Невозможно открыть файл" },
+                { ErrorMicrostationType.FileNotSaved , "Невозможно сохранить файл" },
                 { ErrorMicrostationType.StampNotFound , "Штампы не найдены" },
+                { ErrorMicrostationType.FileNotFound , "Файл не найден" },
                 { ErrorMicrostationType.RangeNotValid , "Некорректный диапазон" },
                 { ErrorMicrostationType.PrinterNotInstall , "Принтер не установлен" },
                 { ErrorMicrostationType.PaperSizeNotFound  , "Формат принтера не найден" },
                 { ErrorMicrostationType.PdfPrintingError  , "Ошибка печати PDF" },
+                { ErrorMicrostationType.DwgCreatingError  , "Ошибка создания DWG" },
+                { ErrorMicrostationType.SignatureNotFound  , "Подпись не найдена" },
+                { ErrorMicrostationType.IncorrectExtension , "Некорректное расширение" },
+                { ErrorMicrostationType.ArgumentNullReference , "Аргумент не задан" },
+                { ErrorMicrostationType.NullReference , "Переменная не задана" },              
+                { ErrorMicrostationType.UnknownError, "Неизвестная ошибка" },
             };
 
         /// <summary>

@@ -18,6 +18,18 @@
         ArgumentNullReference,
         FormatException,
         AttemptingCount,
+        InternalError,
         UnknownError,
+        
+        ApplicationNotLoad, //Microstation and Word Errors
+        FileNotOpen,
+        FileNotSaved,
+        StampNotFound,       
+        RangeNotValid,
+        PrinterNotInstall,
+        PaperSizeNotFound,
+        PdfPrintingError,
+        DwgCreatingError,
+        SignatureNotFound,     
     }
 }

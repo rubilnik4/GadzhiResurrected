@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiCommon.Converters;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
@@ -69,6 +70,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         public StatusProcessing StatusProcessing { get; private set; }
 
         /// <summary>
+        /// Статус ошибок
+        /// </summary>
+        public StatusError StatusError => ConverterErrorType.FileErrorsTypeToStatusError(FileConvertErrorType);
+
+        /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
         public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; private set; }
@@ -80,7 +86,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             if (fileStatus != null)
             {
-                StatusProcessing = fileStatus.StatusProcessing;
+                StatusProcessing = fileStatus.StatusProcessing;                
             }
             else
             {

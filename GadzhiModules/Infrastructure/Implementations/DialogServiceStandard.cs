@@ -62,7 +62,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public void ShowError(FileConvertErrorType fileConvertErrorType, string fileConvertErrorDescription)
         {
             string messageText = "Ошибка" + "\n" +
-                                  ConverterErrorTypeToString.ConvertFileConvertErrorTypeToString(fileConvertErrorType) + "\n" +
+                                  ConverterErrorType.FileErrorTypeToString(fileConvertErrorType) + "\n" +
                                   fileConvertErrorDescription;
 
             MessageBox.Show(messageText);

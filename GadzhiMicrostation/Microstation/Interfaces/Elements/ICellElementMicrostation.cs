@@ -9,5 +9,10 @@
         /// Имя ячейки
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Имя ячейки
+        /// </summary>
+        string Description { get; }
     }
 }

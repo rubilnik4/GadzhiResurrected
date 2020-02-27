@@ -64,7 +64,7 @@ namespace GadzhiConverting.Models.FilesConvert.Implementations
             var uncompletedFiles = _filesDataInfo?.Where(file => !file.IsCompleted);
             foreach (var file in uncompletedFiles)
             {
-                file.StatusProcessing = StatusProcessing.Error;
+                file.StatusProcessing = StatusProcessing.CompletedConverting;
                 file.AddFileConvertErrorType(FileConvertErrorType.UnknownError);
                 file.IsCompleted = true;
             }
