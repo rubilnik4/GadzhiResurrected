@@ -216,7 +216,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private async Task ConvertingFiles()
         {
             await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
-                                            async () => await _applicationGadzhi.AbortPropertiesConverting());
+                                             async () => await _applicationGadzhi.AbortPropertiesConverting());
         }
 
         /// <summary>

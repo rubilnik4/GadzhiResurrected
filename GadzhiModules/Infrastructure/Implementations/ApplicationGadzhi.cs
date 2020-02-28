@@ -307,23 +307,15 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             IsIntermediateResponseInProgress = false;
 
-            await AbortPropertiesConvertingUnmanage(isDispose);
-
-            ClearSubsriptions();
-            _filesInfoProject?.ChangeAllFilesStatusAndMarkError();
-        }
-
-        /// <summary>
-        /// Сбросить индикаторы конвертации неуправляемые ресурсы
-        /// </summary>
-        public async Task AbortPropertiesConvertingUnmanage(bool isDispose)
-        {
             await AbortConverting();
             if (isDispose)
             {
                 _fileConvertingClientService?.Dispose();
             }
-        }
+
+            ClearSubsriptions();
+            _filesInfoProject?.ChangeAllFilesStatusAndMarkError();
+        }       
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования
@@ -343,9 +335,10 @@ namespace GadzhiModules.Infrastructure.Implementations
             {
                 if (disposing)
                 {
-                    AbortPropertiesConverting(true).ConfigureAwait(false);
+                    
                 }
-                AbortPropertiesConvertingUnmanage(true).ConfigureAwait(false);
+                AbortPropertiesConverting(true).ConfigureAwait(false);
+
                 disposedValue = true;
             }
         }

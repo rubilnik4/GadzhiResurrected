@@ -86,7 +86,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             if (fileStatus != null)
             {
-                StatusProcessing = fileStatus.StatusProcessing;                
+                StatusProcessing = fileStatus.StatusProcessing;
+                FileConvertErrorType = fileStatus.Errors;
             }
             else
             {

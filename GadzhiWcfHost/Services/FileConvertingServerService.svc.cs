@@ -1,4 +1,5 @@
-﻿using GadzhiDTOServer.Contracts.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using System;
@@ -37,26 +38,21 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        public async Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse)
-        {
-            await _applicationServerConverting.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
-        }
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse) =>
+                await _applicationServerConverting.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
+
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse)
-        {
-            await _applicationServerConverting.UpdateFromResponse(filesDataResponse);
-        }
+        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse) =>
+                await _applicationServerConverting.UpdateFromResponse(filesDataResponse);
+
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
-        public async Task AbortConvertingById(Guid id)
-        {
-            await _applicationServerConverting.AbortConvertingById(id);
-        }
+        public async Task AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -69,14 +65,14 @@ namespace GadzhiWcfHost.Services
                 {
                     _applicationServerConverting.Dispose();
                 }
-                
+
                 disposedValue = true;
             }
         }
-     
+
         public void Dispose()
-        {           
-            Dispose(true);           
+        {
+            Dispose(true);
         }
         #endregion
     }

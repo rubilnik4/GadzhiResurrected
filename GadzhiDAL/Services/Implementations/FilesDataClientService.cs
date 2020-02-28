@@ -89,7 +89,6 @@ namespace GadzhiDAL.Services.Implementations
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(id.ToString());
-
                 filesDataResponse = await _converterDataAccessFilesDataToDTOClient.ConvertFilesDataAccessToResponse(filesDataEntity);
             }
 

@@ -69,14 +69,16 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary>      
-        public async Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse)
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse)
         {
+            StatusProcessingProject statusProcessingProject = StatusProcessingProject.Converting;
             if (filesDataIntermediateResponse != null)
             {
                 using (var unitOfWork = _container.Resolve<IUnitOfWork>())
                 {
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataIntermediateResponse.Id.ToString());
+                    statusProcessingProject = filesDataEntity.StatusProcessingProject;
 
                     filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
                                        UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, filesDataIntermediateResponse);
@@ -84,6 +86,7 @@ namespace GadzhiDAL.Services.Implementations
                     await unitOfWork.CommitAsync();
                 }
             }
+            return statusProcessingProject;
         }
 
         /// <summary>

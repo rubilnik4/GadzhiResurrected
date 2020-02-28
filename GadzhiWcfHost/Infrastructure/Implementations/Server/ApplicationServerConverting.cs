@@ -1,4 +1,5 @@
-﻿using GadzhiDAL.Services.Implementations;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDAL.Services.Implementations;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using Microsoft.VisualStudio.Threading;
@@ -41,18 +42,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        public async Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse)
-        {
-            await _filesDataServerService.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
-        }
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse) =>
+                await _filesDataServerService.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse)
-        {
-            await _filesDataServerService.UpdateFromResponse(filesDataResponse);
-        }
+        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse) =>      
+                await _filesDataServerService.UpdateFromResponse(filesDataResponse);
+        
 
         /// <summary>
         /// Отмена операции по номеру ID

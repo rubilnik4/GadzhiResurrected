@@ -44,7 +44,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessageAndLoggingService _messageAndLoggingService;        
+        private readonly IMessageAndLoggingService _messageAndLoggingService;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -61,7 +61,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
-                                 IMessageAndLoggingService messageAndLoggingService,                            
+                                 IMessageAndLoggingService messageAndLoggingService,
                                  IExecuteAndCatchErrors executeAndCatchErrors)
         {
             _convertingFileData = convertingFileData;
@@ -69,7 +69,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _fileConvertingServerService = fileConvertingServerService;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
-            _messageAndLoggingService = messageAndLoggingService;         
+            _messageAndLoggingService = messageAndLoggingService;
             _executeAndCatchErrors = executeAndCatchErrors;
 
             _idPackage = null;
@@ -106,8 +106,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (filesDataServer.IsValid)
             {
                 filesDataServer = await ConvertingFilesData(filesDataServer);
-
-                ReplyPackageIsComplete(filesDataServer);
             }
             else
             {
@@ -131,18 +129,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
             else if (!filesDataServer.IsValidByAttemptingCount)
             {
                 _messageAndLoggingService.ShowError(FileConvertErrorType.AttemptingCount,
-                                                    "Превышено количество попыток конвертирования пакета");               
+                                                    "Превышено количество попыток конвертирования пакета");
             }
-            filesDataServer.SetErrorToAllUncompletedFiles();           
+            filesDataServer.SetErrorToAllUncompletedFiles();
             filesDataServer.StatusProcessingProject = StatusProcessingProject.Error;
         }
 
         /// <summary>
-        /// Сообщить об отконвертированном пакете
+        /// Сообщить об отконвертированном пакете, если процесс не был прерван
         /// </summary>
         private void ReplyPackageIsComplete(FilesDataServer filesDataServer)
         {
-            filesDataServer.StatusProcessingProject = StatusProcessingProject.ConvertingComplete;          
+            if (!filesDataServer.IsCompleted)//если пользователь не прервал процесс
+            {
+                filesDataServer.StatusProcessingProject = StatusProcessingProject.ConvertingComplete;
+            }           
         }
 
         /// <summary>
@@ -153,9 +154,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             FilesDataIntermediateResponseServer filesDataIntermediateResponse =
                 _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
 
-            await _fileConvertingServerService.
-                   Operations.
-                   UpdateFromIntermediateResponse(filesDataIntermediateResponse);
+            filesDataServer.StatusProcessingProject = await _fileConvertingServerService.Operations.
+                                                      UpdateFromIntermediateResponse(filesDataIntermediateResponse);
         }
 
         /// <summary>
@@ -163,16 +163,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task SendResponse(FilesDataServer filesDataServer)
         {
-            _messageAndLoggingService.ShowMessage($"Отправка данных в базу...");
+            if (filesDataServer.StatusProcessingProject == StatusProcessingProject.ConvertingComplete)
+            {
+                _messageAndLoggingService.ShowMessage($"Отправка данных в базу...");
 
-            FilesDataResponseServer filesDataResponse =
-                await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
+                FilesDataResponseServer filesDataResponse = await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
+                await _fileConvertingServerService.Operations.UpdateFromResponse(filesDataResponse);
 
-            await _fileConvertingServerService.
-                   Operations.
-                   UpdateFromResponse(filesDataResponse);
-
-            _messageAndLoggingService.ShowMessage($"Конвертация пакета закончена");
+                _messageAndLoggingService.ShowMessage($"Конвертация пакета закончена");
+            }
+            else //в случае если пользователь отменил конвертацию
+            {
+                _messageAndLoggingService.ShowMessage($"Конвертация пакета прервана");
+            }
         }
 
         private async Task AbortConverting(bool isDispose)
@@ -199,14 +202,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             foreach (var fileData in filesDataServer.FilesDataInfo)
             {
-                while (!fileData.IsCompleted && fileData.IsValidByAttemptingCount)
+                if (!filesDataServer.IsCompleted) //если пользователь не прервал процесс
                 {
-                    await _executeAndCatchErrors.ExecuteAndHandleErrorAsync(() => _convertingFileData.Converting(fileData),
-                                                                            () => fileData.AttemptingConvertCount += 1);
-                }
+                    while (!filesDataServer.IsCompleted && !fileData.IsCompleted && fileData.IsValidByAttemptingCount)
+                    {
+                        await _executeAndCatchErrors.ExecuteAndHandleErrorAsync(() => _convertingFileData.Converting(fileData),
+                                                                                () => fileData.AttemptingConvertCount += 1);
+                    }
 
-                await SendIntermediateResponse(filesDataServer);
+                    await SendIntermediateResponse(filesDataServer);
+                }
             }
+            ReplyPackageIsComplete(filesDataServer);
+
             return filesDataServer;
         }
 

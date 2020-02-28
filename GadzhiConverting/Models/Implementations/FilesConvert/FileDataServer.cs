@@ -17,7 +17,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Тип ошибки при конвертации файла
         /// </summary>
         private readonly List<FileConvertErrorType> _fileConvertErrorTypes;
-       
+
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
               : this(filePathServer, filePathClient, colorPrint, new List<FileConvertErrorType>())
         {
@@ -55,7 +55,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtension FileExtensionType => 
+        public FileExtension FileExtensionType =>
             ValidFileExtentions.DocAndDgnFileTypes[FileExtension.ToLower(CultureInfo.CurrentCulture)];
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Завершена ли обработка файла
         /// </summary>
-        public bool IsCompleted => StatusProcessing == StatusProcessing.ConvertingComplete;
+        public bool IsCompleted => CheckStatusProcessing.CompletedStatusProcessingServer.Contains(StatusProcessing);
 
         /// <summary>
         /// Путь и тип отковенртированных файлов

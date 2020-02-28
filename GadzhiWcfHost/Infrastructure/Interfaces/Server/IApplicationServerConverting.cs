@@ -1,4 +1,5 @@
-﻿using GadzhiDTOServer.TransferModels.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
+        Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа

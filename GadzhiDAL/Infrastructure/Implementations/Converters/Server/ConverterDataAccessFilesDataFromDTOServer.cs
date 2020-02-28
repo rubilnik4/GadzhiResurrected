@@ -1,9 +1,11 @@
-﻿using GadzhiCommon.Infrastructure.Implementations;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using NHibernate.Linq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,7 +35,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                                                   Join(filesDataIntermediateResponse?.FilesData,
                                                   fileEntity => fileEntity.FilePath,
                                                   filesIntermediateResponse => filesIntermediateResponse.FilePath,
-                                                  (fileEntity, fileIntermediateResponse) => UpdateFileDataAccessFromIntermediateResponse(fileEntity, fileIntermediateResponse));
+                                                  (fileEntity, fileIntermediateResponse) => UpdateFileDataAccessFromIntermediateResponse(fileEntity, fileIntermediateResponse)).
+                                                  ToList();
             }
             return filesDataEntity;
         }
@@ -52,7 +55,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                 filesDataEntity.FilesData?.Join(filesDataResponse?.FilesData,
                                                 fileEntity => fileEntity.FilePath,
                                                 fileResponse => fileResponse.FilePath,
-                                                (fileEntity, fileResponse) => UpdateFileDataAccessFromResponse(fileEntity, fileResponse));
+                                                (fileEntity, fileResponse) => UpdateFileDataAccessFromResponse(fileEntity, fileResponse)).
+                                                ToList();
 
             }
             return filesDataEntity;

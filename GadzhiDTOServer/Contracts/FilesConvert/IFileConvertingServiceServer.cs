@@ -1,4 +1,5 @@
-﻿using GadzhiDTOServer.TransferModels.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// </summary>      
         [OperationContract(IsInitiating = false,
                            IsTerminating = false)]
-        Task UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
+        Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа

@@ -26,6 +26,6 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
         /// Тип ошибки при конвертации файла
         /// </summary>
         [DataMember]
-        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; set; }
+        public IList<FileConvertErrorType> FileConvertErrorType { get; set; }
     }
 }

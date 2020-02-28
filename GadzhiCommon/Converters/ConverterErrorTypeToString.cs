@@ -87,9 +87,9 @@ namespace GadzhiCommon.Converters
             {
                 statusError = StatusError.InformationError;
             }
-            else if (hasCriticalErrors)
+            if (hasCriticalErrors)
             {
-                statusError = StatusError.NoError;
+                statusError = StatusError.CriticalError;
             }
 
             return statusError;

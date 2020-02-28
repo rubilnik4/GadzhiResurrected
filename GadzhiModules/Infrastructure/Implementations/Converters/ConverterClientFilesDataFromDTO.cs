@@ -169,10 +169,17 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                                                                               fileExtension.ToUpper(CultureInfo.CurrentCulture));
             if (!string.IsNullOrWhiteSpace(directoryPath))
             {
-                string filePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
-                await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
-                        await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource),
-                                                                     $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
+                if (fileDataSourceResponseClient.FileDataSource.Count == 0)
+                {
+                    string filePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
+                    await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
+                            await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource),
+                                                                         $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
+                }
+                else
+                {
+                    return FileConvertErrorType.FileNotFound;
+                }
             }
             else
             {

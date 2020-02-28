@@ -94,16 +94,15 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>
         private async Task<FileDataResponseClient> ConvertFileDataAccessToResponse(FileDataEntity fileDataEntity)
         {
-            var fileDataSourceResponseClientTasks = fileDataEntity.FileDataSourceEntity.AsQueryable().
-                                                    Select(fileData => ConvertFileDataSourceResponse(fileData));
-            var fileDataSourceResponseClient = await Task.WhenAll(fileDataSourceResponseClientTasks);
+            var fileDataSourceResponseClient = await fileDataEntity.FileDataSourceEntity.AsQueryable().
+                                               Select(fileData => ConvertFileDataSourceResponse(fileData)).ToListAsync();
 
             return new FileDataResponseClient()
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 FileDataSourceResponseClient = fileDataSourceResponseClient,
-                FileConvertErrorType = await fileDataEntity.FileConvertErrorType.AsQueryable().ToListAsync(),
+                FileConvertErrorType = fileDataEntity.FileConvertErrorType.AsQueryable().ToList(),
             };
         }
 
@@ -122,12 +121,12 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать информацию о готовых файлах
         /// </summary>        
-        private async Task<FileDataSourceResponseClient> ConvertFileDataSourceResponse(FileDataSourceEntity fileDataSourceEntity)
+        private FileDataSourceResponseClient ConvertFileDataSourceResponse(FileDataSourceEntity fileDataSourceEntity)
         {
             return new FileDataSourceResponseClient()
             {
                 FileName = fileDataSourceEntity?.FileName,
-                FileDataSource = await fileDataSourceEntity?.FileDataSource?.AsQueryable().ToListAsync(),
+                FileDataSource = fileDataSourceEntity?.FileDataSource?.AsQueryable().ToList(),
             };
         }
     }
