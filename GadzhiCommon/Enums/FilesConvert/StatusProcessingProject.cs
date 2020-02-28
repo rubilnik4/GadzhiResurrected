@@ -10,9 +10,11 @@
         Sending,
         InQueue,
         Converting,
+        ConvertingComplete,
         Receiving,
         Writing,
         End,
         Error,
+        Abort,
     }
 }

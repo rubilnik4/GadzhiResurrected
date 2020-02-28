@@ -1,6 +1,7 @@
 ﻿using FluentNHibernate.Mapping;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using NHibernate.Type;
 
 namespace GadzhiDAL.Mappings.FilesConvert

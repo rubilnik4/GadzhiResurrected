@@ -1,5 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
@@ -36,7 +38,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 return new FilesDataIntermediateResponseClient()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
-                    IsCompleted = filesDataEntity.IsCompleted,
                     StatusProcessingProject = filesDataEntity.StatusProcessingProject,
                     FilesData = filesData,
                     FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
@@ -60,7 +61,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 return new FilesDataResponseClient()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
-                    IsCompleted = filesDataEntity.IsCompleted,
                     StatusProcessingProject = filesDataEntity.StatusProcessingProject,
                     FilesData = filesData,
                 };
@@ -75,7 +75,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         private async Task<FileDataIntermediateResponseClient> ConvertFileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
         {
             var fileConvertErrorType = await fileDataEntity.FileConvertErrorType.AsQueryable().ToListAsync();
-            if (!fileDataEntity.IsCompleted && !fileDataEntity.FileConvertErrorType.Any())
+            if (!CheckStatusProcessing.CompletedStatusProcessingServer.Contains(fileDataEntity.StatusProcessing) &&
+                !fileDataEntity.FileConvertErrorType.Any())
             {
                 fileConvertErrorType = new List<FileConvertErrorType> { FileConvertErrorType.UnknownError };
             }
@@ -84,7 +85,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                IsCompleted = fileDataEntity.IsCompleted,
                 FileConvertErrorType = fileConvertErrorType,
             };
         }
@@ -102,7 +102,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                IsCompleted = fileDataEntity.IsCompleted,
                 FileDataSourceResponseClient = fileDataSourceResponseClient,
                 FileConvertErrorType = await fileDataEntity.FileConvertErrorType.AsQueryable().ToListAsync(),
             };

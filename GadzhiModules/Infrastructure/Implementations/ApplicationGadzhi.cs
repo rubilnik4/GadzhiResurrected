@@ -1,5 +1,6 @@
 ﻿using ChannelAdam.ServiceModel;
 using GadzhiCommon.Helpers.Dialogs;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
@@ -257,14 +258,13 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private async Task UpdateStatusProcessing()
         {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _fileConvertingClientService.
-                                                                                Operations.
+            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _fileConvertingClientService.Operations.
                                                                                 CheckFilesStatusProcessing(_filesInfoProject.Id);
             FilesStatus filesStatus = await _fileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             _filesInfoProject.ChangeFilesStatus(filesStatus);
 
-            if (filesDataIntermediateResponse.IsCompleted)
-            {                
+            if (CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(filesDataIntermediateResponse.StatusProcessingProject))
+            {
                 await GetCompleteFiles();
                 ClearSubsriptions();
             }
@@ -295,7 +295,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task AbortConverting()
         {
             if (_statusProcessingInformation?.IsConverting == true)
-            {               
+            {
                 await _fileConvertingClientService?.Operations?.AbortConvertingById(_filesInfoProject.Id);
             }
         }
@@ -336,7 +336,7 @@ namespace GadzhiModules.Infrastructure.Implementations
 
         #region IDisposable Support
         private bool disposedValue = false;
-      
+
         void Dispose(bool disposing)
         {
             if (!disposedValue)

@@ -1,4 +1,5 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;

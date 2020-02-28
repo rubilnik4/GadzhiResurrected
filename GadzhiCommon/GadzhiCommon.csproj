@@ -95,6 +95,7 @@
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />
     <Compile Include="Helpers\FileSystem\FileSavedCheck.cs" />
+    <Compile Include="Infrastructure\Implementations\CheckStatusProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />

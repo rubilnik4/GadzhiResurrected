@@ -1,5 +1,7 @@
-﻿using GadzhiCommonServer.Enums;
+﻿using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDAL.Models.Implementations;
@@ -7,6 +9,7 @@ using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Unity;
 
@@ -117,17 +120,18 @@ namespace GadzhiDAL.Services.Implementations
         {
             var filesDataTask = unityOfWork.Session.Query<FilesDataEntity>().
                                                     Where(package => filesDataEntity != null &&
-                                                                     !package.IsCompleted &&
+                                                                     !CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(package.StatusProcessingProject) &&
                                                                      package.CreationDateTime < filesDataEntity.CreationDateTime);
 
             int packagesInQueueCount = await filesDataTask?.CountAsync();
             int filesInQueueCount = await filesDataTask?.SelectMany(package => package.FilesData).
-                                                         Where(file => !file.IsCompleted).
+                                                         Where(file => !CheckStatusProcessing.CompletedStatusProcessingServer.Contains(file.StatusProcessing)).
                                                          CountAsync();
 
             return new FilesQueueInfo(filesInQueueCount,
                                       packagesInQueueCount);
 
         }
+
     }
 }

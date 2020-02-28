@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
 {
-    public interface  IApplicationMicrostationCommands
+    public interface IApplicationMicrostationCommands
     {
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке
@@ -22,10 +22,10 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
-                                                              PointMicrostation origin,
-                                                              IModelMicrostation modelMicrostation,
-                                                              Action<ICellElementMicrostation> additionalParametrs = null,
-                                                              string cellDescription = null);
+                                                            PointMicrostation origin,
+                                                            IModelMicrostation modelMicrostation,
+                                                            Action<ICellElementMicrostation> additionalParametrs = null,
+                                                            string cellDescription = null);
 
         /// <summary>
         /// Подключить библиотеку

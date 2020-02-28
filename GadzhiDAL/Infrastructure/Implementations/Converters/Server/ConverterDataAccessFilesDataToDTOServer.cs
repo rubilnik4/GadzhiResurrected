@@ -1,4 +1,5 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using NHibernate.Linq;
@@ -37,8 +38,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
 
             return null;
         }
-
-        //Асинхроннный метод toListAsync возможен только при применении Query<> в сервисе
+       
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос
         /// </summary>

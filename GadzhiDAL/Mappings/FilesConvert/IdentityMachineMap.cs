@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Mapping;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 
 namespace GadzhiDAL.Mappings.FilesConvert
 {

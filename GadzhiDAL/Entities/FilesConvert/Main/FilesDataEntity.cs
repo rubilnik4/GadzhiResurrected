@@ -1,65 +1,39 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
+using GadzhiDAL.Entities.FilesConvert.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GadzhiDAL.Entities.FilesConvert
+namespace GadzhiDAL.Entities.FilesConvert.Main
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FilesDataEntity : EntityBase<string>
+    public class FilesDataEntity : FilesDataEntityBase
     {
         public FilesDataEntity()
         {
-            CreationDateTime = DateTime.Now;
-            IsCompleted = false;
             StatusProcessingProject = StatusProcessingProject.InQueue;
             FilesData = new List<FileDataEntity>();
-            IdentityMachine = new IdentityMachine()
-            {
-                AttemptingConvertCount = 0,
-                IdentityLocalName = "",
-                IdentityServerName = "",
-            };
         }
-
-        /// <summary>
-        /// Идентефикатор
-        /// </summary>
-        public override string Id { get; protected set; }
-
-        /// <summary>
-        /// Время создания запроса на конвертирование
-        /// </summary>
-        public virtual DateTime CreationDateTime { get; set; }
-
-        /// <summary>
-        /// Завершена ли обработка
-        /// </summary>
-        public virtual bool IsCompleted { get; set; }
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        public virtual StatusProcessingProject StatusProcessingProject { get; set; }
-
-        /// <summary>
-        /// Идентефикация устройства
-        /// </summary>
-        public virtual IdentityMachine IdentityMachine { get; set; }
+        public virtual StatusProcessingProject StatusProcessingProject { get; set; }       
 
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
-        public virtual IList<FileDataEntity> FilesData { get; protected set; }
+        public virtual IList<FileDataEntity> FilesData { get; protected set; }       
 
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
         public virtual void SetFilesData(IEnumerable<FileDataEntity> fileDataEntities)
-        {           
+        {
             FilesData = fileDataEntities?.Select(fileDataEntity =>
             {
                 fileDataEntity.FilesDataEntity = this;
@@ -93,14 +67,12 @@ namespace GadzhiDAL.Entities.FilesConvert
             switch (сlientServer)
             {
                 case ClientServer.Client:
-                    IsCompleted = true;
-                    StatusProcessingProject = StatusProcessingProject.Error;
+                    StatusProcessingProject = StatusProcessingProject.Abort;                     
                     break;
                 case ClientServer.Server:
-                    IsCompleted = false;
                     StatusProcessingProject = StatusProcessingProject.InQueue;
                     break;
             }
-        }
+        }      
     }
 }

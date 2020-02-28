@@ -88,6 +88,10 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public StatusProcessing StatusProcessing { get; set; }
 
+        /// <summary>
+        /// Завершена ли обработка файла
+        /// </summary>
+        public bool IsCompleted => StatusProcessing == StatusProcessing.ConvertingComplete;
 
         /// <summary>
         /// Путь и тип отковенртированных файлов
@@ -97,12 +101,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public IReadOnlyList<FileConvertErrorType> FileConvertErrorTypes => _fileConvertErrorTypes;        
-
-        /// <summary>
-        /// Завершена ли обработка файла
-        /// </summary>
-        public bool IsCompleted { get; set; }
+        public IReadOnlyList<FileConvertErrorType> FileConvertErrorTypes => _fileConvertErrorTypes;
 
         /// <summary>
         /// Количество попыток конвертирования

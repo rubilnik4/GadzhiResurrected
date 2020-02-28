@@ -137,11 +137,15 @@
   <ItemGroup>
     <Compile Include="DependencyInjection\DependencyInjection.cs" />
     <Compile Include="Entities\EntityBase.cs" />
-    <Compile Include="Entities\FilesConvert\FileDataSourceEntity.cs" />
-    <Compile Include="Entities\FilesConvert\IdentityMachine.cs" />
+    <Compile Include="Entities\FilesConvert\Base\FileDataEntityBase.cs" />
+    <Compile Include="Entities\FilesConvert\Base\FileDataSourceEntityBase.cs" />
+    <Compile Include="Entities\FilesConvert\Base\FilesDataEntityBase.cs" />
+    <Compile Include="Entities\FilesConvert\Base\IdentityMachineBase.cs" />
+    <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
+    <Compile Include="Entities\FilesConvert\Main\IdentityMachine.cs" />
     <Compile Include="Factories\Implementations\NhibernateFactoryManager.cs" />
-    <Compile Include="Entities\FilesConvert\FileDataEntity.cs" />
-    <Compile Include="Entities\FilesConvert\FilesDataEntity.cs" />
+    <Compile Include="Entities\FilesConvert\Main\FileDataEntity.cs" />
+    <Compile Include="Entities\FilesConvert\Main\FilesDataEntity.cs" />
     <Compile Include="Factories\Implementations\UnitOfWork.cs" />
     <Compile Include="Factories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -198,6 +202,9 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\FilesConvert\Archive\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

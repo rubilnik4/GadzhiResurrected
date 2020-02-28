@@ -44,12 +44,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessageAndLoggingService _messageAndLoggingService;
-
-        /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private readonly IFileSystemOperations _fileSystemOperations;
+        private readonly IMessageAndLoggingService _messageAndLoggingService;        
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -66,8 +61,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
-                                 IMessageAndLoggingService messageAndLoggingService,
-                                 IFileSystemOperations fileSystemOperations,
+                                 IMessageAndLoggingService messageAndLoggingService,                            
                                  IExecuteAndCatchErrors executeAndCatchErrors)
         {
             _convertingFileData = convertingFileData;
@@ -75,8 +69,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _fileConvertingServerService = fileConvertingServerService;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
-            _messageAndLoggingService = messageAndLoggingService;
-            _fileSystemOperations = fileSystemOperations;
+            _messageAndLoggingService = messageAndLoggingService;         
             _executeAndCatchErrors = executeAndCatchErrors;
 
             _idPackage = null;
@@ -140,8 +133,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 _messageAndLoggingService.ShowError(FileConvertErrorType.AttemptingCount,
                                                     "Превышено количество попыток конвертирования пакета");               
             }
-            filesDataServer.SetErrorToAllUncompletedFiles();
-            filesDataServer.IsCompleted = true;
+            filesDataServer.SetErrorToAllUncompletedFiles();           
             filesDataServer.StatusProcessingProject = StatusProcessingProject.Error;
         }
 
@@ -150,8 +142,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private void ReplyPackageIsComplete(FilesDataServer filesDataServer)
         {
-            filesDataServer.StatusProcessingProject = StatusProcessingProject.Receiving;
-            filesDataServer.IsCompleted = true;
+            filesDataServer.StatusProcessingProject = StatusProcessingProject.ConvertingComplete;          
         }
 
         /// <summary>

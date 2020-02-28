@@ -1,11 +1,11 @@
-﻿namespace GadzhiDAL.Entities.FilesConvert
+﻿namespace GadzhiDAL.Entities.FilesConvert.Base
 {
     /// <summary>
     /// Идентефикация устройства
     /// </summary>
-    public class IdentityMachine
+    public abstract class IdentityMachineBase
     {
-        public IdentityMachine()
+        public IdentityMachineBase()
         {
 
         }

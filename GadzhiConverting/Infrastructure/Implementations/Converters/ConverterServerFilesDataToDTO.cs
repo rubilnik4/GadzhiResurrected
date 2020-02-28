@@ -34,7 +34,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 return new FilesDataIntermediateResponseServer()
                 {
                     Id = filesDataServer.Id,
-                    IsCompleted = filesDataServer.IsCompleted,
                     StatusProcessingProject = filesDataServer.StatusProcessingProject,
                     FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
                                 ConvertFileToIntermediateResponse(fileDataServer)).ToList(),
@@ -58,7 +57,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             return new FilesDataResponseServer()
             {
                 Id = filesDataServer.Id,
-                IsCompleted = filesDataServer.IsCompleted,
                 StatusProcessingProject = filesDataServer.StatusProcessingProject,
                 FilesData = filesDataToResponse,
             };
@@ -73,7 +71,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                IsCompleted = fileDataServer.IsCompleted,
                 FileConvertErrorType = fileDataServer.FileConvertErrorTypes,
             };
         }
@@ -89,7 +86,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             return new FileDataResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
-                IsCompleted = fileDataServer.IsCompleted,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FileDataSourceResponseServer = filesDataSource,
                 FileConvertErrorType = fileDataServer.FileConvertErrorTypes,

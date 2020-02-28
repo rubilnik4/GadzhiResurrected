@@ -9,7 +9,7 @@
         Sending,
         InQueue,
         Converting,
-        CompletedConverting,
+        ConvertingComplete,
         Writing,
         End,
     }

@@ -115,10 +115,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Закончить конвертирование файла
         /// </summary>
         private FileDataServer FileDataEndConverting(FileDataServer fileDataServer)
-        {
-            fileDataServer.IsCompleted = true;
-            fileDataServer.StatusProcessing = StatusProcessing.CompletedConverting;          
-
+        {           
+            fileDataServer.StatusProcessing = StatusProcessing.ConvertingComplete;
             return fileDataServer;
         }
     }

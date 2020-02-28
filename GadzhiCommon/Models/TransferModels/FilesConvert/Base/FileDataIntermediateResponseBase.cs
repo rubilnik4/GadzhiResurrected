@@ -20,13 +20,7 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
         /// Статус обработки файла
         /// </summary>
         [DataMember]
-        public StatusProcessing StatusProcessing { get; set; }
-
-        /// <summary>
-        /// Завершена ли обработка файла
-        /// </summary>
-        [DataMember]
-        public bool IsCompleted { get; set; }
+        public StatusProcessing StatusProcessing { get; set; }        
 
         /// <summary>
         /// Тип ошибки при конвертации файла

@@ -14,13 +14,7 @@ namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
         /// ID идентефикатор
         /// </summary>
         [DataMember]
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Завершена ли обработка
-        /// </summary>
-        [DataMember]
-        public bool IsCompleted { get; set; }
+        public Guid Id { get; set; }       
 
         /// <summary>
         /// Статус выполнения проекта

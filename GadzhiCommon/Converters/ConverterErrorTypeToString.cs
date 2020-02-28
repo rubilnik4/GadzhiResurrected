@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace GadzhiCommon.Converters
 {
+    /// <summary>
+    /// Операции над типами ошибок
+    /// </summary>
     public static class ConverterErrorType
     {
         /// <summary>

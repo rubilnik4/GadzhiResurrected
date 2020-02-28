@@ -1,6 +1,7 @@
 ﻿using FluentNHibernate.Mapping;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using NHibernate.Type;
 
 namespace GadzhiDAL.Mappings.FilesConvert
@@ -13,8 +14,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
         public FileDataMap()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.FilePath).Not.Nullable().Default("");
-            Map(x => x.IsCompleted).Not.Nullable();
+            Map(x => x.FilePath).Not.Nullable().Default("");         
             Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
             Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();
             HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType");
@@ -23,6 +23,11 @@ namespace GadzhiDAL.Mappings.FilesConvert
                     .Inverse()
                     .Cascade.All();
             References(x => x.FilesDataEntity);
+        }
+
+        public void Override()
+        {
+
         }
     }
 }

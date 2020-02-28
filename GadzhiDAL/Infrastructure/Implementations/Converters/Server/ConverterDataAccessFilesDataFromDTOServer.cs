@@ -1,4 +1,6 @@
-﻿using GadzhiDAL.Entities.FilesConvert;
+﻿using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using NHibernate.Linq;
@@ -25,7 +27,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         {
             if (filesDataEntity != null && filesDataIntermediateResponse != null)
             {
-                filesDataEntity.IsCompleted = filesDataIntermediateResponse.IsCompleted;
                 filesDataEntity.StatusProcessingProject = filesDataIntermediateResponse.StatusProcessingProject;
 
                 var filesDataIntermediateEntity = filesDataEntity.FilesData?.
@@ -41,12 +42,11 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Обновить модель базы данных на основе окончательного ответа
         /// </summary>      
         public FilesDataEntity UpdateFilesDataAccessFromResponse(FilesDataEntity filesDataEntity,
-                                                                             FilesDataResponseServer filesDataResponse)
+                                                                 FilesDataResponseServer filesDataResponse)
         {
             if (filesDataEntity != null && filesDataResponse != null &&
-                !filesDataEntity.IsCompleted)
+                !CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(filesDataEntity.StatusProcessingProject))
             {
-                filesDataEntity.IsCompleted = filesDataResponse.IsCompleted;
                 filesDataEntity.StatusProcessingProject = filesDataResponse.StatusProcessingProject;
 
                 filesDataEntity.FilesData?.Join(filesDataResponse?.FilesData,
@@ -66,7 +66,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         {
             if (fileDataEntity != null && fileDataIntermediateResponse != null)
             {
-                fileDataEntity.IsCompleted = fileDataIntermediateResponse.IsCompleted;
                 fileDataEntity.StatusProcessing = fileDataIntermediateResponse.StatusProcessing;
                 fileDataEntity.FileConvertErrorType = fileDataIntermediateResponse.FileConvertErrorType.ToList();
             }
@@ -84,8 +83,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 var fileDataSourceEntity = fileDataResponse.FileDataSourceResponseServer?.AsQueryable().
                                            Select(fileData => ToFileDataSourceAccess(fileData));
-
-                fileDataEntity.IsCompleted = fileDataResponse.IsCompleted;
                 fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
                 fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorType.ToList();
                 fileDataEntity.SetFileDataSourceEntity(fileDataSourceEntity);

@@ -1,6 +1,8 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
@@ -125,10 +127,7 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary> 
         private Expression<Func<FilesDataEntity, bool>> ConditionConvertion(string identityServerName)
         {
-            return package => !package.IsCompleted &&
-
-                              (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
-
+            return package => (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
                                package.StatusProcessingProject == StatusProcessingProject.Converting &&
                                package.IdentityMachine.IdentityServerName == identityServerName);
         }

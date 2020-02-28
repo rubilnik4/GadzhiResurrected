@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,19 +43,19 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public IReadOnlyList<FileDataServer> FilesDataInfo => _filesDataInfo;
 
         /// <summary>
+        /// Статус выполнения проекта
+        /// </summary>      
+        public StatusProcessingProject StatusProcessingProject { get; set; }
+
+        /// <summary>
         /// Завершена ли обработка
         /// </summary>
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted => CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(StatusProcessingProject);
 
         /// <summary>
         /// Количество попыток конвертирования
         /// </summary>      
-        public int AttemptingConvertCount { get; }
-
-        /// <summary>
-        /// Статус выполнения проекта
-        /// </summary>      
-        public StatusProcessingProject StatusProcessingProject { get; set; }
+        public int AttemptingConvertCount { get; }       
 
         /// <summary>
         /// Изменить статус обработки для всех файлов
@@ -64,9 +65,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             var uncompletedFiles = _filesDataInfo?.Where(file => !file.IsCompleted);
             foreach (var file in uncompletedFiles)
             {
-                file.StatusProcessing = StatusProcessing.CompletedConverting;
-                file.AddFileConvertErrorType(FileConvertErrorType.UnknownError);
-                file.IsCompleted = true;
+                file.StatusProcessing = StatusProcessing.ConvertingComplete;
+                file.AddFileConvertErrorType(FileConvertErrorType.UnknownError);               
             }
         }
 

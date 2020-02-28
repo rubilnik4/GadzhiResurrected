@@ -1,4 +1,5 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using System.Threading.Tasks;
