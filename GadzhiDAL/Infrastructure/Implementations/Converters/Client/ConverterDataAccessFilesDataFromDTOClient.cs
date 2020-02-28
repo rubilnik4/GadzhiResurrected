@@ -1,7 +1,9 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDTOClient.TransferModels.FilesConvert;
+using NHibernate.Linq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
 {
@@ -20,15 +22,19 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>      
         public FilesDataEntity ConvertToFilesDataAccess(FilesDataRequestClient filesDataRequest)
         {
-            var filesDataAccessToConvert = filesDataRequest?.FilesData?.Select(fileDTO =>
-                                               ConvertToFileDataAccess(fileDTO));
+            if (filesDataRequest != null)
+            {
+                var filesDataAccessToConvert = filesDataRequest?.FilesData?.AsQueryable().
+                                               Select(fileDTO => ConvertToFileDataAccess(fileDTO));
+               
+                var filesDataEntity = new FilesDataEntity();
+                filesDataEntity.SetId(filesDataRequest.Id);
+                filesDataEntity.IdentityMachine.IdentityLocalName = filesDataRequest.IdentityName;
+                filesDataEntity.SetFilesData(filesDataAccessToConvert);
 
-            var filesDataEntity = new FilesDataEntity();
-            filesDataEntity.SetId(filesDataRequest.Id);
-            filesDataEntity.IdentityMachine.IdentityLocalName = filesDataRequest.IdentityName;
-            filesDataEntity.SetFilesData(filesDataAccessToConvert);
-
-            return filesDataEntity;
+                return filesDataEntity;
+            }
+            return null;
         }
 
         /// <summary>
@@ -40,7 +46,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 ColorPrint = fileDataRequest.ColorPrint,
                 FilePath = fileDataRequest.FilePath,
-                FileDataSource = fileDataRequest.FileDataSource,
+                FileDataSource = fileDataRequest?.FileDataSource,
             };
         }
 

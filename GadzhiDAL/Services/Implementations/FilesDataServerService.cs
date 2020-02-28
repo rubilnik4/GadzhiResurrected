@@ -56,7 +56,7 @@ namespace GadzhiDAL.Services.Implementations
                                                   FirstOrDefaultAsync(ConditionConvertion(identityServerName));
 
                 filesDataEntity?.StartConverting(identityServerName);
-                filesDataRequest = _converterDataAccessFilesDataToDTOServer.ConvertFilesDataAccessToRequest(filesDataEntity);
+                filesDataRequest = await _converterDataAccessFilesDataToDTOServer.ConvertFilesDataAccessToRequest(filesDataEntity);
 
                 await unitOfWork.CommitAsync();
             }
@@ -77,8 +77,7 @@ namespace GadzhiDAL.Services.Implementations
                                                       LoadAsync<FilesDataEntity>(filesDataIntermediateResponse.Id.ToString());
 
                     filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                       UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity,
-                                                                                     filesDataIntermediateResponse);
+                                       UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, filesDataIntermediateResponse);
 
                     await unitOfWork.CommitAsync();
                 }
@@ -97,10 +96,8 @@ namespace GadzhiDAL.Services.Implementations
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataResponse.Id.ToString());
 
-
                     filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                       UpdateFilesDataAccessFromResponse(filesDataEntity,
-                                                                         filesDataResponse);
+                                       UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
 
                     await unitOfWork.CommitAsync();
                 }

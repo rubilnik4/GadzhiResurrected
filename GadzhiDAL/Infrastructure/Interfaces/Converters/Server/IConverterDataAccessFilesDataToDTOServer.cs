@@ -1,5 +1,6 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
+using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Server
 {
@@ -11,6 +12,6 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Server
         /// <summary>
         /// Конвертировать из модели базы данных в запрос
         /// </summary>          
-        FilesDataRequestServer ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity);
+        Task<FilesDataRequestServer> ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity);
     }
 }

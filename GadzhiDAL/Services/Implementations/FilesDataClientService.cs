@@ -69,8 +69,8 @@ namespace GadzhiDAL.Services.Implementations
 
                 FilesQueueInfo filesQueueInfo = await GetQueueCount(unitOfWork, filesDataEntity);
 
-                filesDataIntermediateResponse = _converterDataAccessFilesDataToDTOClient.
-                                                ConvertFilesDataAccessToIntermediateResponse(filesDataEntity, filesQueueInfo);
+                filesDataIntermediateResponse = await _converterDataAccessFilesDataToDTOClient.
+                                                       ConvertFilesDataAccessToIntermediateResponse(filesDataEntity, filesQueueInfo);
             }
 
             return filesDataIntermediateResponse;
@@ -85,11 +85,9 @@ namespace GadzhiDAL.Services.Implementations
 
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
-                FilesDataEntity filesDataEntity = await unitOfWork.Session.
-                                                  LoadAsync<FilesDataEntity>(id.ToString());
+                FilesDataEntity filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(id.ToString());
 
-                filesDataResponse = _converterDataAccessFilesDataToDTOClient.
-                                        ConvertFilesDataAccessToResponse(filesDataEntity);
+                filesDataResponse = await _converterDataAccessFilesDataToDTOClient.ConvertFilesDataAccessToResponse(filesDataEntity);
             }
 
             return filesDataResponse;

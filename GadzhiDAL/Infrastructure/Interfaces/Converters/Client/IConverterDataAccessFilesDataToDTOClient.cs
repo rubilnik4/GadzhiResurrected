@@ -1,6 +1,7 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
+using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Client
 {
@@ -12,12 +13,12 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        FilesDataIntermediateResponseClient ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
+        Task<FilesDataIntermediateResponseClient> ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
                                                                                          FilesQueueInfo filesQueueInfo);
 
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
-        FilesDataResponseClient ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);
+        Task<FilesDataResponseClient> ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);
     }
 }

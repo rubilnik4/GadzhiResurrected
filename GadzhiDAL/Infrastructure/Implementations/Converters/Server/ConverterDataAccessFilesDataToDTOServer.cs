@@ -1,8 +1,10 @@
 ﻿using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
+using NHibernate.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
 {
@@ -19,23 +21,24 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// <summary>
         /// Конвертировать из модели базы данных в запрос
         /// </summary>          
-        public FilesDataRequestServer ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
+        public async Task<FilesDataRequestServer> ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
         {
             if (filesDataEntity != null)
             {
+                var filesData = await filesDataEntity.FilesData?.AsQueryable().
+                                      Select(fileData => ConvertFileDataAccessToRequest(fileData)).ToListAsync();              
                 return new FilesDataRequestServer()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
                     AttemptingConvertCount = filesDataEntity.IdentityMachine.AttemptingConvertCount,
-                    FilesData = filesDataEntity.FilesData?.
-                                                Select(fileData => ConvertFileDataAccessToRequest(fileData)).
-                                                ToList(),
+                    FilesData = filesData,
                 };
             }
 
             return null;
         }
 
+        //Асинхроннный метод toListAsync возможен только при применении Query<> в сервисе
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос
         /// </summary>
@@ -45,7 +48,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                FileDataSource = fileDataEntity.FileDataSource,
+                FileDataSource = fileDataEntity.FileDataSource.AsQueryable().ToList(),
             };
         }
     }

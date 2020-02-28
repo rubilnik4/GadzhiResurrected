@@ -65,7 +65,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
-        public virtual void SetConvertedFileDataEntity(IEnumerable<FileDataSourceEntity> filesDataSourceEntity)
+        public virtual void SetFileDataSourceEntity(IEnumerable<FileDataSourceEntity> filesDataSourceEntity)
         {            
             FileDataSourceEntity = filesDataSourceEntity?.Select(fileDataSourceEntity =>
             {
