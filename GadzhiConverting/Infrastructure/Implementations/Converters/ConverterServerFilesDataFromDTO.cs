@@ -42,7 +42,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
         {
-            var filesDataServerToConvertTask = filesDataRequest?.FilesData?.Select(fileDTO =>
+            var filesDataServerToConvertTask = filesDataRequest?.FileDatas?.Select(fileDTO =>
                                                ConvertToFileDataServerAndSaveFile(fileDTO,
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);

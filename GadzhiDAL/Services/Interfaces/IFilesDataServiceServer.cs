@@ -29,5 +29,10 @@ namespace GadzhiDAL.Services.Implementations
         /// Отмена операции по номеру ID
         /// </summary>       
         Task AbortConvertingById(Guid id);
+
+        /// <summary>
+        /// Удалить все устаревшие пакеты
+        /// </summary>      
+        Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
     }
 }

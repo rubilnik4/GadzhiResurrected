@@ -16,38 +16,34 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         public FilesDataEntity()
         {
             StatusProcessingProject = StatusProcessingProject.InQueue;
-            FilesData = new List<FileDataEntity>();
         }
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        public virtual StatusProcessingProject StatusProcessingProject { get; set; }       
+        public virtual StatusProcessingProject StatusProcessingProject { get; set; }
+
+        /// <summary>
+        /// Количество попыток конвертирования
+        /// </summary>      
+        public virtual int AttemptingConvertCount { get; set; }
 
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
-        public virtual IList<FileDataEntity> FilesData { get; protected set; }       
+        public virtual IList<FileDataEntity> FileDataEntities { get; protected set; }       
 
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
-        public virtual void SetFilesData(IEnumerable<FileDataEntity> fileDataEntities)
+        public virtual void SetFileDataEntities(IEnumerable<FileDataEntity> fileDataEntities)
         {
-            FilesData = fileDataEntities?.Select(fileDataEntity =>
+            FileDataEntities = fileDataEntities?.Select(fileData =>
             {
-                fileDataEntity.FilesDataEntity = this;
-                return fileDataEntity;
+                fileData.FilesDataEntity = this;
+                return fileData;
             })?.ToList();
-        }
-
-        /// <summary>
-        /// Установить идентефикатор
-        /// </summary>        
-        public virtual void SetId(Guid id)
-        {
-            Id = id.ToString();
-        }
+        }      
 
         /// <summary>
         /// Присовить статус конвертирования
@@ -55,8 +51,8 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         public virtual void StartConverting(string identityServerName)
         {
             StatusProcessingProject = StatusProcessingProject.Converting;
-            IdentityMachine.AttemptingConvertCount += 1;
-            IdentityMachine.IdentityServerName = identityServerName;
+            AttemptingConvertCount += 1;
+            IdentityServerName = identityServerName;
         }
 
         /// <summary>

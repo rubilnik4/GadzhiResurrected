@@ -73,8 +73,8 @@ namespace GadzhiModules.Infrastructure.Implementations
             else if (FilesInfoProject?.StatusProcessingProject == StatusProcessingProject.Converting)
             {
                 double numberOfComplete = FilesInfoProject.
-                                          FilesInfo.Count(file => file.StatusProcessing == StatusProcessing.ConvertingComplete);
-                double numberTotal = FilesInfoProject.FilesInfo.Count;
+                                          FileDatas.Count(file => file.StatusProcessing == StatusProcessing.ConvertingComplete);
+                double numberTotal = FilesInfoProject.FileDatas.Count;
 
                 percentageOfComplete = (numberOfComplete / numberTotal) * 100;
             }

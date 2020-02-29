@@ -14,19 +14,19 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        private readonly List<FileDataServer> _filesDataInfo;
+        private readonly List<FileDataServer> _fileDatas;
 
         public FilesDataServer(Guid id,
                                int attemptingConvertCount,
-                               IEnumerable<FileDataServer> filesDataServer)
+                               IEnumerable<FileDataServer> fileDatasServer)
         {
             Id = id;
             AttemptingConvertCount = attemptingConvertCount;
 
-            _filesDataInfo = new List<FileDataServer>();
-            if (filesDataServer != null)
+            _fileDatas = new List<FileDataServer>();
+            if (fileDatasServer != null)
             {
-                _filesDataInfo.AddRange(filesDataServer);
+                _fileDatas.AddRange(fileDatasServer);
             }
 
             StatusProcessingProject = StatusProcessingProject.Converting;
@@ -40,7 +40,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        public IReadOnlyList<FileDataServer> FilesDataInfo => _filesDataInfo;
+        public IReadOnlyList<FileDataServer> FileDatas => _fileDatas;
 
         /// <summary>
         /// Статус выполнения проекта
@@ -62,7 +62,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public void SetErrorToAllUncompletedFiles()
         {
-            var uncompletedFiles = _filesDataInfo?.Where(file => !file.IsCompleted);
+            var uncompletedFiles = _fileDatas?.Where(file => !file.IsCompleted);
             foreach (var file in uncompletedFiles)
             {
                 file.StatusProcessing = StatusProcessing.ConvertingComplete;
@@ -73,13 +73,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Корректна ли модель
         /// </summary>
-        public bool IsValid => IsValidByFileData &&
+        public bool IsValid => IsValidByFileDatas &&
                                IsValidByAttemptingCount;
 
         /// <summary>
         /// Присутствуют ли файлы для конвертации
         /// </summary>
-        public bool IsValidByFileData => _filesDataInfo?.Any() == true;
+        public bool IsValidByFileDatas => _fileDatas?.Any() == true;
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования

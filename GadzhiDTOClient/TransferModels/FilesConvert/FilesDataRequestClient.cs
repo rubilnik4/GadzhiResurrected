@@ -21,12 +21,12 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IList<FileDataRequestClient> FilesData { get; set; }
+        public IList<FileDataRequestClient> FileDatas { get; set; }
 
         /// <summary>
         /// Удовлетворяет ли модель условиям для отправки
         /// </summary>
         [IgnoreDataMember]
-        public bool IsValid => FilesData?.Any() == true;
+        public bool IsValid => FileDatas?.Any() == true;
     }
 }

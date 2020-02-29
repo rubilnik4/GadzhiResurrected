@@ -82,8 +82,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _messageAndLoggingService.ShowMessage("Запрос пакета в базе...");
 
-            FilesDataRequestServer filesDataRequest = await _fileConvertingServerService.
-                                                             Operations.
+            FilesDataRequestServer filesDataRequest = await _fileConvertingServerService.Operations.
                                                              GetFirstInQueuePackage(_projectSettings.NetworkName);
             if (filesDataRequest != null)
             {
@@ -94,6 +93,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             }
             else
             {
+                await CheckAndDeleteUnusedPackagesOnDataBase();
                 await QueueIsEmpty();
             }
         }
@@ -121,7 +121,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private void ReplyPackageIsInvalid(FilesDataServer filesDataServer)
         {
-            if (!filesDataServer.IsValidByFileData)
+            if (!filesDataServer.IsValidByFileDatas)
             {
                 _messageAndLoggingService.ShowError(FileConvertErrorType.FileNotFound,
                                                     "Файлы для конвертации не обнаружены");
@@ -143,7 +143,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (!filesDataServer.IsCompleted)//если пользователь не прервал процесс
             {
                 filesDataServer.StatusProcessingProject = StatusProcessingProject.ConvertingComplete;
-            }           
+            }
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _messageAndLoggingService.ShowMessage($"Конвертация пакета {filesDataServer.Id.ToString()}");
 
-            foreach (var fileData in filesDataServer.FilesDataInfo)
+            foreach (var fileData in filesDataServer.FileDatas)
             {
                 if (!filesDataServer.IsCompleted) //если пользователь не прервал процесс
                 {
@@ -225,6 +225,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             await Task.Delay(500);
             _messageAndLoggingService.ShowMessage("Очередь пакетов пуста...");
+        }
+
+        /// <summary>
+        /// Проверить и удалить ненужные пакеты в базе
+        /// </summary>
+        private async Task CheckAndDeleteUnusedPackagesOnDataBase()
+        {
+            DateTime dateTimeNow = DateTime.Now;
+            TimeSpan timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedDataCheck).Ticks);
+            if (timeElapsed.TotalSeconds > _projectSettings.IntervalHouresToDeleteUnusedPackages)
+            {
+                await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
+                Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
+            }
+
         }
 
         #region IDisposable Support

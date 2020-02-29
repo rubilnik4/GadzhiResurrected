@@ -1,6 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using GadzhiDAL.Mappings.FilesConvert;
+using GadzhiDAL.Mappings.FilesConvert.Main;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using System;

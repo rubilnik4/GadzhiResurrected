@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        private readonly IList<FileDataSourceMicrostation> _fileDataSourceMicrostationn;
+        private readonly List<FileDataSourceMicrostation> _fileDataSourceMicrostationn;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -108,6 +108,21 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
             else
             {
                 throw new ArgumentNullException(nameof(fileDataSourceMicrostation));
+            }
+        }
+
+        /// <summary>
+        /// Добавить пути к отконвертированным файлам
+        /// </summary>
+        public void AddRangeConvertedFilePath(IEnumerable<FileDataSourceMicrostation> fileDataSourcesMicrostation)
+        {
+            if (fileDataSourcesMicrostation != null)
+            {
+                _fileDataSourceMicrostationn.AddRange(fileDataSourcesMicrostation);
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(fileDataSourcesMicrostation));
             }
         }
 

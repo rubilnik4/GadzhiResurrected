@@ -2,13 +2,17 @@
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Archive;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity;
 
@@ -67,7 +71,7 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
-        /// Обновить информацию после промежуточного ответа
+        /// Обновить информацию после промежуточного ответа. При отмене - удалить пакет
         /// </summary>      
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse)
         {
@@ -78,10 +82,13 @@ namespace GadzhiDAL.Services.Implementations
                 {
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataIntermediateResponse.Id.ToString());
-                    statusProcessingProject = filesDataEntity.StatusProcessingProject;
 
-                    filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                       UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, filesDataIntermediateResponse);
+                    statusProcessingProject = filesDataEntity.StatusProcessingProject;
+                    if (await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
+                    {
+                        filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
+                                           UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, filesDataIntermediateResponse);
+                    }
 
                     await unitOfWork.CommitAsync();
                 }
@@ -90,7 +97,7 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
-        /// Обновить информацию после окончательного ответа
+        /// Обновить информацию после окончательного ответа. При отмене - удалить пакет
         /// </summary>      
         public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse)
         {
@@ -101,11 +108,29 @@ namespace GadzhiDAL.Services.Implementations
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataResponse.Id.ToString());
 
-                    filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                       UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
+                    if (await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
+                    {
+                        filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
+                                          UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
+                    }
 
                     await unitOfWork.CommitAsync();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Удалить все устаревшие пакеты
+        /// </summary>      
+        public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion)
+        {
+            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
+            {
+                await unitOfWork.Session.Query<FilesDataArchiveEntity>().
+                                         //Where(fileData => fileData.CreationDateTime < dateDeletion).
+                                         DeleteAsync(default);
+
+                await unitOfWork.CommitAsync();
             }
         }
 
@@ -126,13 +151,25 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
+        /// Проверить статус пакета. При отмене - удалить
+        /// </summary>
+        private async Task<bool> DeleteFilesDataOnAbortionStatus(IUnitOfWork unitOfWork, FilesDataEntity filesDataEntity)
+        {
+            if (filesDataEntity.StatusProcessingProject == StatusProcessingProject.Abort)
+            {
+                await unitOfWork.Session.DeleteAsync(filesDataEntity);
+            }
+            return filesDataEntity.StatusProcessingProject == StatusProcessingProject.Abort;
+        }
+
+        /// <summary>
         /// Условие при котором пакет берется из очереди на конвертацию
         /// </summary> 
         private Expression<Func<FilesDataEntity, bool>> ConditionConvertion(string identityServerName)
         {
             return package => (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
                                package.StatusProcessingProject == StatusProcessingProject.Converting &&
-                               package.IdentityMachine.IdentityServerName == identityServerName);
+                               package.IdentityServerName == identityServerName);
         }
     }
 }

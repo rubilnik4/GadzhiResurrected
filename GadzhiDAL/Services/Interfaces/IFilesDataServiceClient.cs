@@ -25,6 +25,11 @@ namespace GadzhiDAL.Services.Implementations
         Task<FilesDataResponseClient> GetFilesDataResponseById(Guid id);
 
         /// <summary>
+        /// Установить отметку о получении клиентом пакета. Переместить пакет в архив
+        /// </summary>       
+        Task SetFilesDataLoadedByClient(Guid id);
+
+        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
         Task AbortConvertingById(Guid id);

@@ -1,7 +1,9 @@
 ﻿using GadzhiDAL.Factories.Implementations;
 using GadzhiDAL.Factories.Interfaces;
+using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Client;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
+using GadzhiDAL.Infrastructure.Interfaces.Converters.Archive;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDAL.Services.Implementations;
@@ -24,6 +26,9 @@ namespace GadzhiDAL.DependencyInjection
 
                  // с помощью фабрики открываем сессию
                  .RegisterType<IUnitOfWork, UnitOfWork>()
+
+                  //общая часть
+                  .RegisterType<IConverterToArchive, ConverterToArchive>()
 
                  //регистрация клиенской части
                  .RegisterType<IConverterDataAccessFilesDataFromDTOServer, ConverterDataAccessFilesDataFromDTOServer>()

@@ -35,7 +35,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 {
                     Id = filesDataServer.Id,
                     StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                    FilesData = filesDataServer.FilesDataInfo?.Select(fileDataServer =>
+                    FileDatas = filesDataServer.FileDatas?.Select(fileDataServer =>
                                 ConvertFileToIntermediateResponse(fileDataServer)).ToList(),
                 };
             }
@@ -50,7 +50,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>          
         public async Task<FilesDataResponseServer> ConvertFilesToResponse(FilesDataServer filesDataServer)
         {
-            var filesDataToResponseTasks = filesDataServer?.FilesDataInfo?.Select(fileDataServer =>
+            var filesDataToResponseTasks = filesDataServer?.FileDatas?.Select(fileDataServer =>
                                                             ConvertFileResponse(fileDataServer));
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 
@@ -58,7 +58,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 Id = filesDataServer.Id,
                 StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                FilesData = filesDataToResponse,
+                FileDatas = filesDataToResponse,
             };
         }
 
@@ -80,14 +80,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<FileDataResponseServer> ConvertFileResponse(FileDataServer fileDataServer)
         {
-            var filesDataSourceTasks = fileDataServer.FileDataSourceServer?.Select(fileData => ConvertFileDataSourceResponse(fileData));
+            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(fileData => ConvertFileDataSourceResponse(fileData));
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);
 
             return new FileDataResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                FileDataSourceResponseServer = filesDataSource,
+                FileDatasSourceResponseServer = filesDataSource,
                 FileConvertErrorType = fileDataServer.FileConvertErrorTypes.ToList(),
             };
         }
@@ -102,6 +102,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             return new FileDataSourceResponseServer()
             {
                 FileName = Path.GetFileName(fileDataSourceServer.FilePath),
+                PaperSize = fileDataSourceServer.PaperSize,
+                PrinterName = fileDataSourceServer.PrinterName,
                 FileDataSource = fileDataSource,
             };
         }

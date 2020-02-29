@@ -195,7 +195,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (!_statusProcessingInformation.IsConverting)
             {
-                if (_filesInfoProject?.FilesInfo?.Any() == true)
+                if (_filesInfoProject?.FileDatas?.Any() == true)
                 {
                     FilesDataRequestClient filesDataRequest = await PrepareFilesToSending();
                     if (filesDataRequest.IsValid)
@@ -278,15 +278,15 @@ namespace GadzhiModules.Infrastructure.Implementations
             FilesDataResponseClient filesDataResponse = await _fileConvertingClientService.
                                                         Operations.GetCompleteFiles(_filesInfoProject.Id);
 
-            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
+            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark. 
                                          GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
             _filesInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
             var filesStatusWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseAndWritten(filesDataResponse);
-
             _filesInfoProject.ChangeFilesStatus(filesStatusWrite);
 
+            await _fileConvertingClientService.Operations.SetFilesDataLoadedByClient(_filesInfoProject.Id);
         }
 
         /// <summary>

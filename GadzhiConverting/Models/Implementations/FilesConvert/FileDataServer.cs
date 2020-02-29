@@ -44,7 +44,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             StatusProcessing = StatusProcessing.InQueue;
 
             _fileConvertErrorTypes = new List<FileConvertErrorType>(fileConvertErrorType);
-            FileDataSourceServer = new List<FileDataSourceServer>();
+            FileDatasSourceServer = new List<FileDataSourceServer>();
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Путь и тип отковенртированных файлов
         /// </summary>
-        public IEnumerable<FileDataSourceServer> FileDataSourceServer { get; set; }
+        public IEnumerable<FileDataSourceServer> FileDatasSourceServer { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла

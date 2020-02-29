@@ -14,6 +14,6 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
         /// Промежуточные данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IList<FileDataIntermediateResponseServer> FilesData { get; set; }
+        public IList<FileDataIntermediateResponseServer> FileDatas { get; set; }
     }
 }

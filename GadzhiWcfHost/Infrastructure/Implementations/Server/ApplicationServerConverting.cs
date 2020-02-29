@@ -50,7 +50,12 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// </summary>
         public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse) =>      
                 await _filesDataServerService.UpdateFromResponse(filesDataResponse);
-        
+
+        /// <summary>
+        /// Удалить все устаревшие пакеты
+        /// </summary>      
+        public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
+                await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID

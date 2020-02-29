@@ -4,6 +4,7 @@ using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
+using GadzhiMicrostation.Models.Implementations.FilesData;
 using GadzhiMicrostation.Models.Interfaces;
 using MicroStationDGN;
 using System;
@@ -101,28 +102,17 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
         /// </summary>       
-        public void CreatePdfInDesingFile(string filePath)
+        public IEnumerable<FileDataSourceMicrostation> CreatePdfInDesingFile(string filePath)
         {
             if (Stamps.Any())
             {
-                foreach (var stamp in Stamps)
-                {
-                    ApplicationMicrostation.LoggerMicrostation.ShowMessage($"Обработка штампа {stamp.Name}");
-                    stamp.CompressFieldsRanges();
-
-                    stamp.DeleteSignaturesPrevious();
-                    stamp.InsertSignatures();
-
-                    ApplicationMicrostation.LoggerMicrostation.ShowMessage($"Создание PDF для штампа {stamp.Name}");
-                    CreatePdfByStamp(stamp, filePath);
-
-                    stamp.DeleteSignaturesInserted();
-                }
+                return Stamps?.Select(stamp => CreatePdfWithSignatures(stamp, filePath));
             }
             else
             {
                 ApplicationMicrostation.ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.StampNotFound,
-                                                     $"Штапы в файле {_microstationProject.FileDataMicrostation.FileName} не найдены"));
+                                                     $"Штампы в файле {_microstationProject.FileDataMicrostation.FileName} не найдены"));
+                return null;
             }
         }
 
@@ -135,14 +125,36 @@ namespace GadzhiMicrostation.Microstation.Implementations
         }
 
         /// <summary>
+        /// Создать PDF для штампа, вставить подписи
+        /// </summary>       
+        private FileDataSourceMicrostation CreatePdfWithSignatures(IStamp stamp, string filePath)
+        {
+            ApplicationMicrostation.LoggerMicrostation.ShowMessage($"Обработка штампа {stamp.Name}");
+            stamp.CompressFieldsRanges();
+
+            stamp.DeleteSignaturesPrevious();
+            stamp.InsertSignatures();
+
+            ApplicationMicrostation.LoggerMicrostation.ShowMessage($"Создание PDF для штампа {stamp.Name}");
+            FileDataSourceMicrostation fileDataSourceMicrostation = CreatePdfByStamp(stamp, filePath);
+
+            stamp.DeleteSignaturesInserted();
+
+            return fileDataSourceMicrostation;
+        }
+
+        /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        private void CreatePdfByStamp(IStamp stamp, string filePath)
+        private FileDataSourceMicrostation CreatePdfByStamp(IStamp stamp, string filePath)
         {
             if (stamp != null)
             {
                 CreatePdf(filePath, stamp.PaperSize, stamp.Range, stamp.Orientation, stamp.UnitScale,
                           _microstationProject.FileDataMicrostation.ColorPrint);
+
+                return new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf, stamp.PaperSize,
+                                                      _microstationProject.PrintersInformation.PdfPrinter.PrinterName);
             }
             else
             {

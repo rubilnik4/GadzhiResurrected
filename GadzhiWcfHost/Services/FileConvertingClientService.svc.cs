@@ -30,40 +30,32 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Сохранить файлы для конвертации в системе и отправить отчет
         /// </summary>      
-        public async Task<FilesDataIntermediateResponseClient> SendFiles(FilesDataRequestClient filesDataRequest)
-        {
-            var filesDataIntermediateResponse = await _applicationClientConverting.QueueFilesDataAndGetResponse(filesDataRequest);
-
-            return filesDataIntermediateResponse;
-        }
+        public async Task<FilesDataIntermediateResponseClient> SendFiles(FilesDataRequestClient filesDataRequest) =>
+                await _applicationClientConverting.QueueFilesDataAndGetResponse(filesDataRequest);
 
         /// <summary>
         /// Проверить статус файлов по Id номеру
         /// </summary>      
-        public async Task<FilesDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid id)
-        {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _applicationClientConverting.GetIntermediateFilesDataResponseById(id);
-
-            return filesDataIntermediateResponse;
-        }
+        public async Task<FilesDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid id) =>
+                await _applicationClientConverting.GetIntermediateFilesDataResponseById(id);
 
         /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
-        public async Task<FilesDataResponseClient> GetCompleteFiles(Guid id)
-        {
-            FilesDataResponseClient filesDataResponse = await _applicationClientConverting.GetFilesDataResponseByID(id);
+        public async Task<FilesDataResponseClient> GetCompleteFiles(Guid id) =>
+                await _applicationClientConverting.GetFilesDataResponseByID(id);
 
-            return filesDataResponse;
-        }
+        /// <summary>
+        /// Установить отметку о получении клиентом пакета
+        /// </summary>       
+        public async Task SetFilesDataLoadedByClient(Guid filesDataId) =>
+              await _applicationClientConverting.SetFilesDataLoadedByClient(filesDataId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        public async Task AbortConvertingById(Guid id)
-        {
-            await _applicationClientConverting.AbortConvertingById(id);
-        }
+        public async Task AbortConvertingById(Guid id) => await _applicationClientConverting.AbortConvertingById(id);
+       
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

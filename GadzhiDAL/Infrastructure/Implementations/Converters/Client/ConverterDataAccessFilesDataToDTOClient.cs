@@ -31,7 +31,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         {
             if (filesDataEntity != null)
             {
-                var filesDataTasks = filesDataEntity.FilesData?.AsQueryable()?.
+                var filesDataTasks = filesDataEntity.FileDataEntities?.AsQueryable()?.
                                      Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData));
                 var filesData = await Task.WhenAll(filesDataTasks);
 
@@ -39,7 +39,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
                     StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                    FilesData = filesData,
+                    FileDatas = filesData,
                     FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
                 };
             }
@@ -54,7 +54,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         {
             if (filesDataEntity != null)
             {
-                var filesDataTasks = filesDataEntity.FilesData?.AsQueryable()?.
+                var filesDataTasks = filesDataEntity.FileDataEntities?.AsQueryable()?.
                                      Select(fileData => ConvertFileDataAccessToResponse(fileData));
                 var filesData = await Task.WhenAll(filesDataTasks);
 
@@ -62,7 +62,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
                     StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                    FilesData = filesData,
+                    FileDatas = filesData,
                 };
             }
 
@@ -74,19 +74,26 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>
         private async Task<FileDataIntermediateResponseClient> ConvertFileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
         {
-            var fileConvertErrorType = await fileDataEntity.FileConvertErrorType.AsQueryable().ToListAsync();
-            if (!CheckStatusProcessing.CompletedStatusProcessingServer.Contains(fileDataEntity.StatusProcessing) &&
-                !fileDataEntity.FileConvertErrorType.Any())
+            if (fileDataEntity != null)
             {
-                fileConvertErrorType = new List<FileConvertErrorType> { FileConvertErrorType.UnknownError };
-            }
+                var fileConvertErrorType = await fileDataEntity.FileConvertErrorType.AsQueryable().ToListAsync();
+                if (!CheckStatusProcessing.CompletedStatusProcessingServer.Contains(fileDataEntity.StatusProcessing) &&
+                    !fileDataEntity.FileConvertErrorType.Any())
+                {
+                    fileConvertErrorType = new List<FileConvertErrorType> { FileConvertErrorType.UnknownError };
+                }
 
-            return new FileDataIntermediateResponseClient()
+                return new FileDataIntermediateResponseClient()
+                {
+                    FilePath = fileDataEntity.FilePath,
+                    StatusProcessing = fileDataEntity.StatusProcessing,
+                    FileConvertErrorType = fileConvertErrorType,
+                };
+            }
+            else
             {
-                FilePath = fileDataEntity.FilePath,
-                StatusProcessing = fileDataEntity.StatusProcessing,
-                FileConvertErrorType = fileConvertErrorType,
-            };
+                throw new ArgumentNullException(nameof(fileDataEntity));
+            }
         }
 
         /// <summary>
@@ -94,16 +101,23 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>
         private async Task<FileDataResponseClient> ConvertFileDataAccessToResponse(FileDataEntity fileDataEntity)
         {
-            var fileDataSourceResponseClient = await fileDataEntity.FileDataSourceEntity.AsQueryable().
-                                               Select(fileData => ConvertFileDataSourceResponse(fileData)).ToListAsync();
-
-            return new FileDataResponseClient()
+            if (fileDataEntity != null)
             {
-                FilePath = fileDataEntity.FilePath,
-                StatusProcessing = fileDataEntity.StatusProcessing,
-                FileDataSourceResponseClient = fileDataSourceResponseClient,
-                FileConvertErrorType = fileDataEntity.FileConvertErrorType.AsQueryable().ToList(),
-            };
+                var fileDataSourceResponseClient = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().
+                                                   Select(fileData => ConvertFileDataSourceResponse(fileData)).ToListAsync();
+
+                return new FileDataResponseClient()
+                {
+                    FilePath = fileDataEntity.FilePath,
+                    StatusProcessing = fileDataEntity.StatusProcessing,
+                    FileDatasSourceResponseClient = fileDataSourceResponseClient,
+                    FileConvertErrorType = fileDataEntity.FileConvertErrorType.AsQueryable().ToList(),
+                };
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(fileDataEntity));
+            }
         }
 
         /// <summary>

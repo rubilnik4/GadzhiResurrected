@@ -61,9 +61,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             {
                 _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() =>
                     {
-                        ActiveDesignFile.CreatePdfInDesingFile(filePath);
-                        _microstationProject.FileDataMicrostation.
-                            AddConvertedFilePath(new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf));
+                       var fileDataSourcesMicrostation = ActiveDesignFile.CreatePdfInDesingFile(filePath);
+                        _microstationProject.FileDataMicrostation.AddRangeConvertedFilePath(fileDataSourcesMicrostation);
                     },
                     errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                              $"Ошибка сохранения файла PDF {filePath}"));

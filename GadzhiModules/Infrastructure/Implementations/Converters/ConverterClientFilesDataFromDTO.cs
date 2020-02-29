@@ -49,7 +49,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         public FilesStatus ConvertToFilesStatusFromIntermediateResponse(FilesDataIntermediateResponseClient filesDataIntermediateResponse)
         {
             var filesDataStatus = filesDataIntermediateResponse?.
-                                  FilesData?.
+                                  FileDatas?.
                                   Select(fileResponse => ConvertToFileStatusFromIntermediateResponse(fileResponse));
 
             FilesQueueStatus filesQueueStatus = ConvertToFilesQueueInfoFromResponse(filesDataIntermediateResponse?.
@@ -90,7 +90,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private IEnumerable<FileStatus> ConvertToFilesStatusFromResponse(FilesDataResponseClient filesDataResponse)
         {
             var filesStatus = filesDataResponse?.
-                                  FilesData?.
+                                  FileDatas?.
                                   Select(fileResponse => ConvertToFileStatusFromResponse(fileResponse));
             return filesStatus;
         }
@@ -101,7 +101,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<IEnumerable<FileStatus>> ConvertToFilesStatusFromResponseAndSaveFiles(FilesDataResponseClient filesDataResponse)
         {
             var filesStatusTask = filesDataResponse?.
-                                  FilesData?.
+                                  FileDatas?.
                                   Select(fileResponse => ConvertToFileStatusFromResponseAndSaveFile(fileResponse));
             var filesStatus = await Task.WhenAll(filesStatusTask);
             return filesStatus;
@@ -141,12 +141,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         private async Task<IEnumerable<FileConvertErrorType>> SaveFilesDataSourceFromDTOResponse(FileDataResponseClient fileDataResponse)
         {
-            if (fileDataResponse.FileDataSourceResponseClient != null)
+            if (fileDataResponse.FileDatasSourceResponseClient != null)
             {
                 string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
                 string convertingDirectoryName = Path.Combine(fileDirectoryName, _projectSettings.DirectoryForSavingConvertedFiles);
 
-                var fileConvertErrorTypeTasks = fileDataResponse.FileDataSourceResponseClient?.
+                var fileConvertErrorTypeTasks = fileDataResponse.FileDatasSourceResponseClient?.
                                                 Select(fileData => SaveFileDataSourceFromDTOResponse(fileData, convertingDirectoryName));
                 return await Task.WhenAll(fileConvertErrorTypeTasks);
             }
@@ -169,7 +169,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                                                                               fileExtension.ToUpper(CultureInfo.CurrentCulture));
             if (!string.IsNullOrWhiteSpace(directoryPath))
             {
-                if (fileDataSourceResponseClient.FileDataSource.Count == 0)
+                if (fileDataSourceResponseClient.FileDataSource.Count != 0)
                 {
                     string filePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
                     await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>

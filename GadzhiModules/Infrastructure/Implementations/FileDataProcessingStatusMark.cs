@@ -54,7 +54,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public Task<FilesStatus> GetFilesInSending()
         {
             var filesInSending = _filesInfoProject?.
-                                 FilesInfo?.
+                                 FileDatas?.
                                  Select(file => new FileStatus(file.FilePath,
                                                                StatusProcessing.Sending,
                                                                FileConvertErrorType.IncorrectFileName));
@@ -72,7 +72,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
             var filesNotFound = _filesInfoProject?.
-                                FilesInfoPath.
+                                FileDatasPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath,
                                                                   StatusProcessing.End,
@@ -119,7 +119,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public async Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequestClient filesDataRequest,
                                                                                FilesDataIntermediateResponseClient filesDataIntermediateResponse)
         {
-            var filesNotFound = GetFilesNotFound(filesDataRequest?.FilesData);
+            var filesNotFound = GetFilesNotFound(filesDataRequest?.FileDatas);
             var filesChangedStatus = GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             await Task.WhenAll(filesNotFound, filesChangedStatus);
 

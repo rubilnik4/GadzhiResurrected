@@ -44,32 +44,27 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// <summary>
         /// Поставить файлы в очередь для обработки
         /// </summary>
-        private async Task QueueFilesData(FilesDataRequestClient filesDataRequest)
-        {
-            await _filesDataClientService.QueueFilesData(filesDataRequest);
-        }
+        private async Task QueueFilesData(FilesDataRequestClient filesDataRequest) =>      
+                await _filesDataClientService.QueueFilesData(filesDataRequest);
+       
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по Id номеру
         /// </summary>
-        public async Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId)
-        {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse =
-                    await _filesDataClientService.GetFilesDataIntermediateResponseById(filesDataId);
-
-            return filesDataIntermediateResponse;
-        }
+        public async Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId) =>      
+                await _filesDataClientService.GetFilesDataIntermediateResponseById(filesDataId);       
 
         /// <summary>
         /// Получить отконвертированные файлы по Id номеру
         /// </summary>
-        public async Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataId)
-        {
-            FilesDataResponseClient filesDataResponse =
-                   await _filesDataClientService.GetFilesDataResponseById(filesDataId);
+        public async Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataId) =>
+               await _filesDataClientService.GetFilesDataResponseById(filesDataId);
 
-            return filesDataResponse;
-        }
+        /// <summary>
+        /// Установить отметку о получении клиентом пакета
+        /// </summary>       
+        public async Task SetFilesDataLoadedByClient(Guid filesDataId) =>
+              await _filesDataClientService.SetFilesDataLoadedByClient(filesDataId);
 
         /// <summary>
         /// Отмена операции по номеру ID

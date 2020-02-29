@@ -15,12 +15,8 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         public FilesDataEntityBase()
         {
             CreationDateTime = DateTime.Now;           
-            IdentityMachine = new IdentityMachine()
-            {
-                AttemptingConvertCount = 0,
-                IdentityLocalName = "",
-                IdentityServerName = "",
-            };
+            IdentityLocalName = "";
+            IdentityServerName = "";
         }
 
         /// <summary>
@@ -31,11 +27,24 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Время создания запроса на конвертирование
         /// </summary>
-        public virtual DateTime CreationDateTime { get; set; }      
+        public virtual DateTime CreationDateTime { get; set; }
 
         /// <summary>
-        /// Идентефикация устройства
+        /// Идентефикация имени локального пользователя
         /// </summary>
-        public virtual IdentityMachine IdentityMachine { get; set; }        
+        public virtual string IdentityLocalName { get; set; }
+
+        /// <summary>
+        /// Идентефикация имени сервера
+        /// </summary>
+        public virtual string IdentityServerName { get; set; }
+
+        /// <summary>
+        /// Установить идентефикатор
+        /// </summary>        
+        public virtual void SetId(Guid id)
+        {
+            Id = id.ToString();
+        }       
     }
 }

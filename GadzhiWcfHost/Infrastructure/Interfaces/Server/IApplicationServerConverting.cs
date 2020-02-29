@@ -26,6 +26,11 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         Task UpdateFromResponse(FilesDataResponseServer filesDataResponse);
 
         /// <summary>
+        /// Удалить все устаревшие пакеты
+        /// </summary>      
+        Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
+
+        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>         
         Task AbortConvertingById(Guid id);

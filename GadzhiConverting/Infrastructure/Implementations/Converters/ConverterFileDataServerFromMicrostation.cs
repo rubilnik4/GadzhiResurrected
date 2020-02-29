@@ -23,7 +23,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         {
             if (fileDataServer != null && fileDataMicrostation != null)
             {
-                fileDataServer.FileDataSourceServer = fileDataMicrostation.FileDataSourceMicrostation.
+                fileDataServer.FileDatasSourceServer = fileDataMicrostation.FileDataSourceMicrostation.
                                                          Select(fileData => ConvertingFileDataSourceFromMicrostation(fileData));
 
                 fileDataServer.AddRangeFileConvertErrorType(fileDataMicrostation.FileConvertErrorTypes.
@@ -33,11 +33,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         }
 
         /// <summary>
-        /// Преобразовать информацию о отконвертированных чертежах из мдуля Microstation в серверную часть
+        /// Преобразовать информацию о отконвертированных чертежах из модуля Microstation в серверную часть
         /// </summary>        
         private static FileDataSourceServer ConvertingFileDataSourceFromMicrostation(FileDataSourceMicrostation fileDataSourceMicrostation) =>
             new FileDataSourceServer(fileDataSourceMicrostation.FilePath,
-                                        ConvertingFileExtension(fileDataSourceMicrostation.FileExtentionMicrostation));
+                                     ConvertingFileExtension(fileDataSourceMicrostation.FileExtentionMicrostation),
+                                     fileDataSourceMicrostation.PaperSize,
+                                     fileDataSourceMicrostation.PrinterName);
 
         /// <summary>
         /// Преобразование расширений типов файлов  

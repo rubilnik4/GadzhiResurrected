@@ -26,6 +26,11 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
         Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataServerID);
 
         /// <summary>
+        /// Установить отметку о получении клиентом пакета
+        /// </summary>       
+        Task SetFilesDataLoadedByClient(Guid filesDataId);
+
+        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
         Task AbortConvertingById(Guid id);

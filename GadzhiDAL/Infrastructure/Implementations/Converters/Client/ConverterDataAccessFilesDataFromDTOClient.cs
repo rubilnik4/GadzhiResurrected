@@ -25,13 +25,13 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         {
             if (filesDataRequest != null)
             {
-                var filesDataAccessToConvert = filesDataRequest?.FilesData?.AsQueryable().
+                var filesDataAccessToConvert = filesDataRequest?.FileDatas?.AsQueryable().
                                                Select(fileDTO => ConvertToFileDataAccess(fileDTO));
                
                 var filesDataEntity = new FilesDataEntity();
                 filesDataEntity.SetId(filesDataRequest.Id);
-                filesDataEntity.IdentityMachine.IdentityLocalName = filesDataRequest.IdentityName;
-                filesDataEntity.SetFilesData(filesDataAccessToConvert);
+                filesDataEntity.IdentityLocalName = filesDataRequest.IdentityName;
+                filesDataEntity.SetFileDataEntities(filesDataAccessToConvert);
 
                 return filesDataEntity;
             }
@@ -47,7 +47,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 ColorPrint = fileDataRequest.ColorPrint,
                 FilePath = fileDataRequest.FilePath,
-                FileDataSource = fileDataRequest?.FileDataSource,
+                FileDataSourceClient = fileDataRequest?.FileDataSource,
             };
         }
 

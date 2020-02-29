@@ -15,29 +15,31 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>    
-        [OperationContract(IsInitiating = true,
-                           IsTerminating = false)]
+        [OperationContract(IsInitiating = true, IsTerminating = false)]
         Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName);
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary>      
-        [OperationContract(IsInitiating = false,
-                           IsTerminating = false)]
+        [OperationContract(IsInitiating = false, IsTerminating = false)]
         Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>  
-        [OperationContract(IsInitiating = false,
-                           IsTerminating = false)]
+        [OperationContract(IsInitiating = false, IsTerminating = false)]
         Task UpdateFromResponse(FilesDataResponseServer filesDataResponse);
+
+        /// <summary>
+        /// Удалить все устаревшие пакеты
+        /// </summary> 
+        [OperationContract(IsInitiating = false, IsTerminating = false)]
+        Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>   
-        [OperationContract(IsInitiating = false,
-                          IsTerminating = true)]
+        [OperationContract(IsInitiating = false, IsTerminating = true)]
         Task AbortConvertingById(Guid id);
     }
 }

@@ -30,7 +30,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Время через которое осуществляется проверка пакетов на сервере
         /// </summary>
         public int IntervalSecondsToServer => 5;
-       
+
+        /// <summary>
+        /// Время через которое осуществляется удаление ненужных пакетов на сервере
+        /// </summary>
+        public int IntervalHouresToDeleteUnusedPackages => 12;
+
         /// <summary>
         /// Получить имя компьютера
         /// </summary>

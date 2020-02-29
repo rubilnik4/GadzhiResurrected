@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Coordinates;
 using GadzhiMicrostation.Models.Enums;
+using GadzhiMicrostation.Models.Implementations.FilesData;
 using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
@@ -53,7 +54,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
         /// </summary>       
-        void CreatePdfInDesingFile(string filePath);
+        IEnumerable<FileDataSourceMicrostation> CreatePdfInDesingFile(string filePath);
 
         /// <summary>
         /// Создать файл типа DWG

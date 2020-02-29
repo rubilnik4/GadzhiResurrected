@@ -30,10 +30,8 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>           
-        public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)
-        {
-            return await _applicationServerConverting.GetFirstInQueuePackage(identityServerName);
-        }
+        public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)=>
+                await _applicationServerConverting.GetFirstInQueuePackage(identityServerName);       
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
@@ -41,13 +39,17 @@ namespace GadzhiWcfHost.Services
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse) =>
                 await _applicationServerConverting.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
 
-
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
         public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse) =>
                 await _applicationServerConverting.UpdateFromResponse(filesDataResponse);
 
+        /// <summary>
+        /// Удалить все устаревшие пакеты
+        /// </summary>      
+        public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
+                await _applicationServerConverting.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID

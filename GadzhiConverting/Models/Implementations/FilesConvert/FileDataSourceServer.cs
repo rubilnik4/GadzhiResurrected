@@ -11,13 +11,15 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// Отконвертированный файл серверной части
     /// </summary>
     public class FileDataSourceServer
-    {
-        public FileDataSourceServer(string filePath, FileExtension fileExtensionType)
+    {   
+        public FileDataSourceServer(string filePath, FileExtension fileExtensionType, string paperSize, string printerName)
         {
             if (!String.IsNullOrWhiteSpace(filePath))
             {
                 FilePath = filePath;
                 FileExtensionType = fileExtensionType;
+                PaperSize = paperSize;
+                PrinterName = printerName;
             }
             else
             {
@@ -34,7 +36,17 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Тип расширения файла
         /// </summary>
         public FileExtension FileExtensionType { get; }
+
+        /// <summary>
+        /// Формат печати
+        /// </summary>
+        public string PaperSize { get; }
+
+        /// <summary>
+        /// Имя принтера
+        /// </summary>
+        public string PrinterName { get; }
     }
 
- 
+
 }

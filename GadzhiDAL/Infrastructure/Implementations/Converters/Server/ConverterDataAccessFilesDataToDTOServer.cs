@@ -26,13 +26,13 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         {
             if (filesDataEntity != null)
             {
-                var filesData = await filesDataEntity.FilesData?.AsQueryable().
+                var filesData = await filesDataEntity.FileDataEntities?.AsQueryable().
                                       Select(fileData => ConvertFileDataAccessToRequest(fileData)).ToListAsync();              
                 return new FilesDataRequestServer()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
-                    AttemptingConvertCount = filesDataEntity.IdentityMachine.AttemptingConvertCount,
-                    FilesData = filesData,
+                    AttemptingConvertCount = filesDataEntity.AttemptingConvertCount,
+                    FileDatas = filesData,
                 };
             }
 
@@ -48,7 +48,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                FileDataSource = fileDataEntity.FileDataSource.AsQueryable().ToList(),
+                FileDataSource = fileDataEntity.FileDataSourceClient.AsQueryable().ToList(),
             };
         }
     }

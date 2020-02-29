@@ -14,8 +14,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         public FileDataEntity()
         {
             StatusProcessing = StatusProcessing.InQueue;
-
-            FileDataSourceEntity = new List<FileDataSourceEntity>();
         }
 
         /// <summary>
@@ -24,14 +22,14 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         public virtual StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
-        /// Конвертируемый Файл данных в формате zip GZipStream
+        /// Конвертируемый файл данных в формате zip GZipStream
         /// </summary>       
-        public virtual IList<byte> FileDataSource { get; set; }
+        public virtual IList<byte> FileDataSourceClient { get; set; }
 
         /// <summary>
         /// Файлы отконвертированных данных в формате zip GZipStream
         /// </summary>      
-        public virtual IList<FileDataSourceEntity> FileDataSourceEntity { get; protected set; }
+        public virtual IList<FileDataSourceEntity> FileDataSourceServerEntities { get; protected set; }
 
         /// <summary>
         /// Ссылка на родительский класс
@@ -41,9 +39,9 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
-        public virtual void SetFileDataSourceEntity(IEnumerable<FileDataSourceEntity> filesDataSourceEntity)
+        public virtual void SetFileDataSourceEntities(IEnumerable<FileDataSourceEntity> fileDataSourceEntities)
         {
-            FileDataSourceEntity = filesDataSourceEntity?.Select(fileDataSourceEntity =>
+            FileDataSourceServerEntities = fileDataSourceEntities?.Select(fileDataSourceEntity =>
             {
                 fileDataSourceEntity.FileDataEntity = this;
                 return fileDataSourceEntity;

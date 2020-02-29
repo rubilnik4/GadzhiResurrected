@@ -1,8 +1,10 @@
 ﻿using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Archive;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
+using GadzhiDAL.Infrastructure.Interfaces.Converters.Archive;
 using GadzhiDAL.Infrastructure.Interfaces.Converters.Client;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
@@ -35,13 +37,20 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>
         private readonly IConverterDataAccessFilesDataToDTOClient _converterDataAccessFilesDataToDTOClient;
 
+        /// <summary>
+        /// Конвертер в архивную версию
+        /// </summary>    
+        private readonly IConverterToArchive _сonverterToArchive;
+
         public FilesDataClientService(IUnityContainer container,
                                       IConverterDataAccessFilesDataFromDTOClient converterDataAccessFilesDataFromDTOClient,
-                                      IConverterDataAccessFilesDataToDTOClient converterDataAccessFilesDataToDTOClient)
+                                      IConverterDataAccessFilesDataToDTOClient converterDataAccessFilesDataToDTOClient,
+                                      IConverterToArchive сonverterToArchive)
         {
             _container = container;
             _converterDataAccessFilesDataFromDTOClient = converterDataAccessFilesDataFromDTOClient;
             _converterDataAccessFilesDataToDTOClient = converterDataAccessFilesDataToDTOClient;
+            _сonverterToArchive = сonverterToArchive;
         }
 
         /// <summary>
@@ -90,11 +99,29 @@ namespace GadzhiDAL.Services.Implementations
             {
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(id.ToString());
                 filesDataResponse = await _converterDataAccessFilesDataToDTOClient.ConvertFilesDataAccessToResponse(filesDataEntity);
+
+                await unitOfWork.CommitAsync();
             }
 
             return filesDataResponse;
         }
 
+        /// <summary>
+        /// Установить отметку о получении клиентом пакета. Переместить пакет в архив
+        /// </summary>       
+        public async Task SetFilesDataLoadedByClient(Guid id)
+        {
+            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
+            {
+                FilesDataEntity filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(id.ToString());
+
+                FilesDataArchiveEntity filesDataArchiveEntity = await _сonverterToArchive.ConvertFilesDataToArchive(filesDataEntity);
+                await unitOfWork.Session.SaveAsync(filesDataArchiveEntity);
+                await unitOfWork.Session.DeleteAsync(filesDataEntity);
+
+                await unitOfWork.CommitAsync();
+            }
+        }
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
@@ -114,23 +141,19 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить данные о количестве пакетов и файлов в очереди на конвертирование
         /// </summary>
-        private async Task<FilesQueueInfo> GetQueueCount(IUnitOfWork unityOfWork,
-                                                         FilesDataEntity filesDataEntity)
+        private async Task<FilesQueueInfo> GetQueueCount(IUnitOfWork unitOfWork, FilesDataEntity filesDataEntity)
         {
-            var filesDataTask = unityOfWork.Session.Query<FilesDataEntity>().
+            var filesDataTask = unitOfWork.Session.Query<FilesDataEntity>().
                                                     Where(package => filesDataEntity != null &&
                                                                      !CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(package.StatusProcessingProject) &&
                                                                      package.CreationDateTime < filesDataEntity.CreationDateTime);
 
             int packagesInQueueCount = await filesDataTask?.CountAsync();
-            int filesInQueueCount = await filesDataTask?.SelectMany(package => package.FilesData).
+            int filesInQueueCount = await filesDataTask?.SelectMany(package => package.FileDataEntities).
                                                          Where(file => !CheckStatusProcessing.CompletedStatusProcessingServer.Contains(file.StatusProcessing)).
                                                          CountAsync();
 
-            return new FilesQueueInfo(filesInQueueCount,
-                                      packagesInQueueCount);
-
+            return new FilesQueueInfo(filesInQueueCount, packagesInQueueCount);
         }
-
     }
 }

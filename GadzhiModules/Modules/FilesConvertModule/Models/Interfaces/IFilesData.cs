@@ -26,12 +26,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        IReadOnlyList<FileData> FilesInfo { get; }
+        IReadOnlyList<FileData> FileDatas { get; }
 
         /// <summary>
         /// Пути конвертируемых файлов
         /// </summary>     
-        IEnumerable<string> FilesInfoPath { get; }
+        IEnumerable<string> FileDatasPath { get; }
 
         /// <summary>
         /// Статус выполнения проекта

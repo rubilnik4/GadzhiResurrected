@@ -4,7 +4,7 @@ using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using NHibernate.Type;
 
-namespace GadzhiDAL.Mappings.FilesConvert
+namespace GadzhiDAL.Mappings.FilesConvert.Main
 {
     /// <summary>
     /// Структура в БД для конвертируемого файла
@@ -15,6 +15,8 @@ namespace GadzhiDAL.Mappings.FilesConvert
         {
             Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.FileName).Not.Nullable().Default("");
+            Map(x => x.PaperSize).Not.Nullable().Default("");
+            Map(x => x.PrinterName).Not.Nullable().Default("");
             Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();
             References(x => x.FileDataEntity);
         }

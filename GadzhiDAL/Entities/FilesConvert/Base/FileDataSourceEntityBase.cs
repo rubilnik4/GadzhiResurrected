@@ -19,6 +19,16 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Имя и расширение файла
         /// </summary>       
-        public virtual string FileName { get; set; } 
+        public virtual string FileName { get; set; }
+
+        /// <summary>
+        /// Формат печати
+        /// </summary>
+        public virtual string PaperSize { get; set; }
+
+        /// <summary>
+        /// Имя принтера
+        /// </summary>
+        public virtual string PrinterName { get; set; }
     }
 }
