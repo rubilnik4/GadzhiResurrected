@@ -14,9 +14,8 @@ namespace GadzhiDAL.Mappings.FilesConvert.Archive
             Map(x => x.CreationDateTime).Not.Nullable();        
             Map(x => x.IdentityLocalName).Not.Nullable().Default("");
             Map(x => x.IdentityServerName).Not.Nullable().Default("");           
-            HasMany(x => x.FileDataArchiveEntities)
-                    .Inverse()
-                    .Cascade.All();
+            HasMany(x => x.FileDataArchiveEntities).
+                    Inverse().Cascade.All();
         }
     }
 }

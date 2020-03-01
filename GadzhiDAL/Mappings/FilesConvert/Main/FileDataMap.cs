@@ -16,9 +16,10 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.FilePath).Not.Nullable().Default("");         
             Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
-            Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();
-            HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType");
+            Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();          
             Map(x => x.FileDataSourceClient).CustomType<BinaryBlobType>().LazyLoad();
+            HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType").
+                                              Inverse().Cascade.All();
             HasMany(x => x.FileDataSourceServerEntities)
                     .Inverse()
                     .Cascade.All();

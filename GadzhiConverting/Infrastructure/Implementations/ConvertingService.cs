@@ -52,6 +52,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
         /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
         /// Идентефикатор конвертируемого пакета
         /// </summary>
         private Guid? _idPackage;
@@ -62,7 +67,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
                                  IMessageAndLoggingService messageAndLoggingService,
-                                 IExecuteAndCatchErrors executeAndCatchErrors)
+                                 IExecuteAndCatchErrors executeAndCatchErrors,
+                                 IFileSystemOperations fileSystemOperations)
         {
             _convertingFileData = convertingFileData;
             _projectSettings = projectSettings;
@@ -71,6 +77,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
             _messageAndLoggingService = messageAndLoggingService;
             _executeAndCatchErrors = executeAndCatchErrors;
+            _fileSystemOperations = fileSystemOperations;
 
             _idPackage = null;
         }
@@ -94,6 +101,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             else
             {
                 await CheckAndDeleteUnusedPackagesOnDataBase();
+                await DeleteAllUnusedCovertedDataOnDisk();
+
                 await QueueIsEmpty();
             }
         }
@@ -234,12 +243,27 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             DateTime dateTimeNow = DateTime.Now;
             TimeSpan timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedDataCheck).Ticks);
-            if (timeElapsed.TotalSeconds > _projectSettings.IntervalHouresToDeleteUnusedPackages)
+            if (timeElapsed.TotalHours > _projectSettings.IntervalHouresToDeleteUnusedPackages)
             {
+                _messageAndLoggingService.ShowMessage("Очистка неиспользуемых пакетов...");
                 await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
-                Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
+                Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);               
             }
+        }
 
+        /// <summary>
+        /// Очистить папку с отконвертированными файлами на жестком диске
+        /// </summary>
+        private async Task DeleteAllUnusedCovertedDataOnDisk()
+        {
+            DateTime dateTimeNow = DateTime.Now;
+            TimeSpan timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.ConvertingDataFolderCheck).Ticks);
+            if (timeElapsed.TotalHours > _projectSettings.IntervalHouresToDeleteUnusedPackages)
+            {
+                _messageAndLoggingService.ShowMessage("Очистка пространства на жестком диске...");
+                await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(_projectSettings.ConvertingDirectory));
+                Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
+            }
         }
 
         #region IDisposable Support

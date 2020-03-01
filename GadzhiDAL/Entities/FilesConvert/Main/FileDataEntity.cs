@@ -13,7 +13,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     {
         public FileDataEntity()
         {
-            StatusProcessing = StatusProcessing.InQueue;
+            StatusProcessing = StatusProcessing.InQueue;           
         }
 
         /// <summary>
@@ -25,6 +25,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// Конвертируемый файл данных в формате zip GZipStream
         /// </summary>       
         public virtual IList<byte> FileDataSourceClient { get; set; }
+
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        public virtual IList<FileConvertErrorType> FileConvertErrorType { get; set; }
 
         /// <summary>
         /// Файлы отконвертированных данных в формате zip GZipStream

@@ -56,7 +56,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить вложенные папки
         /// </summary>        
-        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);       
+        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
 
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
@@ -93,6 +93,25 @@ namespace GadzhiCommon.Infrastructure.Implementations
                                                      IsFileExist(f));
 
             return await Task.FromResult(allFilePaths);
+        }
+
+        /// <summary>
+        /// Удалить всю информацию из папки
+        /// </summary>      
+        public void DeleteAllDataInDirectory(string directoryPath)
+        {
+            if (!String.IsNullOrWhiteSpace(directoryPath) && Directory.Exists(directoryPath))
+            {
+                var directoryInfo = new DirectoryInfo(directoryPath);
+                foreach (FileInfo file in directoryInfo.EnumerateFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in directoryInfo.EnumerateDirectories())
+                {
+                    dir.Delete(true);
+                }
+            }
         }
 
         /// <summary>
@@ -165,7 +184,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public string CreateFolderByName(string startingPath, string folderName)
         {
             bool isCreated = false;
-            if (startingPath?.EndsWith("\\",  StringComparison.Ordinal) == false)
+            if (startingPath?.EndsWith("\\", StringComparison.Ordinal) == false)
             {
                 startingPath += "\\";
             }
@@ -178,6 +197,6 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
 
             return isCreated ? createdPath : null;
-        }        
+        }
     }
 }

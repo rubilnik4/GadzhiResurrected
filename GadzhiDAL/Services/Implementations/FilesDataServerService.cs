@@ -84,7 +84,7 @@ namespace GadzhiDAL.Services.Implementations
                                                       LoadAsync<FilesDataEntity>(filesDataIntermediateResponse.Id.ToString());
 
                     statusProcessingProject = filesDataEntity.StatusProcessingProject;
-                    if (await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
+                    if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
                     {
                         filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
                                            UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, filesDataIntermediateResponse);
@@ -108,7 +108,7 @@ namespace GadzhiDAL.Services.Implementations
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
                                                       LoadAsync<FilesDataEntity>(filesDataResponse.Id.ToString());
 
-                    if (await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
+                    if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
                     {
                         filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
                                           UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
@@ -126,10 +126,12 @@ namespace GadzhiDAL.Services.Implementations
         {
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
-                await unitOfWork.Session.Query<FilesDataArchiveEntity>().
-                                         //Where(fileData => fileData.CreationDateTime < dateDeletion).
-                                         DeleteAsync(default);
-
+                var filesDataEntity = await unitOfWork.Session.Query<FilesDataEntity>()?.
+                                            Where(filesData => filesData.CreationDateTime < dateDeletion).ToListAsync();
+                foreach (var fileData in filesDataEntity)
+                {
+                    await unitOfWork.Session.DeleteAsync(fileData);
+                }
                 await unitOfWork.CommitAsync();
             }
         }

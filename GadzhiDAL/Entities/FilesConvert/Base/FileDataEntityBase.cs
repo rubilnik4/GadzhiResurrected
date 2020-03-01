@@ -9,12 +9,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
     public abstract class FileDataEntityBase : EntityBase<int>
-    {
-        public FileDataEntityBase()
-        {           
-            FileConvertErrorType = new List<FileConvertErrorType>();
-        }
-
+    {       
         /// <summary>
         /// Идентефикатор
         /// </summary>
@@ -30,9 +25,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// </summary>       
         public virtual ColorPrint ColorPrint { get; set; }       
 
-        /// <summary>
-        /// Тип ошибки при конвертации файла
-        /// </summary>
-        public virtual IList<FileConvertErrorType> FileConvertErrorType { get; set; }
+        
     }
 }

@@ -59,7 +59,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
                 {
                     ColorPrint = fileDataEntity.ColorPrint,
                     FilePath = fileDataEntity.FilePath,
-                    FileConvertErrorType = fileDataEntity.FileConvertErrorType.AsQueryable().ToList()
+                    FileConvertErrorTypeArchive = fileDataEntity.FileConvertErrorType.AsQueryable().ToList()
                 };
                 var fileDataSourceServerEntities = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().
                                                    Select(fileDataSource => ConvertFileDataSourceToArchive(fileDataSource)).ToListAsync();

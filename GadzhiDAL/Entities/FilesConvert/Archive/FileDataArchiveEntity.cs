@@ -12,6 +12,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
     public class FileDataArchiveEntity : FileDataEntityBase
     {
         /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        public virtual IList<FileConvertErrorType> FileConvertErrorTypeArchive { get; set; }
+
+        /// <summary>
         /// Файлы отконвертированных данных в формате zip GZipStream
         /// </summary>      
         public virtual IList<FileDataSourceArchiveEntity> FileDataSourceServerArchiveEntities { get; protected set; }

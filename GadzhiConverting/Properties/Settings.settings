@@ -5,5 +5,8 @@
     <Setting Name="UnusedDataCheck" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:00</Value>
     </Setting>
+    <Setting Name="ConvertingDataFolderCheck" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">00:00:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

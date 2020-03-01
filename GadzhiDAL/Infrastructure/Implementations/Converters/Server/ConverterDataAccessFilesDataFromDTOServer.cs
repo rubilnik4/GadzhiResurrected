@@ -66,7 +66,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Обновить модель файла данных на основе промежуточного ответа
         /// </summary>      
         public FileDataEntity UpdateFileDataAccessFromIntermediateResponse(FileDataEntity fileDataEntity,
-                                                                                 FileDataIntermediateResponseServer fileDataIntermediateResponse)
+                                                                           FileDataIntermediateResponseServer fileDataIntermediateResponse)
         {
             if (fileDataEntity != null && fileDataIntermediateResponse != null)
             {

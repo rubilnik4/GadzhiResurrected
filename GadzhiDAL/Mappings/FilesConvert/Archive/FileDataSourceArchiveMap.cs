@@ -1,4 +1,4 @@
-﻿using FluentNHibernate.Mapping;
+﻿using FluentNHibernate.Mapping; 
 using GadzhiDAL.Entities.FilesConvert.Archive;
 using NHibernate.Type;
 

@@ -44,6 +44,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);
 
         /// <summary>
+        /// Удалить всю информацию из папки
+        /// </summary>      
+        void DeleteAllDataInDirectory(string directoryPath);
+
+        /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       
         string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension);
