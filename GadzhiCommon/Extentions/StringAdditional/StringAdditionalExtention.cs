@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace GadzhiMicrostation.Extensions.StringAdditional
+namespace GadzhiCommon.Extentions.StringAdditional
 {
     /// <summary>
     /// Методы расширения для строк
     /// </summary>
-    public static class StringAdditionalExtensions
+    public static class StringAdditionalExtentions
     {
         /// <summary>
         /// Удалить часть строки
@@ -60,7 +61,5 @@ namespace GadzhiMicrostation.Extensions.StringAdditional
         public static bool ContainsIgnoreCase(this string input, string substring) =>
             input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
     }
-
-
 
 }

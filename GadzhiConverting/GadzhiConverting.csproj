@@ -143,8 +143,8 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilesDataServer.cs" />
     <Compile Include="Models\Implementations\Printers\PrinterInformation.cs" />
     <Compile Include="Models\Implementations\Printers\PrintersInformation.cs" />
@@ -166,6 +166,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConvertingModels\ConvertingModels.csproj">
+      <Project>{30E39067-3AD7-433B-9494-6DBEE78302D6}</Project>
+      <Name>ConvertingModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiCommonServer\GadzhiCommonServer.csproj">
       <Project>{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}</Project>
       <Name>GadzhiCommonServer</Name>
@@ -185,6 +189,10 @@
     <ProjectReference Include="..\GadzhiWcfHost\GadzhiWcfHost.csproj">
       <Project>{ba2f2cab-9eeb-4f26-abb9-85c71fcb3175}</Project>
       <Name>GadzhiWcfHost</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GadzhiWord\GadzhiWord.csproj">
+      <Project>{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A}</Project>
+      <Name>GadzhiWord</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

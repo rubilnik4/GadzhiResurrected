@@ -71,6 +71,6 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        string CreateFolderByName(string startingPath, string folderName);
+        string CreateFolderByName(string startingPath, string folderName = "");
     }
 }

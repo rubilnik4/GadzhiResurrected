@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
     /// </summary>
-    public class FileDataServer : IEquatable<FileDataServer>
+    public class FileDataServer : IFileDataServer, IEquatable<FileDataServer>
     {
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -36,8 +37,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             {
                 throw new KeyNotFoundException(nameof(filePathServer));
             }
-            FileExtension = fileType;
-            FileName = fileName;
+            FileExtentionType = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];        
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
@@ -48,20 +48,9 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         }
 
         /// <summary>
-        /// Расширение файла
-        /// </summary>
-        public string FileExtension { get; }
-
-        /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtension FileExtensionType =>
-            ValidFileExtentions.DocAndDgnFileTypes[FileExtension.ToLower(CultureInfo.CurrentCulture)];
-
-        /// <summary>
-        /// Имя файла
-        /// </summary>
-        public string FileName { get; }
+        public FileExtention FileExtentionType { get; }
 
         /// <summary>
         /// Путь файла на сервере
@@ -69,14 +58,14 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public string FilePathServer { get; }
 
         /// <summary>
-        /// Имя файла на клиенте
-        /// </summary>
-        public string FileNameWithExtensionClient => Path.GetFileName(FilePathClient);
-
-        /// <summary>
         /// Путь файла на клиенте
         /// </summary>
         public string FilePathClient { get; }
+
+        /// <summary>
+        /// Имя файла на клиенте
+        /// </summary>
+        public string FileNameWithExtensionClient => Path.GetFileName(FilePathClient);       
 
         /// <summary>
         /// Цвет печати
@@ -94,9 +83,9 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public bool IsCompleted => CheckStatusProcessing.CompletedStatusProcessingServer.Contains(StatusProcessing);
 
         /// <summary>
-        /// Путь и тип отковенртированных файлов
+        /// Путь и тип отконвертированных файлов
         /// </summary>
-        public IEnumerable<FileDataSourceServer> FileDatasSourceServer { get; set; }
+        public IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла

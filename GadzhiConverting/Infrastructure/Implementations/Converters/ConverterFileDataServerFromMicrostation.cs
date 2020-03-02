@@ -44,8 +44,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразование расширений типов файлов  
         /// </summary>       
-        private static FileExtension ConvertingFileExtension(FileExtentionMicrostation fileExtentionMicrostation) =>
-            Enum.TryParse(fileExtentionMicrostation.ToString(), out FileExtension fileExtension) ?
+        private static FileExtention ConvertingFileExtension(FileExtentionMicrostation fileExtentionMicrostation) =>
+            Enum.TryParse(fileExtentionMicrostation.ToString(), out FileExtention fileExtension) ?
             fileExtension :
             throw new FormatException(nameof(fileExtentionMicrostation));
 

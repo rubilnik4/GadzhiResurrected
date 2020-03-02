@@ -9,6 +9,7 @@ using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Infrastructure.Implementations;
 using GadzhiMicrostation.Infrastructure.Interfaces;
+using GadzhiWord.DependencyInjection;
 using Unity;
 using Unity.Lifetime;
 
@@ -19,7 +20,7 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
     /// </summary>
     public static class BootStrapUnity
     {
-        public static void Start(IUnityContainer container)
+        public static void ConfigureContainer(IUnityContainer container)
         {
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
@@ -38,7 +39,10 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
 
             //microstation
-            container.RegisterType<IConvertingFileMicrostation, ConvertingFileMicrostation>(new HierarchicalLifetimeManager());            
+            container.RegisterType<IConvertingFileMicrostation, ConvertingFileMicrostation>(new HierarchicalLifetimeManager());
+
+            //word
+            BootStrapUnityWord.ConfigureContainer(container);
         }
     }
 }

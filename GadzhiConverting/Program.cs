@@ -16,7 +16,7 @@ namespace GadzhiConverting
             NativeMethods._handler += new NativeMethods.EventHandler(Handler);
             NativeMethods.SetConsoleCtrlHandler(NativeMethods._handler, true);
 
-            BootStrapUnity.Start(_container);          
+            BootStrapUnity.ConfigureContainer(_container);          
 
             //var micro = _container.Resolve<IConvertingFileMicrostation>();
             //string dir = Environment.CurrentDirectory + "\\01.dgn";

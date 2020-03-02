@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace GadzhiMicrostation.Models.Interfaces
 {
     /// <summary>
-    /// Модель хранения данных конвертации
+    /// Модель хранения данных конвертации Microstation
     /// </summary>
     public interface IMicrostationProject
     {

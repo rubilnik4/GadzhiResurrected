@@ -9,7 +9,7 @@ namespace GadzhiCommon.Enums.FilesConvert
     /// <summary>
     /// Типы допустимых расширений
     /// </summary>   
-    public enum FileExtension
+    public enum FileExtention
     {
         dgn,
         docx,

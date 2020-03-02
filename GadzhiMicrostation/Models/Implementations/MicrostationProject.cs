@@ -11,7 +11,7 @@ using System.IO;
 namespace GadzhiMicrostation.Models.Implementations
 {
     /// <summary>
-    /// Модель хранения данных конвертации
+    /// Модель хранения данных конвертации Microstation
     /// </summary>
     public class MicrostationProject : IMicrostationProject
     { 

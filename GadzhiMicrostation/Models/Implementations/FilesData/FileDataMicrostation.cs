@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        private readonly List<FileDataSourceMicrostation> _fileDataSourceMicrostationn;
+        private readonly List<FileDataSourceMicrostation> _fileDataSourceMicrostation;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
                                     string filePathClient,
                                     ColorPrintMicrostation colorPrint)
         {
-            _fileDataSourceMicrostationn = new List<FileDataSourceMicrostation>();
+            _fileDataSourceMicrostation = new List<FileDataSourceMicrostation>();
             _fileConvertErrorTypes = new List<ErrorMicrostationType>();
 
             if (!String.IsNullOrEmpty(filePathServer))
@@ -72,11 +72,6 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         public string FilePathServer { get; }
 
         /// <summary>
-        /// Имя файла на клиенте
-        /// </summary>
-        public string FileNameWithExtensionClient => Path.GetFileName(FilePathClient);
-
-        /// <summary>
         /// Путь файла на клиенте
         /// </summary>
         public string FilePathClient { get; }
@@ -89,7 +84,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        public IEnumerable<FileDataSourceMicrostation> FileDataSourceMicrostation => _fileDataSourceMicrostationn;
+        public IEnumerable<FileDataSourceMicrostation> FileDataSourceMicrostation => _fileDataSourceMicrostation;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -103,7 +98,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         {
             if (fileDataSourceMicrostation != null)
             {
-                _fileDataSourceMicrostationn.Add(fileDataSourceMicrostation);
+                _fileDataSourceMicrostation.Add(fileDataSourceMicrostation);
             }
             else
             {
@@ -118,7 +113,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         {
             if (fileDataSourcesMicrostation != null)
             {
-                _fileDataSourceMicrostationn.AddRange(fileDataSourcesMicrostation);
+                _fileDataSourceMicrostation.AddRange(fileDataSourcesMicrostation);
             }
             else
             {

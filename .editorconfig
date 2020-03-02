@@ -23,3 +23,6 @@ dotnet_diagnostic.CA1063.severity = none
 
 # CA1816: Dispose methods should call SuppressFinalize
 dotnet_diagnostic.CA1816.severity = none
+
+# CA2000: Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = none

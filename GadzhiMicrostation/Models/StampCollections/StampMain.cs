@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Extensions.StringAdditional;
+﻿using GadzhiMicrostation.Extentions.StringAdditional;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

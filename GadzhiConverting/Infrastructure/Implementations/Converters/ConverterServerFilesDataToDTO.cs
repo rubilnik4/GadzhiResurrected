@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Infrastructure.Interfaces;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
@@ -95,7 +96,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать список отконвертированных файлов в окончательный ответ
         /// </summary>
-        private async Task<FileDataSourceResponseServer> ConvertFileDataSourceResponse(FileDataSourceServer fileDataSourceServer)
+        private async Task<FileDataSourceResponseServer> ConvertFileDataSourceResponse(IFileDataSourceServer fileDataSourceServer)
         {
             var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataSourceServer.FilePath);
 

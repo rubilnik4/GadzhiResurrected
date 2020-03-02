@@ -181,12 +181,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        public string CreateFolderByName(string startingPath, string folderName)
+        public string CreateFolderByName(string startingPath, string folderName = "")
         {
             bool isCreated = false;
             if (startingPath?.EndsWith("\\", StringComparison.Ordinal) == false)
             {
                 startingPath += "\\";
+            }
+            if (!String.IsNullOrWhiteSpace(folderName) && !folderName.EndsWith("\\", StringComparison.Ordinal))
+            {
+                folderName += "\\";
             }
             string createdPath = startingPath + folderName + "\\";
 

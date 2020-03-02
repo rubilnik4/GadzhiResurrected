@@ -15,8 +15,7 @@ namespace GadzhiDAL.DependencyInjection
 {
     public static class GadzhiDALDependencyInjection
     {
-        public static void ConfigureContainer(IUnityContainer container,
-                                              string dataBasePath)
+        public static void ConfigureContainer(IUnityContainer container, string dataBasePath)
         {
             container
                  //регистрируем фабрику, синглтон

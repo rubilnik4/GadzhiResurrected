@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Implementations.Printers;
 using GadzhiMicrostation.Models.Enums;
@@ -43,7 +44,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать параметры принтера
         /// </summary>       
-        private static PrinterInformationMicrostation  PrinterServerToMicrostation(PrinterInformation printerInformation) =>
+        private static PrinterInformationMicrostation  PrinterServerToMicrostation(IPrinterInformation printerInformation) =>
            new PrinterInformationMicrostation(printerInformation.Name, printerInformation.PrefixSearchPaperSize);
     }
 }

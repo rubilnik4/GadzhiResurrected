@@ -14,3 +14,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:GadzhiDAL.Entities.FilesConvert.Main.FileDataEntity.FileDataSourceEntity")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:GadzhiDAL.Entities.FilesConvert.Main.FileDataSourceEntity.FileDataSource")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:GadzhiDAL.Entities.FilesConvert.Main.FilesDataEntity.FilesData")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:GadzhiDAL.Entities.FilesConvert.Main.FileDataEntity.FileConvertErrorType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:GadzhiDAL.Entities.FilesConvert.Main.FileDataEntity.FileDataSourceClient")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:GadzhiDAL.Entities.FilesConvert.Main.FileDataEntity.FileDataSourceServerEntities")]

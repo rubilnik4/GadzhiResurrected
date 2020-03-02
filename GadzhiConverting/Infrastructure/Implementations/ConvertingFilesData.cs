@@ -76,11 +76,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             if (fileDataServer.IsValidByAttemptingCount)
             {
-                if (fileDataServer.FileExtensionType == FileExtension.dgn)
+                if (fileDataServer.FileExtentionType == FileExtention.dgn)
                 {
                     fileDataServer = await ConvertFileDataMicrostation(fileDataServer);
                 }
-                else if (fileDataServer.FileExtensionType == FileExtension.docx)
+                else if (fileDataServer.FileExtentionType == FileExtention.docx)
                 {
                     await Task.Delay(2000);
 

@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
     /// <summary>
     /// Обработка и конвертирование файла DGN
     /// </summary>
-    public sealed class ConvertingFileMicrostation : IConvertingFileMicrostation
+    public class ConvertingFileMicrostation : IConvertingFileMicrostation
     {
         /// <summary>
         /// Контейнер для инверсии зависимости
@@ -34,14 +34,14 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         private readonly ILoggerMicrostation _loggerMicrostation;
 
         /// <summary>
-        /// Модель хранения данных конвертации
+        /// Модель хранения данных конвертации Microstation
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
         public ConvertingFileMicrostation()
         {
             _container = new UnityContainer();
-            BootStrapUnityMicrostation.Start(_container);
+            BootStrapUnityMicrostation.ConfigureContainer(_container);
 
             _applicationMicrostation = _container.Resolve<IApplicationMicrostation>();         
             _loggerMicrostation = _container.Resolve<ILoggerMicrostation>();
@@ -75,8 +75,6 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
             return _microstationProject.FileDataMicrostation;
         }
-
-
 
         /// <summary>
         /// Освободить элементы

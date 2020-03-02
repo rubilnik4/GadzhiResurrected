@@ -11,11 +11,11 @@ using Microsoft.Practices.Unity;
 namespace GadzhiMicrostation.DependencyInjection.BootStrapMicrostation
 {
     /// <summary>
-    /// Класс для регистрации зависимостей
+    /// Класс для регистрации зависимостей Microstation
     /// </summary>
     public static class BootStrapUnityMicrostation
     {
-        public static void Start(IUnityContainer container)
+        public static void ConfigureContainer(IUnityContainer container)
         {
             container.RegisterType<IMicrostationProject, MicrostationProject>(new HierarchicalLifetimeManager());
             container.RegisterType<IErrorMessagingMicrostation, ErrorMessagingMicrostation>(new HierarchicalLifetimeManager());          

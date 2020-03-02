@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Extensions.StringAdditional;
+﻿using GadzhiMicrostation.Extentions.StringAdditional;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;

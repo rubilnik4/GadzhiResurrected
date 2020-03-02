@@ -247,7 +247,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 _messageAndLoggingService.ShowMessage("Очистка неиспользуемых пакетов...");
                 await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
-                Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);               
+
+                Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -262,7 +264,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 _messageAndLoggingService.ShowMessage("Очистка пространства на жестком диске...");
                 await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(_projectSettings.ConvertingDirectory));
+
                 Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
+                Properties.Settings.Default.Save();
             }
         }
 

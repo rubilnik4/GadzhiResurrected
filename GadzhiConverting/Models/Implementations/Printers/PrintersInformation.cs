@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConvertingModels.Models.Interfaces.Printers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
     /// <summary>
     /// Информация о принтерах
     /// </summary>
-    public class PrintersInformation
+    public class PrintersInformation: IPrintersInformation
     {
         public PrintersInformation()
         {
@@ -19,6 +20,6 @@ namespace GadzhiConverting.Models.Implementations.Printers
         /// <summary>
         /// Список принтеров для печати PDF
         /// </summary>
-        public IEnumerable<PrinterInformation> PrintersPdf{ get; set; }
+        public IEnumerable<IPrinterInformation> PrintersPdf{ get; set; }
     }
 }
