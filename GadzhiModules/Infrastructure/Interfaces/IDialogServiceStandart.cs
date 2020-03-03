@@ -8,7 +8,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
     /// <summary>
     /// Стандартные диалоговые окна
     /// </summary>
-    public interface IDialogServiceStandard : IMessageAndLoggingService
+    public interface IDialogServiceStandard : IMessagingService
     {
         /// <summary>
         /// Выбор файлов

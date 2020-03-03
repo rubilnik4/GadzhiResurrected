@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
+namespace GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base
 {
     /// <summary>
     /// Класс содержащий промежуточные данные о конвертируемом файле

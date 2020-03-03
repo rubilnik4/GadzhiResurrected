@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiCommon.Models.Interfaces.Errors;
+using System;
 using System.Threading.Tasks;
 
 namespace GadzhiCommon.Infrastructure.Interfaces
@@ -12,16 +13,16 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
         void ExecuteAndHandleError(Action method,
-                                   Action ApplicationBeforeMethod = null,
-                                   Action ApplicationCatchMethod = null,
-                                   Action ApplicationFinallyMethod = null);
+                                   Action applicationBeforeMethod = null,
+                                   Func<IErrorConverting> applicationCatchMethod = null,
+                                   Action applicationFinallyMethod = null);
 
         /// <summary>
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
         Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
-                                        Action ApplicationBeforeMethod = null,
-                                        Action ApplicationCatchMethod = null,
-                                        Action ApplicationFinallyMethod = null);
+                                        Action applicationBeforeMethod = null,
+                                        Func<Task<IErrorConverting>> applicationCatchMethod = null,
+                                        Action applicationFinallyMethod = null);
     }
 }

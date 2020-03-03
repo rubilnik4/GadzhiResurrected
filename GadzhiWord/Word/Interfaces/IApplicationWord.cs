@@ -11,6 +11,9 @@ namespace GadzhiWord.Word.Interfaces
     /// </summary>
     public interface IApplicationWord
     {
-
+        /// <summary>
+        /// Загрузилась ли оболочка Microstation
+        /// </summary>
+        bool IsApplicationValid { get; }
     }
 }

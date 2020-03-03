@@ -17,35 +17,29 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
     /// Обработка и конвертирование файла DGN
     /// </summary>
     public class ConvertingFileMicrostation : IConvertingFileMicrostation
-    {
-        /// <summary>
-        /// Контейнер для инверсии зависимости
-        /// </summary>
-        private readonly IUnityContainer _container;
-
+    {       
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        private readonly IApplicationMicrostation _applicationMicrostation;      
-
-        /// <summary>
-        /// Отображение системных сообщений
-        /// </summary>
-        private readonly ILoggerMicrostation _loggerMicrostation;
+        private readonly IApplicationMicrostation _applicationMicrostation;        
 
         /// <summary>
         /// Модель хранения данных конвертации Microstation
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
-        public ConvertingFileMicrostation()
-        {
-            _container = new UnityContainer();
-            BootStrapUnityMicrostation.ConfigureContainer(_container);
+        /// <summary>
+        /// Класс для отображения изменений и логгирования
+        /// </summary>
+        private readonly IMessagingMicrostationService _messagingMicrostation;
 
-            _applicationMicrostation = _container.Resolve<IApplicationMicrostation>();         
-            _loggerMicrostation = _container.Resolve<ILoggerMicrostation>();
-            _microstationProject = _container.Resolve<IMicrostationProject>();
+        public ConvertingFileMicrostation(IApplicationMicrostation applicationMicrostation,
+                                          IMicrostationProject microstationProject,
+                                          IMessagingMicrostationService messagingMicrostation)
+        {            
+            _applicationMicrostation = applicationMicrostation;            
+            _microstationProject = microstationProject;
+            _messagingMicrostation = messagingMicrostation;
         }
 
         /// <summary>
@@ -57,16 +51,16 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
             if (_applicationMicrostation.IsApplicationValid)
             {
-                _loggerMicrostation.ShowMessage("Загрузка файла Microstation");
+                _messagingMicrostation.ShowAndLogMessage("Загрузка файла Microstation");
                 _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
                 _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                                                                                                 FileExtentionMicrostation.dgn));
 
-                _loggerMicrostation.ShowMessage("Создание файлов PDF");
+                _messagingMicrostation.ShowAndLogMessage("Создание файлов PDF");
                 _applicationMicrostation.CreatePdfFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                                                                                             FileExtentionMicrostation.pdf));
 
-                _loggerMicrostation.ShowMessage("Создание файла DWG");
+                _messagingMicrostation.ShowAndLogMessage("Создание файла DWG");
                 _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                                                                                                 FileExtentionMicrostation.dwg));
 
@@ -80,8 +74,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// Освободить элементы
         /// </summary>      
         public void Dispose()
-        {
-            _container?.Dispose();
+        {          
             _applicationMicrostation?.Dispose();
         }
 

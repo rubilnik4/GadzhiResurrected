@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiCommon.Models.TransferModels.FilesConvert.Base
+namespace GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base
 {
     /// <summary>
     /// Информация об отконвертированных файлах

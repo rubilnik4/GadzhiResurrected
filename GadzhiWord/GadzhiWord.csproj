@@ -112,18 +112,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyInjection\BootStrapUnityWord.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileWord.cs" />
+    <Compile Include="Infrastructure\Implementations\MessagingWordService.cs" />
+    <Compile Include="Infrastructure\Interfaces\IConvertingFileWord.cs" />
     <Compile Include="Models\Implementations\WordProject.cs" />
     <Compile Include="Models\Interfaces\IWordProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Word\Implementations\ApplicationWord.cs" />
     <Compile Include="Word\Interfaces\IApplicationWord.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Infrastructure\Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ConvertingModels\ConvertingModels.csproj">
       <Project>{30E39067-3AD7-433B-9494-6DBEE78302D6}</Project>

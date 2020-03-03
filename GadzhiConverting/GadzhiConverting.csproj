@@ -135,7 +135,6 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
-    <Compile Include="Infrastructure\Implementations\MessageAndLoggingService.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />

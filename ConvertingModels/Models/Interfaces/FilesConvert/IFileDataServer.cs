@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,11 +36,21 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        IReadOnlyList<FileConvertErrorType> FileConvertErrorTypes { get; }
+        IEnumerable<FileConvertErrorType> FileConvertErrorTypes { get; }
 
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
         IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
+
+        /// <summary>
+        /// Добавить ошибку
+        /// </summary>
+        void AddFileConvertErrorType(FileConvertErrorType errorConverting);
+
+        /// <summary>
+        /// Добавить ошибки
+        /// </summary>
+        void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrors);       
     }
 }

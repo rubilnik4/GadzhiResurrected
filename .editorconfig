@@ -26,3 +26,9 @@ dotnet_diagnostic.CA1816.severity = none
 
 # CA2000: Dispose objects before losing scope
 dotnet_diagnostic.CA2000.severity = none
+
+# CA2227: Collection properties should be read only
+dotnet_diagnostic.CA2227.severity = none
+
+# AD0002: Analyzer Driver Failure
+dotnet_diagnostic.AD0002.severity = none

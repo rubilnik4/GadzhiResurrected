@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations.FilesConvert;
@@ -16,7 +17,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessageAndLoggingService _messageAndLoggingService;
+        private readonly IMessagingService _messageAndLoggingService;
 
         /// <summary>
         /// Обработка и конвертирование файла DGN
@@ -28,7 +29,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly IProjectSettings _projectSettings;
 
-        public ConvertingFileData(IMessageAndLoggingService messageAndLoggingService, IConvertingFileMicrostation convertingFileMicrostation, IProjectSettings projectSettings)
+        public ConvertingFileData(IMessagingService messageAndLoggingService, IConvertingFileMicrostation convertingFileMicrostation, IProjectSettings projectSettings)
         {
             _messageAndLoggingService = messageAndLoggingService;
             _convertingFileMicrostation = convertingFileMicrostation;
@@ -61,7 +62,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private FileDataServer FileDataStartConverting(FileDataServer fileDataServer)
         {
-            _messageAndLoggingService.ShowMessage($"Конвертация файла {fileDataServer.FileNameWithExtensionClient}");
+            _messageAndLoggingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameWithExtensionClient}");
 
             fileDataServer.StatusProcessing = StatusProcessing.Converting;
 
@@ -88,8 +89,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             }
             else
             {
-                _messageAndLoggingService.ShowError(FileConvertErrorType.AttemptingCount,
-                                                    "Превышено количество попыток конвертирования файла");
+                _messageAndLoggingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.AttemptingCount,
+                                                          "Превышено количество попыток конвертирования файла"));
                 fileDataServer.AddFileConvertErrorType(FileConvertErrorType.AttemptingCount);
             }
 
@@ -115,7 +116,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Закончить конвертирование файла
         /// </summary>
         private FileDataServer FileDataEndConverting(FileDataServer fileDataServer)
-        {           
+        {
             fileDataServer.StatusProcessing = StatusProcessing.ConvertingComplete;
             return fileDataServer;
         }

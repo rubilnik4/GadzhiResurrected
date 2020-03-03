@@ -35,13 +35,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 }
                 else
                 {
-                    ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
+                    MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
                                                                       $"Не удалось установить принтер {printerInformation?.PrinterName}"));
                 }
             }
             else
             {
-                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
+                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
                                                                         $"Принтер {printerInformation?.PrinterName} не установлен в системе"));
             }
 
@@ -90,7 +90,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
+                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
                                                                            "Диапазон печати задан некорректно"));
                 return false;
             }
@@ -114,7 +114,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
+                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
                                                                           $"Формат печати {drawSize} не найден"));
                 return false;
             }

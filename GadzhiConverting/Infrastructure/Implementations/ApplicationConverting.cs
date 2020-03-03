@@ -25,7 +25,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessageAndLoggingService _messageAndLoggingService;
+        private readonly IMessagingService _messageAndLoggingService;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -39,7 +39,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         public ApplicationConverting(IConvertingService convertingService,
                                      IProjectSettings projectSettings,
-                                     IMessageAndLoggingService messageAndLoggingService,
+                                     IMessagingService messageAndLoggingService,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
         {
             _convertingService = convertingService;
@@ -62,7 +62,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         public void StartConverting()
         {
-            _messageAndLoggingService.ShowMessage("Запуск процесса конвертирования...");
+            _messageAndLoggingService.ShowAndLogMessage("Запуск процесса конвертирования...");
 
             _convertingUpdaterSubsriptions.Add(
                 Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
@@ -70,8 +70,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                            Subscribe(async _ =>
                                      await _executeAndCatchErrors.
                                      ExecuteAndHandleErrorAsync(_convertingService.ConvertingFirstInQueuePackage,
-                                                                ApplicationBeforeMethod: () => IsConverting = true,
-                                                                ApplicationFinallyMethod: () => IsConverting = false)));
+                                                                applicationBeforeMethod: () => IsConverting = true,
+                                                                applicationFinallyMethod: () => IsConverting = false)));
         }
 
         #region IDisposable Support

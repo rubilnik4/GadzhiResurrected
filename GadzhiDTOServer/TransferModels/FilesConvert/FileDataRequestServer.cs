@@ -1,4 +1,4 @@
-﻿using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
+﻿using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
 using System.Runtime.Serialization;
 
 namespace GadzhiDTOServer.TransferModels.FilesConvert

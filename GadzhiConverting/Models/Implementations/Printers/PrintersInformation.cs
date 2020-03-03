@@ -12,14 +12,20 @@ namespace GadzhiConverting.Models.Implementations.Printers
     /// </summary>
     public class PrintersInformation: IPrintersInformation
     {
-        public PrintersInformation()
+        //public PrintersInformation()
+        //    :this (new List<PrinterInformation>())
+        //{
+           
+        //}
+
+        public PrintersInformation(IEnumerable<IPrinterInformation> printersPdf)
         {
-            PrintersPdf =new List<PrinterInformation>();
+            PrintersPdf = printersPdf;
         }
 
         /// <summary>
         /// Список принтеров для печати PDF
         /// </summary>
-        public IEnumerable<IPrinterInformation> PrintersPdf{ get; set; }
+        public IEnumerable<IPrinterInformation> PrintersPdf{ get; }
     }
 }

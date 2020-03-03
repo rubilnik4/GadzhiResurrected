@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
@@ -216,7 +217,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private async Task ConvertingFiles()
         {
             await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
-                                             async () => await _applicationGadzhi.AbortPropertiesConverting());
+                                             async () =>
+                                             {
+                                                 await _applicationGadzhi.AbortPropertiesConverting();
+                                                 return new ErrorConverting(FileConvertErrorType.UnknownError, "Ошибка конвертирования файлов");
+                                             });
         }
 
         /// <summary>
@@ -326,7 +331,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Реализация Drag&Drop для ссылки на файлы
         /// </summary>       
         public void DragOver(IDropInfo dropInfo)
-        {         
+        {
             if (dropInfo?.Data is IDataObject dataObject)
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;

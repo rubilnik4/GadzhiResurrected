@@ -1,7 +1,10 @@
 ﻿using ChannelAdam.ServiceModel;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.Dialogs;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
@@ -208,7 +211,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 else
                 {
                     await AbortPropertiesConverting(false);
-                    _dialogServiceStandard.ShowMessage("Необходимо загрузить файлы для конвертирования");
+                    _dialogServiceStandard.ShowAndLogMessage("Необходимо загрузить файлы для конвертирования");
                 }
             }
         }
@@ -249,7 +252,12 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                     Subscribe(async _ => await _executeAndCatchErrors.
                                                                                ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
                                                                                                           () => IsIntermediateResponseInProgress = true,
-                                                                                                          async () => await AbortPropertiesConverting(false),
+                                                                                                          async () =>
+                                                                                                          {
+                                                                                                              await AbortPropertiesConverting(false);
+                                                                                                              return new ErrorConverting(FileConvertErrorType.Communication, 
+                                                                                                                     "Ошибка получения запроса");
+                                                                                                          },
                                                                                                           () => IsIntermediateResponseInProgress = false)));
         }
 
@@ -278,7 +286,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             FilesDataResponseClient filesDataResponse = await _fileConvertingClientService.
                                                         Operations.GetCompleteFiles(_filesInfoProject.Id);
 
-            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark. 
+            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
             _filesInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
@@ -315,7 +323,7 @@ namespace GadzhiModules.Infrastructure.Implementations
 
             ClearSubsriptions();
             _filesInfoProject?.ChangeAllFilesStatusAndMarkError();
-        }       
+        }
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования
@@ -335,7 +343,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             {
                 if (disposing)
                 {
-                    
+
                 }
                 AbortPropertiesConverting(true).ConfigureAwait(false);
 

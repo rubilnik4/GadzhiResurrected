@@ -7,11 +7,21 @@ namespace GadzhiMicrostation.Models.Implementations
     /// </summary>
     public class ErrorMicrostation
     {
+        public ErrorMicrostation(ErrorMicrostationType errorMicrostationType, string errorDescription)
+           : this(errorMicrostationType, errorDescription, null, null)
+        {
+
+        }
+
         public ErrorMicrostation(ErrorMicrostationType errorMicrostationType,
-                                 string errorDescription)
+                                 string errorDescription,
+                                 string exceptionMessage,
+                                 string stackTrace)
         {
             ErrorMicrostationType = errorMicrostationType;
-            ErrorDescription = errorDescription;
+            ErrorDescription = errorDescription ?? string.Empty;
+            ExceptionMessage = exceptionMessage;
+            StackTrace = stackTrace;
         }
 
         /// <summary>
@@ -23,5 +33,15 @@ namespace GadzhiMicrostation.Models.Implementations
         /// Описание ошибки
         /// </summary>
         public string ErrorDescription { get; }
+
+        /// <summary>
+        /// Исключение
+        /// </summary>
+        public string ExceptionMessage { get; }
+
+        /// <summary>
+        /// Стэк вызовов
+        /// </summary>
+        public string StackTrace { get; }
     }
 }

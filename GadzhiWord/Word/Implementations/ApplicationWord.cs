@@ -1,4 +1,7 @@
-﻿using GadzhiCommon.Infrastructure.Interfaces;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiWord.Factory;
 using GadzhiWord.Word.Interfaces;
 using Microsoft.Office.Interop.Word;
 using System;
@@ -20,10 +23,9 @@ namespace GadzhiWord.Word.Implementations
         /// </summary> 
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
-
         public ApplicationWord(IExecuteAndCatchErrors executeAndCatchErrors)
         {
-            _executeAndCatchErrors = executeAndCatchErrors;
+            _executeAndCatchErrors = executeAndCatchErrors;          
         }
 
         /// <summary>
@@ -40,13 +42,18 @@ namespace GadzhiWord.Word.Implementations
             {
                 if (_application == null)
                 {
-                    //_executeAndCatchErrors.ExecuteAndHandleError(() => _application = MicrostationInstance.Instance(),
-                    //                                      errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.ApplicationNotLoad,
-                    //                                                                               "Ошибка загрузки приложения Microstation"));
+                    _executeAndCatchErrors.ExecuteAndHandleError(() => _application = WordInstance.Instance(),
+                                          applicationCatchMethod:() => new ErrorConverting(FileConvertErrorType.ApplicationNotLoad,
+                                                                                       "Ошибка загрузки приложения Word"));
                 }
                 return _application;
             }
         }
+
+        /// <summary>
+        /// Загрузилась ли оболочка Microstation
+        /// </summary>
+        public bool IsApplicationValid => Application != null;
 
     }
 }

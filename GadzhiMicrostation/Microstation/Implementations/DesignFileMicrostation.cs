@@ -110,7 +110,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             }
             else
             {
-                ApplicationMicrostation.ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.StampNotFound,
+                ApplicationMicrostation.MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.StampNotFound,
                                                      $"Штампы в файле {_microstationProject.FileDataMicrostation.FileName} не найдены"));
                 return null;
             }
@@ -129,13 +129,13 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>       
         private FileDataSourceMicrostation CreatePdfWithSignatures(IStamp stamp, string filePath)
         {
-            ApplicationMicrostation.LoggerMicrostation.ShowMessage($"Обработка штампа {stamp.Name}");
+            ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
             stamp.CompressFieldsRanges();
 
             stamp.DeleteSignaturesPrevious();
             stamp.InsertSignatures();
 
-            ApplicationMicrostation.LoggerMicrostation.ShowMessage($"Создание PDF для штампа {stamp.Name}");
+            ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
             FileDataSourceMicrostation fileDataSourceMicrostation = CreatePdfByStamp(stamp, filePath);
 
             stamp.DeleteSignaturesInserted();

@@ -90,7 +90,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public IReadOnlyList<FileConvertErrorType> FileConvertErrorTypes => _fileConvertErrorTypes;
+        public IEnumerable<FileConvertErrorType> FileConvertErrorTypes => _fileConvertErrorTypes;
 
         /// <summary>
         /// Количество попыток конвертирования
@@ -105,7 +105,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Присутствуют ли ошибки конвертирования
         /// </summary>
-        public bool IsValidByErrorType => FileConvertErrorTypes == null || FileConvertErrorTypes.Count == 0;
+        public bool IsValidByErrorType => _fileConvertErrorTypes == null || _fileConvertErrorTypes.Count == 0;
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования

@@ -43,7 +43,7 @@ namespace GadzhiResurrected
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
             unityContainer.RegisterSingleton<IProjectSettings, ProjectSettings>();
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
-            unityContainer.RegisterType<IMessageAndLoggingService, DialogServiceStandard>();
+            unityContainer.RegisterType<IMessagingService, DialogServiceStandard>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
         }
 

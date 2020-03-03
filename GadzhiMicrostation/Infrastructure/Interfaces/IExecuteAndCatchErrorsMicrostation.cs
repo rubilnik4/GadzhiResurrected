@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Models.Implementations;
+﻿using GadzhiMicrostation.Models.Enums;
+using GadzhiMicrostation.Models.Implementations;
 using System;
 
 namespace GadzhiMicrostation.Infrastructure.Interfaces
@@ -12,10 +13,9 @@ namespace GadzhiMicrostation.Infrastructure.Interfaces
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
         void ExecuteAndHandleError(Action method,
-                                   Action ApplicationBeforeMethod = null,
-                                   Action ApplicationCatchMethod = null,
-                                   ErrorMicrostation errorMicrostation = null,
-                                   Action ApplicationFinallyMethod = null);
+                                   Action applicationBeforeMethod = null,
+                                   Func<ErrorMicrostation> applicationCatchMethod = null,
+                                   Action applicationFinallyMethod = null);
 
     }
 }

@@ -29,15 +29,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Сервис работы с ошибками
         /// </summary>
-        public IErrorMessagingMicrostation ErrorMessagingMicrostation { get; }
+        public IMessagingMicrostationService MessagingMicrostationService { get; }
 
         /// <summary>
-        /// Отображение системных сообщений
-        /// </summary>
-        public  ILoggerMicrostation LoggerMicrostation { get; }
-
-        /// <summary>
-        /// Модель хранения данных конвертации
+        /// Модель хранения данных конвертации Microstation
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
@@ -48,15 +43,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
 
         public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
                                        IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
-                                       IErrorMessagingMicrostation errorMessagingMicrostation,
-                                       ILoggerMicrostation loggerMicrostation,
+                                       IMessagingMicrostationService errorMessagingMicrostation,
                                        IMicrostationProject microstationProject,
                                        IPdfCreatorService pdfCreatorService)
         {
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
-            ErrorMessagingMicrostation = errorMessagingMicrostation;
-            LoggerMicrostation = loggerMicrostation;
+            MessagingMicrostationService = errorMessagingMicrostation;
             _microstationProject = microstationProject;
             _pdfCreatorService = pdfCreatorService;
         }
@@ -76,8 +69,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 if (_application == null)
                 {
                     _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => _application = MicrostationInstance.Instance(),
-                                                          errorMicrostation: new ErrorMicrostation(ErrorMicrostationType.ApplicationNotLoad,
-                                                                                                   "Ошибка загрузки приложения Microstation"));
+                                                     applicationCatchMethod: () => new ErrorMicrostation(ErrorMicrostationType.ApplicationNotLoad,
+                                                                                                         "Ошибка загрузки приложения Microstation"));
                 }
                 return _application;
             }
@@ -112,7 +105,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 if (disposing)
                 {
                     _pdfCreatorService.Dispose();
-                }               
+                }
 
                 disposedValue = true;
             }

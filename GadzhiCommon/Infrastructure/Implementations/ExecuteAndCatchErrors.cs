@@ -1,5 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -14,38 +16,37 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary> 
-        private readonly IMessageAndLoggingService _messageAndLoggingService;
+        private readonly IMessagingService _messagingService;
 
-        public ExecuteAndCatchErrors(IMessageAndLoggingService messageAndLoggingService)
+        public ExecuteAndCatchErrors(IMessagingService messagingService)
         {
-            _messageAndLoggingService = messageAndLoggingService;
+            _messagingService = messagingService;
         }
 
         /// <summary>
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
         public void ExecuteAndHandleError(Action method,
-                                          Action ApplicationBeforeMethod = null,
-                                          Action ApplicationCatchMethod = null,
-                                          Action ApplicationFinallyMethod = null)
+                                          Action applicationBeforeMethod = null,
+                                          Func<IErrorConverting> applicationCatchMethod = null,
+                                          Action applicationFinallyMethod = null)
         {
             try
             {
-                ApplicationBeforeMethod?.Invoke();
+                applicationBeforeMethod?.Invoke();
                 method();
             }
             catch (Exception ex)
             {
-                ApplicationCatchMethod?.Invoke();
+                var errorConverting = applicationCatchMethod?.Invoke();
 
-                FileConvertErrorType fileConvertErrorType = GetTypeException(ex);
-
-                _messageAndLoggingService.ShowError(fileConvertErrorType,
-                                                    ex.Message);
+                FileConvertErrorType fileConvertErrorType = GetTypeException(ex, errorConverting.FileConvertErrorType);
+                _messagingService.ShowAndLogError(new ErrorConverting(fileConvertErrorType, errorConverting?.ErrorDescription,
+                                                                      ex.Message, ex.StackTrace));
             }
             finally
             {
-                ApplicationFinallyMethod?.Invoke();
+                applicationFinallyMethod?.Invoke();
             }
         }
 
@@ -53,58 +54,63 @@ namespace GadzhiCommon.Infrastructure.Implementations
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
         public async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
-                                                     Action ApplicationBeforeMethod = null,
-                                                     Action ApplicationCatchMethod = null,
-                                                     Action ApplicationFinallyMethod = null)
+                                                     Action applicationBeforeMethod = null,
+                                                     Func<Task<IErrorConverting>> applicationCatchMethod = null,
+                                                     Action applicationFinallyMethod = null)
         {
             try
             {
-                ApplicationBeforeMethod?.Invoke();
+                applicationBeforeMethod?.Invoke();
                 await asyncMethod();
             }
             catch (Exception ex)
             {
-                ApplicationCatchMethod?.Invoke();
+                var errorConverting = await applicationCatchMethod?.Invoke();
 
-                FileConvertErrorType fileConvertErrorType = GetTypeException(ex);
-
-                _messageAndLoggingService.ShowError(fileConvertErrorType,
-                                                    ex.Message);
+                FileConvertErrorType fileConvertErrorType = GetTypeException(ex, errorConverting.FileConvertErrorType);
+                _messagingService.ShowAndLogError(new ErrorConverting(fileConvertErrorType, errorConverting?.ErrorDescription,
+                                                                      ex.Message, ex.StackTrace));
             }
             finally
             {
-                ApplicationFinallyMethod?.Invoke();
+                applicationFinallyMethod?.Invoke();
             }
-        }
+        }     
 
         /// <summary>
         /// Получить тип ошибки
         /// </summary>       
-        private FileConvertErrorType GetTypeException(Exception ex)
+        private FileConvertErrorType GetTypeException(Exception ex, FileConvertErrorType? fileConvertErrorTypeNull = null)
         {
-            var fileConvertErrorType = FileConvertErrorType.UnknownError;
-
-            if (ex is NullReferenceException)
+            FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;
+            if (fileConvertErrorTypeNull != null && fileConvertErrorTypeNull != FileConvertErrorType.UnknownError)
             {
-                fileConvertErrorType = FileConvertErrorType.NullReference;
-            }
-            else if (ex is ArgumentNullException)
-            {
-                fileConvertErrorType = FileConvertErrorType.ArgumentNullReference;
-            }
-            else if (ex is FormatException)
-            {
-                fileConvertErrorType = FileConvertErrorType.FormatException;
-            }
-            else if (ex is TimeoutException)
-            {
-                fileConvertErrorType = FileConvertErrorType.TimeOut;
-            }
-            else if (ex is CommunicationException)
-            {
-                fileConvertErrorType = FileConvertErrorType.Communication;
+                fileConvertErrorType = fileConvertErrorTypeNull.Value;
             }
 
+            if (fileConvertErrorType != FileConvertErrorType.UnknownError)
+            {
+                if (ex is NullReferenceException)
+                {
+                    fileConvertErrorType = FileConvertErrorType.NullReference;
+                }
+                else if (ex is ArgumentNullException)
+                {
+                    fileConvertErrorType = FileConvertErrorType.ArgumentNullReference;
+                }
+                else if (ex is FormatException)
+                {
+                    fileConvertErrorType = FileConvertErrorType.FormatException;
+                }
+                else if (ex is TimeoutException)
+                {
+                    fileConvertErrorType = FileConvertErrorType.TimeOut;
+                }
+                else if (ex is CommunicationException)
+                {
+                    fileConvertErrorType = FileConvertErrorType.Communication;
+                }
+            }
             return fileConvertErrorType;
         }
     }

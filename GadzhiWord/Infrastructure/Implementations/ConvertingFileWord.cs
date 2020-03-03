@@ -1,6 +1,8 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiWord.Infrastructure.Interfaces;
 using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Word.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +14,22 @@ namespace GadzhiWord.Infrastructure.Implementations
     /// <summary>
     /// Обработка и конвертирование файла DOC
     /// </summary>
-    public class ConvertingFileWord
+    public class ConvertingFileWord: IConvertingFileWord
     {
+        /// <summary>
+        /// Класс для работы с приложением Word
+        /// </summary>
+        private readonly IApplicationWord _applicationWord;
+
         /// <summary>
         /// Модель хранения данных конвертации Word
         /// </summary>
         private readonly IWordProject _wordProject;
 
-        public ConvertingFileWord(IWordProject wordProject)
+        public ConvertingFileWord(IApplicationWord applicationWord,
+                                  IWordProject wordProject)
         {
+            _applicationWord = applicationWord;
             _wordProject = wordProject;
         }
 
@@ -32,23 +41,23 @@ namespace GadzhiWord.Infrastructure.Implementations
         {
             _wordProject.SetInitialFileData(fileDataServer, printersInformation);
 
-            //if (_applicationMicrostation.IsApplicationValid)
-            //{
-            //    _loggerMicrostation.ShowMessage("Загрузка файла Microstation");
-            //    _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
-            //    _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-            //                                                                                    FileExtentionMicrostation.dgn));
+            if (_applicationWord.IsApplicationValid)
+            {
+                _loggerMicrostation.ShowMessage("Загрузка файла Microstation");
+                _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
+                //    _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                //                                                                                    FileExtentionMicrostation.dgn));
 
-            //    _loggerMicrostation.ShowMessage("Создание файлов PDF");
-            //    _applicationMicrostation.CreatePdfFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-            //                                                                                FileExtentionMicrostation.pdf));
+                //    _loggerMicrostation.ShowMessage("Создание файлов PDF");
+                //    _applicationMicrostation.CreatePdfFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                //                                                                                FileExtentionMicrostation.pdf));
 
-            //    _loggerMicrostation.ShowMessage("Создание файла DWG");
-            //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-            //                                                                                    FileExtentionMicrostation.dwg));
+                //    _loggerMicrostation.ShowMessage("Создание файла DWG");
+                //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                //                                                                                    FileExtentionMicrostation.dwg));
 
-            //    _applicationMicrostation.CloseDesignFile();
-            //}
+                //    _applicationMicrostation.CloseDesignFile();
+            }
 
             return _wordProject.FileDataServer;
         }

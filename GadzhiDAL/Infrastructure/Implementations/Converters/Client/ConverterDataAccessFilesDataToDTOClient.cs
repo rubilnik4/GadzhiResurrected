@@ -27,7 +27,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
         public async Task<FilesDataIntermediateResponseClient> ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
-                                                                                                FilesQueueInfo filesQueueInfo)
+                                                                                                            FilesQueueInfo filesQueueInfo)
         {
             if (filesDataEntity != null)
             {

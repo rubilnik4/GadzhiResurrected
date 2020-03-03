@@ -32,8 +32,21 @@ namespace GadzhiWord.Factory
         /// Параметры приложения 
         /// </summary>       
         private static void SetPropertiesToApplication(Application wordApplication)
-        {
-            wordApplication.Visible = true;
+        {           
+            wordApplication.ScreenUpdating = false;
+            wordApplication.Visible = false;
+            wordApplication.Options.AnimateScreenMovements = false;
+            wordApplication.Options.UpdateLinksAtOpen = false;
+            wordApplication.Options.CheckGrammarAsYouType = false;
+            wordApplication.Options.CheckGrammarWithSpelling = false;
+            wordApplication.Options.BackgroundSave = false;
+            wordApplication.Options.AutoWordSelection = false;
+            wordApplication.Options.AllowClickAndTypeMouse = false;
+            wordApplication.Options.SmartCursoring = false;
+            wordApplication.Options.ContextualSpeller = false;
+            wordApplication.Options.CheckSpellingAsYouType = false;
+            wordApplication.DisplayAutoCompleteTips = false;
+            wordApplication.DisplayAlerts = WdAlertLevel.wdAlertsNone;          
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// <summary>
         /// Сервис работы с ошибками
         /// </summary>
-        private readonly IErrorMessagingMicrostation _errorMessagingMicrostation;
+        private readonly IMessagingMicrostationService _errorMessagingMicrostation;
         
         /// <summary>
         /// Библиотека Pdf Creator
@@ -32,7 +32,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>
         private bool _readyState = false;
 
-        public PdfCreatorService(IErrorMessagingMicrostation errorMessagingMicrostation)
+        public PdfCreatorService(IMessagingMicrostationService errorMessagingMicrostation)
         {
             _errorMessagingMicrostation = errorMessagingMicrostation;
         }
@@ -74,13 +74,13 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 }
                 else
                 {
-                    _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                    _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                                        $"Некорретно задан путь сохранения {filePath}"));
                 }
             }
             else
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                     "Ошибка инициализации PDF принтера"));
             }
 
@@ -105,7 +105,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             bool success;
             if (!_readyState)
             {
-                _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                                    "Время создания PDF файла истекло"));
                 success = false;
             }
@@ -135,7 +135,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 }
                 else
                 {
-                    _errorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                    _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
                                                                                    "Функция печати не задана"));
                 }
 

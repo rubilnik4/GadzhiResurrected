@@ -16,18 +16,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     public static class ConverterPrintingConfiguration
     {
         public static PrintersInformation ToPrintersInformation()
-        {
-            var printersInformation = new PrintersInformation();
-
+        {           
             var config = RegisterPrintersInformationSection.GetConfig();
 
             var systemPrinters = PrinterSettings.InstalledPrinters.Cast<string>();
-           
-            return new PrintersInformation()
-            {
-                PrintersPdf = config.PrintersPdfCollection.Where(printer => systemPrinters?.Contains(printer.Name, StringComparer.OrdinalIgnoreCase) == true).
-                                                           Select(printer => ToPrinterInformation(printer)),
-            };
+            var printersPdf = config.PrintersPdfCollection.Where(printer => systemPrinters?.
+                                                           Contains(printer.Name, StringComparer.OrdinalIgnoreCase) == true).
+                                                           Select(printer => ToPrinterInformation(printer));
+            return new PrintersInformation(printersPdf);
         }
 
         /// <summary>

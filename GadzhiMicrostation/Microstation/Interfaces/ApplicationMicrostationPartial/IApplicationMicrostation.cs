@@ -25,12 +25,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Сервис работы с ошибками
         /// </summary>
-        IErrorMessagingMicrostation ErrorMessagingMicrostation { get; }
-
-        /// <summary>
-        /// Отображение системных сообщений
-        /// </summary>
-        ILoggerMicrostation LoggerMicrostation { get; }
+        IMessagingMicrostationService MessagingMicrostationService { get; }       
 
         /// <summary>
         /// Закрыть приложение

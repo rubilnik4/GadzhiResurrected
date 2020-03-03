@@ -101,14 +101,17 @@
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
-    <Compile Include="Infrastructure\Interfaces\IMessageAndLoggingService.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataSourceResponseBase.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FileDataResponseBase.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FilesDataIntermediateResponseBase.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FilesDataRequestBase.cs" />
-    <Compile Include="Models\TransferModels\FilesConvert\Base\FilesDataResponseBase.cs" />
+    <Compile Include="Infrastructure\Interfaces\ILoggerService.cs" />
+    <Compile Include="Infrastructure\Interfaces\IMessagingService.cs" />
+    <Compile Include="Models\Implementations\Errors\ErrorConverting.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataSourceResponseBase.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataResponseBase.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FilesDataIntermediateResponseBase.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FilesDataRequestBase.cs" />
+    <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FilesDataResponseBase.cs" />
+    <Compile Include="Models\Interfaces\Errors\IErrorConverting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +131,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

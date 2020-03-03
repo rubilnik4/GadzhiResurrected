@@ -38,7 +38,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.SignatureNotFound,
+                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.SignatureNotFound,
                                                                        $"Идентефикатор библиотечного элемента не задан"));
                 return null;
             }
@@ -74,7 +74,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             else
             {
-                ErrorMessagingMicrostation.AddError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
+                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
                                                                         $"Файл библиотеки {libraryPath} не найден"));
             }
         }

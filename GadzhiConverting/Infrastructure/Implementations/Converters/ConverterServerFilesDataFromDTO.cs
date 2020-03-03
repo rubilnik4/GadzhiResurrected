@@ -1,8 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
-using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Models.TransferModels.FilesConvert.Base;
+using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
 using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
