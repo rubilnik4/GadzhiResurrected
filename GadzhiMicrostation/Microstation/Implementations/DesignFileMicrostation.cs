@@ -14,7 +14,7 @@ using System.Linq;
 namespace GadzhiMicrostation.Microstation.Implementations
 {
     /// <summary>
-    /// Текущий файл Microstation
+    /// Файл файл Microstation
     /// </summary>
     public class DesignFileMicrostation : IDesignFileMicrostation
     {

@@ -15,9 +15,11 @@ using System.Text;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
-    public partial class ApplicationMicrostation : IApplicationMicrostationCommands
+    /// <summary>
+    /// Подкласс приложения Microstation для работы с файлом
+    /// </summary>
+    public partial class ApplicationMicrostation : IApplicationMicrostationDesingFile
     {
-
         /// <summary>
         /// Открыть файл
         /// </summary>

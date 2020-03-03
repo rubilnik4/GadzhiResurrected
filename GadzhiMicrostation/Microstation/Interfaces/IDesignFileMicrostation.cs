@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace GadzhiMicrostation.Microstation.Interfaces
 {
     /// <summary>
-    /// Текущий файл Microstation
+    /// Файл Microstation
     /// </summary>
     public interface IDesignFileMicrostation
     {

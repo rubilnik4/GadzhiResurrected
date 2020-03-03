@@ -1,4 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+﻿using ConvertingModels.Models.Implementations.FilesConvert;
+using ConvertingModels.Models.Interfaces.FilesConvert;
 using ConvertingModels.Models.Interfaces.Printers;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
@@ -44,7 +45,8 @@ namespace GadzhiWord.Models.Implementations
         {
             if (fileDataServer != null && printersInformation != null)
             {
-                FileDataServer = fileDataServer;
+                FileDataServer = new FileDataServerBase(fileDataServer.FilePathServer, fileDataServer.FilePathClient, 
+                                                    fileDataServer.ColorPrint);
                 PrintersInformation = printersInformation;
 
                 CreateSaveFolders();

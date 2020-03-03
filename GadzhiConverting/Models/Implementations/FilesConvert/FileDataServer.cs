@@ -1,76 +1,38 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+﻿using ConvertingModels.Models.Implementations.FilesConvert;
+using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     /// <summary>
-    /// Класс для хранения информации о конвертируемом файле
+    /// Класс для хранения информации о конвертируемом файле для приложения
     /// </summary>
-    public class FileDataServer : IFileDataServer, IEquatable<FileDataServer>
+    public class FileDataServer : FileDataServerBase
     {
-        /// <summary>
-        /// Тип ошибки при конвертации файла
-        /// </summary>
-        private readonly List<FileConvertErrorType> _fileConvertErrorTypes;
-
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
               : this(filePathServer, filePathClient, colorPrint, new List<FileConvertErrorType>())
         {
 
         }
 
-        public FileDataServer(string filePathServer,
-                              string filePathClient,
-                              ColorPrint colorPrint,
-                              IEnumerable<FileConvertErrorType> fileConvertErrorType)
+        public FileDataServer(string filePathServer, string filePathClient,
+                                  ColorPrint colorPrint, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+            : base(filePathServer, filePathClient, colorPrint, fileConvertErrorType)
         {
-            string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
-            string fileName = Path.GetFileNameWithoutExtension(filePathServer);
 
-            if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
-            {
-                throw new KeyNotFoundException(nameof(filePathServer));
-            }
-            FileExtentionType = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];        
-            FilePathServer = filePathServer;
-            FilePathClient = filePathClient;
-            ColorPrint = colorPrint;
-            StatusProcessing = StatusProcessing.InQueue;
-
-            _fileConvertErrorTypes = new List<FileConvertErrorType>(fileConvertErrorType);
-            FileDatasSourceServer = new List<FileDataSourceServer>();
         }
-
-        /// <summary>
-        /// Тип расширения файла
-        /// </summary>
-        public FileExtention FileExtentionType { get; }
-
-        /// <summary>
-        /// Путь файла на сервере
-        /// </summary>
-        public string FilePathServer { get; }
-
-        /// <summary>
-        /// Путь файла на клиенте
-        /// </summary>
-        public string FilePathClient { get; }
 
         /// <summary>
         /// Имя файла на клиенте
         /// </summary>
-        public string FileNameWithExtensionClient => Path.GetFileName(FilePathClient);       
-
-        /// <summary>
-        /// Цвет печати
-        /// </summary>
-        public ColorPrint ColorPrint { get; }
+        public string FileNameWithExtensionClient => Path.GetFileName(FilePathClient);
 
         /// <summary>
         /// Статус обработки файла
@@ -81,16 +43,6 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Завершена ли обработка файла
         /// </summary>
         public bool IsCompleted => CheckStatusProcessing.CompletedStatusProcessingServer.Contains(StatusProcessing);
-
-        /// <summary>
-        /// Путь и тип отконвертированных файлов
-        /// </summary>
-        public IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; set; }
-
-        /// <summary>
-        /// Тип ошибки при конвертации файла
-        /// </summary>
-        public IEnumerable<FileConvertErrorType> FileConvertErrorTypes => _fileConvertErrorTypes;
 
         /// <summary>
         /// Количество попыток конвертирования
@@ -105,43 +57,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Присутствуют ли ошибки конвертирования
         /// </summary>
-        public bool IsValidByErrorType => _fileConvertErrorTypes == null || _fileConvertErrorTypes.Count == 0;
+        public bool IsValidByErrorType => FileConvertErrorTypesBase == null || FileConvertErrorTypesBase.Count == 0;
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования
         /// </summary>
-        public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
-
-        /// <summary>
-        /// Добавить ошибку
-        /// </summary>
-        public void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType)
-        {
-            _fileConvertErrorTypes.Add(fileConvertErrorType);
-        }
-
-        /// <summary>
-        /// Добавить ошибки
-        /// </summary>
-        public void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes)
-        {
-            _fileConvertErrorTypes.AddRange(fileConvertErrorTypes);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is FileDataServer fileDataServer &&
-                   Equals(fileDataServer);
-        }
-
-        public bool Equals(FileDataServer other)
-        {
-            return FilePathServer == other?.FilePathServer;
-        }
-
-        public override int GetHashCode()
-        {
-            return -1576186305 + FilePathServer.GetHashCode();
-        }
+        public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;      
     }
 }

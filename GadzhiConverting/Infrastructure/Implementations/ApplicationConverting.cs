@@ -25,7 +25,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessagingService _messageAndLoggingService;
+        private readonly IMessagingService _messagingService;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -39,12 +39,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         public ApplicationConverting(IConvertingService convertingService,
                                      IProjectSettings projectSettings,
-                                     IMessagingService messageAndLoggingService,
+                                     IMessagingService messagingService,
                                      IExecuteAndCatchErrors executeAndCatchErrors)
         {
             _convertingService = convertingService;
             _projectSettings = projectSettings;
-            _messageAndLoggingService = messageAndLoggingService;
+            _messagingService = messagingService;
             _executeAndCatchErrors = executeAndCatchErrors;
 
             _convertingUpdaterSubsriptions = new CompositeDisposable();
@@ -62,7 +62,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         public void StartConverting()
         {
-            _messageAndLoggingService.ShowAndLogMessage("Запуск процесса конвертирования...");
+            _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
 
             _convertingUpdaterSubsriptions.Add(
                 Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).

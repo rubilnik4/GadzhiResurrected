@@ -16,7 +16,6 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
-using GadzhiWord.DependencyInjection;
 using GadzhiWord.Infrastructure.Implementations;
 using GadzhiWord.Infrastructure.Interfaces;
 using GadzhiWord.Models.Implementations;

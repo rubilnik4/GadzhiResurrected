@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        private readonly List<FileDataSourceMicrostation> _fileDataSourceMicrostation;
+        private readonly List<FileDataSourceMicrostation> _fileDatasSourceMicrostation;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
                                     string filePathClient,
                                     ColorPrintMicrostation colorPrint)
         {
-            _fileDataSourceMicrostation = new List<FileDataSourceMicrostation>();
+            _fileDatasSourceMicrostation = new List<FileDataSourceMicrostation>();
             _fileConvertErrorTypes = new List<ErrorMicrostationType>();
 
             if (!String.IsNullOrEmpty(filePathServer))
@@ -84,7 +84,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        public IEnumerable<FileDataSourceMicrostation> FileDataSourceMicrostation => _fileDataSourceMicrostation;
+        public IEnumerable<FileDataSourceMicrostation> FileDataSourceMicrostation => _fileDatasSourceMicrostation;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -98,7 +98,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         {
             if (fileDataSourceMicrostation != null)
             {
-                _fileDataSourceMicrostation.Add(fileDataSourceMicrostation);
+                _fileDatasSourceMicrostation.Add(fileDataSourceMicrostation);
             }
             else
             {
@@ -109,15 +109,15 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
         /// <summary>
         /// Добавить пути к отконвертированным файлам
         /// </summary>
-        public void AddRangeConvertedFilePath(IEnumerable<FileDataSourceMicrostation> fileDataSourcesMicrostation)
+        public void AddRangeConvertedFilePath(IEnumerable<FileDataSourceMicrostation> fileDatasSourceMicrostation)
         {
-            if (fileDataSourcesMicrostation != null)
+            if (fileDatasSourceMicrostation != null)
             {
-                _fileDataSourceMicrostation.AddRange(fileDataSourcesMicrostation);
+                _fileDatasSourceMicrostation.AddRange(fileDatasSourceMicrostation);
             }
             else
             {
-                throw new ArgumentNullException(nameof(fileDataSourcesMicrostation));
+                throw new ArgumentNullException(nameof(fileDatasSourceMicrostation));
             }
         }
 

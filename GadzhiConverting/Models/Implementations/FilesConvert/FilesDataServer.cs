@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GadzhiConverting.Models.Implementations.FilesConvert
+namespace ConvertingModels.Models.Implementations.FilesConvert
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах на серверной части
@@ -14,16 +14,16 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        private readonly List<FileDataServer> _fileDatas;
+        private readonly List<FileDataServerBase> _fileDatas;
 
         public FilesDataServer(Guid id,
                                int attemptingConvertCount,
-                               IEnumerable<FileDataServer> fileDatasServer)
+                               IEnumerable<FileDataServerBase> fileDatasServer)
         {
             Id = id;
             AttemptingConvertCount = attemptingConvertCount;
 
-            _fileDatas = new List<FileDataServer>();
+            _fileDatas = new List<FileDataServerBase>();
             if (fileDatasServer != null)
             {
                 _fileDatas.AddRange(fileDatasServer);
@@ -40,7 +40,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        public IReadOnlyList<FileDataServer> FileDatas => _fileDatas;
+        public IReadOnlyList<FileDataServerBase> FileDatas => _fileDatas;
 
         /// <summary>
         /// Статус выполнения проекта

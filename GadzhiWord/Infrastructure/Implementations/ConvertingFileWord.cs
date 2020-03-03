@@ -1,8 +1,10 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiWord.Infrastructure.Interfaces;
 using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +28,18 @@ namespace GadzhiWord.Infrastructure.Implementations
         /// </summary>
         private readonly IWordProject _wordProject;
 
+        /// <summary>
+        /// Класс для отображения изменений и логгирования
+        /// </summary>
+        private readonly IMessagingService _messagingService;
+
         public ConvertingFileWord(IApplicationWord applicationWord,
-                                  IWordProject wordProject)
+                                  IWordProject wordProject,
+                                  IMessagingService messagingService)
         {
             _applicationWord = applicationWord;
             _wordProject = wordProject;
+            _messagingService = messagingService;
         }
 
 
@@ -43,9 +52,9 @@ namespace GadzhiWord.Infrastructure.Implementations
 
             if (_applicationWord.IsApplicationValid)
             {
-                _loggerMicrostation.ShowMessage("Загрузка файла Microstation");
-                _applicationMicrostation.OpenDesignFile(_microstationProject.FileDataMicrostation.FilePathServer);
-                //    _applicationMicrostation.SaveDesignFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
+                _messagingService.ShowAndLogMessage("Загрузка файла Word");
+                _applicationWord.OpenDocument(_wordProject.FileDataServer.FilePathServer);
+                _applicationWord.SaveDocument(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                 //                                                                                    FileExtentionMicrostation.dgn));
 
                 //    _loggerMicrostation.ShowMessage("Создание файлов PDF");

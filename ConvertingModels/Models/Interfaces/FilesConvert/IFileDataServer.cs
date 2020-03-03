@@ -41,16 +41,6 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
-
-        /// <summary>
-        /// Добавить ошибку
-        /// </summary>
-        void AddFileConvertErrorType(FileConvertErrorType errorConverting);
-
-        /// <summary>
-        /// Добавить ошибки
-        /// </summary>
-        void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrors);       
+        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }     
     }
 }

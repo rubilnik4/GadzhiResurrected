@@ -109,8 +109,7 @@ namespace GadzhiDAL.Services.Implementations
 
                     if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
                     {
-                        filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                          UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
+                        _converterDataAccessFilesDataFromDTOServer.UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
                     }
 
                     await unitOfWork.CommitAsync();

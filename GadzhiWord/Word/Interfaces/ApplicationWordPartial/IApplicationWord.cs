@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Word.Interfaces
+namespace GadzhiWord.Word.Interfaces.ApplicationWordPartial
 {
     /// <summary>
     /// Класс для работы с приложением Word
     /// </summary>
-    public interface IApplicationWord
+    public interface IApplicationWord: IApplicationWordDocument
     {
         /// <summary>
         /// Загрузилась ли оболочка Microstation
