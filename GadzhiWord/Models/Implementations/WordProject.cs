@@ -3,7 +3,9 @@ using ConvertingModels.Models.Interfaces.FilesConvert;
 using ConvertingModels.Models.Interfaces.Printers;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiWord.Models.Implementations.FilesConvert;
 using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +23,7 @@ namespace GadzhiWord.Models.Implementations
         /// <summary>
         /// Класс для хранения информации о конвертируемом файле типа DGN
         /// </summary>
-        public IFileDataServer FileDataServer { get; private set; }
+        public IFileDataServerWord FileDataServerWord { get; private set; }
 
         /// <summary>
         /// Список используемых принтеров
@@ -45,8 +47,8 @@ namespace GadzhiWord.Models.Implementations
         {
             if (fileDataServer != null && printersInformation != null)
             {
-                FileDataServer = new FileDataServerBase(fileDataServer.FilePathServer, fileDataServer.FilePathClient, 
-                                                    fileDataServer.ColorPrint);
+                FileDataServerWord = new FileDataServerWord(fileDataServer.FilePathServer, fileDataServer.FilePathClient, 
+                                                            fileDataServer.ColorPrint);
                 PrintersInformation = printersInformation;
 
                 CreateSaveFolders();
@@ -114,17 +116,17 @@ namespace GadzhiWord.Models.Implementations
         /// <summary>
         /// Папка для сохранения файлов DGN
         /// </summary>
-        private string DocFilesFolder => Path.GetDirectoryName(FileDataServer?.FilePathServer) + "\\DOC";
+        private string DocFilesFolder => Path.GetDirectoryName(FileDataServerWord?.FilePathServer) + "\\DOC";
 
         /// <summary>
         /// Папка для сохранения файлов PDF
         /// </summary>
-        private string PdfFilesFolder => Path.GetDirectoryName(FileDataServer?.FilePathServer) + "\\PDF";
+        private string PdfFilesFolder => Path.GetDirectoryName(FileDataServerWord?.FilePathServer) + "\\PDF";
 
         /// <summary>
         /// Папка для сохранения файлов DWG
         /// </summary>
-        private string DwgFilesFolder => Path.GetDirectoryName(FileDataServer?.FilePathServer) + "\\XLS";
+        private string DwgFilesFolder => Path.GetDirectoryName(FileDataServerWord?.FilePathServer) + "\\XLS";
 
         /// <summary>
         /// Создать пути для сохранения файлов

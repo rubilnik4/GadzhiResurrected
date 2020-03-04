@@ -116,15 +116,27 @@
     <Compile Include="Infrastructure\Implementations\ConvertingFileWord.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingWordService.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFileWord.cs" />
+    <Compile Include="Models\Enums\StampType.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataServerWord.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServerWord.cs" />
     <Compile Include="Models\Implementations\WordProject.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IFileDataSourceServerWord.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IFileDataServerWord.cs" />
     <Compile Include="Models\Interfaces\IWordProject.cs" />
+    <Compile Include="Models\StampCollections\StampAdditionalParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordDocument.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWord.cs" />
-    <Compile Include="Word\Implementations\DocumentWord.cs" />
+    <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWord.cs" />
+    <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWordElements.cs" />
+    <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWordStamp.cs" />
+    <Compile Include="Word\Implementations\StampPartial\StampWord.cs" />
     <Compile Include="Word\Interfaces\ApplicationWordPartial\IApplicationWordDocument.cs" />
     <Compile Include="Word\Interfaces\ApplicationWordPartial\IApplicationWord.cs" />
-    <Compile Include="Word\Interfaces\IDocumentWord.cs" />
+    <Compile Include="Word\Interfaces\DocumentWordPartial\IDocumentStamp.cs" />
+    <Compile Include="Word\Interfaces\DocumentWordPartial\IDocumentWordElements.cs" />
+    <Compile Include="Word\Interfaces\DocumentWordPartial\IDocumentWord.cs" />
+    <Compile Include="Word\Interfaces\StampPartial\IStampWord.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

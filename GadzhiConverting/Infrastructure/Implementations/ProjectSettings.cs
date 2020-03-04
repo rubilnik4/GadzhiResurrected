@@ -1,4 +1,5 @@
-﻿using GadzhiCommonServer.Infrastructure.Implementations;
+﻿using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations;
@@ -24,7 +25,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        public PrintersInformation PrintersInformation => ConverterPrintingConfiguration.ToPrintersInformation();
+        public IPrintersInformation PrintersInformation => ConverterPrintingConfiguration.ToPrintersInformation();
 
         /// <summary>
         /// Время через которое осуществляется проверка пакетов на сервере

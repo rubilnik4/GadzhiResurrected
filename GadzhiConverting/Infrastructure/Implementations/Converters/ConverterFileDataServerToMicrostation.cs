@@ -1,4 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.Printers;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using ConvertingModels.Models.Interfaces.Printers;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Implementations.Printers;
@@ -21,7 +22,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файла серверной части в модуль Microstation
         /// </summary>
-        public static FileDataMicrostation FileDataServerToMicrostation(FileDataServer fileDataServer) =>
+        public static FileDataMicrostation FileDataServerToMicrostation(IFileDataServer fileDataServer) =>
             fileDataServer != null ?
             new FileDataMicrostation(fileDataServer.FilePathServer, fileDataServer.FilePathClient, 
                                      ConvertColorPrint(fileDataServer.ColorPrint)) :
@@ -30,7 +31,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать параметры принтеров
         /// </summary>
-        public static PrintersInformationMicrostation PrintersServerToMicrostation(PrintersInformation printersInformation) =>
+        public static PrintersInformationMicrostation PrintersServerToMicrostation(IPrintersInformation printersInformation) =>
             new PrintersInformationMicrostation(PrinterServerToMicrostation(printersInformation?.PrintersPdf.FirstOrDefault()));           
 
         /// <summary>

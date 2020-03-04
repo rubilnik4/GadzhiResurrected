@@ -1,6 +1,6 @@
-﻿using GadzhiMicrostation.Models.Coordinates;
+﻿using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;

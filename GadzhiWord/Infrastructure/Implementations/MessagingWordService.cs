@@ -35,7 +35,7 @@ namespace GadzhiWord.Infrastructure.Implementations
             if (errorConverting != null)
             {
                 base.ShowAndLogError(errorConverting);
-                _wordProject.FileDataServer.AddFileConvertErrorType(errorConverting.FileConvertErrorType);
+                _wordProject.FileDataServerWord.AddFileConvertErrorType(errorConverting.FileConvertErrorType);
             }
         }    
     }

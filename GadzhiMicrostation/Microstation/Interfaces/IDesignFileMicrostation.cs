@@ -1,5 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.FilesData;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        IList<IStamp> Stamps { get; }
+        IList<IStampMicrostation> Stamps { get; }
 
         /// <summary>
         /// Сохранить файл

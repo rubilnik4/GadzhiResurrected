@@ -1,4 +1,5 @@
 ﻿using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
@@ -8,6 +9,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Запустить конвертирование файла
         /// </summary>
-        Task<FileDataServer> Converting(FileDataServer fileDataServer);
+        Task<IFileDataServerConverting> Converting(IFileDataServerConverting fileDataServer);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using ConvertingModels.Models.Interfaces.Printers;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiWord.Models.Implementations.FilesConvert;
+using GadzhiWord.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace GadzhiWord.Models.Interfaces
         /// <summary>
         /// Класс для хранения информации о конвертируемом файле типа DGN
         /// </summary>
-        IFileDataServer FileDataServer { get; }
+        IFileDataServerWord FileDataServerWord { get; }
 
         /// <summary>
         /// Список используемых принтеров

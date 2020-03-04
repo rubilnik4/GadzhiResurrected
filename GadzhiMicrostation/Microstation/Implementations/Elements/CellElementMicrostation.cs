@@ -1,7 +1,7 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;

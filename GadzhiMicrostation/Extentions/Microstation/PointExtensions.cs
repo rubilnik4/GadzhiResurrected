@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Models.Coordinates;
+﻿using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 
 namespace GadzhiMicrostation.Extensions.Microstation

@@ -1,5 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiWord.Infrastructure.Interfaces;
 using GadzhiWord.Models.Interfaces;
@@ -53,13 +54,13 @@ namespace GadzhiWord.Infrastructure.Implementations
             if (_applicationWord.IsApplicationValid)
             {
                 _messagingService.ShowAndLogMessage("Загрузка файла Word");
-                _applicationWord.OpenDocument(_wordProject.FileDataServer.FilePathServer);
-                _applicationWord.SaveDocument(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-                //                                                                                    FileExtentionMicrostation.dgn));
+                _applicationWord.OpenDocument(_wordProject.FileDataServerWord.FilePathServer);
+                _applicationWord.SaveDocument(_wordProject.CreateFileSavePath(_wordProject.FileDataServerWord.FileNameWithoutExtensionClient,
+                                                                              FileExtention.docx));
 
-                //    _loggerMicrostation.ShowMessage("Создание файлов PDF");
-                //    _applicationMicrostation.CreatePdfFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-                //                                                                                FileExtentionMicrostation.pdf));
+                _messagingService.ShowAndLogMessage("Создание файлов PDF");
+                _applicationWord.CreatePdfFile(_wordProject.CreateFileSavePath(_wordProject.FileDataServerWord.FileNameWithoutExtensionClient,
+                                                                               FileExtention.pdf));
 
                 //    _loggerMicrostation.ShowMessage("Создание файла DWG");
                 //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
@@ -68,7 +69,7 @@ namespace GadzhiWord.Infrastructure.Implementations
                 //    _applicationMicrostation.CloseDesignFile();
             }
 
-            return _wordProject.FileDataServer;
+            return _wordProject.FileDataServerWord;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiWord.Word.Interfaces.DocumentWordPartial;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,10 @@ namespace GadzhiWord.Word.Interfaces.ApplicationWordPartial
         /// Сохранить документ
         /// </summary>
         void SaveDocument(string filePath);
+
+        /// <summary>
+        /// Сохранить файл PDF
+        /// </summary>
+        void CreatePdfFile(string filePath);
     }
 }

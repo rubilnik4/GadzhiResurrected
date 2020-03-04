@@ -1,6 +1,6 @@
 ﻿using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Interfaces;
 using System;
 

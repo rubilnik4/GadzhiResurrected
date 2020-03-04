@@ -3,7 +3,7 @@ using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.FilesData;
 using GadzhiMicrostation.Models.Implementations.Printers;
 using GadzhiMicrostation.Models.Interfaces;
-using GadzhiMicrostation.Models.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.IO;

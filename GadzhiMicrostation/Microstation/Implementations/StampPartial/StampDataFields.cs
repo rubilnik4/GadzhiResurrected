@@ -2,7 +2,7 @@
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
     /// <summary>
     /// Подкласс для работа с внутренними полями штампа
     /// </summary>
-    public partial class Stamp : IStampDataFields
+    public partial class StampMicrostation : IStampDataFields
     {
         /// <summary>
         /// Доступные поля в Штампе
@@ -32,14 +32,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// <summary>
         /// Доступные поля в штампе в формате обертки
         /// </summary>
-        private IDictionary<string, IElementMicrostation> _stampFieldsWrapper =>
+        private IDictionary<string, IElementMicrostation> StampFieldsWrapper =>
             _stampFields.ToDictionary(pair => pair.Key,
                                       pair => pair.Value.ElementWrapper);
 
         /// <summary>
         /// Формат штампа
         /// </summary>
-        public string PaperSize => StampMain.GetPaperSizeFromField(_stampFieldsWrapper[StampMain.PaperSize.Name]?.AsTextElementMicrostation?.Text) ??
+        public string PaperSize => StampMain.GetPaperSizeFromField(StampFieldsWrapper[StampMain.PaperSize.Name]?.AsTextElementMicrostation?.Text) ??
                                    String.Empty;
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             if (_stampFields.ContainsKey(fieldSearch))
             {
-                return _stampFieldsWrapper[fieldSearch];
+                return StampFieldsWrapper[fieldSearch];
             }
 
             return null;
@@ -96,8 +96,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldSearch,
                                                                            ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
-                                                 fieldSearch?.Where(_stampFieldsWrapper.ContainsKey).
-                                                 Select(fieldName => _stampFieldsWrapper[fieldName]).
+                                                 fieldSearch?.Where(StampFieldsWrapper.ContainsKey).
+                                                 Select(fieldName => StampFieldsWrapper[fieldName]).
                                                  Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
                                                                     fieldName.ElementType == elementMicrostationType);
 

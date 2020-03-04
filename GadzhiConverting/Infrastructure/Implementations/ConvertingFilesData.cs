@@ -4,6 +4,7 @@ using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Models.Implementations.FilesData;
 using System;
@@ -39,7 +40,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить конвертирование файла
         /// </summary>
-        public async Task<FileDataServer> Converting(FileDataServer fileDataServer)
+        public async Task<IFileDataServerConverting> Converting(IFileDataServerConverting fileDataServer)
         {
             if (fileDataServer != null)
             {
@@ -60,9 +61,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Начать конвертирование файла
         /// </summary>
-        private FileDataServer FileDataStartConverting(FileDataServer fileDataServer)
+        private IFileDataServerConverting FileDataStartConverting(IFileDataServerConverting fileDataServer)
         {
-            _messageAndLoggingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameWithExtensionClient}");
+            _messageAndLoggingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}");
 
             fileDataServer.StatusProcessing = StatusProcessing.Converting;
 
@@ -72,7 +73,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл
         /// </summary>
-        private async Task<FileDataServer> FileDataConverting(FileDataServer fileDataServer)
+        private async Task<IFileDataServerConverting> FileDataConverting(IFileDataServerConverting fileDataServer)
         {
 
             if (fileDataServer.IsValidByAttemptingCount)
@@ -100,13 +101,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл типа Microstation
         /// </summary>      
-        private async Task<FileDataServer> ConvertFileDataMicrostation(FileDataServer fileDataServer)
+        private async Task<IFileDataServerConverting> ConvertFileDataMicrostation(IFileDataServerConverting fileDataServer)
         {
             return await Task.Run(() =>
             {
                 FileDataMicrostation convertedFileDataMicrostation = _convertingFileMicrostation.ConvertingFile(
-                                                                               ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
-                                                                               ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+                                                                      ConverterFileDataServerToMicrostation.FileDataServerToMicrostation(fileDataServer),
+                                                                      ConverterFileDataServerToMicrostation.PrintersServerToMicrostation(_projectSettings.PrintersInformation));
+
                 return ConverterFileDataServerFromMicrostation.UpdateFileDataServerFromMicrostation(fileDataServer, convertedFileDataMicrostation);
             });
 
@@ -115,7 +117,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закончить конвертирование файла
         /// </summary>
-        private FileDataServer FileDataEndConverting(FileDataServer fileDataServer)
+        private IFileDataServerConverting FileDataEndConverting(IFileDataServerConverting fileDataServer)
         {
             fileDataServer.StatusProcessing = StatusProcessing.ConvertingComplete;
             return fileDataServer;

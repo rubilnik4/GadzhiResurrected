@@ -1,8 +1,8 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
     /// <summary>
     /// Подкласс штампа для работы с подписями
     /// </summary>
-    public partial class Stamp : ISignaturesStamp
+    public partial class StampMicrostation : ISignaturesStamp
     {
         private IEnumerable<ICellElementMicrostation> _insertedSignatures;
 

@@ -100,8 +100,8 @@
   <ItemGroup>
     <Compile Include="Infrastructure\Implementations\LoggerService.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\FileDataServerBase.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServerBase.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServer.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFileDataServer.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFileDataSourceServer.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />

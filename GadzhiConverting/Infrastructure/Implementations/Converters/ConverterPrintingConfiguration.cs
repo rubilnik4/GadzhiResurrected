@@ -1,4 +1,5 @@
-﻿using GadzhiConverting.Configuration;
+﻿using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiConverting.Configuration;
 using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Implementations.Printers;
 using System;
@@ -15,7 +16,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// </summary>
     public static class ConverterPrintingConfiguration
     {
-        public static PrintersInformation ToPrintersInformation()
+        public static IPrintersInformation ToPrintersInformation()
         {           
             var config = RegisterPrintersInformationSection.GetConfig();
 
@@ -29,7 +30,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать элемент конфигурационного файла в модель о принтере
         /// </summary>       
-        private static PrinterInformation ToPrinterInformation(PrinterInformationElement printerInformationElement) =>
+        private static IPrinterInformation ToPrinterInformation(PrinterInformationElement printerInformationElement) =>
              new PrinterInformation(printerInformationElement?.Name, printerInformationElement?.PrefixSearchPaperSize);
 
     }

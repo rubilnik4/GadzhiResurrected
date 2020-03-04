@@ -41,7 +41,7 @@ namespace GadzhiConverting
             string dir = Environment.CurrentDirectory + "\\Converting.gitignore\\01.docx";
 
             var pdfPrinters = new List<IPrinterInformation> { new PrinterInformation("PDFCreator", "GTNG") };
-            word.ConvertingFile(new FileDataServer(dir,
+            word.ConvertingFile(new FileDataServerConverting(dir,
                                                    dir,
                                                    ColorPrint.BlackAndWhite),
                                 new PrintersInformation(pdfPrinters));

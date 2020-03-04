@@ -1,5 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using System;
 using System.Collections.Generic;
 using System.Linq;

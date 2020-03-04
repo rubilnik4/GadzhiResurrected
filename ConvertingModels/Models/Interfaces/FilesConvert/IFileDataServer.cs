@@ -29,6 +29,16 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         string FilePathClient { get; }
 
         /// <summary>
+        /// Имя файла на клиенте
+        /// </summary>
+        string FileNameClient { get; }
+
+        /// <summary>
+        /// Имя файла без расширения на клиенте
+        /// </summary>
+        string FileNameWithoutExtensionClient { get; }
+
+        /// <summary>
         /// Цвет печати
         /// </summary>
         ColorPrint ColorPrint { get; }
@@ -41,6 +51,16 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }     
+        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
+
+        /// <summary>
+        /// Добавить ошибку
+        /// </summary>
+        void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType);
+
+        /// <summary>
+        /// Добавить ошибки
+        /// </summary>
+        void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes);
     }
 }

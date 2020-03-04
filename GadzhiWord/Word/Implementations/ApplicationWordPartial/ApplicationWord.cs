@@ -3,8 +3,9 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiWord.Factory;
 using GadzhiWord.Models.Interfaces;
-using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
+using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessagingService _messagingService;
+        public IMessagingService MessagingService { get; }
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -41,10 +42,12 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
 
         public ApplicationWord(IWordProject wordProject,
                                IFileSystemOperations fileSystemOperations,
+                               IMessagingService messagingService,
                                IExecuteAndCatchErrors executeAndCatchErrors)
         {
             _wordProject = wordProject;
             _fileSystemOperations = fileSystemOperations;
+            MessagingService = messagingService;
             _executeAndCatchErrors = executeAndCatchErrors;           
         }
 
@@ -73,7 +76,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Текущий документ Word
         /// </summary>
-        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument);
+        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation

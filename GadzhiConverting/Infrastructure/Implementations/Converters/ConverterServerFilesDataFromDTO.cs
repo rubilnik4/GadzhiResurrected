@@ -6,6 +6,7 @@ using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.IO;
@@ -39,30 +40,28 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        public async Task<FilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
+        public async Task<IFilesDataServerConverting> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FileDatas?.Select(fileDTO =>
                                                ConvertToFileDataServerAndSaveFile(fileDTO,
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServer(filesDataRequest.Id,
-                                       filesDataRequest.AttemptingConvertCount,
-                                       filesDataServerToConvert);
+            return new FilesDataServerConverting(filesDataRequest.Id,
+                                                 filesDataRequest.AttemptingConvertCount,
+                                                 filesDataServerToConvert);
         }
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private async Task<FileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest,
+        private async Task<IFileDataServerConverting> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest,
                                                                               string packageGuid)
         {
             FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid);
 
-            return new FileDataServer(fileSavedCheck.FilePath,
-                                      fileDataRequest.FilePath,
-                                      fileDataRequest.ColorPrint,
-                                      fileSavedCheck.Errors);
+            return new FileDataServerConverting(fileSavedCheck.FilePath, fileDataRequest.FilePath,
+                                                fileDataRequest.ColorPrint, fileSavedCheck.Errors);
         }
 
         /// <summary>

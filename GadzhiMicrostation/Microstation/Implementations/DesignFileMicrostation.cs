@@ -1,7 +1,7 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Implementations.FilesData;
@@ -72,8 +72,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        public IList<IStamp> Stamps => ModelsMicrostation.SelectMany(model => model.FindStamps()).
-                                                          ToList();
+        public IList<IStampMicrostation> Stamps => ModelsMicrostation.SelectMany(model => model.FindStamps()).ToList();
 
         /// <summary>
         /// Сохранить файл
@@ -127,7 +126,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private FileDataSourceMicrostation CreatePdfWithSignatures(IStamp stamp, string filePath)
+        private FileDataSourceMicrostation CreatePdfWithSignatures(IStampMicrostation stamp, string filePath)
         {
             ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
             stamp.CompressFieldsRanges();
@@ -146,7 +145,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        private FileDataSourceMicrostation CreatePdfByStamp(IStamp stamp, string filePath)
+        private FileDataSourceMicrostation CreatePdfByStamp(IStampMicrostation stamp, string filePath)
         {
             if (stamp != null)
             {

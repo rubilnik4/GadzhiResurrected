@@ -44,8 +44,7 @@ namespace GadzhiWord.Factory
             wordApplication.Options.AllowClickAndTypeMouse = false;
             wordApplication.Options.SmartCursoring = false;
             wordApplication.Options.ContextualSpeller = false;
-            wordApplication.Options.CheckSpellingAsYouType = false;
-            wordApplication.DisplayAutoCompleteTips = false;
+            wordApplication.Options.CheckSpellingAsYouType = false;          
             wordApplication.DisplayAlerts = WdAlertLevel.wdAlertsNone;          
         }
 

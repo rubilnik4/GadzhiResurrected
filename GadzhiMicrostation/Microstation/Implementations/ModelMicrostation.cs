@@ -7,7 +7,7 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -81,14 +81,12 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        public IEnumerable<IStamp> FindStamps()
-        {
-            return GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
-                   Cast<CellElement>().
-                   Where(cellElement => StampMain.IsStampName(cellElement.Name)).
-                   Select(cellElement => new Stamp(cellElement, ToOwnerContainerMicrostation())).
-                   Cast<IStamp>();          
-        }
+        public IEnumerable<IStampMicrostation> FindStamps() =>        
+            GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
+            Cast<CellElement>().
+            Where(cellElement => StampMain.IsStampName(cellElement.Name)).
+            Select(cellElement => new StampMicrostation(cellElement, ToOwnerContainerMicrostation())).
+            Cast<IStampMicrostation>();
 
         /// <summary>
         /// Найти элементы библиотеки Microstation в модели по типам

@@ -21,7 +21,9 @@ using GadzhiWord.Infrastructure.Interfaces;
 using GadzhiWord.Models.Implementations;
 using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Implementations;
+using GadzhiWord.Word.Implementations.ApplicationWordPartial;
 using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -73,7 +75,8 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             wordContainer.RegisterType<IMessagingService, MessagingWordService>();
             container.RegisterType<IConvertingFileWord, ConvertingFileWord>(
                 new InjectionConstructor(wordContainer.Resolve<IApplicationWord>(),
-                                         wordContainer.Resolve<IWordProject>()));
+                                         wordContainer.Resolve<IWordProject>(),
+                                         wordContainer.Resolve<IMessagingService>()));
         }
     }
 }

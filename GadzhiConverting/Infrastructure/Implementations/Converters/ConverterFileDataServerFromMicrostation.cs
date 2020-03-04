@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Implementations.FilesData;
@@ -19,24 +20,24 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Обновить информацию о конвертируемых пакетах в серверной части из модуля Microstation
         /// </summary>
-        public static FileDataServer UpdateFileDataServerFromMicrostation(FileDataServer fileDataServer, FileDataMicrostation fileDataMicrostation)
+        public static IFileDataServerConverting UpdateFileDataServerFromMicrostation(IFileDataServerConverting fileDataServerConverting, FileDataMicrostation fileDataMicrostation)
         {
-            if (fileDataServer != null && fileDataMicrostation != null)
+            if (fileDataServerConverting != null && fileDataMicrostation != null)
             {
-                fileDataServer.FileDatasSourceServer = fileDataMicrostation.FileDataSourceMicrostation.
-                                                         Select(fileData => ConvertingFileDataSourceFromMicrostation(fileData));
+                fileDataServerConverting.SetFileDatasSourceServerConverting(fileDataMicrostation.FileDataSourceMicrostation.
+                                                                            Select(fileData => ConvertingFileDataSourceFromMicrostation(fileData)));
 
-                fileDataServer.AddRangeFileConvertErrorType(fileDataMicrostation.FileConvertErrorTypes.
-                                                            Select(error => ConvertingFileErrorTypes(error)));
+                fileDataServerConverting.AddRangeFileConvertErrorType(fileDataMicrostation.FileConvertErrorTypes.
+                                                                      Select(error => ConvertingFileErrorTypes(error)));
             }
-            return fileDataServer;
+            return fileDataServerConverting;
         }
 
         /// <summary>
         /// Преобразовать информацию о отконвертированных чертежах из модуля Microstation в серверную часть
         /// </summary>        
-        private static FileDataSourceServer ConvertingFileDataSourceFromMicrostation(FileDataSourceMicrostation fileDataSourceMicrostation) =>
-            new FileDataSourceServer(fileDataSourceMicrostation.FilePath,
+        private static IFileDataSourceServerConverting ConvertingFileDataSourceFromMicrostation(FileDataSourceMicrostation fileDataSourceMicrostation) =>
+            new FileDataSourceServerConverting(fileDataSourceMicrostation.FilePath,
                                      ConvertingFileExtension(fileDataSourceMicrostation.FileExtentionMicrostation),
                                      fileDataSourceMicrostation.PaperSize,
                                      fileDataSourceMicrostation.PrinterName);

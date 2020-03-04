@@ -1,7 +1,7 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Coordinates;
-using GadzhiMicrostation.Models.StampCollections;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements

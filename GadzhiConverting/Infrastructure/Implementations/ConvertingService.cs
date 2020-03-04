@@ -5,6 +5,7 @@ using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
@@ -94,7 +95,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                              GetFirstInQueuePackage(_projectSettings.NetworkName);
             if (filesDataRequest != null)
             {
-                FilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
+                IFilesDataServerConverting filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
                 _idPackage = filesDataServer.Id;
 
                 await ConvertingPackage(filesDataServer);
@@ -111,7 +112,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать пакет
         /// </summary>
-        private async Task ConvertingPackage(FilesDataServer filesDataServer)
+        private async Task ConvertingPackage(IFilesDataServerConverting filesDataServer)
         {
             if (filesDataServer.IsValid)
             {
@@ -129,7 +130,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сообщить о пустом/некорректном пакете
         /// </summary>
-        private void ReplyPackageIsInvalid(FilesDataServer filesDataServer)
+        private void ReplyPackageIsInvalid(IFilesDataServerConverting filesDataServer)
         {
             if (!filesDataServer.IsValidByFileDatas)
             {
@@ -148,7 +149,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сообщить об отконвертированном пакете, если процесс не был прерван
         /// </summary>
-        private void ReplyPackageIsComplete(FilesDataServer filesDataServer)
+        private void ReplyPackageIsComplete(IFilesDataServerConverting filesDataServer)
         {
             if (!filesDataServer.IsCompleted)//если пользователь не прервал процесс
             {
@@ -159,7 +160,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отправить промежуточный отчет
         /// </summary>
-        private async Task SendIntermediateResponse(FilesDataServer filesDataServer)
+        private async Task SendIntermediateResponse(IFilesDataServerConverting filesDataServer)
         {
             FilesDataIntermediateResponseServer filesDataIntermediateResponse =
                 _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
@@ -171,7 +172,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отправить окончательный ответ
         /// </summary>
-        private async Task SendResponse(FilesDataServer filesDataServer)
+        private async Task SendResponse(IFilesDataServerConverting filesDataServer)
         {
             if (filesDataServer.StatusProcessingProject == StatusProcessingProject.ConvertingComplete)
             {
@@ -206,11 +207,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать пакет
         /// </summary>
-        private async Task<FilesDataServer> ConvertingFilesData(FilesDataServer filesDataServer)
+        private async Task<IFilesDataServerConverting> ConvertingFilesData(IFilesDataServerConverting filesDataServer)
         {
             _messageAndLoggingService.ShowAndLogMessage($"Конвертация пакета {filesDataServer.Id.ToString()}");
 
-            foreach (var fileData in filesDataServer.FileDatas)
+            foreach (var fileData in filesDataServer.FileDatasServerConverting)
             {
                 if (!filesDataServer.IsCompleted) //если пользователь не прервал процесс
                 {

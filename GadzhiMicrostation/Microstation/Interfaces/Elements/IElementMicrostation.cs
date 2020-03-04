@@ -1,4 +1,4 @@
-﻿using GadzhiMicrostation.Models.Coordinates;
+﻿using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements

@@ -3,8 +3,10 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiWord.Models.Implementations.FilesConvert;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
+using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +45,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
                     ActiveDocument.SaveAs(filePath);
-                    _wordProject.FileDataServer.
-                        AddConvertedFilePath(new FileDataSourceServerBase(filePath, FileExtention.docx));
+                    _wordProject.FileDataServerWord.AddConvertedFilePath(new FileDataSourceServerWord(filePath, FileExtention.docx));
                 },
                 applicationCatchMethod: () =>
                 {
@@ -55,6 +56,24 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             }
 
         }
+
+        /// <summary>
+        /// Сохранить файл PDF
+        /// </summary>
+        public void CreatePdfFile(string filePath)
+        {
+            if (ActiveDocument.IsDocumentValid)
+            {
+                _executeAndCatchErrors.ExecuteAndHandleError(() =>
+                {
+                    var fileDataSourcesMicrostation = ActiveDocument.CreatePdfInDocument(filePath);
+                    _wordProject.FileDataServerWord.AddRangeConvertedFilePath(fileDataSourcesMicrostation);
+                },
+                    applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+                                                                      $"Ошибка сохранения файла PDF {filePath}"));
+            }
+        }
+
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
@@ -71,13 +90,13 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
                 }
                 else
                 {
-                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.IncorrectExtension,
+                    MessagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.IncorrectExtension,
                                                       $"Расширение файла {filePath} не соответствует типу .doc или .docx"));
                 }
             }
             else
             {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
+                MessagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
                                                                       $"Файл {filePath} не найден"));
             }
 

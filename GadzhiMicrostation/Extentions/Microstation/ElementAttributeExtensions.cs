@@ -1,5 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Implementations;
-using GadzhiMicrostation.Models.Coordinates;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
 

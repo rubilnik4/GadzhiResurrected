@@ -1,4 +1,5 @@
-﻿using GadzhiConverting.Models.Implementations;
+﻿using ConvertingModels.Models.Interfaces.Printers;
+using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Implementations.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
@@ -13,7 +14,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        PrintersInformation PrintersInformation { get; }
+        IPrintersInformation PrintersInformation { get; }
 
         /// <summary>
         /// Время через которое осуществляется проверка пакетов на сервере
