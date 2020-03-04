@@ -112,6 +112,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileWord.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingWordService.cs" />

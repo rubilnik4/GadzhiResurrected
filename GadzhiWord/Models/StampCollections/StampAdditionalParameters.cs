@@ -28,5 +28,10 @@ namespace GadzhiWord.Models.StampCollections
         {
             "Лист",
         };
+
+        /// <summary>
+        /// Маркеры штампа
+        /// </summary>
+        public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.Union(MarkersAdditionalStamp).ToList();
     }
 }
