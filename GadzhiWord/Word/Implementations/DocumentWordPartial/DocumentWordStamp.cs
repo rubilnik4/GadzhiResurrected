@@ -1,5 +1,7 @@
 ﻿using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiWord.Extension;
+using GadzhiWord.Extension.StringAdditional;
+using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Enums;
 using GadzhiWord.Models.StampCollections;
 using GadzhiWord.Word.Implementations.StampPartial;
@@ -26,15 +28,12 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         private IEnumerable<IStampWord> FindStamps() => GetTablesInFooters().Where(CheckFooterIsStamp).
                                                                              Select(table => new StampWord(table));
 
-
         /// <summary>
         /// Проверить является ли колонтитул штампом
         /// </summary>
-        private bool CheckFooterIsStamp(Table table) =>      
-            GetCells(table?.Range.Cells).Where(cell => !String.IsNullOrWhiteSpace(cell?.Range?.Text)).
-                                         Select(cell => StringExtensions.PrepareCellTextToComprare(cell.Range.Text)).
-                                         Any(cellText => StampAdditionalParameters.MarkersStamp.
-                                                           Any(marker => cellText.Contains(marker)));      
-
+        private bool CheckFooterIsStamp(Table table) => table.Range.Cells.ToIEnumerable().
+                                                              Where(cell => !String.IsNullOrWhiteSpace(cell?.Range?.Text)).
+                                                              Select(cell => StringAdditionalExtensions.PrepareCellTextToComprare(cell.Range.Text)).
+                                                              Any(cellText => StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText)); 
     } 
 }

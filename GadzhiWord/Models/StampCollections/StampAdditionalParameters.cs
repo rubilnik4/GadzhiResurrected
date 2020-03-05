@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiWord.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,15 @@ namespace GadzhiWord.Models.StampCollections
     /// </summary>
     public static class StampAdditionalParameters
     {
+        /// <summary>
+        /// Тип штампа в строковом обозначении
+        /// </summary>
+        public static IReadOnlyDictionary<StampType, string> StampTypeToString => new Dictionary<StampType, string>()
+        {
+            { StampType.Main, "Основной"},
+            { StampType.Additional, "Дополнительный"},
+        };
+
         /// <summary>
         /// Маркеры основного штампа
         /// </summary>
@@ -33,5 +43,23 @@ namespace GadzhiWord.Models.StampCollections
         /// Маркеры штампа
         /// </summary>
         public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.Union(MarkersAdditionalStamp).ToList();
+
+        /// <summary>
+        /// Маркеры типа действия в строке с ответственным лицом
+        /// </summary>
+        public static IReadOnlyList<string> MarkersActionTypeSignature => new List<string>()
+        {
+            "Разраб",
+            "Исполн",
+            "Составил",
+            "Проверил",
+            "Вед.инж",
+            "Нач.гр",
+            "Гл.спец",
+            "Нач.сек",
+            "Нач.отд",
+            "Н.конт",
+            "ГИП"
+        };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiWord.Models.Implementations.FilesConvert;
 using GadzhiWord.Models.Interfaces.FilesConvert;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
@@ -78,8 +79,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         {
             if (Stamps.Any())
             {
-                // return Stamps?.Select(stamp => CreatePdfWithSignatures(stamp, filePath));
-                return null;
+                return Stamps?.Select(stamp => CreatePdfWithSignatures(stamp, filePath));               
             }
             else
             {
@@ -89,6 +89,23 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
             }
         }
 
-    
+        /// <summary>
+        /// Создать PDF для штампа, вставить подписи
+        /// </summary>       
+        private FileDataSourceServerWord CreatePdfWithSignatures(IStampWord stamp, string filePath)
+        {
+            _applicationWord.MessagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
+            //stamp.CompressFieldsRanges();
+
+            //stamp.DeleteSignaturesPrevious();
+            //stamp.InsertSignatures();
+
+            //ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
+            //FileDataSourceMicrostation fileDataSourceMicrostation = CreatePdfByStamp(stamp, filePath);
+
+            //stamp.DeleteSignaturesInserted();
+
+            return null;
+        }
     }
 }

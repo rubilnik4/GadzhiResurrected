@@ -1,4 +1,6 @@
 ﻿using GadzhiWord.Extension;
+using GadzhiWord.Extension.StringAdditional;
+using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Enums;
 using GadzhiWord.Models.StampCollections;
 using GadzhiWord.Word.Interfaces.DocumentWordPartial;
@@ -22,7 +24,7 @@ namespace GadzhiWord.Word.Implementations.StampPartial
         /// </summary>
         private readonly Table _tableStamp;
 
-        private readonly IDocumentWord _documentWord;
+     //   private readonly IDocumentWord _documentWord;
 
         public StampWord(Table tableStamp)
         {
@@ -38,12 +40,24 @@ namespace GadzhiWord.Word.Implementations.StampPartial
             {
                 throw new ArgumentException(nameof(StampType));
             }
+
+            StampContainer = new StampContainer();
         }
+
+        /// <summary>
+        /// Контейнер штампа, содержащий составные части
+        /// </summary>
+        public StampContainer StampContainer { get; }
 
         /// <summary>
         /// Тип штампа
         /// </summary>
-        private StampType StampType { get; }
+        public StampType StampType { get; }
+
+        /// <summary>
+        /// Наименование
+        /// </summary>
+        public string Name => $"{StampAdditionalParameters.StampTypeToString[StampType]}. Лист {_tableStamp.Range.GetPageNumber()}";
 
         /// <summary>
         /// Заполнить поля штампа
@@ -56,24 +70,40 @@ namespace GadzhiWord.Word.Implementations.StampPartial
             {
                 if (cell != null && !String.IsNullOrWhiteSpace(cell.Range.Text))
                 {
-                    string cellText = StringExtensions.PrepareCellTextToComprare(cell.Range.Text);
-                    if (stampType != StampType.Main)
-                    {
-                        if (stampType != StampType.Additional &&
-                            StampAdditionalParameters.MarkersAdditionalStamp.Any(marker => cellText.Contains(marker)))
-                        {
-                            stampType = StampType.Additional;
-                        }
-                        if (StampAdditionalParameters.MarkersMainStamp.Any(marker => cellText.Contains(marker)))
-                        {
-                            stampType = StampType.Main;
-                        }
-                    }
+                    string cellText = StringAdditionalExtensions.PrepareCellTextToComprare(cell.Range.Text);
 
+                    stampType = CheckStampType(stampType, cellText);
+
+                    switch (CheckFieldType.GetStampFieldType(cellText))
+                    {
+                        case StampFieldType.PersonSignature:
+                            
+                            break;
+                    }
 
                 }
             }
 
+            return stampType;
+        }
+
+        /// <summary>
+        /// Определить тип штампа
+        /// </summary>       
+        private StampType? CheckStampType(StampType? stampType, string cellText)
+        {
+            if (stampType != StampType.Main)
+            {
+                if (stampType != StampType.Additional &&
+                    StampAdditionalParameters.MarkersAdditionalStamp.MarkerContain(cellText))
+                {
+                    stampType = StampType.Additional;
+                }
+                if (StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText))
+                {
+                    stampType = StampType.Main;
+                }
+            }
             return stampType;
         }
     }

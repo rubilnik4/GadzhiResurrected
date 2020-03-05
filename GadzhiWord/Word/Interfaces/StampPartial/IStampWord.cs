@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiWord.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,14 @@ namespace GadzhiWord.Word.Interfaces.StampPartial
     /// </summary>
     public interface IStampWord
     {
+        /// <summary>
+        /// Тип штампа
+        /// </summary>
+        StampType StampType { get; }
+
+        /// <summary>
+        /// Наименование
+        /// </summary>
+        string Name { get; }
     }
 }

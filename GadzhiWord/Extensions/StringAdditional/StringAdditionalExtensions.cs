@@ -5,12 +5,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Extension
+namespace GadzhiWord.Extension.StringAdditional
 {
     /// <summary>
     /// Класс для обработки строковых значений в модуле Word
     /// </summary>
-    public static class StringExtensions
+    public static class StringAdditionalExtensions
     {
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace GadzhiWord.Extension
                                             Replace("у", "у").
                                             Replace("o", "о").
                                             Replace("..", ".").
-                                            Trim((char)10, (char)11, (char)13, (char)160, (char)176);
+                                            Trim((char)10, (char)11, (char)13, (char)160, (char)176, ' ');
 
             preparedText = Regex.Replace(preparedText, @"\s+", " ");
             return preparedText;
