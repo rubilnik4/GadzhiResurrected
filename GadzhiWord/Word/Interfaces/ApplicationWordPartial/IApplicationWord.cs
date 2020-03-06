@@ -11,12 +11,7 @@ namespace GadzhiWord.Word.Interfaces.ApplicationWordPartial
     /// Класс для работы с приложением Word
     /// </summary>
     public interface IApplicationWord: IApplicationWordDocument
-    {
-        /// <summary>
-        /// Класс для отображения изменений и логгирования
-        /// </summary>
-        IMessagingService MessagingService { get; }
-
+    {    
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>

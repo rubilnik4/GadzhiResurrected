@@ -18,11 +18,17 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// </summary>
         private readonly Cell _cellElement;
 
-        public CellElementWord(Cell cellElement)
+        /// <summary>
+        /// Родительская таблица
+        /// </summary>
+        private readonly ITableElementWord _tableElementWord;
+
+        public CellElementWord(Cell cellElement, ITableElementWord tableElementWord)
         {
             if (cellElement != null)
             {
                 _cellElement = cellElement;
+                _tableElementWord = tableElementWord;
             }
             else
             {
@@ -34,5 +40,37 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// Текст ячейки
         /// </summary>
         public string Text => _cellElement.Range.Text;
+
+        /// <summary>
+        /// Родительский элемент строка
+        /// </summary>
+        public IRowElementWord RowElementWord => _tableElementWord?.RowsElementWord[_cellElement.RowIndex - 1];
+
+        /// <summary>
+        /// Номер строки
+        /// </summary>
+        public int RowIndex => _cellElement.RowIndex - 1;
+
+        /// <summary>
+        /// Вставить картинку
+        /// </summary>
+        public void InsertPicture(string filePath)
+        {
+            if (!String.IsNullOrWhiteSpace(filePath))
+            {
+                _cellElement.Range.InlineShapes.AddPicture(filePath, false, true);
+            }           
+        }
+
+        /// <summary>
+        /// Удалить все картинки
+        /// </summary>
+        public void DeleteAllPictures()
+        {
+            foreach (InlineShape shape in _cellElement.Range.InlineShapes)
+            {
+                shape.Delete();
+            }
+        }
     }
 }

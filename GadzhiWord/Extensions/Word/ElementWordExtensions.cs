@@ -72,6 +72,24 @@ namespace GadzhiWord.Extensions.Word
         }
 
         /// <summary>
+        /// Получить строки
+        /// </summary>        
+        public static IEnumerable<Row> ToIEnumerable(this Rows rows)
+        {
+            if (rows != null)
+            {
+                foreach (Row row in rows)
+                {
+                    yield return row;
+                }
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+
+        /// <summary>
         /// Получить ячейки
         /// </summary>        
         public static IEnumerable<Cell> ToIEnumerable(this Cells cells)

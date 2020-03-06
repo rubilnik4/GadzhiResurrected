@@ -33,7 +33,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        public IMessagingService MessagingService { get; }
+        private readonly IMessagingService _messagingService;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -47,7 +47,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         {
             _wordProject = wordProject;
             _fileSystemOperations = fileSystemOperations;
-            MessagingService = messagingService;
+            _messagingService = messagingService;
             _executeAndCatchErrors = executeAndCatchErrors;           
         }
 
@@ -76,7 +76,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Текущий документ Word
         /// </summary>
-        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
+        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument, _messagingService);
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation

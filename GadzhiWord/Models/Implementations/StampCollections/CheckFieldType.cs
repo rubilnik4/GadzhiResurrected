@@ -1,4 +1,5 @@
-﻿using GadzhiWord.Extensions.Word;
+﻿using GadzhiWord.Extension.StringAdditional;
+using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.StampCollections
+namespace GadzhiWord.Models.Implementations.StampCollections
 {
     /// <summary>
     /// Класс для определения типа поля
@@ -20,6 +21,7 @@ namespace GadzhiWord.Models.StampCollections
         {
             StampFieldType stampFieldType = StampFieldType.Unknown;
 
+            cellText = StringAdditionalExtensions.PrepareCellTextToComprare(cellText);
             if (IsFieldPersonSignature(cellText))
             {
                 stampFieldType = StampFieldType.PersonSignature;

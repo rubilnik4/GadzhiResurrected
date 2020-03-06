@@ -38,7 +38,14 @@ namespace GadzhiWord.Models.Implementations
         public WordProject(IFileSystemOperations fileSystemOperations)
         {
             _fileSystemOperations = fileSystemOperations;
+
+            PutResourcesToDataFolder();
         }
+
+        /// <summary>
+        /// Папка с ресурсами и библиотеками
+        /// </summary>
+        public string WordDataFolder => AppDomain.CurrentDomain.BaseDirectory + "WordData\\";
 
         /// <summary>
         /// Записать исходные данные для конвертации
@@ -47,7 +54,7 @@ namespace GadzhiWord.Models.Implementations
         {
             if (fileDataServer != null && printersInformation != null)
             {
-                FileDataServerWord = new FileDataServerWord(fileDataServer.FilePathServer, fileDataServer.FilePathClient, 
+                FileDataServerWord = new FileDataServerWord(fileDataServer.FilePathServer, fileDataServer.FilePathClient,
                                                             fileDataServer.ColorPrint);
                 PrintersInformation = printersInformation;
 
@@ -136,6 +143,18 @@ namespace GadzhiWord.Models.Implementations
             _fileSystemOperations.CreateFolderByName(DocFilesFolder);
             _fileSystemOperations.CreateFolderByName(PdfFilesFolder);
             _fileSystemOperations.CreateFolderByName(DwgFilesFolder);
+        }
+
+        /// <summary>
+        /// Скопировать ресурсы
+        /// </summary>        
+        private void PutResourcesToDataFolder()
+        {
+            _fileSystemOperations.CreateFolderByName(WordDataFolder);
+            if (_fileSystemOperations.IsDirectoryExist(WordDataFolder))
+            {
+                Properties.Resources.signature.Save(Path.Combine(WordDataFolder, "signature.jpg"));               
+            }
         }
     }
 }

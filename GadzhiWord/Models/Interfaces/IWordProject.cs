@@ -17,6 +17,11 @@ namespace GadzhiWord.Models.Interfaces
     public interface IWordProject
     {
         /// <summary>
+        /// Папка с ресурсами и библиотеками
+        /// </summary>
+        string WordDataFolder { get; }
+
+        /// <summary>
         /// Класс для хранения информации о конвертируемом файле типа DGN
         /// </summary>
         IFileDataServerWord FileDataServerWord { get; }
@@ -34,6 +39,6 @@ namespace GadzhiWord.Models.Interfaces
         /// <summary>
         /// Создать путь для сохранения отконвертированных файлов
         /// </summary>        
-        string CreateFileSavePath(string fileName, FileExtention fileExtentionType);
+        string CreateFileSavePath(string fileName, FileExtention fileExtentionType);       
     }
 }

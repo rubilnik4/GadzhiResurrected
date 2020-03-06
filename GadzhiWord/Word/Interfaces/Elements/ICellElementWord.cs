@@ -15,5 +15,25 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// Текст ячейки
         /// </summary>
         string Text { get; }
+
+        /// <summary>
+        /// родительский элемент строка
+        /// </summary>
+        IRowElementWord RowElementWord { get; }
+
+        /// <summary>
+        /// Номер строки
+        /// </summary>
+        int RowIndex { get; }
+
+        /// <summary>
+        /// Вставить картинку
+        /// </summary>
+        void InsertPicture(string filePath);
+
+        /// <summary>
+        /// Удалить все картинки
+        /// </summary>
+        void DeleteAllPictures();
     }
 }

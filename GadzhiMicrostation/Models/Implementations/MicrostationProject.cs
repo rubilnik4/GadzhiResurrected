@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Models.Implementations
     /// Модель хранения данных конвертации Microstation
     /// </summary>
     public class MicrostationProject : IMicrostationProject
-    { 
+    {
         /// <summary>
         /// Класс для хранения информации о конвертируемом файле типа DGN
         /// </summary>
@@ -31,11 +31,16 @@ namespace GadzhiMicrostation.Models.Implementations
         private readonly IFileSystemOperationsMicrostation _fileSystemOperationsMicrostation;
 
         public MicrostationProject(IFileSystemOperationsMicrostation fileSystemOperationsMicrostation)
-        {           
+        {
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
 
             PutResourcesToDataFolder();
         }
+
+        /// <summary>
+        /// Папка с ресурсами и библиотеками
+        /// </summary>
+        public string MicrostationDataFolder => AppDomain.CurrentDomain.BaseDirectory + "MicrostationData\\";
 
         /// <summary>
         /// Записать исходные данные для конвертации
@@ -98,7 +103,7 @@ namespace GadzhiMicrostation.Models.Implementations
             {
                 case FileExtentionMicrostation.dgn:
                     fileFolderSave = DgnFilesFolder;
-                    break;  
+                    break;
                 case FileExtentionMicrostation.pdf:
                     fileFolderSave = PdfFilesFolder;
                     break;
@@ -114,7 +119,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// Папка для сохранения файлов DGN
         /// </summary>
         private string DgnFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DGN";
-       
+
         /// <summary>
         /// Папка для сохранения файлов PDF
         /// </summary>
@@ -123,7 +128,7 @@ namespace GadzhiMicrostation.Models.Implementations
         /// <summary>
         /// Папка для сохранения файлов DWG
         /// </summary>
-        private string DwgFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DWG";       
+        private string DwgFilesFolder => Path.GetDirectoryName(FileDataMicrostation?.FilePathServer) + "\\DWG";
 
         /// <summary>
         /// Создать пути для сохранения файлов
@@ -140,14 +145,13 @@ namespace GadzhiMicrostation.Models.Implementations
         /// </summary>        
         private void PutResourcesToDataFolder()
         {
-            _fileSystemOperationsMicrostation.CreateFolderByName(StampAdditionalParameters.MicrostationDataFolder);
-            if (_fileSystemOperationsMicrostation.IsDirectoryExist(StampAdditionalParameters.MicrostationDataFolder))
+            _fileSystemOperationsMicrostation.CreateFolderByName(MicrostationDataFolder);
+            if (_fileSystemOperationsMicrostation.IsDirectoryExist(MicrostationDataFolder))
             {
-                _fileSystemOperationsMicrostation.SaveFileFromByte(StampAdditionalParameters.SignatureLibraryPath,
+                _fileSystemOperationsMicrostation.SaveFileFromByte(Path.Combine(MicrostationDataFolder, StampAdditionalParameters.SignatureLibraryName),
                                                                    Properties.Resources.Signature);
-                _fileSystemOperationsMicrostation.SaveFileFromByte(StampAdditionalParameters.StampLibraryPath,
-                                                                 Properties.Resources.Stamp);
-
+                _fileSystemOperationsMicrostation.SaveFileFromByte(Path.Combine(MicrostationDataFolder, StampAdditionalParameters.StampLibraryName),
+                                                                   Properties.Resources.Stamp);
             }
         }
     }

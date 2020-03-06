@@ -202,5 +202,29 @@ namespace GadzhiCommon.Infrastructure.Implementations
 
             return isCreated ? createdPath : null;
         }
+
+        /// <summary>
+        /// Распаковать файл из двоичного вида и сохранить
+        /// </summary>   
+        public bool SaveFileFromByte(string filePath, byte[] fileByte)
+        {
+            bool succsess = false;
+
+            //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
+            try
+            {
+                if (!String.IsNullOrEmpty(filePath) && fileByte != null)
+                {
+                    File.WriteAllBytes(filePath, fileByte);
+
+                    succsess = true;
+                }
+            }
+            finally
+            {
+
+            }
+            return succsess;
+        }
     }
 }

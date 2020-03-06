@@ -23,9 +23,13 @@ namespace GadzhiWord.Extension.StringAdditional
                                             Replace("у", "у").
                                             Replace("o", "о").
                                             Replace("..", ".").
-                                            Trim((char)10, (char)11, (char)13, (char)160, (char)176, ' ');
+                                            Replace(((char)10).ToString(), String.Empty).
+                                            Replace(((char)11).ToString(), String.Empty).
+                                            Replace(((char)13).ToString(), String.Empty).
+                                            Replace(((char)160).ToString(), String.Empty).
+                                            Replace(((char)176).ToString(), String.Empty);
 
-            preparedText = Regex.Replace(preparedText, @"\s+", " ");
+            preparedText = Regex.Replace(preparedText, @"\s+", "");
             return preparedText;
         }
     }

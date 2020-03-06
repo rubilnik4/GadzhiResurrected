@@ -8,21 +8,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// Дополнительные параметры штампа
     /// </summary>
     public static class StampAdditionalParameters
-    {
-        /// <summary>
-        /// Папка с ресурсами и библиотеками
-        /// </summary>
-        public static string MicrostationDataFolder => AppDomain.CurrentDomain.BaseDirectory + "MicrostationData\\";
-
+    {  
         /// <summary>
         /// Имя библиотеки с подписями
         /// </summary>
-        public static string SignatureLibraryPath => MicrostationDataFolder + "Signature.cel";
+        public static string SignatureLibraryName => "Signature.cel";
 
         /// <summary>
         /// Имя библиотеки со штампами
         /// </summary>
-        public static string StampLibraryPath => MicrostationDataFolder + "Stamp.cel";      
+        public static string StampLibraryName => "Stamp.cel";
 
         /// <summary>
         /// Символ разделяющий параметры внутри аттрибута

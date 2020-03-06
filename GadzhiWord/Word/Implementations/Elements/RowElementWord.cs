@@ -17,20 +17,23 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Элемент строка Word
         /// </summary>
-        private readonly Row _rowElement;
-
         private readonly List<ICellElementWord> _cellsElementWord;
-        public RowElementWord(Row rowElement)
+
+        /// <summary>
+        /// Родительская таблица
+        /// </summary>
+        private readonly ITableElementWord _tableElementWord;
+
+        public RowElementWord(List<ICellElementWord> cellsElementWord, ITableElementWord tableElementWord)
         {
-            if (rowElement != null)
+            if (cellsElementWord != null)
             {
-                _rowElement = rowElement;
-                _cellsElementWord = rowElement.Cells.ToIEnumerable().Select(cell => new CellElementWord(cell)).
-                                                     Cast<ICellElementWord>().ToList();
+                _cellsElementWord = cellsElementWord;
+                _tableElementWord = tableElementWord;
             }
             else
             {
-                throw new ArgumentNullException(nameof(rowElement));
+                throw new ArgumentNullException(nameof(cellsElementWord));
             }
         }
 

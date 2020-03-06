@@ -72,5 +72,10 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// Создать поддиректорию
         /// </summary>     
         string CreateFolderByName(string startingPath, string folderName = "");
+
+        /// <summary>
+        /// Распаковать файл из двоичного вида и сохранить
+        /// </summary>   
+        bool SaveFileFromByte(string filePath, byte[] fileByte);
     }
 }

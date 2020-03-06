@@ -1,11 +1,11 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiWord.Models.Implementations.FilesConvert;
 using GadzhiWord.Models.Interfaces.FilesConvert;
-using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
 using GadzhiWord.Word.Interfaces.DocumentWordPartial;
-using GadzhiWord.Word.Interfaces.StampPartial;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -27,26 +27,25 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         private readonly Document _document;
 
         /// <summary>
-        /// Класс для работы с приложением Word
+        /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IApplicationWord _applicationWord;
+        private readonly IMessagingService _messagingService;
 
-        public DocumentWord(Document document,
-                            IApplicationWord applicationWord)
+        public DocumentWord(Document document, IMessagingService messagingService)
         {
             _document = document;
-            _applicationWord = applicationWord;
+            _messagingService = messagingService;
         }
+
+        /// <summary>
+        /// Путь к файлу
+        /// </summary>
+        public string FullName => _document?.FullName;
 
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
         public bool IsDocumentValid => _document != null;
-
-        /// <summary>
-        /// Найти все штампы во всех моделях и листах
-        /// </summary>       
-        public IList<IStampWord> Stamps => FindStamps().ToList();
 
         /// <summary>
         /// Сохранить файл
@@ -77,13 +76,13 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// </summary>       
         public IEnumerable<IFileDataSourceServerWord> CreatePdfInDocument(string filePath)
         {
-            if (Stamps.Any())
+            if (StampWord.IsValid)
             {
-                return Stamps?.Select(stamp => CreatePdfWithSignatures(stamp, filePath));               
+                return StampWord.Stamps?.Select(stamp => CreatePdfWithSignatures(stamp, filePath));
             }
             else
             {
-                _applicationWord.MessagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.StampNotFound,
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.StampNotFound,
                                                                   $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
                 return null;
             }
@@ -92,18 +91,18 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private FileDataSourceServerWord CreatePdfWithSignatures(IStampWord stamp, string filePath)
+        private FileDataSourceServerWord CreatePdfWithSignatures(IStamp stamp, string filePath)
         {
-            _applicationWord.MessagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
+            _messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
             //stamp.CompressFieldsRanges();
 
             //stamp.DeleteSignaturesPrevious();
-            //stamp.InsertSignatures();
+            InsertStampSignatures();
 
-            //ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
+            _messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
             //FileDataSourceMicrostation fileDataSourceMicrostation = CreatePdfByStamp(stamp, filePath);
 
-            //stamp.DeleteSignaturesInserted();
+          //  DeleteStampSignatures();
 
             return null;
         }

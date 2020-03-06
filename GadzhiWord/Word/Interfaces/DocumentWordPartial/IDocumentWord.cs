@@ -13,6 +13,11 @@ namespace GadzhiWord.Word.Interfaces.DocumentWordPartial
     public interface IDocumentWord: IDocumentWordElements, IDocumentWordStamp
     {
         /// <summary>
+        /// Путь к файлу
+        /// </summary>
+        string FullName { get; }
+
+        /// <summary>
         /// Загрузился ли файл
         /// </summary>
         bool IsDocumentValid { get; }

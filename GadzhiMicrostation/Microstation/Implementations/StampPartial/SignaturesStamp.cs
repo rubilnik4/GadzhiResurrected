@@ -21,7 +21,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         public void InsertSignatures()
         {
-            ApplicationMicrostation.AttachLibrary(StampAdditionalParameters.SignatureLibraryPath);
+            ApplicationMicrostation.AttachLibrary(StampAdditionalParameters.SignatureLibraryName);
 
             var mainRowSignatures = InsertMainRowSignatures();
 

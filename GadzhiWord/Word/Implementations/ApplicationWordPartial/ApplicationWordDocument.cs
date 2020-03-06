@@ -75,6 +75,25 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         }
 
         /// <summary>
+        /// Закрыть файл
+        /// </summary>
+        public void CloseDesignFile()
+        {
+            if (ActiveDocument.IsDocumentValid)
+            {
+                _executeAndCatchErrors.ExecuteAndHandleError(
+                    () => ActiveDocument.CloseWithSaving(),
+                    applicationCatchMethod: () =>
+                    {
+                        ActiveDocument.Close();
+                        return new ErrorConverting(FileConvertErrorType.FileNotSaved,
+                                                   $"Ошибка закрытия файла {ActiveDocument.FullName}");
+
+                    });
+            }
+        }
+
+        /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
         private bool IsDesingFileValidAndSetErrors(string filePath)
@@ -90,13 +109,13 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
                 }
                 else
                 {
-                    MessagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.IncorrectExtension,
+                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.IncorrectExtension,
                                                       $"Расширение файла {filePath} не соответствует типу .doc или .docx"));
                 }
             }
             else
             {
-                MessagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
                                                                       $"Файл {filePath} не найден"));
             }
 

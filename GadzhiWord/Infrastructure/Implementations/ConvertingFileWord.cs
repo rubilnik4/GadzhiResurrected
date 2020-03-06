@@ -66,7 +66,7 @@ namespace GadzhiWord.Infrastructure.Implementations
                 //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                 //                                                                                    FileExtentionMicrostation.dwg));
 
-                //    _applicationMicrostation.CloseDesignFile();
+                _applicationWord.CloseDesignFile();
             }
 
             return _wordProject.FileDataServerWord;

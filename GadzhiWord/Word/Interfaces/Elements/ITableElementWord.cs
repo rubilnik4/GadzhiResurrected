@@ -11,6 +11,14 @@ namespace GadzhiWord.Word.Interfaces.Elements
     /// </summary>
     public interface ITableElementWord
     {
+        /// <summary>
+        /// Получить ячейки таблицы
+        /// </summary>
+        IEnumerable<ICellElementWord> CellsElementWord { get; }
 
+        /// <summary>
+        /// Получить строки таблицы
+        /// </summary>
+        IReadOnlyList<IRowElementWord> RowsElementWord { get; }
     }
 }

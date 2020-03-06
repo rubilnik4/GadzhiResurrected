@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.StampCollections
+namespace GadzhiWord.Models.Implementations.StampCollections
 {
     /// <summary>
     /// Дополнительные параметры штампа

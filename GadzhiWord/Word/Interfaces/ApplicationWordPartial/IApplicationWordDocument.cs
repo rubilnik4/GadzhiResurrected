@@ -26,5 +26,10 @@ namespace GadzhiWord.Word.Interfaces.ApplicationWordPartial
         /// Сохранить файл PDF
         /// </summary>
         void CreatePdfFile(string filePath);
+
+        /// <summary>
+        /// Закрыть файл
+        /// </summary>
+        void CloseDesignFile();
     }
 }
