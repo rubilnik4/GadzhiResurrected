@@ -1,6 +1,5 @@
-﻿using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
+﻿using ConvertingModels.Models.Interfaces.StampCollections;
+using GadzhiConverting.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +16,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Элемент строка
         /// </summary>
-        private readonly IRowElementWord _rowElementWord;        
+        private readonly IRowElement _rowElementWord;        
 
-        public StampPersonSignature(IRowElementWord rowElementWord)
+        public StampPersonSignature(IRowElement rowElementWord)
         {
             if (rowElementWord?.CellsElementWord?.Count >= 4)
-            {
-                if (CheckFieldType.IsFieldPersonSignature(rowElementWord?.CellsElementWord[0].Text))
+            {               
+                if (CheckFieldType.IsFieldPersonSignatureWithPrepare(rowElementWord?.CellsElementWord[0].Text))
                 {
                     ActionType = new StampField(rowElementWord?.CellsElementWord[0]);
                     ResponsiblePerson = new StampField(rowElementWord?.CellsElementWord[1]);

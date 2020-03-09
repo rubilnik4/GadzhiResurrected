@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Word.Interfaces.Elements
+namespace GadzhiConverting.Word.Interfaces.Elements
 {
     /// <summary>
-    /// Элемент таблица
+    /// Элемент таблица. Базовый вариант
     /// </summary>
-    public interface ITableElementWord
+    public interface ITableElement
     {
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        IEnumerable<ICellElementWord> CellsElementWord { get; }
+        IEnumerable<ICellElement> CellsElementWord { get; }
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        IReadOnlyList<IRowElementWord> RowsElementWord { get; }
+        IReadOnlyList<IRowElement> RowsElementWord { get; }
     }
 }

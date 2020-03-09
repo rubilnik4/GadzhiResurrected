@@ -66,7 +66,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
-                    var fileDataSourcesMicrostation = ActiveDocument.CreatePdfInDocument(filePath);
+                    var fileDataSourcesMicrostation = ActiveDocument.CreatePdfInDocument(filePath, _wordProject.FileDataServerWord.ColorPrint);
                     _wordProject.FileDataServerWord.AddRangeConvertedFilePath(fileDataSourcesMicrostation);
                 },
                     applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
@@ -77,7 +77,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        public void CloseDesignFile()
+        public void CloseDocument()
         {
             if (ActiveDocument.IsDocumentValid)
             {

@@ -39,13 +39,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Управление печатью пдф
         /// </summary>
-        private readonly IPdfCreatorService _pdfCreatorService;
+        private readonly IPdfCreatorServiceMicrostation _pdfCreatorService;
 
         public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
                                        IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
                                        IMessagingMicrostationService errorMessagingMicrostation,
                                        IMicrostationProject microstationProject,
-                                       IPdfCreatorService pdfCreatorService)
+                                       IPdfCreatorServiceMicrostation pdfCreatorService)
         {
             _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
             _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;

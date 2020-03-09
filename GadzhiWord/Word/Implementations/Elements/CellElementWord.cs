@@ -1,4 +1,4 @@
-﻿using GadzhiWord.Word.Interfaces.Elements;
+﻿using GadzhiConverting.Word.Interfaces.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace GadzhiWord.Word.Implementations.Elements
     /// <summary>
     /// Элемент ячейка
     /// </summary>
-    public class CellElementWord : ICellElementWord
+    public class CellElementWord : ICellElement
     {
         /// <summary>
         /// Элемент ячейка Word
@@ -21,9 +21,9 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Родительская таблица
         /// </summary>
-        private readonly ITableElementWord _tableElementWord;
+        private readonly ITableElement _tableElementWord;
 
-        public CellElementWord(Cell cellElement, ITableElementWord tableElementWord)
+        public CellElementWord(Cell cellElement, ITableElement tableElementWord)
         {
             if (cellElement != null)
             {
@@ -44,7 +44,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Родительский элемент строка
         /// </summary>
-        public IRowElementWord RowElementWord => _tableElementWord?.RowsElementWord[_cellElement.RowIndex - 1];
+        public IRowElement RowElement => _tableElementWord?.RowsElementWord[_cellElement.RowIndex - 1];
 
         /// <summary>
         /// Номер строки

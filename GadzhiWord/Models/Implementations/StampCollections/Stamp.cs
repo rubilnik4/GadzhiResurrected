@@ -1,12 +1,12 @@
-﻿using GadzhiWord.Extension.StringAdditional;
-using GadzhiWord.Models.Enums;
-using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
+﻿using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ConvertingModels.Models.Interfaces.StampCollections;
+using GadzhiConverting.Word.Interfaces.Elements;
+using ConvertingModels.Models.Enums;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -18,21 +18,32 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Элемент таблица Word
         /// </summary>
-        protected ITableElementWord TableStamp { get; }
+        protected ITableElement TableStamp { get; }
 
-        public Stamp(ITableElementWord tableStamp)
+        /// <summary>
+        /// Элемент таблица Word
+        /// </summary>
+        private readonly IDocumentWord _documentWord;
+
+        public Stamp(ITableElement tableStamp, IDocumentWord documentWord)
         {
             TableStamp = tableStamp;
+            _documentWord = documentWord;
         }
         /// <summary>
         /// Наименование
         /// </summary>
         public string Name => $"{StampAdditionalParameters.StampTypeToString[StampType]}";
-      
+
         /// <summary>
         /// Тип штампа
         /// </summary>
-        protected abstract StampType StampType { get; }       
+        public abstract StampType StampType { get; }
+
+        /// <summary>
+        /// Формат
+        /// </summary>
+        public string PaperSize => _documentWord.PaperSize;
 
         /// <summary>
         /// Получить поля штампа
@@ -45,8 +56,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         private IEnumerable<IStampField> GetFields() =>
             TableStamp?.CellsElementWord?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
                                           Select(cell => new StampField(cell)).
-                                          Where(field => field.StampFieldType != StampFieldType.Unknown);    
-        
+                                          Where(field => field.StampFieldType != StampFieldType.Unknown);
+
 
     }
 }

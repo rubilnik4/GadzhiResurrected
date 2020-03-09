@@ -1,9 +1,9 @@
-﻿using GadzhiWord.Extension.StringAdditional;
+﻿using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.StampCollections;
+using GadzhiConverting.Word.Interfaces.Elements;
+using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
-using GadzhiWord.Models.Enums;
-using GadzhiWord.Models.Implementations.StampCollections;
-using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +13,18 @@ using System.Threading.Tasks;
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
     /// <summary>
-    /// Штамп
+    /// Контейнер штампов
     /// </summary>
-    public class StampWord : IStampWord
+    public class StampContainer : IStampContainer
     {
         /// <summary>
         /// Список штампов
         /// </summary>
         public IEnumerable<IStamp> Stamps { get; }
 
-        public StampWord(IEnumerable<ITableElementWord> tableStamps)
+        public StampContainer(IEnumerable<ITableElement> tableStamps, IDocumentWord documentWord)
         {
-            Stamps = InitializeStamp(tableStamps);
+            Stamps = InitializeStamp(tableStamps, documentWord);
         }
 
         /// <summary>
@@ -41,14 +41,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Инициализировать штамп
         /// </summary>       
-        private IEnumerable<IStampMain> InitializeStamp(IEnumerable<ITableElementWord> tableStamps) =>
+        private IEnumerable<IStampMain> InitializeStamp(IEnumerable<ITableElement> tableStamps, IDocumentWord documentWord) =>
                 tableStamps?.Where(table => GetStampType(table) == StampType.Main).
-                             Select(table => new StampMain(table));
+                             Select(table => new StampMain(table, documentWord));
 
         /// <summary>
         /// Заполнить поля штампа
         /// </summary>
-        private StampType? GetStampType(ITableElementWord tableStamp)
+        private StampType? GetStampType(ITableElement tableStamp)
         {
             StampType? stampType = null;
 
@@ -56,7 +56,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             {
                 if (cell != null && !String.IsNullOrWhiteSpace(cell.Text))
                 {
-                    string cellText = StringAdditionalExtensions.PrepareCellTextToComprare(cell.Text);
+                    string cellText = StringAdditionalExtensions.PrepareCellTextToCompare(cell.Text);
                     stampType = CheckStampType(stampType, cellText);
                 }
             }

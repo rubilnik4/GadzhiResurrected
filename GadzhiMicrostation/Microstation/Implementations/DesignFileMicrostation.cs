@@ -149,11 +149,14 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             if (stamp != null)
             {
-                CreatePdf(filePath, stamp.PaperSize, stamp.Range, stamp.Orientation, stamp.UnitScale,
-                          _microstationProject.FileDataMicrostation.ColorPrint);
-
-                return new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf, stamp.PaperSize,
-                                                      _microstationProject.PrintersInformation.PdfPrinter.PrinterName);
+                bool isPdfCreated = CreatePdf(filePath, stamp.PaperSize, stamp.Range, stamp.Orientation, stamp.UnitScale,
+                                              _microstationProject.FileDataMicrostation.ColorPrint);
+                if (isPdfCreated)
+                {
+                    return new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf, stamp.PaperSize,
+                                                                         _microstationProject.PrintersInformation.PdfPrinter.PrinterName);
+                }
+                return null;
             }
             else
             {
@@ -164,7 +167,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        private void CreatePdf(string filePath, string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
+        private bool CreatePdf(string filePath, string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
                               double printScale, ColorPrintMicrostation colorPrint)
         {
             bool isPrinterSet = ApplicationMicrostation.SetDefaultPrinter(_microstationProject.
@@ -179,7 +182,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
             if (isPrinterSet && isFenceSet && isPaperSizeSet)
             {
                 ApplicationMicrostation.PrintPdfCommand(filePath);
+                return true;
             }
+            return false;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using GadzhiWord.Extensions.Word;
-using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
+﻿using GadzhiConverting.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +10,19 @@ namespace GadzhiWord.Word.Implementations.Elements
     /// <summary>
     /// Элемент строка
     /// </summary>
-    public class RowElementWord : IRowElementWord
+    public class RowElementWord : IRowElement
     {
         /// <summary>
         /// Элемент строка Word
         /// </summary>
-        private readonly List<ICellElementWord> _cellsElementWord;
+        private readonly List<ICellElement> _cellsElementWord;
 
         /// <summary>
         /// Родительская таблица
         /// </summary>
-        private readonly ITableElementWord _tableElementWord;
+        private readonly ITableElement _tableElementWord;
 
-        public RowElementWord(List<ICellElementWord> cellsElementWord, ITableElementWord tableElementWord)
+        public RowElementWord(List<ICellElement> cellsElementWord, ITableElement tableElementWord)
         {
             if (cellsElementWord != null)
             {
@@ -40,6 +38,6 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        public IReadOnlyList<ICellElementWord> CellsElementWord => _cellsElementWord;
+        public IReadOnlyList<ICellElement> CellsElementWord => _cellsElementWord;
     }
 }

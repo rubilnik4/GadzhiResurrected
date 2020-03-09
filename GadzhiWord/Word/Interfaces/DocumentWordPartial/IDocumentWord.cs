@@ -1,4 +1,5 @@
-﻿using GadzhiWord.Models.Interfaces.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiWord.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace GadzhiWord.Word.Interfaces.DocumentWordPartial
         /// Путь к файлу
         /// </summary>
         string FullName { get; }
+
+        /// <summary>
+        /// Формат
+        /// </summary>
+        string PaperSize { get; }
 
         /// <summary>
         /// Загрузился ли файл
@@ -45,6 +51,6 @@ namespace GadzhiWord.Word.Interfaces.DocumentWordPartial
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        IEnumerable<IFileDataSourceServerWord> CreatePdfInDocument(string filePath);
+        IEnumerable<IFileDataSourceServerWord> CreatePdfInDocument(string filePath, ColorPrint colorPrint);
     }
 }

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.Enums
+namespace ConvertingModels.Models.Enums
 {
     /// <summary>
-    /// Тип поля в штампе
+    /// тип штампа
     /// </summary>
-    public enum StampFieldType
+    public enum StampType
     {
-        Unknown,
-        PersonSignature,
+        Main,
+        Additional
     }
 }

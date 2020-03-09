@@ -1,14 +1,10 @@
-﻿using GadzhiWord.Models.Enums;
-using GadzhiWord.Models.Implementations.StampCollections;
-using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.Interfaces.StampCollections
+namespace ConvertingModels.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Основные поля штампа

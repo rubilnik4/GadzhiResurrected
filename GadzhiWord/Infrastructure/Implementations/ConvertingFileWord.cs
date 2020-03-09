@@ -65,8 +65,8 @@ namespace GadzhiWord.Infrastructure.Implementations
                 //    _loggerMicrostation.ShowMessage("Создание файла DWG");
                 //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
                 //                                                                                    FileExtentionMicrostation.dwg));
-
-                _applicationWord.CloseDesignFile();
+                _messagingService.ShowAndLogMessage("Конвертирование завершено");
+                _applicationWord.CloseDocument();
             }
 
             return _wordProject.FileDataServerWord;

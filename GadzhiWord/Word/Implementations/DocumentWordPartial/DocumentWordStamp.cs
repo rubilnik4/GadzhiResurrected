@@ -1,10 +1,10 @@
-﻿using GadzhiWord.Extension.StringAdditional;
+﻿using ConvertingModels.Models.Interfaces.StampCollections;
+using GadzhiConverting.Word.Interfaces.Elements;
+using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
-using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Implementations.Elements;
 using GadzhiWord.Word.Interfaces.DocumentWordPartial;
-using GadzhiWord.Word.Interfaces.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -24,12 +24,12 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        public IStampWord StampWord => new StampWord(FindTableStamps());
+        public IStampContainer StampWord => new StampContainer(FindTableStamps(), this);
 
         /// <summary>
         /// Найти штампы в документе
         /// </summary>    
-        private IEnumerable<ITableElementWord> FindTableStamps() => GetTablesInFooters().Where(CheckFooterIsStamp).
+        private IEnumerable<ITableElement> FindTableStamps() => GetTablesInFooters().Where(CheckFooterIsStamp).
                                                                     Select(table => new TableElementWord(table));
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// </summary>
         private bool CheckFooterIsStamp(Table table) => table.Range.Cells.ToIEnumerable().
                                                               Where(cell => !String.IsNullOrWhiteSpace(cell?.Range?.Text)).
-                                                              Select(cell => StringAdditionalExtensions.PrepareCellTextToComprare(cell.Range.Text)).
+                                                              Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell.Range.Text)).
                                                               Any(cellText => StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText));
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace GadzhiWord.Extension.StringAdditional
         /// <summary>
         /// Обработать текст ячейки
         /// </summary>        
-        public static string PrepareCellTextToComprare(string cellText)
+        public static string PrepareCellTextToCompare(string cellText)
         {
             string preparedText = cellText?.Replace("ё", "е").
                                             Replace("c", "с").

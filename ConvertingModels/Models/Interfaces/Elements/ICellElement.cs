@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Word.Interfaces.Elements
+namespace GadzhiConverting.Word.Interfaces.Elements
 {
     /// <summary>
-    /// Элемент ячейка
+    /// Элемент ячейка. Базовый вариант
     /// </summary>
-    public interface ICellElementWord
+    public interface ICellElement
     {
         /// <summary>
         /// Текст ячейки
@@ -19,7 +19,7 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// <summary>
         /// родительский элемент строка
         /// </summary>
-        IRowElementWord RowElementWord { get; }
+        IRowElement RowElement { get; }
 
         /// <summary>
         /// Номер строки

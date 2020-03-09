@@ -64,13 +64,14 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<ILoggerMicrostationService, LoggerMicrostationService>();
             container.RegisterType<IExecuteAndCatchErrorsMicrostation, ExecuteAndCatchErrorsMicrostation>();
             container.RegisterType<IFileSystemOperationsMicrostation, FileSystemOperationsMicrostation>();
-            container.RegisterType<IPdfCreatorService, PdfCreatorService>();
+            container.RegisterType<IPdfCreatorServiceMicrostation, PdfCreatorServiceMicrostation>();
 
             //word
             var wordContainer = container?.CreateChildContainer();
             wordContainer.RegisterSingleton<IWordProject, WordProject>();
             wordContainer.RegisterSingleton<IApplicationWord, ApplicationWord>();
             wordContainer.RegisterType<IMessagingService, MessagingWordService>();
+            wordContainer.RegisterType<IPdfCreatorService, PdfCreatorService>();
             container.RegisterType<IConvertingFileWord, ConvertingFileWord>(
                 new InjectionConstructor(wordContainer.Resolve<IApplicationWord>(),
                                          wordContainer.Resolve<IWordProject>(),

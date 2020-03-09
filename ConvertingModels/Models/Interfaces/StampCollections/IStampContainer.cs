@@ -1,16 +1,15 @@
-﻿using GadzhiWord.Models.Implementations.StampCollections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.Interfaces.StampCollections
+namespace ConvertingModels.Models.Interfaces.StampCollections
 {
     /// <summary>
-    /// Штамп
+    /// Контейнер штампов
     /// </summary>
-    public interface IStampWord
+    public interface IStampContainer
     {
         /// <summary>
         /// Список штампов

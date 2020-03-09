@@ -1,6 +1,6 @@
-﻿using GadzhiWord.Extension.StringAdditional;
+﻿using ConvertingModels.Models.Enums;
+using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
-using GadzhiWord.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         {
             StampFieldType stampFieldType = StampFieldType.Unknown;
 
-            cellText = StringAdditionalExtensions.PrepareCellTextToComprare(cellText);
+            cellText = StringAdditionalExtensions.PrepareCellTextToCompare(cellText);
             if (IsFieldPersonSignature(cellText))
             {
                 stampFieldType = StampFieldType.PersonSignature;
@@ -35,5 +35,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>        
         public static bool IsFieldPersonSignature(string cellText) =>
             StampAdditionalParameters.MarkersActionTypeSignature.MarkerContain(cellText);
+
+        /// <summary>
+        /// Находится ли поле в строке с ответственным лицом и подписью. Обработка входной строки
+        /// </summary>        
+        public static bool IsFieldPersonSignatureWithPrepare(string cellText) =>
+            IsFieldPersonSignature(StringAdditionalExtensions.PrepareCellTextToCompare(cellText));
     }
 }

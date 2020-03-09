@@ -1,13 +1,12 @@
-﻿using GadzhiWord.Models.Enums;
-using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
+﻿using ConvertingModels.Models.Enums;
+using GadzhiConverting.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.Interfaces.StampCollections
+namespace ConvertingModels.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Базовая ячейка штампа
@@ -17,7 +16,7 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
         /// <summary>
         /// Элемент ячейка определяющая поле штампа
         /// </summary>
-        ICellElementWord CellElementWord { get; }
+        ICellElement CellElementWord { get; }
 
         /// <summary>
         /// Тип поля в штампе
@@ -27,6 +26,6 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
         /// <summary>
         /// Родительский элемент строка
         /// </summary>
-        IRowElementWord RowElementStamp { get; }
+        IRowElement RowElementStamp { get; }
     }
 }

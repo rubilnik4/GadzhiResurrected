@@ -1,8 +1,6 @@
-﻿using GadzhiWord.Models.Enums;
-using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Implementations.Elements;
-using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
+﻿using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.StampCollections;
+using GadzhiConverting.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +17,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Элемент ячейка определяющая поле штампа
         /// </summary>
-        public ICellElementWord CellElementWord { get; }
+        public ICellElement CellElementWord { get; }
 
         /// <summary>
         /// Тип поля в штампе
         /// </summary>
         public StampFieldType StampFieldType { get; }
 
-        public StampField(ICellElementWord cellElementWord)
+        public StampField(ICellElement cellElementWord)
         {
             CellElementWord = cellElementWord;
             StampFieldType = CheckFieldType.GetStampFieldType(cellElementWord?.Text);
@@ -35,6 +33,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Родительский элемент строка
         /// </summary>
-        public IRowElementWord RowElementStamp => CellElementWord.RowElementWord;
+        public IRowElement RowElementStamp => CellElementWord.RowElement;
     }
 }

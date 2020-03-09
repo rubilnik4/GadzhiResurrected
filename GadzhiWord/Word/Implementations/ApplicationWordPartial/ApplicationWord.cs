@@ -2,6 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiWord.Factory;
+using GadzhiWord.Infrastructure.Interfaces;
 using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
@@ -40,15 +41,22 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// </summary> 
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
 
+        /// <summary>
+        /// Управление печатью пдф
+        /// </summary>
+        private readonly IPdfCreatorService _pdfCreatorService;
+
         public ApplicationWord(IWordProject wordProject,
                                IFileSystemOperations fileSystemOperations,
                                IMessagingService messagingService,
-                               IExecuteAndCatchErrors executeAndCatchErrors)
+                               IExecuteAndCatchErrors executeAndCatchErrors,
+                               IPdfCreatorService pdfCreatorService)
         {
             _wordProject = wordProject;
             _fileSystemOperations = fileSystemOperations;
             _messagingService = messagingService;
-            _executeAndCatchErrors = executeAndCatchErrors;           
+            _executeAndCatchErrors = executeAndCatchErrors;
+            _pdfCreatorService = pdfCreatorService;
         }
 
         /// <summary>
@@ -76,7 +84,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Текущий документ Word
         /// </summary>
-        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument, _messagingService);
+        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation

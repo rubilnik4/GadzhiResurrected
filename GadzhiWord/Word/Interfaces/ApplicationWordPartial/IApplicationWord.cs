@@ -10,7 +10,7 @@ namespace GadzhiWord.Word.Interfaces.ApplicationWordPartial
     /// <summary>
     /// Класс для работы с приложением Word
     /// </summary>
-    public interface IApplicationWord: IApplicationWordDocument
+    public interface IApplicationWord: IApplicationWordDocument, IApplicationWordPrinting
     {    
         /// <summary>
         /// Загрузилась ли оболочка Microstation

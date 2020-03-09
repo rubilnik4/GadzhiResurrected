@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Word.Interfaces.Elements
+namespace GadzhiConverting.Word.Interfaces.Elements
 {
     /// <summary>
-    /// Элемент строка
+    /// Элемент строка. Базовый вариант
     /// </summary>
-    public interface IRowElementWord
+    public interface IRowElement
     {
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        IReadOnlyList<ICellElementWord> CellsElementWord { get; }
+        IReadOnlyList<ICellElement> CellsElementWord { get; }
     }
 }

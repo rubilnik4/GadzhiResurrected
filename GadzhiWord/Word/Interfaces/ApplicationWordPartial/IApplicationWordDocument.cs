@@ -30,6 +30,6 @@ namespace GadzhiWord.Word.Interfaces.ApplicationWordPartial
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        void CloseDesignFile();
+        void CloseDocument();
     }
 }

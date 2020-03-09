@@ -1,6 +1,7 @@
-﻿using GadzhiWord.Models.Enums;
-using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
+﻿using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.StampCollections;
+using GadzhiConverting.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public class StampMain : Stamp, IStampMain
     {
-        public StampMain(ITableElementWord tableStamp)
-            : base(tableStamp)
+        public StampMain(ITableElement tableStamp, IDocumentWord documentWord)
+            : base(tableStamp, documentWord)
         {
 
         }
@@ -23,12 +24,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Тип штампа
         /// </summary>
-        protected override StampType StampType => StampType.Main;
-
+        public override StampType StampType => StampType.Main;
+        
         /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
         public IEnumerable<IStampPersonSignature> StampPersonSignatures => FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
-                                                                                       Select(field => new StampPersonSignature(field.RowElementStamp));      
+                                                                                       Select(field => new StampPersonSignature(field.RowElementStamp));     
     }
 }

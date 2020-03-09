@@ -1,12 +1,10 @@
-﻿using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiWord.Models.Interfaces.StampCollections
+namespace ConvertingModels.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Строка с ответсвенным лицом и подписью

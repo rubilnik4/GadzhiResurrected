@@ -1,7 +1,9 @@
-﻿using GadzhiMicrostation.Extentions.StringAdditional;
-using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.StringAdditional;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiWord.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,18 +12,18 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace GadzhiMicrostation.Infrastructure.Implementations
+namespace GadzhiWord.Infrastructure.Implementations
 {
     /// <summary>
     /// Управление печатью пдф
     /// </summary>
-    public class PdfCreatorServiceMicrostation : IPdfCreatorServiceMicrostation
+    public class PdfCreatorService : IPdfCreatorService
     {
         /// <summary>
-        /// Сервис работы с ошибками
+        /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessagingMicrostationService _errorMessagingMicrostation;
-        
+        private readonly IMessagingService _messagingService;
+
         /// <summary>
         /// Библиотека Pdf Creator
         /// </summary>
@@ -32,9 +34,9 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
         /// </summary>
         private bool _readyState = false;
 
-        public PdfCreatorServiceMicrostation(IMessagingMicrostationService errorMessagingMicrostation)
+        public PdfCreatorService(IMessagingService messagingService)
         {
-            _errorMessagingMicrostation = errorMessagingMicrostation;
+            _messagingService = messagingService;
         }
 
         /// <summary>
@@ -62,10 +64,10 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
 
             if (_pdfCreator.cStart("/NoProcessingAtStartup", false))
             {
-                string fileExtension = FileSystemOperationsMicrostation.ExtensionWithoutPointFromPath(filePath);
+                string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
 
                 if (!String.IsNullOrEmpty(filePath) || !String.IsNullOrEmpty(fileExtension) ||
-                    FileExtentionMicrostation.pdf.ToString().ContainsIgnoreCase(fileExtension))
+                    FileExtention.pdf.ToString().ContainsIgnoreCase(fileExtension))
                 {
                     _pdfCreator.cOptions = GetPdfPrinterOptions(filePath);
                     _pdfCreator.cClearCache();
@@ -74,13 +76,13 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 }
                 else
                 {
-                    _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                                        $"Некорретно задан путь сохранения {filePath}"));
                 }
             }
             else
             {
-                _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                     "Ошибка инициализации PDF принтера"));
             }
 
@@ -105,8 +107,8 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             bool success;
             if (!_readyState)
             {
-                _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
-                                                                   "Время создания PDF файла истекло"));
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+                                                                      "Время создания PDF файла истекло"));
                 success = false;
             }
             else
@@ -135,7 +137,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
                 }
                 else
                 {
-                    _errorMessagingMicrostation.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PdfPrintingError,
+                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                                                    "Функция печати не задана"));
                 }
 
@@ -155,8 +157,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             pdfCreatorOptions.UseAutosaveDirectory = 1;
             pdfCreatorOptions.AutosaveDirectory = Path.GetDirectoryName(filePath);
             pdfCreatorOptions.AutosaveFilename = Path.GetFileNameWithoutExtension(filePath);
-            pdfCreatorOptions.AutosaveFormat = 0; // сделать PDF           
-
+            pdfCreatorOptions.AutosaveFormat = 0; // сделать PDF 
             return pdfCreatorOptions;
         }
         /// <summary>
@@ -189,7 +190,7 @@ namespace GadzhiMicrostation.Infrastructure.Implementations
             }
         }
 
-        ~PdfCreatorServiceMicrostation()
+        ~PdfCreatorService()
         {
             Dispose(false);
         }
