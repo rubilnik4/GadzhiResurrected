@@ -118,6 +118,9 @@
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Helpers\NativeMethods .cs" />
+    <Compile Include="Infrastructure\ApplicationWordPartial\ApplicationWord.cs" />
+    <Compile Include="Infrastructure\ApplicationWordPartial\ApplicationWordDocument.cs" />
+    <Compile Include="Infrastructure\ApplicationWordPartial\ApplicationWordPrinting.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFileWord.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingWordService.cs" />
     <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />

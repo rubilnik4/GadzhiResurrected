@@ -100,6 +100,9 @@
   <ItemGroup>
     <Compile Include="Infrastructure\Implementations\LoggerService.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
+    <Compile Include="Models\Interfaces\ApplicationLibrary\IApplicationLibrary.cs" />
+    <Compile Include="Models\Interfaces\ApplicationLibrary\IApplicationLibraryDocument.cs" />
+    <Compile Include="Models\Interfaces\ApplicationLibrary\IApplicationLibraryPrinting.cs" />
     <Compile Include="Models\Enums\StampFieldType.cs" />
     <Compile Include="Models\Enums\StampType.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />

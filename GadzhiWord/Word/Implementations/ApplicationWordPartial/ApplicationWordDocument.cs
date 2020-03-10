@@ -1,9 +1,11 @@
 ﻿using ConvertingModels.Models.Implementations.FilesConvert;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiWord.Models.Implementations.FilesConvert;
+using GadzhiWord.Models.Interfaces.FilesConvert;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
 using GadzhiWord.Word.Interfaces.DocumentWordPartial;
@@ -18,60 +20,41 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
     /// <summary>
     /// Подкласс приложения Word для работы с документом
     /// </summary>
-    public partial class ApplicationWord : IApplicationWordDocument
+    public partial class ApplicationWord : IApplicationLibraryDocument
     {
         /// <summary>
         /// Открыть документ
         /// </summary>
         public IDocumentWord OpenDocument(string filePath)
         {
-            if (IsDesingFileValidAndSetErrors(filePath))
+            if (!String.IsNullOrWhiteSpace(filePath))
             {
-                _executeAndCatchErrors.ExecuteAndHandleError(
-                    () => Application.Documents.Open(filePath),
-                    applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.FileNotOpen,
-                                                                      $"Ошибка открытия файла {filePath}"));
-            };
+                Application.Documents.Open(filePath);
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(filePath)));
+            }
             return ActiveDocument;
         }
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public void SaveDocument(string filePath)
+        public IDocumentWord SaveDocument(string filePath)
         {
             if (ActiveDocument.IsDocumentValid)
             {
-                _executeAndCatchErrors.ExecuteAndHandleError(() =>
+                if (!String.IsNullOrWhiteSpace(filePath))
                 {
                     ActiveDocument.SaveAs(filePath);
-                    _wordProject.FileDataServerWord.AddConvertedFilePath(new FileDataSourceServerWord(filePath, FileExtention.docx));
-                },
-                applicationCatchMethod: () =>
+                }
+                else
                 {
-                    ActiveDocument.Close();
-                    return new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                               $"Ошибка сохранения файла DGN {filePath}");
-                });
+                    throw new ArgumentNullException(nameof(filePath)));
+                }
             }
-
-        }
-
-        /// <summary>
-        /// Сохранить файл PDF
-        /// </summary>
-        public void CreatePdfFile(string filePath)
-        {
-            if (ActiveDocument.IsDocumentValid)
-            {
-                _executeAndCatchErrors.ExecuteAndHandleError(() =>
-                {
-                    var fileDataSourcesMicrostation = ActiveDocument.CreatePdfInDocument(filePath, _wordProject.FileDataServerWord.ColorPrint);
-                    _wordProject.FileDataServerWord.AddRangeConvertedFilePath(fileDataSourcesMicrostation);
-                },
-                    applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
-                                                                      $"Ошибка сохранения файла PDF {filePath}"));
-            }
+            return ActiveDocument;
         }
 
         /// <summary>
@@ -81,45 +64,8 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         {
             if (ActiveDocument.IsDocumentValid)
             {
-                _executeAndCatchErrors.ExecuteAndHandleError(
-                    () => ActiveDocument.CloseWithSaving(),
-                    applicationCatchMethod: () =>
-                    {
-                        ActiveDocument.Close();
-                        return new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                                   $"Ошибка закрытия файла {ActiveDocument.FullName}");
-
-                    });
+                ActiveDocument.CloseWithSaving();              
             }
-        }
-
-        /// <summary>
-        /// Проверить корректность файла. Записать ошибки
-        /// </summary>    
-        private bool IsDesingFileValidAndSetErrors(string filePath)
-        {
-            bool isValid = false;
-
-            if (_fileSystemOperations.IsFileExist(filePath))
-            {
-                string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
-                if (FileExtention.docx.ToString().ContainsIgnoreCase(fileExtension))
-                {
-                    isValid = true;
-                }
-                else
-                {
-                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.IncorrectExtension,
-                                                      $"Расширение файла {filePath} не соответствует типу .doc или .docx"));
-                }
-            }
-            else
-            {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
-                                                                      $"Файл {filePath} не найден"));
-            }
-
-            return isValid;
         }
     }
 }
