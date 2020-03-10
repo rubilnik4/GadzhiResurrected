@@ -127,7 +127,15 @@
     <Compile Include="Configuration\RegisterPrintersInformationSection.cs" />
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\NativeMethods .cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConvertingDocument.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConvertingPrinting.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConvertingStamp.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\ConvertingFileWord.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\MessagingWordService.cs" />
+    <Compile Include="Infrastructure\Implementations\Application\PdfCreatorService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerToMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerFromMicrostation.cs" />
@@ -135,24 +143,38 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDTO.cs" />
+    <Compile Include="Infrastructure\Implementations\LoggerService.cs" />
+    <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
+    <Compile Include="Infrastructure\Interfaces\Application\IConvertingFileWord.cs" />
+    <Compile Include="Infrastructure\Interfaces\Application\IPdfCreatorService.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
+    <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
+    <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServerConverting.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServer.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServerConverting.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilesDataServerConverting.cs" />
     <Compile Include="Models\Implementations\Printers\PrinterInformation.cs" />
     <Compile Include="Models\Implementations\Printers\PrintersInformation.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IFileDataServer.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFileDataServerConverting.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IFileDataSourceServer.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFileDataSourceServerConverting.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFilesDataServerConverting.cs" />
-    <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -209,6 +231,15 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\signature.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

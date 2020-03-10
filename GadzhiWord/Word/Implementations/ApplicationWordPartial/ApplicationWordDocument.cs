@@ -1,14 +1,6 @@
-﻿using ConvertingModels.Models.Implementations.FilesConvert;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.StringAdditional;
-using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiWord.Models.Implementations.FilesConvert;
-using GadzhiWord.Models.Interfaces.FilesConvert;
-using GadzhiWord.Word.Interfaces;
-using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
-using GadzhiWord.Word.Interfaces.DocumentWordPartial;
+﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +15,19 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
     public partial class ApplicationWord : IApplicationLibraryDocument
     {
         /// <summary>
+        /// Текущий документ Word
+        /// </summary>
+        public IDocumentLibrary ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
+
+        /// <summary>
+        /// Загрузился ли файл
+        /// </summary>
+        public bool IsDocumentValid => ActiveDocument != null;
+
+        /// <summary>
         /// Открыть документ
         /// </summary>
-        public IDocumentWord OpenDocument(string filePath)
+        public IDocumentLibrary OpenDocument(string filePath)
         {
             if (!String.IsNullOrWhiteSpace(filePath))
             {
@@ -33,7 +35,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             }
             else
             {
-                throw new ArgumentNullException(nameof(filePath)));
+                throw new ArgumentNullException(nameof(filePath));
             }
             return ActiveDocument;
         }
@@ -41,7 +43,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public IDocumentWord SaveDocument(string filePath)
+        public IDocumentLibrary SaveDocument(string filePath)
         {
             if (ActiveDocument.IsDocumentValid)
             {
@@ -51,10 +53,21 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
                 }
                 else
                 {
-                    throw new ArgumentNullException(nameof(filePath)));
+                    throw new ArgumentNullException(nameof(filePath));
                 }
             }
             return ActiveDocument;
+        }
+
+        /// <summary>
+        /// Сохранить и закрыть файл
+        /// </summary>
+        public void CloseAndSaveDocument()
+        {
+            if (ActiveDocument.IsDocumentValid)
+            {
+                ActiveDocument.CloseWithSaving();
+            }
         }
 
         /// <summary>
@@ -64,7 +77,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         {
             if (ActiveDocument.IsDocumentValid)
             {
-                ActiveDocument.CloseWithSaving();              
+                ActiveDocument.Close();
             }
         }
     }

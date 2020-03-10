@@ -1,6 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.Printers;
-using GadzhiConverting.Models.Implementations;
-using GadzhiConverting.Models.Implementations.Printers;
+﻿using GadzhiConverting.Models.Interfaces.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
 {

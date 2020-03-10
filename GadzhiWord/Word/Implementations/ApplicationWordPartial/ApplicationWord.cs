@@ -1,13 +1,7 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Models.Implementations.Errors;
+﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Factory;
-using GadzhiWord.Infrastructure.Interfaces;
-using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Implementations.DocumentWordPartial;
-using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
-using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -44,16 +38,11 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
                 }              
                 return _application;
             }
-        }
-
-        /// <summary>
-        /// Текущий документ Word
-        /// </summary>
-        public IDocumentWord ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
+        }      
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>
-        public bool IsApplicationValid => Application != null;
+        public bool IsApplicationValid => Application != null;      
     }
 }

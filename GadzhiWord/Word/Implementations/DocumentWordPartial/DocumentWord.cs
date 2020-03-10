@@ -1,11 +1,6 @@
-﻿using ConvertingModels.Models.Enums;
-using ConvertingModels.Models.Interfaces.StampCollections;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiWord.Models.Implementations.FilesConvert;
-using GadzhiWord.Models.Interfaces.FilesConvert;
+﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Word.Implementations.Converters;
-using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
-using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -19,24 +14,19 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
     /// <summary>
     /// Документ Word
     /// </summary>
-    public partial class DocumentWord : IDocumentWord
+    public partial class DocumentWord : IDocumentLibrary
     {
         /// <summary>
         /// Экземпляр файла
         /// </summary>
         private readonly Document _document;
-
-        /// <summary>
-        /// Класс для отображения изменений и логгирования
-        /// </summary>
-        //private readonly IMessagingService _messagingService;
-
+      
         /// <summary>
         /// Класс для работы с приложением Word
         /// </summary>
-        private readonly IApplicationWord _applicationWord;
+        private readonly IApplicationLibrary _applicationWord;
 
-        public DocumentWord(Document document, IApplicationWord applicationWord)
+        public DocumentWord(Document document, IApplicationLibrary applicationWord)
         {
             _document = document;
             _applicationWord = applicationWord;
@@ -79,72 +69,6 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         {
             Save();
             Close();
-        }
-
-        /// <summary>
-        /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
-        /// </summary>       
-        public IEnumerable<IFileDataSourceServerWord> CreatePdfInDocument(string filePath, ColorPrint colorPrint)
-        {
-            if (StampWord.IsValid)
-            {
-                return StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
-                                         Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint));
-            }
-            else
-            {
-                //_messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.StampNotFound,
-                //                                                  $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Создать PDF для штампа, вставить подписи
-        /// </summary>       
-        private IFileDataSourceServerWord CreatePdfWithSignatures(IStamp stamp, string filePath, ColorPrint colorPrint)
-        {
-            //_messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
-            //stamp.CompressFieldsRanges();
-
-            InsertStampSignatures();
-
-            //_messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
-            IFileDataSourceServerWord fileDataSourceServerWord = CreatePdfByStamp(stamp, filePath, colorPrint);
-
-            DeleteStampSignatures();
-
-            return fileDataSourceServerWord;
-        }
-
-        /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        private IFileDataSourceServerWord CreatePdfByStamp(IStamp stamp, string filePath, ColorPrint colorPrint)
-        {
-            if (stamp != null)
-            {
-                return CreatePdf(filePath, colorPrint, stamp.PaperSize);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(stamp));
-            }
-        }
-
-
-        /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        private IFileDataSourceServerWord CreatePdf(string filePath, ColorPrint colorPrint, string paperSize)
-        {
-            string pdfPrinterName = _applicationWord.SetDefaultPdfPrinter();
-            if (!String.IsNullOrWhiteSpace(pdfPrinterName))
-            {
-                _applicationWord.PrintPdfCommand(filePath);
-                return new FileDataSourceServerWord(filePath, FileExtention.pdf, paperSize, pdfPrinterName);
-            }
-            return null;
-        }
+        }      
     }
 }

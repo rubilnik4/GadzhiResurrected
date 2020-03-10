@@ -1,7 +1,7 @@
 ﻿using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
 using ConvertingModels.Models.Interfaces.StampCollections;
 using GadzhiConverting.Word.Interfaces.Elements;
-using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public class StampMain : Stamp, IStampMain
     {
-        public StampMain(ITableElement tableStamp, IDocumentWord documentWord)
+        public StampMain(ITableElement tableStamp, IDocumentLibrary documentWord)
             : base(tableStamp, documentWord)
         {
 

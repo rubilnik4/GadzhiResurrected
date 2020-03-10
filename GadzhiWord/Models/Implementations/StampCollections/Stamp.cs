@@ -1,5 +1,4 @@
-﻿using GadzhiWord.Word.Interfaces.DocumentWordPartial;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using ConvertingModels.Models.Interfaces.StampCollections;
 using GadzhiConverting.Word.Interfaces.Elements;
 using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -16,19 +16,19 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     public abstract class Stamp : IStamp
     {
         /// <summary>
-        /// Элемент таблица Word
+        /// Элемент таблица
         /// </summary>
         protected ITableElement TableStamp { get; }
 
         /// <summary>
-        /// Элемент таблица Word
+        /// Документ
         /// </summary>
-        private readonly IDocumentWord _documentWord;
+        private readonly IDocumentLibrary _document;
 
-        public Stamp(ITableElement tableStamp, IDocumentWord documentWord)
+        public Stamp(ITableElement tableStamp, IDocumentLibrary document)
         {
             TableStamp = tableStamp;
-            _documentWord = documentWord;
+            _document = document;
         }
         /// <summary>
         /// Наименование
@@ -43,7 +43,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Формат
         /// </summary>
-        public string PaperSize => _documentWord.PaperSize;
+        public string PaperSize => _document.PaperSize;
 
         /// <summary>
         /// Получить поля штампа

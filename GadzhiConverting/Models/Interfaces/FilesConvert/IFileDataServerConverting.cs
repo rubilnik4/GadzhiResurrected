@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiConverting.Models.Interfaces.FilesConvert
+namespace ConvertingModels.Models.Interfaces.FilesConvert
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле для приложения

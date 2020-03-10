@@ -1,9 +1,9 @@
 ﻿using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
 using ConvertingModels.Models.Interfaces.StampCollections;
 using GadzhiConverting.Word.Interfaces.Elements;
 using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
-using GadzhiWord.Word.Interfaces.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public IEnumerable<IStamp> Stamps { get; }
 
-        public StampContainer(IEnumerable<ITableElement> tableStamps, IDocumentWord documentWord)
+        public StampContainer(IEnumerable<ITableElement> tableStamps, IDocumentLibrary documentWord)
         {
             Stamps = InitializeStamp(tableStamps, documentWord);
         }
@@ -41,7 +41,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Инициализировать штамп
         /// </summary>       
-        private IEnumerable<IStampMain> InitializeStamp(IEnumerable<ITableElement> tableStamps, IDocumentWord documentWord) =>
+        private IEnumerable<IStampMain> InitializeStamp(IEnumerable<ITableElement> tableStamps, IDocumentLibrary documentWord) =>
                 tableStamps?.Where(table => GetStampType(table) == StampType.Main).
                              Select(table => new StampMain(table, documentWord));
 

@@ -1,9 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary;
-using ConvertingModels.Models.Interfaces.Printers;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiWord.Helpers.Implementations;
-using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
+﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -22,10 +17,9 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Команда печати
         /// </summary>
-        public void PrintCommand()
-        {
+        public void PrintCommand() =>       
             Application.PrintOut(Range: WdPrintOutRange.wdPrintAllDocument, PageType: WdPrintOutPages.wdPrintAllPages,
-                                  ManualDuplexPrint: false, PrintToFile: false);
-        }
+                                 ManualDuplexPrint: false, PrintToFile: false);
+       
     }
 }
