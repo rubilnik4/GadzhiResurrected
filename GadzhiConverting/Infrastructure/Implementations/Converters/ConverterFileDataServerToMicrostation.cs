@@ -1,8 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using ConvertingModels.Models.Interfaces.Printers;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiConverting.Models.Implementations.FilesConvert;
-using GadzhiConverting.Models.Implementations.Printers;
+using GadzhiConverting.Models.Interfaces.Printers;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.FilesData;
 using GadzhiMicrostation.Models.Implementations.Printers;

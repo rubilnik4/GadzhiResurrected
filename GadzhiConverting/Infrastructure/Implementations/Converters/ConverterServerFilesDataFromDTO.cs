@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
@@ -40,14 +41,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        public async Task<IFilesDataServerConverting> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
+        public async Task<IFilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FileDatas?.Select(fileDTO =>
                                                ConvertToFileDataServerAndSaveFile(fileDTO,
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServerConverting(filesDataRequest.Id,
+            return new FilesDataServer(filesDataRequest.Id,
                                                  filesDataRequest.AttemptingConvertCount,
                                                  filesDataServerToConvert);
         }

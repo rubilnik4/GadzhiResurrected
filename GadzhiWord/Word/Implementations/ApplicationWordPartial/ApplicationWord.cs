@@ -34,7 +34,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             {
                 if (_application == null)
                 {
-                    WordInstance.Instance();                                       
+                    _application = WordInstance.Instance();                                       
                 }              
                 return _application;
             }

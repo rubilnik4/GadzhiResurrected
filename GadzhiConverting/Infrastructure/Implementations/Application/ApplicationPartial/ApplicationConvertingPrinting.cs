@@ -1,26 +1,31 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+﻿using ConvertingModels.Models.Enums;
+using ConvertingModels.Models.Interfaces.FilesConvert;
+using ConvertingModels.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiConverting.Infrastructure.Interfaces.Application.ApplicationPartial;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.Printers;
 using GadzhiWord.Helpers.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationWordPartial
+namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationPartial
 {
     /// <summary>
-    /// Печать Word
+    /// Подкласс для выполнения печати
     /// </summary>
     public partial class ApplicationConverting : IApplicationConvertingPrinting
     {
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        public bool SetDefaultPrinter(IPrinterInformation printerInformation)
+        private bool SetDefaultPrinter(IPrinterInformation printerInformation)
         {
             bool success = false;
             if (PrinterSettings.InstalledPrinters?.Cast<string>()?.Contains(printerInformation?.Name,
@@ -45,35 +50,25 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
             return success;
         }
 
-        ///// <summary>
-        ///// Установить принтер PDF по умолчанию
-        ///// </summary>       
-        //public string SetDefaultPdfPrinter()
-        //{
-        //    IPrinterInformation pdfPrinterInformation = _wordProject.PrintersInformation.PrintersPdf.FirstOrDefault();
-        //    SetDefaultPrinter(pdfPrinterInformation);
-        //    return pdfPrinterInformation.Name;
-        //}       
-
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        public bool PrintPdfCommand(string filePath) => _pdfCreatorService.PrintPdfWithExecuteAction(filePath, _applicationLibrary.PrintCommand);
+        private bool PrintPdfCommand(string filePath) => _pdfCreatorService.PrintPdfWithExecuteAction(filePath, _applicationLibrary.PrintCommand);
 
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        public IEnumerable<IFileDataSourceServer> CreatePdfInDocument(string filePath, ColorPrint colorPrint)
+        private IEnumerable<IFileDataSourceServer> CreatePdfInDocument(string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
-            if (StampWord.IsValid)
+            if (_applicationLibrary.StampWord.IsValid)
             {
-                return StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
-                                         Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint));
+                return _applicationLibrary.StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
+                                                     Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterName));
             }
             else
             {
-                //_messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.StampNotFound,
-                //                                                  $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.StampNotFound,
+                                                                  $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
                 return null;
             }
         }
@@ -81,17 +76,17 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private IFileDataSourceServerWord CreatePdfWithSignatures(IStamp stamp, string filePath, ColorPrint colorPrint)
+        private IFileDataSourceServer CreatePdfWithSignatures(IStamp stamp, string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
-            //_messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
+            _messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
             //stamp.CompressFieldsRanges();
 
-            InsertStampSignatures();
+            _applicationLibrary.InsertStampSignatures();
 
-            //_messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
-            IFileDataSourceServerWord fileDataSourceServerWord = CreatePdfByStamp(stamp, filePath, colorPrint);
+            _messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
+            IFileDataSourceServer fileDataSourceServerWord = CreatePdfByStamp(stamp, filePath, colorPrint, pdfPrinterName);
 
-            DeleteStampSignatures();
+            _applicationLibrary.DeleteStampSignatures();
 
             return fileDataSourceServerWord;
         }
@@ -99,11 +94,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        private IFileDataSourceServerWord CreatePdfByStamp(IStamp stamp, string filePath, ColorPrint colorPrint)
+        private IFileDataSourceServer CreatePdfByStamp(IStamp stamp, string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
             if (stamp != null)
             {
-                return CreatePdf(filePath, colorPrint, stamp.PaperSize);
+                return CreatePdf(filePath, colorPrint, stamp.PaperSize, pdfPrinterName);
             }
             else
             {
@@ -115,13 +110,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        private IFileDataSourceServerWord CreatePdf(string filePath, ColorPrint colorPrint, string paperSize)
-        {
-            string pdfPrinterName = _applicationWord.SetDefaultPdfPrinter();
-            if (!String.IsNullOrWhiteSpace(pdfPrinterName))
+        private IFileDataSourceServer CreatePdf(string filePath, ColorPrint colorPrint, string paperSize, string pdfPrinterName)
+        {           
+            if (NativeMethods.SetDefaultPrinter(pdfPrinterName))
             {
-                _applicationWord.PrintPdfCommand(filePath);
-                return new FileDataSourceServerWord(filePath, FileExtention.pdf, paperSize, pdfPrinterName);
+                _applicationLibrary.PrintCommand();
+                return new FileDataSourceServerConverting(filePath, FileExtention.pdf, paperSize, pdfPrinterName);
             }
             return null;
         }

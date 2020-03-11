@@ -1,5 +1,5 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Implementations;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах на серверной части
     /// </summary>
-    public interface IFilesDataServerConverting
+    public interface IFilesDataServer
     {
         /// <summary>
         /// ID идентефикатор
@@ -19,7 +19,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        IReadOnlyList<IFileDataServerConverting> FileDatasServerConverting { get; }
+        IReadOnlyList<IFileDataServer> FileDatasServerConverting { get; }
 
         /// <summary>
         /// Статус выполнения проекта

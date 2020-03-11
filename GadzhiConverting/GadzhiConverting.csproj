@@ -128,13 +128,9 @@
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\NativeMethods .cs" />
-    <Compile Include="Infrastructure\Implementations\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConvertingDocument.cs" />
     <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConvertingPrinting.cs" />
-    <Compile Include="Infrastructure\Implementations\Application\ApplicationPartial\ApplicationConvertingStamp.cs" />
-    <Compile Include="Infrastructure\Implementations\Application\ConvertingFileWord.cs" />
-    <Compile Include="Infrastructure\Implementations\Application\MessagingWordService.cs" />
     <Compile Include="Infrastructure\Implementations\Application\PdfCreatorService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerToMicrostation.cs" />
@@ -146,28 +142,25 @@
     <Compile Include="Infrastructure\Implementations\LoggerService.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
-    <Compile Include="Infrastructure\Interfaces\Application\IConvertingFileWord.cs" />
+    <Compile Include="Infrastructure\Interfaces\Application\ApplicationPartial\IApplicationConverting.cs" />
+    <Compile Include="Infrastructure\Interfaces\Application\ApplicationPartial\IApplicationConvertingDocument.cs" />
+    <Compile Include="Infrastructure\Interfaces\Application\ApplicationPartial\IApplicationConvertingPrinting.cs" />
     <Compile Include="Infrastructure\Interfaces\Application\IPdfCreatorService.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataFromDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDTO.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
-    <Compile Include="Infrastructure\Interfaces\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\FileDataServerConverting.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServer.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\FileDataSourceServerConverting.cs" />
-    <Compile Include="Models\Implementations\FilesConvert\FilesDataServerConverting.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FilesDataServer.cs" />
     <Compile Include="Models\Implementations\Printers\PrinterInformation.cs" />
     <Compile Include="Models\Implementations\Printers\PrintersInformation.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFileDataServer.cs" />
-    <Compile Include="Models\Interfaces\FilesConvert\IFileDataServerConverting.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFileDataSourceServer.cs" />
-    <Compile Include="Models\Interfaces\FilesConvert\IFileDataSourceServerConverting.cs" />
-    <Compile Include="Models\Interfaces\FilesConvert\IFilesDataServerConverting.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IFilesDataServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -240,6 +233,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\signature.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="PDFCreator">
+      <Guid>{1CE9DC08-9FBC-45C6-8A7C-4FE1E208A613}</Guid>
+      <VersionMajor>7</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBA">
+      <Guid>{000204EF-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>9</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

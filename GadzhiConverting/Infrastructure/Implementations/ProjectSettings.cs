@@ -1,6 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.Printers;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Interfaces;
+﻿using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
@@ -27,7 +25,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public ProjectSettings(IFileSystemOperations fileSystemOperations)
         {
             PutResourcesToDataFolder();
-            CreateSaveFolders();
+           // CreateSaveFolders();
         }
 
         /// <summary>
@@ -102,19 +100,24 @@ namespace GadzhiConverting.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Папка для сохранения файлов DOC
+        /// </summary>
+        public string DocFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\DOC";
+
+        /// <summary>
         /// Папка для сохранения файлов DGN
         /// </summary>
-        private string DocFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\DOC";
+        public string DgnFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\DGN";
 
         /// <summary>
         /// Папка для сохранения файлов PDF
         /// </summary>
-        private string PdfFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\PDF";
+        public string PdfFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\PDF";
 
         /// <summary>
-        /// Папка для сохранения файлов DWG
+        /// Папка для сохранения файлов XLS
         /// </summary>
-        private string DwgFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\XLS";
+        public string DwgFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\XLS";
 
         ///// <summary>
         ///// Создать пути для сохранения файлов

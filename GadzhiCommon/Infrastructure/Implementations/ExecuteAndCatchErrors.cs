@@ -12,25 +12,21 @@ namespace GadzhiCommon.Infrastructure.Implementations
     /// Класс обертка для отлова ошибок
     /// </summary> 
     public class ExecuteAndCatchErrors : IExecuteAndCatchErrors
-    {
-        /// <summary>
-        /// Стандартные диалоговые окна
-        /// </summary> 
-        private readonly IMessagingService _messagingService;
-
-        public ExecuteAndCatchErrors(IMessagingService messagingService)
-        {
-            _messagingService = messagingService;
+    {       
+        public ExecuteAndCatchErrors()
+        {          
         }
 
         /// <summary>
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
-        public void ExecuteAndHandleError(Action method,
+        public IErrorConverting ExecuteAndHandleError(Action method,
                                           Action applicationBeforeMethod = null,
-                                          Func<IErrorConverting> applicationCatchMethod = null,
+                                          Action applicationCatchMethod = null,
                                           Action applicationFinallyMethod = null)
         {
+            IErrorConverting errorConverting = null;
+
             try
             {
                 applicationBeforeMethod?.Invoke();
@@ -38,26 +34,28 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
             catch (Exception ex)
             {
-                var errorConverting = applicationCatchMethod?.Invoke();
-
-                FileConvertErrorType fileConvertErrorType = GetTypeException(ex, errorConverting.FileConvertErrorType);
-                _messagingService.ShowAndLogError(new ErrorConverting(fileConvertErrorType, errorConverting?.ErrorDescription,
-                                                                      ex.Message, ex.StackTrace));
+                applicationCatchMethod?.Invoke();              
+                errorConverting = new ErrorConverting(GetTypeException(ex, errorConverting.FileConvertErrorType),
+                                                      errorConverting?.ErrorDescription, ex.Message, ex.StackTrace);
             }
             finally
             {
                 applicationFinallyMethod?.Invoke();
             }
+
+            return errorConverting;
         }
 
         /// <summary>
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        public async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
+        public async Task<IErrorConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
                                                      Action applicationBeforeMethod = null,
-                                                     Func<Task<IErrorConverting>> applicationCatchMethod = null,
+                                                     Action applicationCatchMethod = null,
                                                      Action applicationFinallyMethod = null)
         {
+            IErrorConverting errorConverting = null;
+
             try
             {
                 applicationBeforeMethod?.Invoke();
@@ -65,16 +63,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
             catch (Exception ex)
             {
-                var errorConverting = await applicationCatchMethod?.Invoke();
-
-                FileConvertErrorType fileConvertErrorType = GetTypeException(ex, errorConverting.FileConvertErrorType);
-                _messagingService.ShowAndLogError(new ErrorConverting(fileConvertErrorType, errorConverting?.ErrorDescription,
-                                                                      ex.Message, ex.StackTrace));
+                applicationCatchMethod?.Invoke();
+                errorConverting = new ErrorConverting(GetTypeException(ex, errorConverting.FileConvertErrorType),
+                                                     errorConverting?.ErrorDescription, ex.Message, ex.StackTrace);                         
             }
             finally
             {
                 applicationFinallyMethod?.Invoke();
             }
+
+            return errorConverting;
         }     
 
         /// <summary>

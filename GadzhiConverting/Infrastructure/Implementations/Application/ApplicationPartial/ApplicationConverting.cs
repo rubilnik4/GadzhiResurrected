@@ -1,16 +1,17 @@
 ﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Application;
+using GadzhiConverting.Infrastructure.Interfaces.Application.ApplicationPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationWordPartial
+namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationPartial
 {
     /// <summary>
-    /// Класс для работы с приложением Word
+    /// Класс для работы с приложениями конвертации
     /// </summary>
     public partial class ApplicationConverting: IApplicationConverting
     {
@@ -22,12 +23,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
-        private readonly IFileSystemOperations _fileSystemOperations;
-
-        /// <summary>
-        /// Класс для отображения изменений и логгирования
-        /// </summary>
-        private readonly IMessagingService _messagingService;
+        private readonly IFileSystemOperations _fileSystemOperations;        
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -40,14 +36,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         private readonly IPdfCreatorService _pdfCreatorService;
 
         public ApplicationConverting(IApplicationLibrary applicationLibrary,
-                                     IFileSystemOperations fileSystemOperations,
-                                     IMessagingService messagingService,
+                                     IFileSystemOperations fileSystemOperations,                                   
                                      IExecuteAndCatchErrors executeAndCatchErrors,
                                      IPdfCreatorService pdfCreatorService)
         {
             _applicationLibrary = applicationLibrary;
-            _fileSystemOperations = fileSystemOperations;
-            _messagingService = messagingService;
+            _fileSystemOperations = fileSystemOperations;            
             _executeAndCatchErrors = executeAndCatchErrors;
             _pdfCreatorService = pdfCreatorService;
         }

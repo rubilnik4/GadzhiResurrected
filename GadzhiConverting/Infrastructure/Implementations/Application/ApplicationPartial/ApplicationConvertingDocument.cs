@@ -4,6 +4,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiConverting.Infrastructure.Interfaces.Application.ApplicationPartial;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationWordPartial
+namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationPartial
 {
     /// <summary>
-    /// Подкласс приложения Word для работы с документом
+    /// Подкласс для работы с документом
     /// </summary>
     public partial class ApplicationConverting : IApplicationConvertingDocument
     {
@@ -62,7 +63,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IEnumerable<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint)
+        public IEnumerable<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
             IEnumerable<IFileDataSourceServer> fileDataSourceServer = null;
 
@@ -70,7 +71,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
-                    fileDataSourceServer = CreatePdfInDocument(filePath, colorPrint);                   
+                    fileDataSourceServer = CreatePdfInDocument(filePath, colorPrint, pdfPrinterName);                   
                 },
                     applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                                       $"Ошибка сохранения файла PDF {filePath}"));
@@ -91,7 +92,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
                     {
                         _applicationLibrary.CloseDocument();
                         return new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                                   $"Ошибка закрытия файла {ActiveDocument.FullName}");
+                                                   $"Ошибка закрытия файла {_applicationLibrary.ActiveDocument.FullName}");
 
                     });
             }

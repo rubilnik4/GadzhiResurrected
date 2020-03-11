@@ -9,6 +9,11 @@ namespace GadzhiConverting.Infrastructure.Interfaces
     public interface IConvertingService: IDisposable
     {
         /// <summary>
+        /// Запустить процесс конвертирования
+        /// </summary>      
+        void StartConverting();
+
+        /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
         /// </summary>        
         Task ConvertingFirstInQueuePackage();

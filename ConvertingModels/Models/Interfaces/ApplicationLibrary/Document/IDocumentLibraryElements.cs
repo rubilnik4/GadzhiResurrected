@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiConverting.Word.Interfaces.Elements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,9 @@ namespace ConvertingModels.Models.Interfaces.ApplicationLibrary.Document
     /// </summary>
     public interface IDocumentLibraryElements
     {
-
+        /// <summary>
+        /// Найти нижние колонтитулы
+        /// </summary>
+        IEnumerable<ITableElement> GetTablesInFooters();
     }
 }

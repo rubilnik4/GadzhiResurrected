@@ -1,11 +1,15 @@
 ﻿using ChannelAdam.ServiceModel;
-using ConvertingModels.Infrastructure.Implementations;
+using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Implementations;
+using GadzhiConverting.Infrastructure.Implementations.Application;
+using GadzhiConverting.Infrastructure.Implementations.Application.ApplicationPartial;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Interfaces.Application;
+using GadzhiConverting.Infrastructure.Interfaces.Application.ApplicationPartial;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Infrastructure.Implementations;
@@ -16,12 +20,7 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Implementations;
 using GadzhiMicrostation.Models.Interfaces;
-using GadzhiWord.Infrastructure.Implementations;
-using GadzhiWord.Infrastructure.Interfaces;
-using GadzhiWord.Models.Implementations;
-using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Implementations.ApplicationWordPartial;
-using GadzhiWord.Word.Interfaces.ApplicationWordPartial;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -42,8 +41,7 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
            
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
-            container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();
-            container.RegisterSingleton<IApplicationConverting, ApplicationConverting>();
+            container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();          
             container.RegisterSingleton<IConvertingService, ConvertingService>();             
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) =>
                       ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
@@ -66,16 +64,10 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IFileSystemOperationsMicrostation, FileSystemOperationsMicrostation>();
             container.RegisterType<IPdfCreatorServiceMicrostation, PdfCreatorServiceMicrostation>();
 
-            //word
-            var wordContainer = container?.CreateChildContainer();
-            wordContainer.RegisterSingleton<IWordProject, WordProject>();
-            wordContainer.RegisterSingleton<IApplicationWord, ApplicationWord>();
-            wordContainer.RegisterType<IMessagingService, MessagingWordService>();
-            wordContainer.RegisterType<IPdfCreatorService, PdfCreatorService>();
-            container.RegisterType<IConvertingFileWord, ConvertingFileWord>(
-                new InjectionConstructor(wordContainer.Resolve<IApplicationWord>(),
-                                         wordContainer.Resolve<IWordProject>(),
-                                         wordContainer.Resolve<IMessagingService>()));
+            //word          
+            container.RegisterSingleton<IApplicationLibrary, ApplicationWord>();
+            container.RegisterType<IPdfCreatorService, PdfCreatorService>();
+            container.RegisterType<IApplicationConverting, ApplicationConverting>();
         }
     }
 }

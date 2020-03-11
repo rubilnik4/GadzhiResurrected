@@ -11,7 +11,7 @@ namespace ConvertingModels.Models.Interfaces.ApplicationLibrary.Application
     /// <summary>
     /// Класс для работы с приложениями
     /// </summary>
-    public interface IApplicationLibrary: IApplicationLibraryDocument, IApplicationLibraryPrinting
+    public interface IApplicationLibrary: IApplicationLibraryDocument, IApplicationLibraryPrinting, IApplicationLibraryStamp
     {  
         /// <summary>
         /// Загрузилась ли оболочка приложения

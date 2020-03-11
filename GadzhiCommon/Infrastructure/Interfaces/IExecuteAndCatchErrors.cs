@@ -12,17 +12,17 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
-        void ExecuteAndHandleError(Action method,
+        IErrorConverting ExecuteAndHandleError(Action method,
                                    Action applicationBeforeMethod = null,
-                                   Func<IErrorConverting> applicationCatchMethod = null,
+                                   Action applicationCatchMethod = null,
                                    Action applicationFinallyMethod = null);
 
         /// <summary>
         ///Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
+        Task<IErrorConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
                                         Action applicationBeforeMethod = null,
-                                        Func<Task<IErrorConverting>> applicationCatchMethod = null,
+                                        Action applicationCatchMethod = null,
                                         Action applicationFinallyMethod = null);
     }
 }

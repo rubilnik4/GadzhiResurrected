@@ -13,11 +13,11 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServerConverting filesDataServer);
+        FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServer filesDataServer);
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServerConverting filesDataServer);
+        Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServer filesDataServer);
     }
 }

@@ -13,6 +13,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        Task<IFilesDataServerConverting> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest);
+        Task<IFilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest);
     }
 }

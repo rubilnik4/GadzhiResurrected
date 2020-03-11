@@ -100,6 +100,7 @@
   <ItemGroup>
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />
+    <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryStamp.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryPrinting.cs" />
     <Compile Include="Models\Enums\StampFieldType.cs" />
     <Compile Include="Models\Enums\StampType.cs" />

@@ -1,7 +1,6 @@
-﻿using ConvertingModels.Models.Interfaces.Printers;
-using GadzhiConverting.Configuration;
-using GadzhiConverting.Models.Implementations;
+﻿using GadzhiConverting.Configuration;
 using GadzhiConverting.Models.Implementations.Printers;
+using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;

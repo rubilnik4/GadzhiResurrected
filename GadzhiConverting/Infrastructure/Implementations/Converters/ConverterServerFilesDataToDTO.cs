@@ -29,7 +29,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServerConverting filesDataServer)
+        public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServer filesDataServer)
         {
             if (filesDataServer != null)
             {
@@ -50,7 +50,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        public async Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServerConverting filesDataServer)
+        public async Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServer filesDataServer)
         {
             var filesDataToResponseTasks = filesDataServer?.FileDatasServerConverting?.Select(fileDataServer =>
                                                             ConvertFileResponse(fileDataServer));

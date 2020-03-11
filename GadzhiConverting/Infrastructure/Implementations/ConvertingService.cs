@@ -9,6 +9,8 @@ using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -46,7 +48,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessagingService _messageAndLoggingService;
+        private readonly IMessagingService _messagingService;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -59,6 +61,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
+        /// Запуск процесса конвертирования
+        /// </summary>
+        private readonly CompositeDisposable _convertingUpdaterSubsriptions;
+
+        /// <summary>
         /// Идентефикатор конвертируемого пакета
         /// </summary>
         private Guid? _idPackage;
@@ -68,7 +75,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
-                                 IMessagingService messageAndLoggingService,
+                                 IMessagingService messagingService,
                                  IExecuteAndCatchErrors executeAndCatchErrors,
                                  IFileSystemOperations fileSystemOperations)
         {
@@ -77,11 +84,35 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _fileConvertingServerService = fileConvertingServerService;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
-            _messageAndLoggingService = messageAndLoggingService;
+            _messagingService = messagingService;
             _executeAndCatchErrors = executeAndCatchErrors;
             _fileSystemOperations = fileSystemOperations;
 
+            _convertingUpdaterSubsriptions = new CompositeDisposable();
             _idPackage = null;
+        }
+
+
+        /// <summary>
+        /// Запущен ли процесс конвертации
+        /// </summary>
+        private bool IsConverting { get; set; }
+
+        /// <summary>
+        /// Запустить процесс конвертирования
+        /// </summary>      
+        public void StartConverting()
+        {
+            _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
+
+            _convertingUpdaterSubsriptions.Add(
+                Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
+                           Where(_ => !IsConverting).
+                           Subscribe(async _ =>
+                                     await _executeAndCatchErrors.
+                                     ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
+                                                                applicationBeforeMethod: () => IsConverting = true,
+                                                                applicationFinallyMethod: () => IsConverting = false)));
         }
 
         /// <summary>
@@ -89,13 +120,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         public async Task ConvertingFirstInQueuePackage()
         {
-            _messageAndLoggingService.ShowAndLogMessage("Запрос пакета в базе...");
+            _messagingService.ShowAndLogMessage("Запрос пакета в базе...");
 
             FilesDataRequestServer filesDataRequest = await _fileConvertingServerService.Operations.
                                                              GetFirstInQueuePackage(_projectSettings.NetworkName);
             if (filesDataRequest != null)
             {
-                IFilesDataServerConverting filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
+                IFilesDataServer filesDataServer = await _converterServerFilesDataFromDTO.ConvertToFilesDataServerAndSaveFile(filesDataRequest);
                 _idPackage = filesDataServer.Id;
 
                 await ConvertingPackage(filesDataServer);
@@ -112,7 +143,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать пакет
         /// </summary>
-        private async Task ConvertingPackage(IFilesDataServerConverting filesDataServer)
+        private async Task ConvertingPackage(IFilesDataServer filesDataServer)
         {
             if (filesDataServer.IsValid)
             {
@@ -130,16 +161,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сообщить о пустом/некорректном пакете
         /// </summary>
-        private void ReplyPackageIsInvalid(IFilesDataServerConverting filesDataServer)
+        private void ReplyPackageIsInvalid(IFilesDataServer filesDataServer)
         {
             if (!filesDataServer.IsValidByFileDatas)
             {
-                _messageAndLoggingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
                                                           "Файлы для конвертации не обнаружены"));
             }
             else if (!filesDataServer.IsValidByAttemptingCount)
             {
-                _messageAndLoggingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.AttemptingCount,
+                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.AttemptingCount,
                                                           "Превышено количество попыток конвертирования пакета"));
             }
             filesDataServer.SetErrorToAllUncompletedFiles();
@@ -149,7 +180,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сообщить об отконвертированном пакете, если процесс не был прерван
         /// </summary>
-        private void ReplyPackageIsComplete(IFilesDataServerConverting filesDataServer)
+        private void ReplyPackageIsComplete(IFilesDataServer filesDataServer)
         {
             if (!filesDataServer.IsCompleted)//если пользователь не прервал процесс
             {
@@ -160,7 +191,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отправить промежуточный отчет
         /// </summary>
-        private async Task SendIntermediateResponse(IFilesDataServerConverting filesDataServer)
+        private async Task SendIntermediateResponse(IFilesDataServer filesDataServer)
         {
             FilesDataIntermediateResponseServer filesDataIntermediateResponse =
                 _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
@@ -172,26 +203,26 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отправить окончательный ответ
         /// </summary>
-        private async Task SendResponse(IFilesDataServerConverting filesDataServer)
+        private async Task SendResponse(IFilesDataServer filesDataServer)
         {
             if (filesDataServer.StatusProcessingProject == StatusProcessingProject.ConvertingComplete)
             {
-                _messageAndLoggingService.ShowAndLogMessage($"Отправка данных в базу...");
+                _messagingService.ShowAndLogMessage($"Отправка данных в базу...");
 
                 FilesDataResponseServer filesDataResponse = await _converterServerFilesDataToDTO.ConvertFilesToResponse(filesDataServer);
                 await _fileConvertingServerService.Operations.UpdateFromResponse(filesDataResponse);
 
-                _messageAndLoggingService.ShowAndLogMessage($"Конвертация пакета закончена");
+                _messagingService.ShowAndLogMessage($"Конвертация пакета закончена");
             }
             else //в случае если пользователь отменил конвертацию
             {
-                _messageAndLoggingService.ShowAndLogMessage($"Конвертация пакета прервана");
+                _messagingService.ShowAndLogMessage($"Конвертация пакета прервана");
             }
         }
 
         private async Task AbortConverting(bool isDispose)
         {
-            _messageAndLoggingService.ShowAndLogMessage($"Отмена выполнения конвертирования");
+            _messagingService.ShowAndLogMessage($"Отмена выполнения конвертирования");
 
             if (_idPackage.HasValue)
             {
@@ -207,9 +238,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать пакет
         /// </summary>
-        private async Task<IFilesDataServerConverting> ConvertingFilesData(IFilesDataServerConverting filesDataServer)
+        private async Task<IFilesDataServer> ConvertingFilesData(IFilesDataServer filesDataServer)
         {
-            _messageAndLoggingService.ShowAndLogMessage($"Конвертация пакета {filesDataServer.Id.ToString()}");
+            _messagingService.ShowAndLogMessage($"Конвертация пакета {filesDataServer.Id.ToString()}");
 
             foreach (var fileData in filesDataServer.FileDatasServerConverting)
             {
@@ -235,7 +266,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private async Task QueueIsEmpty()
         {
             await Task.Delay(500);
-            _messageAndLoggingService.ShowAndLogMessage("Очередь пакетов пуста...");
+            _messagingService.ShowAndLogMessage("Очередь пакетов пуста...");
         }
 
         /// <summary>
@@ -247,7 +278,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             TimeSpan timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedDataCheck).Ticks);
             if (timeElapsed.TotalHours > _projectSettings.IntervalHouresToDeleteUnusedPackages)
             {
-                _messageAndLoggingService.ShowAndLogMessage("Очистка неиспользуемых пакетов...");
+                _messagingService.ShowAndLogMessage("Очистка неиспользуемых пакетов...");
                 await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
@@ -264,7 +295,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             TimeSpan timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.ConvertingDataFolderCheck).Ticks);
             if (timeElapsed.TotalHours > _projectSettings.IntervalHouresToDeleteUnusedPackages)
             {
-                _messageAndLoggingService.ShowAndLogMessage("Очистка пространства на жестком диске...");
+                _messagingService.ShowAndLogMessage("Очистка пространства на жестком диске...");
                 await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(_projectSettings.ConvertingDirectory));
 
                 Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
@@ -281,7 +312,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 if (disposing)
                 {
-
+                    _convertingUpdaterSubsriptions?.Dispose();
                 }
                 AbortConverting(true).ConfigureAwait(false);
 

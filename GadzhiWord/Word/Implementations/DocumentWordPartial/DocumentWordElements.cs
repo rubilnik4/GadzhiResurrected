@@ -1,5 +1,7 @@
 ﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiConverting.Word.Interfaces.Elements;
 using GadzhiWord.Extensions.Word;
+using GadzhiWord.Word.Implementations.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,9 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Найти нижние колонтитулы
         /// </summary>
-        private IEnumerable<Table> GetTablesInFooters() => _document.Sections.ToIEnumerable().
-                                                                     SelectMany(section => section.Footers.ToIEnumerable()).
-                                                                     SelectMany(footer => footer.Range.Tables.ToIEnumerable());
+        public IEnumerable<ITableElement> GetTablesInFooters() => _document.Sections.ToIEnumerable().
+                                                                   SelectMany(section => section.Footers.ToIEnumerable()).
+                                                                   SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
+                                                                   Select(table => new TableElementWord(table));
     }
 }

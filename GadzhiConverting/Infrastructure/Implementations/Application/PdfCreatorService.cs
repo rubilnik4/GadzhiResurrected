@@ -3,7 +3,7 @@ using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiWord.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Interfaces.Application;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

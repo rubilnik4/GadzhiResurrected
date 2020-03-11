@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,37 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// </summary>
         ColorPrint ColorPrint { get; }
 
+
+        /// <summary>
+        /// Статус обработки файла
+        /// </summary>
+        StatusProcessing StatusProcessing { get; set; }
+
+        /// <summary>
+        /// Завершена ли обработка файла
+        /// </summary>
+        bool IsCompleted { get; }
+
+        /// <summary>
+        /// Количество попыток конвертирования
+        /// </summary>      
+        int AttemptingConvertCount { get; set; }
+
+        /// <summary>
+        /// Корректна ли модель
+        /// </summary>
+        bool IsValid { get; }
+
+        /// <summary>
+        /// Присутствуют ли ошибки конвертирования
+        /// </summary>
+        bool IsValidByErrorType { get; }
+
+        /// <summary>
+        /// Не превышает ли количество попыток конвертирования
+        /// </summary>
+        bool IsValidByAttemptingCount { get; }
+
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
@@ -52,6 +84,11 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// Путь и тип отконвертированных файлов
         /// </summary>
         IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
+
+        /// <summary>
+        /// Установить пути для отконвертированных файлов
+        /// </summary>
+        void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServerConverting> fileDatasSourceServerConverting);
 
         /// <summary>
         /// Добавить ошибку
