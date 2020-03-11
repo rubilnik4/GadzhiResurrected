@@ -22,88 +22,94 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         /// <summary>
         /// Открыть документ
         /// </summary>
-        public IDocumentLibrary OpenDocument(string filePath)
+        public ErrorConverting OpenDocument(string filePath)
         {
-            IDocumentLibrary documentLibrary = null;
-            if (IsDesingFileValidAndSetErrors(filePath))
+            (bool isDocumentValid, ErrorConverting openError) = IsDocumentValid(filePath);
+            if (isDocumentValid)
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(
-                    () => documentLibrary = _applicationLibrary.OpenDocument(filePath),
-                    applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.FileNotOpen,
-                                                                      $"Ошибка открытия файла {filePath}"));
+                    () => _applicationLibrary.OpenDocument(filePath),
+                    applicationCatchMethod: () => openError = new ErrorConverting(FileConvertErrorType.FileNotOpen,
+                                                                                  $"Ошибка открытия файла {filePath}"));
             };
-            return documentLibrary;
+            return openError;
         }
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public IFileDataSourceServer SaveDocument(string filePath)
+        public (IFileDataSourceServer, ErrorConverting) SaveDocument(string filePath)
         {
             IFileDataSourceServer fileDataSourceServer = null;
+            ErrorConverting savingError = null;
 
             if (_applicationLibrary.IsDocumentValid)
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
                     _applicationLibrary.SaveDocument(filePath);
-                    fileDataSourceServer = new FileDataSourceServerConverting(filePath, FileExtention.docx);
+                    fileDataSourceServer = new FileDataSourceServer(filePath, FileExtention.docx);
                 },
                 applicationCatchMethod: () =>
                 {
+                    savingError = new ErrorConverting(FileConvertErrorType.FileNotSaved,
+                                                      $"Ошибка сохранения основного файла {filePath}");
                     _applicationLibrary.CloseDocument();
-                    return new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                               $"Ошибка сохранения файла DGN {filePath}");
                 });
             }
 
-            return fileDataSourceServer;
+            return (fileDataSourceServer, savingError);
         }
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IEnumerable<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, string pdfPrinterName)
+        public (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
-            IEnumerable<IFileDataSourceServer> fileDataSourceServer = null;
+            IEnumerable<IFileDataSourceServer> fileDatasSourceServer = null;
+            IEnumerable<ErrorConverting> savingErrors = null;
 
             if (_applicationLibrary.IsDocumentValid)
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
-                    fileDataSourceServer = CreatePdfInDocument(filePath, colorPrint, pdfPrinterName);                   
+                    (fileDatasSourceServer, savingErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterName);
                 },
-                    applicationCatchMethod: () => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
-                                                                      $"Ошибка сохранения файла PDF {filePath}"));
+                applicationCatchMethod: () => savingErrors = new List<ErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+                                                                                          $"Ошибка сохранения файла PDF {filePath}")});
             }
-            return fileDataSourceServer;
+            return (fileDatasSourceServer, savingErrors);
         }
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        public void CloseDocument()
+        public ErrorConverting CloseDocument()
         {
+            ErrorConverting closingError = null;
+
             if (_applicationLibrary.IsDocumentValid)
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(
                     () => _applicationLibrary.CloseAndSaveDocument(),
                     applicationCatchMethod: () =>
                     {
-                        _applicationLibrary.CloseDocument();
-                        return new ErrorConverting(FileConvertErrorType.FileNotSaved,
+                        closingError = new ErrorConverting(FileConvertErrorType.FileNotSaved,
                                                    $"Ошибка закрытия файла {_applicationLibrary.ActiveDocument.FullName}");
-
+                        _applicationLibrary.CloseDocument();
                     });
             }
+
+            return closingError;
         }
 
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
-        private bool IsDesingFileValidAndSetErrors(string filePath)
+        private (bool, ErrorConverting) IsDocumentValid(string filePath)
         {
             bool isValid = false;
+            ErrorConverting documentError = null;
 
             if (_fileSystemOperations.IsFileExist(filePath))
             {
@@ -114,17 +120,16 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
                 }
                 else
                 {
-                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.IncorrectExtension,
-                                                      $"Расширение файла {filePath} не соответствует типу .doc или .docx"));
+                    documentError = new ErrorConverting(FileConvertErrorType.IncorrectExtension,
+                                        $"Расширение файла {filePath} не соответствует типу .doc или .docx");
                 }
             }
             else
             {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
-                                                                      $"Файл {filePath} не найден"));
+                documentError = new ErrorConverting(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден");
             }
 
-            return isValid;
+            return (isValid, documentError);
         }
     }
 }

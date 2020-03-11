@@ -21,11 +21,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         private readonly IApplicationLibrary _applicationLibrary;
 
         /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private readonly IFileSystemOperations _fileSystemOperations;        
-
-        /// <summary>
         /// Класс обертка для отлова ошибок
         /// </summary> 
         private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
@@ -36,12 +31,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
         private readonly IPdfCreatorService _pdfCreatorService;
 
         public ApplicationConverting(IApplicationLibrary applicationLibrary,
-                                     IFileSystemOperations fileSystemOperations,                                   
                                      IExecuteAndCatchErrors executeAndCatchErrors,
                                      IPdfCreatorService pdfCreatorService)
         {
-            _applicationLibrary = applicationLibrary;
-            _fileSystemOperations = fileSystemOperations;            
+            _applicationLibrary = applicationLibrary;                  
             _executeAndCatchErrors = executeAndCatchErrors;
             _pdfCreatorService = pdfCreatorService;
         }

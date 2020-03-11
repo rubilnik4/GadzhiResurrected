@@ -21,7 +21,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Обновить информацию о конвертируемых пакетах в серверной части из модуля Microstation
         /// </summary>
-        public static IFileDataServerConverting UpdateFileDataServerFromMicrostation(IFileDataServerConverting fileDataServerConverting, FileDataMicrostation fileDataMicrostation)
+        public static IFileDataServer UpdateFileDataServerFromMicrostation(IFileDataServer fileDataServerConverting, FileDataMicrostation fileDataMicrostation)
         {
             if (fileDataServerConverting != null && fileDataMicrostation != null)
             {
@@ -37,8 +37,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать информацию о отконвертированных чертежах из модуля Microstation в серверную часть
         /// </summary>        
-        private static IFileDataSourceServerConverting ConvertingFileDataSourceFromMicrostation(FileDataSourceMicrostation fileDataSourceMicrostation) =>
-            new FileDataSourceServerConverting(fileDataSourceMicrostation.FilePath,
+        private static IFileDataSourceServer ConvertingFileDataSourceFromMicrostation(FileDataSourceMicrostation fileDataSourceMicrostation) =>
+            new FileDataSourceServer(fileDataSourceMicrostation.FilePath,
                                      ConvertingFileExtension(fileDataSourceMicrostation.FileExtentionMicrostation),
                                      fileDataSourceMicrostation.PaperSize,
                                      fileDataSourceMicrostation.PrinterName);

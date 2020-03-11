@@ -11,8 +11,14 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// <summary>
     /// Отконвертированный файл серверной части в базовом варианте
     /// </summary>
-    public class FileDataSourceServer: IFileDataSourceServer
-    {       
+    public class FileDataSourceServer : IFileDataSourceServer
+    {
+        public FileDataSourceServer(string filePath, FileExtention fileExtensionType)
+            :this(filePath, fileExtensionType, "-", "-")
+        {
+
+        }
+
         public FileDataSourceServer(string filePath, FileExtention fileExtensionType, string paperSize, string printerName)
         {
             if (!String.IsNullOrWhiteSpace(filePath))

@@ -67,7 +67,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в промежуточную
         /// </summary>
-        private FileDataIntermediateResponseServer ConvertFileToIntermediateResponse(IFileDataServerConverting fileDataServer)
+        private FileDataIntermediateResponseServer ConvertFileToIntermediateResponse(IFileDataServer fileDataServer)
         {
             return new FileDataIntermediateResponseServer()
             {
@@ -80,7 +80,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в окончательный ответ
         /// </summary>
-        private async Task<FileDataResponseServer> ConvertFileResponse(IFileDataServerConverting fileDataServer)
+        private async Task<FileDataResponseServer> ConvertFileResponse(IFileDataServer fileDataServer)
         {
             var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(fileData => ConvertFileDataSourceResponse(fileData));
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);

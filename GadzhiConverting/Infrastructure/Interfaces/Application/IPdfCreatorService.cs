@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiCommon.Models.Implementations.Errors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Application
     /// <summary>
     /// Управление печатью пдф
     /// </summary>
-    public interface IPdfCreatorService: IDisposable
+    public interface IPdfCreatorService : IDisposable
     {
         /// <summary>
         /// Установить опции печати
@@ -23,7 +24,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Application
         /// <summary>
         /// СОздать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        bool PrintPdfWithExecuteAction(string filePath, Action printAction);
-      
+        (bool Success, IEnumerable<ErrorConverting> ErrorsConverting) PrintPdfWithExecuteAction(string filePath, Action printAction);
+
     }
 }

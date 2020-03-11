@@ -117,7 +117,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Установить пути для отконвертированных файлов
         /// </summary>
-        public void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServerConverting> fileDatasSourceServer)
+        public void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServer)
         {
             if (fileDatasSourceServer != null)           
             {

@@ -23,101 +23,96 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application.Applicatio
     public partial class ApplicationConverting : IApplicationConvertingPrinting
     {
         /// <summary>
-        /// Установить принтер по умолчанию
-        /// </summary>       
-        private bool SetDefaultPrinter(IPrinterInformation printerInformation)
-        {
-            bool success = false;
-            if (PrinterSettings.InstalledPrinters?.Cast<string>()?.Contains(printerInformation?.Name,
-                                                                          StringComparer.OrdinalIgnoreCase) == true)
-            {
-                if (NativeMethods.SetDefaultPrinter(printerInformation?.Name))
-                {
-                    success = true;
-                }
-                else
-                {
-                    _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.PrinterNotInstall,
-                                                                      $"Не удалось установить принтер {printerInformation?.Name}"));
-                }
-            }
-            else
-            {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.PrinterNotInstall,
-                                                                        $"Принтер {printerInformation?.Name} не установлен в системе"));
-            }
-
-            return success;
-        }
-
-        /// <summary>
-        /// Команда печати PDF
-        /// </summary>
-        private bool PrintPdfCommand(string filePath) => _pdfCreatorService.PrintPdfWithExecuteAction(filePath, _applicationLibrary.PrintCommand);
-
-        /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        private IEnumerable<IFileDataSourceServer> CreatePdfInDocument(string filePath, ColorPrint colorPrint, string pdfPrinterName)
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
             if (_applicationLibrary.StampWord.IsValid)
             {
-                return _applicationLibrary.StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
-                                                     Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterName));
+                var fileDataSourceAndErrors = _applicationLibrary.StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
+                                                               Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterName));
+                return (fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.fileSource),
+                        fileDataSourceAndErrors.SelectMany(fileWithErrors => fileWithErrors.errors));
             }
             else
             {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.StampNotFound,
-                                                                  $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
-                return null;
+                return (null, new List<ErrorConverting>() { new ErrorConverting(FileConvertErrorType.StampNotFound,
+                                                            $"Штампы в файле {Path.GetFileName(filePath)} не найдены")});
             }
         }
 
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private IFileDataSourceServer CreatePdfWithSignatures(IStamp stamp, string filePath, ColorPrint colorPrint, string pdfPrinterName)
+        private (IFileDataSourceServer fileSource, IEnumerable<ErrorConverting> errors) CreatePdfWithSignatures(IStamp stamp, string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
-            _messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
+            //_messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
             //stamp.CompressFieldsRanges();
 
             _applicationLibrary.InsertStampSignatures();
 
-            _messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
-            IFileDataSourceServer fileDataSourceServerWord = CreatePdfByStamp(stamp, filePath, colorPrint, pdfPrinterName);
+            //_messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
+            var fileDataSourceAndErrors = CreatePdf(filePath, colorPrint, stamp.PaperSize, pdfPrinterName);
 
             _applicationLibrary.DeleteStampSignatures();
 
-            return fileDataSourceServerWord;
+            return fileDataSourceAndErrors;
         }
 
         /// <summary>
-        /// Создать пдф по координатам и формату
+        /// Печать пдф
         /// </summary>
-        private IFileDataSourceServer CreatePdfByStamp(IStamp stamp, string filePath, ColorPrint colorPrint, string pdfPrinterName)
+        private (IFileDataSourceServer, IEnumerable<ErrorConverting>) CreatePdf(string filePath, ColorPrint colorPrint,
+                                                                                string paperSize, string pdfPrinterName)
         {
-            if (stamp != null)
+            (IFileDataSourceServer fileDataSourceServer, IEnumerable<ErrorConverting> errorsConverting) = (null, null);
+
+            (bool isSetPrinter, ErrorConverting errorPrinter) = SetDefaultPrinter(pdfPrinterName);
+            errorsConverting = errorsConverting.Concat(new List<ErrorConverting>() { errorPrinter });
+
+            if (isSetPrinter)
             {
-                return CreatePdf(filePath, colorPrint, stamp.PaperSize, pdfPrinterName);
+                var errorPdf = PrintPdfCommand(filePath);
+                errorsConverting = errorsConverting.Concat(errorPdf);
+
+                fileDataSourceServer = new FileDataSourceServer(filePath, FileExtention.pdf, paperSize, pdfPrinterName);
+            }
+            return (fileDataSourceServer, errorsConverting);
+        }
+
+        /// <summary>
+        /// Установить принтер по умолчанию
+        /// </summary>       
+        private (bool, ErrorConverting) SetDefaultPrinter(string printerName)
+        {
+            bool success = false;
+            ErrorConverting errorConverting = null;
+
+            if (PrinterSettings.InstalledPrinters?.Cast<string>()?.Contains(printerName, StringComparer.OrdinalIgnoreCase) == true)
+            {
+                if (NativeMethods.SetDefaultPrinter(printerName))
+                {
+                    success = true;
+                }
+                else
+                {
+                    errorConverting = new ErrorConverting(FileConvertErrorType.PrinterNotInstall,
+                                                        $"Не удалось установить принтер {printerName}");
+                }
             }
             else
             {
-                throw new ArgumentNullException(nameof(stamp));
+                errorConverting = new ErrorConverting(FileConvertErrorType.PrinterNotInstall,
+                                                      $"Принтер {printerName} не установлен в системе");
             }
-        }
 
+            return (success, errorConverting);
+        }
 
         /// <summary>
-        /// Создать пдф по координатам и формату
+        /// Команда печати PDF
         /// </summary>
-        private IFileDataSourceServer CreatePdf(string filePath, ColorPrint colorPrint, string paperSize, string pdfPrinterName)
-        {           
-            if (NativeMethods.SetDefaultPrinter(pdfPrinterName))
-            {
-                _applicationLibrary.PrintCommand();
-                return new FileDataSourceServerConverting(filePath, FileExtention.pdf, paperSize, pdfPrinterName);
-            }
-            return null;
-        }
+        private IEnumerable<ErrorConverting> PrintPdfCommand(string filePath) =>
+                _pdfCreatorService.PrintPdfWithExecuteAction(filePath, _applicationLibrary.PrintCommand).ErrorsConverting;
     }
 }

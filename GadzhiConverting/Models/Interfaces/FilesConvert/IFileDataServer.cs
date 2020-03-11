@@ -88,7 +88,7 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Установить пути для отконвертированных файлов
         /// </summary>
-        void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServerConverting> fileDatasSourceServerConverting);
+        void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServerConverting);
 
         /// <summary>
         /// Добавить ошибку

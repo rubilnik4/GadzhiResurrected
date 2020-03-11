@@ -56,12 +56,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private async Task<IFileDataServerConverting> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest,
+        private async Task<IFileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest,
                                                                               string packageGuid)
         {
             FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid);
 
-            return new FileDataServerConverting(fileSavedCheck.FilePath, fileDataRequest.FilePath,
+            return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath,
                                                 fileDataRequest.ColorPrint, fileSavedCheck.Errors);
         }
 

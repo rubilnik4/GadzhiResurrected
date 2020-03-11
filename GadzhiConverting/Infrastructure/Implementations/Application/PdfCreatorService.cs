@@ -22,7 +22,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Application
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessagingService _messagingService;
+        //private readonly IMessagingService _messagingService;
 
         /// <summary>
         /// Библиотека Pdf Creator

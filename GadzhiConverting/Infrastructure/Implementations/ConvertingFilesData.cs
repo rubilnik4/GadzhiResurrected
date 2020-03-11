@@ -51,7 +51,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить конвертирование файла
         /// </summary>
-        public async Task<IFileDataServerConverting> Converting(IFileDataServerConverting fileDataServer)
+        public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer)
         {
             if (fileDataServer != null)
             {
@@ -72,7 +72,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Начать конвертирование файла
         /// </summary>
-        private IFileDataServerConverting FileDataStartConverting(IFileDataServerConverting fileDataServer)
+        private IFileDataServer FileDataStartConverting(IFileDataServer fileDataServer)
         {
             _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}");
 
@@ -84,7 +84,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закончить конвертирование файла
         /// </summary>
-        private IFileDataServerConverting FileDataEndConverting(IFileDataServerConverting fileDataServer)
+        private IFileDataServer FileDataEndConverting(IFileDataServer fileDataServer)
         {
             fileDataServer.StatusProcessing = StatusProcessing.ConvertingComplete;
             return fileDataServer;
@@ -93,7 +93,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл
         /// </summary>
-        private async Task<IFileDataServerConverting> FileDataConverting(IFileDataServerConverting fileDataServer)
+        private async Task<IFileDataServer> FileDataConverting(IFileDataServer fileDataServer)
         {
 
             if (fileDataServer.IsValidByAttemptingCount)
