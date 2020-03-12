@@ -1,5 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Текущий документ Word
         /// </summary>
-        public IDocumentLibrary ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
+        public IDocumentLibrary ActiveDocument => new DocumentWord(_application.ActiveDocument);
 
         /// <summary>
         /// Загрузился ли файл

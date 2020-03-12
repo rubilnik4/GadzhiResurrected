@@ -42,7 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiWord", "GadzhiWord\GadzhiWord.csproj", "{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertingModels", "ConvertingModels\ConvertingModels.csproj", "{30E39067-3AD7-433B-9494-6DBEE78302D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiApplicationCommon", "GadzhiApplicationCommon\GadzhiApplicationCommon.csproj", "{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,10 +98,10 @@ Global
 		{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30E39067-3AD7-433B-9494-6DBEE78302D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30E39067-3AD7-433B-9494-6DBEE78302D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30E39067-3AD7-433B-9494-6DBEE78302D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30E39067-3AD7-433B-9494-6DBEE78302D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,7 +119,7 @@ Global
 		{B327C2A7-14EA-44B0-B3CE-6E4309B12771} = {F416117F-1C73-4708-9C1F-81EACF67A65D}
 		{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 		{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
-		{30E39067-3AD7-433B-9494-6DBEE78302D6} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
+		{965E6A1A-43FA-467D-9AB3-8B73260F7A8A} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35

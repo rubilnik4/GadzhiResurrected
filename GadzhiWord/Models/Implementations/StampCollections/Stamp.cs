@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConvertingModels.Models.Interfaces.StampCollections;
-using GadzhiConverting.Word.Interfaces.Elements;
-using ConvertingModels.Models.Enums;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -54,7 +54,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Получить поля штампа
         /// </summary>
         private IEnumerable<IStampField> GetFields() =>
-            TableStamp?.CellsElementWord?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
+            TableStamp?.CellsElement?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
                                           Select(cell => new StampField(cell)).
                                           Where(field => field.StampFieldType != StampFieldType.Unknown);
 

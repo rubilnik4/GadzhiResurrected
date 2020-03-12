@@ -1,5 +1,5 @@
 ﻿using ChannelAdam.ServiceModel;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;

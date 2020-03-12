@@ -1,5 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.StampCollections;
-using GadzhiConverting.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +20,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
 
         public StampPersonSignature(IRowElement rowElementWord)
         {
-            if (rowElementWord?.CellsElementWord?.Count >= 4)
+            if (rowElementWord?.CellsElement?.Count >= 4)
             {               
-                if (CheckFieldType.IsFieldPersonSignatureWithPrepare(rowElementWord?.CellsElementWord[0].Text))
+                if (CheckFieldType.IsFieldPersonSignatureWithPrepare(rowElementWord?.CellsElement[0].Text))
                 {
-                    ActionType = new StampField(rowElementWord?.CellsElementWord[0]);
-                    ResponsiblePerson = new StampField(rowElementWord?.CellsElementWord[1]);
-                    Signature = new StampField(rowElementWord?.CellsElementWord[2]);
-                    DateSignature = new StampField(rowElementWord?.CellsElementWord[3]);
+                    ActionType = new StampField(rowElementWord?.CellsElement[0]);
+                    ResponsiblePerson = new StampField(rowElementWord?.CellsElement[1]);
+                    Signature = new StampField(rowElementWord?.CellsElement[2]);
+                    DateSignature = new StampField(rowElementWord?.CellsElement[3]);
 
                     _rowElementWord = rowElementWord;
                 }

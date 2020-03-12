@@ -1,6 +1,6 @@
-﻿using ConvertingModels.Models.Enums;
-using ConvertingModels.Models.Interfaces.FilesConvert;
-using ConvertingModels.Models.Interfaces.StampCollections;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;

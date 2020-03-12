@@ -1,5 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
-using ConvertingModels.Models.Interfaces.FilesConvert;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using System;

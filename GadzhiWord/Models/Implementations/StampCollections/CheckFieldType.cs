@@ -1,4 +1,4 @@
-﻿using ConvertingModels.Models.Enums;
+﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using System;

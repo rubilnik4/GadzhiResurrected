@@ -1,6 +1,6 @@
-﻿using ConvertingModels.Models.Enums;
-using ConvertingModels.Models.Interfaces.StampCollections;
-using GadzhiConverting.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiWord.Factory;
-using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;

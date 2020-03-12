@@ -1,5 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
-using GadzhiConverting.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Word.Implementations.Elements;
 using Microsoft.Office.Interop.Word;

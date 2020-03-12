@@ -1,6 +1,6 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
-using ConvertingModels.Models.Interfaces.StampCollections;
-using GadzhiConverting.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
@@ -32,7 +32,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Проверить является ли колонтитул штампом
         /// </summary>
-        private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
+        private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElement.
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
                                                                        Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell?.Text)).
                                                                        Any(cellText => StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText));
@@ -45,8 +45,8 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             var personSignatures = StampWord?.GetStampPersonSignatures();
             foreach (var personSignature in personSignatures)
             {
-                personSignature.Signature.CellElementWord.DeleteAllPictures();
-                personSignature.Signature.CellElementWord.InsertPicture(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
+                personSignature.Signature.CellElementWord.DeleteAllSignatures();
+                personSignature.Signature.CellElementWord.InsertSignature(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
             }
         }
 
@@ -58,7 +58,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             var personSignatures = StampWord?.GetStampPersonSignatures();
             foreach (var personSignature in personSignatures)
             {
-                personSignature.Signature.CellElementWord.DeleteAllPictures();
+                personSignature.Signature.CellElementWord.DeleteAllSignatures();
             }
         }
     }

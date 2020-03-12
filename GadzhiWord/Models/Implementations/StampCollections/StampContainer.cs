@@ -1,7 +1,7 @@
-﻿using ConvertingModels.Models.Enums;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
-using ConvertingModels.Models.Interfaces.StampCollections;
-using GadzhiConverting.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using System;
@@ -52,7 +52,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         {
             StampType? stampType = null;
 
-            foreach (var cell in tableStamp.CellsElementWord)
+            foreach (var cell in tableStamp.CellsElement)
             {
                 if (cell != null && !String.IsNullOrWhiteSpace(cell.Text))
                 {

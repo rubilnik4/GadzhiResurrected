@@ -1,5 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Application;
-using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Word.Implementations.Converters;
 using Microsoft.Office.Interop.Word;
 using System;
@@ -19,17 +19,11 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Экземпляр файла
         /// </summary>
-        private readonly Document _document;
-      
-        /// <summary>
-        /// Класс для работы с приложением Word
-        /// </summary>
-        private readonly IApplicationLibrary _applicationWord;
-
-        public DocumentWord(Document document, IApplicationLibrary applicationWord)
+        private readonly Document _document;      
+       
+        public DocumentWord(Document document)
         {
-            _document = document;
-            _applicationWord = applicationWord;
+            _document = document;           
         }
 
         /// <summary>

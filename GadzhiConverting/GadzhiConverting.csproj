@@ -182,9 +182,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConvertingModels\ConvertingModels.csproj">
-      <Project>{30E39067-3AD7-433B-9494-6DBEE78302D6}</Project>
-      <Name>ConvertingModels</Name>
+    <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
+      <Project>{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}</Project>
+      <Name>GadzhiApplicationCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiCommonServer\GadzhiCommonServer.csproj">
       <Project>{C9FFBC73-5DE1-400B-96D9-44D691D2C68A}</Project>

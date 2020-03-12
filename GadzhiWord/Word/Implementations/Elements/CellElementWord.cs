@@ -1,4 +1,4 @@
-﻿using GadzhiConverting.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Родительский элемент строка
         /// </summary>
-        public IRowElement RowElement => _tableElementWord?.RowsElementWord[_cellElement.RowIndex - 1];
+        public IRowElement RowElement => _tableElementWord?.RowsElement[_cellElement.RowIndex - 1];
 
         /// <summary>
         /// Номер строки
@@ -54,7 +54,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Вставить картинку
         /// </summary>
-        public void InsertPicture(string filePath)
+        public void InsertSignature(string filePath)
         {
             if (!String.IsNullOrWhiteSpace(filePath))
             {
@@ -65,7 +65,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Удалить все картинки
         /// </summary>
-        public void DeleteAllPictures()
+        public void DeleteAllSignatures()
         {
             foreach (InlineShape shape in _cellElement.Range.InlineShapes)
             {
