@@ -52,6 +52,11 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         public void SaveAs(string filePath) => _document.SaveAs(filePath);
 
         /// <summary>
+        /// Экспорт файла
+        /// </summary>      
+        public string Export(string filePath) => throw new NotImplementedException();
+
+        /// <summary>
         /// Закрыть файл файл
         /// </summary>
         public void Close() => _document.Close();

@@ -17,7 +17,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Команда печати
         /// </summary>
-        public void PrintCommand() =>       
+        public void PrintStamp() =>       
             Application.PrintOut(Range: WdPrintOutRange.wdPrintAllDocument, PageType: WdPrintOutPages.wdPrintAllPages,
                                  ManualDuplexPrint: false, PrintToFile: false);
        

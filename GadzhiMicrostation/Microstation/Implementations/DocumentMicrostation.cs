@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using System.IO;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -27,20 +29,13 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        public IApplicationMicrostation ApplicationMicrostation { get; }
-
-        /// <summary>
-        /// Модель хранения данных конвертации
-        /// </summary>
-        private readonly IMicrostationProject _microstationProject;
+        public IApplicationLibrary ApplicationMicrostation { get; }
 
         public DocumentMicrostation(DesignFile designFile,
-                                      IApplicationMicrostation applicationMicrostation,
-                                      IMicrostationProject microstationProject)
+                                    IApplicationLibrary applicationMicrostation)
         {
             _designFile = designFile;
             ApplicationMicrostation = applicationMicrostation;
-            _microstationProject = microstationProject;
         }
 
         /// <summary>
@@ -51,7 +46,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
-        public bool IsDesingFileValid => _designFile != null;
+        public bool IsDocumentValid => _designFile != null;
 
         /// <summary>
         /// Модели и листы в текущем файле
@@ -97,95 +92,47 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             Save();
             Close();
-        }
+        }       
 
         /// <summary>
-        /// Найти все доступные штампы во всех моделях и листах. Начать обработку каждого из них
-        /// </summary>       
-        public IEnumerable<FileDataSourceMicrostation> CreatePdfInDesingFile(string filePath)
-        {
-            if (Stamps.Any())
-            {
-                return Stamps?.Select(stamp => CreatePdfWithSignatures(stamp, filePath));
-            }
-            else
-            {
-                ApplicationMicrostation.MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.StampNotFound,
-                                                     $"Штампы в файле {_microstationProject.FileDataMicrostation.FileName} не найдены"));
-                return null;
-            }
-        }
+        /// Экспорт файла в другие форматы
+        /// </summary>      
+        public string Export(string filePath) => CreateDwgFile(filePath);       
 
         /// <summary>
         /// Создать файл типа DWG
         /// </summary>
-        public void CreateDwgFile(string filePath)
+        private string CreateDwgFile(string filePath)
         {
-            _designFile.SaveAs(filePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG);
-        }
-
-        /// <summary>
-        /// Создать PDF для штампа, вставить подписи
-        /// </summary>       
-        private FileDataSourceMicrostation CreatePdfWithSignatures(IStampMicrostation stamp, string filePath)
-        {
-            ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
-            stamp.CompressFieldsRanges();
-
-            stamp.DeleteSignaturesPrevious();
-            stamp.InsertSignatures();
-
-            ApplicationMicrostation.MessagingMicrostationService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
-            FileDataSourceMicrostation fileDataSourceMicrostation = CreatePdfByStamp(stamp, filePath);
-
-            stamp.DeleteSignaturesInserted();
-
-            return fileDataSourceMicrostation;
-        }
+            string fileName = Path.GetFileNameWithoutExtension(filePath) + "." + FileExtentionMicrostation.dwg.ToString();
+            string dwgFilePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
+            _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG);
+            
+            return dwgFilePath;
+        }       
 
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        private FileDataSourceMicrostation CreatePdfByStamp(IStampMicrostation stamp, string filePath)
-        {
-            if (stamp != null)
-            {
-                bool isPdfCreated = CreatePdf(filePath, stamp.PaperSize, stamp.Range, stamp.Orientation, stamp.UnitScale,
-                                              _microstationProject.FileDataMicrostation.ColorPrint);
-                if (isPdfCreated)
-                {
-                    return new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf, stamp.PaperSize,
-                                                                         _microstationProject.PrintersInformation.PdfPrinter.PrinterName);
-                }
-                return null;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(stamp));
-            }
-        }
+        //private FileDataSourceMicrostation CreatePdfByStamp(IStampMicrostation stamp, string filePath)
+        //{
+        //    if (stamp != null)
+        //    {
+        //        bool isPdfCreated = CreatePdf(filePath, stamp.PaperSize, stamp.Range, stamp.Orientation, stamp.UnitScale,
+        //                                      _microstationProject.FileDataMicrostation.ColorPrint);
+        //        if (isPdfCreated)
+        //        {
+        //            return new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf, stamp.PaperSize,
+        //                                                                 _microstationProject.PrintersInformation.PdfPrinter.PrinterName);
+        //        }
+        //        return null;
+        //    }
+        //    else
+        //    {
+        //        throw new ArgumentNullException(nameof(stamp));
+        //    }
+        //}
 
-        /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        private bool CreatePdf(string filePath, string drawPaperSize, RangeMicrostation rangeToPrint, OrientationType orientation,
-                              double printScale, ColorPrintMicrostation colorPrint)
-        {
-            bool isPrinterSet = ApplicationMicrostation.SetDefaultPrinter(_microstationProject.
-                                                                          PrintersInformation.PdfPrinter);
-            bool isFenceSet = ApplicationMicrostation.SetPrintingFenceByRange(rangeToPrint);
-            ApplicationMicrostation.SetPrintingOrientation(orientation);
-            bool isPaperSizeSet = ApplicationMicrostation.SetPrinterPaperSize(drawPaperSize, _microstationProject.
-                                                                              PrintersInformation.PdfPrinter.PrefixSearchPaperSize);
-            ApplicationMicrostation.SetPrintScale(printScale);
-            ApplicationMicrostation.SetPrintColor(colorPrint);
-
-            if (isPrinterSet && isFenceSet && isPaperSizeSet)
-            {
-                ApplicationMicrostation.PrintPdfCommand(filePath);
-                return true;
-            }
-            return false;
-        }
+      
     }
 }

@@ -19,7 +19,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Найти нижние колонтитулы
         /// </summary>
-        public IEnumerable<ITableElement> GetTablesInFooters() => _document.Sections.ToIEnumerable().
+        private IEnumerable<ITableElement> GetTablesInFooters() => _document.Sections.ToIEnumerable().
                                                                    SelectMany(section => section.Footers.ToIEnumerable()).
                                                                    SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
                                                                    Select(table => new TableElementWord(table));

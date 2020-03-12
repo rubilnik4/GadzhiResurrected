@@ -29,14 +29,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// </summary>
         public IDocumentLibrary OpenDocument(string filePath)
         {
-            if (!String.IsNullOrWhiteSpace(filePath))
-            {
-                Application.Documents.Open(filePath);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(filePath));
-            }
+            Application.Documents.Open(filePath);
             return ActiveDocument;
         }
 
@@ -47,14 +40,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         {
             if (ActiveDocument.IsDocumentValid)
             {
-                if (!String.IsNullOrWhiteSpace(filePath))
-                {
-                    ActiveDocument.SaveAs(filePath);
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(filePath));
-                }
+                ActiveDocument.SaveAs(filePath);
             }
             return ActiveDocument;
         }

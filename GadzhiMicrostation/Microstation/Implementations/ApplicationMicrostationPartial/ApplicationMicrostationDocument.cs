@@ -37,14 +37,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public IDocumentLibrary OpenDocument(string filePath)
         {
-            if (!String.IsNullOrEmpty(filePath))
-            {
-                Application.OpenDesignFile(filePath, false);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(filePath));
-            }
+            Application.OpenDesignFile(filePath, false);
             return ActiveDocument;
         }
 
@@ -55,17 +48,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         {
             if (ActiveDocument.IsDocumentValid)
             {
-                if (!String.IsNullOrEmpty(filePath))
-                {
-                    ActiveDocument.SaveAs(filePath);
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(filePath));
-                }
+                ActiveDocument.SaveAs(filePath);
             }
-            return ActiveDocument;          
-        }      
+            return ActiveDocument;
+        }
 
         /// <summary>
         /// Создать файл типа DWG
@@ -74,14 +60,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         {
             if (ActiveDocument.IsDocumentValid)
             {
-                if (!String.IsNullOrEmpty(filePath))
-                {
-                    ActiveDocument.Export(filePath);
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(filePath));
-                }
+                ActiveDocument.Export(filePath);
             }
             return null;
         }

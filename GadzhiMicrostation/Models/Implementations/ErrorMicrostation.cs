@@ -3,7 +3,7 @@
 namespace GadzhiMicrostation.Models.Implementations
 {
     /// <summary>
-    /// Ошибка  Microstation
+    /// Ошибка Microstation
     /// </summary>
     public class ErrorMicrostation
     {

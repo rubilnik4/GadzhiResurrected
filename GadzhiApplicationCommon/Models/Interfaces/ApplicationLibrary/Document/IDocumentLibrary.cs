@@ -8,17 +8,12 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
     /// <summary>
     /// Документ Word
     /// </summary>
-    public interface IDocumentLibrary: IDocumentLibraryElements
+    public interface IDocumentLibrary
     {
         /// <summary>
         /// Путь к файлу
         /// </summary>
-        string FullName { get; }
-
-        /// <summary>
-        /// Формат
-        /// </summary>
-        string PaperSize { get; }
+        string FullName { get; }       
 
         /// <summary>
         /// Загрузился ли файл
@@ -36,7 +31,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         void SaveAs(string filePath);
 
         /// <summary>
-        /// Экспорт файла
+        /// Экспорт файла в другие форматы
         /// </summary>      
         string Export(string filePath);
 

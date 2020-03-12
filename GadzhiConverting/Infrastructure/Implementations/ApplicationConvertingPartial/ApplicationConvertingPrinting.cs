@@ -30,7 +30,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             if (_applicationLibrary.StampWord.IsValid)
             {
                 var fileDataSourceAndErrors = _applicationLibrary.StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
-                                                                  Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterName));                                    
+                                                                  Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterName));
                 return (fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.fileSource),
                         fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.errors));
             }
@@ -109,7 +109,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        private ErrorConverting PrintPdfCommand(string filePath) =>
-                _pdfCreatorService.PrintPdfWithExecuteAction(filePath, _applicationLibrary.PrintCommand).ErrorConverting;
+        private ErrorConverting PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
+        {
+            var printCommand = new Action(_applicationLibrary.PrintStamp(stamp, colorPrint, prefixSearchPaperSize));
+            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printCommand).ErrorConverting;
+        }       
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        void PrintCommand();
+        IErrorApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize);
     }
 }
