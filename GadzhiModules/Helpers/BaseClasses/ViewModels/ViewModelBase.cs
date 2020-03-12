@@ -32,12 +32,12 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         /// Обертка для вызова индикатора загрузки и отлова ошибок метода.
         /// При наличие ошибок WCF останаливает процеес конвертации
         /// </summary> 
-        protected void ExecuteAndHandleError(Action method, Func<IErrorConverting> ApplicationAbortionMethod = null)
+        protected void ExecuteAndHandleError(Action method, Action applicationAbortionMethod = null)
         {
 
             ExecuteAndCatchErrors.ExecuteAndHandleError(method,
                                                         () => IsLoading = true,
-                                                        ApplicationAbortionMethod,
+                                                        applicationAbortionMethod,
                                                         () => IsLoading = false);
 
         }
@@ -45,11 +45,11 @@ namespace Helpers.GadzhiModules.BaseClasses.ViewModels
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отл5ова ошибок асинхронного метода
         /// </summary> 
-        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Func<Task<IErrorConverting>> ApplicationAbortionMethod = null)
+        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationAbortionMethod = null)
         {
             await ExecuteAndCatchErrors.ExecuteAndHandleErrorAsync(asyncMethod,
                                                                    () => IsLoading = true,
-                                                                   ApplicationAbortionMethod,
+                                                                   applicationAbortionMethod,
                                                                    () => IsLoading = false);
 
         }

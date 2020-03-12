@@ -24,8 +24,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         public ProjectSettings(IFileSystemOperations fileSystemOperations)
         {
+            _fileSystemOperations = fileSystemOperations;
+
             PutResourcesToDataFolder();
-           // CreateSaveFolders();
         }
 
         /// <summary>
@@ -59,34 +60,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         public string NetworkName => Environment.UserDomainName + "\\" + Environment.MachineName;
 
-
-        ///// <summary>
-        ///// Создать путь для сохранения отконвертированных файлов
-        ///// </summary>        
-        //public string CreateFileSavePath(string fileName, FileExtention fileExtentionType)
-        //{
-        //    string fileFolderSave = FileExtensionToSaveFolder(fileExtentionType);
-
-        //    if (!String.IsNullOrWhiteSpace(fileName) && !String.IsNullOrWhiteSpace(fileFolderSave))
-        //    {
-        //        return _fileSystemOperations.CombineFilePath(fileFolderSave, fileName,
-        //                                                     fileExtentionType.ToString());
-        //    }
-        //    else
-        //    {
-        //        if (String.IsNullOrEmpty(fileName))
-        //        {
-        //            throw new ArgumentNullException(nameof(fileName));
-        //        }
-        //        if (String.IsNullOrEmpty(fileFolderSave))
-        //        {
-        //            throw new ArgumentException(nameof(fileFolderSave));
-        //        }
-
-        //        return String.Empty;
-        //    }
-        //}
-
         /// <summary>
         /// Скопировать ресурсы
         /// </summary>        
@@ -97,59 +70,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 Properties.Resources.signature.Save(Path.Combine(DataResourcesFolder, "signature.jpg"));
             }
-        }
-
-        /// <summary>
-        /// Папка для сохранения файлов DOC
-        /// </summary>
-        public string DocFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\DOC";
-
-        /// <summary>
-        /// Папка для сохранения файлов DGN
-        /// </summary>
-        public string DgnFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\DGN";
-
-        /// <summary>
-        /// Папка для сохранения файлов PDF
-        /// </summary>
-        public string PdfFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\PDF";
-
-        /// <summary>
-        /// Папка для сохранения файлов XLS
-        /// </summary>
-        public string DwgFilesFolder(string FilePathServer) => Path.GetDirectoryName(FilePathServer) + "\\XLS";
-
-        ///// <summary>
-        ///// Создать пути для сохранения файлов
-        ///// </summary>      
-        //private void CreateSaveFolders()
-        //{
-        //    _fileSystemOperations.CreateFolderByName(DocFilesFolder);
-        //    _fileSystemOperations.CreateFolderByName(PdfFilesFolder);
-        //    _fileSystemOperations.CreateFolderByName(DwgFilesFolder);
-        //}
-
-        ///// <summary>
-        ///// Папка для сохранения по типу фала
-        ///// </summary>      
-        //private string FileExtensionToSaveFolder(FileExtention fileExtentionType)
-        //{
-        //    string fileFolderSave = String.Empty;
-
-        //    switch (fileExtentionType)
-        //    {
-        //        case FileExtention.docx:
-        //            fileFolderSave = DocFilesFolder;
-        //            break;
-        //        case FileExtention.pdf:
-        //            fileFolderSave = PdfFilesFolder;
-        //            break;
-        //        case FileExtention.xlsx:
-        //            fileFolderSave = DwgFilesFolder;
-        //            break;
-        //    }
-
-        //    return fileFolderSave;
-        //}
+        }       
     }
 }

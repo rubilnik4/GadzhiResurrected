@@ -2,14 +2,9 @@
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
-using GadzhiConverting.Infrastructure.Interfaces.Application.ApplicationPartial;
-using GadzhiConverting.Models.Implementations.FilesConvert;
-using GadzhiConverting.Models.Interfaces.FilesConvert;
+using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Interfaces.Printers;
-using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Models.Implementations.FilesData;
 using System;
 using System.IO;
 using System.Linq;

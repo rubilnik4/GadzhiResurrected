@@ -1,9 +1,4 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiConverting.DependencyInjection.GadzhiConverting;
-using GadzhiConverting.Infrastructure.Interfaces.Application;
-using GadzhiConverting.Models.Implementations.FilesConvert;
-using GadzhiConverting.Models.Implementations.Printers;
-using GadzhiConverting.Models.Interfaces.Printers;
+﻿using GadzhiConverting.DependencyInjection.GadzhiConverting;
 using GadzhiWord.Helpers.Implementations;
 using System;
 using System.Collections.Generic;
@@ -32,14 +27,14 @@ namespace GadzhiConverting
             //                                              ColorPrintMicrostation.BlackAndWhite),
             //                    printersInformationMicrostation);
 
-            var word = _container.Resolve<IConvertingFileWord>();
-            string dir = Environment.CurrentDirectory + "\\Converting.gitignore\\01.docx";
+            //var word = _container.Resolve<IConvertingFileWord>();
+            //string dir = Environment.CurrentDirectory + "\\Converting.gitignore\\01.docx";
 
-            var pdfPrinters = new List<IPrinterInformation> { new PrinterInformation("PDFCreator", "GTNG") };
-            word.ConvertingFile(new FileDataServerConverting(dir,
-                                                   dir,
-                                                   ColorPrint.BlackAndWhite),
-                                new PrintersInformation(pdfPrinters));
+            //var pdfPrinters = new List<IPrinterInformation> { new PrinterInformation("PDFCreator", "GTNG") };
+            //word.ConvertingFile(new FileDataServer(dir,
+            //                                       dir,
+            //                                       ColorPrint.BlackAndWhite),
+            //                    new PrintersInformation(pdfPrinters));
 
             //var applicationConverting = _container.Resolve<IApplicationConverting>();
             //applicationConverting.StartConverting();
@@ -47,6 +42,9 @@ namespace GadzhiConverting
             Console.ReadLine();
         }
 
+        /// <summary>
+        /// Событие закрытия окна
+        /// </summary>
         private static bool Handler(NativeMethods.CtrlType sig)
         {
             switch (sig)

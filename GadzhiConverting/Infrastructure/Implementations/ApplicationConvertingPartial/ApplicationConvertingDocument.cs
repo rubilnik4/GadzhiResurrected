@@ -1,10 +1,9 @@
-﻿using ConvertingModels.Models.Interfaces.ApplicationLibrary.Document;
-using ConvertingModels.Models.Interfaces.FilesConvert;
+﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiConverting.Infrastructure.Interfaces.Application.ApplicationPartial;
+using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GadzhiConverting.Infrastructure.Implementations.Application.ApplicationPartial
+namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
     /// <summary>
     /// Подкласс для работы с документом

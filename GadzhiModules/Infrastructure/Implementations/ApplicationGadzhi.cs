@@ -252,12 +252,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                     Subscribe(async _ => await _executeAndCatchErrors.
                                                                                ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
                                                                                                           () => IsIntermediateResponseInProgress = true,
-                                                                                                          async () =>
-                                                                                                          {
-                                                                                                              await AbortPropertiesConverting(false);
-                                                                                                              return new ErrorConverting(FileConvertErrorType.Communication, 
-                                                                                                                     "Ошибка получения запроса");
-                                                                                                          },
+                                                                                                          async () => await AbortPropertiesConverting(false),
                                                                                                           () => IsIntermediateResponseInProgress = false)));
         }
 

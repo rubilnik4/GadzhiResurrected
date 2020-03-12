@@ -25,6 +25,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         private List<FileConvertErrorType> _fileConvertErrorTypesBase;
 
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
+            :this(filePathServer, filePathClient, colorPrint, null)
+        {
+
+        }
         public FileDataServer(string filePathServer, string filePathClient,
                               ColorPrint colorPrint, IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
