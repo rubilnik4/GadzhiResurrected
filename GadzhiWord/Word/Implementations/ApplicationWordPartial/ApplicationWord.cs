@@ -41,6 +41,14 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Загрузилась ли оболочка Microstation
         /// </summary>
-        public bool IsApplicationValid => Application != null;      
+        public bool IsApplicationValid => Application != null;
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        public void CloseApplication()
+        {
+            _application.Quit();
+        }
     }
 }

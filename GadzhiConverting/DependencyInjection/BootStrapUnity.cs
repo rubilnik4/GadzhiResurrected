@@ -55,7 +55,7 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IConvertingFileMicrostation, ConvertingFileMicrostation>();
             container.RegisterSingleton<IMicrostationProject, MicrostationProject>();
             container.RegisterSingleton<IApplicationMicrostation, ApplicationMicrostation>();
-            container.RegisterSingleton<IDesignFileMicrostation, DesignFileMicrostation>();
+            container.RegisterSingleton<IDesignFileMicrostation, DocumentMicrostation>();
             container.RegisterType<IMessagingMicrostationService, MessagingMicrostationService>();
             container.RegisterType<ILoggerMicrostationService, LoggerMicrostationService>();
             container.RegisterType<IExecuteAndCatchErrorsMicrostation, ExecuteAndCatchErrorsMicrostation>();

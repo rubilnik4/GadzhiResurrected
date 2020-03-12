@@ -36,6 +36,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         void SaveAs(string filePath);
 
         /// <summary>
+        /// Экспорт файла
+        /// </summary>      
+        string Export(string filePath);
+
+        /// <summary>
         /// Закрыть файл файл
         /// </summary>
         void Close() ;

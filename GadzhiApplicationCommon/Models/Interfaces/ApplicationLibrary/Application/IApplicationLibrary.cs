@@ -14,5 +14,10 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         /// Загрузилась ли оболочка приложения
         /// </summary>
         bool IsApplicationValid { get; }
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        void CloseApplication();
     }
 }

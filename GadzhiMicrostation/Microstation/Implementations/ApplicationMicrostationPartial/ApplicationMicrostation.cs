@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Factory;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiMicrostation.Factory;
 using GadzhiMicrostation.Infrastructure.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
@@ -14,44 +15,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public partial class ApplicationMicrostation : IApplicationMicrostation
-    {
-        /// <summary>
-        /// Сервис работы с ошибками
-        /// </summary>
-        private readonly IExecuteAndCatchErrorsMicrostation _executeAndCatchErrorsMicrostation;
-
-        /// <summary>
-        /// Проверка состояния папок и файлов, архивация, сохранение
-        /// </summary>
-        private readonly IFileSystemOperationsMicrostation _fileSystemOperationsMicrostation;
-
-        /// <summary>
-        /// Сервис работы с ошибками
-        /// </summary>
-        public IMessagingMicrostationService MessagingMicrostationService { get; }
-
-        /// <summary>
-        /// Модель хранения данных конвертации Microstation
-        /// </summary>
-        private readonly IMicrostationProject _microstationProject;
-
-        /// <summary>
-        /// Управление печатью пдф
-        /// </summary>
-        private readonly IPdfCreatorServiceMicrostation _pdfCreatorService;
-
-        public ApplicationMicrostation(IExecuteAndCatchErrorsMicrostation executeAndCatchErrorsMicrostation,
-                                       IFileSystemOperationsMicrostation fileSystemOperationsMicrostation,
-                                       IMessagingMicrostationService errorMessagingMicrostation,
-                                       IMicrostationProject microstationProject,
-                                       IPdfCreatorServiceMicrostation pdfCreatorService)
+    public partial class ApplicationMicrostation : IApplicationLibrary
+    {  
+        public ApplicationMicrostation()
         {
-            _executeAndCatchErrorsMicrostation = executeAndCatchErrorsMicrostation;
-            _fileSystemOperationsMicrostation = fileSystemOperationsMicrostation;
-            MessagingMicrostationService = errorMessagingMicrostation;
-            _microstationProject = microstationProject;
-            _pdfCreatorService = pdfCreatorService;
+            
         }
 
         /// <summary>
@@ -68,9 +36,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             {
                 if (_application == null)
                 {
-                    _executeAndCatchErrorsMicrostation.ExecuteAndHandleError(() => _application = MicrostationInstance.Instance(),
-                                                     applicationCatchMethod: () => new ErrorMicrostation(ErrorMicrostationType.ApplicationNotLoad,
-                                                                                                         "Ошибка загрузки приложения Microstation"));
+                    _application = MicrostationInstance.Instance();
                 }
                 return _application;
             }
@@ -80,13 +46,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Загрузилась ли оболочка Microstation
         /// </summary>
         public bool IsApplicationValid => Application != null;
-
-        /// <summary>
-        /// Текущий файл Microstation
-        /// </summary>
-        public IDesignFileMicrostation ActiveDesignFile =>
-            new DesignFileMicrostation(_application.ActiveDesignFile, this, _microstationProject);
-
+       
         /// <summary>
         /// Закрыть приложение
         /// </summary>
@@ -94,30 +54,5 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         {
             _application.Quit();
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _pdfCreatorService.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
-
-
-
     }
 }

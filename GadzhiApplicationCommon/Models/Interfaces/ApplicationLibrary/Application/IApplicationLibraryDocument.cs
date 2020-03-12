@@ -12,7 +12,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
     public interface IApplicationLibraryDocument
     {
         /// <summary>
-        /// Текущий документ Word
+        /// Текущий документ
         /// </summary>
         IDocumentLibrary ActiveDocument { get; }
 
@@ -30,7 +30,12 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         /// Сохранить документ
         /// </summary>
         IDocumentLibrary SaveDocument(string filePath);
-       
+
+        /// <summary>
+        /// Сохранить документ
+        /// </summary>
+        string ExportDocument(string filePath);
+
         /// <summary>
         /// Сохранить и закрыть файл
         /// </summary>

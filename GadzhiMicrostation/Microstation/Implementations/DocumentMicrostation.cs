@@ -10,13 +10,14 @@ using MicroStationDGN;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
     /// <summary>
     /// Файл файл Microstation
     /// </summary>
-    public class DesignFileMicrostation : IDesignFileMicrostation
+    public class DocumentMicrostation : IDocumentLibrary
     {
         /// <summary>
         /// Экземпляр файла
@@ -33,7 +34,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         private readonly IMicrostationProject _microstationProject;
 
-        public DesignFileMicrostation(DesignFile designFile,
+        public DocumentMicrostation(DesignFile designFile,
                                       IApplicationMicrostation applicationMicrostation,
                                       IMicrostationProject microstationProject)
         {

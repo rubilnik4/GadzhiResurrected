@@ -12,46 +12,27 @@ using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
     /// <summary>
     /// Печать Microstation
     /// </summary>
-    public partial class ApplicationMicrostation : IApplicationMicrostationPrinting
+    public partial class ApplicationMicrostation : IApplicationLibraryPrinting
     {
         /// <summary>
-        /// Установить принтер по умолчанию
-        /// </summary>       
-        public bool SetDefaultPrinter(PrinterInformationMicrostation printerInformation)
+        /// Команда печати
+        /// </summary>
+        public void PrintCommand()
         {
-            bool success = false;
-            if (PrinterSettings.InstalledPrinters?.Cast<string>()?.Contains(printerInformation?.PrinterName, 
-                                                                          StringComparer.OrdinalIgnoreCase) == true)
-            {
-                if (NativeMethods.SetDefaultPrinter(printerInformation?.PrinterName))
-                {
-                    success = true;
-                }
-                else
-                {
-                    MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
-                                                                      $"Не удалось установить принтер {printerInformation?.PrinterName}"));
-                }
-            }
-            else
-            {
-                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.PrinterNotInstall,
-                                                                        $"Принтер {printerInformation?.PrinterName} не установлен в системе"));
-            }
-
-            return success;
+            Application.CadInputQueue.SendCommand("PRINT EXECUTE");
         }
 
         /// <summary>
         /// Установить тип поворота
         /// </summary>       
-        public void SetPrintingOrientation(OrientationType orientation)
+        private void SetPrintingOrientation(OrientationType orientation)
         {
             if (orientation == OrientationType.Horizontal)
             {
@@ -66,7 +47,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить границы печати по рамке
         /// </summary>
-        public bool SetPrintingFenceByRange(RangeMicrostation rangeToPrint)
+        private ErrorMicrostation SetPrintingFenceByRange(RangeMicrostation rangeToPrint)
         {
             if (rangeToPrint != null && rangeToPrint.IsValid)
             {
@@ -86,20 +67,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
 
                 Application.CadInputQueue.SendKeyin("print boundary fence");
 
-                return true;
+                return null;
             }
             else
             {
-                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
-                                                                           "Диапазон печати задан некорректно"));
-                return false;
+                return new ErrorMicrostation(ErrorMicrostationType.RangeNotValid, "Диапазон печати задан некорректно");
             }
         }
 
         /// <summary>
         /// Установить формат печати характерный для принтера
         /// </summary>       
-        public bool SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize)
+        private ErrorMicrostation SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize)
         {
             string paperNameFound = GetPrinterPaperSize(drawSize, prefixSearchPaperSize);
 
@@ -110,13 +89,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 Application.CadInputQueue.SendCommand($"PRINT papername {paperNameFound}");
                 Application.CadInputQueue.SendCommand("PRINT MAXIMIZE");
 
-                return true;
+                return null;
             }
             else
             {
-                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.RangeNotValid,
-                                                                          $"Формат печати {drawSize} не найден"));
-                return false;
+                return new ErrorMicrostation(ErrorMicrostationType.RangeNotValid, $"Формат печати {drawSize} не найден");
             }
 
         }
@@ -124,7 +101,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить масштаб печати
         /// </summary>       
-        public void SetPrintScale(double paperScale)
+        private void SetPrintScale(double paperScale)
         {
             string paperScaleString = paperScale.ToString(CultureInfo.CurrentCulture).
                                                  Replace(',', '.');
@@ -134,7 +111,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить цвет печати
         /// </summary>       
-        public void SetPrintColor(ColorPrintMicrostation colorPrint)
+        private void SetPrintColor(ColorPrintMicrostation colorPrint)
         {
             string colorCommand = String.Empty;
             switch (colorPrint)
@@ -150,22 +127,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                     break;
             }
             Application.CadInputQueue.SendCommand($"PRINT colormode {colorCommand}");
-        }
-
-        /// <summary>
-        /// Команда печати
-        /// </summary>
-        public void PrintCommand()
-        {
-            Application.CadInputQueue.SendCommand("PRINT EXECUTE");
-        }
-
-        /// <summary>
-        /// Команда печати PDF
-        /// </summary>
-        public bool PrintPdfCommand(string filePath)
-        {
-            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintCommand);
         }
 
         private string GetPrinterPaperSize(string drawFormat, string prefixSearchPaperSize)

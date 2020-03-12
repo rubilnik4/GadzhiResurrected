@@ -80,7 +80,7 @@
     <Compile Include="Microstation\Converters\ConvertMicrostationElements.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationCommands.cs" />
-    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationDesingFile.cs" />
+    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationDocument.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationPrinting.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostationPair.cs" />
     <Compile Include="Microstation\Implementations\Elements\LibraryElement.cs" />
@@ -124,7 +124,7 @@
     <Compile Include="Models\Enums\OrientationType.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPersonSignature.cs" />
     <Compile Include="Models\Enums\ElementMicrostationAttributes.cs" />
-    <Compile Include="Microstation\Implementations\DesignFileMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\DocumentMicrostation.cs" />
     <Compile Include="Microstation\Implementations\StampPartial\StampMicrostation.cs" />
     <Compile Include="Microstation\Implementations\ModelMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostation.cs" />
@@ -191,6 +191,12 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
+      <Project>{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}</Project>
+      <Name>GadzhiApplicationCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
