@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Word.Implementations.Converters;
 using Microsoft.Office.Interop.Word;
@@ -19,11 +20,11 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Экземпляр файла
         /// </summary>
-        private readonly Document _document;      
-       
+        private readonly Document _document;
+
         public DocumentWord(Document document)
         {
-            _document = document;           
+            _document = document;
         }
 
         /// <summary>
@@ -39,7 +40,14 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Формат
         /// </summary>
-        public string PaperSize => WordPaperSizeToString.ConvertingPaperSizeToString(_document.PageSetup.PaperSize);
+        private string PaperSize => WordPaperSizeToString.ConvertingPaperSizeToString(_document.PageSetup.PaperSize);
+
+        /// <summary>
+        /// Формат
+        /// </summary>
+        private OrientationType OrientationType => _document.PageSetup.Orientation == WdOrientation.wdOrientLandscape ?
+                                                    OrientationType.Landscape :
+                                                    OrientationType.Portrait;
 
         /// <summary>
         /// Сохранить файл
@@ -68,6 +76,6 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         {
             Save();
             Close();
-        }      
+        }
     }
 }

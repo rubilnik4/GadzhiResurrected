@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enums;
@@ -39,7 +40,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        IEnumerable<IStampMicrostation> FindStamps();
+        IEnumerable<IStamp> FindStamps();
 
         /// <summary>
         /// Удалить элемент

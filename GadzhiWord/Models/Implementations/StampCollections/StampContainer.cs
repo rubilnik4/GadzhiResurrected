@@ -22,9 +22,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public IEnumerable<IStamp> Stamps { get; }
 
-        public StampContainer(IEnumerable<ITableElement> tableStamps, IDocumentLibrary documentWord)
+        public StampContainer(IEnumerable<IStamp> stamps)
         {
-            Stamps = InitializeStamp(tableStamps, documentWord);
+            Stamps = stamps;
         }
 
         /// <summary>
@@ -38,50 +38,50 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public IEnumerable<IStampPersonSignature> GetStampPersonSignatures() => Stamps?.OfType<IStampMain>()?.
                                                                                 SelectMany(stamp => stamp.StampPersonSignatures);
 
-        /// <summary>
-        /// Инициализировать штамп
-        /// </summary>       
-        private IEnumerable<IStampMain> InitializeStamp(IEnumerable<ITableElement> tableStamps, IDocumentLibrary documentWord) =>
-                tableStamps?.Where(table => GetStampType(table) == StampType.Main).
-                             Select(table => new StampMain(table, documentWord));
+        ///// <summary>
+        ///// Инициализировать штамп
+        ///// </summary>       
+        //private IEnumerable<IStampMain> InitializeStamp(IEnumerable<ITableElement> tableStamps, IDocumentLibrary documentWord) =>
+        //        tableStamps?.Where(table => GetStampType(table) == StampType.Main).
+        //                     Select(table => new StampMain(table, documentWord));
 
-        /// <summary>
-        /// Заполнить поля штампа
-        /// </summary>
-        private StampType? GetStampType(ITableElement tableStamp)
-        {
-            StampType? stampType = null;
+        ///// <summary>
+        ///// Заполнить поля штампа
+        ///// </summary>
+        //private StampType? GetStampType(ITableElement tableStamp)
+        //{
+        //    StampType? stampType = null;
 
-            foreach (var cell in tableStamp.CellsElement)
-            {
-                if (cell != null && !String.IsNullOrWhiteSpace(cell.Text))
-                {
-                    string cellText = StringAdditionalExtensions.PrepareCellTextToCompare(cell.Text);
-                    stampType = CheckStampType(stampType, cellText);
-                }
-            }
+        //    foreach (var cell in tableStamp.CellsElement)
+        //    {
+        //        if (cell != null && !String.IsNullOrWhiteSpace(cell.Text))
+        //        {
+        //            string cellText = StringAdditionalExtensions.PrepareCellTextToCompare(cell.Text);
+        //            stampType = CheckStampType(stampType, cellText);
+        //        }
+        //    }
 
-            return stampType;
-        }
+        //    return stampType;
+        //}
 
-        /// <summary>
-        /// Определить тип штампа
-        /// </summary>       
-        private StampType? CheckStampType(StampType? stampType, string cellText)
-        {
-            if (stampType != StampType.Main)
-            {
-                if (stampType != StampType.Additional &&
-                    StampAdditionalParameters.MarkersAdditionalStamp.MarkerContain(cellText))
-                {
-                    stampType = StampType.Additional;
-                }
-                if (StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText))
-                {
-                    stampType = StampType.Main;
-                }
-            }
-            return stampType;
-        }
+        ///// <summary>
+        ///// Определить тип штампа
+        ///// </summary>       
+        //private StampType? CheckStampType(StampType? stampType, string cellText)
+        //{
+        //    if (stampType != StampType.Main)
+        //    {
+        //        if (stampType != StampType.Additional &&
+        //            StampAdditionalParameters.MarkersAdditionalStamp.MarkerContain(cellText))
+        //        {
+        //            stampType = StampType.Additional;
+        //        }
+        //        if (StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText))
+        //        {
+        //            stampType = StampType.Main;
+        //        }
+        //    }
+        //    return stampType;
+        //}
     }
 }

@@ -1,7 +1,7 @@
-﻿using GadzhiMicrostation.Microstation.Implementations.Elements;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 
@@ -23,7 +23,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// Тип расположения штапа
         /// </summary>
         public OrientationType Orientation => Range.Width >= Range.Height ?
-                                              OrientationType.Horizontal :
-                                              OrientationType.Vertical;
+                                              OrientationType.Landscape :
+                                              OrientationType.Portrait;
     }
 }

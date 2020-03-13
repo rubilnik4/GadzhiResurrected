@@ -141,9 +141,7 @@
     <Compile Include="Word\Implementations\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Elements\RowElementWord.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
       <Project>{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}</Project>
@@ -172,9 +170,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\signature.jpg" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="VBA">

@@ -1,4 +1,6 @@
-﻿using GadzhiMicrostation.Microstation.Converters;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Word.Interfaces.Elements;
+using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Implementations.StampPartial;
 using GadzhiMicrostation.Microstation.Implementations.Units;
@@ -8,6 +10,7 @@ using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -32,7 +35,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Класс для работы с приложением Microstation
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
-
 
         public ModelMicrostation(ModelReference modelMicrostation,
                                  IApplicationMicrostation applicationMicrostation)
@@ -81,12 +83,12 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        public IEnumerable<IStampMicrostation> FindStamps() =>        
+        public IEnumerable<IStamp> FindStamps() =>        
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
             Cast<CellElement>().
-            Where(cellElement => StampMain.IsStampName(cellElement.Name)).
-            Select(cellElement => new StampMicrostation(cellElement, ToOwnerContainerMicrostation())).
-            Cast<IStampMicrostation>();
+            Where(cellElement => StampFieldMain.IsStampName(cellElement.Name)).
+            Select(cellElement => new StampMain(cellElement, ToOwnerContainerMicrostation())).
+            Cast<IStamp>();
 
         /// <summary>
         /// Найти элементы библиотеки Microstation в модели по типам

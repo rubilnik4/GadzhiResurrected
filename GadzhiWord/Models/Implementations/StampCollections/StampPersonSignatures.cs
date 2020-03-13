@@ -12,12 +12,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
     public class StampPersonSignature: IStampPersonSignature
-    {
-        /// <summary>
-        /// Элемент строка
-        /// </summary>
-        private readonly IRowElement _rowElementWord;        
-
+    {       
         public StampPersonSignature(IRowElement rowElementWord)
         {
             if (rowElementWord?.CellsElement?.Count >= 4)
@@ -28,8 +23,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                     ResponsiblePerson = new StampField(rowElementWord?.CellsElement[1]);
                     Signature = new StampField(rowElementWord?.CellsElement[2]);
                     DateSignature = new StampField(rowElementWord?.CellsElement[3]);
-
-                    _rowElementWord = rowElementWord;
                 }
                 else
                 {

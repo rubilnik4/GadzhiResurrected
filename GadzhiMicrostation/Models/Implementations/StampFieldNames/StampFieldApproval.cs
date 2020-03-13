@@ -1,40 +1,40 @@
 ﻿using System.Collections.Generic;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections
+namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Строка с согласованием
     /// </summary>
-    public class StampApproval
+    public class StampFieldApproval
     {
-        public StampApproval(string departmentApproval,
+        public StampFieldApproval(string departmentApproval,
                              string responsiblePerson,
                              string date)
         {
-            DepartmentApproval = new StampBaseField(departmentApproval, isVertical: true);
-            ResponsiblePerson = new StampBaseField(responsiblePerson, isVertical: true);
-            Date = new StampBaseField(date, isVertical: true);
+            DepartmentApproval = new StampFieldBase(departmentApproval, isVertical: true);
+            ResponsiblePerson = new StampFieldBase(responsiblePerson, isVertical: true);
+            Date = new StampFieldBase(date, isVertical: true);
         }
 
         /// <summary>
         /// Отдел согласования
         /// </summary>
-        public StampBaseField DepartmentApproval { get; }
+        public StampFieldBase DepartmentApproval { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public StampBaseField ResponsiblePerson { get; }
+        public StampFieldBase ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public StampBaseField Date { get; }
+        public StampFieldBase Date { get; }
 
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<StampBaseField> StampControlNamesApproval => new HashSet<StampBaseField>()
+        public HashSet<StampFieldBase> StampControlNamesApproval => new HashSet<StampFieldBase>()
         {
             DepartmentApproval,
             ResponsiblePerson,

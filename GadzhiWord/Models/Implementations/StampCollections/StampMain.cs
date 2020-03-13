@@ -15,21 +15,22 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public class StampMain : Stamp, IStampMain
     {
-        public StampMain(ITableElement tableStamp, IDocumentLibrary documentWord)
-            : base(tableStamp, documentWord)
+        public StampMain(ITableElement tableStamp, string paperSize, OrientationType orientationType)
+            : base(tableStamp, paperSize, orientationType)
         {
 
         }
-              
+
         /// <summary>
         /// Тип штампа
         /// </summary>
         public override StampType StampType => StampType.Main;
-        
+
         /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
         public IEnumerable<IStampPersonSignature> StampPersonSignatures => FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
-                                                                                       Select(field => new StampPersonSignature(field.RowElementStamp));     
+                                                                                       Select(field => new StampPersonSignature(field.RowElementStamp));
+
     }
 }

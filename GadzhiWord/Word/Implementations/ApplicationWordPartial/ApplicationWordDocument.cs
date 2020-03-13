@@ -46,6 +46,14 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         }
 
         /// <summary>
+        /// Экспорт документа
+        /// </summary>
+        public string ExportDocument(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Сохранить и закрыть файл
         /// </summary>
         public void CloseAndSaveDocument()
@@ -66,5 +74,6 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
                 ActiveDocument.Close();
             }
         }
+
     }
 }

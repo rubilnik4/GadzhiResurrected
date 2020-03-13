@@ -1,11 +1,5 @@
 ﻿using GadzhiMicrostation.Microstation.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
-using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
-using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations;
-using GadzhiMicrostation.Models.Implementations.FilesData;
-using GadzhiMicrostation.Models.Interfaces;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -13,13 +7,14 @@ using System.Linq;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using System.IO;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
     /// <summary>
-    /// Файл файл Microstation
+    /// Файл Microstation
     /// </summary>
-    public class DocumentMicrostation : IDocumentLibrary
+    public partial class DocumentMicrostation : IDocumentLibrary
     {
         /// <summary>
         /// Экземпляр файла
@@ -29,10 +24,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        public IApplicationLibrary ApplicationMicrostation { get; }
+        public IApplicationMicrostation ApplicationMicrostation { get; }
 
-        public DocumentMicrostation(DesignFile designFile,
-                                    IApplicationLibrary applicationMicrostation)
+        public DocumentMicrostation(DesignFile designFile, IApplicationMicrostation applicationMicrostation)
         {
             _designFile = designFile;
             ApplicationMicrostation = applicationMicrostation;
@@ -63,12 +57,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 }
                 return modelsMicrostation;
             }
-        }
-
-        /// <summary>
-        /// Найти все штампы во всех моделях и листах
-        /// </summary>       
-        public IList<IStampMicrostation> Stamps => ModelsMicrostation.SelectMany(model => model.FindStamps()).ToList();
+        }       
 
         /// <summary>
         /// Сохранить файл
@@ -109,30 +98,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
             _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG);
             
             return dwgFilePath;
-        }       
-
-        /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        //private FileDataSourceMicrostation CreatePdfByStamp(IStampMicrostation stamp, string filePath)
-        //{
-        //    if (stamp != null)
-        //    {
-        //        bool isPdfCreated = CreatePdf(filePath, stamp.PaperSize, stamp.Range, stamp.Orientation, stamp.UnitScale,
-        //                                      _microstationProject.FileDataMicrostation.ColorPrint);
-        //        if (isPdfCreated)
-        //        {
-        //            return new FileDataSourceMicrostation(filePath, FileExtentionMicrostation.pdf, stamp.PaperSize,
-        //                                                                 _microstationProject.PrintersInformation.PdfPrinter.PrinterName);
-        //        }
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentNullException(nameof(stamp));
-        //    }
-        //}
-
-      
+        } 
     }
 }

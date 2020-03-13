@@ -1,55 +1,55 @@
 ﻿using System.Collections.Generic;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections
+namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Строка с изменениями
     /// </summary>
-    public class StampChange
+    public class StampFieldChange
     {
-        public StampChange(string numberChange,
+        public StampFieldChange(string numberChange,
                            string numberOfPlots,
                            string typeOfChange,
                            string documentChange,
                            string dataChange)
         {
-            NumberChange = new StampBaseField(numberChange, isNeedCompress: false);
-            NumberOfPlots = new StampBaseField(numberOfPlots, isNeedCompress: false);
-            TypeOfChange = new StampBaseField(typeOfChange);
-            DocumentChange = new StampBaseField(documentChange);
-            DateChange = new StampBaseField(dataChange);
+            NumberChange = new StampFieldBase(numberChange, isNeedCompress: false);
+            NumberOfPlots = new StampFieldBase(numberOfPlots, isNeedCompress: false);
+            TypeOfChange = new StampFieldBase(typeOfChange);
+            DocumentChange = new StampFieldBase(documentChange);
+            DateChange = new StampFieldBase(dataChange);
         }
 
         /// <summary>
         /// Номер изменения
         /// </summary>
-        public StampBaseField NumberChange { get; }
+        public StampFieldBase NumberChange { get; }
 
         /// <summary>
         /// Количество участков
         /// </summary>
-        public StampBaseField NumberOfPlots { get; }
+        public StampFieldBase NumberOfPlots { get; }
 
         /// <summary>
         /// Тип изменения
         /// </summary>
-        public StampBaseField TypeOfChange { get; }
+        public StampFieldBase TypeOfChange { get; }
 
         /// <summary>
         /// Номер докумета
         /// </summary>
-        public StampBaseField DocumentChange { get; }
+        public StampFieldBase DocumentChange { get; }
 
         /// <summary>
         /// Дата изменения
         /// </summary>
-        public StampBaseField DateChange { get; }
+        public StampFieldBase DateChange { get; }
 
 
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<StampBaseField> StampControlNamesChange => new HashSet<StampBaseField>()
+        public HashSet<StampFieldBase> StampControlNamesChange => new HashSet<StampFieldBase>()
         {
             NumberChange,
             NumberOfPlots,

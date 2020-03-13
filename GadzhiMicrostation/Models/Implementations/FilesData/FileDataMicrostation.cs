@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GadzhiMicrostation.Infrastructure.Implementations;
-
 namespace GadzhiMicrostation.Models.Implementations.FilesData
 {
     /// <summary>
@@ -32,7 +30,7 @@ namespace GadzhiMicrostation.Models.Implementations.FilesData
 
             if (!String.IsNullOrEmpty(filePathServer))
             {
-                string fileExtention = FileSystemOperationsMicrostation.ExtensionWithoutPointFromPath(filePathServer);
+                string fileExtention = Path.GetExtension(filePathServer).Trim('.');
                 string fileName = Path.GetFileNameWithoutExtension(filePathServer);
 
                 var fileExtensionType = Enum.Parse(typeof(FileExtentionMicrostation), fileExtention, true);

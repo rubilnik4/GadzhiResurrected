@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Globalization;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections
+namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Базовые параметры для поля в штампе
     /// </summary>
-    public class StampBaseField : IEquatable<StampBaseField>
+    public class StampFieldBase : IEquatable<StampFieldBase>
     {
-        public StampBaseField(string name,
+        public StampFieldBase(string name,
                               bool isNeedCompress = true,
                               bool isVertical = false)
         {
@@ -34,10 +34,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
 
         public override bool Equals(object obj)
         {
-            return Equals((StampBaseField)obj);
+            return Equals((StampFieldBase)obj);
         }
 
-        public bool Equals(StampBaseField other)
+        public bool Equals(StampFieldBase other)
         {
             return Name == other?.Name;
         }

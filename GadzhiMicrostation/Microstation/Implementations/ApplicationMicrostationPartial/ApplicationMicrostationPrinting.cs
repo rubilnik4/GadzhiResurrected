@@ -17,6 +17,7 @@ using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Implementation;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -63,7 +64,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         private void SetPrintingOrientation(OrientationType orientation)
         {
-            if (orientation == OrientationType.Horizontal)
+            if (orientation == OrientationType.Landscape)
             {
                 Application.CadInputQueue.SendCommand("PRINT orientation landscape");
             }

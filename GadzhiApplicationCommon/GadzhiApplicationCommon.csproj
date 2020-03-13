@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />
     <Compile Include="Models\Enums\ErrorApplicationType.cs" />
+    <Compile Include="Models\Enums\OrientationType.cs" />
     <Compile Include="Models\Enums\StampFieldType.cs" />
     <Compile Include="Models\Enums\StampType.cs" />
     <Compile Include="Models\Implementation\ErrorApplication.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryPrinting.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryStamp.cs" />
+    <Compile Include="Models\Interfaces\ApplicationLibrary\Document\IDocumentLibraryElements.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Document\IDocumentLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Elements\ICellElement.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Elements\IRowElement.cs" />

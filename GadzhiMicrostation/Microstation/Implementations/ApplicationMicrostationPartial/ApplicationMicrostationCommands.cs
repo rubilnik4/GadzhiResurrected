@@ -6,12 +6,12 @@ using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations;
-using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -32,16 +32,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                      string cellDescription = null)
         {
             string cellNameOriginalyOrFoundByDescription = ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription);
-            if (!String.IsNullOrEmpty(cellNameOriginalyOrFoundByDescription))
-            {
-                return CreateCellElementFromLibraryWithoutCheck(cellName, origin, modelMicrostation, additionalParametrs);
-            }
-            else
-            {
-                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.SignatureNotFound,
-                                                                       $"Идентефикатор библиотечного элемента не задан"));
-                return null;
-            }
+            return !String.IsNullOrEmpty(cellNameOriginalyOrFoundByDescription) ?
+                   CreateCellElementFromLibraryWithoutCheck(cellName, origin, modelMicrostation, additionalParametrs) :
+                   null;
         }
 
         /// <summary>
@@ -54,7 +47,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                    string cellDescription = null)
         {
             AttachLibrary(StampAdditionalParameters.SignatureLibraryName);
-           
+
             var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParametrs);
 
             DetachLibrary();
@@ -67,16 +60,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>      
         public void AttachLibrary(string libraryPath)
         {
-            if (_fileSystemOperationsMicrostation.IsFileExist(libraryPath))
-            {
-                _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath);
-                _cachLibraryElements = CachingLibraryElements();
-            }
-            else
-            {
-                MessagingMicrostationService.ShowAndLogError(new ErrorMicrostation(ErrorMicrostationType.FileNotFound,
-                                                                        $"Файл библиотеки {libraryPath} не найден"));
-            }
+            _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath);
+            _cachLibraryElements = CachingLibraryElements();
         }
 
         /// <summary>

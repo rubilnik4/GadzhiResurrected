@@ -1,44 +1,44 @@
 ﻿using System.Collections.Generic;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections
+namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignature
+    public class StampFieldPersonSignature
     {
-        public StampPersonSignature(string actionType,
+        public StampFieldPersonSignature(string actionType,
                               string responsiblePerson,
                               string date)
         {
-            ActionType = new StampBaseField(actionType, isNeedCompress: false);
-            ResponsiblePerson = new StampBaseField(responsiblePerson);
-            Date = new StampBaseField(date);
+            ActionType = new StampFieldBase(actionType, isNeedCompress: false);
+            ResponsiblePerson = new StampFieldBase(responsiblePerson);
+            DateSignature = new StampFieldBase(date);
         }
 
         /// <summary>
         /// Тип действия
         /// </summary>
-        public StampBaseField ActionType { get; }
+        public StampFieldBase ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public StampBaseField ResponsiblePerson { get; }
+        public StampFieldBase ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public StampBaseField Date { get; }
+        public StampFieldBase DateSignature { get; }
 
         /// <summary>
         /// Список всех полей в строке с ответсвенным лицом и подписью
         /// </summary>
-        public HashSet<StampBaseField> StampPersonSignatureFields => new HashSet<StampBaseField>()
+        public HashSet<StampFieldBase> StampPersonSignatureFields => new HashSet<StampFieldBase>()
         {
             ActionType,
             ResponsiblePerson,
-            Date,
+            DateSignature,
         };
     }
 }

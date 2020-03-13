@@ -6,9 +6,9 @@ using System.Text;
 namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
 {
     /// <summary>
-    /// Документ Word
+    /// Документ приложения
     /// </summary>
-    public interface IDocumentLibrary
+    public interface IDocumentLibrary: IDocumentLibraryElements
     {
         /// <summary>
         /// Путь к файлу

@@ -32,7 +32,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         IDocumentLibrary SaveDocument(string filePath);
 
         /// <summary>
-        /// Сохранить документ
+        /// Экспорт документа
         /// </summary>
         string ExportDocument(string filePath);
 

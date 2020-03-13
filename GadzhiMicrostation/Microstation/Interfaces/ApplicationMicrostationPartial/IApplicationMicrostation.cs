@@ -1,7 +1,4 @@
-﻿using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Implementations.Coordinates;
-using GadzhiMicrostation.Models.Interfaces;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using System;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
@@ -9,27 +6,8 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public interface IApplicationMicrostation : IApplicationMicrostationDesingFile, IApplicationMicrostationCommands, 
-                                                IApplicationMicrostationPrinting, IDisposable
+    public interface IApplicationMicrostation : IApplicationLibrary, IApplicationMicrostationCommands                                                
     {  
-        /// <summary>
-        /// Загрузилась ли оболочка Microstation
-        /// </summary>
-        bool IsApplicationValid { get; }
-
-        /// <summary>
-        /// Текущий файл Microstation
-        /// </summary>
-        IDesignFileMicrostation ActiveDesignFile { get; }
-
-        /// <summary>
-        /// Сервис работы с ошибками
-        /// </summary>
-        IMessagingMicrostationService MessagingMicrostationService { get; }       
-
-        /// <summary>
-        /// Закрыть приложение
-        /// </summary>
-        void CloseApplication();  
+     
     }
 }

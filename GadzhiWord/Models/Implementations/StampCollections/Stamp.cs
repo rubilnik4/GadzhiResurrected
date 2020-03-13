@@ -19,16 +19,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Элемент таблица
         /// </summary>
         protected ITableElement TableStamp { get; }
-
-        /// <summary>
-        /// Документ
-        /// </summary>
-        private readonly IDocumentLibrary _document;
-
-        public Stamp(ITableElement tableStamp, IDocumentLibrary document)
+       
+        public Stamp(ITableElement tableStamp, string paperSize, OrientationType orientationType)
         {
             TableStamp = tableStamp;
-            _document = document;
+            PaperSize = paperSize;
+            Orientation = orientationType;
         }
         /// <summary>
         /// Наименование
@@ -43,7 +39,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Формат
         /// </summary>
-        public string PaperSize => _document.PaperSize;
+        public string PaperSize { get; }
+
+        /// <summary>
+        /// Тип расположения штампа
+        /// </summary>
+        public OrientationType Orientation { get; }
 
         /// <summary>
         /// Получить поля штампа

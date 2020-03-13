@@ -22,31 +22,18 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        public IStampContainer StampWord => new StampContainer(FindTableStamps(), ActiveDocument);
-
-        /// <summary>
-        /// Найти штампы в документе
-        /// </summary>    
-        private IEnumerable<ITableElement> FindTableStamps() => ActiveDocument?.GetTablesInFooters().Where(CheckFooterIsStamp);                                                               
-
-        /// <summary>
-        /// Проверить является ли колонтитул штампом
-        /// </summary>
-        private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElement.
-                                                                       Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
-                                                                       Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell?.Text)).
-                                                                       Any(cellText => StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText));
+        public IStampContainer StampContainer => new StampContainer(ActiveDocument?.FindStamps());
 
         /// <summary>
         /// Вставить подписи
         /// </summary>
         public void InsertStampSignatures()
         {
-            var personSignatures = StampWord?.GetStampPersonSignatures();
+            var personSignatures = StampContainer?.GetStampPersonSignatures();
             foreach (var personSignature in personSignatures)
             {
-                personSignature.Signature.CellElementWord.DeleteAllSignatures();
-                personSignature.Signature.CellElementWord.InsertSignature(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
+                personSignature.Signature.CellElementStamp.DeleteAllSignatures();
+                personSignature.Signature.CellElementStamp.InsertSignature(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
             }
         }
 
@@ -55,10 +42,10 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// </summary>
         public void DeleteStampSignatures()
         {
-            var personSignatures = StampWord?.GetStampPersonSignatures();
+            var personSignatures = StampContainer?.GetStampPersonSignatures();
             foreach (var personSignature in personSignatures)
             {
-                personSignature.Signature.CellElementWord.DeleteAllSignatures();
+                personSignature.Signature.CellElementStamp.DeleteAllSignatures();
             }
         }
     }

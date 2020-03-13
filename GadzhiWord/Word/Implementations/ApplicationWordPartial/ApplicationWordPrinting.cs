@@ -1,4 +1,7 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+﻿using GadzhiApplicationCommon.Models.Interfaces;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Enums;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -17,9 +20,13 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Команда печати
         /// </summary>
-        public void PrintStamp() =>       
+        public IErrorApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
+        {
             Application.PrintOut(Range: WdPrintOutRange.wdPrintAllDocument, PageType: WdPrintOutPages.wdPrintAllPages,
-                                 ManualDuplexPrint: false, PrintToFile: false);
-       
+                              ManualDuplexPrint: false, PrintToFile: false);
+            return null;
+        }
+
+
     }
 }

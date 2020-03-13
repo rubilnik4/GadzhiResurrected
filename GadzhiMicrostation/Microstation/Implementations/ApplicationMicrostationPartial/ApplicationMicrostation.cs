@@ -1,11 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
-using GadzhiMicrostation.Factory;
-using GadzhiMicrostation.Infrastructure.Interfaces;
-using GadzhiMicrostation.Microstation.Interfaces;
+﻿using GadzhiMicrostation.Factory;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
-using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations;
-using GadzhiMicrostation.Models.Interfaces;
 using MicroStationDGN;
 using System;
 using System.IO;
@@ -15,7 +9,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public partial class ApplicationMicrostation : IApplicationLibrary
+    public partial class ApplicationMicrostation : IApplicationMicrostation
     {  
         public ApplicationMicrostation()
         {

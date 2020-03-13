@@ -26,5 +26,10 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// Формат
         /// </summary>
         string PaperSize { get; }
+
+        /// <summary>
+        /// Тип расположения штампа
+        /// </summary>
+        OrientationType Orientation { get; }
     }
 }

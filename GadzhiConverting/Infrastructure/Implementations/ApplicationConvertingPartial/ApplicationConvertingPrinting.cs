@@ -27,9 +27,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>       
         private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint, string pdfPrinterName)
         {
-            if (_applicationLibrary.StampWord.IsValid)
+            if (_applicationLibrary.StampContainer.IsValid)
             {
-                var fileDataSourceAndErrors = _applicationLibrary.StampWord.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
+                var fileDataSourceAndErrors = _applicationLibrary.StampContainer.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
                                                                   Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterName));
                 return (fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.fileSource),
                         fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.errors));

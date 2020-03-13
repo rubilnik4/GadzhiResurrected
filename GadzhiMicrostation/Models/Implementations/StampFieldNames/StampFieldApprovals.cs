@@ -1,33 +1,33 @@
 ﻿using System.Collections.Generic;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections
+namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Поля штампа с согласованием
     /// </summary>
-    public static class StampApprovals
-    {  
+    public static class StampFieldApprovals
+    {
         /// <summary>
         /// Согласование 1
         /// </summary>
-        public static StampApproval StampApprovalsFirst =>
-            new StampApproval("V_C_DEP1_1",
+        public static StampFieldApproval StampApprovalsFirst =>
+            new StampFieldApproval("V_C_DEP1_1",
                               "V_C_NAME1_1",
                               "V_E_DATE_35");
 
         /// <summary>
         /// Согласование 2
         /// </summary>
-        public static StampApproval StampApprovalsSecond =>
-            new StampApproval("V_C_DEP1_2",
+        public static StampFieldApproval StampApprovalsSecond =>
+            new StampFieldApproval("V_C_DEP1_2",
                               "V_C_NAME1_2",
                               "V_E_DATE_25");
 
         /// <summary>
         /// Согласование 3
         /// </summary>
-        public static StampApproval StampApprovalsThird =>
-            new StampApproval("V_C_DEP1_3",
+        public static StampFieldApproval StampApprovalsThird =>
+            new StampFieldApproval("V_C_DEP1_3",
                               "V_C_NAME1_3",
                               "V_E_DATE_15");
 
@@ -35,9 +35,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Список всех полей с изменениями
         /// </summary>
-        public static HashSet<StampBaseField> GetStampControlNamesApprovals()
+        public static HashSet<StampFieldBase> GetStampControlNamesApprovals()
         {
-            var stampControlNamesApprovals = new HashSet<StampBaseField>();
+            var stampControlNamesApprovals = new HashSet<StampFieldBase>();
 
             stampControlNamesApprovals.UnionWith(StampApprovalsFirst.StampControlNamesApproval);
             stampControlNamesApprovals.UnionWith(StampApprovalsSecond.StampControlNamesApproval);
@@ -49,13 +49,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Список строк с согласующим лицом и подписью
         /// </summary>
-        public static HashSet<StampApproval> GetStampRowApprovalSignatures()
+        public static HashSet<StampFieldApproval> GetStampRowApprovalSignatures()
         {
-            return new HashSet<StampApproval>()
+            return new HashSet<StampFieldApproval>()
                 {
                     StampApprovalsFirst,
                     StampApprovalsSecond,
-                    StampApprovalsThird,                   
+                    StampApprovalsThird,
                 };
         }
     }

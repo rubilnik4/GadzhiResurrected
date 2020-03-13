@@ -2,10 +2,11 @@
 using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiMicrostation.Models.Implementations.StampFieldNames;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
 {
@@ -45,7 +46,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         {
             var signaturesElements = OwnerContainerMicrostation.ModelMicrostation.
                                      GetModelElementsMicrostation(ElementMicrostationType.CellElement).
-                                     Where(element => element.AttributeControlName == StampMain.SignatureAttributeMarker);
+                                     Where(element => element.AttributeControlName == StampFieldMain.SignatureAttributeMarker);
 
             foreach (var signature in signaturesElements)
             {
@@ -72,13 +73,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         private IEnumerable<ICellElementMicrostation> InsertMainRowSignatures()
         {
-            var signatureRowSearch = StampPersonSignatures.GetStampRowPersonSignatures();
+            var signatureRowSearch = StampFieldPersonSignatures.GetStampRowPersonSignatures();
             var signatureRowFound = signatureRowSearch?.
                 Select(row =>
                     new
                     {
                         Person = FindElementInStampFields(row.ResponsiblePerson.Name).AsTextElementMicrostation,
-                        Date = FindElementInStampFields(row.Date.Name).AsTextElementMicrostation,
+                        Date = FindElementInStampFields(row.DateSignature.Name).AsTextElementMicrostation,
                     }).
                 Where(row => row.Person != null && row.Date != null);
 
@@ -100,7 +101,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         private IEnumerable<ICellElementMicrostation> InsertChangesSignatures(string personId, string personName)
         {
-            var signatureRowSearch = StampChanges.GetStampRowChangesSignatures();
+            var signatureRowSearch = StampFieldChanges.GetStampRowChangesSignatures();
             var signatureRowFound = signatureRowSearch?.
                 Select(row =>
                     new
@@ -129,7 +130,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
         /// </summary>
         private IEnumerable<ICellElementMicrostation> InsertApprovalSignatures()
         {
-            var signatureRowSearch = StampApprovals.GetStampRowApprovalSignatures();
+            var signatureRowSearch = StampFieldApprovals.GetStampRowApprovalSignatures();
             var signatureRowFound = signatureRowSearch?.
                 Select(row =>
                     new
@@ -219,7 +220,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.StampPartial
                                      new PointMicrostation(signatureRange.Width / cellElement.Range.Width * StampAdditionalParameters.CompressionRatioText,
                                                            signatureRange.Height / cellElement.Range.Height * StampAdditionalParameters.CompressionRatioText));
 
-                cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampMain.SignatureAttributeMarker);
+                cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
             });
         }
     }
