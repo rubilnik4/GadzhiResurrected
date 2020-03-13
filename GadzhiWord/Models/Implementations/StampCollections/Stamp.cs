@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
+using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Word.Interfaces.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -49,15 +50,15 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        protected IEnumerable<IStampField> FieldsStamp => GetFields();
+        protected IEnumerable<IStampFieldWord> FieldsStamp => GetFields();
 
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        private IEnumerable<IStampField> GetFields() =>
-            TableStamp?.CellsElement?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
-                                          Select(cell => new StampField(cell)).
-                                          Where(field => field.StampFieldType != StampFieldType.Unknown);
+        private IEnumerable<IStampFieldWord> GetFields() =>
+            TableStamp?.CellsElementWord?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
+                                      Select(cell => new StampField(cell)).
+                                      Where(field => field.StampFieldType != StampFieldType.Unknown);
 
 
     }

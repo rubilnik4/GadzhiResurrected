@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;

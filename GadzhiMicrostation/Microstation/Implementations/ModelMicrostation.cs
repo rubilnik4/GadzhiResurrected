@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Implementations.StampPartial;

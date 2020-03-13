@@ -118,7 +118,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
            
             _messagingService.ShowAndLogMessage("Создание файлов PDF");
             _applicationConverting.CreatePdfFile(CreateSaveDirectory(fileDataServer.FilePathServer, FileExtention.pdf), 
-                                                 fileDataServer.ColorPrint, printersInformation?.PrintersPdf.FirstOrDefault().Name);
+                                                 fileDataServer.ColorPrint, printersInformation?.PrintersPdf.FirstOrDefault());
 
             //    _loggerMicrostation.ShowMessage("Создание файла DWG");
             //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,

@@ -1,9 +1,4 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
-using GadzhiWord.Extension.StringAdditional;
-using GadzhiWord.Extensions.Word;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;

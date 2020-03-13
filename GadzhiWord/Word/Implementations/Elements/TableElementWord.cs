@@ -1,5 +1,5 @@
-﻿using GadzhiApplicationCommon.Word.Interfaces.Elements;
-using GadzhiWord.Extensions.Word;
+﻿using GadzhiWord.Extensions.Word;
+using GadzhiWord.Word.Interfaces.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -22,19 +22,19 @@ namespace GadzhiWord.Word.Implementations.Elements
         public TableElementWord(Table tableElement)
         {
             _tableElement = tableElement;
-            RowsElement.Count();
+            RowsElementWord.Count();
         }
 
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        public IEnumerable<ICellElement> CellsElement => _tableElement?.Range.Cells.ToIEnumerable().
+        public IEnumerable<ICellElement> CellsElementWord => _tableElement?.Range.Cells.ToIEnumerable().
                                                                   Select(cell => new CellElementWord(cell, this));
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        public IList<IRowElement> RowsElement => GetRowsElement();
+        public IList<IRowElement> RowsElementWord => GetRowsElement();
 
         /// <summary>
         /// Получить строки таблицы
@@ -45,7 +45,7 @@ namespace GadzhiWord.Word.Implementations.Elements
             var rowsElementWord = Enumerable.Range(0, _tableElement.Rows.Count).
                                              Select(index => new List<ICellElement>()).ToList();
 
-            foreach (var cell in CellsElement)
+            foreach (var cell in CellsElementWord)
             {
                 var row = rowsElementWord[cell.RowIndex];                
                 row.Add(cell);

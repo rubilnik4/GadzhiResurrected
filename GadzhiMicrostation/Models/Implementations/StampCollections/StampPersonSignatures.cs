@@ -1,5 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using System;
@@ -19,19 +19,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
             ActionType = elementsMicrostation.Where(element => StampFieldPersonSignatures.GetFieldsSignaturesActionType().
                                                                              Select(field => field.Name).
                                                                              Contains(element.AttributeControlName))?.
-                                              Select(field => new StampField(field))?.
+                                              Select(field => new StampField(field, StampFieldType.PersonSignature))?.
                                               FirstOrDefault();
 
             ResponsiblePerson = elementsMicrostation.Where(element => StampFieldPersonSignatures.GetFieldsSignaturesResponsiblePerson().
                                                                              Select(field => field.Name).
                                                                              Contains(element.AttributeControlName))?.
-                                              Select(field => new StampField(field))?.
+                                              Select(field => new StampField(field, StampFieldType.PersonSignature))?.
                                               FirstOrDefault();
 
             DateSignature = elementsMicrostation.Where(element => StampFieldPersonSignatures.GetFieldsSignaturesDateSignature().
                                                                              Select(field => field.Name).
                                                                              Contains(element.AttributeControlName))?.
-                                              Select(field => new StampField(field))?.
+                                              Select(field => new StampField(field, StampFieldType.PersonSignature))?.
                                               FirstOrDefault();
         }
 

@@ -1,4 +1,4 @@
-﻿using GadzhiApplicationCommon.Word.Interfaces.Elements;
+﻿using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +38,6 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        public IList<ICellElement> CellsElement => _cellsElementWord;
+        public IList<ICellElement> CellsElementWord => _cellsElementWord;
     }
 }

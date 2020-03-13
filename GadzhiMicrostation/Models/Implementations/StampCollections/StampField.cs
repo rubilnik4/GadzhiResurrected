@@ -1,6 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
@@ -22,12 +21,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Тип поля в штампе
         /// </summary>
-       // public StampFieldType StampFieldType { get; }
+        public StampFieldType StampFieldType { get; }
 
-        public StampField(IElementMicrostation elementStamp)
+        public StampField(IElementMicrostation elementStamp, StampFieldType stampFieldType)
         {
-            elementStamp = _elementStamp;
-            //StampFieldType = stampFieldType;
+            _elementStamp = elementStamp;
+            StampFieldType = stampFieldType;
         }       
     }
 }

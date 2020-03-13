@@ -1,7 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +29,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
-        public IEnumerable<IStampPersonSignature> StampPersonSignatures => FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
-                                                                                       Select(field => new StampPersonSignature(field.RowElementStamp));
+        public IEnumerable<IStampPersonSignature> StampPersonSignatures => 
+                FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
+                            Select(field => new StampPersonSignature(field.CellElementStamp.RowElementWord));
 
     }
 }

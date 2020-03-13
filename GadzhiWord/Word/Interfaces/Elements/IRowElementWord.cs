@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.Word.Interfaces.Elements
+namespace GadzhiWord.Word.Interfaces.Elements
 {
     /// <summary>
     /// Элемент строка. Базовый вариант
@@ -13,6 +13,6 @@ namespace GadzhiApplicationCommon.Word.Interfaces.Elements
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        IList<ICellElement> CellsElement { get; }
+        IList<ICellElement> CellsElementWord { get; }
     }
 }

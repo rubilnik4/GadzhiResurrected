@@ -1,6 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using System;
 using System.Collections.Generic;

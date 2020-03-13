@@ -1,10 +1,10 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Word.Implementations.Elements;
+using GadzhiWord.Word.Interfaces.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Проверить является ли колонтитул штампом
         /// </summary>
-        private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElement.
+        private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
                                                                        Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell?.Text)).
                                                                        Any(cellText => StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText));

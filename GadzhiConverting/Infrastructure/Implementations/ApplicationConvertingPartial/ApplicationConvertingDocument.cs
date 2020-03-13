@@ -5,6 +5,7 @@ using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, string pdfPrinterName)
+        public (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, 
+                                                                                                IPrinterInformation pdfPrinterInformation)
         {
             IEnumerable<IFileDataSourceServer> fileDatasSourceServer = null;
             IEnumerable<ErrorConverting> savingErrors = null;
@@ -72,7 +74,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
-                    (fileDatasSourceServer, savingErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterName);
+                    (fileDatasSourceServer, savingErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
                 },
                 applicationCatchMethod: () => savingErrors = new List<ErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                                                           $"Ошибка сохранения файла PDF {filePath}")});

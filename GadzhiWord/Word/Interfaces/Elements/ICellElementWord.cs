@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.Word.Interfaces.Elements
+namespace GadzhiWord.Word.Interfaces.Elements
 {
     /// <summary>
     /// Элемент ячейка. Базовый вариант
@@ -18,7 +18,7 @@ namespace GadzhiApplicationCommon.Word.Interfaces.Elements
         /// <summary>
         /// родительский элемент строка
         /// </summary>
-        IRowElement RowElement { get; }
+        IRowElement RowElementWord { get; }
 
         /// <summary>
         /// Номер строки
@@ -28,11 +28,11 @@ namespace GadzhiApplicationCommon.Word.Interfaces.Elements
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        void InsertSignature(string filePath);
+        void InsertPicture(string filePath);
 
         /// <summary>
         /// Удалить все подписи
         /// </summary>
-        void DeleteAllSignatures();
+        void DeleteAllPictures();
     }
 }

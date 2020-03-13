@@ -1,12 +1,8 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
-using GadzhiWord.Extension.StringAdditional;
-using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
-using GadzhiWord.Word.Implementations.Elements;
+using GadzhiWord.Models.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,11 +25,14 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// </summary>
         public void InsertStampSignatures()
         {
-            var personSignatures = StampContainer?.GetStampPersonSignatures();
-            foreach (var personSignature in personSignatures)
+            var signatures = StampContainer?.GetStampPersonSignatures().
+                                             Select(personSignature => personSignature.Signature).
+                                             Cast<IStampFieldWord>();
+
+            foreach (var signature in signatures)
             {
-                personSignature.Signature.CellElementStamp.DeleteAllSignatures();
-                personSignature.Signature.CellElementStamp.InsertSignature(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
+                signature.CellElementStamp.DeleteAllPictures();
+                signature.CellElementStamp.InsertPicture(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
             }
         }
 
@@ -42,10 +41,13 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// </summary>
         public void DeleteStampSignatures()
         {
-            var personSignatures = StampContainer?.GetStampPersonSignatures();
-            foreach (var personSignature in personSignatures)
+            var signatures = StampContainer?.GetStampPersonSignatures().
+                                            Select(personSignature => personSignature.Signature).
+                                            Cast<IStampFieldWord>();
+
+            foreach (var signature in signatures)
             {
-                personSignature.Signature.CellElementStamp.DeleteAllSignatures();
+                signature.CellElementStamp.DeleteAllPictures();
             }
         }
     }

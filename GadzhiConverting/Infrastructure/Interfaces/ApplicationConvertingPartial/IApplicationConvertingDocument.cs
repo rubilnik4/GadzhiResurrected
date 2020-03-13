@@ -1,6 +1,7 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, string pdfPrinterName);
+        (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
 
         /// <summary>
         /// Закрыть файл

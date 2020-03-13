@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +14,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Тип поля в штампе
         /// </summary>
-        //StampFieldType StampFieldType { get; }      
+        StampFieldType StampFieldType { get; }
     }
 }

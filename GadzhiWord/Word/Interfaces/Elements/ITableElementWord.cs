@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.Word.Interfaces.Elements
+namespace GadzhiWord.Word.Interfaces.Elements
 {
     /// <summary>
     /// Элемент таблица. Базовый вариант
@@ -13,11 +13,11 @@ namespace GadzhiApplicationCommon.Word.Interfaces.Elements
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        IEnumerable<ICellElement> CellsElement { get; }
+        IEnumerable<ICellElement> CellsElementWord { get; }
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        IList<IRowElement> RowsElement { get; }
+        IList<IRowElement> RowsElementWord { get; }
     }
 }
