@@ -50,14 +50,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                                                    ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation)
         {
             //_messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
-            //stamp.CompressFieldsRanges();
+            stamp.CompressFieldsRanges();
 
-            _applicationLibrary.InsertStampSignatures();
+            stamp.InsertStampSignatures();
 
             //_messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
             var fileDataSourceAndError = CreatePdf(stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation);
 
-            _applicationLibrary.DeleteStampSignatures();
+            stamp.DeleteStampSignatures();
 
             return fileDataSourceAndError;
         }

@@ -7,7 +7,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// <summary>
     /// Дополнительные параметры штампа
     /// </summary>
-    public static class StampAdditionalParameters
+    public static class StampSettingsMicrostation
     {
         /// <summary>
         /// Имя библиотеки с подписями

@@ -1,12 +1,10 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
-using GadzhiMicrostation.Microstation.Implementations.StampPartial;
 using GadzhiMicrostation.Microstation.Implementations.Units;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -86,7 +84,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
             Cast<CellElement>().
             Where(cellElement => StampFieldMain.IsStampName(cellElement.Name)).
-            Select(cellElement => new StampMain(cellElement, ToOwnerContainerMicrostation())).
+            Select(cellElement => new StampMainMicrostation(cellElement, ToOwnerContainerMicrostation())).
             Cast<IStamp>();
 
         /// <summary>

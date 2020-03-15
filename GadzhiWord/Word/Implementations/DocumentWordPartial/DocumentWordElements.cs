@@ -27,7 +27,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
                                                                       SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
                                                                       Select(table => new TableElementWord(table)).
                                                                       Where(tableElement => CheckFooterIsStamp(tableElement)).
-                                                                      Select(tableElement => new StampMain(tableElement, PaperSize, OrientationType));
+                                                                      Select(tableElement => new StampMainWord(tableElement, PaperSize, OrientationType));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом
@@ -35,6 +35,6 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
                                                                        Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell?.Text)).
-                                                                       Any(cellText => StampAdditionalParameters.MarkersMainStamp.MarkerContain(cellText));
+                                                                       Any(cellText => StampSettingsWord.MarkersMainStamp.MarkerContain(cellText));
     }
 }

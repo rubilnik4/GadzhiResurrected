@@ -34,7 +34,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Находится ли поле в строке с ответственным лицом и подписью
         /// </summary>        
         public static bool IsFieldPersonSignature(string cellText) =>
-            StampAdditionalParameters.MarkersActionTypeSignature.MarkerContain(cellText);
+            StampSettingsWord.MarkersActionTypeSignature.MarkerContain(cellText);
 
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью. Обработка входной строки

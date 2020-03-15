@@ -6,28 +6,33 @@ using System.Text;
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {
     /// <summary>
-    /// Строка с ответсвенным лицом и подписью
+    /// Строка с ответственным лицом и подписью
     /// </summary>
-    public interface IStampPersonSignature
+    public interface IStampPersonSignature<TField> where TField: IStampField
     {
         /// <summary>
         /// Тип действия
         /// </summary>
-        IStampField ActionType { get; }
+        TField ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        IStampField ResponsiblePerson { get; }
+        TField ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        IStampField Signature { get; }
+        TField Signature { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        IStampField DateSignature { get; }
+        TField DateSignature { get; }
+
+        /// <summary>
+        /// Идентефикатор личности
+        /// </summary>    
+        string AttributePersonId { get; }
     }
 }

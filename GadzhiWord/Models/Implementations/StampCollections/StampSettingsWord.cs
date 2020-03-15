@@ -10,7 +10,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Дополнительные параметры штампа
     /// </summary>
-    public static class StampAdditionalParameters
+    public static class StampSettingsWord
     {
         /// <summary>
         /// Тип штампа в строковом обозначении

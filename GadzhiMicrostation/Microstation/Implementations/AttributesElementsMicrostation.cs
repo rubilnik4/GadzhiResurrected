@@ -70,7 +70,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public static RangeMicrostation GetAttributeRange(Element element)
         {
             string rangeInString = GetAttributeById(element, ElementMicrostationAttributes.Range);
-            IList<string> rangeListInString = StampAdditionalParameters.SeparateAttributeValue(rangeInString);
+            IList<string> rangeListInString = StampSettingsMicrostation.SeparateAttributeValue(rangeInString);
 
             return new RangeMicrostation(rangeListInString);
         }

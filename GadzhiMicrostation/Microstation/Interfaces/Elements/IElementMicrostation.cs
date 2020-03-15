@@ -74,7 +74,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         string AttributeControlName { get; set; }
 
         /// <summary>
-        /// Получить идентефикатор личности
+        /// Идентефикатор личности
         /// </summary>    
         string AttributePersonId { get; }
     }

@@ -14,16 +14,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        IStampContainer StampContainer { get; }
-
-        /// <summary>
-        /// Вставить подписи
-        /// </summary>
-        void InsertStampSignatures();
-
-        /// <summary>
-        /// Удалить подписи
-        /// </summary>
-        void DeleteStampSignatures();       
+        IStampContainer StampContainer { get; }     
     }
 }

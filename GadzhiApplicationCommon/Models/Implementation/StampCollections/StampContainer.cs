@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections
+namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
     /// <summary>
-    /// Контейнер штампов
+    /// Контейнер штампов. Базовый класс
     /// </summary>
     public class StampContainer : IStampContainer
     {
@@ -24,14 +24,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Корретность загрузки штампов
         /// </summary>
-        public bool IsValid => Stamps != null;
-
-        /// <summary>
-        /// Получить список всех строк с подписями во всех штампах
-        /// </summary>     
-        public IEnumerable<IStampPersonSignature> GetStampPersonSignatures() => Stamps?.OfType<IStampMain>()?.
-                                                                                SelectMany(stamp => stamp.StampPersonSignatures);
-
-        
+        public bool IsValid => Stamps != null;       
     }
 }

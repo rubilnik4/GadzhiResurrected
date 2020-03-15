@@ -18,7 +18,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Получить список всех строк с подписями во всех штампах
         /// </summary>     
-        IEnumerable<IStampPersonSignature> GetStampPersonSignatures();
+       // IEnumerable<IStampPersonSignature<TField>> GetStampPersonSignatures();
 
         /// <summary>
         /// Корретность загрузки штампов

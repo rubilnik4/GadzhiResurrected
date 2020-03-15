@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Interfaces.Elements;
 using System;
@@ -12,18 +14,18 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignature: IStampPersonSignature
+    public class StampPersonSignaturesWord : StampPersonSignature<IStampFieldWord>
     {       
-        public StampPersonSignature(IRowElement rowElementWord)
+        public StampPersonSignaturesWord(IRowElement rowElementWord)
         {
             if (rowElementWord?.CellsElementWord?.Count >= 4)
             {               
                 if (CheckFieldType.IsFieldPersonSignatureWithPrepare(rowElementWord?.CellsElementWord[0].Text))
                 {
-                    ActionType = new StampField(rowElementWord?.CellsElementWord[0]);
-                    ResponsiblePerson = new StampField(rowElementWord?.CellsElementWord[1]);
-                    Signature = new StampField(rowElementWord?.CellsElementWord[2]);
-                    DateSignature = new StampField(rowElementWord?.CellsElementWord[3]);
+                    ActionType = new StampFieldWord(rowElementWord?.CellsElementWord[0], StampFieldType.PersonSignature);
+                    ResponsiblePerson = new StampFieldWord(rowElementWord?.CellsElementWord[1], StampFieldType.PersonSignature);
+                    Signature = new StampFieldWord(rowElementWord?.CellsElementWord[2], StampFieldType.PersonSignature);
+                    DateSignature = new StampFieldWord(rowElementWord?.CellsElementWord[3], StampFieldType.PersonSignature);
                 }
                 else
                 {
@@ -39,21 +41,21 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Тип действия
         /// </summary>
-        public IStampField ActionType { get; }
+        public override IStampFieldWord ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public IStampField ResponsiblePerson { get; }
+        public override IStampFieldWord ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public IStampField Signature { get; }
+        public override IStampFieldWord Signature { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public IStampField DateSignature { get; }     
+        public override IStampFieldWord DateSignature { get; }     
     }
 }

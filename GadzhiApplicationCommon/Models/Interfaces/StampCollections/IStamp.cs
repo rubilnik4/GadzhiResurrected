@@ -31,5 +31,15 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// Тип расположения штампа
         /// </summary>
         OrientationType Orientation { get; }
+
+        /// <summary>
+        /// Вставить подписи
+        /// </summary>
+        void InsertSignatures();
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        void DeleteSignatures();
     }
 }

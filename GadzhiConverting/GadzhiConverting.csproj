@@ -134,8 +134,6 @@
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingPrinting.cs" />
     <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerToMicrostation.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterFileDataServerFromMicrostation.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataFromDTO.cs" />

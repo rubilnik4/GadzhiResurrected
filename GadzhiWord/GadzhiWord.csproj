@@ -118,12 +118,11 @@
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\StampCollections\CheckFieldType.cs" />
-    <Compile Include="Models\Implementations\StampCollections\Stamp.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampAdditionalParameters.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampContainer.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampField.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMain.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPersonSignatures.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampFieldWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPersonSignaturesWord.cs" />
     <Compile Include="Models\Interfaces\IStampFieldWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

@@ -1,4 +1,6 @@
-﻿namespace GadzhiMicrostation.Microstation.Interfaces.Elements
+﻿using System.Collections.Generic;
+
+namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {
     /// <summary>
     /// Элемент ячейки типа Microstation
@@ -14,5 +16,10 @@
         /// Имя ячейки
         /// </summary>
         string Description { get; }
+
+        /// <summary>
+        /// Получить дочерние элементы
+        /// </summary>
+        IEnumerable<IElementMicrostation> SubElements { get; }
     }
 }

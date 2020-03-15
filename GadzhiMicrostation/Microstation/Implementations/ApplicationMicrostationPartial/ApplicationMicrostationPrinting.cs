@@ -1,10 +1,6 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Helpers.Implementations;
-using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations;
-using GadzhiMicrostation.Models.Implementations.Printers;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
@@ -13,11 +9,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
-using GadzhiMicrostation.Microstation.Interfaces.StampPartial;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Implementation;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiWord.Models.Interfaces;
@@ -14,14 +15,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Штамп. Базовый вариант
     /// </summary>
-    public abstract class Stamp : IStamp
+    public abstract class StampWord : Stamp
     {
         /// <summary>
         /// Элемент таблица
         /// </summary>
         protected ITableElement TableStamp { get; }
        
-        public Stamp(ITableElement tableStamp, string paperSize, OrientationType orientationType)
+        public StampWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
         {
             TableStamp = tableStamp;
             PaperSize = paperSize;
@@ -30,22 +31,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Наименование
         /// </summary>
-        public string Name => $"{StampAdditionalParameters.StampTypeToString[StampType]}";
-
-        /// <summary>
-        /// Тип штампа
-        /// </summary>
-        public abstract StampType StampType { get; }
-
+        public override string Name => $"{StampSettingsWord.StampTypeToString[StampType]}";
+       
         /// <summary>
         /// Формат
         /// </summary>
-        public string PaperSize { get; }
+        public override string PaperSize { get; }
 
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public OrientationType Orientation { get; }
+        public override OrientationType Orientation { get; }
 
         /// <summary>
         /// Получить поля штампа
@@ -57,9 +53,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         private IEnumerable<IStampFieldWord> GetFields() =>
             TableStamp?.CellsElementWord?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
-                                      Select(cell => new StampField(cell)).
+                                      Select(cell => new StampFieldWord(cell, CheckFieldType.GetStampFieldType(cell.Text))).
                                       Where(field => field.StampFieldType != StampFieldType.Unknown);
-
-
     }
 }

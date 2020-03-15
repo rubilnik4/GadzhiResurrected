@@ -168,7 +168,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
-        /// Получить идентефикатор личности
+        /// Идентефикатор личности
         /// </summary>    
         public string AttributePersonId => _element.GetAttributePersonId();
     }

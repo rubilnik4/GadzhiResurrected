@@ -5,6 +5,7 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -17,6 +18,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Экземпляр ячейки Microstation определяющей штамп
         /// </summary>
         protected CellElement CellElement { get; private set; }
+
 
         public CellElementMicrostation(CellElement cellElement,
                                        IOwnerContainerMicrostation ownerContainerMicrostation)
@@ -51,9 +53,20 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public override PointMicrostation Origin => CellElement.Origin.ToPointMicrostation();
 
         /// <summary>
+        /// Получить дочерние элементы
+        /// </summary>
+        public IEnumerable<IElementMicrostation> SubElements => GetSubElementsPair().
+                                                                Select(elementPair => elementPair.ElementWrapper);
+
+        /// <summary>
+        /// Вписать ячейку в рамку
+        /// </summary>
+        public override bool CompressRange() => throw new NotImplementedException();     
+
+        /// <summary>
         /// Заполнить поля данных
         /// </summary>
-        protected IEnumerable<ElementMicrostationPair> GetSubElements()
+        private IEnumerable<ElementMicrostationPair> GetSubElementsPair()
         {
             if (CellElement != null)
             {
@@ -74,7 +87,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Найти и изменить вложенный в штамп элемент. Только для внешних операций типа Scale, Move
         /// </summary>
-        protected void FindAndChangeSubElement(Element element)
+        private void FindAndChangeSubElement(Element element)
         {
             CellElement.ResetElementEnumeration();
             while (CellElement.MoveToNextElement(true))
@@ -86,14 +99,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Вписать ячейку в рамку
-        /// </summary>
-        public override bool CompressRange()
-        {
-            throw new NotImplementedException();
-        }
+        }        
     }
 }

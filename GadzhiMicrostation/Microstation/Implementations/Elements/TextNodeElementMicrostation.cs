@@ -75,15 +75,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             {
                 var scaleFactor = new PointMicrostation(1, 1, 1);
 
-                if (WidthAttributeWithRotationInUnits * StampAdditionalParameters.CompressionRatioTextNode < WidthWithRotation)
+                if (WidthAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioTextNode < WidthWithRotation)
                 {
-                    scaleFactor.X = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampAdditionalParameters.CompressionRatioTextNode;
+                    scaleFactor.X = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioTextNode;
                 }
 
-                if (HeightAttributeWithRotationInUnits * StampAdditionalParameters.CompressionRatioTextNode < HeightWithRotation &&
+                if (HeightAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioTextNode < HeightWithRotation &&
                     _textNodeElement.TextLinesCount > 1) // коррекция высоты только при многострочном элементе
                 {
-                    scaleFactor.Y = (HeightAttributeWithRotationInUnits / HeightWithRotation) * StampAdditionalParameters.CompressionRatioTextNode;
+                    scaleFactor.Y = (HeightAttributeWithRotationInUnits / HeightWithRotation) * StampSettingsMicrostation.CompressionRatioTextNode;
                 }
 
                 if (scaleFactor.X != 1 || scaleFactor.Y != 1)

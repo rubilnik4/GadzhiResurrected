@@ -24,12 +24,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public void InsertStampSignatures()
         {
-            //var personSignatures = StampWord?.GetStampPersonSignatures();
-            //foreach (var personSignature in personSignatures)
-            //{
-            //    personSignature.Signature.CellElementWord.DeleteAllSignatures();
-            //    personSignature.Signature.CellElementWord.InsertSignature(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "WordData\\", "signature.jpg"));
-            //}
+         
         }
 
         /// <summary>
@@ -37,11 +32,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public void DeleteStampSignatures()
         {
-            //var personSignatures = StampWord?.GetStampPersonSignatures();
-            //foreach (var personSignature in personSignatures)
-            //{
-            //    personSignature.Signature.CellElementWord.DeleteAllSignatures();
-            //}
+          
         }
     }
 }

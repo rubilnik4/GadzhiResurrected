@@ -8,11 +8,12 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Основные поля штампа
     /// </summary>
-    public interface IStampMain : IStamp
+    public interface IStampMain<TField> : IStamp 
+                                          where TField : IStampField
     {
         /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
-        IEnumerable<IStampPersonSignature> StampPersonSignatures { get; }
+        IEnumerable<IStampPersonSignature<TField>> StampPersonSignatures { get; }
     }
 }
