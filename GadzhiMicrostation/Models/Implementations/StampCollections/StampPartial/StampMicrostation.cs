@@ -23,8 +23,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         public ICellElementMicrostation StampCellElement { get; }
 
         public StampMicrostation(ICellElementMicrostation stampCellElement)
-        {
-            StampCellElement = stampCellElement;
+        {           
+                StampCellElement = stampCellElement ??
+                    throw new ArgumentNullException(nameof(stampCellElement));
            // InitializeStampFields();
         }
 

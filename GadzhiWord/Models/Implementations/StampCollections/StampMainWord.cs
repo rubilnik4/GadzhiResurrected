@@ -14,7 +14,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Основные поля штампа
     /// </summary>
-    public class StampMainWord : StampWord, IStampMain<IStampFieldWord, IStampFieldWord>
+    public class StampMainWord : StampWord, IStampMain<IStampFieldWord>
     {
         public StampMainWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
             : base(tableStamp, paperSize, orientationType)
@@ -30,7 +30,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
-        public IEnumerable<IStampPersonSignature<IStampFieldWord, IStampFieldWord>> StampPersonSignatures { get; }
+        public IEnumerable<IStampPersonSignature<IStampFieldWord>> StampPersonSignatures { get; }
               
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
-        private IEnumerable<IStampPersonSignature<IStampFieldWord, IStampFieldWord>>  GetStampPersonWithoutSignatures() =>
+        private IEnumerable<IStampPersonSignature<IStampFieldWord>>  GetStampPersonWithoutSignatures() =>
               FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
                             Select(field => new StampPersonSignaturesWord(field.CellElementStamp.RowElementWord));
     }

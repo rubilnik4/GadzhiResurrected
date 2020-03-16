@@ -24,6 +24,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         bool IsTextNodeElementMicrostation { get; }
 
         /// <summary>
+        /// Является ли базовый элемент Microstation ячейкой
+        /// </summary>       
+        bool IsCellElementMicrostation { get; }
+
+        /// <summary>
         /// Преобразование базового элемента Microstation в текстовый элемент
         /// </summary>       
         ITextElementMicrostation AsTextElementMicrostation { get; }
@@ -32,6 +37,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Преобразование базового элемента Microstation в текстовое поле
         /// </summary>       
         ITextNodeElementMicrostation AsTextNodeElementMicrostation { get; }
+
+        /// <summary>
+        /// Преобразование базового элемента Microstation в ячейку
+        /// </summary>       
+        ICellElementMicrostation AsCellElementMicrostation { get; }
 
         /// <summary>
         /// Тип элемента Microstation

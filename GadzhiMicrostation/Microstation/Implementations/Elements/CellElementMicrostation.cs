@@ -25,6 +25,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             : base((Element)cellElement, ownerContainerMicrostation, false, false)
         {
             CellElement = cellElement;
+            SubElementsPair = GetSubElementsPair();
         }
 
         /// <summary>
@@ -53,18 +54,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public override PointMicrostation Origin => CellElement.Origin.ToPointMicrostation();
 
         /// <summary>
-        /// Получить дочерние элементы
+        /// Дочерние элементы с оригиналами Microstation
         /// </summary>
-        public IEnumerable<IElementMicrostation> SubElements => GetSubElementsPair().
+        private IEnumerable<ElementMicrostationPair> SubElementsPair { get; }
+
+        /// <summary>
+        /// Дочерние элементы
+        /// </summary>
+        public IEnumerable<IElementMicrostation> SubElements => SubElementsPair.
                                                                 Select(elementPair => elementPair.ElementWrapper);
 
         /// <summary>
         /// Вписать ячейку в рамку
         /// </summary>
-        public override bool CompressRange() => throw new NotImplementedException();     
+        public override bool CompressRange() => throw new NotImplementedException();
 
         /// <summary>
-        /// Заполнить поля данных
+        /// Получить Дочерние элементы
         /// </summary>
         private IEnumerable<ElementMicrostationPair> GetSubElementsPair()
         {
@@ -87,18 +93,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Найти и изменить вложенный в штамп элемент. Только для внешних операций типа Scale, Move
         /// </summary>
-        private void FindAndChangeSubElement(Element element)
-        {
-            CellElement.ResetElementEnumeration();
-            while (CellElement.MoveToNextElement(true))
-            {
-                var elementCurrent = CellElement.CopyCurrentElement();
-                if (elementCurrent.ID64 == element?.ID64)
-                {                   
-                    CellElement.ReplaceCurrentElement(element);
-                    break;
-                }
-            }
-        }        
+        //private void FindAndChangeSubElement(Element element)
+        //{
+        //    CellElement.ResetElementEnumeration();
+        //    while (CellElement.MoveToNextElement(true))
+        //    {
+        //        var elementCurrent = CellElement.CopyCurrentElement();
+        //        if (elementCurrent.ID64 == element?.ID64)
+        //        {                   
+        //            CellElement.ReplaceCurrentElement(element);
+        //            break;
+        //        }
+        //    }
+        //}        
     }
 }

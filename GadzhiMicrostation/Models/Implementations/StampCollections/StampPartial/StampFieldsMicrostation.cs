@@ -13,7 +13,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation
     {
-       
+
 
         ///// <summary>
         ///// Инициализировать данные
@@ -38,15 +38,18 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         //    return null;
         //}
 
-        ///// <summary>
-        ///// Найти элементы в словаре штампа по ключам
-        ///// </summary>
-        //protected IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldSearch,
-        //                                                                    ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
-        //                                         fieldSearch?.Where(StampFieldsWrapper.ContainsKey).
-        //                                         Select(fieldName => StampFieldsWrapper[fieldName]).
-        //                                         Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
-        //                                                            fieldName.ElementType == elementMicrostationType);
+        /// <summary>
+        /// Найти элементы в словаре штампа по ключам
+        /// </summary>
+        protected IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldsSearch,
+                                                                              ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
+                                                 StampCellElement.SubElements.
+                                                 Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
+                                                                    fieldName.ElementType == elementMicrostationType).
+                                                 Join(fieldsSearch,
+                                                      subElement => subElement.AttributeControlName,
+                                                      fieldSearch => fieldSearch,
+                                                      (subElement, fieldSearch) => subElement);
 
         ///// <summary>
         ///// Вписать текстовые поля в рамки

@@ -1,6 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
@@ -8,22 +9,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using IStampPersonSignatureMicrostation =
-    GadzhiApplicationCommon.Models.Interfaces.StampCollections.IStampPersonSignature
-            <GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections.IStampTextFieldMicrostation,
-             GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections.IStampCellFieldMicrostation>;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
 {
     /// <summary>
     /// Основные поля штампа Microstation
     /// </summary>
-    public class StampMainMicrostation : StampMicrostation, IStampMain<IStampTextFieldMicrostation, IStampCellFieldMicrostation>
+    public class StampMainMicrostation : StampMicrostation, IStampMain<IStampFieldMicrostation>
     {
         public StampMainMicrostation(ICellElementMicrostation stampCellElement)
             : base(stampCellElement)
         {
-            StampPersonSignatures = GetStampPersonRowsWithoutSignatures();
+            StampPersonSignaturesMicrostation = GetStampPersonRowsWithoutSignatures();
         }
 
         /// <summary>
@@ -32,9 +29,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public override StampType StampType => StampType.Main;
 
         /// <summary>
+        /// Строки с ответсвенным лицом и подписью Microstation
+        /// </summary>
+        private IEnumerable<IStampPersonSignatureMicrostation> StampPersonSignaturesMicrostation { get; set; }
+
+        /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
-        public IEnumerable<IStampPersonSignatureMicrostation> StampPersonSignatures { get; private set; }
+        public IEnumerable<IStampPersonSignature<IStampFieldMicrostation>> StampPersonSignatures =>
+                StampPersonSignaturesMicrostation.Cast<IStampPersonSignature<IStampFieldMicrostation>>();
 
         /// <summary>
         /// Удалить подписи
@@ -52,39 +55,40 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// </summary>
         protected override IEnumerable<ICellElementMicrostation> InsertSignaturesFromLibrary()
         {
-            StampPersonSignatures = StampPersonSignatures.Select(person => GetStampPersonRowWithSignatures(person));
-            return StampPersonSignatures.Select(personSignature => personSignature.Signature.ElementStamp);
-        }  
+            StampPersonSignaturesMicrostation = StampPersonSignaturesMicrostation.Select(person => GetStampPersonRowWithSignatures(person));
+            return StampPersonSignaturesMicrostation.Select(personSignature => personSignature.SignatureElement);
+        }
 
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
-        private IEnumerable<IStampPersonSignatureMicrostation> GetStampPersonRowsWithoutSignatures()=>
+        private IEnumerable<IStampPersonSignatureMicrostation> GetStampPersonRowsWithoutSignatures() =>
             StampFieldPersonSignatures.GetStampRowPersonSignatures().
-                                           Select(signatureRow => signatureRow.StampPersonSignatureFields.
-                                                                               Select(field => field.Name)).
-                                           Select(signatureRow => new StampPersonSignaturesMicrostation<ITextElementMicrostation, 
-                                                                                                    ICellElementMicrostation>(FindElementsInStampFields(signatureRow)));
+                                       Select(signatureRow => signatureRow.StampPersonSignatureFields.
+                                                                           Select(field => field.Name)).
+                                       Select(signatureRow => new StampPersonSignatureMicrostation(FindElementsInStampFields(signatureRow, 
+                                                                                                                             ElementMicrostationType.TextElement).
+                                                                                                   Cast<ITextElementMicrostation>())).
+                                       Cast<IStampPersonSignatureMicrostation>();
 
         /// <summary>
         /// Получить строку с ответственным лицом с подписью
         /// </summary>
         private IStampPersonSignatureMicrostation GetStampPersonRowWithSignatures(IStampPersonSignatureMicrostation person) =>
-            new StampPersonSignaturesMicrostation<ITextElementMicrostation, 
-                                                  ICellElementMicrostation>(person.ActionType,
-                                                                            person.ResponsiblePerson,
-                                                                            new StampFieldMicrostation<ICellElementMicrostation>(InsertSignatureFromLibrary(person),
-                                                                                                                                 StampFieldType.PersonSignature),
-                                                                            person.DateSignature) 
-            as IStampPersonSignatureMicrostation;      
+            new StampPersonSignatureMicrostation(person.ActionType,
+                                                 person.ResponsiblePerson,
+                                                 new StampFieldMicrostation(InsertSignatureFromLibrary(person),
+                                                                            StampFieldType.PersonSignature),
+                                                 person.DateSignature)
+            as IStampPersonSignatureMicrostation;
 
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
         private ICellElementMicrostation InsertSignatureFromLibrary(IStampPersonSignatureMicrostation personSignature) =>
            InsertSignature(personSignature.AttributePersonId,
-                           personSignature.ResponsiblePerson.ElementStamp.Text,
-                           personSignature.ResponsiblePerson.ElementStamp,
-                           personSignature.DateSignature.ElementStamp);
+                           personSignature.ResponsiblePersonElement.Text,
+                           personSignature.ResponsiblePersonElement,
+                           personSignature.DateSignatureElement);
     }
 }
