@@ -14,7 +14,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignaturesWord : StampPersonSignature<IStampFieldWord>
+    public class StampPersonSignaturesWord : StampPersonSignature<IStampFieldWord, IStampFieldWord>
     {       
         public StampPersonSignaturesWord(IRowElement rowElementWord)
         {
@@ -56,6 +56,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Дата
         /// </summary>
-        public override IStampFieldWord DateSignature { get; }     
+        public override IStampFieldWord DateSignature { get; }
+
+        /// <summary>
+        /// Идентефикатор личности
+        /// </summary> 
+        public override string AttributePersonId => throw new NotImplementedException();
     }
 }

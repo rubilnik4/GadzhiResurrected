@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью
     /// </summary>
-    public interface IStampPersonSignature<TField> where TField: IStampField
+    public interface IStampPersonSignature<TField, TFieldSignature>
     {
         /// <summary>
         /// Тип действия
@@ -23,7 +23,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Дата
         /// </summary>
-        TField Signature { get; }
+        TFieldSignature Signature { get; }
 
         /// <summary>
         /// Дата

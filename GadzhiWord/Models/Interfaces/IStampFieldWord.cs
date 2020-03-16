@@ -14,7 +14,7 @@ namespace GadzhiWord.Models.Interfaces
     public interface IStampFieldWord: IStampField
     {
         /// <summary>
-        /// Элемент ячейка определяющая поле штампа
+        /// Элемент ячейка, определяющая поле штампа
         /// </summary>
         ICellElement CellElementStamp { get; }
     }

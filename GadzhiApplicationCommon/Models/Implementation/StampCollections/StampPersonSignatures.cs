@@ -10,8 +10,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью
     /// </summary>
-    public abstract class StampPersonSignature<TField>: IStampPersonSignature<TField> 
+    public abstract class StampPersonSignature<TField, TFieldSignature>: IStampPersonSignature<TField, TFieldSignature> 
                                                         where TField : IStampField
+                                                        where TFieldSignature: IStampField
     {
         public StampPersonSignature()
         {
@@ -31,7 +32,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Дата
         /// </summary>
-        public abstract TField Signature { get; }
+        public abstract TFieldSignature Signature { get; }
 
         /// <summary>
         /// Дата

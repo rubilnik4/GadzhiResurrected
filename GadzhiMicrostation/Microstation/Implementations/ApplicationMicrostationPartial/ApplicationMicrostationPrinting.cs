@@ -29,10 +29,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         {
             if (stamp != null && stamp is IStampMicrostation stampMicrostation)
             {
-                IErrorApplication fenceSetError = SetPrintingFenceByRange(stampMicrostation.Range);
+                IErrorApplication fenceSetError = SetPrintingFenceByRange(stampMicrostation.StampCellElement.Range);
                 SetPrintingOrientation(stampMicrostation.Orientation);
                 IErrorApplication paperSizeSetError = SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize);
-                SetPrintScale(stampMicrostation.UnitScale);
+                SetPrintScale(stampMicrostation.StampCellElement.UnitScale);
                 SetPrintColor(colorPrint);
 
                 if (fenceSetError == null && paperSizeSetError == null)

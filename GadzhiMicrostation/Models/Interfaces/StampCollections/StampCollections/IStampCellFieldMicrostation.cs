@@ -10,12 +10,8 @@ namespace GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections
     /// <summary>
     /// Базовая ячейка штампа Microstation
     /// </summary>  
-    public interface IStampFieldMicrostation<TElement> : IStampField
-                                                         where TElement : class, IElementMicrostation
+    public interface IStampCellFieldMicrostation : IStampFieldMicrostation<ICellElementMicrostation>
     {
-        /// <summary>
-        /// Текстовый элемент, определяющий поле штампа
-        /// </summary>
-        TElement ElementStamp { get; }
+
     }
 }

@@ -14,52 +14,64 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью Microstation
     /// </summary>
-    public class StampPersonSignaturesMicrostation : StampPersonSignature<IStampFieldMicrostation>
+    public class StampPersonSignaturesMicrostation<TElement, TElementSignature> : 
+                        StampPersonSignature<IStampFieldMicrostation<TElement>, IStampFieldMicrostation<TElementSignature>>
+                                             where TElement : class, ITextElementMicrostation
+                                             where TElementSignature : class, ICellElementMicrostation
+                        
     {
-        public StampPersonSignaturesMicrostation(IEnumerable<IElementMicrostation> elementsMicrostation)
+        public StampPersonSignaturesMicrostation(IEnumerable<ITextElementMicrostation> elementsMicrostation)
         {
-            ActionType = elementsMicrostation.Where(element => StampFieldPersonSignatures.GetFieldsSignaturesActionType().
-                                                                             Select(field => field.Name).
-                                                                             Contains(element.AttributeControlName))?.
-                                              Select(field => new StampFieldMicrostation(field, StampFieldType.PersonSignature))?.
-                                              FirstOrDefault();
+            ActionType = GetFieldFromMicrostationElements(elementsMicrostation, StampFieldPersonSignatures.GetFieldsSignaturesActionType());
+            ResponsiblePerson = GetFieldFromMicrostationElements(elementsMicrostation, StampFieldPersonSignatures.GetFieldsSignaturesResponsiblePerson());
+            DateSignature = GetFieldFromMicrostationElements(elementsMicrostation, StampFieldPersonSignatures.GetFieldsSignaturesDateSignature());   
+        }
 
-            ResponsiblePerson = elementsMicrostation.Where(element => StampFieldPersonSignatures.GetFieldsSignaturesResponsiblePerson().
-                                                                             Select(field => field.Name).
-                                                                             Contains(element.AttributeControlName))?.
-                                                     Select(field => new StampFieldMicrostation(field, StampFieldType.PersonSignature))?.
-                                                     FirstOrDefault();
-
-            DateSignature = elementsMicrostation.Where(element => StampFieldPersonSignatures.GetFieldsSignaturesDateSignature().
-                                                                             Select(field => field.Name).
-                                                                             Contains(element.AttributeControlName))?.
-                                                 Select(field => new StampFieldMicrostation(field, StampFieldType.PersonSignature))?.
-                                                 FirstOrDefault();
+        public StampPersonSignaturesMicrostation(IStampFieldMicrostation<TElement> actionType,
+                                                 IStampFieldMicrostation<TElement> responsiblePerson,
+                                                 IStampFieldMicrostation<TElementSignature> signature,
+                                                 IStampFieldMicrostation<TElement> dateSignature)
+        {
+            ActionType = actionType;
+            ResponsiblePerson = responsiblePerson;
+            Signature = signature;
+            DateSignature = dateSignature;
         }
 
         /// <summary>
         /// Тип действия
         /// </summary>
-        public override IStampFieldMicrostation ActionType { get; }
+        public override IStampFieldMicrostation<TElement> ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public override IStampFieldMicrostation ResponsiblePerson { get; }
+        public override IStampFieldMicrostation<TElement> ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public override IStampFieldMicrostation Signature { get; }
+        public override IStampFieldMicrostation<TElementSignature> Signature { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public override IStampFieldMicrostation DateSignature { get; }
+        public override IStampFieldMicrostation<TElement> DateSignature { get; }
 
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => ResponsiblePerson.TextElementStamp.AttributePersonId;
+        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
+
+        /// <summary>
+        /// Получить поля с ответственным лицом и подписью из списка элементов Microstation
+        /// </summary>
+        private IStampFieldMicrostation<TElement> GetFieldFromMicrostationElements(IEnumerable<ITextElementMicrostation> elementsMicrostation, HashSet<StampFieldBase> stampFields) =>        
+                elementsMicrostation?.Where(element => stampFields?.
+                                                       Select(field => field.Name).
+                                                       Contains(element.AttributeControlName) == true)?.
+                                      Select(field => new StampFieldMicrostation<TElement>(field as TElement, StampFieldType.PersonSignature))?.
+                                      FirstOrDefault();
+      
     }
 }

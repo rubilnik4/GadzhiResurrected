@@ -13,28 +13,31 @@ using MicroStationDGN;
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Штамп. Базовый вариант
+    /// Штамп. Базовый вариант Microstation
     /// </summary>
-    public abstract partial class StampMicrostation : Stamp
+    public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
-        private readonly ICellElementMicrostation _stampCellElement;
+        /// <summary>
+        /// Элемент ячейка, определяющая штамп
+        /// </summary>
+        public ICellElementMicrostation StampCellElement { get; }
 
         public StampMicrostation(ICellElementMicrostation stampCellElement)
         {
-            _stampCellElement = stampCellElement;
+            StampCellElement = stampCellElement;
            // InitializeStampFields();
         }
 
         /// <summary>
         /// Наименование
         /// </summary>
-        public override string Name => _stampCellElement.Name;
+        public override string Name => StampCellElement.Name;
 
         /// <summary>
         /// Формат
         /// </summary>
         public override string PaperSize =>
-            _stampCellElement.SubElements?.
+            StampCellElement.SubElements?.
             Where(subElement => subElement.IsTextElementMicrostation &&
                                 subElement.AttributeControlName == StampFieldMain.PaperSize.Name).
             Select(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)).
@@ -45,7 +48,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public override OrientationType Orientation => _stampCellElement.Range.Width >= _stampCellElement.Range.Height ?
+        public override OrientationType Orientation => StampCellElement.Range.Width >= StampCellElement.Range.Height ?
                                               OrientationType.Landscape :
                                               OrientationType.Portrait;
     }

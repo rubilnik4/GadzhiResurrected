@@ -21,10 +21,5 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         {           
             StampFieldType = stampFieldType;
         }
-
-        /// <summary>
-        /// Текст поля в штампе
-        /// </summary>
-        public abstract string Text { get; }
     }
 }

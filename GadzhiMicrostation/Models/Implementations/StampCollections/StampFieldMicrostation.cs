@@ -13,23 +13,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// <summary>
     /// Ячейка штампа Microstation
     /// </summary>
-    public class StampFieldMicrostation : StampField, IStampFieldMicrostation
+    public class StampFieldMicrostation<TElement> : StampField, IStampFieldMicrostation<TElement>
+                                                    where TElement: class, IElementMicrostation
     {
         /// <summary>
         /// Текстовый элемент, определяющий поле штампа
         /// </summary>
-        public ITextElementMicrostation TextElementStamp { get; }
+        public TElement ElementStamp { get; }
 
-        public StampFieldMicrostation(ITextElementMicrostation textElementStamp, StampFieldType stampFieldType)
+        public StampFieldMicrostation(TElement elementStamp, StampFieldType stampFieldType)
             : base(stampFieldType)
         {
-            TextElementStamp = textElementStamp ?? 
-                               throw new ArgumentNullException(nameof(textElementStamp));
+            ElementStamp = elementStamp ?? 
+                           throw new ArgumentNullException(nameof(elementStamp));
         }
-
-        /// <summary>
-        /// Текст поля в штампе
-        /// </summary>
-        public override string Text => TextElementStamp.Text;
     }
 }

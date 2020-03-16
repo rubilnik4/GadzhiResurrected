@@ -14,12 +14,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Основные поля штампа
     /// </summary>
-    public class StampMainWord : StampWord, IStampMain<IStampFieldWord>
+    public class StampMainWord : StampWord, IStampMain<IStampFieldWord, IStampFieldWord>
     {
         public StampMainWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
             : base(tableStamp, paperSize, orientationType)
         {
-
+            StampPersonSignatures = GetStampPersonWithoutSignatures();
         }
 
         /// <summary>
@@ -30,9 +30,37 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Строки с ответсвенным лицом и подписью
         /// </summary>
-        public IEnumerable<IStampPersonSignature<IStampFieldWord>> StampPersonSignatures => 
-                FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
-                            Select(field => new StampPersonSignaturesWord(field.CellElementStamp.RowElementWord));
+        public IEnumerable<IStampPersonSignature<IStampFieldWord, IStampFieldWord>> StampPersonSignatures { get; }
+              
 
+        /// <summary>
+        /// Вставить подписи
+        /// </summary>
+        public override void InsertSignatures()
+        {
+            foreach (var personSignature in StampPersonSignatures)
+            {
+                personSignature.Signature.CellElementStamp.DeleteAllPictures();
+                personSignature.Signature.CellElementStamp.InsertPicture("signature.jpg");
+            }
+        }
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        public override void DeleteSignatures()
+        {
+            foreach (var personSignature in StampPersonSignatures)
+            {
+                personSignature.Signature.CellElementStamp.DeleteAllPictures();               
+            }
+        }
+
+        /// <summary>
+        /// Получить строки с ответственным лицом без подписи
+        /// </summary>
+        private IEnumerable<IStampPersonSignature<IStampFieldWord, IStampFieldWord>>  GetStampPersonWithoutSignatures() =>
+              FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
+                            Select(field => new StampPersonSignaturesWord(field.CellElementStamp.RowElementWord));
     }
 }

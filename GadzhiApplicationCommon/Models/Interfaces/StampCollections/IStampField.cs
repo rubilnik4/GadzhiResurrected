@@ -12,11 +12,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     public interface IStampField
     {
         /// <summary>
-        /// Текст поля в штампе
-        /// </summary>
-        string Text { get; }
-
-        /// <summary>
         /// Тип поля в штампе
         /// </summary>
         StampFieldType StampFieldType { get; }

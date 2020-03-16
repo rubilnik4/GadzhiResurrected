@@ -24,7 +24,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public StampFieldWord(ICellElement cellElementStamp, StampFieldType stampFieldType)
             : base(stampFieldType)
         {
-            CellElementStamp = cellElementStamp;
+            CellElementStamp = cellElementStamp ??
+                         throw new ArgumentNullException(nameof(cellElementStamp));
         }
     }
 }

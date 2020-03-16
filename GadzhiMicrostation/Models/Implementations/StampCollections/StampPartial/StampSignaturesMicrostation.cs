@@ -13,89 +13,39 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// Подкласс штампа для работы с подписями
     /// </summary>
     public abstract partial class StampMicrostation
-    {       
+    {
         /// <summary>
         /// Вставить подписи
         /// </summary>
         public override void InsertSignatures()
         {
-            _stampCellElement.ApplicationMicrostation.AttachLibrary(StampSettingsMicrostation.SignatureLibraryName);
+            StampCellElement.ApplicationMicrostation.AttachLibrary(StampSettingsMicrostation.SignatureLibraryName);
 
-            InsertSignatureFromLibrary();
+            DeleteSignaturesPrevious();
+            InsertSignaturesFromLibrary();
 
-            _stampCellElement.ApplicationMicrostation.DetachLibrary();
-        }
-
-       
-        public override void DeleteSignatures()
-        {
-            throw new NotImplementedException();
+            StampCellElement.ApplicationMicrostation.DetachLibrary();
         }
 
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        protected abstract IEnumerable<ICellElementMicrostation> InsertSignatureFromLibrary();
+        protected abstract IEnumerable<ICellElementMicrostation> InsertSignaturesFromLibrary();
 
-        ///// <summary>
-        ///// Удалить предыдущие подписи
-        ///// </summary>
-        //public void DeleteSignaturesPrevious()
-        //{
-        //    var signaturesElements = ActiveDocument.ModelMicrostation.
-        //                             GetModelElementsMicrostation(ElementMicrostationType.CellElement).
-        //                             Where(element => element.AttributeControlName == StampFieldMain.SignatureAttributeMarker);
+        /// <summary>
+        /// Удалить предыдущие подписи
+        /// </summary>
+        public void DeleteSignaturesPrevious()
+        {
+            var signaturesElements = StampCellElement.ModelMicrostation.
+                                     GetModelElementsMicrostation(ElementMicrostationType.CellElement).
+                                     Where(element => element.AttributeControlName == StampFieldMain.SignatureAttributeMarker);
 
-        //    foreach (var signature in signaturesElements)
-        //    {
-        //        signature.Remove();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Удалить текущие подписи
-        ///// </summary>
-        //public void DeleteSignaturesInserted()
-        //{
-        //    if (_insertedSignatures != null)
-        //    {
-        //        foreach (var signature in _insertedSignatures)
-        //        {
-        //            signature.Remove();
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Вставить и получить подписи из основного штампа
-        ///// </summary>
-        //private IEnumerable<ICellElementMicrostation> InsertMainRowSignatures(IStampMicrostation stamp)
-        //{
-        //    //var signatureRowSearch = StampFieldPersonSignatures.GetStampRowPersonSignatures();
-        //    //var signatureRowFound = signatureRowSearch?.
-        //    //    Select(row =>
-        //    //        new
-        //    //        {
-        //    //            Person = FindElementInStampFields(row.ResponsiblePerson.Name).AsTextElementMicrostation,
-        //    //            Date = FindElementInStampFields(row.DateSignature.Name).AsTextElementMicrostation,
-        //    //        }).
-        //    //    Where(row => row.Person != null && row.Date != null);
-
-        //    var insertedMainRowSignatures = new List<ICellElementMicrostation>();
-        //    if (stamp is IStampMain stampMain)
-        //    {
-        //        foreach (var signatureRow in stampMain.StampPersonSignatures)
-        //        {
-        //            var insertedSignature = InsertSignature(signatureRow.ResponsiblePerson.AttributePersonId, signature.Person.Text, signature.Person, signature.Date);
-        //            if (insertedSignature != null)
-        //            {
-        //                insertedMainRowSignatures.Add(insertedSignature);
-        //            }
-        //        }
-        //    }
-
-        //    return insertedMainRowSignatures;
-        //}
+            foreach (var signature in signaturesElements)
+            {
+                signature.Remove();
+            }
+        }
 
         ///// <summary>
         ///// Вставить и получить подписи из штампа замены
@@ -160,12 +110,21 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         protected ICellElementMicrostation InsertSignature(string personId, string personName,
                                                            ITextElementMicrostation previousField, ITextElementMicrostation nextField)
         {
-            RangeMicrostation signatureRange = GetSignatureRange(_stampCellElement.Origin, _stampCellElement.UnitScale, previousField, nextField);
+            if (previousField == null)
+            {
+                throw new ArgumentNullException(nameof(previousField));
+            }
+            else if (nextField == null)
+            {
+                throw new ArgumentNullException(nameof(nextField));
+            }
 
-            return _stampCellElement.ApplicationMicrostation.
+            RangeMicrostation signatureRange = GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale, previousField, nextField);
+
+            return StampCellElement.ApplicationMicrostation.
                                      CreateCellElementFromLibrary(personId,
                                                                   signatureRange.OriginPoint,
-                                                                  _stampCellElement.ModelMicrostation,
+                                                                  StampCellElement.ModelMicrostation,
                                                                   GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
                                                                   personName);
         }
