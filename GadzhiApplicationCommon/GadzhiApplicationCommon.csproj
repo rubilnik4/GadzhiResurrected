@@ -57,7 +57,8 @@
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampField.cs" />
-    <Compile Include="Models\Implementation\StampCollections\StampPersonSignatures.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampChangeSignatures.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampPersonSignature.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryPrinting.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampField.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampMain.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampChangeSignatures.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampPersonSignatures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,7 +6,7 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using MicroStationDGN;
 using System;

@@ -1,7 +1,9 @@
-﻿using GadzhiMicrostation.Microstation.Implementations.Elements;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +52,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                       subElement => subElement.AttributeControlName,
                                                       fieldSearch => fieldSearch,
                                                       (subElement, fieldSearch) => subElement);
+
+        /// <summary>
+        /// Получить поля штампа на основе элементов Microstation
+        /// </summary>
+        public IStampFieldMicrostation GetFieldFromElements(IEnumerable<ITextElementMicrostation> elementsMicrostation,
+                                                            HashSet<StampFieldBase> stampFields, StampFieldType stampFieldType) =>
+                elementsMicrostation?.Where(element => stampFields?.
+                                                       Select(field => field.Name).
+                                                       Contains(element.AttributeControlName) == true)?.
+                                      Select(field => new StampFieldMicrostation(field, stampFieldType))?.
+                                      FirstOrDefault();
 
         ///// <summary>
         ///// Вписать текстовые поля в рамки

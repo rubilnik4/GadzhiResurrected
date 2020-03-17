@@ -12,5 +12,6 @@ namespace GadzhiApplicationCommon.Models.Enums
     {
         Unknown,
         PersonSignature,
+        ChangeSignature,
     }
 }

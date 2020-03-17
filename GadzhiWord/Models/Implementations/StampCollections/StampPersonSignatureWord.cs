@@ -14,9 +14,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignaturesWord : StampPersonSignature<IStampFieldWord>
+    public class StampPersonSignatureWord : StampPersonSignature<IStampFieldWord>
     {       
-        public StampPersonSignaturesWord(IRowElement rowElementWord)
+        public StampPersonSignatureWord(IRowElement rowElementWord)
         {
             if (rowElementWord?.CellsElementWord?.Count >= 4)
             {               

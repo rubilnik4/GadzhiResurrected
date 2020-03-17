@@ -76,28 +76,28 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Список всех полей с ответсвенным лицом и подписью
         /// </summary>
-        public static HashSet<StampFieldBase> GetStampFieldsPersonSignatures() =>
+        public static HashSet<StampFieldBase> GetFieldsPersonSignatures() =>
             new HashSet<StampFieldBase>(GetStampRowPersonSignatures()?.
                                         SelectMany(rowPerson => rowPerson.StampPersonSignatureFields));
 
         /// <summary>
         /// Список полей с типом действия
         /// </summary>
-        public static HashSet<StampFieldBase> GetFieldsSignaturesActionType() =>
+        public static HashSet<StampFieldBase> GetFieldsActionType() =>
             new HashSet<StampFieldBase>(GetStampRowPersonSignatures()?.
                                         Select(rowPerson => rowPerson.ActionType));
 
         /// <summary>
         /// Список полей с ответственным лицом
         /// </summary>
-        public static HashSet<StampFieldBase> GetFieldsSignaturesResponsiblePerson() =>
+        public static HashSet<StampFieldBase> GetFieldsResponsiblePerson() =>
             new HashSet<StampFieldBase>(GetStampRowPersonSignatures()?.
                                         Select(rowPerson => rowPerson.ResponsiblePerson));
 
         /// <summary>
         /// Список полей с датой
         /// </summary>
-        public static HashSet<StampFieldBase> GetFieldsSignaturesDateSignature() =>
+        public static HashSet<StampFieldBase> GetFieldsDateSignature() =>
             new HashSet<StampFieldBase>(GetStampRowPersonSignatures()?.
                                         Select(rowPerson => rowPerson.DateSignature));
     }

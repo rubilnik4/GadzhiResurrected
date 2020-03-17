@@ -17,17 +17,20 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     public class StampPersonSignatureMicrostation : StampPersonSignature<IStampFieldMicrostation>,
                                                     IStampPersonSignatureMicrostation
     {
-        public StampPersonSignatureMicrostation(IEnumerable<ITextElementMicrostation> elementsMicrostation)
+        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
+                                                IStampFieldMicrostation dateSignature)
+            : this(actionType, responsiblePerson, null, dateSignature) { }
+
+        public StampPersonSignatureMicrostation(IStampPersonSignature<IStampFieldMicrostation> personSignature)
+            : this(personSignature?.ActionType, personSignature?.ResponsiblePerson,
+                  personSignature?.Signature, personSignature?.DateSignature)
         {
-            ActionType = GetFieldFromMicrostationElements(elementsMicrostation, StampFieldPersonSignatures.GetFieldsSignaturesActionType());
-            ResponsiblePerson = GetFieldFromMicrostationElements(elementsMicrostation, StampFieldPersonSignatures.GetFieldsSignaturesResponsiblePerson());
-            DateSignature = GetFieldFromMicrostationElements(elementsMicrostation, StampFieldPersonSignatures.GetFieldsSignaturesDateSignature());
+            if (personSignature == null)
+                throw new ArgumentNullException(nameof(personSignature));
         }
 
-        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType,
-                                                 IStampFieldMicrostation responsiblePerson,
-                                                 IStampFieldMicrostation signature,
-                                                 IStampFieldMicrostation dateSignature)
+        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
+                                                IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
         {
             ActionType = actionType;
             ResponsiblePerson = responsiblePerson;
@@ -79,16 +82,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// Идентефикатор личности
         /// </summary>    
         public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
-
-        /// <summary>
-        /// Получить поля с ответственным лицом и подписью из списка элементов Microstation
-        /// </summary>
-        private IStampFieldMicrostation GetFieldFromMicrostationElements(IEnumerable<ITextElementMicrostation> elementsMicrostation, HashSet<StampFieldBase> stampFields) =>
-                elementsMicrostation?.Where(element => stampFields?.
-                                                       Select(field => field.Name).
-                                                       Contains(element.AttributeControlName) == true)?.
-                                      Select(field => new StampFieldMicrostation(field, StampFieldType.PersonSignature))?.
-                                      FirstOrDefault();
 
     }
 }

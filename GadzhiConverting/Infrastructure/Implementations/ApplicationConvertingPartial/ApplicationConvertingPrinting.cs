@@ -47,17 +47,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
         private (IFileDataSourceServer fileSource, ErrorConverting errors) CreatePdfWithSignatures(IStamp stamp, string filePath,
-                                                                                                   ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation)
+                                                                                                   ColorPrint colorPrint, 
+                                                                                                   IPrinterInformation pdfPrinterInformation)
         {
-            //_messagingService.ShowAndLogMessage($"Обработка штампа {stamp.Name}");
             stamp.CompressFieldsRanges();
 
-            stamp.InsertStampSignatures();
-
-            //_messagingService.ShowAndLogMessage($"Создание PDF для штампа {stamp.Name}");
+            stamp.InsertSignatures();
             var fileDataSourceAndError = CreatePdf(stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation);
-
-            stamp.DeleteStampSignatures();
+            stamp.DeleteSignatures();
 
             return fileDataSourceAndError;
         }

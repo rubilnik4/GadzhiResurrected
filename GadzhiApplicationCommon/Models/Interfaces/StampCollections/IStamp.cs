@@ -33,6 +33,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         OrientationType Orientation { get; }
 
         /// <summary>
+        /// Сжать поля
+        /// </summary>
+        void CompressFieldsRanges();
+
+        /// <summary>
         /// Вставить подписи
         /// </summary>
         void InsertSignatures();

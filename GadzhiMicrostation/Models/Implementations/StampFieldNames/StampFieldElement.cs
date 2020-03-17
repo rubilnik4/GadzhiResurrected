@@ -17,7 +17,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
             get
             {
                 var stampControlNames = StampFieldMain.GetStampMainFields();
-                stampControlNames.UnionWith(StampFieldPersonSignatures.GetStampFieldsPersonSignatures());
+                stampControlNames.UnionWith(StampFieldPersonSignatures.GetFieldsPersonSignatures());
                 stampControlNames.UnionWith(StampFieldChanges.GetStampControlNamesChanges());
                 stampControlNames.UnionWith(StampFieldApprovals.GetStampControlNamesApprovals());
 

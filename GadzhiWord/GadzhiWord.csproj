@@ -122,7 +122,7 @@
     <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPersonSignaturesWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPersonSignatureWord.cs" />
     <Compile Include="Models\Interfaces\IStampFieldWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

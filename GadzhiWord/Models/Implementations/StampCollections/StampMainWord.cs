@@ -61,6 +61,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         private IEnumerable<IStampPersonSignature<IStampFieldWord>>  GetStampPersonWithoutSignatures() =>
               FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
-                            Select(field => new StampPersonSignaturesWord(field.CellElementStamp.RowElementWord));
+                            Select(field => new StampPersonSignatureWord(field.CellElementStamp.RowElementWord));
     }
 }

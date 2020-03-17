@@ -79,6 +79,7 @@
     <Compile Include="Microstation\Implementations\Elements\RangeBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonSignature.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampSignaturesMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitTypes.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsNumeratorDenominator.cs" />
@@ -98,7 +99,8 @@
     <Compile Include="Models\Implementations\StampCollections\StampFieldMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampChangeSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPersonSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldApprovals.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldBase.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldPersonSignatures.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampCollections\StampCollections\IStampMicrostation.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\StampCollections\IStampChangeSignatureMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampCollections\StampCollections\IStampPersonSignatureMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampCollections\StampCollections\IStampFieldMicrostation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -170,9 +173,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Microstation\Implementations\StampPartial\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
