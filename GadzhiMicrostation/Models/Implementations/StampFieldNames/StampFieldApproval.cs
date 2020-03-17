@@ -7,13 +7,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
     /// </summary>
     public class StampFieldApproval
     {
-        public StampFieldApproval(string departmentApproval,
-                             string responsiblePerson,
-                             string date)
+        public StampFieldApproval(string departmentApproval, string responsiblePerson, string date)
         {
             DepartmentApproval = new StampFieldBase(departmentApproval, isVertical: true);
             ResponsiblePerson = new StampFieldBase(responsiblePerson, isVertical: true);
-            Date = new StampFieldBase(date, isVertical: true);
+            DateSignature = new StampFieldBase(date, isVertical: true);
         }
 
         /// <summary>
@@ -29,16 +27,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Дата
         /// </summary>
-        public StampFieldBase Date { get; }
+        public StampFieldBase DateSignature { get; }
 
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<StampFieldBase> StampControlNamesApproval => new HashSet<StampFieldBase>()
+        public HashSet<StampFieldBase> StampApprovalSignatureFields => new HashSet<StampFieldBase>()
         {
             DepartmentApproval,
             ResponsiblePerson,
-            Date,
+            DateSignature,
         };
     }
 }

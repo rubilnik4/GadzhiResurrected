@@ -49,7 +49,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<StampFieldBase> StampControlNamesChange => new HashSet<StampFieldBase>()
+        public HashSet<StampFieldBase> StampChangeSignatureFields => new HashSet<StampFieldBase>()
         {
             NumberChange,
             NumberOfPlots,

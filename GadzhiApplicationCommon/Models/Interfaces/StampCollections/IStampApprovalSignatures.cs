@@ -6,14 +6,14 @@ using System.Text;
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {
     /// <summary>
-    /// Строка с ответственным лицом и подписью
+    /// Строка с согласованием
     /// </summary>
-    public interface IStampPersonSignature<out TField> where TField : IStampField
+    public interface IStampApprovalSignatures<out TField> where TField : IStampField
     {
         /// <summary>
-        /// Тип действия
+        /// Отдел согласования
         /// </summary>
-        TField ActionType { get; }
+        TField DepartmentApproval { get; }
 
         /// <summary>
         /// Ответственное лицо

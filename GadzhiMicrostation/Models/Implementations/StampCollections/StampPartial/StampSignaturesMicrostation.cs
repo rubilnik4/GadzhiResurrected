@@ -45,36 +45,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             {
                 signature.Remove();
             }
-        }
-
-        ///// <summary>
-        ///// Вставить и получить подписи из штампа замены
-        ///// </summary>
-        //private IEnumerable<ICellElementMicrostation> InsertChangesSignatures(string personId, string personName)
-        //{
-        //    var signatureRowSearch = StampFieldChanges.GetStampRowChangesSignatures();
-        //    var signatureRowFound = signatureRowSearch?.
-        //        Select(row =>
-        //            new
-        //            {
-        //                DocumentChange = FindElementInStampFields(row.DocumentChange.Name).AsTextElementMicrostation,
-        //                Date = FindElementInStampFields(row.DateChange.Name).AsTextElementMicrostation,
-        //            }).
-        //        Where(row => row.DocumentChange != null && row.Date != null &&
-        //              !String.IsNullOrEmpty(row.DocumentChange.Text.Trim()));
-
-        //    var insertedMainRowSignatures = new List<ICellElementMicrostation>();
-        //    foreach (var signature in signatureRowFound)
-        //    {
-        //        var insertedSignature = InsertSignature(personId, personName, signature.DocumentChange, signature.Date);
-        //        if (insertedSignature != null)
-        //        {
-        //            insertedMainRowSignatures.Add(insertedSignature);
-        //        }
-        //    }
-
-        //    return insertedMainRowSignatures;
-        //}
+        }       
 
         ///// <summary>
         ///// Вставить и получить подписи из штампа согласования
@@ -107,36 +78,29 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        protected ICellElementMicrostation InsertSignature(string personId, string personName,
-                                                           ITextElementMicrostation previousField, ITextElementMicrostation nextField)
+        protected ICellElementMicrostation InsertSignature(string personId,
+                                                           ITextElementMicrostation previousField, ITextElementMicrostation nextField,
+                                                           string personName = null)
         {
-            if (previousField == null)
-            {
-                throw new ArgumentNullException(nameof(previousField));
-            }
-            else if (nextField == null)
-            {
-                throw new ArgumentNullException(nameof(nextField));
-            }
+            if (previousField == null) throw new ArgumentNullException(nameof(previousField));
+            if (nextField == null) throw new ArgumentNullException(nameof(nextField));
 
-            RangeMicrostation signatureRange = GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale, previousField, nextField);
+            RangeMicrostation signatureRange = GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale,
+                                                                 previousField, nextField);
 
             return StampCellElement.ApplicationMicrostation.
-                                     CreateCellElementFromLibrary(personId,
-                                                                  signatureRange.OriginPoint,
-                                                                  StampCellElement.ModelMicrostation,
-                                                                  GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
-                                                                  personName);
+                   CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
+                                                StampCellElement.ModelMicrostation,
+                                                GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
+                                                personName);
         }
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты
         /// <summary>
         /// Получить координаты и размеры поля для вставки подписей
         /// </summary>       
-        private RangeMicrostation GetSignatureRange(PointMicrostation stampOrigin,
-                                                    double unitScale,
-                                                    ITextElementMicrostation personField,
-                                                    ITextElementMicrostation dateField)
+        private RangeMicrostation GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
+                                                    ITextElementMicrostation personField, ITextElementMicrostation dateField)
         {
             PointMicrostation lowLeftPoint = !personField.IsVertical ?
                                               new PointMicrostation(personField.RangeAttributeInUnits.HighRightPoint.X,
@@ -160,9 +124,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Параметры ячейки подписи
         /// </summary>
-        private Action<ICellElementMicrostation> GetAdditionalParametersToSignature(RangeMicrostation signatureRange, bool isVertical)
-        {
-            return new Action<ICellElementMicrostation>(cellElement =>
+        private Action<ICellElementMicrostation> GetAdditionalParametersToSignature(RangeMicrostation signatureRange, bool isVertical) =>       
+            new Action<ICellElementMicrostation>(cellElement =>
             {
                 cellElement.IsVertical = isVertical;
                 PointMicrostation differenceBetweenOriginAndLowLeft = cellElement.Origin.Subtract(cellElement.Range.LowLeftPoint).
@@ -185,6 +148,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
 
                 cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
             });
-        }
+       
     }
 }

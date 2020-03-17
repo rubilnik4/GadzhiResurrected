@@ -12,40 +12,41 @@ using System.Text;
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
 {
     /// <summary>
-    /// Строка с ответственным лицом и подписью Microstation
+    /// Строка с согласованием Microstation
     /// </summary>
-    public class StampPersonSignatureMicrostation : StampPersonSignature<IStampFieldMicrostation>,
-                                                    IStampPersonSignatureMicrostation
+    public class StampApprovalSignatureMicrostation : StampApprovalSignature<IStampFieldMicrostation>,
+                                                      IStampApprovalSignatureMicrostation
     {
-        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
-                                                IStampFieldMicrostation dateSignature)
-            : this(actionType, responsiblePerson, null, dateSignature) { }
+        public StampApprovalSignatureMicrostation(IStampFieldMicrostation approvalSignature, IStampFieldMicrostation responsiblePerson,
+                                                  IStampFieldMicrostation dateSignature)
+            : this(approvalSignature, responsiblePerson, null, dateSignature) { }
 
-        public StampPersonSignatureMicrostation(IStampPersonSignature<IStampFieldMicrostation> personSignature)
-            : this(personSignature?.ActionType, personSignature?.ResponsiblePerson,
-                  personSignature?.Signature, personSignature?.DateSignature)
+        public StampApprovalSignatureMicrostation(IStampApprovalSignatures<IStampFieldMicrostation> approvalSignature)
+            : this(approvalSignature?.DepartmentApproval, approvalSignature?.ResponsiblePerson,
+                  approvalSignature?.Signature, approvalSignature?.DateSignature)
         {
-            if (personSignature == null) throw new ArgumentNullException(nameof(personSignature));
+            if (approvalSignature == null) throw new ArgumentNullException(nameof(approvalSignature));
         }
 
-        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
-                                                IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
+        public StampApprovalSignatureMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
+                                                  IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
         {
-            ActionType = actionType;
+            DepartmentApproval = departmentApproval;
             ResponsiblePerson = responsiblePerson;
             Signature = signature;
             DateSignature = dateSignature;
         }
 
-        /// <summary>
-        /// Тип действия
-        /// </summary>
-        public override IStampFieldMicrostation ActionType { get; }
 
         /// <summary>
-        /// Тип действия. Элемент
+        /// Отдел согласования
         /// </summary>
-        public ITextElementMicrostation ActionTypeElement => ActionType.ElementStamp.AsTextElementMicrostation;
+        public override IStampFieldMicrostation DepartmentApproval { get; }
+
+        /// <summary>
+        /// Отдел согласования. Элемент
+        /// </summary>
+        public ITextElementMicrostation DepartmentApprovalElement => DepartmentApproval.ElementStamp.AsTextElementMicrostation;
 
         /// <summary>
         /// Ответственное лицо

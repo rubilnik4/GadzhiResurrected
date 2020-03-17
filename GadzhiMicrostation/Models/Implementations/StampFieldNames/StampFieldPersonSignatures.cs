@@ -74,7 +74,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         }
 
         /// <summary>
-        /// Список всех полей с ответсвенным лицом и подписью
+        /// Список всех полей с ответственным лицом и подписью
         /// </summary>
         public static HashSet<StampFieldBase> GetFieldsPersonSignatures() =>
             new HashSet<StampFieldBase>(GetStampRowPersonSignatures()?.

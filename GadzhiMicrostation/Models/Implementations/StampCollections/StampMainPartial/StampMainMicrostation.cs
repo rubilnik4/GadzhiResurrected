@@ -17,10 +17,47 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
     /// </summary>
     public partial class StampMainMicrostation : StampMicrostation, IStampMain<IStampFieldMicrostation>
     {
+
+        /// <summary>
+        /// Строки с ответсвенным лицом и подписью Microstation
+        /// </summary>
+        private IEnumerable<IStampPersonSignatureMicrostation> StampPersonSignaturesMicrostation { get; set; }
+
+        /// <summary>
+        /// Строки с изменениями Microstation
+        /// </summary>
+        private IEnumerable<IStampChangeSignatureMicrostation> StampChangeSignaturesMicrostation { get; set; }
+
+        /// <summary>
+        /// Строки с согласованиями Microstation
+        /// </summary>
+        private IEnumerable<IStampApprovalSignatureMicrostation> StampApprovalSignaturesMicrostation { get; set; }
+
         public StampMainMicrostation(ICellElementMicrostation stampCellElement)
             : base(stampCellElement)
         {
             StampPersonSignaturesMicrostation = GetStampPersonRowsWithoutSignatures();
+            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(StampPersonSignaturesMicrostation?.
+                                                                                    FirstOrDefault().AttributePersonId);
+            StampApprovalSignaturesMicrostation = GetStampApprovalRowsWithoutSignatures();
+        }
+
+        /// <summary>
+        /// Вставить подписи
+        /// </summary>
+        protected override IEnumerable<ICellElementMicrostation> InsertSignaturesFromLibrary()
+        {
+            StampPersonSignaturesMicrostation = StampPersonSignaturesMicrostation?.Select(person => GetStampPersonRowWithSignatures(person));
+
+            StampChangeSignaturesMicrostation = StampChangeSignaturesMicrostation?.  //добавляем ID вставленной подписи, а не имени. Потому что подпись может не соответствовать имени
+                                                Select(change => GetStampChangeRowWithSignatures(change, StampPersonSignaturesMicrostation.
+                                                                                                         FirstOrDefault().SignatureElement.Name));
+
+            StampApprovalSignaturesMicrostation = StampApprovalSignaturesMicrostation?.Select(approval => GetStampApprovalRowWithSignatures(approval));
+
+            return StampPersonSignaturesMicrostation.Select(personSignature => personSignature.SignatureElement)?.
+                   Union(StampChangeSignaturesMicrostation.Select(changeSignature => changeSignature.SignatureElement))?.
+                   Union(StampApprovalSignaturesMicrostation.Select(approvalSignature => approvalSignature.SignatureElement));
         }
 
         /// <summary>
@@ -29,24 +66,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         public override StampType StampType => StampType.Main;
 
         /// <summary>
-        /// Строки с ответсвенным лицом и подписью Microstation
-        /// </summary>
-        private IEnumerable<IStampPersonSignatureMicrostation> StampPersonSignaturesMicrostation { get; set; }
-
-        /// <summary>
-        /// Строки с ответсвенным лицом и подписью
+        /// Строки с ответственным лицом и подписью
         /// </summary>
         public IEnumerable<IStampPersonSignature<IStampFieldMicrostation>> StampPersonSignatures =>
-                StampPersonSignaturesMicrostation.Cast<IStampPersonSignature<IStampFieldMicrostation>>();
+                StampPersonSignaturesMicrostation.Cast<IStampPersonSignature<IStampFieldMicrostation>>();       
 
         /// <summary>
-        /// Вставить подписи
+        /// Строки с изменениями
         /// </summary>
-        protected override IEnumerable<ICellElementMicrostation> InsertSignaturesFromLibrary()
-        {
-            StampPersonSignaturesMicrostation = StampPersonSignaturesMicrostation.Select(person => GetStampPersonRowWithSignatures(person));
-            return StampPersonSignaturesMicrostation.Select(personSignature => personSignature.SignatureElement);
-        }
+        public IEnumerable<IStampChangeSignature<IStampFieldMicrostation>> StampChangesSignatures =>
+                StampChangeSignaturesMicrostation.Cast<IStampChangeSignature<IStampFieldMicrostation>>();      
 
         /// <summary>
         /// Удалить подписи

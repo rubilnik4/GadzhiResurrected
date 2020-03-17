@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
@@ -45,22 +46,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
                             "G_E_S_12",
                             "G_E_S_13",
                             "G_E_S_14",
-                            "G_E_S_16");
-
-        /// <summary>
-        /// Список всех полей с изменениями
-        /// </summary>
-        public static HashSet<StampFieldBase> GetStampControlNamesChanges()
-        {
-            var stampControlNames = new HashSet<StampFieldBase>();
-
-            stampControlNames.UnionWith(StampChangesFirst.StampControlNamesChange);
-            stampControlNames.UnionWith(StampChangesSecond.StampControlNamesChange);
-            stampControlNames.UnionWith(StampChangesThird.StampControlNamesChange);
-            stampControlNames.UnionWith(StampChangesFourth.StampControlNamesChange);
-
-            return stampControlNames;
-        }
+                            "G_E_S_16");       
 
         /// <summary>
         /// Список строк с изменениями
@@ -75,5 +61,46 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
                     StampChangesFourth
                 };
         }
+
+        /// <summary>
+        /// Список всех полей с изменениями
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsChangeSignatures() =>
+            new HashSet<StampFieldBase>(GetStampRowChangesSignatures()?.
+                                        SelectMany(rowChange => rowChange.StampChangeSignatureFields));
+
+        /// <summary>
+        /// Список полей с номером изменения
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsNumberChange() =>
+            new HashSet<StampFieldBase>(GetStampRowChangesSignatures()?.
+                                        Select(rowChange => rowChange.NumberChange));
+
+        /// <summary>
+        /// Список полей с количеством участков
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsNumberOfPlots() =>
+            new HashSet<StampFieldBase>(GetStampRowChangesSignatures()?.
+                                        Select(rowChange => rowChange.NumberOfPlots));
+
+        /// <summary>
+        /// Тип изменения
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsTypeOfChange() =>
+            new HashSet<StampFieldBase>(GetStampRowChangesSignatures()?.
+                                        Select(rowChange => rowChange.TypeOfChange));
+
+        /// <summary>
+        /// Номер докумета
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsDocumentChange() =>
+            new HashSet<StampFieldBase>(GetStampRowChangesSignatures()?.
+                                        Select(rowChange => rowChange.DocumentChange));
+        /// <summary>
+        /// Дата изменения
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsDateChange() =>
+            new HashSet<StampFieldBase>(GetStampRowChangesSignatures()?.
+                                        Select(rowChange => rowChange.DateChange));
     }
 }

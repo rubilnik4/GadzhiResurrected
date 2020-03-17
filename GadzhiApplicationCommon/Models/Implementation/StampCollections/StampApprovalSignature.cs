@@ -8,17 +8,17 @@ using System.Text;
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
     /// <summary>
-    /// Строка с ответственным лицом и подписью
+    /// Строка с согласованием
     /// </summary>
-    public abstract class StampPersonSignature<TField> : IStampPersonSignature<TField>
-                                                        where TField : IStampField
+    public abstract class StampApprovalSignature<TField>: IStampApprovalSignatures<TField> 
+                                                          where TField : IStampField
     {
-        public StampPersonSignature() { }
+        public StampApprovalSignature() { }
 
         /// <summary>
-        /// Тип действия
+        /// Отдел согласования
         /// </summary>
-        public abstract TField ActionType { get; }
+        public abstract TField DepartmentApproval { get; }
 
         /// <summary>
         /// Ответственное лицо
@@ -26,7 +26,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         public abstract TField ResponsiblePerson { get; }
 
         /// <summary>
-        /// Дата
+        /// Подпись
         /// </summary>
         public abstract TField Signature { get; }
 
@@ -39,6 +39,5 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// Идентефикатор личности
         /// </summary>    
         public abstract string AttributePersonId { get; }
-
     }
 }

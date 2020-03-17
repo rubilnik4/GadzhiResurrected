@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
@@ -30,22 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
             new StampFieldApproval("V_C_DEP1_3",
                               "V_C_NAME1_3",
                               "V_E_DATE_15");
-
-
-        /// <summary>
-        /// Список всех полей с изменениями
-        /// </summary>
-        public static HashSet<StampFieldBase> GetStampControlNamesApprovals()
-        {
-            var stampControlNamesApprovals = new HashSet<StampFieldBase>();
-
-            stampControlNamesApprovals.UnionWith(StampApprovalsFirst.StampControlNamesApproval);
-            stampControlNamesApprovals.UnionWith(StampApprovalsSecond.StampControlNamesApproval);
-            stampControlNamesApprovals.UnionWith(StampApprovalsThird.StampControlNamesApproval);
-
-            return stampControlNamesApprovals;
-        }
-
+       
         /// <summary>
         /// Список строк с согласующим лицом и подписью
         /// </summary>
@@ -58,5 +44,33 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
                     StampApprovalsThird,
                 };
         }
+
+        /// <summary>
+        /// Список всех полей с изменениями
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsApprovalSignatures() =>
+            new HashSet<StampFieldBase>(GetStampRowApprovalSignatures()?.
+                                        SelectMany(rowApproval => rowApproval.StampApprovalSignatureFields));
+
+        /// <summary>
+        /// Отдел согласования
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsDepartmentApproval() =>
+            new HashSet<StampFieldBase>(GetStampRowApprovalSignatures()?.
+                                        Select(rowApproval => rowApproval.DepartmentApproval));
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsResponsiblePerson() =>
+            new HashSet<StampFieldBase>(GetStampRowApprovalSignatures()?.
+                                        Select(rowApproval => rowApproval.ResponsiblePerson));
+
+        /// <summary>
+        /// Дата
+        /// </summary>
+        public static HashSet<StampFieldBase> GetFieldsDateSignature() =>
+            new HashSet<StampFieldBase>(GetStampRowApprovalSignatures()?.
+                                        Select(rowApproval => rowApproval.DateSignature));
     }
 }
