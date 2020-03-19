@@ -1,5 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using System;
@@ -16,9 +18,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
     public partial class ApplicationConverting : IApplicationConverting
     {
         /// <summary>
-        /// Проверка состояния папок и файлов
+        /// Модуль конвертации Microstation
         /// </summary>   
-        private readonly IApplicationLibrary _applicationLibrary;
+        private readonly IApplicationLibrary _applicationMicrostation;
+
+        /// <summary>
+        /// Модуль конвертации Word
+        /// </summary>   
+        private readonly IApplicationLibrary _applicationWord;
 
         /// <summary>
         /// Класс обертка для отлова ошибок
@@ -35,15 +42,45 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private readonly IPdfCreatorService _pdfCreatorService;
 
-        public ApplicationConverting(IApplicationLibrary applicationLibrary,
+        public ApplicationConverting(IApplicationLibrary applicationMicrostation,
+                                     IApplicationLibrary applicationWord,
                                      IExecuteAndCatchErrors executeAndCatchErrors,
                                      IFileSystemOperations fileSystemOperations,
                                      IPdfCreatorService pdfCreatorService)
         {
-            _applicationLibrary = applicationLibrary;
+            _applicationMicrostation = applicationMicrostation;
+            _applicationWord = applicationWord;
             _executeAndCatchErrors = executeAndCatchErrors;
             _fileSystemOperations = fileSystemOperations;
             _pdfCreatorService = pdfCreatorService;
+        }
+
+        /// <summary>
+        /// Текущий использумый модуль конвертации
+        /// </summary>
+        private IApplicationLibrary ActiveLibrary { get; set; }
+
+        /// <summary>
+        /// Выбрать библиотеку конвертации по типу расширениф
+        /// </summary>        
+        private ErrorConverting SetActiveLibraryByExtension(FileExtention fileExtention)
+        {
+            ErrorConverting libraryError = null;
+
+            if (fileExtention == FileExtention.dgn)
+            {
+                ActiveLibrary = _applicationMicrostation;
+            }
+            else if (fileExtention == FileExtention.docx)
+            {
+                ActiveLibrary = _applicationWord;
+            }
+            else
+            {
+                libraryError = new ErrorConverting(FileConvertErrorType.LibraryNotFound,
+                                                   $"Библиотека конвертации для типа {fileExtention} не найдена");
+            }
+            return libraryError;
         }
     }
 }

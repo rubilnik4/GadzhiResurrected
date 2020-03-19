@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extentions\Microstation\ElementAttributeExtensions.cs" />
+    <Compile Include="Extentions\Microstation\ElementExtensions.cs" />
     <Compile Include="Extentions\Microstation\PointExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\StringAdditionalExtentions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationPrinting.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationStamp.cs" />
     <Compile Include="Microstation\Implementations\DocumentMicrostationPartial\DocumentMicrostationElements.cs" />
-    <Compile Include="Microstation\Implementations\Elements\ElementMicrostationPair.cs" />
     <Compile Include="Microstation\Implementations\Elements\LibraryElement.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />
@@ -79,6 +79,7 @@
     <Compile Include="Microstation\Implementations\Elements\RangeBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\MicrostationResources.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainApprovalSignature.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonSignature .cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeSignature.cs" />
@@ -137,8 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Signature.cel" />
-    <None Include="Resources\Stamp.cel" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

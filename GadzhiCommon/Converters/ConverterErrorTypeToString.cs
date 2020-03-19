@@ -33,6 +33,7 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.UnknownError, "Неизвестная ошибка" },
 
                 { FileConvertErrorType.ApplicationNotLoad , "Ошибка загрузки приложения" },
+                { FileConvertErrorType.LibraryNotFound , "Библиотека конвертации не найдена" },
                 { FileConvertErrorType.FileNotOpen , "Невозможно открыть файл" },
                 { FileConvertErrorType.FileNotSaved , "Невозможно сохранить файл" },
                 { FileConvertErrorType.StampNotFound , "Штампы не найдены" },

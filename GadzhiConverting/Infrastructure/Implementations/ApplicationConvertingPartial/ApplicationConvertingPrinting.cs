@@ -29,9 +29,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint, 
                                                                                                        IPrinterInformation pdfPrinterInformation)
         {
-            if (_applicationLibrary.StampContainer.IsValid)
+            if (ActiveLibrary.StampContainer.IsValid)
             {
-                var fileDataSourceAndErrors = _applicationLibrary.StampContainer.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
+                var fileDataSourceAndErrors = ActiveLibrary.StampContainer.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
                                                                   Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation));
                 return (fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.fileSource),
                         fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.errors));
@@ -110,7 +110,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private ErrorConverting PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            var printCommand = new Action(() => _applicationLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
+            var printCommand = new Action(() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printCommand).ErrorConverting;
         }       
     }

@@ -26,8 +26,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _fileSystemOperations = fileSystemOperations;
 
-            PutResourcesToDataFolder();
+            ConvertingResources = PutResourcesToDataFolder();
         }
+
+        /// <summary>
+        /// Пути ресурсов модулей конвертации
+        /// </summary>
+        public ConvertingResources ConvertingResources { get; }
 
         /// <summary>
         /// Папка для конвертирования файлов
@@ -61,15 +66,31 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public string NetworkName => Environment.UserDomainName + "\\" + Environment.MachineName;
 
         /// <summary>
-        /// Скопировать ресурсы
+        /// Скопировать ресурсы и вернуть пути их расположения
         /// </summary>        
-        private void PutResourcesToDataFolder()
+        private ConvertingResources PutResourcesToDataFolder()
         {
             _fileSystemOperations.CreateFolderByName(DataResourcesFolder);
-            if (_fileSystemOperations.IsDirectoryExist(DataResourcesFolder))
+
+            string signatureWordFileName = Path.Combine(DataResourcesFolder, "signatureWord.jpg");
+            if (!_fileSystemOperations.IsFileExist(signatureWordFileName))
             {
-                Properties.Resources.signature.Save(Path.Combine(DataResourcesFolder, "signature.jpg"));
+                Properties.Resources.SignatureWord.Save(signatureWordFileName);
             }
-        }       
+
+            string signatureMicrostationFileName = Path.Combine(DataResourcesFolder, "signatureMicrostation.cel");
+            if (!_fileSystemOperations.IsFileExist(signatureMicrostationFileName))
+            {
+                _fileSystemOperations.SaveFileFromByte(signatureMicrostationFileName, Properties.Resources.SignatureMicrostation);
+            }
+
+            string stampMicrostationFileName = Path.Combine(DataResourcesFolder, "stampMicrostation.cel");
+            if (!_fileSystemOperations.IsFileExist(stampMicrostationFileName))
+            {
+                _fileSystemOperations.SaveFileFromByte(stampMicrostationFileName, Properties.Resources.StampMicrostation);
+            }
+
+            return new ConvertingResources(signatureWordFileName, signatureMicrostationFileName, stampMicrostationFileName);
+        }
     }
 }

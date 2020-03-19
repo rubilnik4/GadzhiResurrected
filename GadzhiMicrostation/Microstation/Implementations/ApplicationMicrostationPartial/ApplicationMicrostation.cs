@@ -10,10 +10,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     /// Класс для работы с приложением Microstation
     /// </summary>
     public partial class ApplicationMicrostation : IApplicationMicrostation
-    {  
+    {
+        /// <summary>
+        /// Ресурсы, используемые модулем Microstation
+        /// </summary>
+        public MicrostationResources MicrostationResources { get; }
+
         public ApplicationMicrostation()
         {
-            
+            //MicrostationResources = microstationResources;
         }
 
         /// <summary>

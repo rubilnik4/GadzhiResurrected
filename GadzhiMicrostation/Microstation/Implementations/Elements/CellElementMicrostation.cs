@@ -1,4 +1,5 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Extentions.Microstation;
 using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
@@ -56,13 +57,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Дочерние элементы с оригиналами Microstation
         /// </summary>
-        private IEnumerable<ElementMicrostationPair> SubElementsPair { get; }
+        private IDictionary<IElementMicrostation, Element> SubElementsPair { get; }
 
         /// <summary>
         /// Дочерние элементы
         /// </summary>
-        public IEnumerable<IElementMicrostation> SubElements => SubElementsPair.
-                                                                Select(elementPair => elementPair.ElementWrapper);
+        public IEnumerable<IElementMicrostation> SubElements => SubElementsPair.Keys;
 
         /// <summary>
         /// Вписать ячейку в рамку
@@ -70,41 +70,27 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public override bool CompressRange() => throw new NotImplementedException();
 
         /// <summary>
-        /// Получить Дочерние элементы
+        /// Найти и изменить вложенный в штамп элемент.Только для внешних операций типа Scale, Move
         /// </summary>
-        private IEnumerable<ElementMicrostationPair> GetSubElementsPair()
+        public void FindAndChangeSubElement(IElementMicrostation elementMicrostation)
         {
-            if (CellElement != null)
+            CellElement.ResetElementEnumeration();
+            while (CellElement.MoveToNextElement(true))
             {
-                ElementEnumerator elementEnumerator = CellElement.GetSubElements();
-
-                while (elementEnumerator.MoveNext())
+                var elementCurrent = CellElement.CopyCurrentElement();
+                if (elementCurrent.ID64 == elementMicrostation?.Id)
                 {
-                    var microstationElement = ConvertMicrostationElements.ConvertToMicrostationElement((Element)elementEnumerator.Current, this);
-                    if (microstationElement != null)
-                    {
-                        yield return new ElementMicrostationPair(microstationElement, (Element)elementEnumerator.Current);
-                    }
-
+                    CellElement.ReplaceCurrentElement(SubElementsPair[elementMicrostation]);
+                    break;
                 }
             }
         }
 
         /// <summary>
-        /// Найти и изменить вложенный в штамп элемент. Только для внешних операций типа Scale, Move
+        /// Получить дочерние элементы
         /// </summary>
-        //private void FindAndChangeSubElement(Element element)
-        //{
-        //    CellElement.ResetElementEnumeration();
-        //    while (CellElement.MoveToNextElement(true))
-        //    {
-        //        var elementCurrent = CellElement.CopyCurrentElement();
-        //        if (elementCurrent.ID64 == element?.ID64)
-        //        {                   
-        //            CellElement.ReplaceCurrentElement(element);
-        //            break;
-        //        }
-        //    }
-        //}        
+        private IDictionary<IElementMicrostation, Element> GetSubElementsPair() =>
+            CellElement.GetCellSubElements().ToDictionary(element => element.ToElementMicrostation(this),
+                                                          element => element);       
     }
 }

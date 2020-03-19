@@ -34,7 +34,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public ElementMicrostation(Element element,
                                    IOwnerContainerMicrostation ownerContainerMicrostation)
         {
-            _element = element;
+            _element = element ?? throw new ArgumentNullException(nameof(element));
             OwnerContainerMicrostation = ownerContainerMicrostation;
             ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
             ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;

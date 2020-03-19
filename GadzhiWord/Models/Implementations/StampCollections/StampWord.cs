@@ -55,5 +55,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             TableStamp?.CellsElementWord?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
                                       Select(cell => new StampFieldWord(cell, CheckFieldType.GetStampFieldType(cell.Text))).
                                       Where(field => field.StampFieldType != StampFieldType.Unknown);
+
+        /// <summary>
+        /// Вписать текстовые поля в рамки
+        /// </summary>
+        public override void CompressFieldsRanges() { }
     }
 }

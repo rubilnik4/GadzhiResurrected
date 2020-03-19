@@ -22,6 +22,7 @@
         UnknownError,
         
         ApplicationNotLoad, //Microstation and Word Errors
+        LibraryNotFound,
         FileNotOpen,
         FileNotSaved,
         StampNotFound,       

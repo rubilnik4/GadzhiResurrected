@@ -1,9 +1,15 @@
-﻿using GadzhiConverting.Models.Interfaces.Printers;
+﻿using GadzhiConverting.Models.Implementations;
+using GadzhiConverting.Models.Interfaces.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
 {
     public interface IProjectSettings
-    {  
+    {
+        /// <summary>
+        /// Пути ресурсов модулей конвертации
+        /// </summary>
+        ConvertingResources ConvertingResources { get; }
+
         /// <summary>
         /// Папка для конвертирования файлов
         /// </summary>

@@ -18,8 +18,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
             {
                 var stampControlNames = StampFieldMain.GetStampMainFields();
                 stampControlNames.UnionWith(StampFieldPersonSignatures.GetFieldsPersonSignatures());
-                stampControlNames.UnionWith(StampFieldChanges.GetStampControlNamesChanges());
-                stampControlNames.UnionWith(StampFieldApprovals.GetStampControlNamesApprovals());
+                stampControlNames.UnionWith(StampFieldChanges.GetFieldsChangeSignatures());
+                stampControlNames.UnionWith(StampFieldApprovals.GetFieldsApprovalSignatures());
 
                 return stampControlNames.ToDictionary(p => p.Name);
             }

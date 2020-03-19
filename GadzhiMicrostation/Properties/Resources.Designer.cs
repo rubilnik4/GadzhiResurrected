@@ -59,25 +59,5 @@ namespace GadzhiMicrostation.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Signature {
-            get {
-                object obj = ResourceManager.GetObject("Signature", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Stamp {
-            get {
-                object obj = ResourceManager.GetObject("Stamp", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

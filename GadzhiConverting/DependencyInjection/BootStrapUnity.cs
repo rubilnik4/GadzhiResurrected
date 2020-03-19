@@ -45,9 +45,6 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
             container.RegisterType<IApplicationConverting, ApplicationConverting>();
-           
-            container.RegisterSingleton<IApplicationLibrary, ApplicationMicrostation>();
-            container.RegisterSingleton<IApplicationLibrary, ApplicationWord>();           
         }
     }
 }

@@ -61,12 +61,32 @@ namespace GadzhiConverting.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SignatureMicrostation {
+            get {
+                object obj = ResourceManager.GetObject("SignatureMicrostation", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap signature {
+        internal static System.Drawing.Bitmap SignatureWord {
             get {
-                object obj = ResourceManager.GetObject("signature", resourceCulture);
+                object obj = ResourceManager.GetObject("SignatureWord", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] StampMicrostation {
+            get {
+                object obj = ResourceManager.GetObject("StampMicrostation", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

@@ -21,5 +21,10 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Получить дочерние элементы
         /// </summary>
         IEnumerable<IElementMicrostation> SubElements { get; }
+
+        /// <summary>
+        /// Найти и изменить вложенный в штамп элемент.Только для внешних операций типа Scale, Move
+        /// </summary>
+        void FindAndChangeSubElement(IElementMicrostation elementMicrostation);
     }
 }

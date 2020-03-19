@@ -150,6 +150,7 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
     <Compile Include="Models\Converters\ColorPrintToApplication.cs" />
+    <Compile Include="Models\Implementations\ConvertingResources.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />
@@ -180,6 +181,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\SignatureMicrostation.cel" />
+    <None Include="Resources\StampMicrostation.cel" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
@@ -228,10 +231,11 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\signature.jpg" />
+    <None Include="Resources\SignatureWord.jpg" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="PDFCreator">
