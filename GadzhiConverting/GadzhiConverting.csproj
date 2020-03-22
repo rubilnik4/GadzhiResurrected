@@ -149,7 +149,8 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
-    <Compile Include="Models\Converters\ColorPrintToApplication.cs" />
+    <Compile Include="Models\Converters\ColorPrintToApplicationConverter.cs" />
+    <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />

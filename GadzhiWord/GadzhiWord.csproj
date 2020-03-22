@@ -140,6 +140,7 @@
     <Compile Include="Word\Implementations\Elements\CellElementWord.cs" />
     <Compile Include="Word\Implementations\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Elements\RowElementWord.cs" />
+    <Compile Include="Word\Implementations\WordResources.cs" />
     <Compile Include="Word\Interfaces\Elements\ICellElementWord.cs" />
     <Compile Include="Word\Interfaces\Elements\IRowElementWord.cs" />
     <Compile Include="Word\Interfaces\Elements\ITableElementWord.cs" />

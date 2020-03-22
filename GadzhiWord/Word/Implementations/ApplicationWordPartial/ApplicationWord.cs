@@ -12,10 +12,16 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
     /// <summary>
     /// Класс для работы с приложением Word
     /// </summary>
-    public partial class ApplicationWord: IApplicationLibrary
-    {       
-        public ApplicationWord()
-        {           
+    public partial class ApplicationWord : IApplicationLibrary
+    {
+        /// <summary>
+        /// Ресурсы, используемые модулем Word
+        /// </summary>
+        public WordResources WordResources { get; }
+
+        public ApplicationWord(WordResources wordResources)
+        {
+            WordResources = wordResources;
         }
 
         /// <summary>
@@ -32,11 +38,11 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
             {
                 if (_application == null)
                 {
-                    _application = WordInstance.Instance();                                       
-                }              
+                    _application = WordInstance.Instance();
+                }
                 return _application;
             }
-        }      
+        }
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation

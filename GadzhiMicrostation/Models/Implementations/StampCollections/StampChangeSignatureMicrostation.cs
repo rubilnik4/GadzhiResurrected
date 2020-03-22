@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с изменениями Microstation
     /// </summary>
-    public class StampChangeSignatureMicrostation : StampChangeSignature<IStampFieldMicrostation>,
+    public class StampChangeSignatureMicrostation : StampSignatureMicrostation,
                                                     IStampChangeSignatureMicrostation
     {
         public StampChangeSignatureMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
@@ -36,22 +36,20 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation signature, IStampFieldMicrostation dateChange,
                                                 string attributePersonId)
-            :base(attributePersonId)
+            :base(signature)
         {
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
             DocumentChange = documentChange;
-            Signature = signature;
             DateChange = dateChange;
+            AttributeChangePersonId = attributePersonId;
         }
-
-      
 
         /// <summary>
         /// Номер изменения
         /// </summary>
-        public override IStampFieldMicrostation NumberChange { get; }
+        public IStampFieldMicrostation NumberChange { get; }
 
         /// <summary>
         /// Номер изменения. Элемент
@@ -61,7 +59,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Количество участков
         /// </summary>
-        public override IStampFieldMicrostation NumberOfPlots { get; }
+        public IStampFieldMicrostation NumberOfPlots { get; }
 
         /// <summary>
         ///Количество участков. Элемент
@@ -71,7 +69,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Тип изменения
         /// </summary>
-        public override IStampFieldMicrostation TypeOfChange { get; }
+        public IStampFieldMicrostation TypeOfChange { get; }
 
         /// <summary>
         /// Тип изменения. Элемент
@@ -81,31 +79,31 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Номер докумета
         /// </summary>
-        public override IStampFieldMicrostation DocumentChange { get; }
+        public IStampFieldMicrostation DocumentChange { get; }
 
         /// <summary>
         /// Номер докумета. Элемент
         /// </summary>
-        public ITextElementMicrostation DocumentChangeElement => DocumentChange.ElementStamp.AsTextElementMicrostation;
-
-        /// <summary>
-        /// Подпись
-        /// </summary>
-        public override IStampFieldMicrostation Signature { get; }
-
-        /// <summary>
-        /// Номер докумета. Элемент
-        /// </summary>
-        public ICellElementMicrostation SignatureElement => Signature.ElementStamp.AsCellElementMicrostation;
+        public ITextElementMicrostation DocumentChangeElement => DocumentChange.ElementStamp.AsTextElementMicrostation;      
 
         /// <summary>
         /// Дата изменения
         /// </summary>
-        public override IStampFieldMicrostation DateChange { get; }
+        public IStampFieldMicrostation DateChange { get; }
 
         /// <summary>
         ///Дата изменения. Элемент
         /// </summary>
         public ITextElementMicrostation DateChangeElement => DateChange.ElementStamp.AsTextElementMicrostation;
+
+        /// <summary>
+        /// Идентефикатор личности для изменения
+        /// </summary>    
+        public string AttributeChangePersonId { get; }
+
+        /// <summary>
+        /// Идентефикатор личности
+        /// </summary>    
+        public override string AttributePersonId => AttributeChangePersonId;
     }
 }

@@ -205,7 +205,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task SendResponse(IFilesDataServer filesDataServer)
         {
-            if (filesDataServer.StatusProcessingProject == StatusProcessingProject.ConvertingComplete)
+            if (filesDataServer.StatusProcessingProject == StatusProcessingProject.ConvertingComplete ||
+                filesDataServer.StatusProcessingProject == StatusProcessingProject.Error)
             {
                 _messagingService.ShowAndLogMessage($"Отправка данных в базу...");
 
@@ -214,7 +215,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
                 _messagingService.ShowAndLogMessage($"Конвертация пакета закончена");
             }
-            else //в случае если пользователь отменил конвертацию
+            else if (filesDataServer.StatusProcessingProject == StatusProcessingProject.Abort) //в случае если пользователь отменил конвертацию
             {
                 _messagingService.ShowAndLogMessage($"Конвертация пакета прервана");
             }

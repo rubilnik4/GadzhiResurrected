@@ -1,5 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -26,13 +27,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint, 
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint,
                                                                                                        IPrinterInformation pdfPrinterInformation)
         {
             if (ActiveLibrary.StampContainer.IsValid)
             {
-                var fileDataSourceAndErrors = ActiveLibrary.StampContainer.Stamps?.Where(stamp => stamp.StampType == StampType.Main).
-                                                                  Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation));
+                var fileDataSourceAndErrors = ActiveLibrary.StampContainer.Stamps?.
+                                              Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation));
                 return (fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.fileSource),
                         fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.errors));
             }
@@ -47,7 +48,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
         private (IFileDataSourceServer fileSource, ErrorConverting errors) CreatePdfWithSignatures(IStamp stamp, string filePath,
-                                                                                                   ColorPrint colorPrint, 
+                                                                                                   ColorPrint colorPrint,
                                                                                                    IPrinterInformation pdfPrinterInformation)
         {
             stamp.CompressFieldsRanges();
@@ -109,9 +110,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Команда печати PDF
         /// </summary>
         private ErrorConverting PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
-        {
-            var printCommand = new Action(() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
+        {           
+            var printCommand = new Func<IErrorApplication>(() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printCommand).ErrorConverting;
-        }       
+        }
     }
 }

@@ -1,7 +1,9 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiApplicationCommon.Models.Interfaces;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -50,17 +52,20 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        public (bool, ErrorConverting) PrintPdfWithExecuteAction(string filePath, Action printAction)
+        public (bool, ErrorConverting) PrintPdfWithExecuteAction(string filePath, Func<IErrorApplication> printFunction)
         {
             bool success = false;
 
             (bool isValidSetOptions, ErrorConverting errorConverting) = SetPrinterOptions(filePath);
             if (isValidSetOptions)
             {
-                if (printAction != null)
+                if (printFunction != null)
                 {
-                    printAction.Invoke();
-                    (success, errorConverting) = PrintPdf();
+                    errorConverting = printFunction.Invoke().ToErrorConverting();
+                    if (errorConverting == null)
+                    {
+                        (success, errorConverting) = PrintPdf();
+                    }
                 }
                 else
                 {
@@ -125,12 +130,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ErrorConverting errorConverting = null;
             if (_readyState)
             {
-                errorConverting =(new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло"));              
+                errorConverting = (new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло"));
             }
             _pdfCreator.cPrinterStop = true;
             _pdfCreator.cClose();
 
-            return (success , errorConverting);
+            return (success, errorConverting);
         }
 
         /// <summary>

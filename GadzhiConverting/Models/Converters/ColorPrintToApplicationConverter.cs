@@ -10,7 +10,7 @@ namespace GadzhiConverting.Models.Converters
     /// <summary>
     /// Конвертировать тип цвета печати в версию для приложения
     /// </summary>
-    public static class ColorPrintToApplication
+    public static class ColorPrintToApplicationConverter
     {
         /// <summary>
         /// Конвертировать тип цвета печати в версию для приложения

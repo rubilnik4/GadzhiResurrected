@@ -8,7 +8,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Строка с изменениями
     /// </summary>
-    public interface IStampChangeSignature<out TField> where TField : IStampField
+    public interface IStampChangeSignature<out TField> : IStampSignature<TField>
+                                                         where TField : IStampField
     {
         /// <summary>
         /// Номер изменения
@@ -28,12 +29,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Номер докумета
         /// </summary>
-        TField DocumentChange { get; }
-
-        /// <summary>
-        /// Подпись
-        /// </summary>
-        TField Signature { get; }
+        TField DocumentChange { get; }       
 
         /// <summary>
         /// Дата изменения

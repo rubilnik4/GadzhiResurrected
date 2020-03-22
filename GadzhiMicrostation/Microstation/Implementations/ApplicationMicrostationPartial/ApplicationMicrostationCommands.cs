@@ -46,7 +46,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                    Action<ICellElementMicrostation> additionalParametrs = null,
                                                                    string cellDescription = null)
         {
-            AttachLibrary(StampSettingsMicrostation.SignatureLibraryName);
+            AttachLibrary(MicrostationResources.SignatureMicrostationFileName);
 
             var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParametrs);
 

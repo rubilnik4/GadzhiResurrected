@@ -196,7 +196,11 @@ namespace GadzhiCommon.Infrastructure.Implementations
 
             if (!String.IsNullOrWhiteSpace(startingPath))
             {
-                Directory.CreateDirectory(createdPath);
+                if (!Directory.Exists(createdPath))
+                {
+                    Directory.CreateDirectory(createdPath);
+                }               
+
                 isCreated = true;
             }
 

@@ -6,6 +6,7 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Interfaces.Printers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -113,16 +114,30 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _messagingService.ShowAndLogMessage("Загрузка файла");
             _applicationConverting.OpenDocument(fileDataServer?.FilePathServer);
 
+            (IFileDataSourceServer savingSource, ErrorConverting savingErrors) =
+                _applicationConverting.SaveDocument(CreateSavingPathByExtension(fileDataServer.FilePathServer,
+                                                                                fileDataServer.FileExtentionType));
+            _messagingService.ShowAndLogError(savingErrors);
 
-            _applicationConverting.SaveDocument(CreateSaveDirectory(fileDataServer.FilePathServer, FileExtention.docx));
-           
+
             _messagingService.ShowAndLogMessage("Создание файлов PDF");
-            _applicationConverting.CreatePdfFile(CreateSaveDirectory(fileDataServer.FilePathServer, FileExtention.pdf), 
-                                                 fileDataServer.ColorPrint, printersInformation?.PrintersPdf.FirstOrDefault());
+            (IEnumerable<IFileDataSourceServer> pdfSource, IEnumerable<ErrorConverting> pdfErrors) = 
+                _applicationConverting.CreatePdfFile(CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf),
+                                                                                 fileDataServer.ColorPrint, 
+                                                                                 printersInformation?.PrintersPdf.FirstOrDefault());
+            if (pdfErrors != null)
+            {
+                foreach (var error in pdfErrors)
+                {
+                    _messagingService.ShowAndLogError(error);
+                }
+            }   
 
             //    _loggerMicrostation.ShowMessage("Создание файла DWG");
             //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
             //                                                                                    FileExtentionMicrostation.dwg));
+            pdfSource.ToList();
+           
             _messagingService.ShowAndLogMessage("Конвертирование завершено");
             _applicationConverting.CloseDocument();
 
@@ -132,15 +147,18 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать папку для сохранения отконвертированных файлов по типу расширения
         /// </summary>       
-        private string CreateSaveDirectory(string dataServerFolder, FileExtention fileExtention)
+        private string CreateSavingPathByExtension(string filePathServer, FileExtention fileExtention)
         {
-            if (!String.IsNullOrWhiteSpace(dataServerFolder))
+            if (!String.IsNullOrWhiteSpace(filePathServer))
             {
-                return _fileSystemOperations.CreateFolderByName(dataServerFolder, fileExtention.ToString());
+                string serverDirectory = _fileSystemOperations.CreateFolderByName(Path.GetDirectoryName(filePathServer),
+                                                                                      fileExtention.ToString());
+                return _fileSystemOperations.CombineFilePath(serverDirectory, Path.GetFileNameWithoutExtension(filePathServer),
+                                                             fileExtention.ToString());
             }
             else
             {
-                throw new ArgumentNullException(nameof(dataServerFolder));
+                throw new ArgumentNullException(nameof(filePathServer));
             }
         }
     }

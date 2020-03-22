@@ -10,7 +10,9 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
+using GadzhiMicrostation.Microstation.Implementations;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
+using GadzhiWord.Word.Implementations;
 using GadzhiWord.Word.Implementations.ApplicationWordPartial;
 using Unity;
 using Unity.Injection;
@@ -30,10 +32,10 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
         {
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
-           
+
             container.RegisterSingleton<IProjectSettings, ProjectSettings>();
-            container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();          
-            container.RegisterSingleton<IConvertingService, ConvertingService>();             
+            container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();
+            container.RegisterSingleton<IConvertingService, ConvertingService>();
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) =>
                       ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
@@ -44,7 +46,21 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
-            container.RegisterType<IApplicationConverting, ApplicationConverting>();
+
+            var projectSettings = container.Resolve<IProjectSettings>();
+            container.RegisterFactory<IApplicationLibrary>(nameof(ApplicationMicrostation), unity =>
+                      new ApplicationMicrostation(new MicrostationResources(projectSettings.ConvertingResources.SignatureMicrostationFileName,
+                                                                            projectSettings.ConvertingResources.StampMicrostationFileName)));
+            container.RegisterFactory<IApplicationLibrary>(nameof(ApplicationWord), unity =>
+                      new ApplicationWord(new WordResources(projectSettings.ConvertingResources.SignatureWordFileName)));
+
+            container.RegisterFactory<IApplicationConverting>(unity =>
+                new ApplicationConverting(unity.Resolve<IApplicationLibrary>(nameof(ApplicationMicrostation)),
+                                          unity.Resolve<IApplicationLibrary>(nameof(ApplicationWord)),
+                                          unity.Resolve<IExecuteAndCatchErrors>(),
+                                          unity.Resolve<IFileSystemOperations>(),
+                                          unity.Resolve<IPdfCreatorService>()));
+
         }
     }
 }

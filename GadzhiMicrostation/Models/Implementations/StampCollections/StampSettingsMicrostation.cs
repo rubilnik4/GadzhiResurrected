@@ -8,17 +8,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// Дополнительные параметры штампа
     /// </summary>
     public static class StampSettingsMicrostation
-    {
-        /// <summary>
-        /// Имя библиотеки с подписями
-        /// </summary>
-        public static string SignatureLibraryName => "Signature.cel";
-
-        /// <summary>
-        /// Имя библиотеки со штампами
-        /// </summary>
-        public static string StampLibraryName => "Stamp.cel";
-
+    {   
         /// <summary>
         /// Символ разделяющий параметры внутри аттрибута
         /// </summary>

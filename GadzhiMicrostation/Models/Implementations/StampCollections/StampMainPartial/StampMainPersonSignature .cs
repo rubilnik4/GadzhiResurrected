@@ -46,17 +46,22 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить строку с ответственным лицом и подписью
         /// </summary>
-        private IStampPersonSignatureMicrostation GetStampPersonRowWithSignatures(IStampPersonSignatureMicrostation personSignature) =>
-            new StampPersonSignatureMicrostation(personSignature.ActionType, personSignature.ResponsiblePerson,
-                                                 new StampFieldMicrostation(InsertPersonSignatureFromLibrary(personSignature),
-                                                                            StampFieldType.PersonSignature),
-                                                 personSignature.DateSignature);
+        private IStampPersonSignatureMicrostation GetStampPersonRowWithSignatures(IStampPersonSignatureMicrostation personSignature)
+        {
+            var signature = InsertPersonSignatureFromLibrary(personSignature);
+            return (signature != null) ?
+                    new StampPersonSignatureMicrostation(personSignature.ActionType, personSignature.ResponsiblePerson,
+                                                         new StampFieldMicrostation(signature, StampFieldType.PersonSignature),
+                                                         personSignature.DateSignature) :
+                    personSignature;
+        }
+
 
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
         private ICellElementMicrostation InsertPersonSignatureFromLibrary(IStampPersonSignatureMicrostation personSignature) =>
-           InsertSignature(personSignature.AttributePersonId,                           
+           InsertSignature(personSignature.AttributePersonId,
                            personSignature.ResponsiblePersonElement,
                            personSignature.DateSignatureElement);
     }

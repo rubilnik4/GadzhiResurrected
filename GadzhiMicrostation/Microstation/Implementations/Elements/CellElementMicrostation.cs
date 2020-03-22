@@ -90,7 +90,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Получить дочерние элементы
         /// </summary>
         private IDictionary<IElementMicrostation, Element> GetSubElementsPair() =>
-            CellElement.GetCellSubElements().ToDictionary(element => element.ToElementMicrostation(this),
-                                                          element => element);       
+            CellElement.GetCellSubElements().
+            Where(element => element.IsConvertableToMicrostation()).
+            ToDictionary(element => element.ToElementMicrostation(this),
+                         element => element);
     }
 }

@@ -35,7 +35,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();              
-                errorConverting = new ErrorConverting(GetTypeException(ex, errorConverting.FileConvertErrorType),
+                errorConverting = new ErrorConverting(GetTypeException(ex),
                                                       errorConverting?.ErrorDescription, ex.Message, ex.StackTrace);
             }
             finally
@@ -64,7 +64,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();
-                errorConverting = new ErrorConverting(GetTypeException(ex, errorConverting.FileConvertErrorType),
+                errorConverting = new ErrorConverting(GetTypeException(ex),
                                                      errorConverting?.ErrorDescription, ex.Message, ex.StackTrace);                         
             }
             finally
@@ -78,13 +78,9 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить тип ошибки
         /// </summary>       
-        private FileConvertErrorType GetTypeException(Exception ex, FileConvertErrorType? fileConvertErrorTypeNull = null)
+        private FileConvertErrorType GetTypeException(Exception ex)
         {
-            FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;
-            if (fileConvertErrorTypeNull != null && fileConvertErrorTypeNull != FileConvertErrorType.UnknownError)
-            {
-                fileConvertErrorType = fileConvertErrorTypeNull.Value;
-            }
+            FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;         
 
             if (fileConvertErrorType != FileConvertErrorType.UnknownError)
             {

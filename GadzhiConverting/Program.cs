@@ -1,4 +1,5 @@
 ﻿using GadzhiConverting.DependencyInjection.GadzhiConverting;
+using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiWord.Helpers.Implementations;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,8 @@ namespace GadzhiConverting
             //                                       ColorPrint.BlackAndWhite),
             //                    new PrintersInformation(pdfPrinters));
 
-            //var applicationConverting = _container.Resolve<IApplicationConverting>();
-            //applicationConverting.StartConverting();
+            var applicationConverting = _container.Resolve<IConvertingService>();
+            applicationConverting.StartConverting();
 
             Console.ReadLine();
         }

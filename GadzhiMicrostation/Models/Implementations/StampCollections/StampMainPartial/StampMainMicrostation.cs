@@ -58,6 +58,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             return StampPersonSignaturesMicrostation.Select(personSignature => personSignature.SignatureElement)?.
                    Union(StampChangeSignaturesMicrostation.Select(changeSignature => changeSignature.SignatureElement))?.
                    Union(StampApprovalSignaturesMicrostation.Select(approvalSignature => approvalSignature.SignatureElement));
+                 
         }
 
         /// <summary>
@@ -75,14 +76,20 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// Строки с изменениями
         /// </summary>
         public IEnumerable<IStampChangeSignature<IStampFieldMicrostation>> StampChangesSignatures =>
-                StampChangeSignaturesMicrostation.Cast<IStampChangeSignature<IStampFieldMicrostation>>();      
+                StampChangeSignaturesMicrostation.Cast<IStampChangeSignature<IStampFieldMicrostation>>();
 
+        /// <summary>
+        /// Строки с согласованиями
+        /// </summary>
+        public IEnumerable<IStampApprovalSignatures<IStampFieldMicrostation>> StampApprovalSignatures =>
+                StampApprovalSignaturesMicrostation.Cast<IStampApprovalSignatures<IStampFieldMicrostation>>();
+      
         /// <summary>
         /// Удалить подписи
         /// </summary>
         public override void DeleteSignatures()
         {
-            foreach (var personSignature in StampPersonSignatures)
+            foreach (var personSignature in StampPersonSignaturesMicrostation)
             {
                 personSignature?.Signature.ElementStamp.Remove();
             }

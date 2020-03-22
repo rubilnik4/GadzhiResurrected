@@ -52,6 +52,11 @@ namespace GadzhiWord.Word.Implementations.Elements
         public int RowIndex => _cellElement.RowIndex - 1;
 
         /// <summary>
+        /// Присутствует ли картинка в ячейке
+        /// </summary>
+        public bool HasPicture => _cellElement.Range.InlineShapes.Count > 0;
+
+        /// <summary>
         /// Вставить картинку
         /// </summary>
         public void InsertPicture(string filePath)
@@ -59,7 +64,7 @@ namespace GadzhiWord.Word.Implementations.Elements
             if (!String.IsNullOrWhiteSpace(filePath))
             {
                 _cellElement.Range.InlineShapes.AddPicture(filePath, false, true);
-            }           
+            }
         }
 
         /// <summary>

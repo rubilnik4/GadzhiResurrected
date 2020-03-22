@@ -20,6 +20,12 @@ namespace GadzhiMicrostation.Extentions.Microstation
             ConvertMicrostationElements.ConvertToMicrostationElement(element, owner);
 
         /// <summary>
+        /// Возможно ли конвертировать элемент Microstation в элемент-обертку
+        /// </summary>    
+        public static bool IsConvertableToMicrostation(this Element element) =>
+            ConvertMicrostationElements.IsConvertableToMicrostation(element);
+
+        /// <summary>
         /// Получить подэлементы ячейки
         /// </summary>       
         public static IEnumerable<Element> GetCellSubElements(this CellElement cellElement)

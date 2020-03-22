@@ -16,9 +16,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public MicrostationResources MicrostationResources { get; }
 
-        public ApplicationMicrostation()
+        public ApplicationMicrostation(MicrostationResources microstationResources)
         {
-            //MicrostationResources = microstationResources;
+            MicrostationResources = microstationResources;
         }
 
         /// <summary>

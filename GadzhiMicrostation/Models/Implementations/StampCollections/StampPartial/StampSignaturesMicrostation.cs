@@ -19,7 +19,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public override void InsertSignatures()
         {
-            StampCellElement.ApplicationMicrostation.AttachLibrary(StampSettingsMicrostation.SignatureLibraryName);
+            StampCellElement.ApplicationMicrostation.AttachLibrary(StampCellElement.ApplicationMicrostation.
+                                                                   MicrostationResources.SignatureMicrostationFileName);
 
             DeleteSignaturesPrevious();
             InsertSignaturesFromLibrary();

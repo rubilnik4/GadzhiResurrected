@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью Microstation
     /// </summary>
-    public class StampPersonSignatureMicrostation : StampPersonSignature<IStampFieldMicrostation>,
+    public class StampPersonSignatureMicrostation : StampSignatureMicrostation,
                                                     IStampPersonSignatureMicrostation
     {
         public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
@@ -30,17 +30,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
 
         public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
                                                 IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
+            :base(signature)
         {
             ActionType = actionType;
             ResponsiblePerson = responsiblePerson;
-            Signature = signature;
             DateSignature = dateSignature;
         }
 
         /// <summary>
         /// Тип действия
         /// </summary>
-        public override IStampFieldMicrostation ActionType { get; }
+        public IStampFieldMicrostation ActionType { get; }
 
         /// <summary>
         /// Тип действия. Элемент
@@ -50,27 +50,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public override IStampFieldMicrostation ResponsiblePerson { get; }
+        public IStampFieldMicrostation ResponsiblePerson { get; }
 
         /// <summary>
         /// Ответственное лицо. Элемент
         /// </summary>
-        public ITextElementMicrostation ResponsiblePersonElement => ResponsiblePerson.ElementStamp.AsTextElementMicrostation;
-
-        /// <summary>
-        /// Подпись
-        /// </summary>
-        public override IStampFieldMicrostation Signature { get; }
-
-        /// <summary>
-        /// Подпись. Элемент
-        /// </summary>
-        public ICellElementMicrostation SignatureElement => Signature.ElementStamp.AsCellElementMicrostation;
+        public ITextElementMicrostation ResponsiblePersonElement => ResponsiblePerson.ElementStamp.AsTextElementMicrostation;      
 
         /// <summary>
         /// Дата
         /// </summary>
-        public override IStampFieldMicrostation DateSignature { get; }
+        public IStampFieldMicrostation DateSignature { get; }
 
         /// <summary>
         /// Дата. Элемент
@@ -80,7 +70,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
-
+        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;      
     }
 }

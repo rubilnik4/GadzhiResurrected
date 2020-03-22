@@ -8,7 +8,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Строка с согласованием
     /// </summary>
-    public interface IStampApprovalSignatures<out TField> where TField : IStampField
+    public interface IStampApprovalSignatures<out TField> : IStampSignature<TField>
+                                                            where TField : IStampField
     {
         /// <summary>
         /// Отдел согласования
@@ -18,12 +19,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        TField ResponsiblePerson { get; }
-
-        /// <summary>
-        /// Подпись
-        /// </summary>
-        TField Signature { get; }
+        TField ResponsiblePerson { get; }        
 
         /// <summary>
         /// Дата

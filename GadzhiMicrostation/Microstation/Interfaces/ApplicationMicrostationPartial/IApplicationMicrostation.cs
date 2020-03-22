@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+using GadzhiMicrostation.Microstation.Implementations;
 using System;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
@@ -6,8 +7,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public interface IApplicationMicrostation : IApplicationLibrary, IApplicationMicrostationCommands                                                
-    {  
-     
+    public interface IApplicationMicrostation : IApplicationLibrary, IApplicationMicrostationCommands
+    {
+        /// <summary>
+        /// Ресурсы, используемые модулем Microstation
+        /// </summary>
+        MicrostationResources MicrostationResources { get; }
     }
 }

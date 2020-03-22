@@ -89,9 +89,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             _executeAndCatchErrors = executeAndCatchErrors;
             _projectSettings = projectSettings;
 
-            _statusProcessingUpdaterSubsriptions = new CompositeDisposable();
-
-            // SubsribeToIntermediateResponse();
+            _statusProcessingUpdaterSubsriptions = new CompositeDisposable();        
         }
 
         /// <summary>

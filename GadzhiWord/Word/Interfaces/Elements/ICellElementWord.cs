@@ -26,6 +26,11 @@ namespace GadzhiWord.Word.Interfaces.Elements
         int RowIndex { get; }
 
         /// <summary>
+        /// Присутствует ли картинка в ячейке
+        /// </summary>
+        bool HasPicture { get; }
+
+        /// <summary>
         /// Вставить подпись
         /// </summary>
         void InsertPicture(string filePath);

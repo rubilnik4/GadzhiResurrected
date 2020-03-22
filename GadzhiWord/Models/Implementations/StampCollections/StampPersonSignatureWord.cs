@@ -62,5 +62,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Идентефикатор личности
         /// </summary> 
         public override string AttributePersonId => throw new NotImplementedException();
+
+        /// <summary>
+        /// Установлена ли подпись
+        /// </summary>
+        public override bool IsSignatureValid => Signature?.CellElementStamp?.HasPicture == true;
     }
 }

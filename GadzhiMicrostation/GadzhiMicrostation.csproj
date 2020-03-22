@@ -106,6 +106,7 @@
     <Compile Include="Models\Implementations\StampCollections\StampChangeSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPersonSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampApprovalSignatureMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldApprovals.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldBase.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldChange.cs" />
