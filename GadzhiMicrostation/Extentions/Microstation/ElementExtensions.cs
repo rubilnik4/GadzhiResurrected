@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Extentions.Microstation
         /// <summary>
         /// Преобразовать элемент Microstation в элемент-обертку
         /// </summary>      
-        public static IElementMicrostation ToElementMicrostation(this Element element, IOwnerContainerMicrostation owner) =>
+        public static IElementMicrostation ToElementMicrostation(this Element element, IOwnerMicrostation owner) =>
             ConvertMicrostationElements.ConvertToMicrostationElement(element, owner);
 
         /// <summary>

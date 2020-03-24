@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -31,7 +32,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        protected abstract IEnumerable<ICellElementMicrostation> InsertSignaturesFromLibrary();
+        protected abstract IEnumerable<IErrorApplication> InsertSignaturesFromLibrary();
 
         /// <summary>
         /// Удалить предыдущие подписи
@@ -46,35 +47,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             {
                 signature.Remove();
             }
-        }       
-
-        ///// <summary>
-        ///// Вставить и получить подписи из штампа согласования
-        ///// </summary>
-        //private IEnumerable<ICellElementMicrostation> InsertApprovalSignatures()
-        //{
-        //    var signatureRowSearch = StampFieldApprovals.GetStampRowApprovalSignatures();
-        //    var signatureRowFound = signatureRowSearch?.
-        //        Select(row =>
-        //            new
-        //            {
-        //                Person = FindElementInStampFields(row.ResponsiblePerson.Name).AsTextElementMicrostation,
-        //                Date = FindElementInStampFields(row.Date.Name).AsTextElementMicrostation,
-        //            }).
-        //        Where(row => row.Person != null && row.Date != null);
-
-        //    var insertedMainRowSignatures = new List<ICellElementMicrostation>();
-        //    foreach (var signature in signatureRowFound)
-        //    {
-        //        var insertedSignature = InsertSignature(signature.Person.AttributePersonId, signature.Person.Text, signature.Person, signature.Date);
-        //        if (insertedSignature != null)
-        //        {
-        //            insertedMainRowSignatures.Add(insertedSignature);
-        //        }
-        //    }
-
-        //    return insertedMainRowSignatures;
-        //}
+        } 
 
         /// <summary>
         /// Вставить подпись

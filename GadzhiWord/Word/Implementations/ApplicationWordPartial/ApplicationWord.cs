@@ -1,5 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
-using GadzhiWord.Factory;
+﻿using GadzhiWord.Factory;
+using GadzhiWord.Word.Interfaces;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
     /// <summary>
     /// Класс для работы с приложением Word
     /// </summary>
-    public partial class ApplicationWord : IApplicationLibrary
+    public partial class ApplicationWord : IApplicationWord
     {
         /// <summary>
         /// Ресурсы, используемые модулем Word

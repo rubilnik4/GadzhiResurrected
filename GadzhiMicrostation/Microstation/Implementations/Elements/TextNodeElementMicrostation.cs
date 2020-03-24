@@ -15,13 +15,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         private readonly TextNodeElement _textNodeElement;
 
         public TextNodeElementMicrostation(TextNodeElement textNodeElement,
-                                           IOwnerContainerMicrostation ownerContainerMicrostation)
+                                           IOwnerMicrostation ownerContainerMicrostation)
           : this(textNodeElement, ownerContainerMicrostation, true, false)
         {
         }
 
         public TextNodeElementMicrostation(TextNodeElement textNodeElement,
-                                           IOwnerContainerMicrostation ownerContainerMicrostation,
+                                           IOwnerMicrostation ownerContainerMicrostation,
                                            bool isNeedCompress,
                                            bool isVertical)
             : base((Element)textNodeElement, ownerContainerMicrostation, isNeedCompress, isVertical)

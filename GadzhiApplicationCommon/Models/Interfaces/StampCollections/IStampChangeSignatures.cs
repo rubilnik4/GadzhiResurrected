@@ -35,10 +35,5 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// Дата изменения
         /// </summary>
         TField DateChange { get; }
-
-        /// <summary>
-        /// Идентефикатор личности
-        /// </summary>    
-        string AttributePersonId { get; }
     }
 }

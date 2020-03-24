@@ -118,11 +118,13 @@
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\StampCollections\CheckFieldType.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampChangeSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPersonSignatureWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampSignatureWord.cs" />
     <Compile Include="Models\Interfaces\IStampFieldWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -134,16 +136,21 @@
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWord.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordDocument.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordPrinting.cs" />
+    <Compile Include="Word\Implementations\Converters\TextPrepare.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
     <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWord.cs" />
     <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWordElements.cs" />
     <Compile Include="Word\Implementations\Elements\CellElementWord.cs" />
+    <Compile Include="Word\Implementations\Elements\OwnerWord.cs" />
     <Compile Include="Word\Implementations\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Elements\RowElementWord.cs" />
     <Compile Include="Word\Implementations\WordResources.cs" />
+    <Compile Include="Word\Interfaces\Elements\IOwnerWord.cs" />
     <Compile Include="Word\Interfaces\Elements\ICellElementWord.cs" />
     <Compile Include="Word\Interfaces\Elements\IRowElementWord.cs" />
     <Compile Include="Word\Interfaces\Elements\ITableElementWord.cs" />
+    <Compile Include="Word\Interfaces\IApplicationWord.cs" />
+    <Compile Include="Word\Interfaces\IDocumentWord.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

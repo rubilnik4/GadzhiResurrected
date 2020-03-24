@@ -21,7 +21,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Элемент таблица
         /// </summary>
         protected ITableElement TableStamp { get; }
-       
+
         public StampWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
         {
             TableStamp = tableStamp;
@@ -32,7 +32,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Наименование
         /// </summary>
         public override string Name => $"{StampSettingsWord.StampTypeToString[StampType]}";
-       
+
         /// <summary>
         /// Формат
         /// </summary>
@@ -52,9 +52,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Получить поля штампа
         /// </summary>
         private IEnumerable<IStampFieldWord> GetFields() =>
-            TableStamp?.CellsElementWord?.Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
-                                      Select(cell => new StampFieldWord(cell, CheckFieldType.GetStampFieldType(cell.Text))).
-                                      Where(field => field.StampFieldType != StampFieldType.Unknown);
+            TableStamp?.CellsElementWord?.
+                        Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
+                        Select(cell => new StampFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
+                        Where(field => field.StampFieldType != StampFieldType.Unknown);
 
         /// <summary>
         /// Вписать текстовые поля в рамки

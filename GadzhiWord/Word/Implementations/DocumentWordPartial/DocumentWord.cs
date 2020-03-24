@@ -1,7 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Word.Implementations.Converters;
+using GadzhiWord.Word.Interfaces;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -15,16 +15,22 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
     /// <summary>
     /// Документ Word
     /// </summary>
-    public partial class DocumentWord : IDocumentLibrary
+    public partial class DocumentWord : IDocumentWord
     {
         /// <summary>
         /// Экземпляр файла
         /// </summary>
         private readonly Document _document;
 
-        public DocumentWord(Document document)
+        /// <summary>
+        /// Класс для работы с приложением Word
+        /// </summary>
+        public IApplicationWord ApplicationWord { get; }
+
+        public DocumentWord(Document document, IApplicationWord applicationWord)
         {
             _document = document;
+            ApplicationWord = applicationWord;
         }
 
         /// <summary>

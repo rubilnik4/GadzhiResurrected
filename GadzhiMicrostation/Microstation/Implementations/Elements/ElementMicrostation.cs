@@ -19,7 +19,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Родительский элемент
         /// </summary>
-        protected IOwnerContainerMicrostation OwnerContainerMicrostation { get; private set; }
+        protected IOwnerMicrostation OwnerContainerMicrostation { get; private set; }
 
         /// <summary>
         /// Класс для работы с приложением Microstation
@@ -32,7 +32,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public IModelMicrostation ModelMicrostation { get; }
 
         public ElementMicrostation(Element element,
-                                   IOwnerContainerMicrostation ownerContainerMicrostation)
+                                   IOwnerMicrostation ownerContainerMicrostation)
         {
             _element = element ?? throw new ArgumentNullException(nameof(element));
             OwnerContainerMicrostation = ownerContainerMicrostation;

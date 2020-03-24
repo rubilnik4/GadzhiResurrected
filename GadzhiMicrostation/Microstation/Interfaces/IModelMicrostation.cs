@@ -49,6 +49,6 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Преобразовать к виду родительского элемента
         /// </summary>      
-        IOwnerContainerMicrostation ToOwnerContainerMicrostation();
+        IOwnerMicrostation ToOwnerMicrostation();
     }
 }

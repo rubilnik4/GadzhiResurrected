@@ -16,7 +16,7 @@ namespace GadzhiMicrostation.Microstation.Converters
         /// <summary>
         /// Преобразовать элемент бибилиотеки Microstation во внутреннюю обертку
         /// </summary>      
-        public static IElementMicrostation ConvertToMicrostationElement(Element element, IOwnerContainerMicrostation ownerContainerMicrostation)
+        public static IElementMicrostation ConvertToMicrostationElement(Element element, IOwnerMicrostation ownerContainerMicrostation)
         {
             IElementMicrostation elementMicrostation = null;
 

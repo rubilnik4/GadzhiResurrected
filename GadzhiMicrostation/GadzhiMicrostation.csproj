@@ -75,7 +75,7 @@
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
-    <Compile Include="Microstation\Implementations\Elements\OwnerContainerMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Elements\OwnerMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\RangeBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationCommands.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ICellElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\IElementMicrostation.cs" />
-    <Compile Include="Microstation\Interfaces\Elements\IOwnerContainerMicrostation.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\IOwnerMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ITextElementMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\IRangeBaseElementMicrostation.cs" />

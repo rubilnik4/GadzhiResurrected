@@ -36,14 +36,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation signature, IStampFieldMicrostation dateChange,
                                                 string attributePersonId)
-            :base(signature)
+            : base(signature)
         {
+            AttributeChangePersonId = !String.IsNullOrEmpty(attributePersonId) ?
+                                      attributePersonId :
+                                      throw new ArgumentNullException(nameof(attributePersonId));
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
             DocumentChange = documentChange;
             DateChange = dateChange;
-            AttributeChangePersonId = attributePersonId;
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Номер докумета. Элемент
         /// </summary>
-        public ITextElementMicrostation DocumentChangeElement => DocumentChange.ElementStamp.AsTextElementMicrostation;      
+        public ITextElementMicrostation DocumentChangeElement => DocumentChange.ElementStamp.AsTextElementMicrostation;
 
         /// <summary>
         /// Дата изменения

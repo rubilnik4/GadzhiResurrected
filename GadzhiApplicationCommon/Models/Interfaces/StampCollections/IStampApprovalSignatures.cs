@@ -24,11 +24,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Дата
         /// </summary>
-        TField DateSignature { get; }
-
-        /// <summary>
-        /// Идентефикатор личности
-        /// </summary>    
-        string AttributePersonId { get; }
+        TField DateSignature { get; }      
     }
 }

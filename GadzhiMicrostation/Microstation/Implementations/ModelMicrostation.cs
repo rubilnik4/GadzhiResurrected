@@ -65,7 +65,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation)
         {
             return GetModelElements(new List<ElementMicrostationType>() { includeTypeMicrostation }).
-                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerContainerMicrostation()));
+                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(IEnumerable<ElementMicrostationType> includeTypesMicrostation = null)
         {
             return GetModelElements(includeTypesMicrostation).
-                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerContainerMicrostation()));
+                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
             Cast<CellElement>().
             Where(cellElement => StampFieldMain.IsStampName(cellElement.Name)).
-            Select(cellElement => new CellElementMicrostation(cellElement, ToOwnerContainerMicrostation())).
+            Select(cellElement => new CellElementMicrostation(cellElement, ToOwnerMicrostation())).
             Select(cellElement => new StampMainMicrostation(cellElement)).
             Cast<IStamp>();
 
@@ -105,7 +105,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                     {
                         elementScanCriteria.IncludeType(type);
                     }
-                }                
+                }
 
                 ElementEnumerator elementEnumerator = _modelMicrostation.Scan(elementScanCriteria);
 
@@ -128,10 +128,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Преобразовать к виду родительского элемента
         /// </summary>      
-        public IOwnerContainerMicrostation ToOwnerContainerMicrostation()
-        {
-            return new OwnerContainerMicrostation(this);
-        }
-
+        public IOwnerMicrostation ToOwnerMicrostation() => new OwnerMicrostation(this);
     }
 }

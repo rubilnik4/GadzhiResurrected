@@ -1,8 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -30,10 +27,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
 
         public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
                                                 IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
-            :base(signature)
+            : base(signature)
         {
+            ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
-            ResponsiblePerson = responsiblePerson;
             DateSignature = dateSignature;
         }
 
@@ -55,7 +52,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо. Элемент
         /// </summary>
-        public ITextElementMicrostation ResponsiblePersonElement => ResponsiblePerson.ElementStamp.AsTextElementMicrostation;      
+        public ITextElementMicrostation ResponsiblePersonElement => ResponsiblePerson.ElementStamp.AsTextElementMicrostation;
 
         /// <summary>
         /// Дата
@@ -70,6 +67,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;      
+        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
     }
 }

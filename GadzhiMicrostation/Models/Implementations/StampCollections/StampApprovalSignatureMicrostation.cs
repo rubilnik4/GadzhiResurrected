@@ -17,23 +17,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     public class StampApprovalSignatureMicrostation : StampSignatureMicrostation,
                                                       IStampApprovalSignatureMicrostation
     {
-        public StampApprovalSignatureMicrostation(IStampFieldMicrostation approvalSignature, IStampFieldMicrostation responsiblePerson,
-                                                  IStampFieldMicrostation dateSignature)
-            : this(approvalSignature, responsiblePerson, null, dateSignature) { }
-
-        public StampApprovalSignatureMicrostation(IStampApprovalSignatures<IStampFieldMicrostation> approvalSignature)
-            : this(approvalSignature?.DepartmentApproval, approvalSignature?.ResponsiblePerson,
-                  approvalSignature?.Signature, approvalSignature?.DateSignature)
-        {
-            if (approvalSignature == null) throw new ArgumentNullException(nameof(approvalSignature));
-        }
-
         public StampApprovalSignatureMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
-                                                  IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
-            : base(signature)
+                                                 IStampFieldMicrostation dateSignature,
+                                                Func<string, IStampFieldMicrostation> insertSignatureFunc)
+            : base(insertSignatureFunc)
         {
+            ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             DepartmentApproval = departmentApproval;
-            ResponsiblePerson = responsiblePerson;
             DateSignature = dateSignature;
         }
 
@@ -72,5 +62,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// Идентефикатор личности
         /// </summary>    
         public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        public override string PersonName => ResponsiblePersonElement.Text;
     }
 }

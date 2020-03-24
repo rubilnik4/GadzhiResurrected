@@ -14,58 +14,35 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignatureWord : StampPersonSignature<IStampFieldWord>
-    {       
-        public StampPersonSignatureWord(IRowElement rowElementWord)
+    public class StampPersonSignatureWord : StampSignatureWord, IStampPersonSignature<IStampFieldWord>
+    {
+        /// <summary>
+        /// Количество ячеек в строке
+        /// </summary>
+        public static int FieldsCount => 4;
+
+        public StampPersonSignatureWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
+                                        IStampFieldWord signature, IStampFieldWord dateSignature)
+            : base(signature)
         {
-            if (rowElementWord?.CellsElementWord?.Count >= 4)
-            {               
-                if (CheckFieldType.IsFieldPersonSignatureWithPrepare(rowElementWord?.CellsElementWord[0].Text))
-                {
-                    ActionType = new StampFieldWord(rowElementWord?.CellsElementWord[0], StampFieldType.PersonSignature);
-                    ResponsiblePerson = new StampFieldWord(rowElementWord?.CellsElementWord[1], StampFieldType.PersonSignature);
-                    Signature = new StampFieldWord(rowElementWord?.CellsElementWord[2], StampFieldType.PersonSignature);
-                    DateSignature = new StampFieldWord(rowElementWord?.CellsElementWord[3], StampFieldType.PersonSignature);
-                }
-                else
-                {
-                    throw new ArgumentException(nameof(rowElementWord));
-                }
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException(nameof(rowElementWord));
-            }
+            ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
+            ActionType = actionType;
+            DateSignature = dateSignature;      
         }
 
         /// <summary>
         /// Тип действия
         /// </summary>
-        public override IStampFieldWord ActionType { get; }
+        public IStampFieldWord ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public override IStampFieldWord ResponsiblePerson { get; }
+        public IStampFieldWord ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public override IStampFieldWord Signature { get; }
-
-        /// <summary>
-        /// Дата
-        /// </summary>
-        public override IStampFieldWord DateSignature { get; }
-
-        /// <summary>
-        /// Идентефикатор личности
-        /// </summary> 
-        public override string AttributePersonId => throw new NotImplementedException();
-
-        /// <summary>
-        /// Установлена ли подпись
-        /// </summary>
-        public override bool IsSignatureValid => Signature?.CellElementStamp?.HasPicture == true;
+        public IStampFieldWord DateSignature { get; }
     }
 }

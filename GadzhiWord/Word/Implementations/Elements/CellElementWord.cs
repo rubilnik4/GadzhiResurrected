@@ -52,6 +52,11 @@ namespace GadzhiWord.Word.Implementations.Elements
         public int RowIndex => _cellElement.RowIndex - 1;
 
         /// <summary>
+        /// Номер колонки
+        /// </summary>
+        public int ColumnIndex => _cellElement.ColumnIndex - 1;
+
+        /// <summary>
         /// Присутствует ли картинка в ячейке
         /// </summary>
         public bool HasPicture => _cellElement.Range.InlineShapes.Count > 0;

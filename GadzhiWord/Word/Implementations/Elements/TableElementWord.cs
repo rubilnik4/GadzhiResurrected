@@ -1,4 +1,5 @@
 ﻿using GadzhiWord.Extensions.Word;
+using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Elements;
 using Microsoft.Office.Interop.Word;
 using System;
@@ -19,22 +20,42 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// </summary>
         private readonly Table _tableElement;
 
-        public TableElementWord(Table tableElement)
+        /// <summary>
+        /// Класс для работы с приложением Microstation
+        /// </summary>
+        public IApplicationWord ApplicationWord { get; }
+
+        /// <summary>
+        /// Модель или лист в файле
+        /// </summary>
+        public IDocumentWord DocumentWord { get; }
+
+        public TableElementWord(Table tableElement, IOwnerWord ownerWord)
         {
             _tableElement = tableElement;
-            RowsElementWord.Count();
+
+            ApplicationWord = ownerWord?.ApplicationWord ?? throw new ArgumentNullException(nameof(ownerWord));
+            DocumentWord = ownerWord?.DocumentWord ?? throw new ArgumentNullException(nameof(ownerWord));
         }
 
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
         public IEnumerable<ICellElement> CellsElementWord => _tableElement?.Range.Cells.ToIEnumerable().
-                                                                  Select(cell => new CellElementWord(cell, this));
+                                                              Select(cell => new CellElementWord(cell, this));
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
         public IList<IRowElement> RowsElementWord => GetRowsElement();
+
+
+        /// <summary>
+        /// Проверить существование ячейки 
+        /// </summary>
+        public bool HasCellElement(int rowIndex, int columnIndex) =>
+            RowsElementWord?.Count >= rowIndex && RowsElementWord[rowIndex].CellsElementWord?.Count >= columnIndex;
+
 
         /// <summary>
         /// Получить строки таблицы
@@ -47,7 +68,7 @@ namespace GadzhiWord.Word.Implementations.Elements
 
             foreach (var cell in CellsElementWord)
             {
-                var row = rowsElementWord[cell.RowIndex];                
+                var row = rowsElementWord[cell.RowIndex];
                 row.Add(cell);
             }
             return rowsElementWord?.Select(row => new RowElementWord(row, this)).Cast<IRowElement>().ToList();

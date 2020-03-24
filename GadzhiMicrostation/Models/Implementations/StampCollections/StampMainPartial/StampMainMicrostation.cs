@@ -1,4 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation;
+using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -45,20 +47,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        protected override IEnumerable<ICellElementMicrostation> InsertSignaturesFromLibrary()
+        protected override IEnumerable<IErrorApplication> InsertSignaturesFromLibrary()
         {
             StampPersonSignaturesMicrostation = StampPersonSignaturesMicrostation?.Select(person => GetStampPersonRowWithSignatures(person));
 
-            StampChangeSignaturesMicrostation = StampChangeSignaturesMicrostation?.  //добавляем ID вставленной подписи, а не имени. Потому что подпись может не соответствовать имени
-                                                Select(change => GetStampChangeRowWithSignatures(change, StampPersonSignaturesMicrostation.
-                                                                                                         FirstOrDefault().SignatureElement.Name));
+            StampChangeSignaturesMicrostation = StampChangeSignaturesMicrostation?.
+                                                Select(change => GetStampChangeRowWithSignatures(change, StampPersonSignaturesMicrostation?.
+                                                                                                         FirstOrDefault().AttributePersonId));
 
             StampApprovalSignaturesMicrostation = StampApprovalSignaturesMicrostation?.Select(approval => GetStampApprovalRowWithSignatures(approval));
 
-            return StampPersonSignaturesMicrostation.Select(personSignature => personSignature.SignatureElement)?.
-                   Union(StampChangeSignaturesMicrostation.Select(changeSignature => changeSignature.SignatureElement))?.
-                   Union(StampApprovalSignaturesMicrostation.Select(approvalSignature => approvalSignature.SignatureElement));
-                 
+            return GetSignaturesErrors(StampPersonSignaturesMicrostation,
+                                       StampChangeSignaturesMicrostation,
+                                       StampApprovalSignaturesMicrostation);
         }
 
         /// <summary>
@@ -70,12 +71,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// Строки с ответственным лицом и подписью
         /// </summary>
         public IEnumerable<IStampPersonSignature<IStampFieldMicrostation>> StampPersonSignatures =>
-                StampPersonSignaturesMicrostation.Cast<IStampPersonSignature<IStampFieldMicrostation>>();       
+                StampPersonSignaturesMicrostation.Cast<IStampPersonSignature<IStampFieldMicrostation>>();
 
         /// <summary>
         /// Строки с изменениями
         /// </summary>
-        public IEnumerable<IStampChangeSignature<IStampFieldMicrostation>> StampChangesSignatures =>
+        public IEnumerable<IStampChangeSignature<IStampFieldMicrostation>> StampChangeSignatures =>
                 StampChangeSignaturesMicrostation.Cast<IStampChangeSignature<IStampFieldMicrostation>>();
 
         /// <summary>
@@ -83,16 +84,43 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         public IEnumerable<IStampApprovalSignatures<IStampFieldMicrostation>> StampApprovalSignatures =>
                 StampApprovalSignaturesMicrostation.Cast<IStampApprovalSignatures<IStampFieldMicrostation>>();
-      
+
         /// <summary>
         /// Удалить подписи
         /// </summary>
         public override void DeleteSignatures()
         {
-            foreach (var personSignature in StampPersonSignaturesMicrostation)
+            var signaturesToDelete = GetSignatures(StampPersonSignaturesMicrostation,
+                                                   StampChangeSignaturesMicrostation,
+                                                   StampApprovalSignaturesMicrostation).
+                                     Where(signature => signature.IsSignatureValid);
+
+            foreach (var signature in signaturesToDelete)
             {
-                personSignature?.Signature.ElementStamp.Remove();
+                signature?.DeleteSignature();              
             }
         }
+
+        /// <summary>
+        /// Получить подписи
+        /// </summary>        
+        private IEnumerable<IStampSignature<IStampFieldMicrostation>> GetSignatures(IEnumerable<IStampPersonSignatureMicrostation> personSignatures,
+                                                                                    IEnumerable<IStampChangeSignatureMicrostation> changeSignatures,
+                                                                                    IEnumerable<IStampApprovalSignatureMicrostation> approvalSignatures) =>
+             ((IEnumerable<IStampSignature<IStampFieldMicrostation>>)personSignatures).
+             Union((IEnumerable<IStampSignature<IStampFieldMicrostation>>)changeSignatures).
+             Union((IEnumerable<IStampSignature<IStampFieldMicrostation>>)approvalSignatures);
+
+        /// <summary>
+        /// Получить ошибки вставки подписей
+        /// </summary>        
+        private IEnumerable<IErrorApplication> GetSignaturesErrors(IEnumerable<IStampPersonSignatureMicrostation> personSignatures,
+                                                                   IEnumerable<IStampChangeSignatureMicrostation> changeSignatures,
+                                                                   IEnumerable<IStampApprovalSignatureMicrostation> approvalSignatures) =>
+            GetSignatures(personSignatures, changeSignatures, approvalSignatures).
+            Where(signature => !signature.IsSignatureValid).
+            Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                     $"Не найдена подпись {signature.PersonName}")).
+            Cast<IErrorApplication>();
     }
 }

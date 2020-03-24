@@ -22,6 +22,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             StampFieldPersonSignatures.GetStampRowPersonSignatures().
                                        Select(personRow => personRow.StampPersonSignatureFields.Select(field => field.Name)).
                                        Select(personNames => GetPersonSignatureField(personNames));
+        
 
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
@@ -42,6 +43,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
 
             return new StampPersonSignatureMicrostation(actionType, responsiblePerson, dateSignature);
         }
+
+        /// <summary>
+        /// Получить строку с ответственным лицом без подписи
+        /// </summary>
+        private IStampPersonSignatureMicrostation GetStampPersonRowWithoutSignatures(IStampPersonSignatureMicrostation personSignature) =>
+             new StampPersonSignatureMicrostation(personSignature.ActionType, personSignature.ResponsiblePerson, personSignature.DateSignature);
 
         /// <summary>
         /// Получить строку с ответственным лицом и подписью

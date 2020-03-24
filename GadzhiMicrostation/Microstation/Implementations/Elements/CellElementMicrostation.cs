@@ -22,7 +22,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
 
         public CellElementMicrostation(CellElement cellElement,
-                                       IOwnerContainerMicrostation ownerContainerMicrostation)
+                                       IOwnerMicrostation ownerContainerMicrostation)
             : base((Element)cellElement, ownerContainerMicrostation, false, false)
         {
             CellElement = cellElement;

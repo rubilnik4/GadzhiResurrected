@@ -88,7 +88,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                         false,
                                                         _application.Matrix3dIdentity());
 
-            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerContainerMicrostation());
+            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
             additionalParametrs?.Invoke(cellElementMicrostation);
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);

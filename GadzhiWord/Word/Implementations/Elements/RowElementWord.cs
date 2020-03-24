@@ -24,20 +24,18 @@ namespace GadzhiWord.Word.Implementations.Elements
 
         public RowElementWord(List<ICellElement> cellsElementWord, ITableElement tableElementWord)
         {
-            if (cellsElementWord != null)
-            {
-                _cellsElementWord = cellsElementWord;
-                _tableElementWord = tableElementWord;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(cellsElementWord));
-            }
+            _cellsElementWord = cellsElementWord ?? throw new ArgumentNullException(nameof(cellsElementWord));
+            _tableElementWord = tableElementWord ?? throw new ArgumentNullException(nameof(tableElementWord));
         }
 
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
         public IList<ICellElement> CellsElementWord => _cellsElementWord;
+
+        /// <summary>
+        /// Индекс строки
+        /// </summary>
+        public int Index => _cellsElementWord[0].RowIndex;
     }
 }

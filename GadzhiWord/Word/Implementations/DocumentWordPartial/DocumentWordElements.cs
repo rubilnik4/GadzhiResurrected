@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
@@ -25,7 +26,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         public IEnumerable<IStamp> FindStamps() => _document.Sections.ToIEnumerable().
                                                                       SelectMany(section => section.Footers.ToIEnumerable()).
                                                                       SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
-                                                                      Select(table => new TableElementWord(table)).
+                                                                      Select(table => new TableElementWord(table, ToOwnerWord())).
                                                                       Where(tableElement => CheckFooterIsStamp(tableElement)).
                                                                       Select(tableElement => new StampMainWord(tableElement, PaperSize, OrientationType));
 
@@ -36,5 +37,10 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
                                                                        Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell?.Text)).
                                                                        Any(cellText => StampSettingsWord.MarkersMainStamp.MarkerContain(cellText));
+
+        /// <summary>
+        /// Преобразовать к виду родительского элемента
+        /// </summary>      
+        public IOwnerWord ToOwnerWord() => new OwnerWord(this);
     }
 }

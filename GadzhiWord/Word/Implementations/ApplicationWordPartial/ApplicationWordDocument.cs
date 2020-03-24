@@ -17,7 +17,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Текущий документ Word
         /// </summary>
-        public IDocumentLibrary ActiveDocument => new DocumentWord(_application.ActiveDocument);
+        public IDocumentLibrary ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
 
         /// <summary>
         /// Загрузился ли файл

@@ -14,5 +14,10 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// Список ячеек в строке
         /// </summary>
         IList<ICellElement> CellsElementWord { get; }
+
+        /// <summary>
+        /// Индекс строки
+        /// </summary>
+        int Index { get; }
     }
 }

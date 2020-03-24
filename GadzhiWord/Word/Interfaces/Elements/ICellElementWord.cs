@@ -26,6 +26,11 @@ namespace GadzhiWord.Word.Interfaces.Elements
         int RowIndex { get; }
 
         /// <summary>
+        /// Номер колонки
+        /// </summary>
+        int ColumnIndex { get; }
+
+        /// <summary>
         /// Присутствует ли картинка в ячейке
         /// </summary>
         bool HasPicture { get; }

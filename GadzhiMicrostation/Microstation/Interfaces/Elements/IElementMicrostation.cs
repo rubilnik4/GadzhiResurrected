@@ -6,7 +6,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Элемент типа Microstation
     /// </summary>
-    public interface IElementMicrostation : IOwnerContainerMicrostation
+    public interface IElementMicrostation : IOwnerMicrostation
     {
         /// <summary>
         /// Идентефикатор элемента

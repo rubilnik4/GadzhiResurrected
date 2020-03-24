@@ -61,5 +61,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             "Н.конт",
             "ГИП"
         };
+
+        /// <summary>
+        /// Маркеры строки заголовка изменений
+        /// </summary>
+        public static IReadOnlyList<string> MarkersChangeHeader => new List<string>()
+        {
+            "Изм."            
+        };
     }
 }

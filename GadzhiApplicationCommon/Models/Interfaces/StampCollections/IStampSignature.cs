@@ -24,5 +24,20 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// Идентефикатор личности
         /// </summary>    
         string AttributePersonId { get; }
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        string PersonName { get; }
+
+        /// <summary>
+        /// Вставить подпись
+        /// </summary>
+        void InsertSignature();
+
+        /// <summary>
+        /// Удалить текущую подпись
+        /// </summary>
+        void DeleteSignature();
     }
 }

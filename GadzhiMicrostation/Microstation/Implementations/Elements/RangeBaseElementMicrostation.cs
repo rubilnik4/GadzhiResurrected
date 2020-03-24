@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public bool IsVertical { get; set; }
 
         public RangeBaseElementMicrostation(Element element,
-                                           IOwnerContainerMicrostation ownerContainerMicrostation,
+                                           IOwnerMicrostation ownerContainerMicrostation,
                                            bool isNeedCompress,
                                            bool isVertical)
             : base(element, ownerContainerMicrostation)
