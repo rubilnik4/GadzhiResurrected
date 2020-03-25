@@ -23,7 +23,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        string AttributePersonId { get; }
+        string PersonId { get; }
 
         /// <summary>
         /// Ответственное лицо
@@ -33,7 +33,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        void InsertSignature();
+        IStampSignature<TField> InsertSignature();
 
         /// <summary>
         /// Удалить текущую подпись

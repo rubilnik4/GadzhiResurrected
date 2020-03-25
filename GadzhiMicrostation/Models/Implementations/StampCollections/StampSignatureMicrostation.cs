@@ -14,10 +14,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureMicrostation : StampSignature<IStampFieldMicrostation>
     {
-        private readonly Func<string, IStampFieldMicrostation> InsertSignatureFunc;
+        /// <summary>
+        /// Функция вставки подписи
+        /// </summary>
+        private readonly Func<string, IStampFieldMicrostation> _insertSignatureFunc;
+
         public StampSignatureMicrostation(Func<string, IStampFieldMicrostation> insertSignatureFunc)
         {
-            InsertSignatureFunc = insertSignatureFunc;
+            _insertSignatureFunc = insertSignatureFunc;
         }
 
         /// <summary>
@@ -38,8 +42,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override void InsertSignature() =>
-            Signature = InsertSignatureFunc?.Invoke(AttributePersonId);
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature()
+        {
+            Signature = _insertSignatureFunc?.Invoke(PersonId);
+            return this;
+        }
 
         /// <summary>
         /// Удалить текущую подпись

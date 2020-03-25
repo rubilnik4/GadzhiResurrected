@@ -20,12 +20,6 @@ namespace GadzhiConverting.Extensions
         /// Конвертировать тип цвета печати в версию для приложения
         /// </summary>
         public static ColorPrintApplication ToApplication(this ColorPrint colorPrint) => 
-            ColorPrintToApplicationConverter.ConvertingToApplication(colorPrint);
-
-        /// <summary>
-        /// Преобразовать внутренний класс ошибок библиотеки в основной
-        /// </summary>
-        public static ErrorConverting ToErrorConverting(this IErrorApplication errorApplication) =>
-           ErrorApplicationConverter.ToErrorConverting(errorApplication);
+            ColorPrintToApplicationConverter.ConvertingToApplication(colorPrint);      
     }
 }

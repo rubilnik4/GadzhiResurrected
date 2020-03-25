@@ -16,31 +16,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public class StampChangeSignatureMicrostation : StampSignatureMicrostation,
                                                     IStampChangeSignatureMicrostation
-    {
+    {  
         public StampChangeSignatureMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation dateChange,
-                                                string attributePersonId)
-          : this(numberChange, numberOfPlots, typeOfChange, documentChange, null, dateChange, attributePersonId) { }
-
-        public StampChangeSignatureMicrostation(IStampChangeSignature<IStampFieldMicrostation> changeSignature)
-          : this(changeSignature?.NumberChange, changeSignature?.NumberOfPlots, changeSignature?.TypeOfChange,
-                 changeSignature?.DocumentChange, changeSignature?.Signature, changeSignature?.DateChange,
-                 changeSignature?.AttributePersonId)
+                                                string personId, string personName,
+                                                Func<string, IStampFieldMicrostation> insertSignatureFunc)
+            : base(insertSignatureFunc)
         {
-            if (changeSignature == null)
-                throw new ArgumentNullException(nameof(changeSignature));
-        }
+            PersonId = !String.IsNullOrEmpty(personId) ?
+                                      personId :
+                                      throw new ArgumentNullException(nameof(personId));
+            PersonName = personName;
 
-        public StampChangeSignatureMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
-                                                IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
-                                                IStampFieldMicrostation signature, IStampFieldMicrostation dateChange,
-                                                string attributePersonId)
-            : base(signature)
-        {
-            AttributeChangePersonId = !String.IsNullOrEmpty(attributePersonId) ?
-                                      attributePersonId :
-                                      throw new ArgumentNullException(nameof(attributePersonId));
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
@@ -96,16 +84,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         ///Дата изменения. Элемент
         /// </summary>
-        public ITextElementMicrostation DateChangeElement => DateChange.ElementStamp.AsTextElementMicrostation;
-
-        /// <summary>
-        /// Идентефикатор личности для изменения
-        /// </summary>    
-        public string AttributeChangePersonId { get; }
+        public ITextElementMicrostation DateChangeElement => DateChange.ElementStamp.AsTextElementMicrostation;       
 
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => AttributeChangePersonId;
+        public override string PersonId { get; }
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        public override string PersonName { get; }
     }
 }

@@ -39,27 +39,38 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             : base(stampCellElement)
         {
             StampPersonSignaturesMicrostation = GetStampPersonRowsWithoutSignatures();
-            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(StampPersonSignaturesMicrostation?.
-                                                                                    FirstOrDefault().AttributePersonId);
+
+            var firstPerson = StampPersonSignaturesMicrostation?.FirstOrDefault();
+            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(firstPerson.PersonId, firstPerson.PersonName);
+
             StampApprovalSignaturesMicrostation = GetStampApprovalRowsWithoutSignatures();
         }
 
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        protected override IEnumerable<IErrorApplication> InsertSignaturesFromLibrary()
+        protected override IEnumerable<IErrorApplication> InsertSignaturesFromLibrary() =>
+            GetSignatures(StampPersonSignaturesMicrostation, StampChangeSignaturesMicrostation, StampApprovalSignaturesMicrostation).
+            Select(signature => signature.InsertSignature()).
+            Where(signature => !signature.IsSignatureValid).
+            Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                     $"Не найдена подпись {signature.PersonName}")).
+            Cast<IErrorApplication>();
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        public override void DeleteSignatures()
         {
-            StampPersonSignaturesMicrostation = StampPersonSignaturesMicrostation?.Select(person => GetStampPersonRowWithSignatures(person));
+            var signaturesToDelete = GetSignatures(StampPersonSignaturesMicrostation,
+                                                   StampChangeSignaturesMicrostation,
+                                                   StampApprovalSignaturesMicrostation).
+                                     Where(signature => signature.IsSignatureValid);
 
-            StampChangeSignaturesMicrostation = StampChangeSignaturesMicrostation?.
-                                                Select(change => GetStampChangeRowWithSignatures(change, StampPersonSignaturesMicrostation?.
-                                                                                                         FirstOrDefault().AttributePersonId));
-
-            StampApprovalSignaturesMicrostation = StampApprovalSignaturesMicrostation?.Select(approval => GetStampApprovalRowWithSignatures(approval));
-
-            return GetSignaturesErrors(StampPersonSignaturesMicrostation,
-                                       StampChangeSignaturesMicrostation,
-                                       StampApprovalSignaturesMicrostation);
+            foreach (var signature in signaturesToDelete)
+            {
+                signature?.DeleteSignature();
+            }
         }
 
         /// <summary>
@@ -83,23 +94,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// Строки с согласованиями
         /// </summary>
         public IEnumerable<IStampApprovalSignatures<IStampFieldMicrostation>> StampApprovalSignatures =>
-                StampApprovalSignaturesMicrostation.Cast<IStampApprovalSignatures<IStampFieldMicrostation>>();
-
-        /// <summary>
-        /// Удалить подписи
-        /// </summary>
-        public override void DeleteSignatures()
-        {
-            var signaturesToDelete = GetSignatures(StampPersonSignaturesMicrostation,
-                                                   StampChangeSignaturesMicrostation,
-                                                   StampApprovalSignaturesMicrostation).
-                                     Where(signature => signature.IsSignatureValid);
-
-            foreach (var signature in signaturesToDelete)
-            {
-                signature?.DeleteSignature();              
-            }
-        }
+                StampApprovalSignaturesMicrostation.Cast<IStampApprovalSignatures<IStampFieldMicrostation>>();       
 
         /// <summary>
         /// Получить подписи
@@ -110,17 +105,5 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
              ((IEnumerable<IStampSignature<IStampFieldMicrostation>>)personSignatures).
              Union((IEnumerable<IStampSignature<IStampFieldMicrostation>>)changeSignatures).
              Union((IEnumerable<IStampSignature<IStampFieldMicrostation>>)approvalSignatures);
-
-        /// <summary>
-        /// Получить ошибки вставки подписей
-        /// </summary>        
-        private IEnumerable<IErrorApplication> GetSignaturesErrors(IEnumerable<IStampPersonSignatureMicrostation> personSignatures,
-                                                                   IEnumerable<IStampChangeSignatureMicrostation> changeSignatures,
-                                                                   IEnumerable<IStampApprovalSignatureMicrostation> approvalSignatures) =>
-            GetSignatures(personSignatures, changeSignatures, approvalSignatures).
-            Where(signature => !signature.IsSignatureValid).
-            Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                     $"Не найдена подпись {signature.PersonName}")).
-            Cast<IErrorApplication>();
     }
 }

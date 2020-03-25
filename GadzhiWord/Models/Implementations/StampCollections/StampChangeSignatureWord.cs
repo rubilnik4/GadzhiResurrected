@@ -11,7 +11,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// Строка с изменениями Word
     /// </summary>
     public class StampChangeSignatureWord : StampSignatureWord, IStampChangeSignature<IStampFieldWord>
-    {
+    {       
         /// <summary>
         /// Количество ячеек в строке
         /// </summary>
@@ -20,12 +20,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public StampChangeSignatureWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots,
                                         IStampFieldWord typeOfChange, IStampFieldWord documentChange,
                                         IStampFieldWord signature, IStampFieldWord dateChange,
-                                        string attributePersonId)
-            : base(signature)
+                                        SignatureInformation signatureInformation)
+            : base(signature, signatureInformation?.SignaturePath)
         {
-            AttributeChangePersonId = !String.IsNullOrEmpty(attributePersonId) ?
-                                      attributePersonId :
-                                      throw new ArgumentNullException(nameof(attributePersonId));
+            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(PersonId));
+            PersonName = signatureInformation?.PersonName;
+
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
@@ -59,13 +59,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public IStampFieldWord DateChange { get; }
 
         /// <summary>
-        /// Идентефикатор личности для изменения
-        /// </summary>    
-        public string AttributeChangePersonId { get; }
-
-        /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => AttributeChangePersonId;
+        public override string PersonId { get; }
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        public override string PersonName { get; }
     }
 }

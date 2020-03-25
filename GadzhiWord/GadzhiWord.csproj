@@ -118,6 +118,7 @@
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\StampCollections\CheckFieldType.cs" />
+    <Compile Include="Models\Implementations\StampCollections\SignatureInformation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampChangeSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />

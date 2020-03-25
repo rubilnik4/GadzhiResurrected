@@ -1,5 +1,8 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation;
+using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Models.Interfaces;
 using GadzhiWord.Word.Interfaces.Elements;
 using System;
@@ -40,24 +43,24 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public override void InsertSignatures()
-        {
-            foreach (var personSignature in StampPersonSignatures)
-            {
-                personSignature.Signature.CellElementStamp.DeleteAllPictures();
-                personSignature.Signature.CellElementStamp.
-                                InsertPicture(TableStamp.ApplicationWord.WordResources.SignatureWordFileName);
-            }
-        }
+        public override IEnumerable<IErrorApplication> InsertSignatures() =>
+            GetSignatures(StampPersonSignatures, StampChangeSignatures).
+            Select(signature => signature.InsertSignature()).
+            Where(signature => !signature.IsSignatureValid).
+            Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                     $"Не найдена подпись {signature.PersonName}"));
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
         public override void DeleteSignatures()
         {
-            foreach (var personSignature in StampPersonSignatures)
+            var signaturesToDelete = GetSignatures(StampPersonSignatures, StampChangeSignatures).
+                                     Where(signature => signature.IsSignatureValid);
+
+            foreach (var signature in signaturesToDelete)
             {
-                personSignature.Signature.CellElementStamp.DeleteAllPictures();
+                signature?.DeleteSignature();
             }
         }
 
@@ -86,6 +89,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                                                                      new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
                                                                      new StampFieldWord(row.CellsElementWord[4], StampFieldType.PersonSignature),
                                                                      new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                                     StampPersonSignatures?.FirstOrDefault().AttributePersonId));
+                                                                     StampPersonSignatures?.FirstOrDefault().PersonId));
+
+        /// <summary>
+        /// Получить подписи
+        /// </summary>        
+        private IEnumerable<IStampSignature<IStampFieldWord>> GetSignatures(IEnumerable<IStampPersonSignature<IStampFieldWord>> personSignatures,
+                                                                            IEnumerable<IStampChangeSignature<IStampFieldWord>> changeSignatures) =>
+             personSignatures.Union(changeSignatures);
     }
 }

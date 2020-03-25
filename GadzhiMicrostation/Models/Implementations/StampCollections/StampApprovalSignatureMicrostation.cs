@@ -18,8 +18,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                                                       IStampApprovalSignatureMicrostation
     {
         public StampApprovalSignatureMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
-                                                 IStampFieldMicrostation dateSignature,
-                                                Func<string, IStampFieldMicrostation> insertSignatureFunc)
+                                                  IStampFieldMicrostation dateSignature,
+                                                  Func<string, IStampFieldMicrostation> insertSignatureFunc)
             : base(insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
@@ -61,7 +61,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
+        public override string PersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
 
         /// <summary>
         /// Ответственное лицо

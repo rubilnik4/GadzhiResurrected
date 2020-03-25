@@ -40,7 +40,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        void InsertSignatures();
+        IEnumerable<IErrorApplication> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи

@@ -20,11 +20,15 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Количество ячеек в строке
         /// </summary>
         public static int FieldsCount => 4;
-
+       
         public StampPersonSignatureWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
-                                        IStampFieldWord signature, IStampFieldWord dateSignature)
-            : base(signature)
+                                        IStampFieldWord signature, IStampFieldWord dateSignature,
+                                        SignatureInformation signatureInformation)
+            : base(signature, signatureInformation?.SignaturePath)
         {
+            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(PersonId));
+            PersonName = signatureInformation?.PersonName;
+
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
             DateSignature = dateSignature;      
@@ -44,5 +48,15 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Дата
         /// </summary>
         public IStampFieldWord DateSignature { get; }
+
+        /// <summary>
+        /// Идентефикатор личности
+        /// </summary>    
+        public override string PersonId { get; }
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        public override string PersonName { get; }
     }
 }

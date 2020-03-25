@@ -35,7 +35,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 var fileDataSourceAndErrors = ActiveLibrary.StampContainer.Stamps?.
                                               Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation));
                 return (fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.fileSource),
-                        fileDataSourceAndErrors.Select(fileWithErrors => fileWithErrors.errors));
+                        fileDataSourceAndErrors.SelectMany(fileWithErrors => fileWithErrors.errors));
             }
             else
             {
@@ -47,24 +47,28 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private (IFileDataSourceServer fileSource, ErrorConverting errors) CreatePdfWithSignatures(IStamp stamp, string filePath,
-                                                                                                   ColorPrint colorPrint,
-                                                                                                   IPrinterInformation pdfPrinterInformation)
+        private (IFileDataSourceServer fileSource, IEnumerable<ErrorConverting> errors) CreatePdfWithSignatures(IStamp stamp, string filePath,
+                                                                                                                ColorPrint colorPrint,
+                                                                                                                IPrinterInformation pdfPrinterInformation)
         {
             stamp.CompressFieldsRanges();
 
-            stamp.InsertSignatures();
+            var signaturesErrors = stamp.InsertSignatures().Select(error => error.ToErrorConverting());
             var fileDataSourceAndError = CreatePdf(stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation);
             stamp.DeleteSignatures();
 
-            return fileDataSourceAndError;
+            var errors = (fileDataSourceAndError.error == null) ?
+                          signaturesErrors :
+                          signaturesErrors?.Union(new List<ErrorConverting>() { fileDataSourceAndError.error });
+
+            return (fileDataSourceAndError.fileDataSource, errors);
         }
 
         /// <summary>
         /// Печать пдф
         /// </summary>
-        private (IFileDataSourceServer, ErrorConverting) CreatePdf(IStamp stamp, string filePath, ColorPrint colorPrint,
-                                                                   string paperSize, IPrinterInformation pdfPrinterInformation)
+        private (IFileDataSourceServer fileDataSource, ErrorConverting error) CreatePdf(IStamp stamp, string filePath, ColorPrint colorPrint,
+                                                                                        string paperSize, IPrinterInformation pdfPrinterInformation)
         {
             IFileDataSourceServer fileDataSourceServer = null;
 

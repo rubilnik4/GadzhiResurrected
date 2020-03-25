@@ -13,21 +13,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public class StampPersonSignatureMicrostation : StampSignatureMicrostation,
                                                     IStampPersonSignatureMicrostation
-    {
+    {       
         public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
-                                                IStampFieldMicrostation dateSignature)
-            : this(actionType, responsiblePerson, null, dateSignature) { }
-
-        public StampPersonSignatureMicrostation(IStampPersonSignature<IStampFieldMicrostation> personSignature)
-            : this(personSignature?.ActionType, personSignature?.ResponsiblePerson,
-                  personSignature?.Signature, personSignature?.DateSignature)
-        {
-            if (personSignature == null) throw new ArgumentNullException(nameof(personSignature));
-        }
-
-        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
-                                                IStampFieldMicrostation signature, IStampFieldMicrostation dateSignature)
-            : base(signature)
+                                                IStampFieldMicrostation dateSignature,
+                                                Func<string, IStampFieldMicrostation> insertSignatureFunc)
+            : base(insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
@@ -67,6 +57,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public override string AttributePersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
+        public override string PersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        public override string PersonName => ResponsiblePersonElement.Text;
     }
 }

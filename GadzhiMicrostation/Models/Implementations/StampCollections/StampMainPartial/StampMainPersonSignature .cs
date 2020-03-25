@@ -22,7 +22,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             StampFieldPersonSignatures.GetStampRowPersonSignatures().
                                        Select(personRow => personRow.StampPersonSignatureFields.Select(field => field.Name)).
                                        Select(personNames => GetPersonSignatureField(personNames));
-        
+
 
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
@@ -41,35 +41,20 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             var dateSignature = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsDateSignature(),
                                                      StampFieldType.PersonSignature);
 
-            return new StampPersonSignatureMicrostation(actionType, responsiblePerson, dateSignature);
+            Func<string, IStampFieldMicrostation> insertSignatureFunc = InsertPersonSignatureFromLibrary(responsiblePerson.ElementStamp,
+                                                                                                         dateSignature.ElementStamp);
+
+            return new StampPersonSignatureMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc);
         }
 
         /// <summary>
-        /// Получить строку с ответственным лицом без подписи
-        /// </summary>
-        private IStampPersonSignatureMicrostation GetStampPersonRowWithoutSignatures(IStampPersonSignatureMicrostation personSignature) =>
-             new StampPersonSignatureMicrostation(personSignature.ActionType, personSignature.ResponsiblePerson, personSignature.DateSignature);
-
-        /// <summary>
-        /// Получить строку с ответственным лицом и подписью
-        /// </summary>
-        private IStampPersonSignatureMicrostation GetStampPersonRowWithSignatures(IStampPersonSignatureMicrostation personSignature)
-        {
-            var signature = InsertPersonSignatureFromLibrary(personSignature);
-            return (signature != null) ?
-                    new StampPersonSignatureMicrostation(personSignature.ActionType, personSignature.ResponsiblePerson,
-                                                         new StampFieldMicrostation(signature, StampFieldType.PersonSignature),
-                                                         personSignature.DateSignature) :
-                    personSignature;
-        }
-
-
-        /// <summary>
-        /// Вставить подписи из библиотеки
-        /// </summary>      
-        private ICellElementMicrostation InsertPersonSignatureFromLibrary(IStampPersonSignatureMicrostation personSignature) =>
-           InsertSignature(personSignature.AttributePersonId,
-                           personSignature.ResponsiblePersonElement,
-                           personSignature.DateSignatureElement);
+        /// Функция вставки подписей из библиотеки
+        /// </summary>  
+        private Func<string, IStampFieldMicrostation> InsertPersonSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
+                                                                                       IElementMicrostation dateSignatureElement) =>
+            (string personId) => new StampFieldMicrostation(InsertSignature(personId,
+                                                                           responsiblePersonElement.AsTextElementMicrostation,
+                                                                           dateSignatureElement.AsTextElementMicrostation),
+                                                           StampFieldType.ApprovalSignature);
     }
 }

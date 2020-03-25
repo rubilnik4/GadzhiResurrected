@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
@@ -42,7 +43,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public abstract void InsertSignatures();
+        public abstract IEnumerable<IErrorApplication> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи

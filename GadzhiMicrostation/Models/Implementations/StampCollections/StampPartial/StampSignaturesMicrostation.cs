@@ -18,15 +18,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public override void InsertSignatures()
+        public override IEnumerable<IErrorApplication> InsertSignatures()
         {
             StampCellElement.ApplicationMicrostation.AttachLibrary(StampCellElement.ApplicationMicrostation.
                                                                    MicrostationResources.SignatureMicrostationFileName);
-
             DeleteSignaturesPrevious();
-            InsertSignaturesFromLibrary();
-
+            IEnumerable<IErrorApplication> signatureErrors = InsertSignaturesFromLibrary();
             StampCellElement.ApplicationMicrostation.DetachLibrary();
+
+            return signatureErrors;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             {
                 signature.Remove();
             }
-        } 
+        }
 
         /// <summary>
         /// Вставить подпись
@@ -98,7 +98,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Параметры ячейки подписи
         /// </summary>
-        private Action<ICellElementMicrostation> GetAdditionalParametersToSignature(RangeMicrostation signatureRange, bool isVertical) =>       
+        private Action<ICellElementMicrostation> GetAdditionalParametersToSignature(RangeMicrostation signatureRange, bool isVertical) =>
             new Action<ICellElementMicrostation>(cellElement =>
             {
                 cellElement.IsVertical = isVertical;
@@ -122,6 +122,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
 
                 cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
             });
-       
+
     }
 }
