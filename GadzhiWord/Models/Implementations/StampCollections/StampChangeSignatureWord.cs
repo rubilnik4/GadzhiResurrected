@@ -1,5 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с изменениями Word
     /// </summary>
-    public class StampChangeSignatureWord : StampSignatureWord, IStampChangeSignature<IStampFieldWord>
+    public class StampChangeSignatureWord : StampSignatureWord, IStampChangeSignatureWord
     {       
         /// <summary>
         /// Количество ячеек в строке
@@ -20,10 +20,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public StampChangeSignatureWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots,
                                         IStampFieldWord typeOfChange, IStampFieldWord documentChange,
                                         IStampFieldWord signature, IStampFieldWord dateChange,
-                                        SignatureInformation signatureInformation)
+                                        ISignatureInformation signatureInformation)
             : base(signature, signatureInformation?.SignaturePath)
         {
-            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(PersonId));
+            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(signatureInformation));
             PersonName = signatureInformation?.PersonName;
 
             NumberChange = numberChange;

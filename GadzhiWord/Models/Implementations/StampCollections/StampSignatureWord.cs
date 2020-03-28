@@ -1,6 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +11,19 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Базовая структура подписи Microstation
     /// </summary>
-    public abstract class StampSignatureWord : StampSignature<IStampFieldWord>
-    {
-        /// <summary>
-        /// Функция вставки подписи
-        /// </summary>
-        private readonly string _signaturePath;
-
+    public abstract class StampSignatureWord : StampSignature<IStampFieldWord>, IStampSignatureWord
+    {    
         public StampSignatureWord(IStampFieldWord signature,
                                   string signaturePath)
         {
             Signature = signature ?? throw new ArgumentNullException(nameof(signature));
-
-            _signaturePath =  String.IsNullOrEmpty(signaturePath) ?
-                              signaturePath :
-                              throw new ArgumentNullException(nameof(signaturePath));
+            SignaturePath = signaturePath ?? throw new ArgumentNullException(nameof(signaturePath));
         }
+
+        /// <summary>
+        /// Путь файла подписи
+        /// </summary>
+        public string SignaturePath { get; }
 
         /// <summary>
         /// Подпись
@@ -43,7 +40,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public override IStampSignature<IStampFieldWord> InsertSignature()
         {
-            Signature.CellElementStamp.InsertPicture(_signaturePath);
+            Signature.CellElementStamp.InsertPicture(SignaturePath);
             return this;
         }
 
@@ -54,7 +51,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         {
             if (IsSignatureValid)
             {
-                Signature.CellElementStamp.DeleteAllPictures ();               
+                Signature.CellElementStamp.DeleteAllPictures();
             }
         }
     }

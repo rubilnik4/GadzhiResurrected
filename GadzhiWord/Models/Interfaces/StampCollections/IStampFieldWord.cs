@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiWord.Models.Interfaces
+namespace GadzhiWord.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Базовая ячейка штампа Word
     /// </summary>  
-    public interface IStampFieldWord: IStampField
+    public interface IStampFieldWord : IStampField
     {
         /// <summary>
         /// Элемент ячейка, определяющая поле штампа

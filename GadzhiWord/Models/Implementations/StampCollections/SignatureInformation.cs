@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiWord.Models.Interfaces.StampCollections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Информация о подписи для модуля Word
     /// </summary>
-    public class SignatureInformation
+    public class SignatureInformation : ISignatureInformation
     {
+        public SignatureInformation(string personName, (string personId, string signaturePath) personIdPath)
+           : this(personIdPath.personId, personName, personIdPath.signaturePath) { }
+       
         public SignatureInformation(string personId, string personName, string signaturePath)
         {
             PersonId = personId ?? throw new ArgumentNullException(nameof(personId));

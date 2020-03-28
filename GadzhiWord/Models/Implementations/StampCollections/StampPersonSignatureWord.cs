@@ -1,7 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответсвенным лицом и подписью
     /// </summary>
-    public class StampPersonSignatureWord : StampSignatureWord, IStampPersonSignature<IStampFieldWord>
+    public class StampPersonSignatureWord : StampSignatureWord, IStampPersonSignatureWord
     {
         /// <summary>
         /// Количество ячеек в строке
@@ -23,10 +23,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
        
         public StampPersonSignatureWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
                                         IStampFieldWord signature, IStampFieldWord dateSignature,
-                                        SignatureInformation signatureInformation)
+                                        ISignatureInformation signatureInformation)
             : base(signature, signatureInformation?.SignaturePath)
         {
-            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(PersonId));
+            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(signatureInformation));
             PersonName = signatureInformation?.PersonName;
 
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));

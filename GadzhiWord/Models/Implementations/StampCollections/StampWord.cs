@@ -7,7 +7,7 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Models.Interfaces;
+using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
