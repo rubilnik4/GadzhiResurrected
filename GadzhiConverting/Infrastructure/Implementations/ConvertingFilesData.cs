@@ -135,9 +135,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             //    _loggerMicrostation.ShowMessage("Создание файла DWG");
             //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-            //                                                                                    FileExtentionMicrostation.dwg));
-            pdfSource.ToList();
-           
+            //                                                                                   FileExtentionMicrostation.dwg));
             _messagingService.ShowAndLogMessage("Конвертирование завершено");
             _applicationConverting.CloseDocument();
 

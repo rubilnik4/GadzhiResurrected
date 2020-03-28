@@ -23,8 +23,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public StampFieldMicrostation(IElementMicrostation elementStamp, StampFieldType stampFieldType)
             : base(stampFieldType)
         {
-            ElementStamp = elementStamp ?? 
-                           throw new ArgumentNullException(nameof(elementStamp));
+            ElementStamp = elementStamp ?? throw new ArgumentNullException(nameof(elementStamp));
         }
     }
 }

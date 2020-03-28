@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
+﻿using GadzhiApplicationCommon.FunctionalExtensions;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -51,9 +52,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>      
         private Func<string, IStampFieldMicrostation> InsertApprovalSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
                                                                                          IElementMicrostation dateSignatureElement) =>
-           (string personId) => new StampFieldMicrostation(InsertSignature(personId,
-                                                                           responsiblePersonElement.AsTextElementMicrostation,
-                                                                           dateSignatureElement.AsTextElementMicrostation),
-                                                           StampFieldType.ApprovalSignature);
+              (string personId) => InsertSignature(personId,
+                                                   responsiblePersonElement.AsTextElementMicrostation,
+                                                   dateSignatureElement.AsTextElementMicrostation)?.
+                                   Map(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
     }
 }

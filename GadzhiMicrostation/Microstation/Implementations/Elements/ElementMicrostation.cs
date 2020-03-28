@@ -6,6 +6,8 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -135,8 +137,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public void Remove()
         {
-           DLong parentId = _element.ParentID;
-            if(parentId.High == 0 && parentId.Low == 0)
+            DLong parentId = _element.ParentID;
+            if (parentId.High == 0 && parentId.Low == 0)
             {
                 ModelMicrostation.RemoveElement(Id);
             }

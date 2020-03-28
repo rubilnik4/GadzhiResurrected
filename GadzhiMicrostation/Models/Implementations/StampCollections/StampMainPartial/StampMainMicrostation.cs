@@ -41,7 +41,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             StampPersonSignaturesMicrostation = GetStampPersonRowsWithoutSignatures();
 
             var firstPerson = StampPersonSignaturesMicrostation?.FirstOrDefault();
-            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(firstPerson.PersonId, firstPerson.PersonName);
+            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(firstPerson?.PersonId, firstPerson?.PersonName);
 
             StampApprovalSignaturesMicrostation = GetStampApprovalRowsWithoutSignatures();
         }

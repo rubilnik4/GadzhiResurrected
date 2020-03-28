@@ -62,6 +62,7 @@
     <Compile Include="Extentions\Microstation\PointExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\StringAdditionalExtentions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\RandomInstance.cs" />
     <Compile Include="Microstation\Converters\ConvertElementMicrostationTypes.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
     <Compile Include="Microstation\Converters\ConvertMicrostationElements.cs" />

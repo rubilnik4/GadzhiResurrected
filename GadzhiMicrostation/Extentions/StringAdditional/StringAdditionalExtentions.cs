@@ -55,9 +55,11 @@ namespace GadzhiMicrostation.Extentions.StringAdditional
         }
 
         /// <summary>
-        /// Содержит ли подстроку без учета регистар
+        /// Содержит ли подстроку без учета регистра
         /// </summary>        
         public static bool ContainsIgnoreCase(this string input, string substring) =>
-            input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
+            String.IsNullOrEmpty(substring) ?
+            input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1 :
+            false;
     }
 }

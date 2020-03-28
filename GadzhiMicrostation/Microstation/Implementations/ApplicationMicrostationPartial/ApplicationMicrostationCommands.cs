@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
+using GadzhiApplicationCommon.FunctionalExtensions;
+using GadzhiMicrostation.Helpers;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -25,23 +27,19 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке и проверить наличие такой в библиотеке
         /// </summary>       
-        public ICellElementMicrostation CreateCellElementFromLibrary(string cellName,
-                                                                     PointMicrostation origin,
+        public ICellElementMicrostation CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
                                                                      Action<ICellElementMicrostation> additionalParametrs = null,
-                                                                     string cellDescription = null)
-        {
-            string cellNameOriginalyOrFoundByDescription = ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription);
-            return !String.IsNullOrEmpty(cellNameOriginalyOrFoundByDescription) ?
-                   CreateCellElementFromLibraryWithoutCheck(cellName, origin, modelMicrostation, additionalParametrs) :
-                   null;
-        }
+                                                                     string cellDescription = null) =>
+            ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription).
+            Map(cellNameChanged => !String.IsNullOrEmpty(cellNameChanged) ?
+                                   CreateCellElementFromLibraryWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParametrs) :
+                                   null);
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        public ICellElementMicrostation CreateSignatureFromLibrary(string cellName,
-                                                                   PointMicrostation origin,
+        public ICellElementMicrostation CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                                    IModelMicrostation modelMicrostation,
                                                                    Action<ICellElementMicrostation> additionalParametrs = null,
                                                                    string cellDescription = null)
@@ -77,19 +75,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        private ICellElementMicrostation CreateCellElementFromLibraryWithoutCheck(string cellName,
-                                                                     PointMicrostation origin,
-                                                                     IModelMicrostation modelMicrostation,
-                                                                     Action<ICellElementMicrostation> additionalParametrs = null)
+        private ICellElementMicrostation CreateCellElementFromLibraryWithoutCheck(string cellName, PointMicrostation origin,
+                                                                                  IModelMicrostation modelMicrostation,
+                                                                                  Action<ICellElementMicrostation> additionalParameters = null)
         {
             CellElement cellElement = _application.CreateCellElement2(cellName,
-                                                        _application.Point3dFromXY(origin.X, origin.Y),
-                                                        _application.Point3dFromXY(1, 1),
-                                                        false,
-                                                        _application.Matrix3dIdentity());
+                                                                      _application.Point3dFromXY(origin.X, origin.Y),
+                                                                      _application.Point3dFromXY(1, 1),
+                                                                      false,
+                                                                      _application.Matrix3dIdentity());
 
             var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
-            additionalParametrs?.Invoke(cellElementMicrostation);
+            additionalParameters?.Invoke(cellElementMicrostation);
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
@@ -110,6 +107,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             else if (!isCellContainsInLibrary && !String.IsNullOrEmpty(cellDescription))
             {
                 originallyOrChangedCellName = FindCellNameByDescription(cellDescription) ?? cellName;
+            }
+            else
+            {
+                originallyOrChangedCellName = GetCellNameRandom();
             }
 
             return originallyOrChangedCellName;
@@ -150,14 +151,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Найти замену имени ячейки по описанию
         /// </summary>
-        private string FindCellNameByDescription(string cellDescription)
-        {
-            if (!String.IsNullOrEmpty(cellDescription))
-            {
-                return _cachLibraryElements?.FirstOrDefault(libraryElement =>
-                            libraryElement.Description.ContainsIgnoreCase(cellDescription)).Name;
-            }
-            return null;
-        }
+        private string FindCellNameByDescription(string cellDescription) =>
+           !String.IsNullOrEmpty(cellDescription) ?
+            _cachLibraryElements?.FirstOrDefault(libraryElement =>
+                                  libraryElement.Description.ContainsIgnoreCase(cellDescription)).Name :
+            null;
+
+
+        /// <summary>
+        /// Вернуть случайное имя
+        /// </summary>
+        private string GetCellNameRandom() =>
+            _cachLibraryElements?.
+            Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name);      
     }
 }

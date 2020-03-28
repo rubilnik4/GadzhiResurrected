@@ -7,6 +7,7 @@ using System.Linq;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces;
+using GadzhiApplicationCommon.FunctionalExtensions;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -54,39 +55,35 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         protected ICellElementMicrostation InsertSignature(string personId,
                                                            ITextElementMicrostation previousField, ITextElementMicrostation nextField,
-                                                           string personName = null)
-        {
-            if (previousField == null) throw new ArgumentNullException(nameof(previousField));
-            if (nextField == null) throw new ArgumentNullException(nameof(nextField));
-
-            RangeMicrostation signatureRange = GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale,
-                                                                 previousField, nextField);
-
-            return StampCellElement.ApplicationMicrostation.
-                   CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
-                                                StampCellElement.ModelMicrostation,
-                                                GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
-                                                personName);
-        }
+                                                           string personName = null) =>        
+            GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale, previousField, nextField).
+            Map(signatureRange => StampCellElement.ApplicationMicrostation.
+                                  CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
+                                                               StampCellElement.ModelMicrostation,
+                                                               GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
+                                                               personName));      
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты
         /// <summary>
         /// Получить координаты и размеры поля для вставки подписей
         /// </summary>       
         private RangeMicrostation GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
-                                                    ITextElementMicrostation personField, ITextElementMicrostation dateField)
+                                                    ITextElementMicrostation previousField, ITextElementMicrostation nextField)
         {
-            PointMicrostation lowLeftPoint = !personField.IsVertical ?
-                                              new PointMicrostation(personField.RangeAttributeInUnits.HighRightPoint.X,
-                                                                    personField.RangeAttributeInUnits.LowLeftPoint.Y) :
-                                              new PointMicrostation(personField.RangeAttributeInUnits.LowLeftPoint.X,
-                                                                    personField.RangeAttributeInUnits.HighRightPoint.Y);
+            if (previousField == null) throw new ArgumentNullException(nameof(previousField));
+            if (nextField == null) throw new ArgumentNullException(nameof(nextField));
 
-            PointMicrostation highRightPoint = !personField.IsVertical ?
-                                                new PointMicrostation(dateField.RangeAttributeInUnits.LowLeftPoint.X,
-                                                                      dateField.RangeAttributeInUnits.HighRightPoint.Y) :
-                                                new PointMicrostation(dateField.RangeAttributeInUnits.HighRightPoint.X,
-                                                                      dateField.RangeAttributeInUnits.LowLeftPoint.Y);
+            PointMicrostation lowLeftPoint = !previousField.IsVertical ?
+                                              new PointMicrostation(previousField.RangeAttributeInUnits.HighRightPoint.X,
+                                                                    previousField.RangeAttributeInUnits.LowLeftPoint.Y) :
+                                              new PointMicrostation(previousField.RangeAttributeInUnits.LowLeftPoint.X,
+                                                                    previousField.RangeAttributeInUnits.HighRightPoint.Y);
+
+            PointMicrostation highRightPoint = !previousField.IsVertical ?
+                                                new PointMicrostation(nextField.RangeAttributeInUnits.LowLeftPoint.X,
+                                                                      nextField.RangeAttributeInUnits.HighRightPoint.Y) :
+                                                new PointMicrostation(nextField.RangeAttributeInUnits.HighRightPoint.X,
+                                                                      nextField.RangeAttributeInUnits.LowLeftPoint.Y);
 
             var signatureRangeInCellCoordinates = new RangeMicrostation(lowLeftPoint, highRightPoint);
             var signatureRangeInModelCoordinates = signatureRangeInCellCoordinates.Scale(unitScale).

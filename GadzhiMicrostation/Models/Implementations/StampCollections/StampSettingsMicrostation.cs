@@ -22,7 +22,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
             return valueField?.Split(new string[] { SeparatorAttribute },
                                      StringSplitOptions.None).
                                ToList() ??
-                   new List<string>();
+                               new List<string>();
         }
 
         /// <summary>
