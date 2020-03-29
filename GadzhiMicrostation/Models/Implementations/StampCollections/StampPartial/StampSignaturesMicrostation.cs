@@ -24,7 +24,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             StampCellElement.ApplicationMicrostation.AttachLibrary(StampCellElement.ApplicationMicrostation.
                                                                    MicrostationResources.SignatureMicrostationFileName);
             DeleteSignaturesPrevious();
-            IEnumerable<IErrorApplication> signatureErrors = InsertSignaturesFromLibrary();
+            //Использование toList обязательно. Для синхронизации выполнения с прикрепленной библиотекой
+            IEnumerable<IErrorApplication> signatureErrors = InsertSignaturesFromLibrary().ToList();
             StampCellElement.ApplicationMicrostation.DetachLibrary();
 
             return signatureErrors;
