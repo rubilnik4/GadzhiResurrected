@@ -111,35 +111,72 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         public IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation)
         {
+            (var loadDataSources, var loadErrors) = LoadDocument(fileDataServer);
+            (var pdfDataSources, var pdfErrors) = CreatePdf(fileDataServer, printersInformation);
+            (var exportDataSources, var exportErrors) = ExportFile(fileDataServer);
+
+            var errors = loadErrors.Union(pdfErrors).Union(exportErrors).
+                         Select(error => error.FileConvertErrorType);
+            fileDataServer.AddRangeFileConvertErrorType(errors);
+
+            var dataSources = loadDataSources.Union(pdfDataSources).Union(exportDataSources);
+            fileDataServer.SetFileDatasSourceServerConverting(dataSources);
+
+            CloseFile();
+
+            return fileDataServer;
+        }
+
+        /// <summary>
+        /// Загрузить файл
+        /// </summary>   
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) LoadDocument(IFileDataServer fileDataServer)
+        {
             _messagingService.ShowAndLogMessage("Загрузка файла");
             _applicationConverting.OpenDocument(fileDataServer?.FilePathServer);
 
-            (IFileDataSourceServer savingSource, ErrorConverting savingErrors) =
+            (IEnumerable<IFileDataSourceServer> savingSources, IEnumerable<ErrorConverting> savingErrors) =
                 _applicationConverting.SaveDocument(CreateSavingPathByExtension(fileDataServer.FilePathServer,
                                                                                 fileDataServer.FileExtentionType));
-            _messagingService.ShowAndLogError(savingErrors);
+            _messagingService.ShowAndLogErrors(savingErrors);
 
+            return (savingSources, savingErrors);
+        }
 
+        /// <summary>
+        /// Создать Pdf
+        /// </summary>       
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdf(IFileDataServer fileDataServer,
+                                                                                             IPrintersInformation printersInformation)
+        {
             _messagingService.ShowAndLogMessage("Создание файлов PDF");
-            (IEnumerable<IFileDataSourceServer> pdfSource, IEnumerable<ErrorConverting> pdfErrors) = 
+            (IEnumerable<IFileDataSourceServer> pdfSources, IEnumerable<ErrorConverting> pdfErrors) =
                 _applicationConverting.CreatePdfFile(CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf),
-                                                                                 fileDataServer.ColorPrint, 
+                                                                                 fileDataServer.ColorPrint,
                                                                                  printersInformation?.PrintersPdf.FirstOrDefault());
-            if (pdfErrors != null)
-            {
-                foreach (var error in pdfErrors)
-                {
-                    _messagingService.ShowAndLogError(error);
-                }
-            }   
+            _messagingService.ShowAndLogErrors(pdfErrors);
 
+            return (pdfSources, pdfErrors);
+        }
+
+        /// <summary>
+        /// Экспортировать в другие форматы
+        /// </summary>
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) ExportFile(IFileDataServer fileDataServer)
+        {
             //    _loggerMicrostation.ShowMessage("Создание файла DWG");
             //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
-            //                                                                                   FileExtentionMicrostation.dwg));
+            //  FileExtentionMicrostation.dwg));            
+            return (null, null);
+        }
+
+        /// <summary>
+        /// Закрыть файл
+        /// </summary>
+        private void CloseFile()
+        {
             _messagingService.ShowAndLogMessage("Конвертирование завершено");
             _applicationConverting.CloseDocument();
-
-            return fileDataServer;
         }
 
         /// <summary>

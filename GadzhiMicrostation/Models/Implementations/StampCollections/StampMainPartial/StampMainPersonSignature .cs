@@ -1,4 +1,4 @@
-﻿using GadzhiApplicationCommon.FunctionalExtensions;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -30,7 +30,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         private IStampPersonSignatureMicrostation GetPersonSignatureField(IEnumerable<string> personNames)
         {
-            var foundElements = FindElementsInStampFields(personNames, ElementMicrostationType.TextElement).
+            var foundElements = FindElementsInStampControls(personNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>();
 
             var actionType = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsActionType(),

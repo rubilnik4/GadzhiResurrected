@@ -22,10 +22,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         public ICellElementMicrostation StampCellElement { get; }
 
         public StampMicrostation(ICellElementMicrostation stampCellElement)
-        {           
-                StampCellElement = stampCellElement ??
-                    throw new ArgumentNullException(nameof(stampCellElement));
-           // InitializeStampFields();
+        {
+            StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
+            StampSubControls = FindElementsInStampFields(stampCellElement?.SubElements, StampFieldElement.StampControlNames);
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             Select(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)).
             FirstOrDefault() ??
             String.Empty;
-                                                                 
+
 
         /// <summary>
         /// Тип расположения штампа

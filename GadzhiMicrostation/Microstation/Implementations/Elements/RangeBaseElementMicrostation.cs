@@ -54,6 +54,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         private RangeMicrostation RangeAttribute => _element.GetAttributeRange();
 
         /// <summary>
+        /// Возможено ли сжатие элемента
+        /// </summary>
+        protected bool IsValidToCompress => RangeAttribute.IsValid;
+
+        /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
         public RangeMicrostation RangeAttributeInUnits => RangeAttribute.Scale(UnitScale);

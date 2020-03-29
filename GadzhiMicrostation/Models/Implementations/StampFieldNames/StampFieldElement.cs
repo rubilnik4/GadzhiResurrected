@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Список всех полей
         /// </summary>
-        private static IDictionary<string, StampFieldBase> StampBaseParameters
+        private static IDictionary<string, StampFieldBase> StampBaseFields
         {
             get
             {
@@ -25,26 +25,21 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
             }
         }
 
-        private static HashSet<string> StampControlNames => new HashSet<string>(StampBaseParameters.Keys);
+        /// <summary>
+        /// 
+        /// </summary>
+        public static HashSet<string> StampControlNames => new HashSet<string>(StampBaseFields.Keys);
 
         /// <summary>
         /// Содержится ли поле в списке Штампа
         /// </summary>       
-        public static bool ContainControlName(string controlName)
-        {
-            if (!string.IsNullOrEmpty(controlName))
-            {
-                if (StampControlNames.Contains(controlName))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        public static bool ContainControlName(string controlName) => !String.IsNullOrEmpty(controlName) && 
+                                                                      StampControlNames.Contains(controlName);
+          
 
         /// <summary>
         /// Получить список параметров по имени элемента
         /// </summary>
-        public static StampFieldBase GetBaseParametersByControlName(string controlName) => StampBaseParameters[controlName];
+        public static StampFieldBase GetBaseParametersByControlName(string controlName) => StampBaseFields[controlName];
     }
 }

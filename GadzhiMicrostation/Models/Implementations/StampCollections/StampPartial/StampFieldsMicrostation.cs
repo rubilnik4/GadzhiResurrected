@@ -16,17 +16,30 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     public abstract partial class StampMicrostation
     {
         /// <summary>
+        /// Дочерние элементы штампа
+        /// </summary>
+        private IEnumerable<IElementMicrostation> StampSubControls { get; }
+
+        /// <summary>
         /// Найти элементы в словаре штампа по ключам
         /// </summary>
-        protected IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<string> fieldsSearch,
+        private IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<IElementMicrostation> cellSubElements,
+                                                                              IEnumerable<string> fieldsSearch,
                                                                               ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
-                                                 StampCellElement.SubElements.
+                                                 cellSubElements?.
                                                  Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
                                                                     fieldName.ElementType == elementMicrostationType).
                                                  Join(fieldsSearch,
                                                       subElement => subElement.AttributeControlName,
                                                       fieldSearch => fieldSearch,
                                                       (subElement, fieldSearch) => subElement);
+
+        /// <summary>
+        /// Найти элементы в словаре штампа по ключам
+        /// </summary>
+        protected IEnumerable<IElementMicrostation> FindElementsInStampControls(IEnumerable<string> fieldsSearch,
+                                                                                ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
+            FindElementsInStampFields(StampSubControls, fieldsSearch, elementMicrostationType);
 
         /// <summary>
         /// Получить поля штампа на основе элементов Microstation

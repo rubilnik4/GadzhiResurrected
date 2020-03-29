@@ -38,8 +38,9 @@ namespace GadzhiMicrostation.Factory
         /// Уничтожить все предыдущие процессы
         /// </summary>
         private static void KillAllPreviousProcess()
-        {
-            var microstationProcesses = Process.GetProcesses().Where(process => process.ProcessName.ContainsIgnoreCase("ustation"));
+        { 
+            var microstationProcesses = Process.GetProcesses().
+                                        Where(process => process.ProcessName.ContainsIgnoreCase("ustation"));
             foreach (var microstationProcess in microstationProcesses)
             {
                 microstationProcess.Kill();

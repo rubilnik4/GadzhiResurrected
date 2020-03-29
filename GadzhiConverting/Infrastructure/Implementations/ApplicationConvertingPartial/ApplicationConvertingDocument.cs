@@ -1,5 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -42,27 +43,30 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public (IFileDataSourceServer, ErrorConverting) SaveDocument(string filePath)
+        public (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) SaveDocument(string filePath)
         {
-            IFileDataSourceServer fileDataSourceServer = null;
-            ErrorConverting savingError = null;
+            IEnumerable<IFileDataSourceServer> filesDataSourceServer = null;
+            IEnumerable<ErrorConverting> savingErrors = null;
 
             if (ActiveLibrary.IsDocumentValid)
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
                     ActiveLibrary.SaveDocument(filePath);
-                    fileDataSourceServer = new FileDataSourceServer(filePath, FileExtention.docx);
+                    filesDataSourceServer = new FileDataSourceServer(filePath, FileExtention.docx).
+                                            Map(dataSource => new List<IFileDataSourceServer>() { dataSource });
                 },
                 applicationCatchMethod: () =>
                 {
-                    savingError = new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                                      $"Ошибка сохранения основного файла {filePath}");
+                    savingErrors = new ErrorConverting(FileConvertErrorType.FileNotSaved,
+                                                       $"Ошибка сохранения основного файла {filePath}").
+                                   Map(error => new List<ErrorConverting>() { error });
+
                     ActiveLibrary.CloseDocument();
                 });
             }
 
-            return (fileDataSourceServer, savingError);
+            return (filesDataSourceServer, savingErrors);
         }
 
         /// <summary>

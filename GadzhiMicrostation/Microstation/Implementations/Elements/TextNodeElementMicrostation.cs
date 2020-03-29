@@ -71,7 +71,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         {
             bool isComressed = false;
 
-            if (IsNeedCompress == true)
+            if (IsNeedCompress && IsValidToCompress)
             {
                 var scaleFactor = new PointMicrostation(1, 1, 1);
 

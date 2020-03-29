@@ -24,7 +24,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        (IFileDataSourceServer, ErrorConverting) SaveDocument(string filePath);
+        (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) SaveDocument(string filePath);
 
 
         /// <summary>

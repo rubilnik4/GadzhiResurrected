@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FunctionalExtensions\MapExtensions.cs" />
+    <Compile Include="Extensions\Functional\MapExtensions.cs" />
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />
     <Compile Include="Models\Enums\ErrorApplicationType.cs" />
     <Compile Include="Models\Enums\OrientationType.cs" />

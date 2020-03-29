@@ -1,4 +1,6 @@
-﻿using GadzhiCommon.Helpers.Dialogs;
+﻿using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Extentions.StringAdditional;
+using GadzhiCommon.Helpers.Dialogs;
 using GadzhiCommon.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,11 +27,9 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Взять расширение. Убрать точку из расширения файла и привести к нижнему регистру
         /// </summary>      
-        public static string ExtensionWithoutPointFromPath(string path)
-        {
-            string extensionWithPoint = Path.GetExtension(path);
-            return ExtensionWithoutPoint(extensionWithPoint);
-        }
+        public static string ExtensionWithoutPointFromPath(string path) =>        
+           Path.GetExtension(path).
+           Map(extension => ExtensionWithoutPoint(extension));        
 
         /// <summary>
         /// Является ли путь папкой
@@ -61,17 +61,10 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить полное имя файла по директории, имени и расширению
         /// </summary>       
-        public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
-        {
-            if (directoryPath?.EndsWith("\\", StringComparison.Ordinal) == false)
-            {
-                directoryPath += "\\";
-            }
-
-            extension = extension?.TrimStart('.');
-
-            return directoryPath + fileNameWithoutExtension + "." + extension;
-        }
+        public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension) =>                 
+             directoryPath.AddSlashesToPath() + 
+             fileNameWithoutExtension + "." + 
+             extension?.TrimStart('.');       
 
         /// <summary>
         /// Получить вложенные файлы
@@ -146,7 +139,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>   
         public async Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileBinary)
         {
-            bool succsess = false;
+            bool success = false;
 
             //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
             try
@@ -160,59 +153,35 @@ namespace GadzhiCommon.Infrastructure.Implementations
                         await zip.CopyToAsync(output);
                     }
 
-                    succsess = true;
+                    success = true;
                 }
             }
             finally
             {
 
             }
-            return succsess;
+            return success;
         }
 
         /// <summary>
         /// Создать поддиректорию и присвоить идентефикатор
         /// </summary>     
-        public string CreateFolderByGuid(string startingPath)
-        {
-            return CreateFolderByName(startingPath, Guid.NewGuid().ToString());
-        }
+        public string CreateFolderByGuid(string startingPath) => CreateFolderByName(startingPath, Guid.NewGuid().ToString());       
 
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        public string CreateFolderByName(string startingPath, string folderName = "")
-        {
-            bool isCreated = false;
-            if (startingPath?.EndsWith("\\", StringComparison.Ordinal) == false)
-            {
-                startingPath += "\\";
-            }
-            if (!String.IsNullOrWhiteSpace(folderName) && !folderName.EndsWith("\\", StringComparison.Ordinal))
-            {
-                folderName += "\\";
-            }
-            string createdPath = startingPath + folderName + "\\";
-
-            if (!String.IsNullOrWhiteSpace(startingPath))
-            {
-                if (!Directory.Exists(createdPath))
-                {
-                    Directory.CreateDirectory(createdPath);
-                }               
-
-                isCreated = true;
-            }
-
-            return isCreated ? createdPath : null;
-        }
+        public string CreateFolderByName(string startingPath, string folderName = "") =>
+             (startingPath.AddSlashesToPath() + folderName.AddSlashesToPath())?.
+             Map(createdPath => Directory.CreateDirectory(createdPath))?.
+             FullName;      
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
         public bool SaveFileFromByte(string filePath, byte[] fileByte)
         {
-            bool succsess = false;
+            bool success = false;
 
             //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
             try
@@ -221,14 +190,14 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 {
                     File.WriteAllBytes(filePath, fileByte);
 
-                    succsess = true;
+                    success = true;
                 }
             }
             finally
             {
 
             }
-            return succsess;
+            return success;
         }
     }
 }

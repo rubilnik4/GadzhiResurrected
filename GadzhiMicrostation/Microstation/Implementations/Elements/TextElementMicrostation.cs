@@ -48,16 +48,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         {
             bool isComressed = false;
 
-            if (IsNeedCompress == true)
+            if (IsNeedCompress && IsValidToCompress &&
+                WidthAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioText < WidthWithRotation)
             {
-                if (WidthAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioText < WidthWithRotation)
-                {
-                    double compressionLevel = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioText;
-                    _textElement.TextStyle.Width *= compressionLevel;
-                    _textElement.Rewrite();
+                double compressionLevel = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioText;
+                _textElement.TextStyle.Width *= compressionLevel;
+                _textElement.Rewrite();
 
-                    isComressed = true;
-                }
+                isComressed = true;
             }
 
             return isComressed;

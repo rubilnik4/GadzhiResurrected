@@ -1,4 +1,4 @@
-﻿using GadzhiApplicationCommon.FunctionalExtensions;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -22,7 +22,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private IEnumerable<IStampChangeSignatureMicrostation> GetStampChangeRowsWithoutSignatures(string personId, string personName) =>
             StampFieldChanges.GetStampRowChangesSignatures().
                               Select(changeRow => changeRow.StampChangeSignatureFields.Select(field => field.Name)).
-                              Select(changeNames => GetChangeSignatureField(changeNames, personId, personName));
+                              Select(changeNames => GetChangeSignatureField(changeNames, personId, personName)).
+                              Where(changeSignature => !String.IsNullOrEmpty(changeSignature.NumberChangeElement.Text));
 
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
@@ -30,7 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private IStampChangeSignatureMicrostation GetChangeSignatureField(IEnumerable<string> changeNames,
                                                                           string personId, string personName)
         {
-            var foundElements = FindElementsInStampFields(changeNames, ElementMicrostationType.TextElement).
+            var foundElements = FindElementsInStampControls(changeNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>();
 
             var numberChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberChange(),

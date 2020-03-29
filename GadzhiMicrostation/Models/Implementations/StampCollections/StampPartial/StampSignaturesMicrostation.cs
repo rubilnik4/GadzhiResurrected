@@ -7,7 +7,7 @@ using System.Linq;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces;
-using GadzhiApplicationCommon.FunctionalExtensions;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {

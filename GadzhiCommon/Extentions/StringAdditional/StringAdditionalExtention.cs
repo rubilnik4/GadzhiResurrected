@@ -59,7 +59,7 @@ namespace GadzhiCommon.Extentions.StringAdditional
         /// Содержит ли подстроку без учета регистар
         /// </summary>        
         public static bool ContainsIgnoreCase(this string input, string substring) =>
-            String.IsNullOrWhiteSpace(substring) ?
+            !String.IsNullOrWhiteSpace(substring) ?
             input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1 :
             false;
     }

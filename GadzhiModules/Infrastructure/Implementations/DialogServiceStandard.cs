@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Infrastructure.Interfaces;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -62,14 +63,22 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         public void ShowAndLogError(IErrorConverting errorConverting)
         {
-            if (errorConverting != null)
-            {
-                string messageText = "Ошибка" + "\n" +
-                                 ConverterErrorType.FileErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
-                                 errorConverting.ErrorDescription;
+            if (errorConverting == null) throw new ArgumentNullException(nameof(errorConverting));
+            string messageText = "Ошибка" + "\n" +
+                             ConverterErrorType.FileErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
+                             errorConverting.ErrorDescription;
+            MessageBox.Show(messageText);
+        }
 
-                MessageBox.Show(messageText);
-            }           
+        /// <summary>
+        /// Сообщение об ошибках
+        /// </summary>  
+        public void ShowAndLogErrors(IEnumerable<IErrorConverting> errorsConverting)
+        {
+            foreach (var error in errorsConverting.EmptyIfNull())
+            {
+                ShowAndLogError(error);
+            }
         }
 
         /// <summary>

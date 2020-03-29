@@ -12,8 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
-using GadzhiApplicationCommon.FunctionalExtensions;
 using GadzhiMicrostation.Helpers;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {

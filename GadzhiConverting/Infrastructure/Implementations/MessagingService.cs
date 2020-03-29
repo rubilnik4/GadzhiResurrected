@@ -1,8 +1,10 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
+using System.Collections.Generic;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -31,14 +33,23 @@ namespace GadzhiConverting.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Отобразить ошибку
-        /// </summary>        
+        /// Отобразить и добавить в журнал ошибку
+        /// </summary>            
         public virtual void ShowAndLogError(IErrorConverting errorConverting)
         {
-            if (errorConverting != null)
+            ShowError(errorConverting);
+            _loggerService.LogError(errorConverting);
+        }
+
+        /// <summary>
+        /// Отобразить и добавить в журнал ошибки
+        /// </summary>       
+        public virtual void ShowAndLogErrors(IEnumerable<IErrorConverting> errorsConverting)
+        {
+            foreach (var error in errorsConverting.EmptyIfNull())
             {
-                ShowError(errorConverting);
-                _loggerService.LogError(errorConverting);
+                ShowError(error);
+                _loggerService.LogError(error);
             }
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.FunctionalExtensions
+namespace GadzhiCommon.Extentions.Functional
 {
     /// <summary>
     /// Методы расширения для преобразования типов
