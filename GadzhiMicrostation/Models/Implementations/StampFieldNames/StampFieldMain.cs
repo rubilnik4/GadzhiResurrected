@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
@@ -105,5 +106,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
                    !cellElementName.Contains("STAMP_AUDIT") &&
                    !cellElementName.Contains("STAMP_ISM");
         }
+
+        /// <summary>
+        /// Является ли элемент вертикальным
+        /// </summary>     
+        public static bool IsControlVertical(string name) =>
+            !String.IsNullOrEmpty(name) &&
+            StampFieldApprovals.GetFieldsApprovalSignatures().
+                                Where(field => field.IsVertical).
+                                Select(field => field.Name).
+                                Contains(name);
     }
 }

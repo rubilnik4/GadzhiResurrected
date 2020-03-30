@@ -5,17 +5,18 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Базовый класс для элементов находящихся в рамке
     /// </summary>
-    public interface IRangeBaseElementMicrostation : IElementMicrostation
+    public interface IRangeBaseElementMicrostation<out TElement> : IElementMicrostation
+                                              where TElement : class
     {
         /// <summary>
         /// Необходимо ли сжатие в рамке
         /// </summary>
-        bool IsNeedCompress { get; set; }
+        bool IsNeedCompress { get; }
 
         /// <summary>
         /// Вертикальное расположение
         /// </summary>
-        bool IsVertical { get; set; }
+        bool IsVertical { get; }
 
         /// <summary>
         /// Координаты текстового элемента
@@ -36,5 +37,10 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Вписать элемент в рамку
         /// </summary>
         bool CompressRange();
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>     
+        TElement Copy(bool IsVertical);
     }
 }

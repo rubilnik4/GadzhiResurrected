@@ -4,6 +4,7 @@ using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.Printers;
@@ -23,9 +24,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Открыть документ
         /// </summary>
-        public ErrorConverting OpenDocument(string filePath)
+        public IErrorConverting OpenDocument(string filePath)
         {
-            (FileExtention? documentExtension, ErrorConverting openError) = IsDocumentValid(filePath);
+            (FileExtention? documentExtension, IErrorConverting openError) = IsDocumentValid(filePath);
             if (documentExtension != null)
             {
                 openError = SetActiveLibraryByExtension(documentExtension.Value);
@@ -43,10 +44,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) SaveDocument(string filePath)
+        public (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) SaveDocument(string filePath)
         {
             IEnumerable<IFileDataSourceServer> filesDataSourceServer = null;
-            IEnumerable<ErrorConverting> savingErrors = null;
+            IEnumerable<IErrorConverting> savingErrors = null;
 
             if (ActiveLibrary.IsDocumentValid)
             {
@@ -60,7 +61,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 {
                     savingErrors = new ErrorConverting(FileConvertErrorType.FileNotSaved,
                                                        $"Ошибка сохранения основного файла {filePath}").
-                                   Map(error => new List<ErrorConverting>() { error });
+                                   Map(error => new List<IErrorConverting>() { error });
 
                     ActiveLibrary.CloseDocument();
                 });
@@ -72,11 +73,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint,
+        public (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint,
                                                                                                 IPrinterInformation pdfPrinterInformation)
         {
             IEnumerable<IFileDataSourceServer> fileDatasSourceServer = null;
-            IEnumerable<ErrorConverting> savingErrors = null;
+            IEnumerable<IErrorConverting> savingErrors = null;
 
             if (ActiveLibrary.IsDocumentValid)
             {
@@ -84,7 +85,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 {
                     (fileDatasSourceServer, savingErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
                 },
-                applicationCatchMethod: () => savingErrors = new List<ErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+                applicationCatchMethod: () => savingErrors = new List<IErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                                                           $"Ошибка сохранения файла PDF {filePath}")});
             }
             return (fileDatasSourceServer, savingErrors);
@@ -93,9 +94,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        public ErrorConverting CloseDocument()
+        public IErrorConverting CloseDocument()
         {
-            ErrorConverting closingError = null;
+            IErrorConverting closingError = null;
 
             if (ActiveLibrary.IsDocumentValid)
             {
@@ -115,10 +116,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
-        private (FileExtention?, ErrorConverting) IsDocumentValid(string filePath)
+        private (FileExtention?, IErrorConverting) IsDocumentValid(string filePath)
         {
             FileExtention? fileExtention = null;
-            ErrorConverting documentError = null;
+            IErrorConverting documentError = null;
 
             if (_fileSystemOperations.IsFileExist(filePath))
             {

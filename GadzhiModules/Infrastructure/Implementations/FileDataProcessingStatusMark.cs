@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
@@ -123,7 +124,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             var filesChangedStatus = GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
             await Task.WhenAll(filesNotFound, filesChangedStatus);
 
-            var filesDataUnion = filesNotFound?.Result.FileStatus.Union(filesChangedStatus.Result.FileStatus);
+            var filesDataUnion = filesNotFound?.Result.FileStatus.UnionNotNull(filesChangedStatus.Result.FileStatus);
             var filesStatusUnion = new FilesStatus(filesDataUnion,
                                                    filesDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
                                                    filesChangedStatus.Result.FilesQueueStatus);

@@ -55,6 +55,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
               (string personId) => InsertSignature(personId,
                                                    responsiblePersonElement.AsTextElementMicrostation,
                                                    dateSignatureElement.AsTextElementMicrostation)?.
-                                   Map(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
+                                   Map(signature => new StampFieldMicrostation(signature, StampFieldType.ApprovalSignature));
     }
 }

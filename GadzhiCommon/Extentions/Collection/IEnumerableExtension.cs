@@ -14,6 +14,12 @@ namespace GadzhiCommon.Extentions.Collection
         /// <summary>
         /// ПРоверка перечесления на null
         /// </summary>      
-        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => source ?? Enumerable.Empty<T>();       
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => source ?? Enumerable.Empty<T>();
+
+        /// <summary>
+        /// Объединить элемент и инициализировать, если они пустые
+        /// </summary>       
+        public static IEnumerable<T> UnionNotNull<T>(this IEnumerable<T> first, IEnumerable<T> second) =>
+            first.EmptyIfNull().Union(second.EmptyIfNull());
     }
 }

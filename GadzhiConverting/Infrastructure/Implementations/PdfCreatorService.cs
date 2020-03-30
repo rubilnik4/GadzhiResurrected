@@ -3,6 +3,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Interfaces;
 using System;
@@ -52,11 +53,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        public (bool, ErrorConverting) PrintPdfWithExecuteAction(string filePath, Func<IErrorApplication> printFunction)
+        public (bool, IErrorConverting) PrintPdfWithExecuteAction(string filePath, Func<IErrorApplication> printFunction)
         {
             bool success = false;
 
-            (bool isValidSetOptions, ErrorConverting errorConverting) = SetPrinterOptions(filePath);
+            (bool isValidSetOptions, IErrorConverting errorConverting) = SetPrinterOptions(filePath);
             if (isValidSetOptions)
             {
                 if (printFunction != null)
@@ -79,10 +80,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Установить опции печати
         /// </summary>   
-        private (bool, ErrorConverting) SetPrinterOptions(string filePath)
+        private (bool, IErrorConverting) SetPrinterOptions(string filePath)
         {
             bool success = false;
-            ErrorConverting errorConverting = null;
+            IErrorConverting errorConverting = null;
 
             PdrCreatorInitialize();
 
@@ -114,7 +115,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Напечатать PDF
         /// </summary>
-        private (bool, ErrorConverting) PrintPdf()
+        private (bool, IErrorConverting) PrintPdf()
         {
             _readyState = false;
             _pdfCreator.cPrinterStop = false;
@@ -127,7 +128,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             }
 
             bool success = !_readyState;
-            ErrorConverting errorConverting = null;
+            IErrorConverting errorConverting = null;
             if (_readyState)
             {
                 errorConverting = (new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло"));

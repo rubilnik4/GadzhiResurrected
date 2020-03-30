@@ -26,13 +26,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         private IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<IElementMicrostation> cellSubElements,
                                                                               IEnumerable<string> fieldsSearch,
                                                                               ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
-                                                 cellSubElements?.
-                                                 Where(fieldName => elementMicrostationType == ElementMicrostationType.Element ||
-                                                                    fieldName.ElementType == elementMicrostationType).
-                                                 Join(fieldsSearch,
-                                                      subElement => subElement.AttributeControlName,
-                                                      fieldSearch => fieldSearch,
-                                                      (subElement, fieldSearch) => subElement);
+                cellSubElements?.
+                Where(subElement => (elementMicrostationType == ElementMicrostationType.Element ||
+                                     subElement.ElementType == elementMicrostationType) &&
+                                     subElement is IRangeBaseElementMicrostation<IElementMicrostation>).
+                Cast<IRangeBaseElementMicrostation<IElementMicrostation>>().
+                Join(fieldsSearch,
+                     subElement => subElement.AttributeControlName,
+                     fieldSearch => fieldSearch,
+                     (subElement, fieldSearch) => subElement).
+                Select(subElement => subElement.Copy(StampFieldMain.IsControlVertical(subElement.AttributeControlName))).
+                Cast<IElementMicrostation>();
 
         /// <summary>
         /// Найти элементы в словаре штампа по ключам

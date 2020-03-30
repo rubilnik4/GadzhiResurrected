@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiCommon.Extentions.Collection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Маркеры штампа
         /// </summary>
-        public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.Union(MarkersAdditionalStamp).ToList();
+        public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.
+                                                            UnionNotNull(MarkersAdditionalStamp).
+                                                            ToList();
 
         /// <summary>
         /// Маркеры типа действия в строке с ответственным лицом

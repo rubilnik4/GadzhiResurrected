@@ -2,6 +2,7 @@
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using System;
@@ -63,9 +64,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширениф
         /// </summary>        
-        private ErrorConverting SetActiveLibraryByExtension(FileExtention fileExtention)
+        private IErrorConverting SetActiveLibraryByExtension(FileExtention fileExtention)
         {
-            ErrorConverting libraryError = null;
+            IErrorConverting libraryError = null;
 
             if (fileExtention == FileExtention.dgn)
             {

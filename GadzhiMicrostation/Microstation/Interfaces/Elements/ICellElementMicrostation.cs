@@ -5,7 +5,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Элемент ячейки типа Microstation
     /// </summary>
-    public interface ICellElementMicrostation : IRangeBaseElementMicrostation
+    public interface ICellElementMicrostation : IRangeBaseElementMicrostation<ICellElementMicrostation>
     {
         /// <summary>
         /// Имя ячейки

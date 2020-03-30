@@ -3,7 +3,9 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Implementations.FilesConvert;
@@ -27,7 +29,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint,
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) CreatePdfInDocument(string filePath, ColorPrint colorPrint,
                                                                                                        IPrinterInformation pdfPrinterInformation)
         {
             if (ActiveLibrary.StampContainer.IsValid)
@@ -39,7 +41,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             }
             else
             {
-                return (null, new List<ErrorConverting>() { new ErrorConverting(FileConvertErrorType.StampNotFound,
+                return (null, new List<IErrorConverting>() { new ErrorConverting(FileConvertErrorType.StampNotFound,
                                                             $"Штампы в файле {Path.GetFileName(filePath)} не найдены")});
             }
         }
@@ -47,9 +49,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private (IFileDataSourceServer fileSource, IEnumerable<ErrorConverting> errors) CreatePdfWithSignatures(IStamp stamp, string filePath,
-                                                                                                                ColorPrint colorPrint,
-                                                                                                                IPrinterInformation pdfPrinterInformation)
+        private (IFileDataSourceServer fileSource, IEnumerable<IErrorConverting> errors) CreatePdfWithSignatures(IStamp stamp, string filePath,
+                                                                                                                 ColorPrint colorPrint,
+                                                                                                                 IPrinterInformation pdfPrinterInformation)
         {
             stamp.CompressFieldsRanges();
 
@@ -59,7 +61,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
 
             var errors = (fileDataSourceAndError.error == null) ?
                           signaturesErrors :
-                          signaturesErrors?.Union(new List<ErrorConverting>() { fileDataSourceAndError.error });
+                          signaturesErrors.UnionNotNull(new List<IErrorConverting>() { fileDataSourceAndError.error });
 
             return (fileDataSourceAndError.fileDataSource, errors);
         }
@@ -67,12 +69,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Печать пдф
         /// </summary>
-        private (IFileDataSourceServer fileDataSource, ErrorConverting error) CreatePdf(IStamp stamp, string filePath, ColorPrint colorPrint,
+        private (IFileDataSourceServer fileDataSource, IErrorConverting error) CreatePdf(IStamp stamp, string filePath, ColorPrint colorPrint,
                                                                                         string paperSize, IPrinterInformation pdfPrinterInformation)
         {
             IFileDataSourceServer fileDataSourceServer = null;
 
-            (bool isSetPrinter, ErrorConverting errorConverting) = SetDefaultPrinter(pdfPrinterInformation.Name);
+            (bool isSetPrinter, IErrorConverting errorConverting) = SetDefaultPrinter(pdfPrinterInformation.Name);
             if (isSetPrinter)
             {
                 errorConverting = PrintPdfCommand(stamp, filePath, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize);
@@ -84,10 +86,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        private (bool, ErrorConverting) SetDefaultPrinter(string printerName)
+        private (bool, IErrorConverting) SetDefaultPrinter(string printerName)
         {
             bool success = false;
-            ErrorConverting errorConverting = null;
+            IErrorConverting errorConverting = null;
 
             if (PrinterSettings.InstalledPrinters?.Cast<string>()?.Contains(printerName, StringComparer.OrdinalIgnoreCase) == true)
             {
@@ -113,7 +115,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        private ErrorConverting PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
+        private IErrorConverting PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
         {           
             var printCommand = new Func<IErrorApplication>(() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printCommand).ErrorConverting;

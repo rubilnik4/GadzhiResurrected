@@ -7,7 +7,7 @@ using System;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
-    public class TextNodeElementMicrostation : RangeBaseElementMicrostation, ITextNodeElementMicrostation
+    public class TextNodeElementMicrostation : RangeBaseElementMicrostation<ITextNodeElementMicrostation>, ITextNodeElementMicrostation
     {
         /// <summary>
         /// Экземпляр текстового элемента Microstation
@@ -17,8 +17,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public TextNodeElementMicrostation(TextNodeElement textNodeElement,
                                            IOwnerMicrostation ownerContainerMicrostation)
           : this(textNodeElement, ownerContainerMicrostation, true, false)
-        {
-        }
+        { }
 
         public TextNodeElementMicrostation(TextNodeElement textNodeElement,
                                            IOwnerMicrostation ownerContainerMicrostation,
@@ -88,7 +87,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
                 if (scaleFactor.X != 1 || scaleFactor.Y != 1)
                 {
-                    ScaleAll(Origin, scaleFactor);                   
+                    ScaleAll(Origin, scaleFactor);
                     isComressed = true;
                 }
             }
@@ -101,17 +100,19 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>       
         private void ChangeTextElementsInNode(Action<TextElement> changeTextElement)
         {
-            if (changeTextElement != null)
+            ElementEnumerator elementEnumerator = _textNodeElement.GetSubElements();
+            while (elementEnumerator.MoveNext())
             {
-                ElementEnumerator elementEnumerator = _textNodeElement.GetSubElements();
-                while (elementEnumerator.MoveNext())
-                {
-                    TextElement textElement = (TextElement)elementEnumerator.Current;
-                    changeTextElement.Invoke(textElement);
-                    textElement.Rewrite();
-                }
+                TextElement textElement = (TextElement)elementEnumerator.Current;
+                changeTextElement?.Invoke(textElement);
+                textElement.Rewrite();
             }
-
         }
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>     
+        public override ITextNodeElementMicrostation Copy(bool isVertical) =>
+            new TextNodeElementMicrostation(_textNodeElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
     }
 }

@@ -18,7 +18,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Пути отконвертированных файлов
         /// </summary>
-        private readonly List<IFileDataSourceServer> _fileDatasSourceServerBase;
+        private IReadOnlyList<IFileDataSourceServer> _fileDatasSourceServerBase;
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -27,9 +27,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
             : this(filePathServer, filePathClient, colorPrint, null)
-        {
+        { }
 
-        }
         public FileDataServer(string filePathServer, string filePathClient,
                               ColorPrint colorPrint, IEnumerable<FileConvertErrorType> fileConvertErrorType)
         {
@@ -123,31 +122,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServer)
         {
-            if (fileDatasSourceServer != null)
-            {
-                _fileDatasSourceServerBase.Clear();
-                _fileDatasSourceServerBase.AddRange(fileDatasSourceServer);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(fileDatasSourceServer));
-            }
-        }
-
-        /// <summary>
-        /// Добавить пути к отконвертированным файлам
-        /// </summary>
-        protected void AddRangeConvertedFilePathBase(IEnumerable<IFileDataSourceServer> fileDatasSourceServer)
-        {
-            if (fileDatasSourceServer != null)
-            {
-                _fileDatasSourceServerBase.AddRange(fileDatasSourceServer);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(fileDatasSourceServer));
-            }
-        }
+            _fileDatasSourceServerBase = new List<IFileDataSourceServer>(fileDatasSourceServer ?? Enumerable.Empty<IFileDataSourceServer>());
+        }      
 
         /// <summary>
         /// Добавить ошибку
@@ -162,40 +138,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes)
         {
-            _fileConvertErrorTypesBase.AddRange(fileConvertErrorTypes);
-        }
-
-        ///// <summary>
-        ///// Добавить путь к отконвертированному файлу или внести ошибку в список
-        ///// </summary>
-        //public void AddDataSourceOrError(IFileDataSourceServer fileDataSourceServer, FileConvertErrorType? fileConvertErrorType)
-        //{
-        //    if (fileDataSourceServer != null)
-        //    {
-        //      add(fileDataSourceServer);
-        //    }
-        //    if (fileConvertErrorType != null)
-        //    {
-        //        _fileConvertErrorTypesBase.Add(fileConvertErrorType.Value);
-        //    }
-           
-        //}
-
-        /// <summary>
-        /// Добавить пути к отконвертированным файлам или внести ошибки в список
-        /// </summary>
-        public void AddDataSourceOrError(IFileDataSourceServer fileDataSourceServer, FileConvertErrorType? fileConvertErrorType)
-        {
-            if (fileDataSourceServer != null)
-            {
-                _fileDatasSourceServerBase.Add(fileDataSourceServer);
-            }
-            if (fileConvertErrorType != null)
-            {
-                _fileConvertErrorTypesBase.Add(fileConvertErrorType.Value);
-            }
-
-        }
+            _fileConvertErrorTypesBase.AddRange(fileConvertErrorTypes ?? Enumerable.Empty<FileConvertErrorType>());
+        }        
 
         public override bool Equals(object obj)
         {

@@ -2,6 +2,7 @@
 using GadzhiApplicationCommon.Models.Implementation;
 using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.Elements;
@@ -120,7 +121,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>        
         private IEnumerable<IStampSignature<IStampFieldWord>> GetSignatures(IEnumerable<IStampSignature<IStampFieldWord>> personSignatures,
                                                                             IEnumerable<IStampSignature<IStampFieldWord>> changeSignatures) =>
-             personSignatures.Union(changeSignatures);
+             personSignatures.UnionNotNull(changeSignatures);
 
         /// <summary>
         /// Получить информацию об ответственном лице по имени

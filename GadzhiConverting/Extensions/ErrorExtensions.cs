@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Converters;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace GadzhiConverting.Extensions
         /// <summary>
         /// Преобразовать внутренний класс ошибок библиотеки в основной
         /// </summary>
-        public static ErrorConverting ToErrorConverting(this IErrorApplication errorApplication) =>
+        public static IErrorConverting ToErrorConverting(this IErrorApplication errorApplication) =>
             ErrorApplicationConverter.ToErrorConverting(errorApplication);
     }
 }

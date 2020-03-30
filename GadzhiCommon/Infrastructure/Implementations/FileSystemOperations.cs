@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Extentions.Functional;
+﻿using GadzhiCommon.Extentions.Collection;
+using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Helpers.Dialogs;
 using GadzhiCommon.Infrastructure.Interfaces;
@@ -79,11 +80,13 @@ namespace GadzhiCommon.Infrastructure.Implementations
             var filePaths = fileOrDirectoriesPaths?.Where(f => IsFile(f));
             var directoriesPath = fileOrDirectoriesPaths?.Where(d => IsDirectory(d) &&
                                                                      IsDirectoryExist(d));
-            var filesInDirectories = directoriesPath?.Union(directoriesPath?.SelectMany(d => GetDirectories(d)))?
-                                                     .SelectMany(d => GetFiles(d));
-            var allFilePaths = filePaths?.Union(filesInDirectories)?
-                                         .Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) &&
-                                                     IsFileExist(f));
+            var filesInDirectories = directoriesPath.
+                                     UnionNotNull(directoriesPath?.SelectMany(d => GetDirectories(d)))?.
+                                     SelectMany(d => GetFiles(d));
+
+            var allFilePaths = filePaths.
+                               UnionNotNull(filesInDirectories)?.
+                               Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) && IsFileExist(f));
 
             return await Task.FromResult(allFilePaths);
         }

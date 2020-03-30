@@ -61,5 +61,10 @@ namespace GadzhiMicrostation.Extentions.StringAdditional
             !String.IsNullOrEmpty(substring) ?
             input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1 :
             false;
+
+        /// <summary>
+        /// Является ли строка пустой
+        /// </summary>       
+        public static bool IsNullOrWhiteSpace(this string text) => String.IsNullOrEmpty(text?.Trim());
     }
 }

@@ -61,7 +61,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             Map(signatureRange => StampCellElement.ApplicationMicrostation.
                                   CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
                                                                StampCellElement.ModelMicrostation,
-                                                               GetAdditionalParametersToSignature(signatureRange, previousField.IsVertical),
+                                                               CreateSignatureCell(signatureRange, previousField.IsVertical),
                                                                personName));      
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты
@@ -96,29 +96,30 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Параметры ячейки подписи
         /// </summary>
-        private Action<ICellElementMicrostation> GetAdditionalParametersToSignature(RangeMicrostation signatureRange, bool isVertical) =>
-            new Action<ICellElementMicrostation>(cellElement =>
+        private Func<ICellElementMicrostation, ICellElementMicrostation> CreateSignatureCell(RangeMicrostation signatureRange, bool isVertical) =>
+            new Func<ICellElementMicrostation, ICellElementMicrostation>(cellElement =>
             {
-                cellElement.IsVertical = isVertical;
-                PointMicrostation differenceBetweenOriginAndLowLeft = cellElement.Origin.Subtract(cellElement.Range.LowLeftPoint).
-                                                                                         Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow);
+                var signatureCell = cellElement.Copy(isVertical);
+                PointMicrostation differenceBetweenOriginAndLowLeft = signatureCell.Origin.Subtract(signatureCell.Range.LowLeftPoint).
+                                                                                           Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow);
                 if (isVertical)
                 {
                     differenceBetweenOriginAndLowLeft.X += signatureRange.Width;
                 }
-                cellElement.Move(differenceBetweenOriginAndLowLeft);
+                signatureCell.Move(differenceBetweenOriginAndLowLeft);
 
-                var originPoint = !isVertical ? cellElement.Range.LowLeftPoint : new PointMicrostation(signatureRange.HighRightPoint.X, signatureRange.LowLeftPoint.Y);
+                var originPoint = !isVertical ? signatureCell.Range.LowLeftPoint : new PointMicrostation(signatureRange.HighRightPoint.X, signatureRange.LowLeftPoint.Y);
                 if (isVertical)
                 {
-                    cellElement.Rotate(originPoint, 90);
+                    signatureCell.Rotate(originPoint, 90);
                 }
 
-                cellElement.ScaleAll(originPoint,
-                                     new PointMicrostation(signatureRange.Width / cellElement.Range.Width * StampSettingsMicrostation.CompressionRatioText,
-                                                           signatureRange.Height / cellElement.Range.Height * StampSettingsMicrostation.CompressionRatioText));
+                signatureCell.ScaleAll(originPoint,
+                                       new PointMicrostation(signatureRange.Width / signatureCell.Range.Width * StampSettingsMicrostation.CompressionRatioText,
+                                                           signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText));
 
-                cellElement.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
+                signatureCell.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
+                return signatureCell;
             });
 
     }

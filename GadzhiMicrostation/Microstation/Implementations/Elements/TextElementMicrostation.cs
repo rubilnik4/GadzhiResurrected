@@ -9,7 +9,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Текстовый элемент типа Microstation
     /// </summary>
-    public class TextElementMicrostation : RangeBaseElementMicrostation, ITextElementMicrostation
+    public class TextElementMicrostation : RangeBaseElementMicrostation<ITextElementMicrostation>, ITextElementMicrostation
     {
         /// <summary>
         /// Экземпляр текстового элемента Microstation
@@ -60,5 +60,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
             return isComressed;
         }
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>     
+        public override ITextElementMicrostation Copy(bool isVertical) =>
+            new TextElementMicrostation(_textElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
     }
 }

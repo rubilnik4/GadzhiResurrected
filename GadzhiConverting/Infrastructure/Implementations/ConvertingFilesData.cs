@@ -1,7 +1,9 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Interfaces.Printers;
@@ -115,11 +117,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
             (var pdfDataSources, var pdfErrors) = CreatePdf(fileDataServer, printersInformation);
             (var exportDataSources, var exportErrors) = ExportFile(fileDataServer);
 
-            var errors = loadErrors.Union(pdfErrors).Union(exportErrors).
+            var errors = loadErrors.
+                         UnionNotNull(pdfErrors).
+                         UnionNotNull(exportErrors).
                          Select(error => error.FileConvertErrorType);
             fileDataServer.AddRangeFileConvertErrorType(errors);
 
-            var dataSources = loadDataSources.Union(pdfDataSources).Union(exportDataSources);
+            var dataSources = loadDataSources.
+                              UnionNotNull(pdfDataSources).
+                              UnionNotNull(exportDataSources);
             fileDataServer.SetFileDatasSourceServerConverting(dataSources);
 
             CloseFile();
@@ -130,12 +136,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Загрузить файл
         /// </summary>   
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) LoadDocument(IFileDataServer fileDataServer)
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) LoadDocument(IFileDataServer fileDataServer)
         {
             _messagingService.ShowAndLogMessage("Загрузка файла");
             _applicationConverting.OpenDocument(fileDataServer?.FilePathServer);
 
-            (IEnumerable<IFileDataSourceServer> savingSources, IEnumerable<ErrorConverting> savingErrors) =
+            (IEnumerable<IFileDataSourceServer> savingSources, IEnumerable<IErrorConverting> savingErrors) =
                 _applicationConverting.SaveDocument(CreateSavingPathByExtension(fileDataServer.FilePathServer,
                                                                                 fileDataServer.FileExtentionType));
             _messagingService.ShowAndLogErrors(savingErrors);
@@ -146,11 +152,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать Pdf
         /// </summary>       
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdf(IFileDataServer fileDataServer,
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) CreatePdf(IFileDataServer fileDataServer,
                                                                                              IPrintersInformation printersInformation)
         {
             _messagingService.ShowAndLogMessage("Создание файлов PDF");
-            (IEnumerable<IFileDataSourceServer> pdfSources, IEnumerable<ErrorConverting> pdfErrors) =
+            (IEnumerable<IFileDataSourceServer> pdfSources, IEnumerable<IErrorConverting> pdfErrors) =
                 _applicationConverting.CreatePdfFile(CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf),
                                                                                  fileDataServer.ColorPrint,
                                                                                  printersInformation?.PrintersPdf.FirstOrDefault());
@@ -162,7 +168,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Экспортировать в другие форматы
         /// </summary>
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) ExportFile(IFileDataServer fileDataServer)
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) ExportFile(IFileDataServer fileDataServer)
         {
             //    _loggerMicrostation.ShowMessage("Создание файла DWG");
             //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,

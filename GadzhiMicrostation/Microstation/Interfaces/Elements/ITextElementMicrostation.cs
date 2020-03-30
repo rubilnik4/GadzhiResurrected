@@ -3,7 +3,7 @@
     /// <summary>
     /// Текстовый элемент типа Microstation
     /// </summary>
-    public interface ITextElementMicrostation : IRangeBaseElementMicrostation
+    public interface ITextElementMicrostation : IRangeBaseElementMicrostation<ITextElementMicrostation>
     {
         /// <summary>
         /// Текст элемента

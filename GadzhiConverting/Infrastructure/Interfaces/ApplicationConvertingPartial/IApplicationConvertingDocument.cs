@@ -1,6 +1,7 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
@@ -18,23 +19,24 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Открыть документ
         /// </summary>
-        ErrorConverting OpenDocument(string filePath);
+        IErrorConverting OpenDocument(string filePath);
 
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) SaveDocument(string filePath);
+        (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) SaveDocument(string filePath);
 
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        (IEnumerable<IFileDataSourceServer>, IEnumerable<ErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
+        (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint, 
+                                                                                          IPrinterInformation pdfPrinterInformation);
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        ErrorConverting CloseDocument();
+        IErrorConverting CloseDocument();
     }
 }

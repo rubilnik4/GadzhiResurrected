@@ -13,17 +13,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Элемент ячейки типа Microstation
     /// </summary>
-    public class CellElementMicrostation : RangeBaseElementMicrostation, ICellElementMicrostation
+    public class CellElementMicrostation : RangeBaseElementMicrostation<ICellElementMicrostation>, ICellElementMicrostation
     {
         /// <summary>
         /// Экземпляр ячейки Microstation определяющей штамп
         /// </summary>
         protected CellElement CellElement { get; private set; }
 
+        public CellElementMicrostation(CellElement cellElement,
+                                      IOwnerMicrostation ownerContainerMicrostation)
+           : this(cellElement, ownerContainerMicrostation, false, false)
+        { }
 
         public CellElementMicrostation(CellElement cellElement,
-                                       IOwnerMicrostation ownerContainerMicrostation)
-            : base((Element)cellElement, ownerContainerMicrostation, false, false)
+                                       IOwnerMicrostation ownerContainerMicrostation,
+                                       bool isNeedCompress,
+                                       bool isVertical)
+            : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
             CellElement = cellElement;
             SubElementsPair = GetSubElementsPair();
@@ -94,5 +100,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             Where(element => element.IsConvertableToMicrostation()).
             ToDictionary(element => element.ToElementMicrostation(this),
                          element => element);
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>     
+        public override ICellElementMicrostation Copy(bool isVertical) =>
+            new CellElementMicrostation(CellElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
     }
 }

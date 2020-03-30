@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
@@ -130,8 +131,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<FileStatus> ConvertToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse)
         {
             var fileConvertSavedErrorType = await SaveFilesDataSourceFromDTOResponse(fileResponse);
-            var fileConvertErrorTypes = fileResponse.FileConvertErrorType?.Union(fileConvertSavedErrorType)?.
-                                                                           Where(error => error != FileConvertErrorType.NoError);
+            var fileConvertErrorTypes = fileResponse.FileConvertErrorType.UnionNotNull(fileConvertSavedErrorType).
+                                                                          Where(error => error != FileConvertErrorType.NoError);
 
             return new FileStatus(fileResponse.FilePath, StatusProcessing.End, fileConvertErrorTypes);
         }

@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         public ICellElementMicrostation CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
-                                                                     Action<ICellElementMicrostation> additionalParametrs = null,
+                                                                     Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                                      string cellDescription = null) =>
             ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription).
             Map(cellNameChanged => !String.IsNullOrEmpty(cellNameChanged) ?
@@ -41,7 +41,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         public ICellElementMicrostation CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                                    IModelMicrostation modelMicrostation,
-                                                                   Action<ICellElementMicrostation> additionalParametrs = null,
+                                                                   Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                                    string cellDescription = null)
         {
             AttachLibrary(MicrostationResources.SignatureMicrostationFileName);
@@ -77,7 +77,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         private ICellElementMicrostation CreateCellElementFromLibraryWithoutCheck(string cellName, PointMicrostation origin,
                                                                                   IModelMicrostation modelMicrostation,
-                                                                                  Action<ICellElementMicrostation> additionalParameters = null)
+                                                                                  Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null)
         {
             CellElement cellElement = _application.CreateCellElement2(cellName,
                                                                       _application.Point3dFromXY(origin.X, origin.Y),
@@ -85,8 +85,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                       false,
                                                                       _application.Matrix3dIdentity());
 
-            var cellElementMicrostation = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
-            additionalParameters?.Invoke(cellElementMicrostation);
+            var cellDefaultOrigin = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
+            var cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
@@ -163,6 +163,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         private string GetCellNameRandom() =>
             _cachLibraryElements?.
-            Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name);      
+            Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name);
     }
 }

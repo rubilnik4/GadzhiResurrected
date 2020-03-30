@@ -9,7 +9,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Базовый класс для элементов находящихся в рамке
     /// </summary>
-    public abstract class RangeBaseElementMicrostation : ElementMicrostation, IRangeBaseElementMicrostation
+    public abstract class RangeBaseElementMicrostation<TElement> : ElementMicrostation, IRangeBaseElementMicrostation<TElement>
+                                                                   where TElement : class
     {
         /// <summary>
         /// Экземпляр элемента Microstation
@@ -19,17 +20,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Необходимо ли сжатие в рамке
         /// </summary>
-        public bool IsNeedCompress { get; set; }
+        public bool IsNeedCompress { get; }
 
         /// <summary>
         /// Вертикальное расположение
         /// </summary>
-        public bool IsVertical { get; set; }
+        public bool IsVertical { get;  }
 
-        public RangeBaseElementMicrostation(Element element,
-                                           IOwnerMicrostation ownerContainerMicrostation,
-                                           bool isNeedCompress,
-                                           bool isVertical)
+        public RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
+                                            bool isNeedCompress, bool isVertical)
             : base(element, ownerContainerMicrostation)
         {
             _element = element;
@@ -87,5 +86,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Вписать элемент в рамку
         /// </summary>
         public abstract bool CompressRange();
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>     
+        public abstract TElement Copy(bool isVertical);
     }
 }
