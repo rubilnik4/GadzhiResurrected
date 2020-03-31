@@ -14,6 +14,8 @@ using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiApplicationCommon.Models.Implementation;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
+using GadzhiMicrostation.Extentions.StringAdditional;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -25,7 +27,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        public IErrorApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
+        public IEnumerable<IErrorApplication> PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
         {
             if (stamp != null && stamp is IStampMicrostation stampMicrostation)
             {
@@ -35,11 +37,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 SetPrintScale(stampMicrostation.StampCellElement.UnitScale);
                 SetPrintColor(colorPrint);
 
-                if (fenceSetError == null && paperSizeSetError == null)
+                var errors = new List<IErrorApplication>() { fenceSetError, paperSizeSetError }.
+                             Where(error => error != null);
+
+                if (!errors.Any())
                 {
                     PrintCommand();
                 }
-                return fenceSetError ?? paperSizeSetError;
+
+                return errors;
             }
             else
             {
@@ -158,12 +164,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Получить формат принтера по формату штампа
         /// </summary>      
-        private string GetPrinterPaperSize(string drawFormat, string prefixSearchPaperSize)
+        private string GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize)
         {
             var pageSettings = new PageSettings();
             string paperNameFound = pageSettings.PrinterSettings.PaperSizes.
                                                  Cast<PaperSize>().
-                                                 FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawFormat, prefixSearchPaperSize))?.
+                                                 FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize))?.
                                                  PaperName;
             return paperNameFound;
         }
@@ -175,31 +181,27 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         {
             bool success = false;
 
-            if (!String.IsNullOrEmpty(paperName) && !String.IsNullOrEmpty(drawPaperSize) &&
-                paperName.IndexOf(drawPaperSize, StringComparison.OrdinalIgnoreCase) > -1)
+            if (paperName?.ContainsIgnoreCase(drawPaperSize) == true &&
+                paperName?.ContainsIgnoreCase(prefixSearchPaperSize) == true)
             {
-                if (prefixSearchPaperSize == null ||
-                    paperName.IndexOf(prefixSearchPaperSize, StringComparison.OrdinalIgnoreCase) > -1)
-                {
-                    int indexSubstringStart = paperName.IndexOf(drawPaperSize, StringComparison.OrdinalIgnoreCase);
-                    int indexSubstringEnd = indexSubstringStart + drawPaperSize.Length;
+                int indexSubstringStart = paperName.IndexOf(drawPaperSize, StringComparison.OrdinalIgnoreCase);
+                int indexSubstringEnd = indexSubstringStart + drawPaperSize.Length;
 
-                    if (indexSubstringEnd > paperName.Length)
+                if (indexSubstringEnd > paperName.Length)
+                {
+                    //дальше символов нет
+                    success = true;
+                }
+                else
+                {
+                    char postDrawFormat = paperName[indexSubstringEnd];
+                    if (!Char.IsNumber(postDrawFormat) &&
+                         postDrawFormat != 'x' && postDrawFormat != 'х')
                     {
-                        //дальше символов нет
+                        //не число и не содержит знаков
                         success = true;
                     }
-                    else
-                    {
-                        char postDrawFormat = paperName[indexSubstringEnd];
-                        if (!Char.IsNumber(postDrawFormat) &&
-                            postDrawFormat != 'x' &&
-                             postDrawFormat != 'х')
-                        {
-                            //не число и не содержит знаков
-                            success = true;
-                        }
-                    }
+
                 }
             }
             return success;

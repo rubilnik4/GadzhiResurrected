@@ -20,13 +20,11 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Команда печати
         /// </summary>
-        public IErrorApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
+        public IEnumerable<IErrorApplication> PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
         {
             Application.PrintOut(Range: WdPrintOutRange.wdPrintAllDocument, PageType: WdPrintOutPages.wdPrintAllPages,
                               ManualDuplexPrint: false, PrintToFile: false);
-            return null;
+            return Enumerable.Empty<IErrorApplication>();
         }
-
-
     }
 }

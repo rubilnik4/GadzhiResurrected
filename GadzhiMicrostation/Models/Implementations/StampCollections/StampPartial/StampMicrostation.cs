@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
@@ -37,18 +38,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public override string PaperSize =>
             StampCellElement.SubElements?.
-            Where(subElement => subElement.IsTextElementMicrostation &&
-                                subElement.AttributeControlName == StampFieldMain.PaperSize.Name).
-            Select(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)).
-            FirstOrDefault() ??
-            String.Empty;
-
+            FirstOrDefault(subElement => subElement.IsTextElementMicrostation &&
+                                         StampFieldMain.IsFormatField(subElement.AsTextElementMicrostation.Text))?.
+            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)) 
+            ?? String.Empty;
 
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
         public override OrientationType Orientation => StampCellElement.Range.Width >= StampCellElement.Range.Height ?
-                                              OrientationType.Landscape :
-                                              OrientationType.Portrait;
+                                                       OrientationType.Landscape :
+                                                       OrientationType.Portrait;
     }
 }

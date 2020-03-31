@@ -16,7 +16,8 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// СОздать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        (bool Success, IErrorConverting ErrorConverting) PrintPdfWithExecuteAction(string filePath, Func<IErrorApplication> printAction);
+        (bool Success, IEnumerable<IErrorConverting> ErrorsConverting) PrintPdfWithExecuteAction(string filePath, 
+                                                                                                 Func<IEnumerable<IErrorApplication>> printAction);
 
     }
 }

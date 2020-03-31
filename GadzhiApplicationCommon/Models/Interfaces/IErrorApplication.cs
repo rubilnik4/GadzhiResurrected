@@ -9,7 +9,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces
     /// <summary>
     /// Ошибка приложения конвертации
     /// </summary>
-    public interface IErrorApplication
+    public interface IErrorApplication : IEnumerable<IErrorApplication>
     {
         /// <summary>
         /// Тип ошибки при конвертации Microstation

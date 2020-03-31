@@ -77,18 +77,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                                                 IPrinterInformation pdfPrinterInformation)
         {
             IEnumerable<IFileDataSourceServer> fileDatasSourceServer = null;
-            IEnumerable<IErrorConverting> savingErrors = null;
+            IEnumerable<IErrorConverting> pdfErrors = null;
 
             if (ActiveLibrary.IsDocumentValid)
             {
                 _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
-                    (fileDatasSourceServer, savingErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
+                    (fileDatasSourceServer, pdfErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
                 },
-                applicationCatchMethod: () => savingErrors = new List<IErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+                applicationCatchMethod: () => pdfErrors = new List<IErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
                                                                                           $"Ошибка сохранения файла PDF {filePath}")});
             }
-            return (fileDatasSourceServer, savingErrors);
+            return (fileDatasSourceServer, pdfErrors);
         }
 
         /// <summary>

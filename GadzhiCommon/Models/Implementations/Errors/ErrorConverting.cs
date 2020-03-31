@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,5 +50,18 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// Стек вызовов
         /// </summary>
         public string StackTrace { get; }
+
+        /// <summary>
+        /// Реализация перечисления
+        /// </summary>       
+        public IEnumerator<IErrorConverting> GetEnumerator()
+        {
+            yield return this;
+        }
+
+        /// <summary>
+        /// Реализация перечисления
+        /// </summary>  
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();       
     }
 }

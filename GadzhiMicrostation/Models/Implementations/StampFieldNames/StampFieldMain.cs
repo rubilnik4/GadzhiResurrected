@@ -79,16 +79,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Проверка, является ли поле указателем формата
         /// </summary>      
-        public static bool IsFormatField(string fieldText)
-        {
-            if (!string.IsNullOrEmpty(fieldText) &&
-                fieldText.StartsWith("Формат", StringComparison.Ordinal))
-            {
-                return true;
-            }
-            return false;
-        }
-
+        public static bool IsFormatField(string fieldText) => !String.IsNullOrEmpty(fieldText) &&
+                                                               fieldText.StartsWith("Формат", StringComparison.Ordinal);
+      
         /// <summary>
         /// Получить формат штампа
         /// </summary>      

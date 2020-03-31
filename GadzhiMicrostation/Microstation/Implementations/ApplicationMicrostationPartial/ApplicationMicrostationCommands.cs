@@ -138,15 +138,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Содержится ли текущая ячейка в библиотеке 
         /// </summary>       
-        private bool IsCellContainsInLibrary(string cellName)
-        {
-            if (!String.IsNullOrEmpty(cellName))
-            {
-                return _cachLibraryElements?.Any(libraryElement =>
-                        libraryElement.Name.ContainsIgnoreCase(cellName)) == true;
-            }
-            return false;
-        }
+        private bool IsCellContainsInLibrary(string cellName) =>
+
+            !String.IsNullOrEmpty(cellName) &&
+             _cachLibraryElements?.Any(libraryElement => libraryElement.Name.ContainsIgnoreCase(cellName)) == true;
+
+
+
 
         /// <summary>
         /// Найти замену имени ячейки по описанию

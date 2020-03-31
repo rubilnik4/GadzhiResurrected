@@ -8,6 +8,7 @@ using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -32,15 +33,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private bool _readyState = false;
 
         public PdfCreatorService()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Инициализировать модуль PDFCreator
         /// </summary>
         private void PdrCreatorInitialize()
         {
+            KillAllPreviousProcess();
             _pdfCreator = new PDFCreator.clsPDFCreator();
             _pdfCreator.eReady += new PDFCreator.__clsPDFCreator_eReadyEventHandler(PdfCreatorReady);
         }
@@ -53,16 +53,17 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        public (bool, IErrorConverting) PrintPdfWithExecuteAction(string filePath, Func<IErrorApplication> printFunction)
+        public (bool, IEnumerable<IErrorConverting>) PrintPdfWithExecuteAction(string filePath, Func<IEnumerable<IErrorApplication>> printFunction)
         {
             bool success = false;
 
-            (bool isValidSetOptions, IErrorConverting errorConverting) = SetPrinterOptions(filePath);
+            (bool isValidSetOptions, IEnumerable<IErrorConverting> errorConverting) = SetPrinterOptions(filePath);
             if (isValidSetOptions)
             {
                 if (printFunction != null)
                 {
-                    errorConverting = printFunction.Invoke().ToErrorConverting();
+                    errorConverting = printFunction.Invoke().
+                                      Select(error => error.ToErrorConverting());
                     if (errorConverting == null)
                     {
                         (success, errorConverting) = PrintPdf();
@@ -159,6 +160,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _pdfCreator.cPrinterStop = true;
             _readyState = true;
+        }
+
+        /// <summary>
+        /// Уничтожить все предыдущие процессы
+        /// </summary>
+        private static void KillAllPreviousProcess()
+        {
+            var pdfCreatorProcesses = Process.GetProcesses().
+                                        Where(process => process.ProcessName.ContainsIgnoreCase("pdfcreator"));
+            foreach (var pdfCreator in pdfCreatorProcesses)
+            {
+                pdfCreator.Kill();
+            }
         }
 
         #region IDisposable Support

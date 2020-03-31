@@ -1,6 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiMicrostation.Models.Enums;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,5 +29,17 @@ namespace GadzhiApplicationCommon.Models.Implementation
         /// </summary>
         public string ErrorDescription { get; }
 
+        /// <summary>
+        /// Реализация перечисления
+        /// </summary>      
+        public IEnumerator<IErrorApplication> GetEnumerator()
+        {
+            yield return this;
+        }
+
+        /// <summary>
+        /// Реализация перечисления
+        /// </summary>     
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();   
     }
 }

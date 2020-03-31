@@ -15,10 +15,8 @@ namespace GadzhiCommon.Extentions.StringAdditional
         /// Добавить дроби в конце пути
         /// </summary>      
         public static string AddSlashesToPath(this string path) =>
-            !path?.EndsWith("\\", StringComparison.Ordinal) == false ?
+            path?.EndsWith("\\", StringComparison.Ordinal) == false ?
             path + "\\" :
             path;
-
-
-}
+    }
 }
