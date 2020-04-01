@@ -118,7 +118,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private IEnumerable<IErrorConverting> PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            var printCommand = new Func<IEnumerable<IErrorApplication>>(() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
+            var printCommand = new Func<IResultApplication>(() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize));
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printCommand).ErrorsConverting;
         }
     }

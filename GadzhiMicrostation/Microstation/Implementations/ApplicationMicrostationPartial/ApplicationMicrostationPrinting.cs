@@ -27,31 +27,21 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        public IEnumerable<IErrorApplication> PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
-        {
-            if (stamp != null && stamp is IStampMicrostation stampMicrostation)
-            {
-                IErrorApplication fenceSetError = SetPrintingFenceByRange(stampMicrostation.StampCellElement.Range);
-                SetPrintingOrientation(stampMicrostation.Orientation);
-                IErrorApplication paperSizeSetError = SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize);
-                SetPrintScale(stampMicrostation.StampCellElement.UnitScale);
-                SetPrintColor(colorPrint);
-
-                var errors = new List<IErrorApplication>() { fenceSetError, paperSizeSetError }.
-                             Where(error => error != null);
-
-                if (!errors.Any())
+        public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>      
+            new ResultApplication().
+            WhereMap(result => stamp != null && stamp is IStampMicrostation)?.
+            ConcatResultApplication(SetPrintingFenceByRange(((IStampMicrostation)stamp).StampCellElement.Range))?.
+            ConcatResultApplication(SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize))?.
+            Map(result =>
                 {
-                    PrintCommand();
-                }
-
-                return errors;
-            }
-            else
-            {
-                return new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден или не соответствует формату Microstation");
-            }
-        }
+                    SetPrintingOrientation(stamp.Orientation);
+                    SetPrintScale(((IStampMicrostation)stamp).StampCellElement.UnitScale);
+                    SetPrintColor(colorPrint);
+                    if (!result.HasErrors) PrintCommand();
+                    return result;
+                })
+            ?? new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден или не соответствует формату Microstation").
+               Map(error => new ResultApplication(error));
 
         /// <summary>
         /// Команда печати
@@ -79,13 +69,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить границы печати по рамке
         /// </summary>
-        private IErrorApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint)
+        private IResultApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint)
         {
-            if (rangeToPrint != null && rangeToPrint.IsValid)
+            if (rangeToPrint?.IsValid == true)
             {
                 var rangeInPoints = rangeToPrint?.ToPointsMicrostation().
-                                                      Select(point => point.ToPoint3d()).
-                                                      ToArray();
+                                                  Select(point => point.ToPoint3d()).
+                                                  ToArray();
 
                 ShapeElement shapeElement = Application.CreateShapeElement1(null, rangeInPoints, MsdFillMode.msdFillModeNotFilled);
 
@@ -99,36 +89,32 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
 
                 Application.CadInputQueue.SendKeyin("print boundary fence");
 
-                return null;
+                return new ResultApplication();
             }
             else
             {
-                return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно");
+                return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно").
+                       Map(error => new ResultApplication(error));
             }
         }
 
         /// <summary>
         /// Установить формат печати характерный для принтера
         /// </summary>       
-        private IErrorApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize)
-        {
-            string paperNameFound = GetPrinterPaperSize(drawSize, prefixSearchPaperSize);
-
-            if (!String.IsNullOrEmpty(paperNameFound))
+        private IResultApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+            GetPrinterPaperSize(drawSize, prefixSearchPaperSize).
+            WhereMap(paperName => !String.IsNullOrEmpty(paperName))?.
+            Map(paperName =>
             {
                 Application.CadInputQueue.SendKeyin("print driver printer.pltcfg");
                 Application.CadInputQueue.SendCommand("Print Units mm");
-                Application.CadInputQueue.SendCommand($"PRINT papername {paperNameFound}");
+                Application.CadInputQueue.SendCommand($"PRINT papername {paperName}");
                 Application.CadInputQueue.SendCommand("PRINT MAXIMIZE");
 
-                return null;
-            }
-            else
-            {
-                return new ErrorApplication(ErrorApplicationType.RangeNotValid, $"Формат печати {drawSize} не найден");
-            }
-
-        }
+                return new ResultApplication();
+            })
+            ?? new ErrorApplication(ErrorApplicationType.RangeNotValid, $"Формат печати {drawSize} не найден").
+                   Map(error => new ResultApplication(error));
 
         /// <summary>
         /// Установить масштаб печати
@@ -164,15 +150,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Получить формат принтера по формату штампа
         /// </summary>      
-        private string GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize)
-        {
-            var pageSettings = new PageSettings();
-            string paperNameFound = pageSettings.PrinterSettings.PaperSizes.
-                                                 Cast<PaperSize>().
-                                                 FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize))?.
-                                                 PaperName;
-            return paperNameFound;
-        }
+        private string GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+            new PageSettings().
+            Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>().
+                                             FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize))?.
+                                             PaperName);
 
         /// <summary>
         /// Проверить соответсвие формата
@@ -189,17 +171,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
 
                 if (indexSubstringEnd > paperName.Length)
                 {
-                    //дальше символов нет
-                    success = true;
+                    success = true; //дальше символов нет
                 }
                 else
                 {
                     char postDrawFormat = paperName[indexSubstringEnd];
-                    if (!Char.IsNumber(postDrawFormat) &&
-                         postDrawFormat != 'x' && postDrawFormat != 'х')
+                    if (!Char.IsNumber(postDrawFormat) && postDrawFormat != 'x' && postDrawFormat != 'х')
                     {
-                        //не число и не содержит знаков
-                        success = true;
+                        success = true; //не число и не содержит знаков
                     }
 
                 }

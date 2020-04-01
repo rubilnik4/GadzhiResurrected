@@ -95,6 +95,7 @@
     <Compile Include="Extentions\Functional\MapExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\PathExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\StringAdditionalExtention.cs" />
+    <Compile Include="Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />

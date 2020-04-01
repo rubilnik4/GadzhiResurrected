@@ -15,6 +15,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        IEnumerable<IErrorApplication> PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize);
+        IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize);
     }
 }

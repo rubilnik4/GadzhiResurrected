@@ -35,8 +35,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();              
-                errorConverting = new ErrorConverting(GetTypeException(ex),
-                                                      String.Empty, ex.Message, ex.StackTrace);
+                errorConverting = new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace);
             }
             finally
             {

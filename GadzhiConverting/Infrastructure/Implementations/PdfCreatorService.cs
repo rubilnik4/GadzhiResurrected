@@ -1,6 +1,8 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.StringAdditional;
+using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -53,7 +55,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        public (bool, IEnumerable<IErrorConverting>) PrintPdfWithExecuteAction(string filePath, Func<IEnumerable<IErrorApplication>> printFunction)
+        public IResultApplication PrintPdfWithExecuteAction(string filePath, Func<IResultApplication> printFunction)
         {
             bool success = false;
 
@@ -81,7 +83,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Установить опции печати
         /// </summary>   
-        private (bool, IErrorConverting) SetPrinterOptions(string filePath)
+        private IResultApplication SetPrinterOptions(string filePath)
         {
             bool success = false;
             IErrorConverting errorConverting = null;
@@ -90,20 +92,18 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             if (_pdfCreator.cStart("/NoProcessingAtStartup", false))
             {
-                string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
-
-                if (!String.IsNullOrEmpty(filePath) || !String.IsNullOrEmpty(fileExtension) ||
-                    FileExtention.pdf.ToString().ContainsIgnoreCase(fileExtension))
+                return FileSystemOperations.ExtensionWithoutPointFromPath(filePath).
+                WhereMap(fileExtension => !String.IsNullOrEmpty(filePath) || !String.IsNullOrEmpty(fileExtension) ||
+                                          FileExtention.pdf.ToString().ContainsIgnoreCase(fileExtension))?.
+                Map(fileExtension =>
                 {
                     _pdfCreator.cOptions = GetPdfPrinterOptions(filePath);
                     _pdfCreator.cClearCache();
-
-                    success = true;
-                }
-                else
-                {
-                    errorConverting = new ErrorConverting(FileConvertErrorType.PdfPrintingError, $"Некорретно задан путь сохранения {filePath}");
-                }
+                    return new ResultApplication();
+                })
+                ?? new ErrorConverting(FileConvertErrorType.PdfPrintingError, $"Некорретно задан путь сохранения {filePath}").
+                   Map(error => new ResultApplication(error));
+               
             }
             else
             {
@@ -165,15 +165,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Уничтожить все предыдущие процессы
         /// </summary>
-        private static void KillAllPreviousProcess()
-        {
-            var pdfCreatorProcesses = Process.GetProcesses().
-                                        Where(process => process.ProcessName.ContainsIgnoreCase("pdfcreator"));
-            foreach (var pdfCreator in pdfCreatorProcesses)
+        private static IEnumerable<string> KillAllPreviousProcess() =>
+            Process.GetProcesses().
+            Where(process => process.ProcessName.ContainsIgnoreCase("pdfcreator")).
+            Select(process =>
             {
-                pdfCreator.Kill();
-            }
-        }
+                string proccessName = process.ProcessName;
+                process.Kill();
+                return proccessName;
+            }).
+            ToList();
 
         #region IDisposable Support
         private bool disposedValue = false;

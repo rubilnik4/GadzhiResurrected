@@ -1,9 +1,12 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Extentions.Collection;
+using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -60,21 +63,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отобразить сообщение
         /// </summary>
-        protected virtual void ShowError(IErrorConverting errorConverting)
-        {
-            if (errorConverting != null)
-            {
-                string messageText = "Ошибка | " + ConverterErrorType.FileErrorTypeToString(errorConverting.FileConvertErrorType);
-                if (!String.IsNullOrEmpty(errorConverting?.ErrorDescription))
-                {
-                    messageText += "\n" + errorConverting?.ErrorDescription;
-                }
-                if (!String.IsNullOrEmpty(errorConverting?.ExceptionMessage))
-                {
-                    messageText += "\n" + errorConverting?.ExceptionMessage;
-                }
-                Console.WriteLine(messageText);
-            }
-        }
+        protected virtual void ShowError(IErrorConverting errorConverting) =>
+            errorConverting?.
+            Map(error => new List<string>()
+            { "Ошибка | " + ConverterErrorType.FileErrorTypeToString(error.FileConvertErrorType),
+             errorConverting?.ErrorDescription,
+             errorConverting?.ExceptionMessage}).
+            Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).
+            Map(messageText => { Console.WriteLine(messageText); return Unit.Value; });
     }
 }

@@ -25,7 +25,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional
             predicate != null ?
                 predicate(@this) ?
                 @this :
-                default:
+            default:
             throw new ArgumentNullException(nameof(predicate));
     }
 }

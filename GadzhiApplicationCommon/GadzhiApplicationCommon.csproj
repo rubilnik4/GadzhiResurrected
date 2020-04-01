@@ -55,6 +55,7 @@
     <Compile Include="Models\Enums\StampFieldType.cs" />
     <Compile Include="Models\Enums\StampType.cs" />
     <Compile Include="Models\Implementation\ErrorApplication.cs" />
+    <Compile Include="Models\Implementation\ResultApplication.cs" />
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampField.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Models\Interfaces\ApplicationLibrary\Document\IDocumentLibraryElements.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Document\IDocumentLibrary.cs" />
     <Compile Include="Models\Interfaces\IErrorApplication.cs" />
+    <Compile Include="Models\Interfaces\IResultApplication.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStamp.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampField.cs" />
