@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiMicrostation.Models.Implementations.StampCollections;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// Координаты правого нижнего угла
         /// </summary>
         public PointMicrostation HighRightPoint { get; }
+        public RangeMicrostation() { }
 
         public RangeMicrostation(PointMicrostation lowLeftPoint,
                                  PointMicrostation highRightPoint)
@@ -27,20 +30,18 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
             HighRightPoint = highRightPoint;
         }
 
-        public RangeMicrostation(IList<string> pointsAttribute)
+        public RangeMicrostation(IList<double> points)
         {
+            if (points == null) throw new ArgumentNullException(nameof(points));
+            if (points?.Count != 6) throw new ArgumentOutOfRangeException(nameof(points));
 
-            if (pointsAttribute?.Count == 6) //включая z координаты
-            {
-                IList<double> points = pointsAttribute?.Select(p => Double.Parse(p, CultureInfo.CurrentCulture)).ToList();
-                if (points?.Count == pointsAttribute.Count)
-                {
-                    LowLeftPoint = new PointMicrostation(Math.Min(points[0], points[3]), Math.Min(points[1], points[4]), points[2]);
-                    HighRightPoint = new PointMicrostation(Math.Max(points[0], points[3]), Math.Max(points[1], points[4]), points[5]);
-                }
-            }
+            LowLeftPoint = new PointMicrostation(Math.Min(points[0], points[3]),
+                                                 Math.Min(points[1], points[4]), points[2]);
+
+            HighRightPoint = new PointMicrostation(Math.Max(points[0], points[3]),
+                                                   Math.Max(points[1], points[4]), points[5]);
         }
-               
+
         /// <summary>
         /// Ширина с учетом поворота
         /// </summary>
@@ -61,7 +62,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Точка вставки элемента с учетом поворота
         /// </summary>
-        public PointMicrostation OriginPoint => LowLeftPoint;      
+        public PointMicrostation OriginPoint => LowLeftPoint;
 
         /// <summary>
         /// Преобразовать границы в массив точек
@@ -95,5 +96,23 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// </summary>       
         public RangeMicrostation Scale(double scaleFactor) =>
              new RangeMicrostation(LowLeftPoint.Multiply(scaleFactor), HighRightPoint.Multiply(scaleFactor));
+
+        /// <summary>
+        /// Преобразовать строку в диапазон
+        /// </summary>    
+        public static RangeMicrostation StringToRange(string rangeInString) =>
+            rangeInString?.
+            Map(rangeInlineString => StampSettingsMicrostation.SeparateAttributeValue(rangeInlineString))?.
+            WhereMap(rangeListString => ValidateRangeString(rangeListString))?.
+            Select(pointsString => Double.Parse(pointsString, CultureInfo.CurrentCulture)).
+            ToList().
+            Map(points => new RangeMicrostation(points));
+
+        /// <summary>
+        /// Проверить строку на возможность преобразования в диапазон
+        /// </summary>   
+        public static bool ValidateRangeString(IList<string> rangeListString) =>
+            rangeListString?.Count == 6 &&
+            rangeListString.All(dimension => Double.TryParse(dimension, out double dimensionValid));
     }
 }

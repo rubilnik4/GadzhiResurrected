@@ -129,7 +129,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             fileDataServer.SetFileDatasSourceServerConverting(dataSources);
 
             CloseFile();
-
             
             return fileDataServer;
         }

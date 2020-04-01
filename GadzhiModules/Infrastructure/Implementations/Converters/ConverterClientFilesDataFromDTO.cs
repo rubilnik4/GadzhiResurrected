@@ -170,7 +170,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                                                                               fileExtension.ToUpper(CultureInfo.CurrentCulture));
             if (!string.IsNullOrWhiteSpace(directoryPath))
             {
-                if (fileDataSourceResponseClient.FileDataSource.Count != 0)
+                if (fileDataSourceResponseClient.FileDataSource?.Count != 0)
                 {
                     string filePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
                     await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>

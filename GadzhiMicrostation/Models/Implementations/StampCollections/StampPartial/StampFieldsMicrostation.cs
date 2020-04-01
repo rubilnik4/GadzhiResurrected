@@ -24,8 +24,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Найти элементы в словаре штампа по ключам
         /// </summary>
         private IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<IElementMicrostation> cellSubElements,
-                                                                              IEnumerable<string> fieldsSearch,
-                                                                              ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
+                                                                            IEnumerable<string> fieldsSearch,
+                                                                            ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
                 cellSubElements?.
                 Where(subElement => (elementMicrostationType == ElementMicrostationType.Element ||
                                      subElement.ElementType == elementMicrostationType) &&

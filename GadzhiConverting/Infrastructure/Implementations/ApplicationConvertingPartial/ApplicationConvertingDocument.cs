@@ -51,20 +51,17 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
 
             if (ActiveLibrary.IsDocumentValid)
             {
-                _executeAndCatchErrors.ExecuteAndHandleError(() =>
+                var executeError = _executeAndCatchErrors.ExecuteAndHandleError(() =>
                 {
                     ActiveLibrary.SaveDocument(filePath);
                     filesDataSourceServer = new FileDataSourceServer(filePath, FileExtention.docx).
                                             Map(dataSource => new List<IFileDataSourceServer>() { dataSource });
                 },
-                applicationCatchMethod: () =>
-                {
-                    savingErrors = new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                                       $"Ошибка сохранения основного файла {filePath}").
-                                   Map(error => new List<IErrorConverting>() { error });
-
-                    ActiveLibrary.CloseDocument();
-                });
+                applicationCatchMethod: () => ActiveLibrary.CloseDocument());
+                savingErrors = executeError?.
+                               Map(error => new ErrorConverting(FileConvertErrorType.FileNotSaved,
+                                                                $"Ошибка сохранения основного файла {filePath}",
+                                                                error.ExceptionMessage, error.StackTrace));
             }
 
             return (filesDataSourceServer, savingErrors);
@@ -81,12 +78,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
 
             if (ActiveLibrary.IsDocumentValid)
             {
-                _executeAndCatchErrors.ExecuteAndHandleError(() =>
-                {
-                    (fileDatasSourceServer, pdfErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
-                },
-                applicationCatchMethod: () => pdfErrors = new List<IErrorConverting>() {new ErrorConverting(FileConvertErrorType.PdfPrintingError,
-                                                                                          $"Ошибка сохранения файла PDF {filePath}")});
+                var executeError = _executeAndCatchErrors.ExecuteAndHandleError(() =>
+                  {
+                      (fileDatasSourceServer, pdfErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
+                  });
+                pdfErrors = executeError?.
+                            Map(error => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+                                                             $"Ошибка сохранения файла PDF {filePath}",
+                                                             error.ExceptionMessage, error.StackTrace));
             }
             return (fileDatasSourceServer, pdfErrors);
         }
@@ -100,14 +99,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
 
             if (ActiveLibrary.IsDocumentValid)
             {
-                _executeAndCatchErrors.ExecuteAndHandleError(
+                var executeError = _executeAndCatchErrors.ExecuteAndHandleError(
                     () => ActiveLibrary.CloseAndSaveDocument(),
-                    applicationCatchMethod: () =>
-                    {
-                        closingError = new ErrorConverting(FileConvertErrorType.FileNotSaved,
-                                                   $"Ошибка закрытия файла {ActiveLibrary.ActiveDocument.FullName}");
-                        ActiveLibrary.CloseDocument();
-                    });
+                    applicationCatchMethod: () => ActiveLibrary.CloseDocument());
+
+                closingError = executeError?.
+                               Map(error => new ErrorConverting(FileConvertErrorType.FileNotSaved,
+                                                                $"Ошибка закрытия файла {ActiveLibrary.ActiveDocument.FullName}",
+                                                                error.ExceptionMessage, error.StackTrace));
             }
 
             return closingError;

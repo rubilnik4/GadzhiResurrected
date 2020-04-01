@@ -1,5 +1,7 @@
-﻿using GadzhiMicrostation.Extensions.Microstation;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
@@ -25,7 +27,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Вертикальное расположение
         /// </summary>
-        public bool IsVertical { get;  }
+        public bool IsVertical { get; }
 
         public RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
                                             bool isNeedCompress, bool isVertical)
@@ -50,7 +52,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
-        private RangeMicrostation RangeAttribute => _element.GetAttributeRange();
+        private RangeMicrostation RangeAttribute =>
+            GetAttributeFromCachOrLoad(ElementMicrostationAttributes.Range).
+            Map(rangeInline => RangeMicrostation.StringToRange(rangeInline))
+            ?? new RangeMicrostation();
 
         /// <summary>
         /// Возможено ли сжатие элемента

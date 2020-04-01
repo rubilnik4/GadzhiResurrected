@@ -69,6 +69,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 {
                     messageText += "\n" + errorConverting?.ErrorDescription;
                 }
+                if (!String.IsNullOrEmpty(errorConverting?.ExceptionMessage))
+                {
+                    messageText += "\n" + errorConverting?.ExceptionMessage;
+                }
                 Console.WriteLine(messageText);
             }
         }

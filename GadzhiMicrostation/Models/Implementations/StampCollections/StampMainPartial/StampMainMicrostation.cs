@@ -38,12 +38,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         public StampMainMicrostation(ICellElementMicrostation stampCellElement)
             : base(stampCellElement)
         {
-            StampPersonSignaturesMicrostation = GetStampPersonRowsWithoutSignatures();
+            StampPersonSignaturesMicrostation = GetStampPersonRowsWithoutSignatures().ToList();
 
             var firstPerson = StampPersonSignaturesMicrostation?.FirstOrDefault();
-            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(firstPerson?.PersonId, firstPerson?.PersonName);
+            StampChangeSignaturesMicrostation = GetStampChangeRowsWithoutSignatures(firstPerson?.PersonId, firstPerson?.PersonName).ToList();
 
-            StampApprovalSignaturesMicrostation = GetStampApprovalRowsWithoutSignatures();
+            StampApprovalSignaturesMicrostation = GetStampApprovalRowsWithoutSignatures().ToList();
         }
 
         /// <summary>

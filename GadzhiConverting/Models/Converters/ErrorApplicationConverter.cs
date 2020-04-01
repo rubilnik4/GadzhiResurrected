@@ -1,6 +1,7 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать внутренний класс ошибок библиотеки в основной
         /// </summary>
-        public static ErrorConverting ToErrorConverting(IErrorApplication errorApplication) =>
+        public static IErrorConverting ToErrorConverting(IErrorApplication errorApplication) =>
             (errorApplication != null) ?
              new ErrorConverting(ToFileConvertErrorType(errorApplication.ErrorMicrostationType), errorApplication.ErrorDescription) :
              throw new ArgumentNullException(nameof(errorApplication));

@@ -21,9 +21,9 @@ namespace GadzhiCommon.Infrastructure.Implementations
         ///Отлов ошибок и вызов постметода       
         /// </summary> 
         public IErrorConverting ExecuteAndHandleError(Action method,
-                                          Action applicationBeforeMethod = null,
-                                          Action applicationCatchMethod = null,
-                                          Action applicationFinallyMethod = null)
+                                                      Action applicationBeforeMethod = null,
+                                                      Action applicationCatchMethod = null,
+                                                      Action applicationFinallyMethod = null)
         {
             IErrorConverting errorConverting = null;
 
@@ -36,7 +36,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             {
                 applicationCatchMethod?.Invoke();              
                 errorConverting = new ErrorConverting(GetTypeException(ex),
-                                                      errorConverting?.ErrorDescription, ex.Message, ex.StackTrace);
+                                                      String.Empty, ex.Message, ex.StackTrace);
             }
             finally
             {

@@ -64,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 {
                     errorConverting = printFunction.Invoke().
                                       Select(error => error.ToErrorConverting());
-                    if (errorConverting == null)
+                    if (errorConverting?.Any() == false)
                     {
                         (success, errorConverting) = PrintPdf();
                     }

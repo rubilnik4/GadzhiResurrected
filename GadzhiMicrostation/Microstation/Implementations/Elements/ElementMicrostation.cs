@@ -40,6 +40,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             OwnerContainerMicrostation = ownerContainerMicrostation;
             ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
             ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
+
+            AttributeCaching = new Dictionary<ElementMicrostationAttributes, string>();
         }
 
         /// <summary>
@@ -149,29 +151,51 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Кэшированные аттрибуты элемента
+        /// </summary>
+        protected IDictionary<ElementMicrostationAttributes, string> AttributeCaching { get; }
+
+        /// <summary>
         /// Получить значение аттрибута по его Id номеру
         /// </summary>       
-        public string GetAttributeById(ElementMicrostationAttributes elementAttributes) =>
-            _element.GetAttributeById(elementAttributes);
+        public string GetAttributeById(ElementMicrostationAttributes elementAttribute) =>
+            GetAttributeFromCachOrLoad(elementAttribute);
 
         /// <summary>
         /// Записать значение аттрибута по его Id номеру
         /// </summary>       
-        public void SetAttributeById(ElementMicrostationAttributes elementAttributes, string attributeValue) =>
-            _element.SetAttributeById(elementAttributes, attributeValue);
+        public void SetAttributeById(ElementMicrostationAttributes elementAttribute, string attributeValue) =>
+            SetAttributeToCachAndUpload(elementAttribute, attributeValue);
 
         /// <summary>
         /// Имя элемента из аттрибутов
         /// </summary>
         public string AttributeControlName
         {
-            get => _element.GetAttributeControlName();
-            set => _element.SetAttributeControlName(value);
+            get => GetAttributeFromCachOrLoad(ElementMicrostationAttributes.ControlName);
+            set => SetAttributeToCachAndUpload(ElementMicrostationAttributes.ControlName, value);
         }
 
         /// <summary>
         /// Идентефикатор личности
         /// </summary>    
-        public string AttributePersonId => _element.GetAttributePersonId();      
+        public string AttributePersonId => GetAttributeFromCachOrLoad(ElementMicrostationAttributes.PersonId);
+
+        /// <summary>
+        /// Получить аттрибут из кэша или выгрузить из Microstation
+        /// </summary>       
+        protected string GetAttributeFromCachOrLoad(ElementMicrostationAttributes attribute) =>
+            (AttributeCaching.ContainsKey(attribute)) ?
+             AttributeCaching[attribute] :
+             _element.GetAttributeById(attribute);
+
+        /// <summary>
+        /// Добавить аттрибут в кэш
+        /// </summary>        
+        protected void SetAttributeToCachAndUpload(ElementMicrostationAttributes elementAttribute, string attributeValue)
+        {
+            _element.SetAttributeById(elementAttribute, attributeValue);
+            AttributeCaching[elementAttribute] = attributeValue;
+        }
     }
 }

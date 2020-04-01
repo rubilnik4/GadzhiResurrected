@@ -17,5 +17,15 @@ namespace GadzhiApplicationCommon.Extensions.Functional
             func != null ?
             func(@this) :
             throw new ArgumentNullException(nameof(func));
+
+        /// <summary>
+        /// Условие возвращающее объект или null 
+        /// </summary>      
+        public static T WhereMap<T>(this T @this, Func<T, bool> predicate) =>
+            predicate != null ?
+                predicate(@this) ?
+                @this :
+                default:
+            throw new ArgumentNullException(nameof(predicate));
     }
 }

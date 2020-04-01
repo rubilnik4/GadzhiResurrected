@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -67,13 +68,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах
         /// </summary>
-        public static RangeMicrostation GetAttributeRange(Element element)
-        {
-            string rangeInString = GetAttributeById(element, ElementMicrostationAttributes.Range);
-            IList<string> rangeListInString = StampSettingsMicrostation.SeparateAttributeValue(rangeInString);
-
-            return new RangeMicrostation(rangeListInString);
-        }
+        public static RangeMicrostation GetAttributeRange(Element element) =>
+           GetAttributeById(element, ElementMicrostationAttributes.Range).
+           Map(rangeInlineString => RangeMicrostation.StringToRange(rangeInlineString));       
 
         /// <summary>
         /// Получить идентефикатор личности
