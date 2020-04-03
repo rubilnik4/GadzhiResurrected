@@ -1,4 +1,4 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;

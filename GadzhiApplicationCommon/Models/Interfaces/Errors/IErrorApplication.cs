@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.Models.Interfaces
+namespace GadzhiApplicationCommon.Models.Interfaces.Errors
 {
     /// <summary>
     /// Ошибка приложения конвертации
@@ -20,5 +20,10 @@ namespace GadzhiApplicationCommon.Models.Interfaces
         /// Описание ошибки
         /// </summary>
         string ErrorDescription { get; }
+
+        /// <summary>
+        /// Преобразовать в ответ
+        /// </summary>      
+        IResultApplication ToResultConverting();
     }
 }

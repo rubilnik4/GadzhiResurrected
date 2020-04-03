@@ -1,6 +1,7 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     public class FileDataSourceServer : IFileDataSourceServer
     {
         public FileDataSourceServer(string filePath, FileExtention fileExtensionType)
-            :this(filePath, fileExtensionType, "-", "-")
+            : this(filePath, fileExtensionType, "-", "-")
         {
 
         }
@@ -53,5 +54,18 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Имя принтера
         /// </summary>
         public string PrinterName { get; }
+
+        /// <summary>
+        /// Реализация перечисления
+        /// </summary>  
+        public IEnumerator<IFileDataSourceServer> GetEnumerator()
+        {
+            yield return this;
+        }
+
+        /// <summary>
+        /// Реализация перечисления
+        /// </summary>  
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

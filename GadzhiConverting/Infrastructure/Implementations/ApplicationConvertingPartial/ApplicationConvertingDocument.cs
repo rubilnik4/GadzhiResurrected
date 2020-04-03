@@ -6,7 +6,9 @@ using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
+using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Implementations.FilesConvert;
+using GadzhiConverting.Models.Interfaces;
 using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
@@ -70,31 +72,30 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) CreatePdfFile(string filePath, ColorPrint colorPrint,
-                                                                                                IPrinterInformation pdfPrinterInformation)
-        {
-            IEnumerable<IFileDataSourceServer> fileDatasSourceServer = null;
-            IEnumerable<IErrorConverting> pdfErrors = null;
-
-            if (ActiveLibrary.IsDocumentValid)
-            {
-                var executeError = _executeAndCatchErrors.ExecuteAndHandleError(() =>
-                  {
-                      (fileDatasSourceServer, pdfErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
-                  });
-                pdfErrors = executeError?.
-                            Map(error => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
-                                                             $"Ошибка сохранения файла PDF {filePath}",
-                                                             error.ExceptionMessage, error.StackTrace));
-            }
-            return (fileDatasSourceServer, pdfErrors);
-        }
+        public IResultConverting CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
+             _executeAndCatchErrors.ExecuteAndHandleError(() => CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation)).
+             WhereContinue (executeError => executeError.OkStatus
+                
+        //{           
+        //    if (ActiveLibrary.IsDocumentValid)
+        //    {
+        //        var executeError = _executeAndCatchErrors.ExecuteAndHandleError(() =>
+        //          {
+        //              (fileDatasSourceServer, pdfErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
+        //          });
+        //        pdfErrors = executeError?.
+        //                    Map(error => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
+        //                                                     $"Ошибка сохранения файла PDF {filePath}",
+        //                                                     error.ExceptionMessage, error.StackTrace));
+        //    }
+        //    return (fileDatasSourceServer, pdfErrors);
+        //}
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
         public IErrorConverting CloseDocument()
-        {
+        {            
             IErrorConverting closingError = null;
 
             if (ActiveLibrary.IsDocumentValid)

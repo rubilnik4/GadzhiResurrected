@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:GadzhiResurrected.ViewModels"       
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
-        Title="{Binding Title}" Height="600" Width="900"
+        Title="{Binding Title}" 
+        Height="600" Width="900"
       
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"

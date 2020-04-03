@@ -14,6 +14,8 @@ using System.Text;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiMicrostation.Helpers;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -27,19 +29,20 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке и проверить наличие такой в библиотеке
         /// </summary>       
-        public ICellElementMicrostation CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
+        public IResultApplicationValue<ICellElementMicrostation> CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
                                                                      Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                                      string cellDescription = null) =>
             ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription).
-            Map(cellNameChanged => !String.IsNullOrEmpty(cellNameChanged) ?
-                                   CreateCellElementFromLibraryWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParametrs) :
-                                   null);
+            WhereContinue(resultCellName => resultCellName.OkStatus,
+                okFunc: resultCellName => CreateCellElementWithoutCheck(resultCellName.Value, origin, modelMicrostation, additionalParametrs).
+                                          Map(cellElement => new ResultApplicationValue<ICellElementMicrostation>(cellElement)),
+                badFunc: resultCellName => new ResultApplicationValue<ICellElementMicrostation>(resultCellName.ErrorsApplication));
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        public ICellElementMicrostation CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
+        public IResultApplicationValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                                    IModelMicrostation modelMicrostation,
                                                                    Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                                    string cellDescription = null)
@@ -75,47 +78,38 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        private ICellElementMicrostation CreateCellElementFromLibraryWithoutCheck(string cellName, PointMicrostation origin,
+        private ICellElementMicrostation CreateCellElementWithoutCheck(string cellName, PointMicrostation origin,
                                                                                   IModelMicrostation modelMicrostation,
                                                                                   Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null)
         {
             CellElement cellElement = _application.CreateCellElement2(cellName,
                                                                       _application.Point3dFromXY(origin.X, origin.Y),
                                                                       _application.Point3dFromXY(1, 1),
-                                                                      false,
-                                                                      _application.Matrix3dIdentity());
+                                                                      false,_application.Matrix3dIdentity());
 
             var cellDefaultOrigin = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
             var cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
-
             return cellElementMicrostation;
         }
 
         /// <summary>
         /// Замена имени ячейки по описанию в случае отсутствия в библиотеке
         /// </summary>       
-        private string ChangeCellNameByDescriptionIfNotFoundInLibrary(string cellName, string cellDescription)
-        {
-            string originallyOrChangedCellName = null;
-            bool isCellContainsInLibrary = IsCellContainsInLibrary(cellName);
-            if (isCellContainsInLibrary)
-            {
-                originallyOrChangedCellName = cellName;
-            }
-            else if (!isCellContainsInLibrary && !String.IsNullOrEmpty(cellDescription))
-            {
-                originallyOrChangedCellName = FindCellNameByDescription(cellDescription) ?? cellName;
-            }
-            else
-            {
-                originallyOrChangedCellName = GetCellNameRandom();
-            }
+        private IResultApplicationValue<string> ChangeCellNameByDescriptionIfNotFoundInLibrary(string cellName, string cellDescription) =>
+            cellName?.
+            WhereContinue(nameInLibrary => IsCellContainsInLibrary(nameInLibrary),
+                okFunc: nameInLibrary => new ResultApplicationValue<string>(nameInLibrary),
+                badFunc: _ => FindCellNameByDescription(cellDescription)).
+            WhereBad(result => result.OkStatus,               
+                badFunc: _ => FindCellNameByDescription(cellDescription)).
+            WhereBad(result => result.OkStatus,
+                badFunc: _ => GetCellNameRandom())
+            ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись {cellDescription} не найдена").
+               Map(error => new ResultApplicationValue<string>(error));
 
-            return originallyOrChangedCellName;
-        }
-
+       
         /// <summary>
         /// Кэшировать элементы
         /// </summary>
@@ -138,29 +132,27 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Содержится ли текущая ячейка в библиотеке 
         /// </summary>       
-        private bool IsCellContainsInLibrary(string cellName) =>
-
-            !String.IsNullOrEmpty(cellName) &&
+        private bool IsCellContainsInLibrary(string cellName) =>          
              _cachLibraryElements?.Any(libraryElement => libraryElement.Name.ContainsIgnoreCase(cellName)) == true;
-
-
-
 
         /// <summary>
         /// Найти замену имени ячейки по описанию
         /// </summary>
-        private string FindCellNameByDescription(string cellDescription) =>
-           !String.IsNullOrEmpty(cellDescription) ?
-            _cachLibraryElements?.FirstOrDefault(libraryElement =>
-                                  libraryElement.Description.ContainsIgnoreCase(cellDescription)).Name :
-            null;
-
+        private IResultApplicationValue<string> FindCellNameByDescription(string cellDescription) =>
+            _cachLibraryElements?.
+            FirstOrDefault(libraryElement => libraryElement.Description.ContainsIgnoreCase(cellDescription))?.
+            Map(libraryElement => new ResultApplicationValue<string>(libraryElement.Name))
+            ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по фамилии {cellDescription} не найдена").
+               Map(error => new ResultApplicationValue<string>(error));
 
         /// <summary>
         /// Вернуть случайное имя
         /// </summary>
-        private string GetCellNameRandom() =>
+        private IResultApplicationValue<string> GetCellNameRandom() =>
             _cachLibraryElements?.
-            Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name);
+            Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name).
+            Map(name => new ResultApplicationValue<string>(name))
+            ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"База подписей не установлена").
+               Map(error => new ResultApplicationValue<string>(error));
     }
 }

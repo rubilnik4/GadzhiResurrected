@@ -1,6 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces;
-using GadzhiCommon.Models.Implementations.Errors;
+﻿using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConverting.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// СОздать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        IResultApplication PrintPdfWithExecuteAction(string filePath, Func<IResultApplication> printAction);
+        IResultConverting PrintPdfWithExecuteAction(string filePath, Func<IResultConverting> printFunc);
 
     }
 }

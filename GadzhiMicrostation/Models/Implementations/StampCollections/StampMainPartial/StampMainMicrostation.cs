@@ -1,6 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation;
-using GadzhiApplicationCommon.Models.Interfaces;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;

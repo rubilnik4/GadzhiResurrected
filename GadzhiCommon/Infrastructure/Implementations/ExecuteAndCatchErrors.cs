@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -12,74 +13,89 @@ namespace GadzhiCommon.Infrastructure.Implementations
     /// Класс обертка для отлова ошибок
     /// </summary> 
     public class ExecuteAndCatchErrors : IExecuteAndCatchErrors
-    {       
-        public ExecuteAndCatchErrors()
-        {          
-        }
+    {
+        public ExecuteAndCatchErrors() { }
 
         /// <summary>
-        ///Отлов ошибок и вызов постметода       
+        /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public IErrorConverting ExecuteAndHandleError(Action method,
-                                                      Action applicationBeforeMethod = null,
-                                                      Action applicationCatchMethod = null,
-                                                      Action applicationFinallyMethod = null)
+        public IResultConverting ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
+                                                       Action applicationCatchMethod = null, Action applicationFinallyMethod = null)
         {
-            IErrorConverting errorConverting = null;
+            IResultConverting result = new ResultConverting();
 
             try
             {
                 applicationBeforeMethod?.Invoke();
-                method();
-            }
-            catch (Exception ex)
-            {
-                applicationCatchMethod?.Invoke();              
-                errorConverting = new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace);
-            }
-            finally
-            {
-                applicationFinallyMethod?.Invoke();
-            }
-
-            return errorConverting;
-        }
-
-        /// <summary>
-        ///Отлов ошибок и вызов постметода асинхронно     
-        /// </summary> 
-        public async Task<IErrorConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod,
-                                                     Action applicationBeforeMethod = null,
-                                                     Action applicationCatchMethod = null,
-                                                     Action applicationFinallyMethod = null)
-        {
-            IErrorConverting errorConverting = null;
-
-            try
-            {
-                applicationBeforeMethod?.Invoke();
-                await asyncMethod();
+                method?.Invoke();
             }
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();
-                errorConverting = new ErrorConverting(GetTypeException(ex),
-                                                     errorConverting?.ErrorDescription, ex.Message, ex.StackTrace);                         
+                result = new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResultConverting();
             }
             finally
             {
                 applicationFinallyMethod?.Invoke();
             }
 
-            return errorConverting;
-        }     
+            return result;
+        }
+
+        /// <summary>
+        /// Отлов ошибок и суммирование ошибок     
+        /// </summary> 
+        public IResultConvertingValue<TSource> ExecuteBindErrors<TSource>(Func<IResultConvertingValue<TSource>> method)
+        {
+            if (method == null) throw new ArgumentNullException(nameof(method));
+            IResultConvertingValue<TSource> result = new ResultConvertingValue<TSource>();
+
+            try
+            {
+                result = method.Invoke();
+                
+            }
+            catch (Exception ex)
+            {               
+                result = result.ConcatResult
+                         new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResultConverting();
+            }         
+
+            return result;
+        }
+
+        /// <summary>
+        /// Отлов ошибок и вызов постметода асинхронно     
+        /// </summary> 
+        public async Task<IResultConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
+                                                                        Action applicationCatchMethod = null, Action applicationFinallyMethod = null)
+        {
+            IResultConverting result = new ResultConverting();
+
+            try
+            {
+                applicationBeforeMethod?.Invoke();
+                await asyncMethod?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                applicationCatchMethod?.Invoke();
+                result = new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResultConverting();
+            }
+            finally
+            {
+                applicationFinallyMethod?.Invoke();
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Получить тип ошибки
         /// </summary>       
         private FileConvertErrorType GetTypeException(Exception ex)
         {
-            FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;         
+            FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;
 
             if (fileConvertErrorType != FileConvertErrorType.UnknownError)
             {

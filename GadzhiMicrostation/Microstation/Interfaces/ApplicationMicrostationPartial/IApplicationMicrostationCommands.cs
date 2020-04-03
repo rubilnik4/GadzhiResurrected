@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces.Elements;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Создать ячейку на освнове шаблона в библиотеке
         /// </summary>       
-        ICellElementMicrostation CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
+        IResultApplicationValue<ICellElementMicrostation> CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
                                                               Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                               string cellDescription = null);
@@ -20,7 +21,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        ICellElementMicrostation CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
+        IResultApplicationValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                             IModelMicrostation modelMicrostation,
                                                             Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                             string cellDescription = null);

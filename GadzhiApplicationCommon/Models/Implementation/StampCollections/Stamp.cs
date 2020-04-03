@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Interfaces;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
@@ -38,12 +39,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Сжать поля
         /// </summary>
-        public abstract void CompressFieldsRanges();
+        public abstract Unit CompressFieldsRanges();
 
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public abstract IEnumerable<IErrorApplication> InsertSignatures();
+        public abstract IResultApplication InsertSignatures();
 
         /// <summary>
         /// Удалить подписи

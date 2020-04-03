@@ -10,12 +10,12 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces;
-using GadzhiApplicationCommon.Models.Implementation;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using GadzhiMicrostation.Extentions.StringAdditional;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -30,18 +30,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>      
             new ResultApplication().
             WhereMap(result => stamp != null && stamp is IStampMicrostation)?.
-            ConcatResultApplication(SetPrintingFenceByRange(((IStampMicrostation)stamp).StampCellElement.Range))?.
-            ConcatResultApplication(SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize))?.
+            ConcatResult(SetPrintingFenceByRange(((IStampMicrostation)stamp).StampCellElement.Range))?.
+            ConcatResult(SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize))?.
             Map(result =>
                 {
                     SetPrintingOrientation(stamp.Orientation);
                     SetPrintScale(((IStampMicrostation)stamp).StampCellElement.UnitScale);
                     SetPrintColor(colorPrint);
-                    if (!result.HasErrors) PrintCommand();
+                    if (result.OkStatus) PrintCommand();
                     return result;
                 })
             ?? new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден или не соответствует формату Microstation").
-               Map(error => new ResultApplication(error));
+               ToResultConverting();
 
         /// <summary>
         /// Команда печати
@@ -94,7 +94,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             else
             {
                 return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно").
-                       Map(error => new ResultApplication(error));
+                       ToResultConverting();
             }
         }
 
@@ -114,7 +114,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 return new ResultApplication();
             })
             ?? new ErrorApplication(ErrorApplicationType.RangeNotValid, $"Формат печати {drawSize} не найден").
-                   Map(error => new ResultApplication(error));
+                   ToResultConverting();
 
         /// <summary>
         /// Установить масштаб печати

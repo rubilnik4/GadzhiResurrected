@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;

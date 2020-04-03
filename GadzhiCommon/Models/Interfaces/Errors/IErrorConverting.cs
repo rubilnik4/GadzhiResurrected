@@ -31,5 +31,10 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// Стек вызовов
         /// </summary>
         string StackTrace { get; }
+
+        /// <summary>
+        /// Преобразовать в ответ
+        /// </summary>      
+        IResultConverting ToResultConverting();
     }
 }

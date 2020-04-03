@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.Models.Interfaces
+namespace GadzhiCommon.Models.Interfaces.Errors
 {
     /// <summary>
-    /// Возвращаемый тип после конвертации с учетом ошибок
+    /// Базовый вариант ответа
     /// </summary>
-    public interface IResultApplication
-    {
+    public interface IResultConverting
+    {      
         /// <summary>
         /// Список ошибок
         /// </summary>
-        IEnumerable<IErrorApplication> ErrorsApplication { get; }
+        IEnumerable<IErrorConverting> ErrorsConverting { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -21,8 +21,13 @@ namespace GadzhiApplicationCommon.Models.Interfaces
         bool HasErrors { get; }
 
         /// <summary>
+        /// Отсуствие ошибок
+        /// </summary>
+        bool OkStatus { get; }
+
+        /// <summary>
         /// Добавить ошибку. Вернуть новый объект
         /// </summary>      
-        IResultApplication ConcatResultApplication(IResultApplication errorApplication);
+        IResultConverting ConcatResult(IResultConverting errorConverting);
     }
 }

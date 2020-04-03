@@ -10,7 +10,7 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
     /// <summary>
     /// Отконвертированный файл серверной части
     /// </summary>
-    public interface  IFileDataSourceServer
+    public interface  IFileDataSourceServer: IEnumerable<IFileDataSourceServer>
     {
         /// <summary>
         /// Путь файла

@@ -23,10 +23,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
     public class FilesConvertModule : IModule
     {
 
-        public FilesConvertModule()
-        {
-
-        }
+        public FilesConvertModule() { }     
 
         /// <summary>
         /// Привязка модулей к View
@@ -42,7 +39,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
         /// </summary>
         public void ConfigureViewModelLocator()
         {
-            ViewModelLocationProvider.Register<FilesConvertView, FilesConvertViewModel>();
+           // ViewModelLocationProvider.Register<FilesConvertView, FilesConvertViewModel>();
         }
 
         /// <summary>

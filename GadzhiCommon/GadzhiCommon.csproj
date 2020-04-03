@@ -108,6 +108,8 @@
     <Compile Include="Infrastructure\Interfaces\ILoggerService.cs" />
     <Compile Include="Infrastructure\Interfaces\IMessagingService.cs" />
     <Compile Include="Models\Implementations\Errors\ErrorConverting.cs" />
+    <Compile Include="Models\Implementations\Errors\ResultConvertingValue.cs" />
+    <Compile Include="Models\Implementations\Errors\ResultConverting.cs" />
     <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataSourceResponseBase.cs" />
     <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
     <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
@@ -116,6 +118,8 @@
     <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FilesDataRequestBase.cs" />
     <Compile Include="Models\Implementations\TransferModels\FilesConvert\Base\FilesDataResponseBase.cs" />
     <Compile Include="Models\Interfaces\Errors\IErrorConverting.cs" />
+    <Compile Include="Models\Interfaces\Errors\IResultConvertingValue.cs" />
+    <Compile Include="Models\Interfaces\Errors\IResultConverting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -128,6 +128,7 @@
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Extensions\ColorPrintExtensions.cs" />
     <Compile Include="Extensions\ErrorExtensions.cs" />
+    <Compile Include="Extensions\ResultExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\NativeMethods .cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConverting.cs" />
@@ -150,9 +151,12 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
+    <Compile Include="Models\Interfaces\IResultFileDataSource.cs" />
     <Compile Include="Models\Converters\ColorPrintToApplicationConverter.cs" />
     <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
+    <Compile Include="Models\Converters\ResultApplicationConverter.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
+    <Compile Include="Models\Implementations\ResultFileDataSource.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />

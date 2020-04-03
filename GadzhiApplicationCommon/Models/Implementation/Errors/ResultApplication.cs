@@ -1,13 +1,13 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GadzhiApplicationCommon.Models.Implementation
+namespace GadzhiApplicationCommon.Models.Implementation.Errors
 {
     /// <summary>
-    /// Возвращаемый тип после конвертации с учетом ошибок
+    /// Возвращаемый тип модуля после конвертации с учетом ошибок
     /// </summary>
     public class ResultApplication : IResultApplication
     {
@@ -40,10 +40,15 @@ namespace GadzhiApplicationCommon.Models.Implementation
         public bool HasErrors => ErrorsApplication.Any();
 
         /// <summary>
+        /// Отсуствие ошибок
+        /// </summary>
+        public bool OkStatus => !HasErrors;
+
+        /// <summary>
         /// Добавить ошибку. Вернуть новый объект
         /// </summary>      
-        public IResultApplication ConcatResultApplication(IResultApplication resultApplication) =>
-            (resultApplication != null) ?
+        public IResultApplication ConcatResult(IResultApplication resultApplication) =>
+            resultApplication != null ?
             new ResultApplication(ErrorsApplication.Union(resultApplication.ErrorsApplication)) :
             this;
 

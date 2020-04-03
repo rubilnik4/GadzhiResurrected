@@ -52,6 +52,11 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public string StackTrace { get; }
 
         /// <summary>
+        /// Преобразовать в ответ
+        /// </summary>      
+        public IResultConverting ToResultConverting() => new ResultConverting(this);
+
+        /// <summary>
         /// Реализация перечисления
         /// </summary>       
         public IEnumerator<IErrorConverting> GetEnumerator()
@@ -62,6 +67,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Реализация перечисления
         /// </summary>  
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();       
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();   
+        
     }
 }
