@@ -30,16 +30,9 @@ namespace GadzhiModules.Modules.FilesConvertModule
         /// </summary>
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            var regionManager = containerProvider.Resolve<IRegionManager>();
+            var regionManager = containerProvider.Resolve<IRegionManager>();          
             regionManager.RegisterViewWithRegion(RegionNames.FilesConvertModule, typeof(FilesConvertView));
-        }
-
-        /// <summary>
-        /// Привязка View к ViewModels
-        /// </summary>
-        public void ConfigureViewModelLocator()
-        {
-           // ViewModelLocationProvider.Register<FilesConvertView, FilesConvertViewModel>();
+           
         }
 
         /// <summary>
@@ -47,8 +40,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
         /// </summary>        
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            IUnityContainer unityContainer = containerRegistry.GetContainer();
-
+            IUnityContainer unityContainer = containerRegistry.GetContainer();         
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));
 

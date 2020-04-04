@@ -12,6 +12,9 @@ namespace GadzhiConverting.Models.Interfaces
     /// </summary>
     public interface IResultFileDataSource: IResultConvertingValue<IEnumerable<IFileDataSourceServer>>
     {
-       
+        /// <summary>
+        /// Добавить ответ
+        /// </summary>      
+        IResultFileDataSource ConcatResult(IResultFileDataSource resultFileDataSource);
     }
 }

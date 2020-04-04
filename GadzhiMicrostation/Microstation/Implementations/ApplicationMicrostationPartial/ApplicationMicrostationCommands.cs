@@ -16,6 +16,7 @@ using GadzhiMicrostation.Helpers;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -34,10 +35,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                      Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
                                                                      string cellDescription = null) =>
             ChangeCellNameByDescriptionIfNotFoundInLibrary(cellName, cellDescription).
-            WhereContinue(resultCellName => resultCellName.OkStatus,
-                okFunc: resultCellName => CreateCellElementWithoutCheck(resultCellName.Value, origin, modelMicrostation, additionalParametrs).
-                                          Map(cellElement => new ResultApplicationValue<ICellElementMicrostation>(cellElement)),
-                badFunc: resultCellName => new ResultApplicationValue<ICellElementMicrostation>(resultCellName.ErrorsApplication));
+            ResultValueOk(cellNameChanged => CreateCellElementWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParametrs));
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
@@ -107,7 +105,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             WhereBad(result => result.OkStatus,
                 badFunc: _ => GetCellNameRandom())
             ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись {cellDescription} не найдена").
-               Map(error => new ResultApplicationValue<string>(error));
+               ToResultConvertingValue<string>();
 
        
         /// <summary>

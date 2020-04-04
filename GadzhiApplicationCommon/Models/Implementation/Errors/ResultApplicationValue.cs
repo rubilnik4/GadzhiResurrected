@@ -14,17 +14,17 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public ResultApplicationValue()
             : base() { }
 
-        public ResultApplicationValue(IErrorApplication errorApplication)
-            : base(errorApplication.AsEnumerable()) { }
+        public ResultApplicationValue(IErrorApplication error)
+            : base(error.AsEnumerable()) { }
 
-        public ResultApplicationValue(IEnumerable<IErrorApplication> errorsApplication)
-           : base(errorsApplication) { }
+        public ResultApplicationValue(IEnumerable<IErrorApplication> errors)
+           : base(errors) { }
 
         public ResultApplicationValue(TValue value)
           : this(value, Enumerable.Empty<IErrorApplication>()) { }
 
-        public ResultApplicationValue(TValue value, IEnumerable<IErrorApplication> errorsApplication)
-            : base(errorsApplication)
+        public ResultApplicationValue(TValue value, IEnumerable<IErrorApplication> errors)
+            : base(errors)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
             Value = value;

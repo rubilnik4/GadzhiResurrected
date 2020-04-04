@@ -36,5 +36,10 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// Преобразовать в ответ
         /// </summary>      
         IResultConverting ToResultConverting();
+
+        /// <summary>
+        /// Преобразовать в ответ с вложенным типом
+        /// </summary>      
+        IResultConvertingValue<TValue> ToResultConvertingValue<TValue>();
     }
 }

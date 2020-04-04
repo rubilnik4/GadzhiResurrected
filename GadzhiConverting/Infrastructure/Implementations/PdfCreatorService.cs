@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Extentions.Functional.Result;
 using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
@@ -26,11 +27,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class PdfCreatorService : IPdfCreatorService
     {
         /// <summary>
-        /// Библиотека Pdf Creator
-        /// </summary>
-        private PDFCreator.clsPDFCreator _pdfCreator;
-
-        /// <summary>
         /// Маркер готовности
         /// </summary>
         private bool _readyState = false;
@@ -44,9 +40,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private PDFCreator.clsPDFCreator PdrCreatorInitialize()
         {
             KillAllPreviousProcess();
-            _pdfCreator = new PDFCreator.clsPDFCreator();
-            _pdfCreator.eReady += new PDFCreator.__clsPDFCreator_eReadyEventHandler(PdfCreatorReady);
-            return _pdfCreator;
+            var pdfCreator = new PDFCreator.clsPDFCreator();
+            return pdfCreator;
         }
 
         /// <summary>
@@ -59,43 +54,42 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>       
         public IResultConverting PrintPdfWithExecuteAction(string filePath, Func<IResultConverting> printFunction) =>
             SetPrinterOptions(filePath).
-            WhereContinue(result => result.OkStatus,
-            okFunc: result => printFunction?.Invoke().
-                              WhereContinue(resultPrint => resultPrint.OkStatus,
-                                            okFunc: resultPrint => PrintPdf(),
-                                            badFunc: resultPrint => resultPrint)
-                              ?? new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Функция печати не задана").
-                                Map(error => new ResultConverting(error)),
-            badFunc: result => result);
+            ResultValueOkBind(pdfCreator => new ResultConvertingValue<PDFCreator.clsPDFCreator>(pdfCreator, printFunction.Invoke().Errors)).
+            ResultValueOkBind(pdfCreator => new ResultConvertingValue<Unit>(Unit.Value, PrintPdf(pdfCreator).Errors));
 
         /// <summary>
         /// Установить опции печати
         /// </summary>   
-        private IResultConverting SetPrinterOptions(string filePath) =>
-            PdrCreatorInitialize().
-            WhereNull(pdfCreator => pdfCreator.cStart("/NoProcessingAtStartup", false))?.
-            Map(pdfCreator =>
-                FileSystemOperations.ExtensionWithoutPointFromPath(filePath).
-                WhereNull(fileExtension => !String.IsNullOrEmpty(filePath) || !String.IsNullOrEmpty(fileExtension) ||
-                                          FileExtention.pdf.ToString().ContainsIgnoreCase(fileExtension))?.
-                Map(fileExtension =>
+        private IResultConvertingValue<PDFCreator.clsPDFCreator> SetPrinterOptions(string filePath) =>
+            new ResultConvertingValue<PDFCreator.clsPDFCreator>(PdrCreatorInitialize()).
+            ResultContinue(pdfCreator => pdfCreator.cStart("/NoProcessingAtStartup", false),
+                okFunc: pdfCreator => pdfCreator,
+                badFunc: _ => new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Ошибка инициализации PDF принтера")).
+            ResultContinue(pdfCreator => PdfPathValid(filePath),
+                okFunc: pdfCreator =>
                 {
-                    pdfCreator.cOptions = GetPdfPrinterOptions(filePath);
+                    pdfCreator.cOptions = GetPdfPrinterOptions(pdfCreator, filePath);
                     pdfCreator.cClearCache();
-                    return new ResultConverting();
-                })
-                ?? new ErrorConverting(FileConvertErrorType.PdfPrintingError, $"Некорретно задан путь сохранения {filePath}").
-                   Map(error => new ResultConverting(error))
-            ) ?? new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Ошибка инициализации PDF принтера").
-                Map(error => new ResultConverting(error));
+                    return pdfCreator;
+                },
+                badFunc: _ => new ErrorConverting(FileConvertErrorType.PdfPrintingError, $"Некорретно задан путь сохранения {filePath}"));
+
+        /// <summary>
+        /// Корректнет ли путь для сохранения pdf
+        /// </summary>        
+        private bool PdfPathValid(string filePath) =>
+            FileSystemOperations.ExtensionWithoutPointFromPath(filePath).
+            Map(fileExtension => !String.IsNullOrEmpty(filePath) && !String.IsNullOrEmpty(fileExtension) &&
+                                  FileExtention.pdf.ToString().ContainsIgnoreCase(fileExtension));
 
         /// <summary>
         /// Напечатать PDF
         /// </summary>
-        private IResultConverting PrintPdf()
+        private IResultConverting PrintPdf(PDFCreator.clsPDFCreator pdfCreator)
         {
+            pdfCreator.eReady += new PDFCreator.__clsPDFCreator_eReadyEventHandler(PdfCreatorReady);
             _readyState = false;
-            _pdfCreator.cPrinterStop = false;
+            pdfCreator.cPrinterStop = false;
 
             int waitingLimit = 0;
             while (!_readyState && waitingLimit < WaitingPrintingLimitInSeconds)
@@ -104,20 +98,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 Thread.Sleep(1000);
             }
 
-            _pdfCreator.cPrinterStop = true;
-            _pdfCreator.cClose();
+            pdfCreator.cPrinterStop = true;
+            pdfCreator.cClose();
+            pdfCreator = null;
 
             return !_readyState ?
                    new ResultConverting() :
-                   new ResultConverting(new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло"));
+                   new ErrorConverting(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло").ToResultConverting();
         }
 
         /// <summary>
         /// Установить опции печати PDF
         /// </summary>       
-        private PDFCreator.clsPDFCreatorOptions GetPdfPrinterOptions(string filePath)
+        private PDFCreator.clsPDFCreatorOptions GetPdfPrinterOptions(PDFCreator.clsPDFCreator pdfCreator, string filePath)
         {
-            var pdfCreatorOptions = _pdfCreator.cOptions;
+            var pdfCreatorOptions = pdfCreator.cOptions;
             pdfCreatorOptions.UseAutosave = 1;
             pdfCreatorOptions.UseAutosaveDirectory = 1;
             pdfCreatorOptions.AutosaveDirectory = Path.GetDirectoryName(filePath);
@@ -129,8 +124,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Событие готовности печати PDF
         /// </summary>
         private void PdfCreatorReady()
-        {
-            _pdfCreator.cPrinterStop = true;
+        {          
             _readyState = true;
         }
 
@@ -147,38 +141,5 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 return proccessName;
             }).
             ToList();
-
-        #region IDisposable Support
-        private bool disposedValue = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-
-                }
-                if (_pdfCreator?.cIsClosed == false)
-                {
-                    _pdfCreator?.cClose();
-                }
-                _pdfCreator = null;
-
-                disposedValue = true;
-            }
-        }
-
-        ~PdfCreatorService()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

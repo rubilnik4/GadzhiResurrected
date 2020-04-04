@@ -8,11 +8,21 @@ namespace GadzhiCommon.Models.Interfaces.Errors
     /// <summary>
     /// Базовый вариант ответа
     /// </summary>
-    public interface IResultConvertingValue<TValue>: IResultConverting
+    public interface IResultConvertingValue<TValue> : IResultConverting
     {
         /// <summary>
         /// Список значений
         /// </summary>
-        TValue ValueConverting { get; }
+        TValue Value { get; }
+
+        /// <summary>
+        /// Добавить ответ
+        /// </summary>      
+        IResultConvertingValue<TValue> ConcatResult(IResultConvertingValue<TValue> resultConverting);
+
+        /// <summary>
+        /// Добавить ошибку
+        /// </summary>      
+        IResultConvertingValue<TValue> ConcatErrors(IEnumerable<IErrorConverting> errors);
     }
 }

@@ -93,6 +93,9 @@
     <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
     <Compile Include="Extentions\Collection\IEnumerableExtension.cs" />
     <Compile Include="Extentions\Functional\MapExtensions.cs" />
+    <Compile Include="Extentions\Functional\Result\ResultMapExtensions.cs" />
+    <Compile Include="Extentions\Functional\Result\ResultWhereExtensions.cs" />
+    <Compile Include="Extentions\Functional\WhereExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\PathExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\StringAdditionalExtention.cs" />
     <Compile Include="Functional\Unit.cs" />
@@ -103,7 +106,6 @@
     <Compile Include="Infrastructure\Implementations\CheckStatusProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
-    <Compile Include="Infrastructure\Interfaces\IExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileSystemOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\ILoggerService.cs" />
     <Compile Include="Infrastructure\Interfaces\IMessagingService.cs" />

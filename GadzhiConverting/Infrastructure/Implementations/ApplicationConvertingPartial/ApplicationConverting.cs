@@ -29,11 +29,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private readonly IApplicationLibrary _applicationWord;
 
         /// <summary>
-        /// Класс обертка для отлова ошибок
-        /// </summary> 
-        private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
-
-        /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
@@ -45,13 +40,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
 
         public ApplicationConverting(IApplicationLibrary applicationMicrostation,
                                      IApplicationLibrary applicationWord,
-                                     IExecuteAndCatchErrors executeAndCatchErrors,
                                      IFileSystemOperations fileSystemOperations,
                                      IPdfCreatorService pdfCreatorService)
         {
             _applicationMicrostation = applicationMicrostation;
             _applicationWord = applicationWord;
-            _executeAndCatchErrors = executeAndCatchErrors;
             _fileSystemOperations = fileSystemOperations;
             _pdfCreatorService = pdfCreatorService;
         }

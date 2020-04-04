@@ -134,6 +134,7 @@
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingDocument.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingPrinting.cs" />
+    <Compile Include="Infrastructure\Implementations\ExecuteBindHandler.cs" />
     <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />

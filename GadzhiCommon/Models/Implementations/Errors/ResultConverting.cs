@@ -14,7 +14,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
     {
         public ResultConverting()
         {
-            ErrorsConverting = Enumerable.Empty<IErrorConverting>();           
+            Errors = Enumerable.Empty<IErrorConverting>();           
         }
 
         public ResultConverting(IErrorConverting errorConverting)
@@ -25,18 +25,18 @@ namespace GadzhiCommon.Models.Implementations.Errors
             if (errorsConverting == null) throw new ArgumentNullException(nameof(errorsConverting));
             if (!Validate(errorsConverting)) throw new NullReferenceException(nameof(errorsConverting));
            
-            ErrorsConverting = errorsConverting;
+            Errors = errorsConverting;
         }
       
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorConverting> ErrorsConverting { get; }
+        public IEnumerable<IErrorConverting> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
         /// </summary>
-        public bool HasErrors => ErrorsConverting.Any();
+        public bool HasErrors => Errors.Any();
 
         /// <summary>
         /// Отсуствие ошибок
@@ -48,7 +48,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// </summary>      
         public virtual IResultConverting ConcatResult(IResultConverting resultConverting) =>
             resultConverting != null ?
-            new ResultConverting(ErrorsConverting.Union(resultConverting.ErrorsConverting)) :
+            new ResultConverting(Errors.Union(resultConverting.Errors)) :
             this;
 
         /// <summary>
