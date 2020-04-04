@@ -11,7 +11,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
     /// <summary>
     /// Управление печатью пдф
     /// </summary>
-    public interface IPdfCreatorService : IDisposable
+    public interface IPdfCreatorService 
     {  
         /// <summary>
         /// СОздать PDF файл с выполнением отложенной печати 

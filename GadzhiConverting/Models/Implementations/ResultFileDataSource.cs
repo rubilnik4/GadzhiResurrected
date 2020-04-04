@@ -18,19 +18,27 @@ namespace GadzhiConverting.Models.Implementations
         public ResultFileDataSource()
             : base() { }
 
-        public ResultFileDataSource(IErrorConverting errorConverting)
-            : base(errorConverting.AsEnumerable()) { }
+        public ResultFileDataSource(IErrorConverting error)
+            : base(error.AsEnumerable()) { }
 
-        public ResultFileDataSource(IEnumerable<IErrorConverting> errorsConverting)
-           : base(errorsConverting) { }
+        public ResultFileDataSource(IEnumerable<IErrorConverting> errors)
+           : base(errors) { }
 
         public ResultFileDataSource(IEnumerable<IFileDataSourceServer> filedatasSource)
           : this(filedatasSource, Enumerable.Empty<IErrorConverting>()) { }
 
-        public ResultFileDataSource(IEnumerable<IFileDataSourceServer> filedatasSource, IEnumerable<IErrorConverting> errorsConverting)
-            : base(filedatasSource, errorsConverting)
+        public ResultFileDataSource(IEnumerable<IFileDataSourceServer> filedatasSource, IEnumerable<IErrorConverting> errors)
+            : base(filedatasSource, errors)
         {
             if (!Validate(filedatasSource)) throw new NullReferenceException(nameof(filedatasSource));
         }
+
+        /// <summary>
+        /// Добавить ответ
+        /// </summary>      
+        public IResultFileDataSource ConcatResult(IResultFileDataSource resultFileDataSource) =>
+            resultFileDataSource != null ?
+            new ResultFileDataSource(resultFileDataSource.Value, resultFileDataSource.Errors) :
+            this;
     }
 }

@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Functional\MapExtensions.cs" />
+    <Compile Include="Extensions\Functional\Result\ResultWhereExtensions.cs" />
+    <Compile Include="Extensions\Functional\WhereExtensions.cs" />
     <Compile Include="Functional\Unit.cs" />
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />
     <Compile Include="Models\Enums\ErrorApplicationType.cs" />

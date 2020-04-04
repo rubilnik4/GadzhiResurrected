@@ -41,7 +41,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                     return result;
                 })
             ?? new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден или не соответствует формату Microstation").
-               ToResultConverting();
+               ToResultApplication();
 
         /// <summary>
         /// Команда печати
@@ -94,7 +94,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             else
             {
                 return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно").
-                       ToResultConverting();
+                       ToResultApplication();
             }
         }
 
@@ -114,7 +114,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 return new ResultApplication();
             })
             ?? new ErrorApplication(ErrorApplicationType.RangeNotValid, $"Формат печати {drawSize} не найден").
-                   ToResultConverting();
+                   ToResultApplication();
 
         /// <summary>
         /// Установить масштаб печати

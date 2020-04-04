@@ -15,33 +15,42 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public ResultConvertingValue()
             : base() { }
 
-        public ResultConvertingValue(IErrorConverting errorConverting)
-            : base(errorConverting.AsEnumerable()) { }
+        public ResultConvertingValue(IErrorConverting error)
+            : base(error.AsEnumerable()) { }
 
-        public ResultConvertingValue(IEnumerable<IErrorConverting> errorsConverting)
-           : base(errorsConverting) { }
+        public ResultConvertingValue(IEnumerable<IErrorConverting> errors)
+           : base(errors) { }
 
         public ResultConvertingValue(TValue value)
           : this(value, Enumerable.Empty<IErrorConverting>()) { }
 
-        public ResultConvertingValue(TValue value, IEnumerable<IErrorConverting> errorsConverting)
-            : base(errorsConverting)
+        public ResultConvertingValue(TValue value, IEnumerable<IErrorConverting> errors)
+            : base(errors)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            ValueConverting = value;
+            Value = value;
         }
 
         /// <summary>
         /// Список значений
         /// </summary>
-        public TValue ValueConverting { get; }
+        public TValue Value { get; }
 
         /// <summary>
-        /// Добавить ошибку. Вернуть новый объект
+        /// Добавить ответ
         /// </summary>      
         public virtual IResultConvertingValue<TValue> ConcatResult(IResultConvertingValue<TValue> resultConverting) =>
             resultConverting != null ?
-            new ResultConvertingValue<TValue>(, ErrorsConverting.Union(resultConverting.ErrorsConverting)) :
+            new ResultConvertingValue<TValue>(resultConverting.Value, resultConverting.Errors) :
             this;
+
+        /// <summary>
+        /// Добавить ошибку
+        /// </summary>      
+        public virtual IResultConvertingValue<TValue> ConcatErrors(IEnumerable<IErrorConverting> errors) =>
+            errors != null && Validate(errors) ?
+            new ResultConvertingValue<TValue>(Value, Errors.Union(errors)) :
+            this;
+
     }
 }

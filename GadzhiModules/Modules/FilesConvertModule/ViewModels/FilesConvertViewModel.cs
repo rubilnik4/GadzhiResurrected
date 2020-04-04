@@ -35,9 +35,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         private readonly IDisposable fileDataChangeSubscribe;
 
         public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi,
-                                     IStatusProcessingInformation statusProcessingInformation,
-                                     IExecuteAndCatchErrors executeAndCatchErrors)
-            : base(executeAndCatchErrors)
+                                     IStatusProcessingInformation statusProcessingInformation)
+            : base()
         {
             _applicationGadzhi = applicationGadzhi;
             _statusProcessingInformation = statusProcessingInformation;

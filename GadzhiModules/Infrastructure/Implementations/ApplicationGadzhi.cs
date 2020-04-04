@@ -19,6 +19,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
+using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -60,12 +61,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Параметры приложения
         /// </summary>
         private readonly IProjectSettings _projectSettings;
-
-        /// <summary>
-        /// Класс обертка для отлова ошибок
-        /// </summary>        
-        private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
-
+        
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
         /// </summary>
@@ -77,7 +73,6 @@ namespace GadzhiModules.Infrastructure.Implementations
                                  IServiceConsumer<IFileConvertingClientService> FileConvertingClientService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation,
-                                 IExecuteAndCatchErrors executeAndCatchErrors,
                                  IProjectSettings projectSettings)
         {
             _dialogServiceStandard = dialogServiceStandard;
@@ -86,7 +81,6 @@ namespace GadzhiModules.Infrastructure.Implementations
             _fileConvertingClientService = FileConvertingClientService;
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark;
             _statusProcessingInformation = statusProcessingInformation;
-            _executeAndCatchErrors = executeAndCatchErrors;
             _projectSettings = projectSettings;
 
             _statusProcessingUpdaterSubsriptions = new CompositeDisposable();        
@@ -242,17 +236,15 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Подписаться на изменение статуса файлов при конвертировании
         /// </summary>
-        private void SubsribeToIntermediateResponse()
-        {
-            _statusProcessingUpdaterSubsriptions.Add(Observable.
-                                                    Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
-                                                    Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
-                                                    Subscribe(async _ => await _executeAndCatchErrors.
-                                                                               ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
-                                                                                                          () => IsIntermediateResponseInProgress = true,
-                                                                                                          async () => await AbortPropertiesConverting(false),
-                                                                                                          () => IsIntermediateResponseInProgress = false)));
-        }
+        private void SubsribeToIntermediateResponse() =>       
+            _statusProcessingUpdaterSubsriptions.
+            Add(Observable.
+                Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
+                Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
+                Subscribe(async _ => await ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
+                                                                      () => IsIntermediateResponseInProgress = true,
+                                                                      async () => await AbortPropertiesConverting(false),
+                                                                      () => IsIntermediateResponseInProgress = false)));
 
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов

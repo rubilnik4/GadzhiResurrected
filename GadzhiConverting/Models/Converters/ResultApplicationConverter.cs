@@ -19,9 +19,9 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать результирующий отвеа модуля конвертации в основной
         /// </summary>      
-        public static IResultFileDataSource ToResultConverting(IResultApplication resultApplication) =>
+        public static IResultFileDataSource ToResultFileDataSource(IResultApplication resultApplication) =>
             resultApplication?.
-            Map(result => new ResultFileDataSource(result.ErrorsApplication.ToErrorsConverting()))
+            Map(result => new ResultFileDataSource(result.Errors.ToErrorsConverting()))
             ?? throw new ArgumentNullException(nameof(resultApplication));
 
 

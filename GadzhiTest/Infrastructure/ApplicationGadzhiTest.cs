@@ -32,12 +32,7 @@ namespace GadzhiTest
         /// <summary>
         /// Получение файлов для изменения статуса. Пустой класс
         /// </summary>
-        Mock<IFileDataProcessingStatusMark> MockFileDataProcessingStatusMark;
-
-        /// <summary>
-        /// Класс обертка для отлова ошибок
-        /// </summary>
-        Mock<IExecuteAndCatchErrors> MockExecuteAndCatchErrors;
+        Mock<IFileDataProcessingStatusMark> MockFileDataProcessingStatusMark;       
 
         /// <summary>
         /// Текущий статус конвертирования
@@ -54,8 +49,7 @@ namespace GadzhiTest
         {
             MockDialogServiceStandard = new Mock<IDialogServiceStandard>();
             MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingClientService>>();
-            MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();
-            MockExecuteAndCatchErrors = new Mock<IExecuteAndCatchErrors>();
+            MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();       
             MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();
             MockProjectSettings = new Mock<IProjectSettings>();
         }
@@ -104,8 +98,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockStatusProcessingInformation.Object,                                                      
                                                           MockProjectSettings.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
@@ -153,8 +146,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockStatusProcessingInformation.Object,                                                       
                                                           MockProjectSettings.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
@@ -192,8 +184,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockStatusProcessingInformation.Object,                                                          
                                                           MockProjectSettings.Object);
 
             IEnumerable<string> files = null;
@@ -233,8 +224,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,
-                                                          MockExecuteAndCatchErrors.Object,
+                                                          MockStatusProcessingInformation.Object,                                                   
                                                           MockProjectSettings.Object);
 
             IEnumerable<string> files = new List<string> { null };

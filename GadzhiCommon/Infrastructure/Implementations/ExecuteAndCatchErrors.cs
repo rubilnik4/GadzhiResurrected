@@ -12,15 +12,13 @@ namespace GadzhiCommon.Infrastructure.Implementations
     /// <summary>
     /// Класс обертка для отлова ошибок
     /// </summary> 
-    public class ExecuteAndCatchErrors : IExecuteAndCatchErrors
-    {
-        public ExecuteAndCatchErrors() { }
-
+    public static class ExecuteAndCatchErrors 
+    {       
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public IResultConverting ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
-                                                       Action applicationCatchMethod = null, Action applicationFinallyMethod = null)
+        public static IResultConverting ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
+                                                              Action applicationCatchMethod = null, Action applicationFinallyMethod = null)
         {
             IResultConverting result = new ResultConverting();
 
@@ -40,35 +38,14 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Отлов ошибок и суммирование ошибок     
-        /// </summary> 
-        public IResultConvertingValue<TSource> ExecuteBindErrors<TSource>(Func<IResultConvertingValue<TSource>> method)
-        {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-            IResultConvertingValue<TSource> result = new ResultConvertingValue<TSource>();
-
-            try
-            {
-                result = method.Invoke();
-                
-            }
-            catch (Exception ex)
-            {               
-                result = result.ConcatResult
-                         new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResultConverting();
-            }         
-
-            return result;
-        }
+        }       
 
         /// <summary>
         /// Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        public async Task<IResultConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
-                                                                        Action applicationCatchMethod = null, Action applicationFinallyMethod = null)
+        public static async Task<IResultConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
+                                                                               Action applicationCatchMethod = null, 
+                                                                               Action applicationFinallyMethod = null)
         {
             IResultConverting result = new ResultConverting();
 
@@ -93,7 +70,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить тип ошибки
         /// </summary>       
-        private FileConvertErrorType GetTypeException(Exception ex)
+        public static FileConvertErrorType GetTypeException(Exception ex)
         {
             FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;
 

@@ -13,7 +13,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Список ошибок
         /// </summary>
-        IEnumerable<IErrorConverting> ErrorsConverting { get; }
+        IEnumerable<IErrorConverting> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки

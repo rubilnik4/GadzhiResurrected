@@ -13,12 +13,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
     {
         public ResultApplication()
         {
-            ErrorsApplication = Enumerable.Empty<IErrorApplication>();
+            Errors = Enumerable.Empty<IErrorApplication>();
         }
 
         public ResultApplication(IErrorApplication errorApplication)
         {
-            ErrorsApplication = errorApplication ?? throw new ArgumentNullException(nameof(errorApplication));
+            Errors = errorApplication ?? throw new ArgumentNullException(nameof(errorApplication));
         }
 
         public ResultApplication(IEnumerable<IErrorApplication> errorsApplication)
@@ -26,18 +26,18 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             if (errorsApplication == null) throw new ArgumentNullException(nameof(errorsApplication));
             if (!ValidateErrors(errorsApplication)) throw new NullReferenceException(nameof(errorsApplication));
 
-            ErrorsApplication = errorsApplication;
+            Errors = errorsApplication;
         }
 
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorApplication> ErrorsApplication { get; }
+        public IEnumerable<IErrorApplication> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
         /// </summary>
-        public bool HasErrors => ErrorsApplication.Any();
+        public bool HasErrors => Errors.Any();
 
         /// <summary>
         /// Отсуствие ошибок
@@ -49,7 +49,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// </summary>      
         public IResultApplication ConcatResult(IResultApplication resultApplication) =>
             resultApplication != null ?
-            new ResultApplication(ErrorsApplication.Union(resultApplication.ErrorsApplication)) :
+            new ResultApplication(Errors.Union(resultApplication.Errors)) :
             this;
 
         /// <summary>

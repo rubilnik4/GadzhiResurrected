@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static GadzhiConverting.Infrastructure.Implementations.ExecuteBindHandler;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -72,24 +73,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IResultConverting CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-             _executeAndCatchErrors.ExecuteAndHandleError(() => CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation)).
-             WhereContinue (executeError => executeError.OkStatus
-                
-        //{           
-        //    if (ActiveLibrary.IsDocumentValid)
-        //    {
-        //        var executeError = _executeAndCatchErrors.ExecuteAndHandleError(() =>
-        //          {
-        //              (fileDatasSourceServer, pdfErrors) = CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation);
-        //          });
-        //        pdfErrors = executeError?.
-        //                    Map(error => new ErrorConverting(FileConvertErrorType.PdfPrintingError,
-        //                                                     $"Ошибка сохранения файла PDF {filePath}",
-        //                                                     error.ExceptionMessage, error.StackTrace));
-        //    }
-        //    return (fileDatasSourceServer, pdfErrors);
-        //}
+        public IResultFileDataSource CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
+             ExecuteBindFileDataErrors(() => CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation),
+                                       new ErrorConverting(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}"));
 
         /// <summary>
         /// Закрыть файл
@@ -116,29 +102,37 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
-        private (FileExtention?, IErrorConverting) IsDocumentValid(string filePath)
-        {
-            FileExtention? fileExtention = null;
-            IErrorConverting documentError = null;
+        private IResultConvertingValue<FileExtention> IsDocumentValid(string filePathDocument) =>
+            filePathDocument?.
+            WhereContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
+                okFunc: filePath => new ResultConvertingValue<string>(filePath),
+                badFunc: filePath => new ErrorConverting(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден").
+                                     ToResultConvertingValue<string>()).
 
-            if (_fileSystemOperations.IsFileExist(filePath))
-            {
-                string fileExtentionString = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
-                fileExtention = ValidFileExtentions.DocAndDgnFileTypes.
-                                FirstOrDefault(pair => pair.Key.ContainsIgnoreCase(fileExtentionString)).
-                                Value;
-                if (fileExtention == null)
-                {
-                    documentError = new ErrorConverting(FileConvertErrorType.IncorrectExtension,
-                                        $"Расширение файла {filePath} не соответствует типам расширений doc или dgn");
-                }
-            }
-            else
-            {
-                documentError = new ErrorConverting(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден");
-            }
+            ?? throw new ArgumentNullException(nameof(filePathDocument));
 
-            return (fileExtention, documentError);
-        }
+        //{
+        //    FileExtention? fileExtention = null;
+        //    IErrorConverting documentError = null;
+
+        //    if (_fileSystemOperations.IsFileExist(filePath))
+        //    {
+        //        string fileExtentionString = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
+        //        fileExtention = ValidFileExtentions.DocAndDgnFileTypes.
+        //                        FirstOrDefault(pair => pair.Key.ContainsIgnoreCase(fileExtentionString)).
+        //                        Value;
+        //        if (fileExtention == null)
+        //        {
+        //            documentError = new ErrorConverting(FileConvertErrorType.IncorrectExtension,
+        //                                $"Расширение файла {filePath} не соответствует типам расширений doc или dgn");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        documentError = new ErrorConverting(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден");
+        //    }
+
+        //    return (fileExtention, documentError);
+        //}
     }
 }

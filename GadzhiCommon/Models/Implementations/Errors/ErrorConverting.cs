@@ -57,6 +57,11 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public IResultConverting ToResultConverting() => new ResultConverting(this);
 
         /// <summary>
+        /// Преобразовать в ответ с вложенным типом
+        /// </summary>      
+        public IResultConvertingValue<TValue> ToResultConvertingValue<TValue>() => new ResultConvertingValue<TValue>(this);
+
+        /// <summary>
         /// Реализация перечисления
         /// </summary>       
         public IEnumerator<IErrorConverting> GetEnumerator()
