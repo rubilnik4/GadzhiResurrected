@@ -67,7 +67,7 @@ namespace GadzhiCommon.Extentions.Functional.Result
                    WhereContinue(result => result.OkStatus,
                         okFunc: result => new ResultConvertingValue<TValueOut>(result.Value),
                         badFunc: result => new ResultConvertingValue<TValueOut>(result.Errors));
-        }
+        }      
 
         /// <summary>
         /// Выполнение положительного условия результирующего ответа или возвращение предыдущей ошибки в результирующем ответе

@@ -50,7 +50,6 @@ namespace GadzhiModules.Modules.FilesConvertModule
             unityContainer.RegisterSingleton<IFilesData, FilesData>();
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
-            unityContainer.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
             unityContainer.RegisterType<IConverterClientFilesDataToDTO, ConverterClientFilesDataToDTO>();
             unityContainer.RegisterType<IConverterClientFilesDataFromDTO, ConverterClientFilesDataFromDTO>();
         }
