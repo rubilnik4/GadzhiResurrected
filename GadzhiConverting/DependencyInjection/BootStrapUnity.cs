@@ -42,7 +42,6 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
-            container.RegisterType<IExecuteAndCatchErrors, ExecuteAndCatchErrors>();
             container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();
             container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
@@ -56,8 +55,7 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
 
             container.RegisterFactory<IApplicationConverting>(unity =>
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary>(nameof(ApplicationMicrostation)),
-                                          unity.Resolve<IApplicationLibrary>(nameof(ApplicationWord)),
-                                          unity.Resolve<IExecuteAndCatchErrors>(),
+                                          unity.Resolve<IApplicationLibrary>(nameof(ApplicationWord)),                                        
                                           unity.Resolve<IFileSystemOperations>(),
                                           unity.Resolve<IPdfCreatorService>()));
 

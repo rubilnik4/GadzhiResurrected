@@ -12,6 +12,7 @@ using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -48,12 +49,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Класс для отображения изменений и логгирования
         /// </summary>
-        private readonly IMessagingService _messagingService;
-
-        /// <summary>
-        /// Класс обертка для отлова ошибок
-        /// </summary> 
-        private readonly IExecuteAndCatchErrors _executeAndCatchErrors;
+        private readonly IMessagingService _messagingService;       
 
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -75,8 +71,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerFilesDataFromDTO converterServerFilesDataFromDTO,
                                  IConverterServerFilesDataToDTO converterServerFilesDataToDTO,
-                                 IMessagingService messagingService,
-                                 IExecuteAndCatchErrors executeAndCatchErrors,
+                                 IMessagingService messagingService,                               
                                  IFileSystemOperations fileSystemOperations)
         {
             _convertingFileData = convertingFileData;
@@ -84,8 +79,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _fileConvertingServerService = fileConvertingServerService;
             _converterServerFilesDataFromDTO = converterServerFilesDataFromDTO;
             _converterServerFilesDataToDTO = converterServerFilesDataToDTO;
-            _messagingService = messagingService;
-            _executeAndCatchErrors = executeAndCatchErrors;
+            _messagingService = messagingService;          
             _fileSystemOperations = fileSystemOperations;
 
             _convertingUpdaterSubsriptions = new CompositeDisposable();
@@ -109,10 +103,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
                            Where(_ => !IsConverting).
                            Subscribe(async _ =>
-                                     await _executeAndCatchErrors.
-                                     ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                applicationBeforeMethod: () => IsConverting = true,
-                                                                applicationFinallyMethod: () => IsConverting = false)));
+                                     await ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
+                                                                      applicationBeforeMethod: () => IsConverting = true,
+                                                                      applicationFinallyMethod: () => IsConverting = false)));
         }
 
         /// <summary>
@@ -165,12 +158,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             if (!filesDataServer.IsValidByFileDatas)
             {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.FileNotFound,
+                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.FileNotFound,
                                                           "Файлы для конвертации не обнаружены"));
             }
             else if (!filesDataServer.IsValidByAttemptingCount)
             {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.AttemptingCount,
+                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount,
                                                           "Превышено количество попыток конвертирования пакета"));
             }
             filesDataServer.SetErrorToAllUncompletedFiles();
@@ -241,7 +234,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task<IFilesDataServer> ConvertingFilesData(IFilesDataServer filesDataServer)
         {
-            _messagingService.ShowAndLogMessage($"Конвертация пакета {filesDataServer.Id.ToString()}");
+            _messagingService.ShowAndLogMessage($"Конвертация пакета {filesDataServer.Id}");
 
             foreach (var fileData in filesDataServer.FileDatasServerConverting)
             {
@@ -249,8 +242,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 {
                     while (!filesDataServer.IsCompleted && !fileData.IsCompleted && fileData.IsValidByAttemptingCount)
                     {
-                        await _executeAndCatchErrors.ExecuteAndHandleErrorAsync(() => _convertingFileData.Converting(fileData),
-                                                                                () => fileData.AttemptingConvertCount += 1);
+                        await ExecuteAndHandleErrorAsync(() => _convertingFileData.Converting(fileData),
+                                                         () => fileData.AttemptingConvertCount += 1);
                     }
 
                     await SendIntermediateResponse(filesDataServer);

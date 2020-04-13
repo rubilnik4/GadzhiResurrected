@@ -16,7 +16,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Записать ошибку
         /// </summary>       
-        public void LogError(IErrorConverting errorConverting)
+        public void LogError(IErrorCommon errorConverting)
         {
 
         }

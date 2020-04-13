@@ -18,13 +18,13 @@ namespace GadzhiConverting.Extensions
         /// <summary>
         /// Преобразовать внутренний класс ошибок библиотеки в основной
         /// </summary>
-        public static IErrorConverting ToErrorConverting(this IErrorApplication errorApplication) =>
+        public static IErrorCommon ToErrorConverting(this IErrorApplication errorApplication) =>
             ErrorApplicationConverter.ToErrorConverting(errorApplication);
 
         /// <summary>
         /// Преобразовать внутренние классы ошибок библиотеки в основные
         /// </summary>
-        public static IEnumerable<IErrorConverting> ToErrorsConverting(this IEnumerable<IErrorApplication> errorsApplication) =>
+        public static IEnumerable<IErrorCommon> ToErrorsConverting(this IEnumerable<IErrorApplication> errorsApplication) =>
             errorsApplication?.Select(error => error.ToErrorConverting())
             ?? throw new ArgumentNullException (nameof(errorsApplication));
     }   

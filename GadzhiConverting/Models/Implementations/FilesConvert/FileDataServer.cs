@@ -29,8 +29,15 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             : this(filePathServer, filePathClient, colorPrint, null)
         { }
 
-        public FileDataServer(string filePathServer, string filePathClient,
-                              ColorPrint colorPrint, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, 
+                              IEnumerable<FileConvertErrorType> fileConvertErrorType)
+            :this (filePathServer, filePathClient, colorPrint, fileConvertErrorType, Enumerable.Empty<IFileDataSourceServer>())
+        {
+           
+        }
+
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint,
+                              IEnumerable<FileConvertErrorType> filesConvertErrorType, IEnumerable <IFileDataSourceServer> fileDatasSourceServer)
         {
             string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
 
@@ -44,7 +51,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             ColorPrint = colorPrint;
 
             _fileDatasSourceServerBase = new List<IFileDataSourceServer>();
-            _fileConvertErrorTypesBase = new List<FileConvertErrorType>(fileConvertErrorType);
+            _fileConvertErrorTypesBase = new List<FileConvertErrorType>(filesConvertErrorType);
         }
 
         /// <summary>

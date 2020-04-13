@@ -10,7 +10,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
     /// <summary>
     /// Ошибка конвертации
     /// </summary>
-    public interface IErrorConverting: IEnumerable<IErrorConverting>
+    public interface IErrorCommon: IEnumerable<IErrorCommon>
     {
         /// <summary>
         /// Тип ошибки при конвертации файлов
@@ -35,11 +35,11 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Преобразовать в ответ
         /// </summary>      
-        IResultConverting ToResultConverting();
+        IResult ToResult();
 
         /// <summary>
         /// Преобразовать в ответ с вложенным типом
         /// </summary>      
-        IResultConvertingValue<TValue> ToResultConvertingValue<TValue>();
+        IResultValue<TValue> ToResultValue<TValue>();
     }
 }

@@ -55,26 +55,20 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IApplicationLibrary ActiveLibrary { get; set; }
 
         /// <summary>
-        /// Выбрать библиотеку конвертации по типу расширениф
+        /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        private IErrorConverting SetActiveLibraryByExtension(FileExtention fileExtention)
-        {
-            IErrorConverting libraryError = null;
-
-            if (fileExtention == FileExtention.dgn)
+        private IResultValue<IApplicationLibrary> SetActiveLibraryByExtension(FileExtention fileExtention)
+        { 
+            switch(fileExtention)
             {
-                ActiveLibrary = _applicationMicrostation;
+                case FileExtention.dgn:
+                    return new ResultValue<IApplicationLibrary>(_applicationMicrostation);
+                case FileExtention.docx:
+                    return new ResultValue<IApplicationLibrary>(_applicationWord);
+                default:
+                    return new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtention} не найдена").
+                           ToResultValue<IApplicationLibrary>();
             }
-            else if (fileExtention == FileExtention.docx)
-            {
-                ActiveLibrary = _applicationWord;
-            }
-            else
-            {
-                libraryError = new ErrorConverting(FileConvertErrorType.LibraryNotFound,
-                                                   $"Библиотека конвертации для типа {fileExtention} не найдена");
-            }
-            return libraryError;
-        }
+        }    
     }
 }

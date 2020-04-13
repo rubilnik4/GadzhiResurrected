@@ -19,9 +19,9 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать внутренний класс ошибок библиотеки в основной
         /// </summary>
-        public static IErrorConverting ToErrorConverting(IErrorApplication errorApplication) =>
+        public static IErrorCommon ToErrorConverting(IErrorApplication errorApplication) =>
             (errorApplication != null) ?
-             new ErrorConverting(ToFileConvertErrorType(errorApplication.ErrorMicrostationType), errorApplication.ErrorDescription) :
+             new ErrorCommon(ToFileConvertErrorType(errorApplication.ErrorMicrostationType), errorApplication.ErrorDescription) :
              throw new ArgumentNullException(nameof(errorApplication));
 
         /// <summary>

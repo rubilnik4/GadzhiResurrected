@@ -15,7 +15,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Записать ошибку
         /// </summary>        
-        void LogError(IErrorConverting errorConverting);
+        void LogError(IErrorCommon errorConverting);
 
         /// <summary>
         /// Записать сообщение

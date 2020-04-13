@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static GadzhiConverting.Infrastructure.Implementations.ExecuteBindHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -29,88 +30,57 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Открыть документ
         /// </summary>
-        public IErrorConverting OpenDocument(string filePath)
-        {
-            (FileExtention? documentExtension, IErrorConverting openError) = IsDocumentValid(filePath);
-            if (documentExtension != null)
-            {
-                openError = SetActiveLibraryByExtension(documentExtension.Value);
-                if (openError == null)
-                {
-                    _executeAndCatchErrors.ExecuteAndHandleError(
-                        () => ActiveLibrary.OpenDocument(filePath),
-                        applicationCatchMethod: () => openError = new ErrorConverting(FileConvertErrorType.FileNotOpen,
-                                                                                      $"Ошибка открытия файла {filePath}"));
-                }
-            };
-            return openError;
-        }
+        public IResultValue<IDocumentLibrary> OpenDocument(string filePath) =>
+            IsDocumentValid(filePath).
+            ResultValueOkBind(extension => SetActiveLibraryByExtension(extension)).
+            ResultValueOkTry(activeLibrary => new ResultValue<IDocumentLibrary>(activeLibrary.OpenDocument(filePath)),
+                             new ErrorCommon(FileConvertErrorType.FileNotOpen, $"Ошибка открытия файла {filePath}"));
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public IResultFileDataSource SaveDocument(string filePath) =>
-        //{
-        //    IEnumerable<IFileDataSourceServer> filesDataSourceServer = null;
-        //    IEnumerable<IErrorConverting> savingErrors = null;
-
-        //    if (ActiveLibrary.IsDocumentValid)
-        //    {
-        //        var executeError = _executeAndCatchErrors.ExecuteAndHandleError(() =>
-        //        {
-        //            ActiveLibrary.SaveDocument(filePath);
-        //            filesDataSourceServer = new FileDataSourceServer(filePath, FileExtention.docx).
-        //                                    Map(dataSource => new List<IFileDataSourceServer>() { dataSource });
-        //        },
-        //        applicationCatchMethod: () => ActiveLibrary.CloseDocument());
-        //        savingErrors = executeError?.
-        //                       Map(error => new ErrorConverting(FileConvertErrorType.FileNotSaved,
-        //                                                        $"Ошибка сохранения основного файла {filePath}",
-        //                                                        error.ExceptionMessage, error.StackTrace));
-        //    }
-
-        //    return (filesDataSourceServer, savingErrors);
-        //}
+        public IResultValue<IFileDataSourceServer> SaveDocument(string filePath) =>
+            ExecuteBindFileDataErrors<IDocumentLibrary, IResultValue<IDocumentLibrary>>(()
+                => new ResultValue<IDocumentLibrary>(ActiveLibrary.SaveDocument(filePath))).
+            ResultValueOk(document => (IFileDataSourceServer)new FileDataSourceServer(document.FullName, FileExtention.docx));
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IResultFileDataSource CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-             ExecuteBindFileDataErrors(() => CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation),
-                                       new ErrorConverting(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}"));
+        public IResultCollection<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
+             ExecuteBindFileDataErrors<IEnumerable<IFileDataSourceServer>, IResultCollection<IFileDataSourceServer>>(() =>
+                CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation),
+                                    new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}"));
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        public IResultConverting CloseDocument() =>
-             ExecuteAndHandleError(() => ActiveLibrary.CloseAndSaveDocument()).
-             WhereBad(result => result.HasErrors,
-                 badFunc: result => new ErrorConverting(FileConvertErrorType.FileNotSaved,$"Ошибка закрытия файла {ActiveLibrary.ActiveDocument.FullName}").
-                                    ToResultConverting ().
-                                    Map(errorResult => result.ConcatResult(errorResult))); 
+        public IResult CloseDocument() =>
+             ExecuteAndHandleError(() => ActiveLibrary.CloseAndSaveDocument(),
+                    errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved,$"Ошибка закрытия файла {ActiveLibrary.ActiveDocument.FullName}"));           
 
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
-        private IResultConvertingValue<FileExtention> IsDocumentValid(string filePathDocument) =>
+        private IResultValue<FileExtention> IsDocumentValid(string filePathDocument) =>
             filePathDocument.
             WhereContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
-                okFunc: filePath => new ResultConvertingValue<string>(filePath),
-                badFunc: filePath => new ErrorConverting(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден").
-                                     ToResultConvertingValue<string>()).
+                okFunc: filePath => new ResultValue<string>(filePath),
+                badFunc: filePath => new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден").
+                                     ToResultValue<string>()).
             ResultMap(filePath => FileSystemOperations.ExtensionWithoutPointFromPath(filePath)).
-            ResultValueOkBind(fileExtension => ValidateFileExtension(fileExtension));       
+            ResultValueOkBind(fileExtension => ValidateFileExtension(fileExtension));
 
         /// <summary>
         /// Проверить допустимость использования расширения файла
         /// </summary>           
-        private IResultConvertingValue<FileExtention> ValidateFileExtension(string fileExtension) =>
+        private IResultValue<FileExtention> ValidateFileExtension(string fileExtension) =>
             ValidFileExtentions.DocAndDgnFileTypes.Select(pair => pair.Key).
             FirstOrDefault(extensionString => extensionString.ContainsIgnoreCase(fileExtension)).
             WhereContinue(extensionKey => !String.IsNullOrWhiteSpace(extensionKey),
-                   okFunc: extensionKey => new ResultConvertingValue<FileExtention>(ValidFileExtentions.DocAndDgnFileTypes[extensionKey]),
-                   badFunc: _ => new ErrorConverting(FileConvertErrorType.IncorrectExtension,
+                   okFunc: extensionKey => new ResultValue<FileExtention>(ValidFileExtentions.DocAndDgnFileTypes[extensionKey]),
+                   badFunc: _ => new ErrorCommon(FileConvertErrorType.IncorrectExtension,
                                    $"Расширение файла {fileExtension} не соответствует типам расширений doc или dgn").
-                                 ToResultConvertingValue<FileExtention>());          
+                                 ToResultValue<FileExtention>());
     }
 }

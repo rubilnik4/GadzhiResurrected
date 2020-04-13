@@ -12,15 +12,15 @@ namespace GadzhiCommon.Models.Implementations.Errors
     /// <summary>
     /// Ошибка конвертации
     /// </summary>
-    public class ErrorConverting: IErrorConverting
+    public class ErrorCommon: IErrorCommon
     {
-        public ErrorConverting(FileConvertErrorType fileConvertErrorType, string errorDescription)
+        public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription)
             : this(fileConvertErrorType, errorDescription, null, null)
         {
           
         }
 
-        public ErrorConverting(FileConvertErrorType fileConvertErrorType,
+        public ErrorCommon(FileConvertErrorType fileConvertErrorType,
                                string errorDescription,
                                string exceptionMessage,
                                string stackTrace)
@@ -54,17 +54,22 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Преобразовать в ответ
         /// </summary>      
-        public IResultConverting ToResultConverting() => new ResultConverting(this);
+        public IResult ToResult() => new Result(this);
 
         /// <summary>
         /// Преобразовать в ответ с вложенным типом
         /// </summary>      
-        public IResultConvertingValue<TValue> ToResultConvertingValue<TValue>() => new ResultConvertingValue<TValue>(this);
+        public IResultValue<TValue> ToResultValue<TValue>() => new ResultValue<TValue>(this);
+
+        /// <summary>
+        /// Преобразовать в ответ с коллекцией
+        /// </summary>      
+        public IResultCollection<TValue> ToResultCollection<TValue>() => new ResultCollection<TValue>(this);
 
         /// <summary>
         /// Реализация перечисления
         /// </summary>       
-        public IEnumerator<IErrorConverting> GetEnumerator()
+        public IEnumerator<IErrorCommon> GetEnumerator()
         {
             yield return this;
         }

@@ -1,8 +1,8 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Extensions;
-using GadzhiConverting.Models.Implementations;
-using GadzhiConverting.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +19,22 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать результирующий отвеа модуля конвертации в основной
         /// </summary>      
-        public static IResultFileDataSource ToResultFileDataSource(IResultApplication resultApplication) =>
+        public static IResult ToResult(IResultApplication resultApplication) =>
             resultApplication?.
-            Map(result => new ResultFileDataSource(result.Errors.ToErrorsConverting()))
+            Map(result => new Result(result.Errors.ToErrorsConverting()))
             ?? throw new ArgumentNullException(nameof(resultApplication));
 
+        /// <summary>
+        /// Преобразовать результирующий ответ модуля со значением конвертации в основной
+        /// </summary>      
+        public static IResultValue<TResult> ToResultValue<TApplication, TResult>(IResultApplicationValue<TApplication> resultApplicationValue,
+                                                                                 Func<TApplication, TResult> converterValue)
+        {
+            if (resultApplicationValue == null) throw new ArgumentNullException(nameof(resultApplicationValue));
+            if (converterValue == null) throw new ArgumentNullException(nameof(converterValue));
 
+            return resultApplicationValue.
+            Map(result => new ResultValue<TResult>(converterValue(result.Value), result.Errors.ToErrorsConverting()));
+        }
     }
 }

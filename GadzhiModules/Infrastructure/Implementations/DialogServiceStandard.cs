@@ -61,7 +61,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Сообщение об ошибке
         /// </summary>  
-        public void ShowAndLogError(IErrorConverting errorConverting)
+        public void ShowAndLogError(IErrorCommon errorConverting)
         {
             if (errorConverting == null) throw new ArgumentNullException(nameof(errorConverting));
             string messageText = "Ошибка" + "\n" +
@@ -73,7 +73,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Сообщение об ошибках
         /// </summary>  
-        public void ShowAndLogErrors(IEnumerable<IErrorConverting> errorsConverting)
+        public void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting)
         {
             foreach (var error in errorsConverting.EmptyIfNull())
             {

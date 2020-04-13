@@ -1,11 +1,15 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiApplicationCommon.Functional;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Collection;
+using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Extentions.Functional.Result;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
@@ -100,7 +104,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             }
             else
             {
-                _messagingService.ShowAndLogError(new ErrorConverting(FileConvertErrorType.AttemptingCount,
+                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount,
                                                           "Превышено количество попыток конвертирования файла"));
                 fileDataServer.AddFileConvertErrorType(FileConvertErrorType.AttemptingCount);
             }
@@ -111,64 +115,57 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        public IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation)
-        {
-            (var loadDataSources, var loadErrors) = LoadDocument(fileDataServer);
-            (var pdfDataSources, var pdfErrors) = CreatePdf(fileDataServer, printersInformation);
-            (var exportDataSources, var exportErrors) = ExportFile(fileDataServer);
+        public IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
+            LoadDocument(fileDataServer).
+            ResultValueOkBind(_ => CreatePdf(fileDataServer, printersInformation)).
+            Map(result => new FileDataServer(fileDataServer.FilePathServer, )
+           
+        //{
+        //    (var loadDataSources, var loadErrors) = LoadDocument(fileDataServer);
+        //    (var pdfDataSources, var pdfErrors) = CreatePdf(fileDataServer, printersInformation);
+        //    (var exportDataSources, var exportErrors) = ExportFile(fileDataServer);
 
-            var errors = loadErrors.
-                         UnionNotNull(pdfErrors).
-                         UnionNotNull(exportErrors).
-                         Select(error => error.FileConvertErrorType);
-            fileDataServer.AddRangeFileConvertErrorType(errors);
+        //    var errors = loadErrors.
+        //                 UnionNotNull(pdfErrors).
+        //                 UnionNotNull(exportErrors).
+        //                 Select(error => error.FileConvertErrorType);
+        //    fileDataServer.AddRangeFileConvertErrorType(errors);
 
-            var dataSources = loadDataSources.
-                              UnionNotNull(pdfDataSources).
-                              UnionNotNull(exportDataSources);
-            fileDataServer.SetFileDatasSourceServerConverting(dataSources);
+        //    var dataSources = loadDataSources.
+        //                      UnionNotNull(pdfDataSources).
+        //                      UnionNotNull(exportDataSources);
+        //    fileDataServer.SetFileDatasSourceServerConverting(dataSources);
 
-            CloseFile();
-            
-            return fileDataServer;
-        }
+        //    CloseFile();
+
+        //    return fileDataServer;
+        //}
 
         /// <summary>
         /// Загрузить файл
         /// </summary>   
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) LoadDocument(IFileDataServer fileDataServer)
-        {
-            _messagingService.ShowAndLogMessage("Загрузка файла");
-            _applicationConverting.OpenDocument(fileDataServer?.FilePathServer);
+        private IResultValue<IFileDataSourceServer> LoadDocument(IFileDataServer fileDataServer) =>
+            new Result().
+            ResultValueOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
+            ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
+            ResultValueOkBind(savingPath => _applicationConverting.SaveDocument(savingPath)).
+            Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
-            (IEnumerable<IFileDataSourceServer> savingSources, IEnumerable<IErrorConverting> savingErrors) =
-                _applicationConverting.SaveDocument(CreateSavingPathByExtension(fileDataServer.FilePathServer,
-                                                                                fileDataServer.FileExtentionType));
-            _messagingService.ShowAndLogErrors(savingErrors);
 
-            return (savingSources, savingErrors);
-        }
-
-        /// <summary>
-        /// Создать Pdf
-        /// </summary>       
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) CreatePdf(IFileDataServer fileDataServer,
-                                                                                             IPrintersInformation printersInformation)
-        {
-            _messagingService.ShowAndLogMessage("Создание файлов PDF");
-            (IEnumerable<IFileDataSourceServer> pdfSources, IEnumerable<IErrorConverting> pdfErrors) =
-                _applicationConverting.CreatePdfFile(CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf),
-                                                                                 fileDataServer.ColorPrint,
-                                                                                 printersInformation?.PrintersPdf.FirstOrDefault());
-            _messagingService.ShowAndLogErrors(pdfErrors);
-
-            return (pdfSources, pdfErrors);
-        }
+        private IResultCollection<IFileDataSourceServer> CreatePdf(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
+            new Result().
+            ResultValueOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf)).
+            ResultValueOkBind(filePath => _applicationConverting.CreatePdfFile(filePath, fileDataServer.ColorPrint,
+                                                                               printersInformation?.PrintersPdf.FirstOrDefault())).
+            Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
+            ToResultCollection();
 
         /// <summary>
         /// Экспортировать в другие форматы
         /// </summary>
-        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorConverting>) ExportFile(IFileDataServer fileDataServer)
+        private (IEnumerable<IFileDataSourceServer>, IEnumerable<IErrorCommon>) ExportFile(IFileDataServer fileDataServer)
         {
             //    _loggerMicrostation.ShowMessage("Создание файла DWG");
             //    _applicationMicrostation.CreateDwgFile(_microstationProject.CreateFileSavePath(_microstationProject.FileDataMicrostation.FileName,
@@ -179,28 +176,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        private void CloseFile()
-        {
-            _messagingService.ShowAndLogMessage("Конвертирование завершено");
-            _applicationConverting.CloseDocument();
-        }
+        private IResult CloseFile() =>
+            _applicationConverting.CloseDocument().
+            Void(_ => _messagingService.ShowAndLogMessage("Конвертирование завершено"));
 
         /// <summary>
         /// Создать папку для сохранения отконвертированных файлов по типу расширения
         /// </summary>       
-        private string CreateSavingPathByExtension(string filePathServer, FileExtention fileExtention)
-        {
-            if (!String.IsNullOrWhiteSpace(filePathServer))
-            {
-                string serverDirectory = _fileSystemOperations.CreateFolderByName(Path.GetDirectoryName(filePathServer),
-                                                                                      fileExtention.ToString());
-                return _fileSystemOperations.CombineFilePath(serverDirectory, Path.GetFileNameWithoutExtension(filePathServer),
-                                                             fileExtention.ToString());
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(filePathServer));
-            }
-        }
+        private IResultValue<string> CreateSavingPathByExtension(string filePathServer, FileExtention fileExtention) =>
+            new ResultValue<string>(filePathServer).
+            ResultValueOk(filePath => Path.GetDirectoryName(filePath)).
+            ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtention.ToString())).
+            ResultValueOk(serverDirectory => _fileSystemOperations.CombineFilePath(serverDirectory,
+                                                                                   Path.GetFileNameWithoutExtension(filePathServer),
+                                                                                   fileExtention.ToString()));      
     }
 }

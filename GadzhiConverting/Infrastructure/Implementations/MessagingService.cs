@@ -37,7 +37,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отобразить и добавить в журнал ошибку
         /// </summary>            
-        public virtual void ShowAndLogError(IErrorConverting errorConverting)
+        public virtual void ShowAndLogError(IErrorCommon errorConverting)
         {
             ShowError(errorConverting);
             _loggerService.LogError(errorConverting);
@@ -46,7 +46,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отобразить и добавить в журнал ошибки
         /// </summary>       
-        public virtual void ShowAndLogErrors(IEnumerable<IErrorConverting> errorsConverting)
+        public virtual void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting)
         {
             foreach (var error in errorsConverting.EmptyIfNull())
             {
@@ -63,7 +63,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отобразить сообщение
         /// </summary>
-        protected virtual void ShowError(IErrorConverting errorConverting) =>
+        protected virtual void ShowError(IErrorCommon errorConverting) =>
             errorConverting?.
             Map(error => new List<string>()
             { "Ошибка | " + ConverterErrorType.FileErrorTypeToString(error.FileConvertErrorType),

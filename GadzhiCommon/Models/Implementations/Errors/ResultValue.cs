@@ -1,20 +1,21 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace GadzhiApplicationCommon.Models.Implementation.Errors
+namespace GadzhiCommon.Models.Implementations.Errors
 {
     /// <summary>
-    /// Базовый вариант ответа
+    /// Базовый вариант ответа со значением
     /// </summary>
-    public class ResultApplicationValue<TValue> : IResultApplicationValue<TValue>
+    public class ResultValue<TValue>: IResultValue<TValue>
     {
-        public ResultApplicationValue(IErrorApplication error)
-           : this(error.AsEnumerable()) { }
+        public ResultValue(IErrorCommon error)
+            : this(error.AsEnumerable()) { }
 
-        public ResultApplicationValue(IEnumerable<IErrorApplication> errors)
+        public ResultValue(IEnumerable<IErrorCommon> errors)
         {
             if (errors == null) throw new ArgumentNullException(nameof(errors));
             if (!ValidateCollection(errors)) throw new NullReferenceException(nameof(errors));
@@ -22,15 +23,15 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             Errors = errors;
         }
 
-        public ResultApplicationValue(TValue value)
-          : this(value, Enumerable.Empty<IErrorApplication>()) { }
+        public ResultValue(TValue value)
+          : this(value, Enumerable.Empty<IErrorCommon>()) { }
 
-        public ResultApplicationValue(TValue value, IEnumerable<IErrorApplication> errors)
-            : this(errors)
+        public ResultValue(TValue value, IEnumerable<IErrorCommon> errors) 
+            :this (errors)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));           
 
-            Value = value;
+            Value = value;           
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorApplication> Errors { get; }
+        public IEnumerable<IErrorCommon> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -56,9 +57,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Добавить ошибку
         /// </summary>      
-        public IResultApplicationValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
+        public IResultValue<TValue> ConcatErrors(IEnumerable<IErrorCommon> errors) =>
             errors != null && ValidateCollection(errors) ?
-            new ResultApplicationValue<TValue>(Value, Errors.Union(errors)) :
+            new ResultValue<TValue>(Value, Errors.Union(errors)) :
             this;
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System.Collections.Generic;
 
@@ -12,16 +13,16 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Отобразить и записать в журнал сообщение
         /// </summary>     
-        void ShowAndLogMessage(string message);
+        Unit ShowAndLogMessage(string message);
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибку
         /// </summary>       
-        void ShowAndLogError(IErrorConverting errorConverting);
+        void ShowAndLogError(IErrorCommon errorConverting);
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибки
         /// </summary>       
-        void ShowAndLogErrors(IEnumerable<IErrorConverting> errorsConverting);
+        void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting);
     }
 }

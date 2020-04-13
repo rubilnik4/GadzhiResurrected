@@ -1,4 +1,5 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -20,22 +21,22 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Открыть документ
         /// </summary>
-        IResultConverting OpenDocument(string filePath);
+        IResultValue<IDocumentLibrary> OpenDocument(string filePath);
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
-       IResultFileDataSource SaveDocument(string filePath);
+        IResultValue<IFileDataSourceServer> SaveDocument(string filePath);
 
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        IResultFileDataSource CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
+        IResultCollection<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        IResultConverting CloseDocument();
+        IResult CloseDocument();
     }
 }

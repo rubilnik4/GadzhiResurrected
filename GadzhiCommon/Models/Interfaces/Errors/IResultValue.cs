@@ -6,14 +6,19 @@ using System.Text;
 namespace GadzhiCommon.Models.Interfaces.Errors
 {
     /// <summary>
-    /// Базовый вариант ответа
+    /// Базовый вариант ответа со значением
     /// </summary>
-    public interface IResultConverting
-    {      
+    public interface IResultValue<TValue>
+    {
+        /// <summary>
+        /// Список значений
+        /// </summary>
+        TValue Value { get; }
+
         /// <summary>
         /// Список ошибок
         /// </summary>
-        IEnumerable<IErrorConverting> Errors { get; }
+        IEnumerable<IErrorCommon> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -26,8 +31,8 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         bool OkStatus { get; }
 
         /// <summary>
-        /// Добавить ошибку. Вернуть новый объект
+        /// Добавить ошибку
         /// </summary>      
-        IResultConverting ConcatResult(IResultConverting errorConverting);
+        IResultValue<TValue> ConcatErrors(IEnumerable<IErrorCommon> errors);
     }
 }

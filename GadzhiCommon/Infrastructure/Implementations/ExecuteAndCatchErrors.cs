@@ -12,15 +12,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
     /// <summary>
     /// Класс обертка для отлова ошибок
     /// </summary> 
-    public static class ExecuteAndCatchErrors 
-    {       
+    public static class ExecuteAndCatchErrors
+    {
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public static IResultConverting ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
-                                                              Action applicationCatchMethod = null, Action applicationFinallyMethod = null)
+        public static IResult ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
+                                                    Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
+                                                    IErrorCommon errorMessage = null)
         {
-            IResultConverting result = new ResultConverting();
+            IResult result = new Result();
 
             try
             {
@@ -30,7 +31,9 @@ namespace GadzhiCommon.Infrastructure.Implementations
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();
-                result = new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResultConverting();
+                result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
+                         ToResult().
+                         ConcatErrors(errorMessage);
             }
             finally
             {
@@ -38,16 +41,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
 
             return result;
-        }       
+        }
 
         /// <summary>
         /// Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        public static async Task<IResultConverting> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
-                                                                               Action applicationCatchMethod = null, 
+        public static async Task<IResult> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
+                                                                               Action applicationCatchMethod = null,
                                                                                Action applicationFinallyMethod = null)
         {
-            IResultConverting result = new ResultConverting();
+            IResult result = new Result();
 
             try
             {
@@ -57,7 +60,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();
-                result = new ErrorConverting(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResultConverting();
+                result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResult();
             }
             finally
             {

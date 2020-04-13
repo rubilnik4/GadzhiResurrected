@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
@@ -60,6 +61,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вписать текстовые поля в рамки
         /// </summary>
-        public override void CompressFieldsRanges() { }
+        public override Unit CompressFieldsRanges() => Unit.Value;
     }
 }
