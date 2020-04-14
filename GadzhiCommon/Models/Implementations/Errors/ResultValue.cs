@@ -23,13 +23,20 @@ namespace GadzhiCommon.Models.Implementations.Errors
             Errors = errors;
         }
 
-        public ResultValue(TValue value)
-          : this(value, Enumerable.Empty<IErrorCommon>()) { }
+        public ResultValue(TValue value, IErrorCommon errorNull = null)
+          : this(value, Enumerable.Empty<IErrorCommon>(), errorNull) { }
 
-        public ResultValue(TValue value, IEnumerable<IErrorCommon> errors) 
+        public ResultValue(TValue value, IEnumerable<IErrorCommon> errors, IErrorCommon errorNull = null) 
             :this (errors)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));           
+            if (value == null && errorNull != null)
+            {
+                Errors = Errors.Concat(errorNull);
+            }
+            else if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
 
             Value = value;           
         }

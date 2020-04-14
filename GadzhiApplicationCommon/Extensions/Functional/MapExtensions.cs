@@ -19,6 +19,15 @@ namespace GadzhiApplicationCommon.Extensions.Functional
             throw new ArgumentNullException(nameof(func));
 
         /// <summary>
+        /// Преобразование типов с помощью функции
+        /// </summary>    
+        public static TResult Map<TSourceFirst, TSourceSecond, TResult>(this TSourceFirst sourceFirst, TSourceSecond sourceSecond,
+                                                                        Func<TSourceFirst, TSourceSecond, TResult> func) =>
+            func != null ?
+            func(sourceFirst, sourceSecond) :
+            throw new ArgumentNullException(nameof(func));       
+
+        /// <summary>
         /// Выполнить действие, вернуть тот же тип
         /// </summary>       
         public static T Void<T>(this T @this, Action<T> action)

@@ -11,6 +11,7 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using static GadzhiApplicationCommon.Functional.MapFunctional;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -64,60 +65,83 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Получить координаты и размеры поля для вставки подписей
         /// </summary>       
         private IResultApplicationValue<RangeMicrostation> GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
-                                                    ITextElementMicrostation previousField, ITextElementMicrostation nextField)
-        {
-            if (previousField == null || nextField == null)
-            {
-                return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Некорректно заданы параметры диапазона вставки подписи").
-                       ToResultApplicationValue<RangeMicrostation>();
-            }
+                                                    ITextElementMicrostation previousField, ITextElementMicrostation nextField) =>
+        
+            Map(GetSignatureLowLeft(previousField), GetSignatureHighRight(nextField),
+                (previous, next) => previous.OkStatus && next.OkStatus ?
+                                    new ResultApplicationValue<RangeMicrostation>(new RangeMicrostation(previous.Value, next.Value)) :
+                                    previous.Errors.Concat(next.Errors).ToResultApplicationValue<RangeMicrostation>()).
+            ResultValueOk(rangeCellCoordinates => rangeCellCoordinates.Scale(unitScale).
+                                                                      Offset(stampOrigin));
 
-            PointMicrostation lowLeftPoint = !previousField.IsVertical ?
-                                              new PointMicrostation(previousField.RangeAttributeInUnits.HighRightPoint.X,
-                                                                    previousField.RangeAttributeInUnits.LowLeftPoint.Y) :
-                                              new PointMicrostation(previousField.RangeAttributeInUnits.LowLeftPoint.X,
-                                                                    previousField.RangeAttributeInUnits.HighRightPoint.Y);
+        /// <summary>
+        /// Получить нижнюю левую точку поля
+        /// </summary>       
+        private IResultApplicationValue<PointMicrostation> GetSignatureLowLeft(ITextElementMicrostation fieldText) =>
+          new ResultApplicationValue<ITextElementMicrostation>(fieldText,
+                                     new ErrorApplication(ErrorApplicationType.ArgumentNullReference, "Не задан диапазон поля подписи LowLeft")).
+          ResultValueOk(field => !field.IsVertical ?
+                                 new PointMicrostation(field.RangeAttributeInUnits.HighRightPoint.X, field.RangeAttributeInUnits.LowLeftPoint.Y) :
+                                 new PointMicrostation(field.RangeAttributeInUnits.LowLeftPoint.X, field.RangeAttributeInUnits.HighRightPoint.Y));
 
-            PointMicrostation highRightPoint = !previousField.IsVertical ?
-                                                new PointMicrostation(nextField.RangeAttributeInUnits.LowLeftPoint.X,
-                                                                      nextField.RangeAttributeInUnits.HighRightPoint.Y) :
-                                                new PointMicrostation(nextField.RangeAttributeInUnits.HighRightPoint.X,
-                                                                      nextField.RangeAttributeInUnits.LowLeftPoint.Y);
-
-            var signatureRangeInCellCoordinates = new RangeMicrostation(lowLeftPoint, highRightPoint);
-            var signatureRangeInModelCoordinates = signatureRangeInCellCoordinates.Scale(unitScale).
-                                                                                   Offset(stampOrigin);
-            // левая нижняя точка
-            return new ResultApplicationValue<RangeMicrostation>(signatureRangeInModelCoordinates);
-        }
+        /// <summary>
+        /// Получить верхнюю правую точку поля
+        /// </summary>       
+        private IResultApplicationValue<PointMicrostation> GetSignatureHighRight(ITextElementMicrostation fieldText) =>
+          new ResultApplicationValue<ITextElementMicrostation>(fieldText,
+                                     new ErrorApplication(ErrorApplicationType.ArgumentNullReference, "Не задан диапазон поля подписи HighRight")).
+          ResultValueOk(field => !field.IsVertical ?
+                                 new PointMicrostation(field.RangeAttributeInUnits.LowLeftPoint.X, field.RangeAttributeInUnits.HighRightPoint.Y) :
+                                 new PointMicrostation(field.RangeAttributeInUnits.HighRightPoint.X, field.RangeAttributeInUnits.LowLeftPoint.Y));
 
         /// <summary>
         /// Параметры ячейки подписи
         /// </summary>
         private Func<ICellElementMicrostation, ICellElementMicrostation> CreateSignatureCell(RangeMicrostation signatureRange, bool isVertical) =>
             new Func<ICellElementMicrostation, ICellElementMicrostation>(cellElement =>
-            {
-                var signatureCell = cellElement.Copy(isVertical);
-                PointMicrostation differenceBetweenOriginAndLowLeft = signatureCell.Origin.Subtract(signatureCell.Range.LowLeftPoint).
-                                                                                           Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow);
-                if (isVertical)
-                {
-                    differenceBetweenOriginAndLowLeft.X += signatureRange.Width;
-                }
-                signatureCell.Move(differenceBetweenOriginAndLowLeft);
+                cellElement.Copy(isVertical).
+                Map(cell => SignatureMove(cell, signatureRange, isVertical)).
+                Map(cell => SignatureRotate(cell, signatureRange, isVertical)).
+                Map(cell => SignatureScale(cell, signatureRange, isVertical)).
+                Void(cell => cell.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker))
+            );
 
-                var originPoint = !isVertical ? signatureCell.Range.LowLeftPoint : new PointMicrostation(signatureRange.HighRightPoint.X, signatureRange.LowLeftPoint.Y);
-                if (isVertical)
-                {
-                    signatureCell.Rotate(originPoint, 90);
-                }
+        /// <summary>
+        /// Переместить ячейку подписи
+        /// </summary>
+        private ICellElementMicrostation SignatureMove(this ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
+            signatureCell.Origin.
+            Subtract(signatureCell.Range.LowLeftPoint).
+            Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow).
+            WhereOK(_ => isVertical,
+                okFunc: originMinusLowLeft => originMinusLowLeft.AddX(signatureRange.Width)).
+            Map(originMinusLowLeft => (ICellElementMicrostation)signatureCell.Move(originMinusLowLeft));
 
-                var scaleFactor = new PointMicrostation(signatureRange.Width / signatureCell.Range.Width * StampSettingsMicrostation.CompressionRatioText,
-                                                        signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText);
-                signatureCell.ScaleAll(originPoint, scaleFactor);
+        /// <summary>
+        /// Повернуть ячейку подписи
+        /// </summary>       
+        private ICellElementMicrostation SignatureRotate(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
+            GetTransformPoint(signatureRange, isVertical).
+            WhereContinue(_ => isVertical,
+                okFunc: rotatePoint => (ICellElementMicrostation)signatureCell.Rotate(rotatePoint, 90),
+                badFunc: _ => signatureCell);
 
-                signatureCell.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
-                return signatureCell;
-            });
+        /// <summary>
+        /// Масштабировать ячейку подписи
+        /// </summary>       
+        private ICellElementMicrostation SignatureScale(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
+             new PointMicrostation(signatureRange.Width / signatureCell.Range.Width * StampSettingsMicrostation.CompressionRatioText,
+                                   signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText).
+             Map(scaleFactor => GetTransformPoint(signatureRange, isVertical).
+                                Map(scalePoint => (ICellElementMicrostation)signatureCell.ScaleAll(scalePoint, scaleFactor)));
+
+        /// <summary>
+        /// Получить точку для модификации
+        /// </summary>
+        private PointMicrostation GetTransformPoint(RangeMicrostation signatureRange, bool isVertical) =>
+            signatureRange.
+            WhereContinue(_ => isVertical,
+                okFunc: range => range.LowLeftPoint,
+                badFunc: range => new PointMicrostation(range.HighRightPoint.X, range.LowLeftPoint.Y));
     }
 }

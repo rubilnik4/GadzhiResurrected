@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +23,20 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             Errors = errors;
         }
 
-        public ResultApplicationValue(TValue value)
-          : this(value, Enumerable.Empty<IErrorApplication>()) { }
+        public ResultApplicationValue(TValue value, IErrorApplication errorNull = null)
+          : this(value, Enumerable.Empty<IErrorApplication>(), errorNull) { }
 
-        public ResultApplicationValue(TValue value, IEnumerable<IErrorApplication> errors)
+        public ResultApplicationValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
             : this(errors)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (value == null && errorNull != null)
+            {
+                Errors = Errors.Concat(errorNull);
+            }
+            else if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
 
             Value = value;
         }
