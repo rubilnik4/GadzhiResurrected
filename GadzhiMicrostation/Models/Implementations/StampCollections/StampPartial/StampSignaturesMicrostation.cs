@@ -8,6 +8,9 @@ using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -19,60 +22,55 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public override IEnumerable<IErrorApplication> InsertSignatures()
-        {
-            StampCellElement.ApplicationMicrostation.AttachLibrary(StampCellElement.ApplicationMicrostation.
-                                                                   MicrostationResources.SignatureMicrostationFileName);
-            DeleteSignaturesPrevious();
-            //Использование toList обязательно. Для синхронизации выполнения с прикрепленной библиотекой
-            IEnumerable<IErrorApplication> signatureErrors = InsertSignaturesFromLibrary().ToList();
-            StampCellElement.ApplicationMicrostation.DetachLibrary();
-
-            return signatureErrors;
-        }
+        public override IResultApplication InsertSignatures() =>
+            StampCellElement.ApplicationMicrostation.
+            Void(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.
+                                                          MicrostationResources.SignatureMicrostationFileName)).
+            Void(_ => DeleteSignaturesPrevious()).
+            Map(_ => InsertSignaturesFromLibrary().ToList()).
+            Void(_ => StampCellElement.ApplicationMicrostation.DetachLibrary());
 
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        protected abstract IEnumerable<IErrorApplication> InsertSignaturesFromLibrary();
+        protected abstract IResultApplication InsertSignaturesFromLibrary();
 
         /// <summary>
         /// Удалить предыдущие подписи
         /// </summary>
-        public void DeleteSignaturesPrevious()
-        {
-            var signaturesElements = StampCellElement.ModelMicrostation.
-                                     GetModelElementsMicrostation(ElementMicrostationType.CellElement).
-                                     Where(element => element.AttributeControlName == StampFieldMain.SignatureAttributeMarker);
-
-            foreach (var signature in signaturesElements)
-            {
-                signature.Remove();
-            }
-        }
+        public Unit DeleteSignaturesPrevious() =>
+            StampCellElement.ModelMicrostation.
+            GetModelElementsMicrostation(ElementMicrostationType.CellElement).
+            Where(element => element.AttributeControlName == StampFieldMain.SignatureAttributeMarker).
+            Select(element => { element.Remove(); return Unit.Value; }).
+            Map(_ => Unit.Value);
 
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        protected ICellElementMicrostation InsertSignature(string personId,
-                                                           ITextElementMicrostation previousField, ITextElementMicrostation nextField,
-                                                           string personName = null) =>        
+        protected IResultApplicationValue<ICellElementMicrostation> InsertSignature(string personId,
+                                                                                    ITextElementMicrostation previousField,
+                                                                                    ITextElementMicrostation nextField,
+                                                                                    string personName = null) =>
             GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale, previousField, nextField).
-            Map(signatureRange => StampCellElement.ApplicationMicrostation.
-                                  CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
-                                                               StampCellElement.ModelMicrostation,
-                                                               CreateSignatureCell(signatureRange, previousField.IsVertical),
-                                                               personName));      
+            ResultValueOkBind(signatureRange => StampCellElement.ApplicationMicrostation.
+                                                CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
+                                                                             StampCellElement.ModelMicrostation,
+                                                                             CreateSignatureCell(signatureRange, previousField.IsVertical),
+                                                                             personName));
 
         //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты
         /// <summary>
         /// Получить координаты и размеры поля для вставки подписей
         /// </summary>       
-        private RangeMicrostation GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
+        private IResultApplicationValue<RangeMicrostation> GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
                                                     ITextElementMicrostation previousField, ITextElementMicrostation nextField)
         {
-            if (previousField == null) throw new ArgumentNullException(nameof(previousField));
-            if (nextField == null) throw new ArgumentNullException(nameof(nextField));
+            if (previousField == null || nextField == null)
+            {
+                return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Некорректно заданы параметры диапазона вставки подписи").
+                       ToResultApplicationValue<RangeMicrostation>();
+            }
 
             PointMicrostation lowLeftPoint = !previousField.IsVertical ?
                                               new PointMicrostation(previousField.RangeAttributeInUnits.HighRightPoint.X,
@@ -90,7 +88,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             var signatureRangeInModelCoordinates = signatureRangeInCellCoordinates.Scale(unitScale).
                                                                                    Offset(stampOrigin);
             // левая нижняя точка
-            return signatureRangeInModelCoordinates;
+            return new ResultApplicationValue<RangeMicrostation>(signatureRangeInModelCoordinates);
         }
 
         /// <summary>
@@ -114,13 +112,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                     signatureCell.Rotate(originPoint, 90);
                 }
 
-                signatureCell.ScaleAll(originPoint,
-                                       new PointMicrostation(signatureRange.Width / signatureCell.Range.Width * StampSettingsMicrostation.CompressionRatioText,
-                                                           signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText));
+                var scaleFactor = new PointMicrostation(signatureRange.Width / signatureCell.Range.Width * StampSettingsMicrostation.CompressionRatioText,
+                                                        signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText);
+                signatureCell.ScaleAll(originPoint, scaleFactor);
 
                 signatureCell.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker);
                 return signatureCell;
             });
-
     }
 }

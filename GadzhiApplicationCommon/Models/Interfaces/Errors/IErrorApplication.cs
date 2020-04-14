@@ -29,6 +29,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// <summary>
         /// Преобразовать в ответ с вложенным типом
         /// </summary>      
-        IResultApplicationValue<TValue> ToResultConvertingValue<TValue>();
+        IResultApplicationValue<TValue> ToResultApplicationValue<TValue>();
     }
 }

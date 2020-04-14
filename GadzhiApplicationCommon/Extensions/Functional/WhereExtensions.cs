@@ -42,12 +42,12 @@ namespace GadzhiApplicationCommon.Extensions.Functional
         /// Обработка позитивного условия
         /// </summary>      
         public static TSource WhereOK<TSource>(this TSource @this, Func<TSource, bool> predicate, Func<TSource, TSource> okFunc) =>
-               @this.WhereContinue(predicate, okFunc, (_) => @this);
+               @this.WhereContinue(predicate, okFunc, _ => @this);
 
         /// <summary>
         /// Обработка негативного условия
         /// </summary>      
         public static TSource WhereBad<TSource>(this TSource @this, Func<TSource, bool> predicate, Func<TSource, TSource> badFunc) =>
-               @this.WhereContinue(predicate, (_) => @this, badFunc);
+               @this.WhereContinue(predicate, _ => @this, badFunc);
     }
 }

@@ -16,6 +16,16 @@ namespace GadzhiApplicationCommon.Extensions.Functional
         public static TResult Map<TSource, TResult>(this TSource @this, Func<TSource, TResult> func) =>
             func != null ?
             func(@this) :
-            throw new ArgumentNullException(nameof(func));       
+            throw new ArgumentNullException(nameof(func));
+
+        /// <summary>
+        /// Выполнить действие, вернуть тот же тип
+        /// </summary>       
+        public static T Void<T>(this T @this, Action<T> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            action.Invoke(@this);
+            return @this;
+        }
     }
 }

@@ -43,6 +43,18 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
             new PointMicrostation(this.X + point.X, this.Y + point.Y, this.Z + point.Z);
 
         /// <summary>
+        /// Операция сложения по оси X
+        /// </summary>       
+        public PointMicrostation AddX(double xCoorditate) =>
+            new PointMicrostation(this.X + xCoorditate, this.Y , this.Z);
+
+        /// <summary>
+        /// Операция сложения по оси Y
+        /// </summary>       
+        public PointMicrostation AddY(double yCoorditate) =>
+            new PointMicrostation(this.X, this.Y + yCoorditate, this.Z);
+
+        /// <summary>
         /// Операция вычитания с другой точкой
         /// </summary>   
         public PointMicrostation Subtract(PointMicrostation point) =>

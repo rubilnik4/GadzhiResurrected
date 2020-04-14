@@ -37,7 +37,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Преобразовать в ответ с вложенным типом
         /// </summary>      
-        public IResultApplicationValue<TValue> ToResultConvertingValue<TValue>() => new ResultApplicationValue<TValue>(this);
+        public IResultApplicationValue<TValue> ToResultApplicationValue<TValue>() => new ResultApplicationValue<TValue>(this);
 
         /// <summary>
         /// Реализация перечисления

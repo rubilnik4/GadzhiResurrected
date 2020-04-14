@@ -52,17 +52,17 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// <summary>
         /// Переместить элемент
         /// </summary>
-        void Move(PointMicrostation origin);
+        IElementMicrostation Move(PointMicrostation origin);
 
         /// <summary>
         /// Повернуть элемент
         /// </summary>
-        void Rotate(PointMicrostation origin, double degree);
+        IElementMicrostation Rotate(PointMicrostation origin, double degree);
 
         /// <summary>
         /// Масштабировать элемент
         /// </summary>
-        void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);
+        IElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);
 
         /// <summary>
         /// Удалить текущий элемент

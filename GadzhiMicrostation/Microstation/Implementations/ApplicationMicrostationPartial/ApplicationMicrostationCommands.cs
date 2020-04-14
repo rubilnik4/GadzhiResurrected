@@ -105,7 +105,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             WhereBad(result => result.OkStatus,
                 badFunc: _ => GetCellNameRandom())
             ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись {cellDescription} не найдена").
-               ToResultConvertingValue<string>();
+               ToResultApplicationValue<string>();
 
        
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -59,23 +61,23 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вписать текстовые поля в рамки
         /// </summary>
-        public override void CompressFieldsRanges()
-        {
-            foreach (var element in StampCellElement.SubElements)
+        public override Unit CompressFieldsRanges() =>
+            StampCellElement.SubElements.Select(element =>
             {
                 switch (element.ElementType)
                 {
                     case ElementMicrostationType.TextElement:
-                        element.AsTextElementMicrostation.CompressRange();
-                        break;
+                        return element.AsTextElementMicrostation.CompressRange();                      
                     case ElementMicrostationType.TextNodeElement:
-                        if (element.AsTextNodeElementMicrostation.CompressRange())
-                        {
-                            StampCellElement.FindAndChangeSubElement(element);
-                        }
-                        break;
+                        return element.AsTextNodeElementMicrostation.CompressRange().
+                               WhereOK(isCompressed => isCompressed,
+                               okFunc: isCompressed => { StampCellElement.FindAndChangeSubElement(element); 
+                                                         return isCompressed; });                       
+                    default:
+                        return false;
                 }
-            }
-        }
+              
+            }).
+            Map(_ => Unit.Value);       
     }
 }
