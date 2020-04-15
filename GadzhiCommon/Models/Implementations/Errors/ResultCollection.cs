@@ -51,6 +51,6 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        public new IResultCollection<T> Execute() => new ResultCollection<T>(Value.ToList(), Errors.ToList());
+        public IResultCollection<T> Execute() => new ResultCollection<T>(Value.ToList(), Errors.ToList());
     }
 }

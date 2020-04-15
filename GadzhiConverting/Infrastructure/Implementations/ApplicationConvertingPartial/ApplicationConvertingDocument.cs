@@ -68,7 +68,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 okFunc: filePath => new ResultValue<string>(filePath),
                 badFunc: filePath => new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден").
                                      ToResultValue<string>()).
-            ResultMapOk(filePath => FileSystemOperations.ExtensionWithoutPointFromPath(filePath)).
+            ResultValueOk(filePath => FileSystemOperations.ExtensionWithoutPointFromPath(filePath)).
             ResultValueOkBind(fileExtension => ValidateFileExtension(fileExtension));
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             WhereContinue(extensionKey => !String.IsNullOrWhiteSpace(extensionKey),
                    okFunc: extensionKey => new ResultValue<FileExtention>(ValidFileExtentions.DocAndDgnFileTypes[extensionKey]),
                    badFunc: _ => new ErrorCommon(FileConvertErrorType.IncorrectExtension,
-                                   $"Расширение файла {fileExtension} не соответствует типам расширений doc или dgn").
+                                                 $"Расширение файла {fileExtension} не соответствует типам расширений doc или dgn").
                                  ToResultValue<FileExtention>());
     }
 }

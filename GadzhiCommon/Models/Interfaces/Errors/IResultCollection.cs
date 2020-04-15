@@ -23,6 +23,6 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        new IResultCollection<T> Execute();
+        IResultCollection<T> Execute();
     }
 }

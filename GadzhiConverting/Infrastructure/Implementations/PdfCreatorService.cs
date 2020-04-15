@@ -55,7 +55,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public IResultError PrintPdfWithExecuteAction(string filePath, Func<IResultError> printFunction) =>
             SetPrinterOptions(filePath).
             ResultValueOkBind(pdfCreator => new ResultValue<PDFCreator.clsPDFCreator>(pdfCreator, printFunction.Invoke().Errors)).
-            ResultValueOkBind(pdfCreator => new ResultValue<Unit>(Unit.Value, PrintPdf(pdfCreator).Errors));
+            ResultValueOkBind(pdfCreator => new ResultValue<Unit>(Unit.Value, PrintPdf(pdfCreator).Errors)).
+            ToResult();
 
         /// <summary>
         /// Установить опции печати

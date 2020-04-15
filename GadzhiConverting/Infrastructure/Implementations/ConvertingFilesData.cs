@@ -129,7 +129,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>   
         private IResultValue<IFileDataSourceServer> LoadDocument(IFileDataServer fileDataServer) =>
             new ResultError().
-            ResultValueOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
+            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
             ResultValueOkBind(savingPath => _applicationConverting.SaveDocument(savingPath)).
@@ -138,7 +138,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         private IResultCollection<IFileDataSourceServer> CreatePdf(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             new ResultError().
-            ResultValueOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
+            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf)).
             ResultValueOkBind(filePath => _applicationConverting.CreatePdfFile(filePath, fileDataServer.ColorPrint,
                                                                                printersInformation?.PrintersPdf.FirstOrDefault())).

@@ -1,5 +1,7 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -33,17 +35,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             var foundElements = FindElementsInStampControls(personNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>();
 
-            var actionType = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsActionType(),
-                                                  StampFieldType.PersonSignature);
-
-            var responsiblePerson = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsResponsiblePerson(),
-                                                         StampFieldType.PersonSignature);
-
-            var dateSignature = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsDateSignature(),
-                                                     StampFieldType.PersonSignature);
-
-            Func<string, IStampFieldMicrostation> insertSignatureFunc = InsertPersonSignatureFromLibrary(responsiblePerson.ElementStamp,
-                                                                                                         dateSignature.ElementStamp);
+            var actionType = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsActionType(), StampFieldType.PersonSignature);
+            var responsiblePerson = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsResponsiblePerson(), StampFieldType.PersonSignature);
+            var dateSignature = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsDateSignature(), StampFieldType.PersonSignature);
+            var insertSignatureFunc = InsertPersonSignatureFromLibrary(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
 
             return new StampPersonSignatureMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc);
         }
@@ -51,11 +46,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>  
-        private Func<string, IStampFieldMicrostation> InsertPersonSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
-                                                                                       IElementMicrostation dateSignatureElement) =>
-            (string personId) => InsertSignature(personId,
-                                                 responsiblePersonElement.AsTextElementMicrostation,
-                                                 dateSignatureElement.AsTextElementMicrostation)?.
-                                 Map(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
+        private Func<string, IResultValue<IStampFieldMicrostation>> InsertPersonSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
+                                                                                                     IElementMicrostation dateSignatureElement) =>
+            (string personId) =>
+                InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation).
+                ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
     }
 }

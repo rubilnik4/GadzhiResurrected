@@ -2,6 +2,7 @@
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 
 namespace GadzhiMicrostation.Extensions.Microstation
 {
@@ -37,7 +38,7 @@ namespace GadzhiMicrostation.Extensions.Microstation
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах
         /// </summary>
-        public static RangeMicrostation GetAttributeRange(this Element element) =>
+        public static IResultValue<RangeMicrostation> GetAttributeRange(this Element element) =>
              AttributesElementsMicrostation.GetAttributeRange(element);
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        StatusProcessing StatusProcessing { get; set; }
+        StatusProcessing StatusProcessing { get; }
 
         /// <summary>
         /// Завершена ли обработка файла
@@ -83,21 +83,6 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
-
-        ///// <summary>
-        ///// Установить пути для отконвертированных файлов
-        ///// </summary>
-        //void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServerConverting);
-
-        ///// <summary>
-        ///// Добавить ошибку
-        ///// </summary>
-        //void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType);
-
-        ///// <summary>
-        ///// Добавить ошибки
-        ///// </summary>
-        //void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes);
+        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }   
     }
 }

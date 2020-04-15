@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections
         /// <summary>
         /// Дата
         /// </summary>
-        ICellElementMicrostation SignatureElement { get; }
+        IResultValue<ICellElementMicrostation> SignatureElement { get; }
 
         /// <summary>
         /// Дата

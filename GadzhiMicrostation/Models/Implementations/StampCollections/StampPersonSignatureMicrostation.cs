@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
@@ -16,7 +17,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     {       
         public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
                                                 IStampFieldMicrostation dateSignature,
-                                                Func<string, IStampFieldMicrostation> insertSignatureFunc)
+                                                Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
             : base(insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));

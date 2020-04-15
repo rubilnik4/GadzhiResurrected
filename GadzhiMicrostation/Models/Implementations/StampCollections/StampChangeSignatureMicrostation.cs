@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -21,14 +22,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation dateChange,
                                                 string personId, string personName,
-                                                Func<string, IStampFieldMicrostation> insertSignatureFunc)
+                                                Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
             : base(insertSignatureFunc)
         {
-            PersonId = !String.IsNullOrEmpty(personId) ?
-                                      personId :
-                                      throw new ArgumentNullException(nameof(personId));
-            PersonName = personName;
+            if (String.IsNullOrEmpty(personId)) throw new ArgumentNullException(nameof(personId));
 
+            PersonId = personId;                        
+            PersonName = personName;
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
@@ -64,7 +64,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Тип изменения. Элемент
         /// </summary>
-        public ITextElementMicrostation TypeOfChangeElement => Signature.ElementStamp.AsTextElementMicrostation;
+        public ITextElementMicrostation TypeOfChangeElement => TypeOfChange.ElementStamp.AsTextElementMicrostation;
 
         /// <summary>
         /// Номер докумета

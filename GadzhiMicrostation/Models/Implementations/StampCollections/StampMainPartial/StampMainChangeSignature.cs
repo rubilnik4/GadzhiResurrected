@@ -1,5 +1,7 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Extentions.StringAdditional;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -35,23 +37,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             var foundElements = FindElementsInStampControls(changeNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>();
 
-            var numberChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberChange(),
-                                                    StampFieldType.ChangeSignature);
-
-            var numberOfPlots = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberOfPlots(),
-                                                     StampFieldType.ChangeSignature);
-
-            var typeOfChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsTypeOfChange(),
-                                                    StampFieldType.ChangeSignature);
-
-            var documentChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsDocumentChange(),
-                                                    StampFieldType.ChangeSignature);
-
-            var dateChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsDateChange(),
-                                                      StampFieldType.ChangeSignature);
-
-            Func<string, IStampFieldMicrostation> insertSignatureFunc = InsertChangeSignatureFromLibrary(documentChange.ElementStamp,
-                                                                                                        dateChange.ElementStamp);
+            var numberChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberChange(), StampFieldType.ChangeSignature);
+            var numberOfPlots = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberOfPlots(), StampFieldType.ChangeSignature);
+            var typeOfChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsTypeOfChange(), StampFieldType.ChangeSignature);
+            var documentChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsDocumentChange(), StampFieldType.ChangeSignature);
+            var dateChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsDateChange(), StampFieldType.ChangeSignature);
+            var insertSignatureFunc = InsertChangeSignatureFromLibrary(documentChange.ElementStamp, dateChange.ElementStamp);
 
             return new StampChangeSignatureMicrostation(numberChange, numberOfPlots, typeOfChange, documentChange,
                                                         dateChange, personId, personName, insertSignatureFunc);
@@ -60,11 +51,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        private Func<string, IStampFieldMicrostation> InsertChangeSignatureFromLibrary(IElementMicrostation documentChangeElement,
+        private Func<string, IResultValue<IStampFieldMicrostation>> InsertChangeSignatureFromLibrary(IElementMicrostation documentChangeElement,
                                                                           IElementMicrostation dateChangeElement) =>
-              (string personId) => InsertSignature(personId,
-                                                   documentChangeElement.AsTextElementMicrostation,
-                                                   dateChangeElement.AsTextElementMicrostation)?.
-                                   Map(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
+            (string personId) =>
+                InsertSignature(personId, documentChangeElement.AsTextElementMicrostation, dateChangeElement.AsTextElementMicrostation).
+                ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
     }
 }

@@ -1,7 +1,7 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiConverting.Models.Interfaces.FilesConvert;
+using GadzhiCommon.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,34 +15,33 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class FileDataServer : IFileDataServer, IEquatable<FileDataServer>
     {
-        ///// <summary>
-        ///// Пути отконвертированных файлов
-        ///// </summary>
-        //private IReadOnlyList<IFileDataSourceServer> _fileDatasSourceServerBase;
-
-        ///// <summary>
-        ///// Тип ошибки при конвертации файла
-        ///// </summary>
-        //private readonly List<FileConvertErrorType> _fileConvertErrorTypesBase;
+        private const StatusProcessing _defaultStatusProcessing = StatusProcessing.InQueue;
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
-            : this(filePathServer, filePathClient, colorPrint, Enumerable.Empty<FileConvertErrorType>())
+            : this(filePathServer, filePathClient, colorPrint, _defaultStatusProcessing, Enumerable.Empty<FileConvertErrorType>())
         { }
 
-        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint,
+        public FileDataServer(IFileDataServer fileDataServer, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+          : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient, fileDataServer.NonNull().ColorPrint,
+                _defaultStatusProcessing, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
+        { }
+
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, StatusProcessing statusProcessing,
                               IEnumerable<FileConvertErrorType> fileConvertErrorType)
-            : this(filePathServer, filePathClient, colorPrint, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
+            : this(filePathServer, filePathClient, colorPrint, statusProcessing, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
         { }
 
-        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint,
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, StatusProcessing statusProcessing,
                               IEnumerable<IFileDataSourceServer> fileDatasSourceServer, IEnumerable<FileConvertErrorType> filesConvertErrorType)
         {
+            if (String.IsNullOrWhiteSpace(filePathServer)) throw new ArgumentNullException(nameof(filePathServer));
+            if (String.IsNullOrWhiteSpace(filePathClient)) throw new ArgumentNullException(nameof(filePathClient));
             string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
-
             if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
             {
                 throw new KeyNotFoundException(nameof(filePathServer));
             }
+
             FileExtentionType = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
@@ -95,7 +94,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; set; }
+        public StatusProcessing StatusProcessing { get; }
 
         /// <summary>
         /// Завершена ли обработка файла
@@ -121,30 +120,6 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Не превышает ли количество попыток конвертирования
         /// </summary>
         public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
-
-        /// <summary>
-        /// Установить пути для отконвертированных файлов
-        /// </summary>
-        //public void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServer)
-        //{
-        //    _fileDatasSourceServerBase = new List<IFileDataSourceServer>(fileDatasSourceServer ?? Enumerable.Empty<IFileDataSourceServer>());
-        //}
-
-        ///// <summary>
-        ///// Добавить ошибку
-        ///// </summary>
-        //public void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType)
-        //{
-        //    _fileConvertErrorTypesBase.Add(fileConvertErrorType);
-        //}
-
-        ///// <summary>
-        ///// Добавить ошибки
-        ///// </summary>
-        //public void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes)
-        //{
-        //    _fileConvertErrorTypesBase.AddRange(fileConvertErrorTypes ?? Enumerable.Empty<FileConvertErrorType>());
-        //}
 
         public override bool Equals(object obj)
         {

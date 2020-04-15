@@ -32,7 +32,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         private void SignatureInitialize()
         {
             Signature = new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подпись не инициализирована").
-                       ToResultApplicationValue<IStampFieldMicrostation>();
+                        ToResultApplicationValue<IStampFieldMicrostation>();
         }
 
         /// <summary>

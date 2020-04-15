@@ -58,8 +58,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
         private IResultValue<IApplicationLibrary> SetActiveLibraryByExtension(FileExtention fileExtention)
-        { 
-            switch(fileExtention)
+        {
+            switch (fileExtention)
             {
                 case FileExtention.dgn:
                     return new ResultValue<IApplicationLibrary>(_applicationMicrostation);
@@ -69,6 +69,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                     return new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtention} не найдена").
                            ToResultValue<IApplicationLibrary>();
             }
-        }    
+        }
     }
 }

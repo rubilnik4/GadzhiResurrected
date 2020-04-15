@@ -13,7 +13,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Отобразить и записать в журнал сообщение
         /// </summary>     
-        Unit ShowAndLogMessage(string message);
+        void ShowAndLogMessage(string message);
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибку
