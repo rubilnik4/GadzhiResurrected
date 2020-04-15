@@ -17,11 +17,11 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public static IResult ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
+        public static IResultError ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
                                                     Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
                                                     IErrorCommon errorMessage = null)
         {
-            IResult result = new Result();
+            IResultError result = new ResultError();
 
             try
             {
@@ -46,11 +46,11 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        public static async Task<IResult> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
+        public static async Task<IResultError> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
                                                                                Action applicationCatchMethod = null,
                                                                                Action applicationFinallyMethod = null)
         {
-            IResult result = new Result();
+            IResultError result = new ResultError();
 
             try
             {

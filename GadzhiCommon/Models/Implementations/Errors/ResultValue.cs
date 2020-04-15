@@ -10,7 +10,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
     /// <summary>
     /// Базовый вариант ответа со значением
     /// </summary>
-    public class ResultValue<TValue>: IResultValue<TValue>
+    public class ResultValue<TValue> : IResultValue<TValue>
     {
         public ResultValue(IErrorCommon error)
             : this(error.AsEnumerable()) { }
@@ -26,8 +26,8 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public ResultValue(TValue value, IErrorCommon errorNull = null)
           : this(value, Enumerable.Empty<IErrorCommon>(), errorNull) { }
 
-        public ResultValue(TValue value, IEnumerable<IErrorCommon> errors, IErrorCommon errorNull = null) 
-            :this (errors)
+        public ResultValue(TValue value, IEnumerable<IErrorCommon> errors, IErrorCommon errorNull = null)
+            : this(errors)
         {
             if (value == null && errorNull != null)
             {
@@ -38,7 +38,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
                 throw new ArgumentNullException(nameof(value));
             }
 
-            Value = value;           
+            Value = value;
         }
 
         /// <summary>
@@ -68,6 +68,16 @@ namespace GadzhiCommon.Models.Implementations.Errors
             errors != null && ValidateCollection(errors) ?
             new ResultValue<TValue>(Value, Errors.Union(errors)) :
             this;
+
+        /// <summary>
+        /// Преобразовать в результирующий тип
+        /// </summary>
+        public IResultError ToResult() => new ResultError(Errors);
+
+        /// <summary>
+        /// Выполнить отложенные функции
+        /// </summary>
+        public IResultValue<TValue> ExecuteLazy() => new ResultValue<TValue>(Value, Errors.ToList());
 
         /// <summary>
         /// Проверить ошибки на корретность

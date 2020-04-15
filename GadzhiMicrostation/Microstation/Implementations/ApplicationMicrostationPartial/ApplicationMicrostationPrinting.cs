@@ -16,6 +16,7 @@ using GadzhiMicrostation.Extentions.StringAdditional;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -27,102 +28,71 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>
-        public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>      
-            new ResultApplication().
-            WhereMap(result => stamp != null && stamp is IStampMicrostation)?.
-            ConcatResult(SetPrintingFenceByRange(((IStampMicrostation)stamp).StampCellElement.Range))?.
-            ConcatResult(SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize))?.
-            Map(result =>
-                {
-                    SetPrintingOrientation(stamp.Orientation);
-                    SetPrintScale(((IStampMicrostation)stamp).StampCellElement.UnitScale);
-                    SetPrintColor(colorPrint);
-                    if (result.OkStatus) PrintCommand();
-                    return result;
-                })
-            ?? new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден или не соответствует формату Microstation").
-               ToResultApplication();
+        public IResultApplication PrintStamp(IStamp stampContainer, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
+            new ResultValue<IStamp>(stampContainer, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден")).
+            ResultContinue(stamp => stamp is IStampMicrostation,
+                okFunc: stamp => (IStampMicrostation)stamp,
+                badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
+            ResultValueOkBind(stamp => SetPrintingFenceByRange(stamp.StampCellElement.Range).ToResultApplicationValue<IStampMicrostation>()).
+            ResultValueOkBind(stamp => SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize).ToResultApplicationValue<IStampMicrostation>())?.
+            ResultVoidOk(stamp => SetPrintingOrientation(stamp.Orientation)).
+            ResultVoidOk(stamp => SetPrintScale(stamp.StampCellElement.UnitScale)).
+            ResultVoidOk(_ => SetPrintColor(colorPrint)).
+            ResultVoidOk(_ => PrintCommand()).
+            ToResultApplication();
 
         /// <summary>
         /// Команда печати
         /// </summary>
-        private void PrintCommand()
-        {
-            Application.CadInputQueue.SendCommand("PRINT EXECUTE");
-        }
+        private void PrintCommand() => Application.CadInputQueue.SendCommand("PRINT EXECUTE");
 
         /// <summary>
         /// Установить тип поворота
         /// </summary>       
-        private void SetPrintingOrientation(OrientationType orientation)
-        {
-            if (orientation == OrientationType.Landscape)
-            {
-                Application.CadInputQueue.SendCommand("PRINT orientation landscape");
-            }
-            else
-            {
-                Application.CadInputQueue.SendCommand("PRINT orientation portrait");
-            }
-        }
+        private void SetPrintingOrientation(OrientationType orientation) =>
+             Application.CadInputQueue.SendCommand($"PRINT orientation {orientation.ToString().ToLower(CultureInfo.CurrentCulture)}");       
 
         /// <summary>
         /// Установить границы печати по рамке
         /// </summary>
-        private IResultApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint)
-        {
-            if (rangeToPrint?.IsValid == true)
+        private IResultApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint) =>
+            new ResultValue<RangeMicrostation>(rangeToPrint, new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно")).
+            ResultValueOk(rangePrint => rangeToPrint.ToPointsMicrostation().
+                                        Select(point => point.ToPoint3d()).
+                                        ToArray()).
+            ResultValueOk(rangeInPoints => Application.CreateShapeElement1(null, rangeInPoints, MsdFillMode.msdFillModeNotFilled)).
+            ResultVoidOk(shape =>
             {
-                var rangeInPoints = rangeToPrint?.ToPointsMicrostation().
-                                                  Select(point => point.ToPoint3d()).
-                                                  ToArray();
-
-                ShapeElement shapeElement = Application.CreateShapeElement1(null, rangeInPoints, MsdFillMode.msdFillModeNotFilled);
-
                 Fence fence = Application.ActiveDesignFile.Fence;
                 fence.Undefine();
 
                 Application.CadInputQueue.SendKeyin("view on 1");
                 View view = Application.ActiveDesignFile.Views[1];
 
-                fence.DefineFromElement(view, (Element)shapeElement);
+                fence.DefineFromElement(view, (Element)shape);
 
                 Application.CadInputQueue.SendKeyin("print boundary fence");
-
-                return new ResultApplication();
-            }
-            else
-            {
-                return new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно").
-                       ToResultApplication();
-            }
-        }
+            }).ToResultApplication();
 
         /// <summary>
         /// Установить формат печати характерный для принтера
         /// </summary>       
         private IResultApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
             GetPrinterPaperSize(drawSize, prefixSearchPaperSize).
-            WhereMap(paperName => !String.IsNullOrEmpty(paperName))?.
-            Map(paperName =>
+            ResultVoidOk(paperName =>
             {
                 Application.CadInputQueue.SendKeyin("print driver printer.pltcfg");
                 Application.CadInputQueue.SendCommand("Print Units mm");
                 Application.CadInputQueue.SendCommand($"PRINT papername {paperName}");
                 Application.CadInputQueue.SendCommand("PRINT MAXIMIZE");
-
-                return new ResultApplication();
-            })
-            ?? new ErrorApplication(ErrorApplicationType.RangeNotValid, $"Формат печати {drawSize} не найден").
-                   ToResultApplication();
+            }).ToResultApplication();
 
         /// <summary>
         /// Установить масштаб печати
         /// </summary>       
         private void SetPrintScale(double paperScale)
         {
-            string paperScaleString = paperScale.ToString(CultureInfo.CurrentCulture).
-                                                 Replace(',', '.');
+            string paperScaleString = paperScale.ToString(CultureInfo.CurrentCulture).Replace(',', '.');
             Application.CadInputQueue.SendKeyin($"print scale {paperScaleString}");
         }
 
@@ -131,30 +101,30 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         private void SetPrintColor(ColorPrintApplication colorPrint)
         {
-            string colorCommand = String.Empty;
+            void setColorMode(string colorCommand) => Application.CadInputQueue.SendCommand($"PRINT colormode {colorCommand}");
             switch (colorPrint)
             {
                 case ColorPrintApplication.BlackAndWhite:
-                    colorCommand = "monochrome";
-                    break;
+                    setColorMode("monochrome");
+                    return;
                 case ColorPrintApplication.GrayScale:
-                    colorCommand = "grayscale";
-                    break;
+                    setColorMode("grayscale");
+                    return;
                 case ColorPrintApplication.Color:
-                    colorCommand = "color";
-                    break;
+                    setColorMode("color");
+                    return;
             }
-            Application.CadInputQueue.SendCommand($"PRINT colormode {colorCommand}");
         }
 
         /// <summary>
         /// Получить формат принтера по формату штампа
         /// </summary>      
-        private string GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+        private IResultValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
             new PageSettings().
-            Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>().
-                                             FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize))?.
-                                             PaperName);
+            Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>()).
+            FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize)).
+            Map(paperSize => new ResultValue<string>(paperSize?.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
+                                                                                                   $"Формат печати {drawSize} не найден")));
 
         /// <summary>
         /// Проверить соответсвие формата
@@ -180,7 +150,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                     {
                         success = true; //не число и не содержит знаков
                     }
-
                 }
             }
             return success;

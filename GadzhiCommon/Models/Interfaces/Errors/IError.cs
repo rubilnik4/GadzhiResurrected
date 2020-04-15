@@ -35,7 +35,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Преобразовать в ответ
         /// </summary>      
-        IResult ToResult();
+        IResultError ToResult();
 
         /// <summary>
         /// Преобразовать в ответ с вложенным типом

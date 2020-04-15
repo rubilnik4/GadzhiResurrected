@@ -64,20 +64,20 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        private IResult SetDefaultPrinter(string printerName) =>
+        private IResultError SetDefaultPrinter(string printerName) =>
             PrinterSettings.InstalledPrinters?.Cast<string>()?.
             WhereNull(printersInstall => printersInstall.Any(printerInstall => printerInstall.ContainsIgnoreCase(printerName)) &&
                                          NativeMethods.SetDefaultPrinter(printerName))?.
-            Map(_ => new Result())
+            Map(_ => new ResultError())
             ?? new ErrorCommon(FileConvertErrorType.PrinterNotInstall, $"Принтер {printerName} не установлен в системе").
                ToResult();
 
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        private IResult PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
+        private IResultError PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            IResult printPdfCommand() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
+            IResultError printPdfCommand() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
                                          ToResultFromApplication();
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printPdfCommand);
         }

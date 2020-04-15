@@ -8,7 +8,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
     /// <summary>
     /// Базовый вариант ответа со значением
     /// </summary>
-    public interface IResultValue<TValue>
+    public interface IResultValue<out TValue>
     {
         /// <summary>
         /// Список значений
@@ -34,5 +34,15 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// Добавить ошибку
         /// </summary>      
         IResultValue<TValue> ConcatErrors(IEnumerable<IErrorCommon> errors);
+
+        /// <summary>
+        /// Преобразовать в результирующий тип
+        /// </summary>
+        IResultError ToResult();
+
+        /// <summary>
+        /// Выполнить отложенные функции
+        /// </summary>
+        IResultValue<TValue> ExecuteLazy();
     }
 }

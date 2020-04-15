@@ -85,19 +85,19 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// </summary>
         IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
 
-        /// <summary>
-        /// Установить пути для отконвертированных файлов
-        /// </summary>
-        void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServerConverting);
+        ///// <summary>
+        ///// Установить пути для отконвертированных файлов
+        ///// </summary>
+        //void SetFileDatasSourceServerConverting(IEnumerable<IFileDataSourceServer> fileDatasSourceServerConverting);
 
-        /// <summary>
-        /// Добавить ошибку
-        /// </summary>
-        void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType);
+        ///// <summary>
+        ///// Добавить ошибку
+        ///// </summary>
+        //void AddFileConvertErrorType(FileConvertErrorType fileConvertErrorType);
 
-        /// <summary>
-        /// Добавить ошибки
-        /// </summary>
-        void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes);
+        ///// <summary>
+        ///// Добавить ошибки
+        ///// </summary>
+        //void AddRangeFileConvertErrorType(IEnumerable<FileConvertErrorType> fileConvertErrorTypes);
     }
 }

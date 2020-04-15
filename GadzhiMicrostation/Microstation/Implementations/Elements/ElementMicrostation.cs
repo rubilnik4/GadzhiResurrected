@@ -90,48 +90,51 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public ElementMicrostationType ElementType
         {
             get
-            {
-                ElementMicrostationType elementType = ElementMicrostationType.Element;
-
+            {                
                 if (IsTextElementMicrostation)
                 {
-                    elementType = ElementMicrostationType.TextElement;
+                    return ElementMicrostationType.TextElement;
                 }
                 else if (IsTextNodeElementMicrostation)
                 {
-                    elementType = ElementMicrostationType.TextNodeElement;
+                    return ElementMicrostationType.TextNodeElement;
                 }
                 else if (IsCellElementMicrostation)
                 {
-                    elementType = ElementMicrostationType.CellElement;
+                    return ElementMicrostationType.CellElement;
                 }
-
-                return elementType;
+                else
+                {
+                    return ElementMicrostationType.Element;
+                }
             }
         }
 
         /// <summary>
         /// Переместить элемент
         /// </summary>
-        public virtual void Move(PointMicrostation offset)
+        public virtual IElementMicrostation Move(PointMicrostation offset)
         {
             _element.Move(offset.ToPoint3d());
+            return this;
         }
 
         /// <summary>
         /// Повернуть элемент
         /// </summary>
-        public virtual void Rotate(PointMicrostation origin, double degree)
+        public virtual IElementMicrostation Rotate(PointMicrostation origin, double degree)
         {
             _element.RotateAboutZ(origin.ToPoint3d(), degree * (Math.PI / 180));
+            return this;
         }
 
         /// <summary>
         /// Масштабировать элемент
         /// </summary>
-        public virtual void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
+        public virtual IElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
         {
             _element.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
+            return this;
         }
 
         /// <summary>

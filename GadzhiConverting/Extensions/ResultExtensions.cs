@@ -20,13 +20,13 @@ namespace GadzhiConverting.Extensions
         /// <summary>
         /// Преобразовать результирующий ответ модуля конвертации в основной
         /// </summary>      
-        public static IResult ToResultFromApplication(this IResultApplication resultApplication) =>
+        public static IResultError ToResultFromApplication(this IResultApplication resultApplication) =>
           ResultApplicationConverter.ToResult(resultApplication);
 
         /// <summary>
         /// Преобразовать результирующий ответ модуля со значением  конвертации в основной
         /// </summary>      
-        public static IResultValue<TResult> ToResultValueFromApplication<TApplication, TResult>(this IResultApplicationValue<TApplication> resultApplication,
+        public static GadzhiCommon.Models.Interfaces.Errors.IResultValue<TResult> ToResultValueFromApplication<TApplication, TResult>(this GadzhiApplicationCommon.Models.Interfaces.Errors.IResultValue<TApplication> resultApplication,
                                                                                                 Func<TApplication, TResult> converterValue) =>
           ResultApplicationConverter.ToResultValue(resultApplication, converterValue);
     }

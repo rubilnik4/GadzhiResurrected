@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Collection;
+using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Infrastructure.Interfaces;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -53,9 +54,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Информационное сообщение
         /// </summary>  
-        public void ShowAndLogMessage(string messageText)
+        public Unit ShowAndLogMessage(string messageText)
         {
             MessageBox.Show(messageText);
+            return Unit.Value;
         }
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string messageText)
         {
-            bool retry = false;
+            bool retry;
             do
             {
                 retry = false;

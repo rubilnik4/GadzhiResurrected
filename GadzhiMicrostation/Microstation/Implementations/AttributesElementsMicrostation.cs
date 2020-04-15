@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -68,9 +69,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить размеры ячейки элемента в стандартных координатах
         /// </summary>
-        public static RangeMicrostation GetAttributeRange(Element element) =>
+        public static IResultValue<RangeMicrostation> GetAttributeRange(Element element) =>
            GetAttributeById(element, ElementMicrostationAttributes.Range).
-           Map(rangeInlineString => RangeMicrostation.StringToRange(rangeInlineString));       
+           Map(rangeInlineString => RangeMicrostation.StringToRange(rangeInlineString));
 
         /// <summary>
         /// Получить идентефикатор личности

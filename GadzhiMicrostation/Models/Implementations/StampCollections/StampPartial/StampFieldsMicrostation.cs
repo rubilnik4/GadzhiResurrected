@@ -61,7 +61,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вписать текстовые поля в рамки
         /// </summary>
-        public override Unit CompressFieldsRanges() =>
+        public override IEnumerable<bool> CompressFieldsRanges() =>
             StampCellElement.SubElements.Select(element =>
             {
                 switch (element.ElementType)
@@ -75,9 +75,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                          return isCompressed; });                       
                     default:
                         return false;
-                }
-              
-            }).
-            Map(_ => Unit.Value);       
+                }              
+            });       
     }
 }

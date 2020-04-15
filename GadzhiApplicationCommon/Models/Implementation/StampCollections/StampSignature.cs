@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Подпись
         /// </summary>
-        public abstract TField Signature { get; protected set; }
+        public abstract IResultValue<TField> Signature { get; protected set; }
 
         /// <summary>
         /// Установлена ли подпись

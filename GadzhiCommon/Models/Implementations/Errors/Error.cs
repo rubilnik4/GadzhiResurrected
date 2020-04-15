@@ -54,7 +54,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Преобразовать в ответ
         /// </summary>      
-        public IResult ToResult() => new Result(this);
+        public IResultError ToResult() => new ResultError(this);
 
         /// <summary>
         /// Преобразовать в ответ с вложенным типом

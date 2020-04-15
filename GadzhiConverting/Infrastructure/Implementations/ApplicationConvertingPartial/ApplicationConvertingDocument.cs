@@ -55,7 +55,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        public IResult CloseDocument() =>
+        public IResultError CloseDocument() =>
              ExecuteAndHandleError(() => ActiveLibrary.CloseAndSaveDocument(),
                     errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved,$"Ошибка закрытия файла {ActiveLibrary.ActiveDocument.FullName}"));           
 
@@ -68,7 +68,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 okFunc: filePath => new ResultValue<string>(filePath),
                 badFunc: filePath => new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден").
                                      ToResultValue<string>()).
-            ResultMap(filePath => FileSystemOperations.ExtensionWithoutPointFromPath(filePath)).
+            ResultMapOk(filePath => FileSystemOperations.ExtensionWithoutPointFromPath(filePath)).
             ResultValueOkBind(fileExtension => ValidateFileExtension(fileExtension));
 
         /// <summary>

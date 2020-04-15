@@ -36,7 +36,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Переместить текстовое поле
         /// </summary>
-        public override void Move(PointMicrostation offset)
+        public override IElementMicrostation Move(PointMicrostation offset)
         {
             throw new NotImplementedException();
         }
@@ -44,7 +44,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Повернуть элемент
         /// </summary>
-        public override void Rotate(PointMicrostation origin, double degree)
+        public override IElementMicrostation Rotate(PointMicrostation origin, double degree)
         {
             throw new NotImplementedException();
         }
@@ -52,7 +52,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Масштабировать текстовое поле
         /// </summary>
-        public override void ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
+        public override IElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
         {
             ChangeTextElementsInNode(textElement =>
             {
@@ -61,6 +61,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             /// необходимо сжатие самого элемента контейнера
             _textNodeElement.ScaleAll(Origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
             _textNodeElement.Rewrite();
+            return this;
         }
 
         /// <summary>

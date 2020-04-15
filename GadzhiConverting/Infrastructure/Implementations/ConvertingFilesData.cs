@@ -105,7 +105,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             else
             {
                 _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount,
-                                                          "Превышено количество попыток конвертирования файла"));
+                                                  "Превышено количество попыток конвертирования файла"));
                 fileDataServer.AddFileConvertErrorType(FileConvertErrorType.AttemptingCount);
             }
 
@@ -118,34 +118,17 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadDocument(fileDataServer).
             ResultValueOkBind(_ => CreatePdf(fileDataServer, printersInformation)).
-            Map(result => new FileDataServer(fileDataServer.FilePathServer, )
-           
-        //{
-        //    (var loadDataSources, var loadErrors) = LoadDocument(fileDataServer);
-        //    (var pdfDataSources, var pdfErrors) = CreatePdf(fileDataServer, printersInformation);
-        //    (var exportDataSources, var exportErrors) = ExportFile(fileDataServer);
-
-        //    var errors = loadErrors.
-        //                 UnionNotNull(pdfErrors).
-        //                 UnionNotNull(exportErrors).
-        //                 Select(error => error.FileConvertErrorType);
-        //    fileDataServer.AddRangeFileConvertErrorType(errors);
-
-        //    var dataSources = loadDataSources.
-        //                      UnionNotNull(pdfDataSources).
-        //                      UnionNotNull(exportDataSources);
-        //    fileDataServer.SetFileDatasSourceServerConverting(dataSources);
-
-        //    CloseFile();
-
-        //    return fileDataServer;
-        //}
-
+            ResultValueOkBind(_ => CloseFile().ToResultValue<IEnumerable<IFileDataSourceServer>>()).
+            ToResultCollection().
+            Map(result => new FileDataServer(fileDataServer.FilePathServer, fileDataServer.FilePathClient,
+                                             fileDataServer.ColorPrint, result.Value,
+                                             result.Errors.Select(error => error.FileConvertErrorType)));
+      
         /// <summary>
         /// Загрузить файл
         /// </summary>   
         private IResultValue<IFileDataSourceServer> LoadDocument(IFileDataServer fileDataServer) =>
-            new Result().
+            new ResultError().
             ResultValueOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
@@ -154,7 +137,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
 
         private IResultCollection<IFileDataSourceServer> CreatePdf(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
-            new Result().
+            new ResultError().
             ResultValueOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf)).
             ResultValueOkBind(filePath => _applicationConverting.CreatePdfFile(filePath, fileDataServer.ColorPrint,
@@ -176,7 +159,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        private IResult CloseFile() =>
+        private IResultError CloseFile() =>
             _applicationConverting.CloseDocument().
             Void(_ => _messagingService.ShowAndLogMessage("Конвертирование завершено"));
 
@@ -189,6 +172,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtention.ToString())).
             ResultValueOk(serverDirectory => _fileSystemOperations.CombineFilePath(serverDirectory,
                                                                                    Path.GetFileNameWithoutExtension(filePathServer),
-                                                                                   fileExtention.ToString()));      
+                                                                                   fileExtention.ToString()));
     }
 }

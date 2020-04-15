@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -54,8 +55,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         private RangeMicrostation RangeAttribute =>
             GetAttributeFromCachOrLoad(ElementMicrostationAttributes.Range).
-            Map(rangeInline => RangeMicrostation.StringToRange(rangeInline))
-            ?? new RangeMicrostation();
+            Map(rangeInline => RangeMicrostation.StringToRange(rangeInline)).
+            WhereContinue(result => result.OkStatus,
+                okFunc: result => result.Value ,
+                badFunc: result => new RangeMicrostation());
 
         /// <summary>
         /// Возможено ли сжатие элемента

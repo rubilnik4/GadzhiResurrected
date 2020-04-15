@@ -61,6 +61,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вписать текстовые поля в рамки
         /// </summary>
-        public override Unit CompressFieldsRanges() => Unit.Value;
+        public override IEnumerable<bool> CompressFieldsRanges() => Enumerable.Empty<bool>();
     }
 }

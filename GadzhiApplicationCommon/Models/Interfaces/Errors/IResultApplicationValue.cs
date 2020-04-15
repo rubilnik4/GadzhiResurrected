@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
     /// <summary>
     /// Базовый вариант ответа
     /// </summary>
-    public interface IResultApplicationValue<TValue>
+    public interface IResultValue<out TValue>
     {
         /// <summary>
         /// Список значений
@@ -33,6 +33,16 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// <summary>
         /// Добавить ошибку
         /// </summary>      
-        IResultApplicationValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors);
+        IResultValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors);
+
+        /// <summary>
+        /// Преобразовать в результирующий тип
+        /// </summary>
+        IResultApplication ToResultApplication();
+
+        /// <summary>
+        /// Выполнить отложенные функции
+        /// </summary>
+        IResultValue<TValue> ExecuteLazy();
     }
 }

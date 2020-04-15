@@ -35,23 +35,7 @@ namespace GadzhiCommon.Extentions.Functional.Result
                           Map(okResult => new ResultValue<TValueOut>(okResult, @this.Errors)) :
                    badFunc.Invoke(@this.Value).
                           Map(badResult => new ResultValue<TValueOut>(@this.Errors.Union(badResult)));
-        }
-
-        /// <summary>
-        /// Выполнение положительного условия результирующего ответа или возвращение предыдущей ошибки в результирующем ответе
-        /// </summary>   
-        //public static IResult ResultOkBind(this IResult @this, Func<IResult> okFunc)
-        //{
-        //    if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
-
-        //    if (@this == null) return null;
-        //    if (@this.HasErrors) return new Models.Implementations.Errors.Result(@this.Errors);
-
-        //    return okFunc.Invoke().
-        //           WhereContinue(result => result.OkStatus,
-        //                okFunc: result => new Models.Implementations.Errors.Result(),
-        //                badFunc: result => new Models.Implementations.Errors.Result(result.Errors));
-        //}
+        }     
 
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе

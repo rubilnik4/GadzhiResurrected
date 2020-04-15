@@ -10,12 +10,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
     /// <summary>
     /// Базовый вариант ответа
     /// </summary>
-    public class ResultApplicationValue<TValue> : IResultApplicationValue<TValue>
+    public class ResultValue<TValue> : IResultValue<TValue>
     {
-        public ResultApplicationValue(IErrorApplication error)
+        public ResultValue(IErrorApplication error)
            : this(error.AsEnumerable()) { }
 
-        public ResultApplicationValue(IEnumerable<IErrorApplication> errors)
+        public ResultValue(IEnumerable<IErrorApplication> errors)
         {
             if (errors == null) throw new ArgumentNullException(nameof(errors));
             if (!ValidateCollection(errors)) throw new NullReferenceException(nameof(errors));
@@ -23,10 +23,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             Errors = errors;
         }
 
-        public ResultApplicationValue(TValue value, IErrorApplication errorNull = null)
+        public ResultValue(TValue value, IErrorApplication errorNull = null)
           : this(value, Enumerable.Empty<IErrorApplication>(), errorNull) { }
 
-        public ResultApplicationValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
+        public ResultValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
             : this(errors)
         {
             if (value == null && errorNull != null)
@@ -64,10 +64,20 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Добавить ошибку
         /// </summary>      
-        public IResultApplicationValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
+        public IResultValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
             errors != null && ValidateCollection(errors) ?
-            new ResultApplicationValue<TValue>(Value, Errors.Union(errors)) :
+            new ResultValue<TValue>(Value, Errors.Union(errors)) :
             this;
+
+        /// <summary>
+        /// Преобразовать в результирующий тип
+        /// </summary>
+        public IResultApplication ToResultApplication() => new ResultApplication(Errors);
+
+        /// <summary>
+        /// Выполнить отложенные функции
+        /// </summary>
+        public IResultValue<TValue> ExecuteLazy() => new ResultValue<TValue>(Value, Errors.ToList());
 
         /// <summary>
         /// Проверить ошибки на корретность

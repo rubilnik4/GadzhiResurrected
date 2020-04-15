@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
@@ -63,58 +65,54 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public override IEnumerable<IErrorApplication> InsertSignatures() =>
+        public override IResultApplication InsertSignatures() =>
             GetSignatures(StampPersonSignatures, StampChangeSignatures).
             Select(signature => signature.InsertSignature()).
             Where(signature => !signature.IsSignatureValid).
             Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                     $"Не найдена подпись {signature.PersonName}"));
+                                                     $"Не найдена подпись {signature.PersonName}")).
+            ToResultApplication();
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        public override void DeleteSignatures()
-        {
-            var signaturesToDelete = GetSignatures(StampPersonSignatures, StampChangeSignatures).
-                                     Where(signature => signature.IsSignatureValid);
-
-            foreach (var signature in signaturesToDelete)
-            {
-                signature?.DeleteSignature();
-            }
-        }
+        public override IEnumerable<Unit> DeleteSignatures() =>
+            GetSignatures(StampPersonSignatures, StampChangeSignatures).
+            Where(signature => signature.IsSignatureValid).
+            Select(signature => { signature.DeleteSignature(); return Unit.Value; });
 
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
         private IEnumerable<IStampPersonSignatureWord> GetStampPersonSignatures() =>
-              FieldsStamp.Where(field => field.StampFieldType == StampFieldType.PersonSignature).
-                          Select(field => field.CellElementStamp.RowElementWord).
-                          Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FieldsCount).
-                          Select(row => {
-                              ICellElement personCell = row.CellsElementWord[0];
-                              return new StampPersonSignatureWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
-                                                                  new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                                                  new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                                                  new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                                  GetSignatureInformationByPersonName(personCell.Text));
-                          });
+            FieldsStamp.
+            Where(field => field.StampFieldType == StampFieldType.PersonSignature).
+            Select(field => field.CellElementStamp.RowElementWord).
+            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FieldsCount).
+            Select(row =>
+                row.CellsElementWord[0].
+                Map(personCell =>
+                    new StampPersonSignatureWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
+                                                 new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
+                                                 new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
+                                                 new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                                 GetSignatureInformationByPersonName(personCell.Text))));
 
         /// <summary>
         /// Получить cтроки с изменениями
         /// </summary>
         private IEnumerable<IStampChangeSignatureWord> GetStampChangeSignatures(ISignatureInformation personInformation) =>
-              FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
-                          Select(field => field.CellElementStamp.RowElementWord).
-                          Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FieldsCount).
-                          Select(row =>
-                            new StampChangeSignatureWord(new StampFieldWord(row.CellsElementWord[0], StampFieldType.PersonSignature),
-                                                         new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                                         new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                                         new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                         new StampFieldWord(row.CellsElementWord[4], StampFieldType.PersonSignature),
-                                                         new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                         personInformation));
+            FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
+            Select(field => field.CellElementStamp.RowElementWord).
+            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FieldsCount).
+            Select(row =>
+                new StampChangeSignatureWord(new StampFieldWord(row.CellsElementWord[0], StampFieldType.PersonSignature),
+                                             new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
+                                             new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
+                                             new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                             new StampFieldWord(row.CellsElementWord[4], StampFieldType.PersonSignature),
+                                             new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                             personInformation));
 
         /// <summary>
         /// Получить подписи
@@ -126,11 +124,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private SignatureInformation GetSignatureInformationByPersonName(string personName)
-        {
-            var personIdPath = personIdTable.FirstOrDefault().Value;
-            return new SignatureInformation(personName, personIdPath);
-        }
-
+        private SignatureInformation GetSignatureInformationByPersonName(string personName) =>
+            new SignatureInformation(personName, personIdTable.FirstOrDefault().Value);
     }
 }

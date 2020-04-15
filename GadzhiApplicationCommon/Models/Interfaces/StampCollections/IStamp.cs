@@ -37,7 +37,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Сжать поля
         /// </summary>
-        Unit CompressFieldsRanges();
+        IEnumerable<bool> CompressFieldsRanges();
 
         /// <summary>
         /// Вставить подписи
@@ -47,6 +47,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        void DeleteSignatures();
+        IEnumerable<Unit> DeleteSignatures();
     }
 }

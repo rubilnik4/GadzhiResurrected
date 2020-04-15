@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Подпись
         /// </summary>
-        TField Signature { get; }
+        IResultValue<TField> Signature { get; }
 
         /// <summary>
         /// Установлена ли подпись

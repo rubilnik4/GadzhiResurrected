@@ -15,13 +15,13 @@ namespace GadzhiCommon.Extentions.Functional
         /// <summary>
         /// Преобразовать коллекцию ошибок в результирующий ответ с параметром
         /// </summary>       
-        public static IResult ToResultApplication(this IEnumerable<IErrorCommon> @this) =>
-            new Result(@this);
+        public static IResultError ToResult(this IEnumerable<IErrorCommon> @this) =>
+            new ResultError(@this);
 
         /// <summary>
         /// Преобразовать коллекцию ошибок в результирующий ответ с параметром
         /// </summary>       
-        public static IResultValue<T> ToResultApplicationValue<T>(this IEnumerable<IErrorCommon> @this) =>
-            new ResultValue<T>(@this);
+        public static IResultValue<TValue> ToResultValue<TValue>(this IEnumerable<IErrorCommon> @this) =>
+            new ResultValue<TValue>(@this);
     }
 }

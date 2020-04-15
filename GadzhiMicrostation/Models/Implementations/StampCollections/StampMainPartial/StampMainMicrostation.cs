@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
@@ -49,29 +51,22 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        protected override IEnumerable<IErrorApplication> InsertSignaturesFromLibrary() =>
+        protected override IResultApplication InsertSignaturesFromLibrary() =>
             GetSignatures(StampPersonSignaturesMicrostation, StampChangeSignaturesMicrostation, StampApprovalSignaturesMicrostation).
             Select(signature => signature.InsertSignature()).
             Where(signature => !signature.IsSignatureValid).
             Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                      $"Не найдена подпись {signature.PersonName}")).
-            Cast<IErrorApplication>();
+            Cast<IErrorApplication>().
+            ToResultApplication();
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        public override void DeleteSignatures()
-        {
-            var signaturesToDelete = GetSignatures(StampPersonSignaturesMicrostation,
-                                                   StampChangeSignaturesMicrostation,
-                                                   StampApprovalSignaturesMicrostation).
-                                     Where(signature => signature.IsSignatureValid);
-
-            foreach (var signature in signaturesToDelete)
-            {
-                signature?.DeleteSignature();
-            }
-        }
+        public override IEnumerable<Unit> DeleteSignatures() =>
+            GetSignatures(StampPersonSignaturesMicrostation, StampChangeSignaturesMicrostation, StampApprovalSignaturesMicrostation).
+            Where(signature => signature.IsSignatureValid).
+            Select(signature => { signature.DeleteSignature(); return Unit.Value; });       
 
         /// <summary>
         /// Тип штампа
@@ -94,7 +89,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// Строки с согласованиями
         /// </summary>
         public IEnumerable<IStampApprovalSignatures<IStampFieldMicrostation>> StampApprovalSignatures =>
-                StampApprovalSignaturesMicrostation.Cast<IStampApprovalSignatures<IStampFieldMicrostation>>();       
+                StampApprovalSignaturesMicrostation.Cast<IStampApprovalSignatures<IStampFieldMicrostation>>();
 
         /// <summary>
         /// Получить подписи

@@ -1,4 +1,8 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -52,7 +56,6 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// </summary>
         public double Height => Math.Abs(LowLeftPoint.Y - HighRightPoint.Y);
 
-
         /// <summary>
         /// Корректны ли значения координат
         /// </summary>
@@ -90,7 +93,6 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         public RangeMicrostation Offset(PointMicrostation offset) =>
              new RangeMicrostation(LowLeftPoint.Add(offset), HighRightPoint.Add(offset));
 
-
         /// <summary>
         /// Масштабирование
         /// </summary>       
@@ -100,14 +102,16 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Преобразовать строку в диапазон
         /// </summary>    
-        public static RangeMicrostation StringToRange(string rangeInString) =>
-            rangeInString?.
-            Map(rangeInlineString => StampSettingsMicrostation.SeparateAttributeValue(rangeInlineString))?.
-            WhereMap(rangeListString => ValidateRangeString(rangeListString))?.
-            Select(pointsString => Double.Parse(pointsString, CultureInfo.CurrentCulture)).
-            ToList().
-            Map(points => new RangeMicrostation(points));
-
+        public static IResultValue<RangeMicrostation> StringToRange(string rangeInString) =>
+            StampSettingsMicrostation.SeparateAttributeValue(rangeInString).
+            WhereContinue(rangeListString => ValidateRangeString(rangeListString),
+                okFunc: rangeListString => new ResultValue<IList<string>>(rangeListString),
+                badFunc: _ => new ErrorApplication(ErrorApplicationType.RangeNotValid, "Некорректный диапазон координат из атрибутов").
+                              ToResultApplicationValue<IList<string>>()).
+            ResultValueOk(rangeListString => rangeListString.
+                                             Select(pointsString => Double.Parse(pointsString, CultureInfo.CurrentCulture))).
+            ResultValueOk(points => new RangeMicrostation(points.ToList()));
+     
         /// <summary>
         /// Проверить строку на возможность преобразования в диапазон
         /// </summary>   

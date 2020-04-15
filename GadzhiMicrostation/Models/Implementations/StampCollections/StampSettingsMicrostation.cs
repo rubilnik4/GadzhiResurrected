@@ -8,7 +8,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// Дополнительные параметры штампа
     /// </summary>
     public static class StampSettingsMicrostation
-    {   
+    {
         /// <summary>
         /// Символ разделяющий параметры внутри аттрибута
         /// </summary>
@@ -17,13 +17,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Разделить значение аттрибута через символ-разделитель
         /// </summary>
-        public static IList<string> SeparateAttributeValue(string valueField)
-        {
-            return valueField?.Split(new string[] { SeparatorAttribute },
-                                     StringSplitOptions.None).
-                               ToList() ??
-                               new List<string>();
-        }
+        public static IList<string> SeparateAttributeValue(string valueField) =>
+            valueField?.
+            Split(new string[] { SeparatorAttribute }, StringSplitOptions.None).
+            ToList()
+            ?? new List<string>();
 
         /// <summary>
         /// Коэффициент сжатия текстовых элементов в штампе

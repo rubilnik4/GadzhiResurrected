@@ -1,5 +1,7 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -41,20 +43,18 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             IStampFieldMicrostation dateSignature = GetFieldFromElements(foundElements, StampFieldApprovals.GetFieldsDateSignature(),
                                                     StampFieldType.ApprovalSignature);
 
-            Func<string, IStampFieldMicrostation> insertSignatureFunc = InsertApprovalSignatureFromLibrary(responsiblePerson.ElementStamp, 
-                                                                                                           dateSignature.ElementStamp);
-            
+            var insertSignatureFunc = InsertApprovalSignatureFromLibrary(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
+
             return new StampApprovalSignatureMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc);
         }
 
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        private Func<string, IStampFieldMicrostation> InsertApprovalSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
+        private Func<string, IResultValue<IStampFieldMicrostation>> InsertApprovalSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
                                                                                          IElementMicrostation dateSignatureElement) =>
-              (string personId) => InsertSignature(personId,
-                                                   responsiblePersonElement.AsTextElementMicrostation,
-                                                   dateSignatureElement.AsTextElementMicrostation)?.
-                                   Map(signature => new StampFieldMicrostation(signature, StampFieldType.ApprovalSignature));
+            (string personId) =>
+                InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation)?.
+                ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.ApprovalSignature));
     }
 }

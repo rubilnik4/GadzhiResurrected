@@ -19,15 +19,15 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать результирующий отвеа модуля конвертации в основной
         /// </summary>      
-        public static IResult ToResult(IResultApplication resultApplication) =>
+        public static IResultError ToResult(IResultApplication resultApplication) =>
             resultApplication?.
-            Map(result => new Result(result.Errors.ToErrorsConverting()))
+            Map(result => new ResultError(result.Errors.ToErrorsConverting()))
             ?? throw new ArgumentNullException(nameof(resultApplication));
 
         /// <summary>
         /// Преобразовать результирующий ответ модуля со значением конвертации в основной
         /// </summary>      
-        public static IResultValue<TResult> ToResultValue<TApplication, TResult>(IResultApplicationValue<TApplication> resultApplicationValue,
+        public static GadzhiCommon.Models.Interfaces.Errors.IResultValue<TResult> ToResultValue<TApplication, TResult>(GadzhiApplicationCommon.Models.Interfaces.Errors.IResultValue<TApplication> resultApplicationValue,
                                                                                  Func<TApplication, TResult> converterValue)
         {
             if (resultApplicationValue == null) throw new ArgumentNullException(nameof(resultApplicationValue));

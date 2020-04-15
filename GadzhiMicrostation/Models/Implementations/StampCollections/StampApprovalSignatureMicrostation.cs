@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -19,7 +20,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     {
         public StampApprovalSignatureMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
                                                   IStampFieldMicrostation dateSignature,
-                                                  Func<string, IStampFieldMicrostation> insertSignatureFunc)
+                                                  Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
             : base(insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));

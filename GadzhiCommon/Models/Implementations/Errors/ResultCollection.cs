@@ -47,5 +47,10 @@ namespace GadzhiCommon.Models.Implementations.Errors
             new ResultCollection<T>(Value.Append(resultValue.Value),
                                     Errors.Union(resultValue.Errors ?? Enumerable.Empty<IErrorCommon>())) :
             this;
+
+        /// <summary>
+        /// Выполнить отложенные функции
+        /// </summary>
+        public new IResultCollection<T> Execute() => new ResultCollection<T>(Value.ToList(), Errors.ToList());
     }
 }

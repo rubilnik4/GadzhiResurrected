@@ -1,6 +1,10 @@
-﻿using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+﻿using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -17,27 +21,35 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Функция вставки подписи
         /// </summary>
-        private readonly Func<string, IStampFieldMicrostation> _insertSignatureFunc;
+        private readonly Func<string, IResultValue<IStampFieldMicrostation>> _insertSignatureFunc;
 
-        public StampSignatureMicrostation(Func<string, IStampFieldMicrostation> insertSignatureFunc)
+        public StampSignatureMicrostation(Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
         {
             _insertSignatureFunc = insertSignatureFunc;
+            SignatureInitialize();
+        }
+
+        private void SignatureInitialize()
+        {
+            Signature = new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подпись не инициализирована").
+                       ToResultApplicationValue<IStampFieldMicrostation>();
         }
 
         /// <summary>
         /// Подпись
         /// </summary>
-        public override IStampFieldMicrostation Signature { get; protected set; }
+        public override IResultValue<IStampFieldMicrostation> Signature { get; protected set; }
 
         /// <summary>
         /// Подпись. Элемент
         /// </summary>
-        public ICellElementMicrostation SignatureElement => Signature.ElementStamp.AsCellElementMicrostation;
+        public IResultValue<ICellElementMicrostation> SignatureElement =>
+            Signature.ResultValueOk(signature => signature.ElementStamp.AsCellElementMicrostation);
 
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public override bool IsSignatureValid => Signature != null;
+        public override bool IsSignatureValid => Signature.OkStatus;
 
         /// <summary>
         /// Вставить подпись
@@ -51,13 +63,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Удалить текущую подпись
         /// </summary>
-        public override void DeleteSignature()
-        {
-            if (IsSignatureValid)
+        public override void DeleteSignature() =>
+            Signature.
+            ResultVoidOk(signature =>
             {
-                Signature.ElementStamp.Remove();
-                Signature = null;
-            }
-        }
+                Signature.Value.ElementStamp.Remove();
+                SignatureInitialize();
+            });
     }
 }

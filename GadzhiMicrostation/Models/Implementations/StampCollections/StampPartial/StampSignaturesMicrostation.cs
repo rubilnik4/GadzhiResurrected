@@ -28,7 +28,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             Void(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.
                                                           MicrostationResources.SignatureMicrostationFileName)).
             Void(_ => DeleteSignaturesPrevious()).
-            Map(_ => InsertSignaturesFromLibrary().ToList()).
+            Map(_ => InsertSignaturesFromLibrary().ExecuteLazy()).
             Void(_ => StampCellElement.ApplicationMicrostation.DetachLibrary());
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        protected IResultApplicationValue<ICellElementMicrostation> InsertSignature(string personId,
+        protected IResultValue<ICellElementMicrostation> InsertSignature(string personId,
                                                                                     ITextElementMicrostation previousField,
                                                                                     ITextElementMicrostation nextField,
                                                                                     string personName = null) =>
@@ -64,12 +64,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Получить координаты и размеры поля для вставки подписей
         /// </summary>       
-        private IResultApplicationValue<RangeMicrostation> GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
+        private IResultValue<RangeMicrostation> GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
                                                     ITextElementMicrostation previousField, ITextElementMicrostation nextField) =>
         
             Map(GetSignatureLowLeft(previousField), GetSignatureHighRight(nextField),
                 (previous, next) => previous.OkStatus && next.OkStatus ?
-                                    new ResultApplicationValue<RangeMicrostation>(new RangeMicrostation(previous.Value, next.Value)) :
+                                    new ResultValue<RangeMicrostation>(new RangeMicrostation(previous.Value, next.Value)) :
                                     previous.Errors.Concat(next.Errors).ToResultApplicationValue<RangeMicrostation>()).
             ResultValueOk(rangeCellCoordinates => rangeCellCoordinates.Scale(unitScale).
                                                                       Offset(stampOrigin));
@@ -77,8 +77,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Получить нижнюю левую точку поля
         /// </summary>       
-        private IResultApplicationValue<PointMicrostation> GetSignatureLowLeft(ITextElementMicrostation fieldText) =>
-          new ResultApplicationValue<ITextElementMicrostation>(fieldText,
+        private IResultValue<PointMicrostation> GetSignatureLowLeft(ITextElementMicrostation fieldText) =>
+          new ResultValue<ITextElementMicrostation>(fieldText,
                                      new ErrorApplication(ErrorApplicationType.ArgumentNullReference, "Не задан диапазон поля подписи LowLeft")).
           ResultValueOk(field => !field.IsVertical ?
                                  new PointMicrostation(field.RangeAttributeInUnits.HighRightPoint.X, field.RangeAttributeInUnits.LowLeftPoint.Y) :
@@ -87,8 +87,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Получить верхнюю правую точку поля
         /// </summary>       
-        private IResultApplicationValue<PointMicrostation> GetSignatureHighRight(ITextElementMicrostation fieldText) =>
-          new ResultApplicationValue<ITextElementMicrostation>(fieldText,
+        private IResultValue<PointMicrostation> GetSignatureHighRight(ITextElementMicrostation fieldText) =>
+          new ResultValue<ITextElementMicrostation>(fieldText,
                                      new ErrorApplication(ErrorApplicationType.ArgumentNullReference, "Не задан диапазон поля подписи HighRight")).
           ResultValueOk(field => !field.IsVertical ?
                                  new PointMicrostation(field.RangeAttributeInUnits.LowLeftPoint.X, field.RangeAttributeInUnits.HighRightPoint.Y) :
@@ -109,7 +109,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Переместить ячейку подписи
         /// </summary>
-        private ICellElementMicrostation SignatureMove(this ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
+        private ICellElementMicrostation SignatureMove(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
             signatureCell.Origin.
             Subtract(signatureCell.Range.LowLeftPoint).
             Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow).
