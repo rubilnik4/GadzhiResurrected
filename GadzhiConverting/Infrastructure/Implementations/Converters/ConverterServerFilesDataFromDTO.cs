@@ -48,21 +48,19 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServer(filesDataRequest.Id,
-                                                 filesDataRequest.AttemptingConvertCount,
-                                                 filesDataServerToConvert);
+            return new FilesDataServer(filesDataRequest.Id, filesDataRequest.AttemptingConvertCount,
+                                       filesDataServerToConvert);
         }
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private async Task<IFileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest,
-                                                                              string packageGuid)
+        private async Task<IFileDataServer> ConvertToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest, string packageGuid)
         {
             FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid);
 
             return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath,
-                                                fileDataRequest.ColorPrint, fileSavedCheck.Errors);
+                                      fileDataRequest.ColorPrint, fileSavedCheck.Errors);
         }
 
         /// <summary>

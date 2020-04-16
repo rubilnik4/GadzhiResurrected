@@ -7,17 +7,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
     /// Проверка состояния папок и файлов
     /// </summary>
     public interface IFileSystemOperations
-    {
-        /// <summary>
-        /// Является ли путь папкой
-        /// </summary>       
-        bool IsDirectory(string directoryPath);
-
-        /// <summary>
-        /// Является ли путь файлом
-        /// </summary>       
-        bool IsFile(string filePath);
-
+    {  
         /// <summary>
         /// Существует ли папка
         /// </summary>       
@@ -41,17 +31,12 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущей папке       
         /// </summary>    
-        Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);
+        IEnumerable<string> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);
 
         /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
-        void DeleteAllDataInDirectory(string directoryPath);
-
-        /// <summary>
-        /// Получить полное имя файла по директории, имени и расширению
-        /// </summary>       
-        string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension);
+        void DeleteAllDataInDirectory(string directoryPath);      
 
         /// <summary>
         /// Представить файл в двоичном виде
@@ -64,6 +49,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileBinary);
 
         /// <summary>
+        /// Распаковать файл из двоичного вида и сохранить
+        /// </summary>   
+        Task<bool> SaveFileFromByte(string filePath, byte[] fileByte);
+
+        /// <summary>
         /// Создать поддиректорию и пррисвоить идентефикатор
         /// </summary>     
         string CreateFolderByGuid(string startingPath);
@@ -71,11 +61,6 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Создать поддиректорию
         /// </summary>     
-        string CreateFolderByName(string startingPath, string folderName = "");
-
-        /// <summary>
-        /// Распаковать файл из двоичного вида и сохранить
-        /// </summary>   
-        bool SaveFileFromByte(string filePath, byte[] fileByte);
+        string CreateFolderByName(string startingPath, string folderName = "");     
     }
 }

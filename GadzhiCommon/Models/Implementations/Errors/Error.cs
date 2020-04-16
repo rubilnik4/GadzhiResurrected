@@ -15,10 +15,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
     public class ErrorCommon: IErrorCommon
     {
         public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription)
-            : this(fileConvertErrorType, errorDescription, null, null)
-        {
-          
-        }
+            : this(fileConvertErrorType, errorDescription, null, null) { }
 
         public ErrorCommon(FileConvertErrorType fileConvertErrorType,
                                string errorDescription,

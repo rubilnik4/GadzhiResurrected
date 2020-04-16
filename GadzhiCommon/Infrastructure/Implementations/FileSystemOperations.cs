@@ -24,30 +24,37 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public static string ExtensionWithoutPoint(string extension) =>
             extension?.ToLower(CultureInfo.CurrentCulture).TrimStart('.');
 
-
         /// <summary>
         /// Взять расширение. Убрать точку из расширения файла и привести к нижнему регистру
         /// </summary>      
-        public static string ExtensionWithoutPointFromPath(string path) =>        
+        public static string ExtensionWithoutPointFromPath(string path) =>
            Path.GetExtension(path).
-           Map(extension => ExtensionWithoutPoint(extension));        
+           Map(extension => ExtensionWithoutPoint(extension));
 
         /// <summary>
         /// Является ли путь папкой
         /// </summary>    
-        public bool IsDirectory(string directoryPath) => !String.IsNullOrEmpty(directoryPath) &&
-                                                         String.IsNullOrEmpty(Path.GetExtension(directoryPath));
+        public static bool IsDirectory(string directoryPath) => !String.IsNullOrEmpty(directoryPath) &&
+                                                                String.IsNullOrEmpty(Path.GetExtension(directoryPath));
+
+        /// <summary>
+        /// Является ли путь файлом
+        /// </summary>       
+        public static bool IsFile(string filePath) => !String.IsNullOrEmpty(filePath) &&
+                                                      !String.IsNullOrEmpty(Path.GetExtension(filePath));
+
+        /// <summary>
+        /// Получить полное имя файла по директории, имени и расширению
+        /// </summary>       
+        public static string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension) =>
+             directoryPath.AddSlashesToPath() +
+             fileNameWithoutExtension + "." +
+             extension?.TrimStart('.');
 
         /// <summary>
         /// Существует ли папка
         /// </summary>     
         public bool IsDirectoryExist(string directoryPath) => Directory.Exists(directoryPath);
-
-        /// <summary>
-        /// Является ли путь файлом
-        /// </summary>       
-        public bool IsFile(string filePath) => !String.IsNullOrEmpty(filePath) &&
-                                               !String.IsNullOrEmpty(Path.GetExtension(filePath));
 
         /// <summary>
         /// Существует ли файл
@@ -60,14 +67,6 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
 
         /// <summary>
-        /// Получить полное имя файла по директории, имени и расширению
-        /// </summary>       
-        public string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension) =>                 
-             directoryPath.AddSlashesToPath() + 
-             fileNameWithoutExtension + "." + 
-             extension?.TrimStart('.');       
-
-        /// <summary>
         /// Получить вложенные файлы
         /// </summary>       
         public IEnumerable<string> GetFiles(string filePath) => Directory.GetFiles(filePath);
@@ -75,21 +74,14 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущих папках. Допустимо передавать пути файлов для дальнейшего объединения      
         /// </summary>    
-        public async Task<IEnumerable<string>> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths)
-        {
-            var filePaths = fileOrDirectoriesPaths?.Where(f => IsFile(f));
-            var directoriesPath = fileOrDirectoriesPaths?.Where(d => IsDirectory(d) &&
-                                                                     IsDirectoryExist(d));
-            var filesInDirectories = directoriesPath.
-                                     UnionNotNull(directoriesPath?.SelectMany(d => GetDirectories(d)))?.
-                                     SelectMany(d => GetFiles(d));
-
-            var allFilePaths = filePaths.
-                               UnionNotNull(filesInDirectories)?.
-                               Where(f => DialogFilters.IsInDocAndDgnFileTypes(f) && IsFileExist(f));
-
-            return await Task.FromResult(allFilePaths);
-        }
+        public IEnumerable<string> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths) =>
+            fileOrDirectoriesPaths?.
+            Where(directoryPath => IsDirectory(directoryPath) && IsDirectoryExist(directoryPath)).
+            Map(directoriesPath => directoriesPath.UnionNotNull(
+                                   directoriesPath?.SelectMany(d => GetDirectories(d)))).
+            SelectMany(directoryPath => GetFiles(directoryPath)).
+            Map(filesPath => filesPath.UnionNotNull(
+                             fileOrDirectoriesPaths?.Where(f => IsFile(f))));
 
         /// <summary>
         /// Удалить всю информацию из папки
@@ -130,10 +122,8 @@ namespace GadzhiCommon.Infrastructure.Implementations
                     result = output.ToArray();
                 }
             }
-            catch (Exception)
-            {
-
-            }
+            finally
+            { }
             return result;
         }
 
@@ -160,29 +150,14 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 }
             }
             finally
-            {
-
-            }
+            { }
             return success;
         }
 
         /// <summary>
-        /// Создать поддиректорию и присвоить идентефикатор
-        /// </summary>     
-        public string CreateFolderByGuid(string startingPath) => CreateFolderByName(startingPath, Guid.NewGuid().ToString());       
-
-        /// <summary>
-        /// Создать поддиректорию
-        /// </summary>     
-        public string CreateFolderByName(string startingPath, string folderName = "") =>
-             (startingPath.AddSlashesToPath() + folderName.AddSlashesToPath())?.
-             Map(createdPath => Directory.CreateDirectory(createdPath))?.
-             FullName;      
-
-        /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
-        public bool SaveFileFromByte(string filePath, byte[] fileByte)
+        public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
         {
             bool success = false;
 
@@ -191,16 +166,31 @@ namespace GadzhiCommon.Infrastructure.Implementations
             {
                 if (!String.IsNullOrEmpty(filePath) && fileByte != null)
                 {
-                    File.WriteAllBytes(filePath, fileByte);
+                    using (FileStream sourceStream = File.Open(filePath, FileMode.OpenOrCreate))
+                    {
+                        sourceStream.Seek(0, SeekOrigin.End);
+                        await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
+                    }
 
                     success = true;
                 }
             }
             finally
-            {
-
-            }
+            { }
             return success;
         }
+
+        /// <summary>
+        /// Создать поддиректорию и присвоить идентефикатор
+        /// </summary>     
+        public string CreateFolderByGuid(string startingPath) => CreateFolderByName(startingPath, Guid.NewGuid().ToString());
+
+        /// <summary>
+        /// Создать поддиректорию
+        /// </summary>     
+        public string CreateFolderByName(string startingPath, string folderName = "") =>
+             (startingPath.AddSlashesToPath() + folderName.AddSlashesToPath())?.
+             Map(createdPath => Directory.CreateDirectory(createdPath))?.
+             FullName;      
     }
 }

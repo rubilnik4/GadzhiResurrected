@@ -19,12 +19,12 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        IReadOnlyList<IFileDataServer> FileDatasServerConverting { get; }
+        IEnumerable<IFileDataServer> FileDatasServer { get; }
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        StatusProcessingProject StatusProcessingProject { get; set; }
+        StatusProcessingProject StatusProcessingProject { get; }
 
         /// <summary>
         /// Завершена ли обработка
@@ -34,7 +34,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Количество попыток конвертирования
         /// </summary>      
-        int AttemptingConvertCount { get; }        
+        int AttemptingConvertCount { get; }
 
         /// <summary>
         /// Корректна ли модель
@@ -52,8 +52,13 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         bool IsValidByAttemptingCount { get; }
 
         /// <summary>
-        /// Изменить статус обработки для всех файлов
+        /// Присвоить статус ошибки обработки для всех файлов
         /// </summary>
-        void SetErrorToAllUncompletedFiles();
+        IFilesDataServer SetErrorToAllFiles();
+
+        /// <summary>
+        /// Присвоить статус обработки проекта
+        /// </summary>     
+        IFilesDataServer SetStatusProcessingProject(StatusProcessingProject statusProcessingProject);
     }
 }

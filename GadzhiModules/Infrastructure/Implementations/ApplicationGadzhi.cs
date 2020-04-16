@@ -127,7 +127,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (!_statusProcessingInformation.IsConverting)
             {
-                var allFilePaths = await _fileSystemOperations.GetFilesFromDirectoryAndSubDirectory(fileOrDirectoriesPaths);
+                var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromDirectoryAndSubDirectory(fileOrDirectoriesPaths));
                 if (allFilePaths != null && allFilePaths.Any())
                 {
                     _filesInfoProject.AddFiles(allFilePaths);

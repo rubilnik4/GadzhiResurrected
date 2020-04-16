@@ -54,11 +54,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Информационное сообщение
         /// </summary>  
-        public Unit ShowAndLogMessage(string messageText)
-        {
-            MessageBox.Show(messageText);
-            return Unit.Value;
-        }
+        public void ShowAndLogMessage(string messageText) => MessageBox.Show(messageText);     
 
         /// <summary>
         /// Сообщение об ошибке

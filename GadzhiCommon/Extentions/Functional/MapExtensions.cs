@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GadzhiCommon.Extentions.Functional
 {
@@ -37,6 +38,17 @@ namespace GadzhiCommon.Extentions.Functional
             if (action == null) throw new ArgumentNullException(nameof(action));
             action.Invoke(@this);
             return @this;
-        }            
+        }
+
+        /// <summary>
+        /// Выполнить действие, вернуть тот же тип
+        /// </summary>       
+        public static async Task<T> VoidAwait<T>(this Task<T> @this, Action<T> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            var awaited = await @this;
+            action.Invoke(awaited);
+            return awaited;
+        }
     }
 }

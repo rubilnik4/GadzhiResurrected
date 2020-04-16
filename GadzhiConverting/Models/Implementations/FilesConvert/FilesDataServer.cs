@@ -1,6 +1,9 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -13,24 +16,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class FilesDataServer : IFilesDataServer
     {
-        /// <summary>
-        /// Файлы для конвертирования
-        /// </summary>
-        private readonly List<IFileDataServer> _fileDatasServer;
-
-        public FilesDataServer(Guid id, int attemptingConvertCount,
-                               IEnumerable<IFileDataServer> fileDatasServerConverting)
+        public FilesDataServer(Guid id, int attemptingConvertCount, StatusProcessingProject statusProcessingProject,
+                               IEnumerable<IFileDataServer> fileDatasServer)
         {
             Id = id;
             AttemptingConvertCount = attemptingConvertCount;
-
-            _fileDatasServer = new List<IFileDataServer>();
-            if (fileDatasServerConverting != null)
-            {
-                _fileDatasServer.AddRange(fileDatasServerConverting);
-            }
-
-            StatusProcessingProject = StatusProcessingProject.Converting;
+            StatusProcessingProject = statusProcessingProject;
+            FileDatasServer = fileDatasServer ?? throw new ArgumentNullException(nameof(fileDatasServer));
         }
 
         /// <summary>
@@ -41,12 +33,12 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        public IReadOnlyList<IFileDataServer> FileDatasServerConverting => _fileDatasServer;
+        public IEnumerable<IFileDataServer> FileDatasServer { get; }
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        public StatusProcessingProject StatusProcessingProject { get; set; }
+        public StatusProcessingProject StatusProcessingProject { get; }
 
         /// <summary>
         /// Завершена ли обработка
@@ -67,24 +59,26 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Присутствуют ли файлы для конвертации
         /// </summary>
-        public bool IsValidByFileDatas => _fileDatasServer?.Any() == true;
+        public bool IsValidByFileDatas => FileDatasServer?.Any() == true;
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования
         /// </summary>
         public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
-        
+
         /// <summary>
-        /// Изменить статус обработки для всех файлов
+        /// Присвоить статус ошибки обработки для всех файлов
         /// </summary>
-        public void SetErrorToAllUncompletedFiles()
-        {
-            var uncompletedFiles = _fileDatasServer?.Where(file => !file.IsCompleted);
-            foreach (var file in uncompletedFiles)
-            {
-                file.StatusProcessing = StatusProcessing.ConvertingComplete;
-                file.AddFileConvertErrorType(FileConvertErrorType.UnknownError);
-            }
-        }
+        public IFilesDataServer SetErrorToAllFiles() =>
+            FileDatasServer.Select(fileData => new FileDataServer(fileData, StatusProcessing.ConvertingComplete,
+                                                                  FileConvertErrorType.UnknownError)).
+            Map(fileDatas => new FilesDataServer(Id, AttemptingConvertCount, StatusProcessingProject, fileDatas));       
+
+        /// <summary>
+        /// Присвоить статус обработки проекта
+        /// </summary>     
+        public IFilesDataServer SetStatusProcessingProject(StatusProcessingProject statusProcessingProject) =>
+            new FilesDataServer(Id, AttemptingConvertCount, statusProcessingProject, FileDatasServer);    
+
     }
 }

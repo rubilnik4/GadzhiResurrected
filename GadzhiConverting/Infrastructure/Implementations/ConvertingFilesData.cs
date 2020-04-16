@@ -4,6 +4,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.Functional.Result;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -51,79 +52,36 @@ namespace GadzhiConverting.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Запустить конвертирование файла
-        /// </summary>
-        public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer)
-        {
-            if (fileDataServer != null)
-            {
-                fileDataServer = FileDataStartConverting(fileDataServer);
-
-                await FileDataConverting(fileDataServer);
-
-                fileDataServer = FileDataEndConverting(fileDataServer);
-
-                return fileDataServer;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(fileDataServer));
-            }
-        }
-
-        /// <summary>
-        /// Начать конвертирование файла
-        /// </summary>
-        private IFileDataServer FileDataStartConverting(IFileDataServer fileDataServer)
-        {
-            _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}");
-
-            fileDataServer.StatusProcessing = StatusProcessing.Converting;
-
-            return fileDataServer;
-        }
-
-        /// <summary>
-        /// Закончить конвертирование файла
-        /// </summary>
-        private IFileDataServer FileDataEndConverting(IFileDataServer fileDataServer)
-        {
-            fileDataServer.StatusProcessing = StatusProcessing.ConvertingComplete;
-            return fileDataServer;
-        }
-
-        /// <summary>
         /// Конвертировать файл
         /// </summary>
-        private async Task<IFileDataServer> FileDataConverting(IFileDataServer fileDataServer)
-        {
-
-            if (fileDataServer.IsValidByAttemptingCount)
-            {
-                await Task.Run(() => ConvertingFile(fileDataServer, _projectSettings.PrintersInformation));
-            }
-            else
-            {
-                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount,
-                                                  "Превышено количество попыток конвертирования файла"));
-                fileDataServer.AddFileConvertErrorType(FileConvertErrorType.AttemptingCount);
-            }
-
-            return fileDataServer;
-        }
+        public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer) =>
+            await fileDataServer?.
+            Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
+            WhereContinueAsync(fileData => fileData.IsValidByAttemptingCount,
+                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, _projectSettings.PrintersInformation)),
+                badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
 
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        public IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
+        private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadDocument(fileDataServer).
             ResultValueOkBind(_ => CreatePdf(fileDataServer, printersInformation)).
-            ResultValueOkBind(_ => CloseFile().ToResultValue<IEnumerable<IFileDataSourceServer>>()).
+            ResultValueOkBind(_ => CloseFile(fileDataServer.FileNameClient).ToResultValue<IEnumerable<IFileDataSourceServer>>()).
             ToResultCollection().
             Map(result => new FileDataServer(fileDataServer.FilePathServer, fileDataServer.FilePathClient,
-                                             fileDataServer.ColorPrint, result.Value,
+                                             fileDataServer.ColorPrint, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
-      
+
+        /// <summary>
+        /// Присвоить ошибку по количеству попыток конвертирования
+        /// </summary>      
+        private IFileDataServer GetErrorByAttemptingCount(IFileDataServer fileDataServer) =>
+            new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования файла").
+            Void(errorDataServer => _messagingService.ShowAndLogError(errorDataServer)).
+            Map(errorDataServer => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete,
+                                                      errorDataServer.Select(error => error.FileConvertErrorType)));
+
         /// <summary>
         /// Загрузить файл
         /// </summary>   
@@ -159,9 +117,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        private IResultError CloseFile() =>
+        private IResultError CloseFile(string fileNameClient) =>
             _applicationConverting.CloseDocument().
-            Void(_ => _messagingService.ShowAndLogMessage("Конвертирование завершено"));
+            Void(_ => _messagingService.ShowAndLogMessage($"Конвертация файла {fileNameClient} завершена"));
 
         /// <summary>
         /// Создать папку для сохранения отконвертированных файлов по типу расширения
@@ -170,8 +128,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             new ResultValue<string>(filePathServer).
             ResultValueOk(filePath => Path.GetDirectoryName(filePath)).
             ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtention.ToString())).
-            ResultValueOk(serverDirectory => _fileSystemOperations.CombineFilePath(serverDirectory,
-                                                                                   Path.GetFileNameWithoutExtension(filePathServer),
-                                                                                   fileExtention.ToString()));
+            ResultValueOk(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
+                                                                                  Path.GetFileNameWithoutExtension(filePathServer),
+                                                                                  fileExtention.ToString()));
     }
 }

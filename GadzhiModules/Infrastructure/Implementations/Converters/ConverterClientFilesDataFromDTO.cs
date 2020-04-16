@@ -172,7 +172,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             {
                 if (fileDataSourceResponseClient.FileDataSource?.Count != 0)
                 {
-                    string filePath = _fileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
+                    string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
                     await _dialogServiceStandard.RetryOrIgnoreBoolFunction(async () =>
                             await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource),
                                                                          $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");

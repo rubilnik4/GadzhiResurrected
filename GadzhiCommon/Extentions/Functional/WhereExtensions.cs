@@ -40,6 +40,21 @@ namespace GadzhiCommon.Extentions.Functional
         }
 
         /// <summary>
+        /// Условие продолжающее действие
+        /// </summary>      
+        public static async Task<TResult> WhereContinueAsync<TSource, TResult>(this TSource @this, Func<TSource, bool> predicate,
+                                                              Func<TSource, Task<TResult>> okFunc, Func<TSource, Task<TResult>> badFunc)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            return predicate(@this) ?
+                   await okFunc.Invoke(@this) :
+                   await badFunc.Invoke(@this);
+        }
+
+        /// <summary>
         /// Обработка позитивного условия
         /// </summary>      
         public static TSource WhereOK<TSource>(this TSource @this, Func<TSource, bool> predicate, Func<TSource, TSource> okFunc) =>

@@ -15,15 +15,14 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class FileDataServer : IFileDataServer, IEquatable<FileDataServer>
     {
-        private const StatusProcessing _defaultStatusProcessing = StatusProcessing.InQueue;
-
-        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint)
-            : this(filePathServer, filePathClient, colorPrint, _defaultStatusProcessing, Enumerable.Empty<FileConvertErrorType>())
+        public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, FileConvertErrorType fileConvertErrorType)
+         : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient, fileDataServer.NonNull().ColorPrint,
+               statusProcessing, Enumerable.Empty<IFileDataSourceServer>(), new List<FileConvertErrorType>() { fileConvertErrorType })
         { }
 
-        public FileDataServer(IFileDataServer fileDataServer, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+        public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> fileConvertErrorType)
           : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient, fileDataServer.NonNull().ColorPrint,
-                _defaultStatusProcessing, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
+                statusProcessing, fileDataServer.NonNull().FileDatasSourceServer, fileConvertErrorType)
         { }
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, StatusProcessing statusProcessing,
@@ -46,6 +45,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
+            StatusProcessing = statusProcessing;
 
             FileConvertErrorTypes = filesConvertErrorType;
             FileDatasSourceServer = fileDatasSourceServer;
