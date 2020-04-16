@@ -52,6 +52,20 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         }
 
         /// <summary>
+        /// Выполнение негативного условия или возвращение положительного условия в результирующем ответе
+        /// </summary>   
+        public static IResultValue<TValue> ResultValueBad<TValue>(this IResultValue<TValue> @this, Func<TValue, TValue> badFunc)
+        {
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            if (@this == null) return null;
+            if (@this.OkStatus) return @this;
+
+            return badFunc.Invoke(@this.Value).
+                   Map(badResult => new ResultValue<TValue>(badResult));
+        }
+
+        /// <summary>
         /// Выполнение положительного условия результирующего ответа или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>   
         public static IResultValue<TValueOut> ResultValueOkBind<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,

@@ -15,22 +15,30 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class FileDataServer : IFileDataServer, IEquatable<FileDataServer>
     {
+        /// <summary>
+        /// Стартовое количество попыток конвертирования
+        /// </summary>
+        public const int AttemptingDefaultCount = 1;
+
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, FileConvertErrorType fileConvertErrorType)
-         : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient, fileDataServer.NonNull().ColorPrint,
-               statusProcessing, Enumerable.Empty<IFileDataSourceServer>(), new List<FileConvertErrorType>() { fileConvertErrorType })
-        { }
+         : this(fileDataServer, statusProcessing, new List<FileConvertErrorType>() { fileConvertErrorType }) { }
 
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> fileConvertErrorType)
-          : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient, fileDataServer.NonNull().ColorPrint,
-                statusProcessing, fileDataServer.NonNull().FileDatasSourceServer, fileConvertErrorType)
+          : this(fileDataServer, statusProcessing, fileDataServer.NonNull().FileDatasSourceServer, fileConvertErrorType) { }
+        public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing,
+                              IEnumerable<IFileDataSourceServer> fileDatasSourceServer, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+        : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient,
+               fileDataServer.NonNull().ColorPrint, statusProcessing,
+               fileDataServer.NonNull().AttemptingConvertCount, fileDatasSourceServer, fileConvertErrorType)
         { }
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, StatusProcessing statusProcessing,
                               IEnumerable<FileConvertErrorType> fileConvertErrorType)
-            : this(filePathServer, filePathClient, colorPrint, statusProcessing, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
+            : this(filePathServer, filePathClient, colorPrint, statusProcessing, AttemptingDefaultCount, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
         { }
 
-        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, StatusProcessing statusProcessing,
+        public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint,
+                              StatusProcessing statusProcessing, int attemptingConvertCount,
                               IEnumerable<IFileDataSourceServer> fileDatasSourceServer, IEnumerable<FileConvertErrorType> filesConvertErrorType)
         {
             if (String.IsNullOrWhiteSpace(filePathServer)) throw new ArgumentNullException(nameof(filePathServer));
@@ -40,12 +48,14 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             {
                 throw new KeyNotFoundException(nameof(filePathServer));
             }
+            if (attemptingConvertCount <= 0) throw new ArgumentOutOfRangeException(nameof(attemptingConvertCount));
 
             FileExtentionType = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
             StatusProcessing = statusProcessing;
+            AttemptingConvertCount = attemptingConvertCount;
 
             FileConvertErrorTypes = filesConvertErrorType;
             FileDatasSourceServer = fileDatasSourceServer;
@@ -104,7 +114,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Количество попыток конвертирования
         /// </summary>      
-        public int AttemptingConvertCount { get; set; }
+        public int AttemptingConvertCount { get; }
 
         /// <summary>
         /// Корректна ли модель
@@ -120,6 +130,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Не превышает ли количество попыток конвертирования
         /// </summary>
         public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
+
+        /// <summary>
+        /// Установить количество попыток конвертирования
+        /// </summary>       
+        public IFileDataServer SetAttemtingCount(int attemptingCount) =>
+            new FileDataServer(FilePathServer, FilePathClient, ColorPrint, StatusProcessing, 
+                               attemptingCount, FileDatasSourceServer, FileConvertErrorTypes);
 
         public override bool Equals(object obj)
         {

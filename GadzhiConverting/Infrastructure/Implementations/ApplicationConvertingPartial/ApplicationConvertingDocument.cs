@@ -40,7 +40,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Сохранить документ
         /// </summary>
         public IResultValue<IFileDataSourceServer> SaveDocument(string filePath) =>
-            ExecuteBindFileDataErrors<IDocumentLibrary, IResultValue<IDocumentLibrary>>(()
+            ExecuteBindResultValue<IDocumentLibrary, IResultValue<IDocumentLibrary>>(()
                 => new ResultValue<IDocumentLibrary>(ActiveLibrary.SaveDocument(filePath))).
             ResultValueOk(document => (IFileDataSourceServer)new FileDataSourceServer(document.FullName, FileExtention.docx));
 
@@ -48,7 +48,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Сохранить файл PDF
         /// </summary>
         public IResultCollection<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-             ExecuteBindFileDataErrors<IEnumerable<IFileDataSourceServer>, IResultCollection<IFileDataSourceServer>>(() =>
+             ExecuteBindResultValue<IEnumerable<IFileDataSourceServer>, IResultCollection<IFileDataSourceServer>>(() =>
                 CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation),
                                     new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}"));
 

@@ -69,8 +69,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOkBind(_ => CreatePdf(fileDataServer, printersInformation)).
             ResultValueOkBind(_ => CloseFile(fileDataServer.FileNameClient).ToResultValue<IEnumerable<IFileDataSourceServer>>()).
             ToResultCollection().
-            Map(result => new FileDataServer(fileDataServer.FilePathServer, fileDataServer.FilePathClient,
-                                             fileDataServer.ColorPrint, StatusProcessing.ConvertingComplete, result.Value,
+            Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
 
         /// <summary>

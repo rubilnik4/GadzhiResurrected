@@ -40,9 +40,7 @@ namespace GadzhiCommon.Extentions.Functional.Result
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>   
-        public static IResultValue<TValueOut> ResultValueOk<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
-                                                                                      Func<TValueIn, TValueOut> okFunc)
-                                                                                          
+        public static IResultValue<TValueOut> ResultValueOk<TValueIn, TValueOut>(this IResultValue<TValueIn> @this, Func<TValueIn, TValueOut> okFunc)                                                                                          
         {           
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));          
 
@@ -51,6 +49,20 @@ namespace GadzhiCommon.Extentions.Functional.Result
 
             return okFunc.Invoke(@this.Value).
                    Map(okResult => new ResultValue<TValueOut>(okResult, @this.Errors));
+        }
+
+        /// <summary>
+        /// Выполнение негативного условия или возвращение положительного условия в результирующем ответе
+        /// </summary>   
+        public static IResultValue<TValue> ResultValueBad<TValue>(this IResultValue<TValue> @this, Func<TValue, TValue> badFunc)
+        {
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            if (@this == null) return null;
+            if (@this.OkStatus) return @this;
+
+            return badFunc.Invoke(@this.Value).
+                   Map(badResult => new ResultValue<TValue>(badResult));
         }
 
         /// <summary>
@@ -82,7 +94,7 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
 
-            return ExecuteBindFileDataErrors<TValueOut, IResultValue<TValueOut>>(() => okFunc(@this.Value), errorMessage);
+            return ExecuteBindResultValue<TValueOut, IResultValue<TValueOut>>(() => okFunc(@this.Value), errorMessage);
         }      
     }
 }

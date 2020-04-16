@@ -11,14 +11,14 @@ using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 namespace GadzhiConverting.Infrastructure.Implementations
 {
     /// <summary>
-    /// Отлов ошибок и суммирование ошибок для модуля конвертации   
+    /// Отлов ошибок и их суммирование с привязкой к результирующему ответу  
     /// </summary> 
     public static class ExecuteBindHandler
     {
         /// <summary>
         /// Отлов ошибок и суммирование ошибок для модуля конвертации   
         /// </summary> 
-        public static TResult ExecuteBindFileDataErrors<T, TResult>(Func<TResult> method, IErrorCommon errorMessage = null)
+        public static TResult ExecuteBindResultValue<T, TResult>(Func<TResult> method, IErrorCommon errorMessage = null)
             where TResult: IResultValue<T>
         {
             if (method == null) throw new ArgumentNullException(nameof(method));

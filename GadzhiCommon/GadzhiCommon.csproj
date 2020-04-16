@@ -94,10 +94,13 @@
     <Compile Include="Extentions\Collection\IEnumerableExtension.cs" />
     <Compile Include="Extentions\Functional\ErrorExtension.cs" />
     <Compile Include="Extentions\Functional\ExecuteBindHandler.cs" />
+    <Compile Include="Extentions\Functional\ExecuteTaskHandler.cs" />
+    <Compile Include="Extentions\Functional\MapAsyncExtension.cs" />
     <Compile Include="Extentions\Functional\MapExtensions.cs" />
     <Compile Include="Extentions\Functional\Result\ResultCollectionExtensions.cs" />
     <Compile Include="Extentions\Functional\Result\ResultMapExtensions.cs" />
     <Compile Include="Extentions\Functional\Result\ResultWhereExtensions.cs" />
+    <Compile Include="Extentions\Functional\WhereAsyncExtensions.cs" />
     <Compile Include="Extentions\Functional\WhereExtensions.cs" />
     <Compile Include="Extentions\NullExtensions.cs" />
     <Compile Include="Extentions\StringAdditional\PathExtensions.cs" />

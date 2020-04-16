@@ -41,7 +41,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional
         /// <summary>
         /// Обработка позитивного условия
         /// </summary>      
-        public static TSource WhereOK<TSource>(this TSource @this, Func<TSource, bool> predicate, Func<TSource, TSource> okFunc) =>
+        public static TSource WhereOk<TSource>(this TSource @this, Func<TSource, bool> predicate, Func<TSource, TSource> okFunc) =>
                @this.WhereContinue(predicate, okFunc, _ => @this);
 
         /// <summary>

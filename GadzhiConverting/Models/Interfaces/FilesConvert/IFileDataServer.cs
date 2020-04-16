@@ -58,7 +58,7 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Количество попыток конвертирования
         /// </summary>      
-        int AttemptingConvertCount { get; set; }
+        int AttemptingConvertCount { get; }
 
         /// <summary>
         /// Корректна ли модель
@@ -83,6 +83,11 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }   
+        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
+
+        /// <summary>
+        /// Установить количество попыток конвертирования
+        /// </summary>       
+        IFileDataServer SetAttemtingCount(int attemptingCount);
     }
 }

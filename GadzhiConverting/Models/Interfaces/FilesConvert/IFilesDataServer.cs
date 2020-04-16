@@ -60,5 +60,10 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// Присвоить статус обработки проекта
         /// </summary>     
         IFilesDataServer SetStatusProcessingProject(StatusProcessingProject statusProcessingProject);
+
+        /// <summary>
+        /// Заменить файл после конвертирования в пакете
+        /// </summary>      
+        IFilesDataServer ChangeFileDataServer(IFileDataServer fileDataServer);
     }
 }

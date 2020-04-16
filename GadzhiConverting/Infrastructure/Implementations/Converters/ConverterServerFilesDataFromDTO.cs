@@ -48,7 +48,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                                                                                   filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServer(filesDataRequest.Id, filesDataRequest.AttemptingConvertCount,
+            return new FilesDataServer(filesDataRequest.Id, filesDataRequest.AttemptingConvertCount, StatusProcessingProject.Converting,
                                        filesDataServerToConvert);
         }
 
@@ -59,8 +59,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         {
             FileSavedCheck fileSavedCheck = await SaveFileFromDTORequest(fileDataRequest, packageGuid);
 
-            return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath,
-                                      fileDataRequest.ColorPrint, fileSavedCheck.Errors);
+            return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath, fileDataRequest.ColorPrint,
+                                      StatusProcessing.InQueue, fileSavedCheck.Errors);
         }
 
         /// <summary>

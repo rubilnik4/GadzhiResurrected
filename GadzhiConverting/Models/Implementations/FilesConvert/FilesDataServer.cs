@@ -1,5 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extentions;
 using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -16,6 +17,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class FilesDataServer : IFilesDataServer
     {
+        public FilesDataServer(IFilesDataServer filesDataServer, IEnumerable<IFileDataServer> fileDatasServer)
+            : this(filesDataServer.NonNull().Id, filesDataServer.NonNull().AttemptingConvertCount,
+                  filesDataServer.NonNull().StatusProcessingProject, fileDatasServer)
+        { }
+
         public FilesDataServer(Guid id, int attemptingConvertCount, StatusProcessingProject statusProcessingProject,
                                IEnumerable<IFileDataServer> fileDatasServer)
         {
@@ -72,13 +78,23 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public IFilesDataServer SetErrorToAllFiles() =>
             FileDatasServer.Select(fileData => new FileDataServer(fileData, StatusProcessing.ConvertingComplete,
                                                                   FileConvertErrorType.UnknownError)).
-            Map(fileDatas => new FilesDataServer(Id, AttemptingConvertCount, StatusProcessingProject, fileDatas));       
+            Map(fileDatas => new FilesDataServer(Id, AttemptingConvertCount, StatusProcessingProject, fileDatas));
 
         /// <summary>
         /// Присвоить статус обработки проекта
         /// </summary>     
         public IFilesDataServer SetStatusProcessingProject(StatusProcessingProject statusProcessingProject) =>
-            new FilesDataServer(Id, AttemptingConvertCount, statusProcessingProject, FileDatasServer);    
+            statusProcessingProject != StatusProcessingProject ?
+            new FilesDataServer(Id, AttemptingConvertCount, statusProcessingProject, FileDatasServer) :
+            this;
 
+        /// <summary>
+        /// Заменить файл после конвертирования в пакете
+        /// </summary>      
+        public IFilesDataServer ChangeFileDataServer(IFileDataServer fileDataServer) =>
+            FileDatasServer.
+            Where(fileData => fileData != fileDataServer).
+            Append(fileDataServer).
+            Map(fileDatas => new FilesDataServer(this, fileDatas));
     }
 }

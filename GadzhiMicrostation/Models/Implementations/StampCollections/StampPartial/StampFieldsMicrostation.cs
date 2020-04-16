@@ -70,7 +70,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                         return element.AsTextElementMicrostation.CompressRange();                      
                     case ElementMicrostationType.TextNodeElement:
                         return element.AsTextNodeElementMicrostation.CompressRange().
-                               WhereOK(isCompressed => isCompressed,
+                               WhereOk(isCompressed => isCompressed,
                                okFunc: isCompressed => { StampCellElement.FindAndChangeSubElement(element); 
                                                          return isCompressed; });                       
                     default:

@@ -113,7 +113,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             signatureCell.Origin.
             Subtract(signatureCell.Range.LowLeftPoint).
             Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow).
-            WhereOK(_ => isVertical,
+            WhereOk(_ => isVertical,
                 okFunc: originMinusLowLeft => originMinusLowLeft.AddX(signatureRange.Width)).
             Map(originMinusLowLeft => (ICellElementMicrostation)signatureCell.Move(originMinusLowLeft));
 

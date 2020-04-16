@@ -1,4 +1,5 @@
 ﻿using ChannelAdam.ServiceModel;
+using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
@@ -14,6 +15,9 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
+using static GadzhiCommon.Extentions.Functional.ExecuteTaskHandler;
+using GadzhiCommon.Extentions.Functional.Result;
+using System.Linq;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -131,12 +135,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать пакет
         /// </summary>
-        private Task ConvertingPackage(IFilesDataServer filesDataServer) =>
-            filesDataServer.
+        private async Task ConvertingPackage(IFilesDataServer filesDataServer) =>
+            await filesDataServer.
             WhereContinueAsync(fileData => fileData.IsValid,
-                okFunc: fileData => ConvertingFilesData(fileData),
+                okFunc: fileData => fileData.
+                                    Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {fileData.Id}")).
+                                    Map(_ => ConvertingFilesData(fileData)).
+                                    MapAsync(fileDataConverted => ReplyPackageIsComplete(fileDataConverted)),
                 badFunc: fileData => Task.FromResult(ReplyPackageIsInvalid(filesDataServer))).
-            VoidAwait(async fileData => await SendResponse(fileData));
+            VoidAsync(async fileData => await SendResponse(fileData));
 
         /// <summary>
         /// Сообщить о пустом/некорректном пакете
@@ -149,7 +156,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             }
             if (!filesDataServer.IsValidByAttemptingCount)
             {
-                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования пакета");
+                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования пакета"));
             }
             return filesDataServer.SetErrorToAllFiles().
                    SetStatusProcessingProject(StatusProcessingProject.Error);
@@ -160,18 +167,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private IFilesDataServer ReplyPackageIsComplete(IFilesDataServer filesDataServer) =>
             filesDataServer.
-            WhereOK(fileData => fileData.IsCompleted,
+            WhereOk(fileData => fileData.IsCompleted,
                 okFunc: fileData => fileData.SetStatusProcessingProject(StatusProcessingProject.ConvertingComplete));
-       
+
         /// <summary>
         /// Отправить промежуточный отчет
         /// </summary>
-        private async Task<IFilesDataServer> SendIntermediateResponse(IFilesDataServer filesDataServer)
-        {
-            var filesDataIntermediateResponse = _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer);
-            filesDataServer.StatusProcessingProject = await _fileConvertingServerService.Operations.
-                                                      UpdateFromIntermediateResponse(filesDataIntermediateResponse);
-        }
+        private async Task<IFilesDataServer> SendIntermediateResponse(IFilesDataServer filesDataServer) =>
+            await _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer).
+            MapAsync(feliDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(feliDataRequest)).
+            MapAsync(statusProcessingProject => filesDataServer.SetStatusProcessingProject(statusProcessingProject));
 
         /// <summary>
         /// Отправить окончательный ответ
@@ -209,25 +214,27 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать пакет
         /// </summary>
-        private async Task<IFilesDataServer> ConvertingFilesData(IFilesDataServer filesDataServer)
-        {
-            _messagingService.ShowAndLogMessage($"Конвертация пакета {filesDataServer.Id}");
-
-            foreach (var fileData in filesDataServer.FileDatasServer)
-            {
-                if (!filesDataServer.IsCompleted) //если пользователь не прервал процесс
-                {
-                    while (!filesDataServer.IsCompleted && !fileData.IsCompleted && fileData.IsValidByAttemptingCount)
-                    {
-                        await ExecuteAndHandleErrorAsync(() => _convertingFileData.Converting(fileData),
-                                                         () => fileData.AttemptingConvertCount += 1);
-                    }
-                    await SendIntermediateResponse(filesDataServer);
-                }
-            }            
-
-            return ReplyPackageIsComplete(filesDataServer);
-        }
+        private async Task<IFilesDataServer> ConvertingFilesData(IFilesDataServer filesDataServer) =>
+            await filesDataServer.FileDatasServer.
+            Where(fileData => !filesDataServer.IsCompleted && !fileData.IsCompleted).
+            FirstOrDefault().
+            Map(fileData => new ResultValue<IFileDataServer>(fileData)).
+            ResultValueOk(fileData => ConvertingByCountLimit(fileData).
+                                      MapAsync(fileDataConverted => filesDataServer.ChangeFileDataServer(fileDataConverted)).
+                                      BindAsync(filesDataChanged => SendIntermediateResponse(filesDataChanged)).
+                                      BindAsync(filesDataSent => ConvertingFilesData(filesDataSent))).          
+            Value;
+       
+        /// <summary>
+        /// Конвертировать файл до превышения лимита
+        /// </summary>       
+        private async Task<IFileDataServer> ConvertingByCountLimit(IFileDataServer fileDataServer) =>
+            await fileDataServer.WhereOkAsync(fileData => !fileData.IsCompleted,
+                okFunc: fileData =>
+                        ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData)).
+                        ResultValueBad(fileDataTask => new Task<IFileDataServer>(() => fileData.SetAttemtingCount(fileData.AttemptingConvertCount))).
+                        ResultValueBad(fileDataTask => fileDataTask.VoidAsync(async fileDataVoid => await ConvertingByCountLimit(fileDataVoid))).
+                        Value);
 
         /// <summary>
         /// Сообщить об отсутсвии пакетов на конвертирование

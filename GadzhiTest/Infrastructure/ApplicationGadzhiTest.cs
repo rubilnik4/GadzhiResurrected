@@ -67,10 +67,6 @@ namespace GadzhiTest
                          .Returns(true);
             mockFileSeach.Setup(fileSeach => fileSeach.IsFileExist(It.IsAny<string>()))
                          .Returns(true);
-            mockFileSeach.Setup(fileSeach => fileSeach.IsDirectory(It.IsAny<string>()))
-                         .Returns<string>(path => fileSeachImplementation.IsDirectory(path));
-            mockFileSeach.Setup(fileSeach => fileSeach.IsFile(It.IsAny<string>()))
-                         .Returns<string>(path => fileSeachImplementation.IsFile(path));
             mockFileSeach.Setup(fileSeach => fileSeach.GetDirectories(It.IsAny<string>()))
                          .Returns(subDirectoryPath);
             mockFileSeach.Setup(fileSeach => fileSeach.GetFiles(subfolderGetFiles))
