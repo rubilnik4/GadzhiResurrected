@@ -44,7 +44,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             if (String.IsNullOrWhiteSpace(filePathServer)) throw new ArgumentNullException(nameof(filePathServer));
             if (String.IsNullOrWhiteSpace(filePathClient)) throw new ArgumentNullException(nameof(filePathClient));
             string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
-            if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
+            if (!ValidFileExtentions.DocAndDgnFileTypes.Keys(fileType))
             {
                 throw new KeyNotFoundException(nameof(filePathServer));
             }

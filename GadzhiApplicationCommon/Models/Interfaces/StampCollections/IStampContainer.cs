@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +14,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Список штампов
         /// </summary>
-        IEnumerable<IStamp> Stamps { get; }
-        
-        /// <summary>
-        /// Получить список всех строк с подписями во всех штампах
-        /// </summary>     
-       // IEnumerable<IStampPersonSignature<TField>> GetStampPersonSignatures();
-
-        /// <summary>
-        /// Корретность загрузки штампов
-        /// </summary>
-        bool IsValid { get; }
+        IResultAppCollection<IStamp> Stamps { get; }
     }
 }

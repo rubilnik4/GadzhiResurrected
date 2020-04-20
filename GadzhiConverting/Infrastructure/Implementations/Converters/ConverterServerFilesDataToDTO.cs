@@ -37,7 +37,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 {
                     Id = filesDataServer.Id,
                     StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                    FileDatas = filesDataServer.FileDatasServerConverting?.Select(fileDataServer =>
+                    FileDatas = filesDataServer.FileDatasServer?.Select(fileDataServer =>
                                 ConvertFileToIntermediateResponse(fileDataServer)).ToList(),
                 };
             }
@@ -52,7 +52,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>          
         public async Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServer filesDataServer)
         {
-            var filesDataToResponseTasks = filesDataServer?.FileDatasServerConverting?.Select(fileDataServer =>
+            var filesDataToResponseTasks = filesDataServer?.FileDatasServer?.Select(fileDataServer =>
                                                             ConvertFileResponse(fileDataServer));
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 

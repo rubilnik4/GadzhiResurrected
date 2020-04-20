@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Создать пдф по координатам и формату
         /// </summary>
         public IResultApplication PrintStamp(IStamp stampContainer, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
-            new ResultValue<IStamp>(stampContainer, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден")).
+            new ResultAppValue<IStamp>(stampContainer, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден")).
             ResultContinue(stamp => stamp is IStampMicrostation,
                 okFunc: stamp => (IStampMicrostation)stamp,
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
@@ -56,7 +56,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Установить границы печати по рамке
         /// </summary>
         private IResultApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint) =>
-            new ResultValue<RangeMicrostation>(rangeToPrint, new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно")).
+            new ResultAppValue<RangeMicrostation>(rangeToPrint, new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно")).
             ResultValueOk(rangePrint => rangeToPrint.ToPointsMicrostation().
                                         Select(point => point.ToPoint3d()).
                                         ToArray()).
@@ -119,11 +119,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Получить формат принтера по формату штампа
         /// </summary>      
-        private IResultValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+        private IResultAppValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
             new PageSettings().
             Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>()).
             FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize)).
-            Map(paperSize => new ResultValue<string>(paperSize?.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
+            Map(paperSize => new ResultAppValue<string>(paperSize?.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
                                                                                                    $"Формат печати {drawSize} не найден")));
 
         /// <summary>

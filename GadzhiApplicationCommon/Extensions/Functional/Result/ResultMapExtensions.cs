@@ -15,7 +15,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнить действие при положительном условии, вернуть результирующий ответ
         /// </summary>      
-        public static IResultValue<TValue> ResultVoidOk<TValue>(this IResultValue<TValue> @this, Action<TValue> action)
+        public static IResultAppValue<TValue> ResultVoidOk<TValue>(this IResultAppValue<TValue> @this, Action<TValue> action)
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
 

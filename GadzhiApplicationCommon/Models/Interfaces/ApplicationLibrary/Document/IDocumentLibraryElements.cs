@@ -12,8 +12,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
     public interface IDocumentLibraryElements
     {
         /// <summary>
-        /// Найти таблицы в документе
-        /// </summary>
-        IEnumerable<IStamp> FindStamps();
+        /// Найти все штампы во всех моделях и листах
+        /// </summary>       
+        IStampContainer StampContainer { get; }
     }
 }

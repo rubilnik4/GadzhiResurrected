@@ -22,7 +22,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation dateChange,
                                                 string personId, string personName,
-                                                Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                                Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : base(insertSignatureFunc)
         {
             if (String.IsNullOrEmpty(personId)) throw new ArgumentNullException(nameof(personId));

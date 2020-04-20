@@ -36,7 +36,7 @@ namespace GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections
         /// <summary>
         /// Подпись. Элемент
         /// </summary>
-        IResultValue<ICellElementMicrostation> SignatureElement { get; }
+        IResultAppValue<ICellElementMicrostation> SignatureElement { get; }
 
         /// <summary>
         /// Дата изменения. Элемент

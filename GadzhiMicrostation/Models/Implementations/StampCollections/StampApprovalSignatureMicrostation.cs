@@ -20,7 +20,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     {
         public StampApprovalSignatureMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
                                                   IStampFieldMicrostation dateSignature,
-                                                  Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                                  Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : base(insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));

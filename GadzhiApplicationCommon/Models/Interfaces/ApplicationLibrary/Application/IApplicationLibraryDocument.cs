@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,39 +13,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
     public interface IApplicationLibraryDocument
     {
         /// <summary>
-        /// Текущий документ
-        /// </summary>
-        IDocumentLibrary ActiveDocument { get; }
-
-        /// <summary>
-        /// Загрузился ли файл
-        /// </summary>
-        bool IsDocumentValid { get; }
-
-        /// <summary>
         /// Открыть документ
         /// </summary>
-        IDocumentLibrary OpenDocument(string filePath);
-
-        /// <summary>
-        /// Сохранить документ
-        /// </summary>
-        IDocumentLibrary SaveDocument(string filePath);
-
-        /// <summary>
-        /// Экспорт документа
-        /// </summary>
-        string ExportDocument(string filePath);
-
-        /// <summary>
-        /// Сохранить и закрыть файл
-        /// </summary>
-        void CloseAndSaveDocument();
-
-        /// <summary>
-        /// Закрыть файл
-        /// </summary>
-        void CloseDocument();       
+        IResultAppValue<IDocumentLibrary> OpenDocument(string filePath);
     }
-
 }

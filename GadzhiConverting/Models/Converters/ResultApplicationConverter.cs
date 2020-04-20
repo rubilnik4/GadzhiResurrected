@@ -27,14 +27,24 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать результирующий ответ модуля со значением конвертации в основной
         /// </summary>      
-        public static GadzhiCommon.Models.Interfaces.Errors.IResultValue<TResult> ToResultValue<TApplication, TResult>(GadzhiApplicationCommon.Models.Interfaces.Errors.IResultValue<TApplication> resultApplicationValue,
-                                                                                 Func<TApplication, TResult> converterValue)
+        public static IResultValue<TValue> ToResultValue<TValue>(IResultAppValue<TValue> resultApplicationValue)
         {
             if (resultApplicationValue == null) throw new ArgumentNullException(nameof(resultApplicationValue));
-            if (converterValue == null) throw new ArgumentNullException(nameof(converterValue));
 
             return resultApplicationValue.
-            Map(result => new ResultValue<TResult>(converterValue(result.Value), result.Errors.ToErrorsConverting()));
+            Map(result => new ResultValue<TValue>(result.Value, result.Errors.ToErrorsConverting()));
+        }
+
+        /// <summary>
+        /// Преобразовать результирующий ответ модуля конвертации с коллекцией в основной
+        /// </summary>      
+        public static IResultCollection<TValue> ToResultCollection<TValue>(IResultAppCollection<TValue> resultApplicationCollection)
+        {
+            if (resultApplicationCollection == null) throw new ArgumentNullException(nameof(resultApplicationCollection));
+
+            return resultApplicationCollection.
+            Map(result => new ResultCollection<TValue>(result.Value.Select(value => value), 
+                                                       result.Errors.ToErrorsConverting()));
         }
     }
 }

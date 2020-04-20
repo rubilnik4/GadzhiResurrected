@@ -7,18 +7,17 @@ using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
-using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Implementations.FilesConvert;
-using GadzhiConverting.Models.Interfaces;
 using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiConverting.Extensions;
 using static GadzhiConverting.Infrastructure.Implementations.ExecuteBindHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -32,32 +31,46 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         public IResultValue<IDocumentLibrary> OpenDocument(string filePath) =>
             IsDocumentValid(filePath).
-            ResultValueOkBind(extension => SetActiveLibraryByExtension(extension)).
-            ResultValueOkTry(activeLibrary => new ResultValue<IDocumentLibrary>(activeLibrary.OpenDocument(filePath)),
+            ResultValueOkBind(extension => GetActiveLibraryByExtension(extension)).
+            ResultValueOkTry(activeLibrary => activeLibrary.OpenDocument(filePath).ToResultValueFromApplication(),
                              new ErrorCommon(FileConvertErrorType.FileNotOpen, $"Ошибка открытия файла {filePath}"));
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public IResultValue<IFileDataSourceServer> SaveDocument(string filePath) =>
-            ExecuteBindResultValue<IDocumentLibrary, IResultValue<IDocumentLibrary>>(()
-                => new ResultValue<IDocumentLibrary>(ActiveLibrary.SaveDocument(filePath))).
-            ResultValueOk(document => (IFileDataSourceServer)new FileDataSourceServer(document.FullName, FileExtention.docx));
+        public IResultValue<IFileDataSourceServer> SaveDocument(IResultValue<IDocumentLibrary> documentLibrary, string filePath, 
+                                                                FileExtention fileExtention) =>
+            documentLibrary.
+            ResultValueOkBind(document => ExecuteAndHandleError(() => document.SaveAs(filePath),
+                                      errorMessage: new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла{filePath}"))).
+            ResultValueOk(_ => (IFileDataSourceServer)new FileDataSourceServer(filePath, fileExtention));
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IResultCollection<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
+        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IResultValue<IDocumentLibrary> documentLibrary, string filePath, 
+                                                                      ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
              ExecuteBindResultValue<IEnumerable<IFileDataSourceServer>, IResultCollection<IFileDataSourceServer>>(() =>
-                CreatePdfInDocument(filePath, colorPrint, pdfPrinterInformation),
+                CreatePdfInDocument(documentLibrary, filePath, colorPrint, pdfPrinterInformation),
                                     new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}"));
 
         /// <summary>
+        /// Экпортировать файл
+        /// </summary>
+        public IResultValue<IFileDataSourceServer> CreateExportFile(IResultValue<IDocumentLibrary> documentLibrary, string filePath) =>
+            documentLibrary.
+            ResultValueOkBind(document => ExecuteAndHandleError(() => document.Export(filePath),
+                                          errorMessage: new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка экспорта файла {filePath}"))).
+            ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(fileExportPath,));
+     
+        /// <summary>
         /// Закрыть файл
         /// </summary>
-        public IResultError CloseDocument() =>
-             ExecuteAndHandleError(() => ActiveLibrary.CloseAndSaveDocument(),
-                    errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved,$"Ошибка закрытия файла {ActiveLibrary.ActiveDocument.FullName}"));           
+        public IResultError CloseDocument(IResultValue<IDocumentLibrary> documentLibrary) =>
+            documentLibrary.
+            ResultValueOk(document => ExecuteAndHandleError(() => document.CloseWithSaving(),
+                          errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка закрытия файла {document.FullName}"))).
+            ToResult();
 
         /// <summary>
         /// Проверить корректность файла. Записать ошибки

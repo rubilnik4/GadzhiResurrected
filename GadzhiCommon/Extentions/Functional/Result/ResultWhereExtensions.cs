@@ -86,8 +86,8 @@ namespace GadzhiCommon.Extentions.Functional.Result
         /// Выполнение положительного условия результирующего ответа или возвращение предыдущей ошибки в результирующем ответе с обработкой ошибок
         /// </summary>   
         public static IResultValue<TValueOut> ResultValueOkTry<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
-                                                                                              Func<TValueIn, IResultValue<TValueOut>> okFunc,
-                                                                                              IErrorCommon errorMessage = null)
+                                                                                    Func<TValueIn, IResultValue<TValueOut>> okFunc,
+                                                                                    IErrorCommon errorMessage = null)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 

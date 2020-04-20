@@ -1,6 +1,10 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -14,16 +18,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Список штампов
         /// </summary>
-        public IEnumerable<IStamp> Stamps { get; }
+        public IResultAppCollection<IStamp> Stamps { get; }
 
-        public StampContainer(IEnumerable<IStamp> stamps)
+        public StampContainer(IEnumerable<IStamp> stamps, string filePath)
         {
-            Stamps = stamps;
+            Stamps = new ResultAppCollection<IStamp>(stamps,
+                            new ErrorApplication(ErrorApplicationType.StampNotFound, $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
         }
-
-        /// <summary>
-        /// Корретность загрузки штампов
-        /// </summary>
-        public bool IsValid => Stamps != null;       
     }
 }

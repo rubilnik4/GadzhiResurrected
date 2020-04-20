@@ -7,6 +7,7 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,14 +51,25 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         }
 
         /// <summary>
-        /// Текущий использумый модуль конвертации
-        /// </summary>
-        private IApplicationLibrary ActiveLibrary { get; set; }
+        /// Выбрать библиотеку конвертации по типу расширения
+        /// </summary>        
+        public FileExtention GetExportFileExtension(FileExtention fileExtentionMain)
+        {
+            switch (fileExtentionMain)
+            {
+                case FileExtention.dgn:
+                    return FileExtention.dwg;
+                case FileExtention.docx:
+                    return FileExtention.docx;
+                default:
+                    throw new InvalidEnumArgumentException("Расширение экспортируемого файла не задано");
+            }
+        }
 
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        private IResultValue<IApplicationLibrary> SetActiveLibraryByExtension(FileExtention fileExtention)
+        private IResultValue<IApplicationLibrary> GetActiveLibraryByExtension(FileExtention fileExtention)
         {
             switch (fileExtention)
             {
@@ -69,6 +81,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                     return new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtention} не найдена").
                            ToResultValue<IApplicationLibrary>();
             }
-        }
+        }      
     }
 }

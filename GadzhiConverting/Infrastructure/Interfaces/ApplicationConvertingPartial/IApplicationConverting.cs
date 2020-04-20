@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,9 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
     /// </summary>
     public interface IApplicationConverting: IApplicationConvertingDocument
     {
-       
+        /// <summary>
+        /// Выбрать библиотеку конвертации по типу расширения
+        /// </summary>        
+        FileExtention GetExportFileExtension(FileExtention fileExtentionMain);
     }
 }

@@ -102,10 +102,10 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Преобразовать строку в диапазон
         /// </summary>    
-        public static IResultValue<RangeMicrostation> StringToRange(string rangeInString) =>
+        public static IResultAppValue<RangeMicrostation> StringToRange(string rangeInString) =>
             StampSettingsMicrostation.SeparateAttributeValue(rangeInString).
             WhereContinue(rangeListString => ValidateRangeString(rangeListString),
-                okFunc: rangeListString => new ResultValue<IList<string>>(rangeListString),
+                okFunc: rangeListString => new ResultAppValue<IList<string>>(rangeListString),
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.RangeNotValid, "Некорректный диапазон координат из атрибутов").
                               ToResultApplicationValue<IList<string>>()).
             ResultValueOk(rangeListString => rangeListString.

@@ -36,5 +36,18 @@ namespace GadzhiMicrostation.Extentions.Microstation
                 yield return (Element)elementEnumerator.Current;
             }
         }
+
+        /// <summary>
+        /// Получить список моделей
+        /// </summary>
+        public static IEnumerable<ModelReference> ToIEnumerable(this ModelReferences modelReferences)
+        {
+            if (modelReferences == null) yield break;
+
+            foreach (ModelReference model in modelReferences)
+            {
+                yield return model;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiWord.Word.Implementations.Converters;
 using GadzhiWord.Word.Interfaces;
@@ -29,8 +30,10 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
 
         public DocumentWord(Document document, IApplicationWord applicationWord)
         {
-            _document = document;
-            ApplicationWord = applicationWord;
+            _document = document ?? throw new ArgumentNullException(nameof(document));
+            ApplicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
+
+            StampContainer = new StampContainer(FindStamps(), document.FullName);
         }
 
         /// <summary>

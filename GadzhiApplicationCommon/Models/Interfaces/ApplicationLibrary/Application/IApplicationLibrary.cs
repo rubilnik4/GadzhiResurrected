@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
     /// <summary>
     /// Класс для работы с приложениями
     /// </summary>
-    public interface IApplicationLibrary: IApplicationLibraryDocument, IApplicationLibraryPrinting, IApplicationLibraryStamp
+    public interface IApplicationLibrary: IApplicationLibraryDocument, IApplicationLibraryPrinting
     {  
         /// <summary>
         /// Загрузилась ли оболочка приложения

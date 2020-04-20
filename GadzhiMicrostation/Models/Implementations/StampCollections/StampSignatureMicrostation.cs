@@ -21,9 +21,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Функция вставки подписи
         /// </summary>
-        private readonly Func<string, IResultValue<IStampFieldMicrostation>> _insertSignatureFunc;
+        private readonly Func<string, IResultAppValue<IStampFieldMicrostation>> _insertSignatureFunc;
 
-        public StampSignatureMicrostation(Func<string, IResultValue<IStampFieldMicrostation>> insertSignatureFunc)
+        public StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
         {
             _insertSignatureFunc = insertSignatureFunc;
             SignatureInitialize();
@@ -38,12 +38,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Подпись
         /// </summary>
-        public override IResultValue<IStampFieldMicrostation> Signature { get; protected set; }
+        public override IResultAppValue<IStampFieldMicrostation> Signature { get; protected set; }
 
         /// <summary>
         /// Подпись. Элемент
         /// </summary>
-        public IResultValue<ICellElementMicrostation> SignatureElement =>
+        public IResultAppValue<ICellElementMicrostation> SignatureElement =>
             Signature.ResultValueOk(signature => signature.ElementStamp.AsCellElementMicrostation);
 
         /// <summary>

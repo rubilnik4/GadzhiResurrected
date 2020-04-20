@@ -20,7 +20,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     {
         public StampSignatureWord(IStampFieldWord signature, string signaturePath)
         {
-            Signature = new ResultValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+            Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                         "Подпись не инициализирована"));
             SignaturePath = signaturePath ?? throw new ArgumentNullException(nameof(signaturePath));
         }
@@ -33,7 +33,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Подпись
         /// </summary>
-        public override IResultValue<IStampFieldWord> Signature { get; protected set; }
+        public override IResultAppValue<IStampFieldWord> Signature { get; protected set; }
 
         /// <summary>
         /// Установлена ли подпись

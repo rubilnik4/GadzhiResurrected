@@ -8,6 +8,9 @@ using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using System.IO;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiMicrostation.Extentions.Microstation;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -28,8 +31,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
 
         public DocumentMicrostation(DesignFile designFile, IApplicationMicrostation applicationMicrostation)
         {
-            _designFile = designFile;
-            ApplicationMicrostation = applicationMicrostation;
+            _designFile = designFile ?? throw new ArgumentNullException(nameof(designFile));
+            ApplicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
+
+            ModelsMicrostation = GetModelsMicrostation();
+            StampContainer = new StampContainer(FindStamps(ModelsMicrostation), designFile.FullName);
         }
 
         /// <summary>
@@ -45,18 +51,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
-        public IList<IModelMicrostation> ModelsMicrostation
-        {
-            get
-            {
-                List<IModelMicrostation> modelsMicrostation = new List<IModelMicrostation>();
-                foreach (ModelReference model in _designFile.Models)
-                {
-                    modelsMicrostation.Add(new ModelMicrostation(model, ApplicationMicrostation));
-                }
-                return modelsMicrostation;
-            }
-        }       
+        public IList<IModelMicrostation> ModelsMicrostation { get; }
 
         /// <summary>
         /// Сохранить файл
@@ -80,23 +75,23 @@ namespace GadzhiMicrostation.Microstation.Implementations
         {
             Save();
             Close();
-        }       
+        }
 
         /// <summary>
-        /// Экспорт файла в другие форматы
+        /// Экспорт файла в Dwg
         /// </summary>      
-        public string Export(string filePath) => CreateDwgFile(filePath);       
+        public string Export(string filePath) =>
+           (Path.GetFileNameWithoutExtension(filePath) + "." + FileExtentionMicrostation.dwg.ToString()).
+           Map(fileName => Path.Combine(Path.GetDirectoryName(filePath), fileName)).
+           Void(dwgFilePath => _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));       
 
         /// <summary>
-        /// Создать файл типа DWG
-        /// </summary>
-        private string CreateDwgFile(string filePath)
-        {
-            string fileName = Path.GetFileNameWithoutExtension(filePath) + "." + FileExtentionMicrostation.dwg.ToString();
-            string dwgFilePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
-            _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG);
-            
-            return dwgFilePath;
-        } 
+        /// Получить модели в текущем файле
+        /// </summary>       
+        private IList<IModelMicrostation> GetModelsMicrostation() =>
+            _designFile.Models.ToIEnumerable().
+            Select(model => new ModelMicrostation(model, ApplicationMicrostation)).
+            Cast<IModelMicrostation>().
+            ToList();
     }
 }

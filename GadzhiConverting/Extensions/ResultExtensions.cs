@@ -24,10 +24,15 @@ namespace GadzhiConverting.Extensions
           ResultApplicationConverter.ToResult(resultApplication);
 
         /// <summary>
-        /// Преобразовать результирующий ответ модуля со значением  конвертации в основной
+        /// Преобразовать результирующий ответ модуля конвертации со значением в основной
         /// </summary>      
-        public static GadzhiCommon.Models.Interfaces.Errors.IResultValue<TResult> ToResultValueFromApplication<TApplication, TResult>(this GadzhiApplicationCommon.Models.Interfaces.Errors.IResultValue<TApplication> resultApplication,
-                                                                                                Func<TApplication, TResult> converterValue) =>
-          ResultApplicationConverter.ToResultValue(resultApplication, converterValue);
+        public static IResultValue<TValue> ToResultValueFromApplication<TValue>(this IResultAppValue<TValue> resultApplication) =>
+          ResultApplicationConverter.ToResultValue(resultApplication);
+
+        /// <summary>
+        /// Преобразовать результирующий ответ модуля конвертации с коллекцией в основной
+        /// </summary>      
+        public static IResultCollection<TValue> ToResultCollectionFromApplication<TValue>(this IResultAppCollection<TValue> resultApplication) =>
+          ResultApplicationConverter.ToResultCollection(resultApplication);
     }
 }

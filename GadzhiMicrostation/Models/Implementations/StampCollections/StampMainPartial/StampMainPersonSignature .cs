@@ -46,7 +46,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>  
-        private Func<string, IResultValue<IStampFieldMicrostation>> InsertPersonSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
+        private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertPersonSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
                                                                                                      IElementMicrostation dateSignatureElement) =>
             (string personId) =>
                 InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation).

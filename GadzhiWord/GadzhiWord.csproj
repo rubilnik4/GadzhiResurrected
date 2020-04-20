@@ -142,7 +142,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordStamp.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWord.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordDocument.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordPrinting.cs" />

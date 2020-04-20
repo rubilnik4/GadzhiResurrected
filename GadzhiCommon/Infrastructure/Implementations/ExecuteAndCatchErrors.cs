@@ -17,22 +17,22 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public static IResultError ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
+        public static IResultValue<T> ExecuteAndHandleError<T>(Func<T> method, Action applicationBeforeMethod = null,
                                                     Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
                                                     IErrorCommon errorMessage = null)
         {
-            IResultError result = new ResultError();
+            IResultValue<T> result = default;
 
             try
             {
                 applicationBeforeMethod?.Invoke();
-                method?.Invoke();
+                result = new ResultValue<T>(method.Invoke());
             }
             catch (Exception ex)
             {
                 applicationCatchMethod?.Invoke();
                 result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
-                         ToResult().
+                         ToResultValue<T>().
                          ConcatErrors(errorMessage);
             }
             finally

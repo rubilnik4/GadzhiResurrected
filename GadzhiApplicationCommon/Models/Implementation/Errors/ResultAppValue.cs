@@ -10,12 +10,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
     /// <summary>
     /// Базовый вариант ответа
     /// </summary>
-    public class ResultValue<TValue> : IResultValue<TValue>
+    public class ResultAppValue<TValue> : IResultAppValue<TValue>
     {
-        public ResultValue(IErrorApplication error)
+        public ResultAppValue(IErrorApplication error)
            : this(error.AsEnumerable()) { }
 
-        public ResultValue(IEnumerable<IErrorApplication> errors)
+        public ResultAppValue(IEnumerable<IErrorApplication> errors)
         {
             if (errors == null) throw new ArgumentNullException(nameof(errors));
             if (!ValidateCollection(errors)) throw new NullReferenceException(nameof(errors));
@@ -23,10 +23,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             Errors = errors;
         }
 
-        public ResultValue(TValue value, IErrorApplication errorNull = null)
+        public ResultAppValue(TValue value, IErrorApplication errorNull = null)
           : this(value, Enumerable.Empty<IErrorApplication>(), errorNull) { }
 
-        public ResultValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
+        public ResultAppValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
             : this(errors)
         {
             if (value == null && errorNull != null)
@@ -64,9 +64,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Добавить ошибку
         /// </summary>      
-        public IResultValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
+        public IResultAppValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
             errors != null && ValidateCollection(errors) ?
-            new ResultValue<TValue>(Value, Errors.Union(errors)) :
+            new ResultAppValue<TValue>(Value, Errors.Union(errors)) :
             this;
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        public IResultValue<TValue> ExecuteLazy() => new ResultValue<TValue>(Value, Errors.ToList());
+        public IResultAppValue<TValue> ExecuteLazy() => new ResultAppValue<TValue>(Value, Errors.ToList());
 
         /// <summary>
         /// Проверить ошибки на корретность

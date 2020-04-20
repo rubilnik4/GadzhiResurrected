@@ -70,7 +70,6 @@
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationCommands.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationDocument.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationPrinting.cs" />
-    <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostationStamp.cs" />
     <Compile Include="Microstation\Implementations\DocumentMicrostationPartial\DocumentMicrostationElements.cs" />
     <Compile Include="Microstation\Implementations\Elements\LibraryElement.cs" />
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />

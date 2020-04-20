@@ -26,17 +26,22 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        IResultValue<IFileDataSourceServer> SaveDocument(string filePath);
-
+        IResultValue<IFileDataSourceServer> SaveDocument(IResultValue<IDocumentLibrary> documentLibrary, string filePath, FileExtention fileExtention);
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        IResultCollection<IFileDataSourceServer> CreatePdfFile(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
+        IResultCollection<IFileDataSourceServer> CreatePdfFile(IResultValue<IDocumentLibrary> documentLibrary, string filePath,
+                                                               ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
+
+        /// <summary>
+        /// Экпортировать файл
+        /// </summary>
+        IResultValue<IFileDataSourceServer> CreateExportFile(IResultValue<IDocumentLibrary> documentLibrary, string filePath, FileExtention fileExtention);
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        IResultError CloseDocument();
+        IResultError CloseDocument(IResultValue<IDocumentLibrary> documentLibrary);
     }
 }

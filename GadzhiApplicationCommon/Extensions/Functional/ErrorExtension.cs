@@ -21,7 +21,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional
         /// <summary>
         /// Преобразовать коллекцию ошибок в результирующий ответ с параметром
         /// </summary>       
-        public static IResultValue<TValue> ToResultApplicationValue<TValue>(this IEnumerable<IErrorApplication> @this) =>
-            new ResultValue<TValue>(@this);
+        public static IResultAppValue<TValue> ToResultApplicationValue<TValue>(this IEnumerable<IErrorApplication> @this) =>
+            new ResultAppValue<TValue>(@this);
     }
 }

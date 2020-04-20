@@ -62,7 +62,8 @@
     <Compile Include="Models\Enums\StampType.cs" />
     <Compile Include="Models\Implementation\Errors\ErrorApplication.cs" />
     <Compile Include="Models\Implementation\Errors\ResultApplication.cs" />
-    <Compile Include="Models\Implementation\Errors\ResultApplicationValue.cs" />
+    <Compile Include="Models\Implementation\Errors\ResultAppValue.cs" />
+    <Compile Include="Models\Implementation\Errors\ResultAppCollection.cs" />
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampField.cs" />
@@ -70,12 +71,12 @@
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryPrinting.cs" />
-    <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryStamp.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Document\IDocumentLibraryElements.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Document\IDocumentLibrary.cs" />
     <Compile Include="Models\Interfaces\Errors\IErrorApplication.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultApplication.cs" />
-    <Compile Include="Models\Interfaces\Errors\IResultApplicationValue.cs" />
+    <Compile Include="Models\Interfaces\Errors\IResultAppValue.cs" />
+    <Compile Include="Models\Interfaces\Errors\IResultAppCollection.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStamp.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampField.cs" />

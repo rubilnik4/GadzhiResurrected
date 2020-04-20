@@ -1,4 +1,5 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Collection;
@@ -32,14 +33,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(string filePath, ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-            ActiveLibrary.StampContainer.
-            WhereContinue(stampContainer => stampContainer.IsValid,
-                okFunc: stampContainer => stampContainer.Stamps?.
-                                          Select(stamp => CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation)).
-                                          ToResultCollection(),
-                badFunc: _ => new ErrorCommon(FileConvertErrorType.StampNotFound, $"Штампы в файле {Path.GetFileName(filePath)} не найдены").
-                              ToResultCollection<IFileDataSourceServer>());
+        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IResultValue<IDocumentLibrary> documentLibrary, string filePath,
+                                                                             ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
+            documentLibrary.
+            ResultValueOkBind(document => document.StampContainer.Stamps.ToResultCollectionFromApplication()).
+            ResultValueOkBind(stamps => stamps.Select(stamp =>
+                                        CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation)).
+                                        ToResultCollection()).
+            ToResultCollection();
 
         /// <summary>
         /// Создать PDF для штампа, вставить подписи

@@ -18,7 +18,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
-        bool IsDocumentValid { get; }
+        bool IsDocumentValid { get; }      
 
         /// <summary>
         /// Сохранить файл

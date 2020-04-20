@@ -4,6 +4,8 @@ using System.Linq;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using System.IO;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiMicrostation.Microstation.Interfaces;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -13,8 +15,14 @@ namespace GadzhiMicrostation.Microstation.Implementations
     public partial class DocumentMicrostation : IDocumentLibraryElements
     {
         /// <summary>
+        /// Найти все штампы во всех моделях и листах
+        /// </summary>       
+        public IStampContainer StampContainer { get; }
+
+        /// <summary>
         /// Найти таблицы-штампы во всех моделях и листах
         /// </summary>
-        public IEnumerable<IStamp> FindStamps() => ModelsMicrostation.SelectMany(model => model.FindStamps());
+        private IEnumerable<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation) => 
+            modelsMicrostation.SelectMany(model => model.FindStamps());
     }
 }

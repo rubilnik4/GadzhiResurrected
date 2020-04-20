@@ -10,7 +10,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
     /// <summary>
     /// Возвращаемый тип модуля после конвертации с учетом ошибок
     /// </summary>
-    public class ResultApplication : ResultValue<Unit>, IResultApplication
+    public class ResultApplication : ResultAppValue<Unit>, IResultApplication
     {
         public ResultApplication()
             : this(Enumerable.Empty<IErrorApplication>()) { }
@@ -32,7 +32,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Преобразовать в результирующий ответ с параметром
         /// </summary>      
-        public IResultValue<T> ToResultApplicationValue<T>() => new ResultValue<T>(Errors);
+        public IResultAppValue<T> ToResultApplicationValue<T>() => new ResultAppValue<T>(Errors);
 
         /// <summary>
         /// Выполнить отложенные функции

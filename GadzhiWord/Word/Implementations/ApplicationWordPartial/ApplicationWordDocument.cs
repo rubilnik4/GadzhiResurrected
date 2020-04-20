@@ -1,5 +1,8 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
+﻿using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
@@ -15,65 +18,10 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
     public partial class ApplicationWord : IApplicationLibraryDocument
     {
         /// <summary>
-        /// Текущий документ Word
-        /// </summary>
-        public IDocumentLibrary ActiveDocument => new DocumentWord(_application.ActiveDocument, this);
-
-        /// <summary>
-        /// Загрузился ли файл
-        /// </summary>
-        public bool IsDocumentValid => ActiveDocument != null;
-
-        /// <summary>
         /// Открыть документ
         /// </summary>
-        public IDocumentLibrary OpenDocument(string filePath)
-        {
-            Application.Documents.Open(filePath);
-            return ActiveDocument;
-        }
-
-        /// <summary>
-        /// Сохранить документ
-        /// </summary>
-        public IDocumentLibrary SaveDocument(string filePath)
-        {
-            if (ActiveDocument.IsDocumentValid)
-            {
-                ActiveDocument.SaveAs(filePath);
-            }
-            return ActiveDocument;
-        }
-
-        /// <summary>
-        /// Экспорт документа
-        /// </summary>
-        public string ExportDocument(string filePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Сохранить и закрыть файл
-        /// </summary>
-        public void CloseAndSaveDocument()
-        {
-            if (ActiveDocument.IsDocumentValid)
-            {
-                ActiveDocument.CloseWithSaving();
-            }
-        }
-
-        /// <summary>
-        /// Закрыть файл
-        /// </summary>
-        public void CloseDocument()
-        {
-            if (ActiveDocument.IsDocumentValid)
-            {
-                ActiveDocument.Close();
-            }
-        }
-
+        public IResultAppValue<IDocumentLibrary> OpenDocument(string filePath) =>
+           new ResultAppValue<IDocumentLibrary>(new DocumentWord(_application.ActiveDocument, this),
+                                                new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Word не создан"));
     }
 }

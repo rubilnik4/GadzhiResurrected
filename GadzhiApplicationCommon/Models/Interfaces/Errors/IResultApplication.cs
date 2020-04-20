@@ -9,7 +9,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
     /// <summary>
     /// Возвращаемый тип модуля после конвертации с учетом ошибок 
     /// </summary>
-    public interface IResultApplication : IResultValue<Unit>
+    public interface IResultApplication : IResultAppValue<Unit>
     {
         /// <summary>
         /// Добавить ошибку. Вернуть новый объект
@@ -19,7 +19,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// <summary>
         /// Преобразовать в результирующий ответ с параметром
         /// </summary>      
-        IResultValue<T> ToResultApplicationValue<T>();
+        IResultAppValue<T> ToResultApplicationValue<T>();
 
         /// <summary>
         /// Выполнить отложенные функции

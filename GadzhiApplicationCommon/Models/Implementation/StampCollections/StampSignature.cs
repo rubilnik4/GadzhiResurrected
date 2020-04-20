@@ -16,7 +16,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Подпись
         /// </summary>
-        public abstract IResultValue<TField> Signature { get; protected set; }
+        public abstract IResultAppValue<TField> Signature { get; protected set; }
 
         /// <summary>
         /// Установлена ли подпись

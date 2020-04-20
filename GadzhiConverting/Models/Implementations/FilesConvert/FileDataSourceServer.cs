@@ -1,5 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,25 +15,25 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class FileDataSourceServer : IFileDataSourceServer
     {
-        public FileDataSourceServer(string filePath, FileExtention fileExtensionType)
-            : this(filePath, fileExtensionType, "-", "-")
+        public FileDataSourceServer(string filePath)
+            : this(filePath, "-", "-")
         {
 
         }
 
-        public FileDataSourceServer(string filePath, FileExtention fileExtensionType, string paperSize, string printerName)
+        public FileDataSourceServer(string filePath, string paperSize, string printerName)
         {
-            if (!String.IsNullOrWhiteSpace(filePath))
+            if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
+            string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
+            if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
             {
-                FilePath = filePath;
-                FileExtensionType = fileExtensionType;
-                PaperSize = paperSize;
-                PrinterName = printerName;
+                throw new KeyNotFoundException(nameof(filePathServer));
             }
-            else
-            {
-                throw new ArgumentNullException(nameof(filePath));
-            }
+
+            FilePath = filePath;
+            FileExtensionType = fileExtensionType;
+            PaperSize = paperSize;
+            PrinterName = printerName;
         }
 
         /// <summary>
