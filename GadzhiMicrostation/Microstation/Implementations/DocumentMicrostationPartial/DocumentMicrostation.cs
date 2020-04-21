@@ -11,6 +11,12 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Extentions.Microstation;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -78,12 +84,30 @@ namespace GadzhiMicrostation.Microstation.Implementations
         }
 
         /// <summary>
+        /// Создать пдф по координатам и формату
+        /// </summary>
+        public IResultApplication PrintStamp(IStamp stampContainer, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
+            new ResultAppValue<IStamp>(stampContainer, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден")).
+            ResultContinue(stamp => stamp is IStampMicrostation,
+                okFunc: stamp => (IStampMicrostation)stamp,
+                badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
+            ResultValueOkBind(stamp => ApplicationMicrostation.SetPrintingFenceByRange(stamp.StampCellElement.Range).
+                                       ToResultApplicationValue<IStampMicrostation>()).
+            ResultValueOkBind(stamp => ApplicationMicrostation.SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize).
+                                       ToResultApplicationValue<IStampMicrostation>())?.
+            ResultVoidOk(stamp => ApplicationMicrostation.SetPrintingOrientation(stamp.Orientation)).
+            ResultVoidOk(stamp => ApplicationMicrostation.SetPrintScale(stamp.StampCellElement.UnitScale)).
+            ResultVoidOk(_ => ApplicationMicrostation.SetPrintColor(colorPrint)).
+            ResultVoidOk(_ => ApplicationMicrostation.PrintCommand()).
+            ToResultApplication();
+
+        /// <summary>
         /// Экспорт файла в Dwg
         /// </summary>      
         public string Export(string filePath) =>
            (Path.GetFileNameWithoutExtension(filePath) + "." + FileExtentionMicrostation.dwg.ToString()).
            Map(fileName => Path.Combine(Path.GetDirectoryName(filePath), fileName)).
-           Void(dwgFilePath => _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));       
+           Void(dwgFilePath => _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));
 
         /// <summary>
         /// Получить модели в текущем файле
@@ -92,6 +116,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
             _designFile.Models.ToIEnumerable().
             Select(model => new ModelMicrostation(model, ApplicationMicrostation)).
             Cast<IModelMicrostation>().
-            ToList();
+            ToList();       
     }
 }

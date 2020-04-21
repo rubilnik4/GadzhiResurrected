@@ -1,6 +1,12 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Word.Implementations.Converters;
 using GadzhiWord.Word.Interfaces;
 using Microsoft.Office.Interop.Word;
@@ -67,6 +73,13 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// Сохранить файл
         /// </summary>
         public void SaveAs(string filePath) => _document.SaveAs(filePath);
+
+        /// <summary>
+        /// Команда печати
+        /// </summary>
+        public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
+            new ResultApplication().
+            Void(_ => ApplicationWord.PrintCommand());        
 
         /// <summary>
         /// Экспорт файла

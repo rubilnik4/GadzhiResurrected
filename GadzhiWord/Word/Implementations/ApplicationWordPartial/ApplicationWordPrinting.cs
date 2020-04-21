@@ -21,11 +21,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Команда печати
         /// </summary>
-        public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize)
-        {
-            Application.PrintOut(Range: WdPrintOutRange.wdPrintAllDocument, PageType: WdPrintOutPages.wdPrintAllPages,
-                              ManualDuplexPrint: false, PrintToFile: false);
-            return new ResultApplication();
-        }
+        public void PrintCommand() =>  Application.PrintOut(Range: WdPrintOutRange.wdPrintAllDocument, PageType: WdPrintOutPages.wdPrintAllPages,
+                                                            ManualDuplexPrint: false, PrintToFile: false);
     }
 }

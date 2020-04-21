@@ -80,6 +80,7 @@
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\MicrostationResources.cs" />
+    <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationPrinting.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainApprovalSignature.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonSignature .cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeSignature.cs" />

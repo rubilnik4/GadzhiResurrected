@@ -33,34 +33,33 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IResultValue<IDocumentLibrary> documentLibrary, string filePath,
+        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, string filePath,
                                                                              ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-            documentLibrary.
-            ResultValueOkBind(document => document.StampContainer.Stamps.ToResultCollectionFromApplication()).
+            documentLibrary.StampContainer.Stamps.ToResultCollectionFromApplication().
             ResultValueOkBind(stamps => stamps.Select(stamp =>
-                                        CreatePdfWithSignatures(stamp, filePath, colorPrint, pdfPrinterInformation)).
+                                        CreatePdfWithSignatures(documentLibrary, stamp, filePath, colorPrint, pdfPrinterInformation)).
                                         ToResultCollection()).
             ToResultCollection();
 
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private IResultValue<IFileDataSourceServer> CreatePdfWithSignatures(IStamp stamp, string filePath, ColorPrint colorPrint,
+        private IResultValue<IFileDataSourceServer> CreatePdfWithSignatures(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, ColorPrint colorPrint,
                                                                             IPrinterInformation pdfPrinterInformation) =>
             stamp.CompressFieldsRanges().
             Map(_ => stamp.InsertSignatures().ToResultFromApplication()).
-            Map(errors => CreatePdf(stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation).
+            Map(errors => CreatePdf(documentLibrary, stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation).
                           ConcatErrors(errors.Errors)).
             Map(result => { stamp.DeleteSignatures(); return result; });
 
         /// <summary>
         /// Печать пдф
         /// </summary>
-        private IResultValue<IFileDataSourceServer> CreatePdf(IStamp stamp, string filePath, ColorPrint colorPrint,
-                                                string paperSize, IPrinterInformation pdfPrinterInformation) =>
+        private IResultValue<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, ColorPrint colorPrint,
+                                                              string paperSize, IPrinterInformation pdfPrinterInformation) =>
             SetDefaultPrinter(pdfPrinterInformation.Name).
-            ResultValueOkBind(_ => PrintPdfCommand(stamp, filePath, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize)).
-            ResultValueOk(_ => (IFileDataSourceServer)new FileDataSourceServer(filePath, FileExtention.pdf, paperSize, pdfPrinterInformation.Name));
+            ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize)).
+            ResultValueOk(_ => (IFileDataSourceServer)new FileDataSourceServer(filePath, paperSize, pdfPrinterInformation.Name));
 
         /// <summary>
         /// Установить принтер по умолчанию
@@ -76,9 +75,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        private IResultError PrintPdfCommand(IStamp stamp, string filePath, ColorPrint colorPrint, string prefixSearchPaperSize)
+        private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, 
+                                             ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            IResultError printPdfCommand() => ActiveLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
+            IResultError printPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
                                          ToResultFromApplication();
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printPdfCommand);
         }

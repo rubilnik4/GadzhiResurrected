@@ -24,38 +24,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     /// Печать Microstation
     /// </summary>
     public partial class ApplicationMicrostation : IApplicationLibraryPrinting
-    {
-        /// <summary>
-        /// Создать пдф по координатам и формату
-        /// </summary>
-        public IResultApplication PrintStamp(IStamp stampContainer, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
-            new ResultAppValue<IStamp>(stampContainer, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден")).
-            ResultContinue(stamp => stamp is IStampMicrostation,
-                okFunc: stamp => (IStampMicrostation)stamp,
-                badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
-            ResultValueOkBind(stamp => SetPrintingFenceByRange(stamp.StampCellElement.Range).ToResultApplicationValue<IStampMicrostation>()).
-            ResultValueOkBind(stamp => SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize).ToResultApplicationValue<IStampMicrostation>())?.
-            ResultVoidOk(stamp => SetPrintingOrientation(stamp.Orientation)).
-            ResultVoidOk(stamp => SetPrintScale(stamp.StampCellElement.UnitScale)).
-            ResultVoidOk(_ => SetPrintColor(colorPrint)).
-            ResultVoidOk(_ => PrintCommand()).
-            ToResultApplication();
-
+    {  
         /// <summary>
         /// Команда печати
         /// </summary>
-        private void PrintCommand() => Application.CadInputQueue.SendCommand("PRINT EXECUTE");
+        public void PrintCommand() => Application.CadInputQueue.SendCommand("PRINT EXECUTE");
 
         /// <summary>
         /// Установить тип поворота
         /// </summary>       
-        private void SetPrintingOrientation(OrientationType orientation) =>
-             Application.CadInputQueue.SendCommand($"PRINT orientation {orientation.ToString().ToLower(CultureInfo.CurrentCulture)}");       
+        public void SetPrintingOrientation(OrientationType orientation) =>
+             Application.CadInputQueue.SendCommand($"PRINT orientation {orientation.ToString().ToLower(CultureInfo.CurrentCulture)}");
 
         /// <summary>
         /// Установить границы печати по рамке
         /// </summary>
-        private IResultApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint) =>
+        public IResultApplication SetPrintingFenceByRange(RangeMicrostation rangeToPrint) =>
             new ResultAppValue<RangeMicrostation>(rangeToPrint, new ErrorApplication(ErrorApplicationType.RangeNotValid, "Диапазон печати задан некорректно")).
             ResultValueOk(rangePrint => rangeToPrint.ToPointsMicrostation().
                                         Select(point => point.ToPoint3d()).
@@ -77,7 +61,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить формат печати характерный для принтера
         /// </summary>       
-        private IResultApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+        public IResultApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
             GetPrinterPaperSize(drawSize, prefixSearchPaperSize).
             ResultVoidOk(paperName =>
             {
@@ -90,7 +74,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить масштаб печати
         /// </summary>       
-        private void SetPrintScale(double paperScale)
+        public void SetPrintScale(double paperScale)
         {
             string paperScaleString = paperScale.ToString(CultureInfo.CurrentCulture).Replace(',', '.');
             Application.CadInputQueue.SendKeyin($"print scale {paperScaleString}");
@@ -99,7 +83,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить цвет печати
         /// </summary>       
-        private void SetPrintColor(ColorPrintApplication colorPrint)
+        public void SetPrintColor(ColorPrintApplication colorPrint)
         {
             void setColorMode(string colorCommand) => Application.CadInputQueue.SendCommand($"PRINT colormode {colorCommand}");
             switch (colorPrint)

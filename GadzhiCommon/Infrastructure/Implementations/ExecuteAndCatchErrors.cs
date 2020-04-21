@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -17,9 +18,20 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
+        public static IResultError ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
+                                                               Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
+                                                                IErrorCommon errorMessage = null) =>
+            ExecuteAndHandleError(() => { method.Invoke(); return Unit.Value; },
+                                  applicationBeforeMethod, applicationCatchMethod,
+                                  applicationFinallyMethod, errorMessage).
+            ToResult();
+
+        /// <summary>
+        /// Отлов ошибок и вызов постметода       
+        /// </summary> 
         public static IResultValue<T> ExecuteAndHandleError<T>(Func<T> method, Action applicationBeforeMethod = null,
-                                                    Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
-                                                    IErrorCommon errorMessage = null)
+                                                               Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
+                                                                IErrorCommon errorMessage = null)
         {
             IResultValue<T> result = default;
 

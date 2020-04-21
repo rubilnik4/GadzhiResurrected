@@ -67,9 +67,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadDocument(fileDataServer).
-            ResultValueOkBind(_ => CreatePdf(fileDataServer, printersInformation)).
-            ResultValueOkBind(_ => CreatePdf(fileDataServer, printersInformation)).
-            ResultValueOkBind(_ => CloseFile(fileDataServer.FileNameClient).ToResultValue<IEnumerable<IFileDataSourceServer>>()).
+            ResultValueOkBind(document => SaveDocument(document, fileDataServer).
+                                          ResultValueOkBind(_ => CreatePdf(document, fileDataServer, printersInformation)).
+                                          ResultValueOkBind(_ => CloseFile(document, fileDataServer.FileNameClient).
+                                          ToResultValue<IEnumerable<IFileDataSourceServer>>())).          
             ToResultCollection().
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
@@ -95,13 +96,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сохранить файл
         /// </summary>        
-        private IResultValue<IFileDataSourceServer> SaveDocument(IResultValue<IDocumentLibrary> documentLibrary, IFileDataServer fileDataServer) =>
+        private IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer) =>
              new ResultError().
              ResultValueOkBind(_ =>CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
-             ResultValueOkBind(savingPath => _applicationConverting.SaveDocument(documentLibrary, savingPath, fileDataServer.FileExtentionType)).
+             ResultValueOkBind(savingPath => _applicationConverting.SaveDocument(documentLibrary, savingPath)).
              Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
-        private IResultCollection<IFileDataSourceServer> CreatePdf(IResultValue<IDocumentLibrary> documentLibrary, IFileDataServer fileDataServer, 
+        private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer, 
                                                                    IPrintersInformation printersInformation) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
@@ -114,17 +115,17 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Экспортировать в другие форматы
         /// </summary>
-        private IResultValue<IFileDataSourceServer> ExportFile(IResultValue<IDocumentLibrary> documentLibrary, IFileDataServer fileDataServer) =>
+        private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, _applicationConverting.GetExportFileExtension(fileDataServer.FileExtentionType))).
-            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, fileExportPath, ));
+            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, fileExportPath));
           
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        private IResultError CloseFile(IResultValue<IDocumentLibrary> documentLibrary, string fileNameClient) =>
+        private IResultError CloseFile(IDocumentLibrary documentLibrary, string fileNameClient) =>
             _applicationConverting.CloseDocument(documentLibrary).
             Void(_ => _messagingService.ShowAndLogMessage($"Конвертация файла {fileNameClient} завершена"));
 

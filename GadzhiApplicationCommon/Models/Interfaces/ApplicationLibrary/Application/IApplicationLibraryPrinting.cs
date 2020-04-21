@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Models.Enums;
 using System;
@@ -14,8 +15,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
     public interface IApplicationLibraryPrinting
     {
         /// <summary>
-        /// Команда печати PDF
+        /// Команда печати
         /// </summary>
-        IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize);
+        void PrintCommand();       
     }
 }

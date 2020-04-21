@@ -7,7 +7,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public interface IApplicationMicrostation : IApplicationLibrary, IApplicationMicrostationCommands
+    public interface IApplicationMicrostation : IApplicationLibrary, IApplicationMicrostationCommands, IApplicationMicrostationPrinting
     {
         /// <summary>
         /// Ресурсы, используемые модулем Microstation
