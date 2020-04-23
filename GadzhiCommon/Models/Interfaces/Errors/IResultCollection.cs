@@ -24,5 +24,10 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// Выполнить отложенные функции
         /// </summary>
         IResultCollection<T> Execute();
+
+        /// <summary>
+        /// Добавить значение
+        /// </summary>       
+        IResultCollection<T> ConcatValue(T value);
     }
 }

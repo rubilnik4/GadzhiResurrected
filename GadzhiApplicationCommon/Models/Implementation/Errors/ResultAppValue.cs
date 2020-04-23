@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// </summary>      
         public IResultAppValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
             errors != null && ValidateCollection(errors) ?
-            new ResultAppValue<TValue>(Value, Errors.Union(errors)) :
+            Value.WhereContinue(value => value != null,
+                okFunc: value => new ResultAppValue<TValue>(value, Errors.Union(errors)),
+                badFunc: value => new ResultAppValue<TValue>(Errors.Union(errors))) :
             this;
 
         /// <summary>

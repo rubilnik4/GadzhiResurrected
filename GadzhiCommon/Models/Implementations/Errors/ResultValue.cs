@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +67,9 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// </summary>      
         public IResultValue<TValue> ConcatErrors(IEnumerable<IErrorCommon> errors) =>
             errors != null && ValidateCollection(errors) ?
-            new ResultValue<TValue>(Value, Errors.Union(errors)) :
+            Value.WhereContinue(value => value != null,
+                okFunc: value => new ResultValue<TValue>(value, Errors.Union(errors)),
+                badFunc: value => new ResultValue<TValue>(Errors.Union(errors))) :
             this;
 
         /// <summary>

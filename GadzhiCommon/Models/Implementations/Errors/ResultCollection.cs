@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Extentions.Collection;
+using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace GadzhiCommon.Models.Implementations.Errors
           : base(Enumerable.Empty<T>()) { }
 
         public ResultCollection(IErrorCommon error)
-            : base(error.AsEnumerable()) { }
+            : base(Enumerable.Empty<T>(), error.AsEnumerable()) { }
 
         public ResultCollection(IEnumerable<IErrorCommon> errors)
-           : base(errors) { }
+           : base(Enumerable.Empty<T>(), errors) { }
 
         public ResultCollection(IEnumerable<T> collection)
           : this(collection, Enumerable.Empty<IErrorCommon>()) { }
@@ -35,18 +36,26 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// </summary>      
         public IResultCollection<T> ConcatResult(IResultCollection<T> resultCollection) =>
             resultCollection != null ?
-            new ResultCollection<T>(Value.Union(resultCollection.Value), 
+            new ResultCollection<T>(Value.UnionNotNull(resultCollection.Value),
                                     Errors.Union(resultCollection.Errors ?? Enumerable.Empty<IErrorCommon>())) :
-            this;
+            throw new ArgumentNullException(nameof(resultCollection));
 
         /// <summary>
         /// Добавить ответ со значением
         /// </summary>      
         public IResultCollection<T> ConcatResultValue(IResultValue<T> resultValue) =>
             resultValue != null ?
-            new ResultCollection<T>(Value.Append(resultValue.Value),
-                                    Errors.Union(resultValue.Errors ?? Enumerable.Empty<IErrorCommon>())) :
-            this;
+            ConcatValue(resultValue.Value) :
+            throw new ArgumentNullException(nameof(resultValue));                  
+
+        /// <summary>
+        /// Добавить значение
+        /// </summary>       
+        public IResultCollection<T> ConcatValue(T value) =>
+            value != null ?
+            new ResultCollection<T>(Value.Append(value),
+                                    Errors.Union(Errors ?? Enumerable.Empty<IErrorCommon>())) :
+            throw new ArgumentNullException(nameof(value));
 
         /// <summary>
         /// Выполнить отложенные функции

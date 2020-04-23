@@ -46,11 +46,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, string filePath, 
+        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, string filePath,
                                                                       ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-             ExecuteBindResultValue<IEnumerable<IFileDataSourceServer>, IResultCollection<IFileDataSourceServer>>(() =>
-                CreatePdfInDocument(documentLibrary, filePath, colorPrint, pdfPrinterInformation),
-                                    new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}"));
+            ExecuteBindResultValue(() => CreatePdfInDocument(documentLibrary, filePath, colorPrint, pdfPrinterInformation),
+                                         new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}")).
+            ToResultCollection();
 
         /// <summary>
         /// Экпортировать файл
@@ -59,7 +59,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
            ExecuteAndHandleError(() => documentLibrary.Export(filePath),
                          errorMessage: new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка экспорта файла {filePath}")).
             ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(fileExportPath));
-     
+
         /// <summary>
         /// Закрыть файл
         /// </summary>

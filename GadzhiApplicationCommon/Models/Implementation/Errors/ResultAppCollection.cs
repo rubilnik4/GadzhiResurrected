@@ -15,10 +15,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
           : base(Enumerable.Empty<T>()) { }
 
         public ResultAppCollection(IErrorApplication error)
-            : base(error.AsEnumerable()) { }
+            : base(Enumerable.Empty<T>(), error.AsEnumerable()) { }
 
         public ResultAppCollection(IEnumerable<IErrorApplication> errors)
-           : base(errors) { }
+           : base(Enumerable.Empty<T>(), errors) { }
 
         public ResultAppCollection(IEnumerable<T> collection)
           : this(collection, Enumerable.Empty<IErrorApplication>()) { }
@@ -43,9 +43,17 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// </summary>      
         public IResultAppCollection<T> ConcatResultValue(IResultAppValue<T> resultValue) =>
             resultValue != null ?
-            new ResultAppCollection<T>(Value.Concat(new List<T>() { resultValue.Value }),
-                                       Errors.Union(resultValue.Errors ?? Enumerable.Empty<IErrorApplication>())) :
-            this;
+            ConcatValue(resultValue.Value) :
+            throw new ArgumentNullException(nameof(resultValue));
+
+        /// <summary>
+        /// Добавить значение
+        /// </summary>       
+        public IResultAppCollection<T> ConcatValue(T value) =>
+            value != null ?
+            new ResultAppCollection<T>(Value.Concat(new List<T>() { value }),
+                                       Errors.Union(Errors ?? Enumerable.Empty<IErrorApplication>())) :
+            throw new ArgumentNullException(nameof(value));
 
         /// <summary>
         /// Выполнить отложенные функции

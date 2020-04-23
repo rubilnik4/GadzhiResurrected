@@ -18,12 +18,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и суммирование ошибок для модуля конвертации   
         /// </summary> 
-        public static TResult ExecuteBindResultValue<T, TResult>(Func<TResult> method, IErrorCommon errorMessage = null)
-            where TResult: IResultValue<T>
+        public static IResultValue<T> ExecuteBindResultValue<T>(Func<IResultValue<T>> method, IErrorCommon errorMessage = null)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
-            IResultValue<T> result = default(TResult);
-
+            IResultValue<T> result;
             try
             {
                 result = method.Invoke();
@@ -31,10 +29,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
             catch (Exception ex)
             {
                 result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
-                         Map(error => result.ConcatErrors(error).ConcatErrors(errorMessage));                     
+                         ToResultValue<T>().
+                         ConcatErrors(errorMessage);
             }
 
-            return (TResult)result;
+            return result;
         }       
     }
 }

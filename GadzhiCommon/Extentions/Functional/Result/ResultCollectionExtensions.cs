@@ -20,14 +20,14 @@ namespace GadzhiCommon.Extentions.Functional.Result
         @this == null ?
         @this.Aggregate((IResultCollection<T>)new ResultCollection<T>(), (resultCollection, resultValue) =>
                         resultCollection.ConcatResultValue(resultValue)) :
-        null;
+        throw new ArgumentNullException(nameof(@this));
 
         /// <summary>
         /// Преобразовать коллекцию ответов в ответ с коллекцией
         /// </summary>
         public static IResultCollection<T> ToResultCollection<T>(this IResultValue<IEnumerable<T>> @this) =>
-        @this == null ?
-        (IResultCollection<T>)@this :
-        null;
+        @this != null ?
+        new ResultCollection<T>(@this.Value, @this.Errors) :
+        throw new ArgumentNullException(nameof(@this));
     }
 }

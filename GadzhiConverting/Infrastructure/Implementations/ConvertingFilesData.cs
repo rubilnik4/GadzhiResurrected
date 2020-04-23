@@ -67,11 +67,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadDocument(fileDataServer).
-            ResultValueOkBind(document => SaveDocument(document, fileDataServer).
-                                          ResultValueOkBind(_ => CreatePdf(document, fileDataServer, printersInformation)).
-                                          ResultValueOkBind(_ => CloseFile(document, fileDataServer.FileNameClient).
-                                          ToResultValue<IEnumerable<IFileDataSourceServer>>())).          
-            ToResultCollection().
+            ResultValueOkBind(document => SaveDocument(document, fileDataServer).ToResultCollection().
+                                          ResultValueOkRawCollection(saveResult => CreatePdf(document, fileDataServer, printersInformation).
+                                                                                   Map(resultPdf => saveResult.ConcatResult(resultPdf))).
+                                          ResultValueOkRawCollection(fileDatas => CloseFile(document, fileDataServer.FileNameClient).
+                                                                                  Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
+                                                                                  ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
 
@@ -90,7 +91,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultValue<IDocumentLibrary> LoadDocument(IFileDataServer fileDataServer) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
-            ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).          
+            ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>
@@ -98,11 +99,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>        
         private IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer) =>
              new ResultError().
-             ResultValueOkBind(_ =>CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
+             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
              ResultValueOkBind(savingPath => _applicationConverting.SaveDocument(documentLibrary, savingPath)).
              Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
-        private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer, 
+        private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                    IPrintersInformation printersInformation) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
@@ -120,7 +121,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, _applicationConverting.GetExportFileExtension(fileDataServer.FileExtentionType))).
             ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, fileExportPath));
-          
+
 
         /// <summary>
         /// Закрыть файл
