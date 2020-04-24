@@ -82,7 +82,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<FileDataResponseServer> ConvertFileResponse(IFileDataServer fileDataServer)
         {
-            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(fileData => ConvertFileDataSourceResponse(fileData));
+            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(fileData => ConvertFileDataSourceResponse(fileData))
+                                       ?? Enumerable.Empty<Task<FileDataSourceResponseServer>>();
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);
 
             return new FileDataResponseServer()

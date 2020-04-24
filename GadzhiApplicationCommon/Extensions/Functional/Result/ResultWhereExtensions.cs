@@ -16,7 +16,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнение условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>      
-        public static IResultAppValue<TValueOut> ResultContinue<TValueIn, TValueOut>(this IResultAppValue<TValueIn> @this,
+        public static IResultAppValue<TValueOut> ResultValueContinue<TValueIn, TValueOut>(this IResultAppValue<TValueIn> @this,
                                                                                             Func<TValueIn, bool> predicate,
                                                                                             Func<TValueIn, TValueOut> okFunc,
                                                                                             Func<TValueIn, IEnumerable<IErrorApplication>> badFunc)
@@ -34,6 +34,26 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
                    badFunc.Invoke(@this.Value).
                           Map(badResult => new ResultAppValue<TValueOut>(@this.Errors.Union(badResult)));
         }
+
+        /// <summary>
+        /// Выполнение положительного иди негативного условия в результирующем ответе
+        /// </summary>      
+        public static IResultAppValue<TValueOut> ResultOkBad<TValueIn, TValueOut>(this IResultAppValue<TValueIn> @this,
+                                                                               Func<TValueIn, TValueOut> okFunc,
+                                                                               Func<TValueIn, TValueOut> badFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            if (@this == null) return null;
+
+            return @this.OkStatus ?
+                   okFunc.Invoke(@this.Value).
+                          Map(okResult => new ResultAppValue<TValueOut>(okResult, @this.Errors)) :
+                   badFunc.Invoke(@this.Value).
+                           Map(badResult => new ResultAppValue<TValueOut>(badResult, @this.Errors));
+        }
+
 
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
@@ -79,7 +99,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             return okFunc.Invoke(@this.Value).
                    WhereContinue(result => result.OkStatus,
                         okFunc: result => new ResultAppValue<TValueOut>(result.Value),
-                        badFunc: result => new ResultAppValue<TValueOut>(result.Errors));
+                        badFunc: result => new ResultAppValue<TValueOut>(result.Value, result.Errors));
         }
 
         /// <summary>

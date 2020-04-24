@@ -93,7 +93,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>      
         public IFilesDataServer ChangeFileDataServer(IFileDataServer fileDataServer) =>
             FileDatasServer.
-            Where(fileData => fileData != fileDataServer).
+            Where(fileData => !fileData.Equals(fileDataServer)).
             Append(fileDataServer).
             Map(fileDatas => new FilesDataServer(this, fileDatas));
     }

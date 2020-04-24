@@ -15,8 +15,21 @@ namespace GadzhiCommon.Extentions.Functional
         /// <summary>
         /// Выполнить действие, вернуть результирующий ответ
         /// </summary>      
+        public static IResultValue<TValue> ResultVoid<TValue>(this IResultValue<TValue> @this, Action<TValue> action)
+        {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
+            action?.Invoke(@this.Value);
+            return @this;
+        }
+
+        /// <summary>
+        /// Выполнить действие при положительном значении, вернуть результирующий ответ
+        /// </summary>      
         public static IResultValue<TValue> ResultVoidOk<TValue>(this IResultValue<TValue> @this, Action<TValue> action)
         {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
             if (@this?.OkStatus == true) action?.Invoke(@this.Value);
             return @this;
         }

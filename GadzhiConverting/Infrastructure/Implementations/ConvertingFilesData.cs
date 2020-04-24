@@ -68,13 +68,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadDocument(fileDataServer).
             ResultValueOkBind(document => SaveDocument(document, fileDataServer).ToResultCollection().
-                                          ResultValueOkRawCollection(saveResult => CreatePdf(document, fileDataServer, printersInformation).
-                                                                                   Map(resultPdf => saveResult.ConcatResult(resultPdf))).
-                                          ResultValueOkRawCollection(fileDatas => ExportFile(document, fileDataServer).
-                                                                                  Map(exportResult => fileDatas.ConcatResultValue(exportResult))).
-                                          ResultValueOkRawCollection(fileDatas => CloseFile(document, fileDataServer.FileNameClient).
-                                                                                  Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
-                                                                                  ToResultCollection())).
+                                          ResultValueEqualOkRawCollection(saveResult => CreatePdf(document, fileDataServer, printersInformation).
+                                                                                        Map(resultPdf => saveResult.ConcatResult(resultPdf))).
+                                          ResultValueEqualOkRawCollection(fileDatas => ExportFile(document, fileDataServer).
+                                                                                       Map(exportResult => fileDatas.ConcatResultValue(exportResult))).
+                                          Void(fileDatas => CloseFile(document, fileDataServer.FileNameClient).
+                                                            Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
+                                                            ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
 
@@ -123,7 +123,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, _applicationConverting.GetExportFileExtension(fileDataServer.FileExtentionType))).
             ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, fileExportPath));
-
 
         /// <summary>
         /// Закрыть файл

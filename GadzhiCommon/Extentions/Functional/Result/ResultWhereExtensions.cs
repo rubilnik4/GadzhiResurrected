@@ -18,10 +18,10 @@ namespace GadzhiCommon.Extentions.Functional.Result
         /// <summary>
         /// Выполнение условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>      
-        public static IResultValue<TValueOut> ResultContinue<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
-                                                                                            Func<TValueIn, bool> predicate,
-                                                                                            Func<TValueIn, TValueOut> okFunc,
-                                                                                            Func<TValueIn, IEnumerable<IErrorCommon>> badFunc)
+        public static IResultValue<TValueOut> ResultValueContinue<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
+                                                                                  Func<TValueIn, bool> predicate,
+                                                                                  Func<TValueIn, TValueOut> okFunc,
+                                                                                  Func<TValueIn, IEnumerable<IErrorCommon>> badFunc)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
@@ -34,15 +34,34 @@ namespace GadzhiCommon.Extentions.Functional.Result
                    okFunc.Invoke(@this.Value).
                           Map(okResult => new ResultValue<TValueOut>(okResult, @this.Errors)) :
                    badFunc.Invoke(@this.Value).
-                          Map(badResult => new ResultValue<TValueOut>(@this.Errors.Union(badResult)));
-        }     
+                           Map(badResult => new ResultValue<TValueOut>(@this.Errors.Union(badResult)));
+        }
+
+        /// <summary>
+        /// Выполнение положительного иди негативного условия в результирующем ответе
+        /// </summary>      
+        public static IResultValue<TValueOut> ResultOkBad<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
+                                                                               Func<TValueIn, TValueOut> okFunc,
+                                                                               Func<TValueIn, TValueOut> badFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            if (@this == null) return null;
+
+            return @this.OkStatus ?
+                   okFunc.Invoke(@this.Value).
+                          Map(okResult => new ResultValue<TValueOut>(okResult, @this.Errors)) :
+                   badFunc.Invoke(@this.Value).
+                           Map(badResult => new ResultValue<TValueOut>(badResult, @this.Errors));
+        }
 
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>   
-        public static IResultValue<TValueOut> ResultValueOk<TValueIn, TValueOut>(this IResultValue<TValueIn> @this, Func<TValueIn, TValueOut> okFunc)                                                                                          
-        {           
-            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));          
+        public static IResultValue<TValueOut> ResultValueOk<TValueIn, TValueOut>(this IResultValue<TValueIn> @this, Func<TValueIn, TValueOut> okFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
@@ -67,13 +86,29 @@ namespace GadzhiCommon.Extentions.Functional.Result
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе в обертке
         /// </summary>   
-        public static IResultCollection<TValueOut> ResultValueOkRawCollection<TValueIn, TValueOut>(this IResultCollection<TValueIn> @this, 
-                                                                                         Func<IResultCollection<TValueIn>, IResultCollection<TValueOut>> okFunc)
+        public static IResultCollection<TValueOut> ResultValueOkRawCollection<TValueIn, TValueOut>(this IResultCollection<TValueIn> @this,
+                                                                                                   Func<IResultCollection<TValueIn>,
+                                                                                                   IResultCollection<TValueOut>> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultCollection<TValueOut>(@this.Errors);
+
+            return okFunc.Invoke(@this);
+        }
+
+        /// <summary>
+        /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе в обертке при равестве параметров
+        /// </summary>   
+        public static IResultCollection<TValue> ResultValueEqualOkRawCollection<TValue>(this IResultCollection<TValue> @this,
+                                                                                        Func<IResultCollection<TValue>,
+                                                                                        IResultCollection<TValue>> okFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+
+            if (@this == null) return null;
+            if (@this.HasErrors) return new ResultCollection<TValue>(@this.Value, @this.Errors);
 
             return okFunc.Invoke(@this);
         }
@@ -102,11 +137,11 @@ namespace GadzhiCommon.Extentions.Functional.Result
 
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
-          
+
             return okFunc.Invoke(@this.Value).
                    WhereContinue(result => result.OkStatus,
                         okFunc: result => new ResultValue<TValueOut>(result.Value),
-                        badFunc: result => new ResultValue<TValueOut>(result.Errors));
+                        badFunc: result => new ResultValue<TValueOut>(result.Value, result.Errors));
         }
 
         /// <summary>
@@ -122,6 +157,6 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
 
             return ExecuteBindResultValue(() => okFunc(@this.Value), errorMessage);
-        }      
+        }
     }
 }

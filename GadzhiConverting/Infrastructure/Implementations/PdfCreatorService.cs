@@ -63,10 +63,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>   
         private IResultValue<PDFCreator.clsPDFCreator> SetPrinterOptions(string filePath) =>
             new ResultValue<PDFCreator.clsPDFCreator>(PdrCreatorInitialize()).
-            ResultContinue(pdfCreator => pdfCreator.cStart("/NoProcessingAtStartup", false),
+            ResultValueContinue(pdfCreator => pdfCreator.cStart("/NoProcessingAtStartup", false),
                 okFunc: pdfCreator => pdfCreator,
                 badFunc: _ => new ErrorCommon(FileConvertErrorType.PdfPrintingError, "Ошибка инициализации PDF принтера")).
-            ResultContinue(pdfCreator => PdfPathValid(filePath),
+            ResultValueContinue(pdfCreator => PdfPathValid(filePath),
                 okFunc: pdfCreator =>
                 {
                     pdfCreator.cOptions = GetPdfPrinterOptions(pdfCreator, filePath);

@@ -88,7 +88,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         public IResultApplication PrintStamp(IStamp stampContainer, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
             new ResultAppValue<IStamp>(stampContainer, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не найден")).
-            ResultContinue(stamp => stamp is IStampMicrostation,
+            ResultValueContinue(stamp => stamp is IStampMicrostation,
                 okFunc: stamp => (IStampMicrostation)stamp,
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
             ResultValueOkBind(stamp => ApplicationMicrostation.SetPrintingFenceByRange(stamp.StampCellElement.Range).

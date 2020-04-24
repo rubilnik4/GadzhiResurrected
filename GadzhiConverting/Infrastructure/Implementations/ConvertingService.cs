@@ -169,9 +169,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Сообщить об отконвертированном пакете, если процесс не был прерван
         /// </summary>
         private IFilesDataServer ReplyPackageIsComplete(IFilesDataServer filesDataServer) =>
-            filesDataServer.
-            WhereOk(fileData => fileData.IsCompleted,
-                okFunc: fileData => fileData.SetStatusProcessingProject(StatusProcessingProject.ConvertingComplete));
+            filesDataServer.SetStatusProcessingProject(StatusProcessingProject.ConvertingComplete);
 
         /// <summary>
         /// Отправить промежуточный отчет
@@ -221,11 +219,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await filesDataServer.FileDatasServer.
             Where(fileData => !filesDataServer.IsCompleted && !fileData.IsCompleted).
             FirstOrDefault().
-            Map(fileData => new ResultValue<IFileDataServer>(fileData)).
-            ResultValueOk(fileData => ConvertingByCountLimit(fileData).
-                                      MapAsync(fileDataConverted => filesDataServer.ChangeFileDataServer(fileDataConverted)).
-                                      BindAsync(filesDataChanged => SendIntermediateResponse(filesDataChanged)).
-                                      BindAsync(filesDataSent => ConvertingFilesData(filesDataSent))).
+            Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(FileConvertErrorType.ArgumentNullReference, nameof(IFileDataServer)))).
+            ResultOkBad(
+                okFunc: fileData => ConvertingByCountLimit(fileData).
+                                    MapAsync(fileDataConverted => filesDataServer.ChangeFileDataServer(fileDataConverted)).
+                                    BindAsync(filesDataChanged => SendIntermediateResponse(filesDataChanged)).
+                                    BindAsync(filesDataSent => ConvertingFilesData(filesDataSent)),
+                badFunc: _ => Task.FromResult(filesDataServer)).
             Value;
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await fileDataServer.WhereOkAsync(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData)).
-                        ResultValueBad(fileDataTask => new Task<IFileDataServer>(() => fileData.SetAttemtingCount(fileData.AttemptingConvertCount + 1))).
+                        ResultValueBad(fileDataTask => Task.FromResult(fileData.SetAttemtingCount(fileData.AttemptingConvertCount + 1))).
                         ResultValueBad(fileDataTask => fileDataTask.VoidAsync(async fileDataVoid => await ConvertingByCountLimit(fileDataVoid))).
                         Value);
 
