@@ -70,6 +70,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOkBind(document => SaveDocument(document, fileDataServer).ToResultCollection().
                                           ResultValueOkRawCollection(saveResult => CreatePdf(document, fileDataServer, printersInformation).
                                                                                    Map(resultPdf => saveResult.ConcatResult(resultPdf))).
+                                          ResultValueOkRawCollection(fileDatas => ExportFile(document, fileDataServer).
+                                                                                  Map(exportResult => fileDatas.ConcatResultValue(exportResult))).
                                           ResultValueOkRawCollection(fileDatas => CloseFile(document, fileDataServer.FileNameClient).
                                                                                   Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
                                                                                   ToResultCollection())).

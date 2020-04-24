@@ -18,6 +18,8 @@ using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using static GadzhiCommon.Extentions.Functional.ExecuteTaskHandler;
 using GadzhiCommon.Extentions.Functional.Result;
 using System.Linq;
+using System.Diagnostics;
+using GadzhiCommon.Extentions.StringAdditional;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -102,6 +104,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public void StartConverting()
         {
             _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
+            KillPreviousRunProcesses();
 
             var subcribe = Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
                            Where(_ => !IsConverting).
@@ -222,9 +225,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOk(fileData => ConvertingByCountLimit(fileData).
                                       MapAsync(fileDataConverted => filesDataServer.ChangeFileDataServer(fileDataConverted)).
                                       BindAsync(filesDataChanged => SendIntermediateResponse(filesDataChanged)).
-                                      BindAsync(filesDataSent => ConvertingFilesData(filesDataSent))).          
+                                      BindAsync(filesDataSent => ConvertingFilesData(filesDataSent))).
             Value;
-       
+
         /// <summary>
         /// Конвертировать файл до превышения лимита
         /// </summary>       
@@ -232,7 +235,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await fileDataServer.WhereOkAsync(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData)).
-                        ResultValueBad(fileDataTask => new Task<IFileDataServer>(() => fileData.SetAttemtingCount(fileData.AttemptingConvertCount))).
+                        ResultValueBad(fileDataTask => new Task<IFileDataServer>(() => fileData.SetAttemtingCount(fileData.AttemptingConvertCount + 1))).
                         ResultValueBad(fileDataTask => fileDataTask.VoidAsync(async fileDataVoid => await ConvertingByCountLimit(fileDataVoid))).
                         Value);
 
@@ -253,6 +256,20 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await CheckAndDeleteUnusedPackagesOnDataBase();
             await DeleteAllUnusedCovertedDataOnDisk();
             await QueueIsEmpty();
+        }
+
+        /// <summary>
+        /// Удалить все предыдущие запущенные процессы
+        /// </summary>
+        private void KillPreviousRunProcesses()
+        {
+            var processes = Process.GetProcesses().
+                                        Where(process => process.ProcessName.ContainsIgnoreCase("ustation") ||
+                                                         process.ProcessName.ContainsIgnoreCase("winword"));
+            foreach (var processe in processes)
+            {
+                processe.Kill();
+            }
         }
 
         /// <summary>

@@ -93,15 +93,25 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 var directoryInfo = new DirectoryInfo(directoryPath);
                 foreach (FileInfo file in directoryInfo.EnumerateFiles())
                 {
-                    file.Delete();
+                    if(!IsFileLocked(file))
+                    {
+                        file.Delete();
+                    }                  
                 }
                 foreach (DirectoryInfo dir in directoryInfo.EnumerateDirectories())
                 {
-                    dir.Delete(true);
+                    try
+                    {
+                        dir.Delete(true);
+                    }
+                    catch (IOException)
+                    {
+
+                    }
                 }
             }
         }
-
+     
         /// <summary>
         /// Представить файл в двоичном виде и запаковать
         /// </summary>   
@@ -191,6 +201,27 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public string CreateFolderByName(string startingPath, string folderName = "") =>
              (startingPath.AddSlashesToPath() + folderName.AddSlashesToPath())?.
              Map(createdPath => Directory.CreateDirectory(createdPath))?.
-             FullName;      
+             FullName;
+
+        /// <summary>
+        /// Проверка, используется ли файл
+        /// </summary>
+        private bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file?.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
     }
 }

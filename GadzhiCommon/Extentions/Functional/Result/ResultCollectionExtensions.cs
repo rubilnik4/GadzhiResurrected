@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Models.Implementations.Errors;
+﻿using GadzhiCommon.Extentions.Collection;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace GadzhiCommon.Extentions.Functional.Result
         /// </summary>
         public static IResultCollection<T> ToResultCollection<T>(this IResultValue<IEnumerable<T>> @this) =>
         @this != null ?
-        new ResultCollection<T>(@this.Value, @this.Errors) :
+        new ResultCollection<T>(@this.Value.EmptyIfNull(), @this.Errors) :
         throw new ArgumentNullException(nameof(@this));
     }
 }

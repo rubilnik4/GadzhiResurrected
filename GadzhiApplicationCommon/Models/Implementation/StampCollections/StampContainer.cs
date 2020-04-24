@@ -23,7 +23,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         public StampContainer(IEnumerable<IStamp> stamps, string filePath)
         {
             Stamps = new ResultAppCollection<IStamp>(stamps,
-                            new ErrorApplication(ErrorApplicationType.StampNotFound, $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
+                                                     new ErrorApplication(ErrorApplicationType.StampNotFound, 
+                                                                          $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
         }
     }
 }

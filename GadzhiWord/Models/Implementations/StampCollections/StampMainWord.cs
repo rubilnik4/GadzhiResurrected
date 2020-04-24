@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Extensions.Functional;
+﻿using GadzhiApplicationCommon.Extensions.Collection;
+using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;

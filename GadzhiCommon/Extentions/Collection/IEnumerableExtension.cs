@@ -12,7 +12,7 @@ namespace GadzhiCommon.Extentions.Collection
    public static class IEnumerableExtension
     {
         /// <summary>
-        /// ПРоверка перечесления на null
+        /// Проверка перечесления на null
         /// </summary>      
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => source ?? Enumerable.Empty<T>();
 
