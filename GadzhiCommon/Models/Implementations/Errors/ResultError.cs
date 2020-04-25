@@ -38,6 +38,6 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        public new IResultError ExecuteLazy() => new ResultError(Errors.ToList());
+        public new IResultError Execute() => new ResultError(Errors.ToList());
     }
 }

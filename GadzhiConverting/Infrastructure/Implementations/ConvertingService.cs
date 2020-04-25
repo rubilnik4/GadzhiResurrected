@@ -109,8 +109,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             var subcribe = Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
                            Where(_ => !IsConverting).
                            Subscribe(async _ => await ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                      applicationBeforeMethod: () => IsConverting = true,
-                                                                      applicationFinallyMethod: () => IsConverting = false));
+                                                                      beforeMethod: () => IsConverting = true,
+                                                                      finallyMethod: () => IsConverting = false));
             _convertingUpdaterSubsriptions.Add(subcribe);
         }
 

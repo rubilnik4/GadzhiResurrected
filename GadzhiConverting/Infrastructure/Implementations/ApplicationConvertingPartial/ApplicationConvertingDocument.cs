@@ -57,15 +57,16 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, string filePath) =>
            ExecuteAndHandleError(() => documentLibrary.Export(filePath),
-                         errorMessage: new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка экспорта файла {filePath}")).
+                         errorMessage: new ErrorCommon(FileConvertErrorType.ExportError, $"Ошибка экспорта файла {filePath}")).
             ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(fileExportPath));
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        public IResultError CloseDocument(IDocumentLibrary documentLibrary) =>
+        public IResultError CloseDocument(IDocumentLibrary documentLibrary, string filePath) =>
             ExecuteAndHandleError(() => documentLibrary.CloseWithSaving(),
-                          errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка закрытия файла {documentLibrary?.FullName}")).
+                          catchMethod: () => documentLibrary.CloseApplication(),
+                          errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка закрытия файла {filePath}")).
             ToResult();
 
         /// <summary>

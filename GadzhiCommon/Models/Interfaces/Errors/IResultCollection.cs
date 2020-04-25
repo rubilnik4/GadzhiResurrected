@@ -23,7 +23,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        IResultCollection<T> Execute();
+        new IResultCollection<T> Execute();
 
         /// <summary>
         /// Добавить значение

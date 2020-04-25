@@ -43,6 +43,6 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        IResultValue<TValue> ExecuteLazy();
+        IResultValue<TValue> Execute();
     }
 }

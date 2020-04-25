@@ -18,38 +18,36 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public static IResultError ExecuteAndHandleError(Action method, Action applicationBeforeMethod = null,
-                                                               Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
-                                                                IErrorCommon errorMessage = null) =>
+        public static IResultError ExecuteAndHandleError(Action method, Action BeforeMethod = null, Action catchMethod = null,
+                                                         Action finallyMethod = null, IErrorCommon errorMessage = null) =>
             ExecuteAndHandleError(() => { method.Invoke(); return Unit.Value; },
-                                  applicationBeforeMethod, applicationCatchMethod,
-                                  applicationFinallyMethod, errorMessage).
+                                  BeforeMethod, catchMethod,
+                                  finallyMethod, errorMessage).
             ToResult();
 
         /// <summary>
         /// Отлов ошибок и вызов постметода       
         /// </summary> 
-        public static IResultValue<T> ExecuteAndHandleError<T>(Func<T> method, Action applicationBeforeMethod = null,
-                                                               Action applicationCatchMethod = null, Action applicationFinallyMethod = null,
-                                                                IErrorCommon errorMessage = null)
+        public static IResultValue<T> ExecuteAndHandleError<T>(Func<T> method, Action beforeMethod = null, Action catchMethod = null, 
+                                                               Action finallyMethod = null, IErrorCommon errorMessage = null)
         {
             IResultValue<T> result = default;
 
             try
             {
-                applicationBeforeMethod?.Invoke();
+                beforeMethod?.Invoke();
                 result = new ResultValue<T>(method.Invoke());
             }
             catch (Exception ex)
             {
-                applicationCatchMethod?.Invoke();
+                catchMethod?.Invoke();
                 result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
                          ToResultValue<T>().
                          ConcatErrors(errorMessage);
             }
             finally
             {
-                applicationFinallyMethod?.Invoke();
+                finallyMethod?.Invoke();
             }
 
             return result;
@@ -58,25 +56,24 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Отлов ошибок и вызов постметода асинхронно     
         /// </summary> 
-        public static async Task<IResultError> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationBeforeMethod = null,
-                                                                               Action applicationCatchMethod = null,
-                                                                               Action applicationFinallyMethod = null)
+        public static async Task<IResultError> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action beforeMethod = null,
+                                                                          Action catchMethod = null, Action finallyMethod = null)
         {
             IResultError result = new ResultError();
 
             try
             {
-                applicationBeforeMethod?.Invoke();
+                beforeMethod?.Invoke();
                 await asyncMethod?.Invoke();
             }
             catch (Exception ex)
             {
-                applicationCatchMethod?.Invoke();
+                catchMethod?.Invoke();
                 result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResult();
             }
             finally
             {
-                applicationFinallyMethod?.Invoke();
+                finallyMethod?.Invoke();
             }
 
             return result;

@@ -24,6 +24,6 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        new IResultError ExecuteLazy();
+        new IResultError Execute();
     }
 }

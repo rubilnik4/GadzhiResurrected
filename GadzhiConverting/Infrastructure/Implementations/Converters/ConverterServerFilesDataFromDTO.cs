@@ -44,12 +44,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         public async Task<IFilesDataServer> ConvertToFilesDataServerAndSaveFile(FilesDataRequestServer filesDataRequest)
         {
             var filesDataServerToConvertTask = filesDataRequest?.FileDatas?.Select(fileDTO =>
-                                               ConvertToFileDataServerAndSaveFile(fileDTO,
-                                                                                  filesDataRequest.Id.ToString()));
+                                               ConvertToFileDataServerAndSaveFile(fileDTO, filesDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask);
 
-            return new FilesDataServer(filesDataRequest.Id, filesDataRequest.AttemptingConvertCount, StatusProcessingProject.Converting,
-                                       filesDataServerToConvert);
+            return new FilesDataServer(filesDataRequest.Id, filesDataRequest.AttemptingConvertCount, 
+                                       StatusProcessingProject.Converting, filesDataServerToConvert);
         }
 
         /// <summary>

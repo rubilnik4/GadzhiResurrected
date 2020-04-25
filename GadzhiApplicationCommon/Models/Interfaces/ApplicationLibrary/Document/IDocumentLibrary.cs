@@ -52,6 +52,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Закрыть файл файл
         /// </summary>
-        void CloseWithSaving();       
+        void CloseWithSaving();
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        void CloseApplication();
     }
 }

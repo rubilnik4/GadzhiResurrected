@@ -37,6 +37,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        public new IResultApplication ExecuteLazy() => new ResultApplication(Errors.ToList());
+        public new IResultApplication Execute() => new ResultApplication(Errors.ToList());
     }
 }

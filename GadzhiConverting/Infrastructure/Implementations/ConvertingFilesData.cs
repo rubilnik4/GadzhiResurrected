@@ -72,9 +72,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                         Map(resultPdf => saveResult.ConcatResult(resultPdf))).
                                           ResultValueEqualOkRawCollection(fileDatas => ExportFile(document, fileDataServer).
                                                                                        Map(exportResult => fileDatas.ConcatResultValue(exportResult))).
-                                          Void(fileDatas => CloseFile(document, fileDataServer.FileNameClient).
-                                                            Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
-                                                            ToResultCollection())).
+                                          Map(fileDatas => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
+                                                                                       Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
+                                                                                       ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
 
@@ -127,8 +127,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        private IResultError CloseFile(IDocumentLibrary documentLibrary, string fileNameClient) =>
-            _applicationConverting.CloseDocument(documentLibrary).
+        private IResultError CloseFile(IDocumentLibrary documentLibrary, string FilePathServer, string fileNameClient) =>
+            _applicationConverting.CloseDocument(documentLibrary, FilePathServer).
             Void(_ => _messagingService.ShowAndLogMessage($"Конвертация файла {fileNameClient} завершена"));
 
         /// <summary>

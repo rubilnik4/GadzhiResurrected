@@ -79,7 +79,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// </summary>
         public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
             new ResultApplication().
-            Void(_ => ApplicationWord.PrintCommand());        
+            Void(_ => ApplicationWord.PrintCommand());
 
         /// <summary>
         /// Экспорт файла
@@ -99,5 +99,10 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
             Save();
             Close();
         }
+
+        /// <summary>
+        /// Закрыть приложение
+        /// </summary>
+        public void CloseApplication() => ApplicationWord.CloseApplication();
     }
 }

@@ -49,9 +49,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication()
-        {
-            _application.Quit();
-        }
+        public void CloseApplication() => _application.Quit();       
     }
 }

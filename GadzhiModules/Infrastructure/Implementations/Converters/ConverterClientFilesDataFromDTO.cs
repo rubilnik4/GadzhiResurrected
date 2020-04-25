@@ -115,14 +115,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         {
             return new FileStatus(fileIntermediateResponse.FilePath,
                                   fileIntermediateResponse.StatusProcessing,
-                                  fileIntermediateResponse.FileConvertErrorType);
+                                  fileIntermediateResponse.FileConvertErrorTypes);
         }
 
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части перед сохранением
         /// </summary>      
         private FileStatus ConvertToFileStatusFromResponse(FileDataResponseClient fileResponse) =>
-             new FileStatus(fileResponse.FilePath, StatusProcessing.Writing, fileResponse.FileConvertErrorType);
+             new FileStatus(fileResponse.FilePath, StatusProcessing.Writing, fileResponse.FileConvertErrorTypes);
 
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<FileStatus> ConvertToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse)
         {
             var fileConvertSavedErrorType = await SaveFilesDataSourceFromDTOResponse(fileResponse);
-            var fileConvertErrorTypes = fileResponse.FileConvertErrorType.UnionNotNull(fileConvertSavedErrorType).
+            var fileConvertErrorTypes = fileResponse.FileConvertErrorTypes.UnionNotNull(fileConvertSavedErrorType).
                                                                           Where(error => error != FileConvertErrorType.NoError);
 
             return new FileStatus(fileResponse.FilePath, StatusProcessing.End, fileConvertErrorTypes);

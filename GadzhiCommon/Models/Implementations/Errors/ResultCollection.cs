@@ -60,6 +60,6 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        public IResultCollection<T> Execute() => new ResultCollection<T>(Value.ToList(), Errors.ToList());
+        public new IResultCollection<T> Execute() => new ResultCollection<T>(Value.ToList(), Errors.ToList());
     }
 }

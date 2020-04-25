@@ -80,7 +80,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Выполнить отложенные функции
         /// </summary>
-        public IResultValue<TValue> ExecuteLazy() => new ResultValue<TValue>(Value, Errors.ToList());
+        public IResultValue<TValue> Execute() => new ResultValue<TValue>(Value, Errors.ToList());
 
         /// <summary>
         /// Проверить ошибки на корретность

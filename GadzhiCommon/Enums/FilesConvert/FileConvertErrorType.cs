@@ -30,7 +30,7 @@
         PrinterNotInstall,
         PaperSizeNotFound,
         PdfPrintingError,
-        DwgCreatingError,
+        ExportError,
         SignatureNotFound,     
     }
 }

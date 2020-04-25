@@ -71,7 +71,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             if (fileDataEntity != null && fileDataIntermediateResponse != null)
             {
                 fileDataEntity.StatusProcessing = fileDataIntermediateResponse.StatusProcessing;
-                fileDataEntity.FileConvertErrorType = fileDataIntermediateResponse.FileConvertErrorType.ToList();
+                fileDataEntity.FileConvertErrorType = fileDataIntermediateResponse.FileConvertErrorTypes.ToList();
             }
 
             return fileDataEntity;
@@ -88,7 +88,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                 var fileDataSourceEntity = fileDataResponse.FileDatasSourceResponseServer?.AsQueryable().
                                            Select(fileData => ToFileDataSourceAccess(fileData));
                 fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
-                fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorType.ToList();
+                fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorTypes.ToList();
                 fileDataEntity.SetFileDataSourceEntities(fileDataSourceEntity);
             }
 

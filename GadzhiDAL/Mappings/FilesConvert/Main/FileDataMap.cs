@@ -18,11 +18,8 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
             Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();          
             Map(x => x.FileDataSourceClient).CustomType<BinaryBlobType>().LazyLoad();
-            HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType").
-                                              Inverse().Cascade.All();
-            HasMany(x => x.FileDataSourceServerEntities)
-                    .Inverse()
-                    .Cascade.All();
+            HasMany(x => x.FileConvertErrorType).Element("FileConvertErrorType");
+            HasMany(x => x.FileDataSourceServerEntities).Inverse().Cascade.All();
             References(x => x.FilesDataEntity);
         }
     }

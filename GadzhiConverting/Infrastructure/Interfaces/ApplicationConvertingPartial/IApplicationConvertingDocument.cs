@@ -42,6 +42,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        IResultError CloseDocument(IDocumentLibrary documentLibrary);
+        IResultError CloseDocument(IDocumentLibrary documentLibrary, string filePath);
     }
 }

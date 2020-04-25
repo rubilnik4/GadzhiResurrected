@@ -41,7 +41,7 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.PrinterNotInstall , "Принтер не установлен" },
                 { FileConvertErrorType.PaperSizeNotFound  , "Формат принтера не найден" },
                 { FileConvertErrorType.PdfPrintingError  , "Ошибка печати PDF" },
-                { FileConvertErrorType.DwgCreatingError  , "Ошибка создания DWG" },
+                { FileConvertErrorType.ExportError  , "Ошибка экспортирования файла" },
                 { FileConvertErrorType.SignatureNotFound  , "Подпись не найдена" },               
             };
 

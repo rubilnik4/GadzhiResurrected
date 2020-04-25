@@ -83,6 +83,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
             Close();
         }
 
+        public void CloseApplication() => ApplicationMicrostation.CloseApplication();
+
         /// <summary>
         /// Создать пдф по координатам и формату
         /// </summary>

@@ -52,9 +52,6 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication()
-        {
-            _application.Quit();
-        }
+        public void CloseApplication() => _application.Quit();      
     }
 }

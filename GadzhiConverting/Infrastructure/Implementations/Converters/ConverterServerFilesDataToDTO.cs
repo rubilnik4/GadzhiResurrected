@@ -29,31 +29,24 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServer filesDataServer)
-        {
-            if (filesDataServer != null)
+        public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServer filesDataServer) =>
+            (filesDataServer != null) ?
+            new FilesDataIntermediateResponseServer()
             {
-                return new FilesDataIntermediateResponseServer()
-                {
-                    Id = filesDataServer.Id,
-                    StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                    FileDatas = filesDataServer.FileDatasServer?.Select(fileDataServer =>
-                                ConvertFileToIntermediateResponse(fileDataServer)).ToList(),
-                };
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(filesDataServer));
-            }
-        }
+                Id = filesDataServer.Id,
+                StatusProcessingProject = filesDataServer.StatusProcessingProject,
+                FileDatas = filesDataServer.FileDatasServer?.Select(ConvertFileToIntermediateResponse).ToList(),
+            } :
+            throw new ArgumentNullException(nameof(filesDataServer));
+
+
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
         public async Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServer filesDataServer)
         {
-            var filesDataToResponseTasks = filesDataServer?.FileDatasServer?.Select(fileDataServer =>
-                                                            ConvertFileResponse(fileDataServer));
+            var filesDataToResponseTasks = filesDataServer?.FileDatasServer?.Select(ConvertFileResponse);
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 
             return new FilesDataResponseServer()
@@ -73,7 +66,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                FileConvertErrorType = fileDataServer.FileConvertErrorTypes.ToList(),
+                FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
             };
         }
 
@@ -82,7 +75,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<FileDataResponseServer> ConvertFileResponse(IFileDataServer fileDataServer)
         {
-            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(fileData => ConvertFileDataSourceResponse(fileData))
+            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(ConvertFileDataSourceResponse)
                                        ?? Enumerable.Empty<Task<FileDataSourceResponseServer>>();
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);
 
@@ -91,7 +84,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FileDatasSourceResponseServer = filesDataSource,
-                FileConvertErrorType = fileDataServer.FileConvertErrorTypes.ToList(),
+                FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
             };
         }
 
