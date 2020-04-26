@@ -54,6 +54,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         Task<bool> SaveFileFromByte(string filePath, byte[] fileByte);
 
         /// <summary>
+        /// Копировать файл
+        /// </summary>   
+        bool CopyFile(string fileSource, string fileDestination);
+
+        /// <summary>
         /// Создать поддиректорию и пррисвоить идентефикатор
         /// </summary>     
         string CreateFolderByGuid(string startingPath);

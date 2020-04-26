@@ -21,11 +21,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public ResultAppCollection(IEnumerable<IErrorApplication> errors)
            : base(Enumerable.Empty<T>(), errors) { }
 
-        public ResultAppCollection(IEnumerable<T> collection)
-          : this(collection, Enumerable.Empty<IErrorApplication>()) { }
+        public ResultAppCollection(IEnumerable<T> collection, IErrorApplication errorNull = null)
+          : this(collection, Enumerable.Empty<IErrorApplication>(), errorNull) { }
 
-        public ResultAppCollection(IEnumerable<T> collection, IEnumerable<IErrorApplication> errors)
-            : base(collection, errors)
+        public ResultAppCollection(IEnumerable<T> collection, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
+            : base(collection, errors, errorNull)
         {
             if (!ValidateCollection(collection)) throw new NullReferenceException(nameof(collection));
         }
@@ -44,7 +44,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// </summary>      
         public IResultAppCollection<T> ConcatResultValue(IResultAppValue<T> resultValue) =>
             resultValue != null ?
-            ConcatValue(resultValue.Value) :
+            new ResultAppCollection<T>(resultValue.Value != null ?
+                                            Value.Concat(new List<T>() { resultValue.Value }) :
+                                            Value,
+                                        Errors.UnionNotNullApp(resultValue.Errors)) :
             throw new ArgumentNullException(nameof(resultValue));
 
         /// <summary>
@@ -52,8 +55,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// </summary>       
         public IResultAppCollection<T> ConcatValue(T value) =>
             value != null ?
-            new ResultAppCollection<T>(Value.Concat(new List<T>() { value }),
-                                       Errors.Union(Errors ?? Enumerable.Empty<IErrorApplication>())) :
+            new ResultAppCollection<T>(Value.Concat(new List<T>() { value }), Errors) :
             throw new ArgumentNullException(nameof(value));
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
-        public virtual IList<FileDataEntity> FileDataEntities { get; protected set; }       
+        public virtual IList<FileDataEntity> FileDataEntities { get; protected set; }
 
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
@@ -43,7 +43,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
                 fileData.FilesDataEntity = this;
                 return fileData;
             })?.ToList();
-        }      
+        }
 
         /// <summary>
         /// Присовить статус конвертирования
@@ -56,19 +56,22 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         }
 
         /// <summary>
-        /// Присовить статус отмены конвертирования
+        /// Присовить статус отмены конвертирования, если файл неотконвертирован
         /// </summary>
         public virtual void AbortConverting(ClientServer сlientServer)
         {
-            switch (сlientServer)
+            if (StatusProcessingProject != StatusProcessingProject.ConvertingComplete)
             {
-                case ClientServer.Client:
-                    StatusProcessingProject = StatusProcessingProject.Abort;                     
-                    break;
-                case ClientServer.Server:
-                    StatusProcessingProject = StatusProcessingProject.InQueue;
-                    break;
+                switch (сlientServer)
+                {
+                    case ClientServer.Client:
+                        StatusProcessingProject = StatusProcessingProject.Abort;
+                        break;
+                    case ClientServer.Server:
+                        StatusProcessingProject = StatusProcessingProject.InQueue;
+                        break;
+                }
             }
-        }      
+        }
     }
 }

@@ -66,18 +66,26 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
         private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
-            LoadDocument(fileDataServer).
-            ResultValueOkBind(document => SaveDocument(document, fileDataServer).ToResultCollection().
-                                          ResultValueEqualOkRawCollection(saveResult => CreatePdf(document, fileDataServer, printersInformation).
-                                                                                        Map(resultPdf => saveResult.ConcatResult(resultPdf))).
-                                          ResultValueEqualOkRawCollection(fileDatas => ExportFile(document, fileDataServer).
-                                                                                       Map(exportResult => fileDatas.ConcatResultValue(exportResult))).
+            LoadAndSaveDocument(fileDataServer).
+            ResultValueOkBind(document => GetSavedFileDataSource(document).ToResultCollection().
+                                          Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
                                           Map(fileDatas => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
                                                                                        Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
                                                                                        ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
 
+        /// <summary>
+        /// Печать и экспорт файла
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> MakeConvertingFileActions(IResultCollection<IFileDataSourceServer> fileDataSourceServer,
+                                                                                   IDocumentLibrary documentLibrary,
+                                                                                   IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
+            fileDataSourceServer.
+            ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, printersInformation).
+                                                          Map(resultPdf => saveResult.ConcatResult(resultPdf)).
+                                                          Map(fileDatas => ExportFile(documentLibrary, fileDataServer).
+                                                                           Map(exportResult => fileDatas.ConcatResultValue(exportResult))));
         /// <summary>
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
@@ -88,22 +96,26 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                       errorDataServer.Select(error => error.FileConvertErrorType)));
 
         /// <summary>
-        /// Загрузить файл
+        /// Загрузить файл и сохранить в папку для обработки
         /// </summary>   
-        private IResultValue<IDocumentLibrary> LoadDocument(IFileDataServer fileDataServer) =>
+        private IResultValue<IDocumentLibrary> LoadAndSaveDocument(IFileDataServer fileDataServer) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
+            ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(fileDataServer.FilePathServer, savingPath).
+                                            WhereContinue(copyResult => copyResult,
+                                                okFunc: _ => new ResultValue<string>(savingPath),
+                                                badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
+                                                              ToResultValue<string>())).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>
-        /// Сохранить файл
+        /// Получить путь к сохраненному файлу для обработки
         /// </summary>        
-        private IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer) =>
-             new ResultError().
-             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
-             ResultValueOkBind(savingPath => _applicationConverting.SaveDocument(documentLibrary, savingPath)).
-             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
+        private IResultValue<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary) =>
+            new FileDataSourceServer(documentLibrary.FullName).
+            Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource));
 
         private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                    IPrintersInformation printersInformation) =>

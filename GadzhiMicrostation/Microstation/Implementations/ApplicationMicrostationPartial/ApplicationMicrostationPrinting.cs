@@ -123,7 +123,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                 int indexSubstringStart = paperName.IndexOf(drawPaperSize, StringComparison.OrdinalIgnoreCase);
                 int indexSubstringEnd = indexSubstringStart + drawPaperSize.Length;
 
-                if (indexSubstringEnd > paperName.Length)
+                if (indexSubstringEnd >= paperName.Length)
                 {
                     success = true; //дальше символов нет
                 }

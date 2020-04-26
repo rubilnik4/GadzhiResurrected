@@ -32,7 +32,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Преобразовать в результирующий ответ с параметром
         /// </summary>      
-        public IResultAppValue<T> ToResultApplicationValue<T>() => new ResultAppValue<T>(Errors);
+        public IResultAppValue<T> ToResultApplicationValue<T>(T value) => new ResultAppValue<T>(value, Errors);
 
         /// <summary>
         /// Выполнить отложенные функции

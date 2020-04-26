@@ -18,7 +18,7 @@ namespace GadzhiCommon.Extentions.Functional.Result
         /// Преобразовать коллекцию ответов в ответ с коллекцией
         /// </summary>
         public static IResultCollection<T> ToResultCollection<T>(this IEnumerable<IResultValue<T>> @this) =>
-        @this == null ?
+        @this != null ?
         @this.Aggregate((IResultCollection<T>)new ResultCollection<T>(), (resultCollection, resultValue) =>
                         resultCollection.ConcatResultValue(resultValue)) :
         throw new ArgumentNullException(nameof(@this));

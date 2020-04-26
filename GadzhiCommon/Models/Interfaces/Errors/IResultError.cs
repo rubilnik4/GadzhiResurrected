@@ -19,7 +19,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Преобразовать в результирующий ответ с параметром
         /// </summary>      
-        IResultValue<T> ToResultValue<T>();
+        IResultValue<T> ToResultValue<T>(T value);
 
         /// <summary>
         /// Выполнить отложенные функции

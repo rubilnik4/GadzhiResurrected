@@ -93,10 +93,10 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 var directoryInfo = new DirectoryInfo(directoryPath);
                 foreach (FileInfo file in directoryInfo.EnumerateFiles())
                 {
-                    if(!IsFileLocked(file))
+                    if (!IsFileLocked(file))
                     {
                         file.Delete();
-                    }                  
+                    }
                 }
                 foreach (DirectoryInfo dir in directoryInfo.EnumerateDirectories())
                 {
@@ -111,7 +111,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 }
             }
         }
-     
+
         /// <summary>
         /// Представить файл в двоичном виде и запаковать
         /// </summary>   
@@ -191,6 +191,25 @@ namespace GadzhiCommon.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Копировать файл
+        /// </summary>   
+        public bool CopyFile(string fileSource, string fileDestination)
+        {
+            if (String.IsNullOrWhiteSpace(fileDestination)) return false;
+            if (!IsFileExist(fileSource)) return false;
+
+            try
+            {
+                File.Copy(fileSource, fileDestination, true);
+                return true;
+            }
+            catch(IOException)
+            {
+                return false;
+            }           
+        }
+
+        /// <summary>
         /// Создать поддиректорию и присвоить идентефикатор
         /// </summary>     
         public string CreateFolderByGuid(string startingPath) => CreateFolderByName(startingPath, Guid.NewGuid().ToString());
@@ -221,7 +240,5 @@ namespace GadzhiCommon.Infrastructure.Implementations
             }
             return false;
         }
-
-
     }
 }

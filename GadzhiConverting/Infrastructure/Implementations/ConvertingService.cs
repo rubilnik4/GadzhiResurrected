@@ -198,6 +198,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 _messagingService.ShowAndLogMessage($"Конвертация пакета прервана");
             }
+            _idPackage = null;
         }
 
         /// <summary>

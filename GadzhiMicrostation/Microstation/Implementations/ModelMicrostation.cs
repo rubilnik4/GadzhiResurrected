@@ -62,20 +62,16 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти элементы в модели по типу
         /// </summary>       
-        public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation)
-        {
-            return GetModelElements(new List<ElementMicrostationType>() { includeTypeMicrostation }).
+        public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation) =>
+            GetModelElements(new List<ElementMicrostationType>() { includeTypeMicrostation }).
                    Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));
-        }
 
         /// <summary>
         /// Найти элементы в модели по типам
         /// </summary>       
-        public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(IEnumerable<ElementMicrostationType> includeTypesMicrostation = null)
-        {
-            return GetModelElements(includeTypesMicrostation).
-                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));
-        }
+        public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(IEnumerable<ElementMicrostationType> includeTypesMicrostation = null) =>
+            GetModelElements(includeTypesMicrostation).
+                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));        
 
         /// <summary>
         /// Найти штампы в модели
@@ -98,7 +94,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 var elementScanCriteria = new ElementScanCriteria();
                 elementScanCriteria.ExcludeAllTypes();
 
-                var includeTypes = includeTypesMicrostation?.Select(type => ConvertElementMicrostationTypes.ConvertToMsdMicrostation(type));
+                var includeTypes = includeTypesMicrostation?.Select(ConvertElementMicrostationTypes.ConvertToMsdMicrostation);
                 if (includeTypes != null)
                 {
                     foreach (MsdElementType type in includeTypes)

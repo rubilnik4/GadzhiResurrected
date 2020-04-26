@@ -64,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Закрыть файл
         /// </summary>
         public IResultError CloseDocument(IDocumentLibrary documentLibrary, string filePath) =>
-            ExecuteAndHandleError(() => documentLibrary.CloseWithSaving(),
+            ExecuteAndHandleError(() => documentLibrary.Close(),
                           catchMethod: () => documentLibrary.CloseApplication(),
                           errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка закрытия файла {filePath}")).
             ToResult();

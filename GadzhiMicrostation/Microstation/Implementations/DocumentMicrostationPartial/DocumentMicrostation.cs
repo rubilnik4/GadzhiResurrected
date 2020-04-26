@@ -28,31 +28,36 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Экземпляр файла
         /// </summary>
-        private readonly DesignFile _designFile;
+        private readonly Application _application;
 
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
 
-        public DocumentMicrostation(DesignFile designFile, IApplicationMicrostation applicationMicrostation)
+        public DocumentMicrostation(Application application, IApplicationMicrostation applicationMicrostation)
         {
-            _designFile = designFile ?? throw new ArgumentNullException(nameof(designFile));
+            _application = application ?? throw new ArgumentNullException(nameof(application));
             ApplicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
 
             ModelsMicrostation = GetModelsMicrostation();
-            StampContainer = new StampContainer(FindStamps(ModelsMicrostation), designFile.FullName);
+            StampContainer = new StampContainer(FindStamps(ModelsMicrostation), DesignFile.FullName);
         }
+
+        /// <summary>
+        /// Текущий документ
+        /// </summary>
+        private DesignFile DesignFile => _application.ActiveDesignFile;
 
         /// <summary>
         /// Путь к файлу
         /// </summary>
-        public string FullName => _designFile?.FullName;
+        public string FullName => DesignFile?.FullName;
 
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
-        public bool IsDocumentValid => _designFile != null;
+        public bool IsDocumentValid => DesignFile != null;
 
         /// <summary>
         /// Модели и листы в текущем файле
@@ -62,17 +67,17 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Сохранить файл
         /// </summary>
-        public void Save() => _designFile.Save();
+        public void Save() => DesignFile.Save();
 
         /// <summary>
         /// Сохранить файл
         /// </summary>
-        public void SaveAs(string filePath) => _designFile.SaveAs(filePath, true);
+        public void SaveAs(string filePath) => DesignFile.SaveAs(filePath, true);
 
         /// <summary>
         /// Закрыть файл файл
         /// </summary>
-        public void Close() => _designFile.Close();
+        public void Close() => DesignFile.Close();
 
         /// <summary>
         /// Закрыть файл файл
@@ -94,9 +99,9 @@ namespace GadzhiMicrostation.Microstation.Implementations
                 okFunc: stamp => (IStampMicrostation)stamp,
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
             ResultValueOkBind(stamp => ApplicationMicrostation.SetPrintingFenceByRange(stamp.StampCellElement.Range).
-                                       ToResultApplicationValue<IStampMicrostation>()).
+                                       ToResultApplicationValue(stamp)).
             ResultValueOkBind(stamp => ApplicationMicrostation.SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize).
-                                       ToResultApplicationValue<IStampMicrostation>())?.
+                                       ToResultApplicationValue(stamp))?.
             ResultVoidOk(stamp => ApplicationMicrostation.SetPrintingOrientation(stamp.Orientation)).
             ResultVoidOk(stamp => ApplicationMicrostation.SetPrintScale(stamp.StampCellElement.UnitScale)).
             ResultVoidOk(_ => ApplicationMicrostation.SetPrintColor(colorPrint)).
@@ -109,15 +114,15 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public string Export(string filePath) =>
            (Path.GetFileNameWithoutExtension(filePath) + "." + FileExtentionMicrostation.dwg.ToString()).
            Map(fileName => Path.Combine(Path.GetDirectoryName(filePath), fileName)).
-           Void(dwgFilePath => _designFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));
+           Void(dwgFilePath => DesignFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));
 
         /// <summary>
         /// Получить модели в текущем файле
         /// </summary>       
         private IList<IModelMicrostation> GetModelsMicrostation() =>
-            _designFile.Models.ToIEnumerable().
+            DesignFile.Models.ToIEnumerable().
             Select(model => new ModelMicrostation(model, ApplicationMicrostation)).
             Cast<IModelMicrostation>().
-            ToList();       
+            ToList();
     }
 }

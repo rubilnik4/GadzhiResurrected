@@ -38,6 +38,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             documentLibrary.StampContainer.Stamps.ToResultCollectionFromApplication().
             ResultValueOkBind(stamps => stamps.Select(stamp =>
                                         CreatePdfWithSignatures(documentLibrary, stamp, filePath, colorPrint, pdfPrinterInformation)).
+                                        ToList().
                                         ToResultCollection()).
             ToResultCollection();
 

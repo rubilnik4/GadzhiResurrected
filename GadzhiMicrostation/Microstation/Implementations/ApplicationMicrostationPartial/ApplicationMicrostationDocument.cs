@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Implementation.Errors;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
@@ -17,12 +18,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     /// Подкласс приложения Microstation для работы с файлом
     /// </summary>
     public partial class ApplicationMicrostation : IApplicationLibraryDocument
-    {        
+    {
         /// <summary>
         /// Открыть файл
         /// </summary>
         public IResultAppValue<IDocumentLibrary> OpenDocument(string filePath) =>
-            new ResultAppValue<IDocumentLibrary>(new DocumentMicrostation(Application.OpenDesignFile(filePath, false), this),
-                                              new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Microstation не создан"));       
+            Application.OpenDesignFile(filePath, false).
+            Map(openDocument => new ResultAppValue<IDocumentLibrary>(new DocumentMicrostation(_application, this),
+                                             new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Microstation не создан")));
     }
 }

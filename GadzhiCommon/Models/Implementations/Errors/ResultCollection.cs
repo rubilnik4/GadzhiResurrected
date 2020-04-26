@@ -45,16 +45,18 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// </summary>      
         public IResultCollection<T> ConcatResultValue(IResultValue<T> resultValue) =>
             resultValue != null ?
-            ConcatValue(resultValue.Value) :
-            throw new ArgumentNullException(nameof(resultValue));                  
+            new ResultCollection<T>(resultValue.Value != null ?
+                                        Value.Append(resultValue.Value) :
+                                        Value,
+                                    Errors.UnionNotNull(resultValue.Errors)) :
+            throw new ArgumentNullException(nameof(resultValue));
 
         /// <summary>
         /// Добавить значение
         /// </summary>       
         public IResultCollection<T> ConcatValue(T value) =>
             value != null ?
-            new ResultCollection<T>(Value.Append(value),
-                                    Errors.Union(Errors ?? Enumerable.Empty<IErrorCommon>())) :
+            new ResultCollection<T>(Value.Append(value), Errors) :
             throw new ArgumentNullException(nameof(value));
 
         /// <summary>
