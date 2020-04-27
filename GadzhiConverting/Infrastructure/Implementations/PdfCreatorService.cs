@@ -47,15 +47,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Время ожидания на создание PDF файла
         /// </summary>
-        private int WaitingPrintingLimitInSeconds => 60;
+        private int _waitingPrintingLimitInSeconds => 60;
 
         /// <summary>
         /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
         public IResultError PrintPdfWithExecuteAction(string filePath, Func<IResultError> printFunction) =>
             SetPrinterOptions(filePath).
-            ResultValueOkBind(pdfCreator => new ResultValue<PDFCreator.clsPDFCreator>(pdfCreator, printFunction.Invoke().Errors)).
-            ResultValueOkBind(pdfCreator => new ResultValue<Unit>(Unit.Value, PrintPdf(pdfCreator).Errors)).
+            ResultValueOkBind(pdfCreator => new ResultValue<PDFCreator.clsPDFCreator>(pdfCreator)).
+            ResultValueOkBind(pdfCreator => new ResultValue<Unit>(Unit.Value, PrintPdf(pdfCreator, printFunction).Errors)).
             ToResult();
 
         /// <summary>
@@ -86,14 +86,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Напечатать PDF
         /// </summary>
-        private IResultError PrintPdf(PDFCreator.clsPDFCreator pdfCreator)
+        private IResultError PrintPdf(PDFCreator.clsPDFCreator pdfCreator, Func<IResultError> printFunction)
         {
             pdfCreator.eReady += new PDFCreator.__clsPDFCreator_eReadyEventHandler(PdfCreatorReady);
             _readyState = false;
             pdfCreator.cPrinterStop = false;
 
+            var printFunctionResult = printFunction.Invoke();
             int waitingLimit = 0;
-            while (!_readyState && waitingLimit < WaitingPrintingLimitInSeconds)
+            while (!_readyState && waitingLimit < _waitingPrintingLimitInSeconds)
             {
                 waitingLimit += 1;
                 Thread.Sleep(1000);
@@ -103,9 +104,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
             pdfCreator.cClose();
             pdfCreator = null;
 
-            return !_readyState ?
+            return _readyState ?
                    new ResultError() :
-                   new ErrorCommon(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло").ToResult();
+                   new ErrorCommon(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло").
+                   ToResult().
+                   ConcatErrors(printFunctionResult.Errors);
         }
 
         /// <summary>
@@ -125,7 +128,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Событие готовности печати PDF
         /// </summary>
         private void PdfCreatorReady()
-        {          
+        {
             _readyState = true;
         }
 

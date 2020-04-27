@@ -25,7 +25,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         public StampMicrostation(ICellElementMicrostation stampCellElement)
         {
             StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
-            StampSubControls = FindElementsInStampFields(stampCellElement?.SubElements, StampFieldElement.StampControlNames);
+            StampSubControls = FindElementsInStampFields(stampCellElement?.SubElements, StampFieldElement.StampControlNames).ToList();
         }
 
         /// <summary>

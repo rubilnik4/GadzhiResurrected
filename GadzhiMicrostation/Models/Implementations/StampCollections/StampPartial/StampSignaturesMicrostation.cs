@@ -28,7 +28,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             Void(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.
                                                           MicrostationResources.SignatureMicrostationFileName)).
             Void(_ => DeleteSignaturesPrevious()).
-            Map(_ => InsertSignaturesFromLibrary().Execute()).
+            Map(_ => InsertSignaturesFromLibrary()).
             Void(_ => StampCellElement.ApplicationMicrostation.DetachLibrary());
 
         /// <summary>

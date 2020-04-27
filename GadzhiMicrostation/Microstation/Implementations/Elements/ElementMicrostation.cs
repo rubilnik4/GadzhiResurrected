@@ -90,7 +90,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public ElementMicrostationType ElementType
         {
             get
-            {                
+            {
                 if (IsTextElementMicrostation)
                 {
                     return ElementMicrostationType.TextElement;
@@ -187,10 +187,19 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Получить аттрибут из кэша или выгрузить из Microstation
         /// </summary>       
-        protected string GetAttributeFromCachOrLoad(ElementMicrostationAttributes attribute) =>
-            (AttributeCaching.ContainsKey(attribute)) ?
-             AttributeCaching[attribute] :
-             _element.GetAttributeById(attribute);
+        protected string GetAttributeFromCachOrLoad(ElementMicrostationAttributes attributeElement)
+        {
+            if (AttributeCaching.ContainsKey(attributeElement))
+            {
+                return AttributeCaching[attributeElement];
+            }
+            else
+            {
+                var attribute = _element.GetAttributeById(attributeElement);
+                AttributeCaching[attributeElement] = attribute;
+                return attribute;
+            }
+        }
 
         /// <summary>
         /// Добавить аттрибут в кэш

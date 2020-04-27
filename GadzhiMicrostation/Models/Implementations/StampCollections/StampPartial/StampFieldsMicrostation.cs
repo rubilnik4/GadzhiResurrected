@@ -33,10 +33,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                      subElement.ElementType == elementMicrostationType) &&
                                      subElement is IRangeBaseElementMicrostation<IElementMicrostation>).
                 Cast<IRangeBaseElementMicrostation<IElementMicrostation>>().
-                Join(fieldsSearch,
-                     subElement => subElement.AttributeControlName,
-                     fieldSearch => fieldSearch,
-                     (subElement, fieldSearch) => subElement).
+                Where (subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).            
                 Select(subElement => subElement.Copy(StampFieldMain.IsControlVertical(subElement.AttributeControlName))).
                 Cast<IElementMicrostation>();
 

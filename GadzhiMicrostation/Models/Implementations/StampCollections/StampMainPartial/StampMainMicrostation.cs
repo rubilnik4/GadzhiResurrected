@@ -58,6 +58,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                      $"Не найдена подпись {signature.PersonName}")).
             Cast<IErrorApplication>().
+            ToList().
             ToResultApplication();
 
         /// <summary>
