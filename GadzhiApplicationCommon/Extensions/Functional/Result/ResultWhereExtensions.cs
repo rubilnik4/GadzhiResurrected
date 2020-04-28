@@ -36,7 +36,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         }
 
         /// <summary>
-        /// Выполнение положительного иди негативного условия в результирующем ответе
+        /// Выполнение положительного или негативного условия в результирующем ответе
         /// </summary>      
         public static IResultAppValue<TValueOut> ResultOkBad<TValueIn, TValueOut>(this IResultAppValue<TValueIn> @this,
                                                                                Func<TValueIn, TValueOut> okFunc,
@@ -96,10 +96,21 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultAppValue<TValueOut>(@this.Errors);
 
-            return okFunc.Invoke(@this.Value).
-                   WhereContinue(result => result.OkStatus,
-                        okFunc: result => new ResultAppValue<TValueOut>(result.Value),
-                        badFunc: result => new ResultAppValue<TValueOut>(result.Value, result.Errors));
+            return okFunc.Invoke(@this.Value);
+        }
+
+        /// <summary>
+        /// Выполнение негативного условия результирующего ответа или возвращение положительного в результирующем ответе
+        /// </summary>   
+        public static IResultAppValue<TValue> ResultValueBadBind<TValue>(this IResultAppValue<TValue> @this,
+                                                                         Func<TValue, IResultAppValue<TValue>> badFunc)
+        {
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            if (@this == null) return null;
+            if (@this.OkStatus) return @this;
+
+            return badFunc.Invoke(@this.Value);
         }
 
         /// <summary>
@@ -112,10 +123,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultApplication(@this.Errors);
 
-            return okFunc.Invoke().
-                   WhereContinue(result => result.OkStatus,
-                        okFunc: result => new ResultApplication(),
-                        badFunc: result => new ResultApplication(result.Errors));
+            return okFunc.Invoke();
         }
     }
 }

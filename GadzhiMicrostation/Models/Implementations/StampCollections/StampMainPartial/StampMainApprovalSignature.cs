@@ -48,7 +48,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertApprovalSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
                                                                                                        IElementMicrostation dateSignatureElement) =>
             (string personId) =>
-                InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation)?.
+                InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation,
+                                responsiblePersonElement.AsTextElementMicrostation.Text)?.
                 ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.ApprovalSignature));
     }
 }

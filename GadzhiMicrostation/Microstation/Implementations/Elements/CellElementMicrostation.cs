@@ -32,7 +32,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
             CellElement = cellElement;
-            SubElementsPair = GetSubElementsPair();
         }
 
         /// <summary>
@@ -63,7 +62,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Дочерние элементы с оригиналами Microstation
         /// </summary>
-        private IDictionary<IElementMicrostation, Element> SubElementsPair { get; }
+        private IDictionary<IElementMicrostation, Element> _subElementsPair;
+
+        /// <summary>
+        /// Дочерние элементы с оригиналами Microstation
+        /// </summary>
+        private IDictionary<IElementMicrostation, Element> SubElementsPair
+        {
+            get
+            {
+                if (_subElementsPair == null)
+                {
+                    _subElementsPair = GetSubElementsPair();
+                }
+                return _subElementsPair;
+            }
+        }
 
         /// <summary>
         /// Дочерние элементы

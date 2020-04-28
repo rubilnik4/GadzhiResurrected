@@ -138,10 +138,21 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (@this == null) return null;
             if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
 
-            return okFunc.Invoke(@this.Value).
-                   WhereContinue(result => result.OkStatus,
-                        okFunc: result => new ResultValue<TValueOut>(result.Value),
-                        badFunc: result => new ResultValue<TValueOut>(result.Value, result.Errors));
+            return okFunc.Invoke(@this.Value);
+        }
+
+        /// <summary>
+        /// Выполнение негативного условия результирующего ответа или возвращение положительного в результирующем ответе
+        /// </summary>   
+        public static IResultValue<TValue> ResultValueBadBind<TValue>(this IResultValue<TValue> @this,
+                                                                      Func<TValue, IResultValue<TValue>> badFunc)
+        {
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            if (@this == null) return null;
+            if (@this.OkStatus) return @this;
+
+            return badFunc.Invoke(@this.Value);
         }
 
         /// <summary>

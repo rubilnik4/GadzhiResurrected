@@ -49,10 +49,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId,
-                                                                                    ITextElementMicrostation previousField,
-                                                                                    ITextElementMicrostation nextField,
-                                                                                    string personName = null) =>
+        protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId, ITextElementMicrostation previousField,
+                                                                            ITextElementMicrostation nextField, string personName = null) =>
             GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale, previousField, nextField).
             ResultValueOkBind(signatureRange => StampCellElement.ApplicationMicrostation.
                                                 CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
@@ -102,7 +100,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                 cellElement.Copy(isVertical).
                 Map(cell => SignatureMove(cell, signatureRange, isVertical)).
                 Map(cell => SignatureRotate(cell, signatureRange, isVertical)).
-                Map(cell => SignatureScale(cell, signatureRange, isVertical)).
+             //   Map(cell => SignatureScale(cell, signatureRange, isVertical)).
                 Void(cell => cell.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker))
             );
 
@@ -111,10 +109,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         private ICellElementMicrostation SignatureMove(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
             signatureCell.Origin.
-            Subtract(signatureCell.Range.LowLeftPoint).
-            Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow).
+            Subtract(signatureCell.Origin).
+           // Multiply(StampSettingsMicrostation.SignatureRatioMoveFromOriginToLow).
             WhereOk(_ => isVertical,
-                okFunc: originMinusLowLeft => originMinusLowLeft.AddX(signatureRange.Width)).
+                okFunc: originMinusLowLeft => originMinusLowLeft.SubtractY(signatureRange.Width)).
             Map(originMinusLowLeft => (ICellElementMicrostation)signatureCell.Move(originMinusLowLeft));
 
         /// <summary>

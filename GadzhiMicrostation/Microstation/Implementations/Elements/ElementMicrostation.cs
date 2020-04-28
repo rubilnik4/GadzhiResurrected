@@ -124,7 +124,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public virtual IElementMicrostation Rotate(PointMicrostation origin, double degree)
         {
-            _element.RotateAboutZ(origin.ToPoint3d(), degree * (Math.PI / 180));
+            _element.AsCellElement.RotateAboutZ(origin.ToPoint3d(), degree * (Math.PI / 180));
             return this;
         }
 

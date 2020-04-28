@@ -55,10 +55,22 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
             new PointMicrostation(this.X, this.Y + yCoorditate, this.Z);
 
         /// <summary>
-        /// Операция вычитания с другой точкой
+        /// Операция вычитания по оси X
         /// </summary>   
         public PointMicrostation Subtract(PointMicrostation point) =>
             new PointMicrostation(this.X - point.X, this.Y - point.Y, this.Z - point.Z);
+
+        /// <summary>
+        /// Операция вычитания по оси Y
+        /// </summary>   
+        public PointMicrostation SubtractX(double xCoorditate) =>
+            new PointMicrostation(this.X - xCoorditate, this.Y , this.Z);
+
+        /// <summary>
+        /// Операция вычитания с другой точкой
+        /// </summary>   
+        public PointMicrostation SubtractY(double yCoorditate) =>
+            new PointMicrostation(this.X , this.Y - yCoorditate, this.Z);
 
         /// <summary>
         /// Операция умножения

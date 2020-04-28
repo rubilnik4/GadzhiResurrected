@@ -146,7 +146,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                     Map(_ => ConvertingFilesData(fileData)).
                                     MapAsync(fileDataConverted => ReplyPackageIsComplete(fileDataConverted)),
                 badFunc: fileData => Task.FromResult(ReplyPackageIsInvalid(filesDataServer))).
-            VoidAsync(async fileData => await SendResponse(fileData));
+            VoidAsync(fileData => SendResponse(fileData));
 
         /// <summary>
         /// Сообщить о пустом/некорректном пакете
@@ -176,7 +176,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task<IFilesDataServer> SendIntermediateResponse(IFilesDataServer filesDataServer) =>
             await _converterServerFilesDataToDTO.ConvertFilesToIntermediateResponse(filesDataServer).
-            MapAsync(feliDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(feliDataRequest)).
+            Map(feliDataRequest => Task.FromResult (feliDataRequest)).
+            BindAsync(feliDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(feliDataRequest)).
             MapAsync(statusProcessingProject => filesDataServer.SetStatusProcessingProject(statusProcessingProject));
 
         /// <summary>
@@ -224,7 +225,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultOkBad(
                 okFunc: fileData => ConvertingByCountLimit(fileData).
                                     MapAsync(fileDataConverted => filesDataServer.ChangeFileDataServer(fileDataConverted)).
-                                    BindAsync(filesDataChanged => SendIntermediateResponse(filesDataChanged)).
+                                    BindAsync(filesDataChanged =>  SendIntermediateResponse(filesDataChanged)).
                                     BindAsync(filesDataSent => ConvertingFilesData(filesDataSent)),
                 badFunc: _ => Task.FromResult(filesDataServer)).
             Value;

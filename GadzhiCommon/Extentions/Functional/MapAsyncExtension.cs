@@ -11,16 +11,8 @@ namespace GadzhiCommon.Extentions.Functional
     /// <summary>
     /// Методы расширения для преобразования типов
     /// </summary>
-    public static class MapAyncExtensions
-    {
-        /// <summary>
-        /// Преобразование типов с помощью функции
-        /// </summary>       
-        public static Task<TResult> MapAsync<TSource, TResult>(this TSource @this, Func<TSource, Task<TResult>> func) =>
-            func != null ?
-            func(@this) :
-            throw new ArgumentNullException(nameof(func));
-
+    public static class MapAsyncExtensions
+    { 
         /// <summary>
         /// Преобразование типов с помощью функции
         /// </summary>       
@@ -44,11 +36,11 @@ namespace GadzhiCommon.Extentions.Functional
         /// <summary>
         /// Выполнить действие, вернуть тот же тип
         /// </summary>       
-        public static async Task<T> VoidAsync<T>(this Task<T> @this, Action<T> action)
+        public static async Task<T> VoidAsync<T>(this Task<T> @this, Func<T, Task> action)
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
             var awaited = await @this;
-            action.Invoke(awaited);
+            await action.Invoke(awaited);
             return awaited;
         }
     }

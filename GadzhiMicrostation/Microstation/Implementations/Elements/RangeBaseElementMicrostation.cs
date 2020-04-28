@@ -48,7 +48,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Размеры ячейки элемента в текущих координатах
         /// </summary>
         public RangeMicrostation Range => new RangeMicrostation(_element.Range.Low.ToPointMicrostation(),
-                                                                 _element.Range.High.ToPointMicrostation());
+                                                                _element.Range.High.ToPointMicrostation());
 
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
