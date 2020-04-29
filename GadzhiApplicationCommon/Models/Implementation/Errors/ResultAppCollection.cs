@@ -1,6 +1,7 @@
 ﻿using GadzhiApplicationCommon.Extensions.Collection;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,9 +26,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
           : this(collection, Enumerable.Empty<IErrorApplication>(), errorNull) { }
 
         public ResultAppCollection(IEnumerable<T> collection, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
-            : base(collection, errors, errorNull)
+            : base(errors)
         {
-            if (!ValidateCollection(collection)) throw new NullReferenceException(nameof(collection));
+            var collectionList = collection?.ToList();
+            InitializeValue(collectionList, errorNull);
+
+            if (!ValidateCollection(collectionList)) throw new NullReferenceException(nameof(collection));
         }
 
         /// <summary>

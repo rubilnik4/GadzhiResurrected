@@ -1,8 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations;
@@ -56,7 +54,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Конвертировать файл
         /// </summary>
         public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer) =>
-            await fileDataServer?.
+            await fileDataServer.
             Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             WhereContinueAsync(fileData => fileData.IsValidByAttemptingCount,
                 okFunc: fileData => Task.Run(() => ConvertingFile(fileData, _projectSettings.PrintersInformation)),
@@ -69,7 +67,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             LoadAndSaveDocument(fileDataServer).
             ResultValueOkBind(document => GetSavedFileDataSource(document).ToResultCollection().
                                           Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
-                                          Map(fileDatas => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
+                                          Map(fileDatas =>  CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
                                                                                        Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
                                                                                        ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
@@ -83,9 +81,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                    IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             fileDataSourceServer.
             ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, printersInformation).
-                                                          Map(resultPdf => saveResult.ConcatResult(resultPdf)).
+                                                          Map(saveResult.ConcatResult).
                                                           Map(fileDatas => ExportFile(documentLibrary, fileDataServer).
-                                                                           Map(exportResult => fileDatas.ConcatResultValue(exportResult))));
+                                                                           Map(fileDatas.ConcatResultValue)));
         /// <summary>
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
@@ -139,8 +137,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Закрыть файл
         /// </summary>
-        private IResultError CloseFile(IDocumentLibrary documentLibrary, string FilePathServer, string fileNameClient) =>
-            _applicationConverting.CloseDocument(documentLibrary, FilePathServer).
+        private IResultError CloseFile(IDocumentLibrary documentLibrary, string filePathServer, string fileNameClient) =>
+            _applicationConverting.CloseDocument(documentLibrary, filePathServer).
             Void(_ => _messagingService.ShowAndLogMessage($"Конвертация файла {fileNameClient} завершена"));
 
         /// <summary>
@@ -148,7 +146,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>       
         private IResultValue<string> CreateSavingPathByExtension(string filePathServer, FileExtention fileExtention) =>
             new ResultValue<string>(filePathServer).
-            ResultValueOk(filePath => Path.GetDirectoryName(filePath)).
+            ResultValueOk(Path.GetDirectoryName).
             ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtention.ToString())).
             ResultValueOk(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
                                                                                   Path.GetFileNameWithoutExtension(filePathServer),

@@ -17,6 +17,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+// ReSharper disable All
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -84,10 +85,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                       _application.Point3dFromXY(origin.X, origin.Y),
                                                                       _application.Point3dFromXY(1, 1),
                                                                       false, _application.Matrix3dIdentity());
+            if (modelMicrostation == null) throw new ArgumentNullException(nameof(modelMicrostation));
 
-           
             var cellDefaultOrigin = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
-            var cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
+            ICellElementMicrostation cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
@@ -111,14 +112,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         private IList<LibraryElement> CachingLibraryElements()
         {
-            CellInformation cellInformation;
             CellInformationEnumerator сellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
             сellInformationEnumerator.Reset();
 
             var cachingLibraryElements = new List<LibraryElement>();
             while (сellInformationEnumerator.MoveNext())
             {
-                cellInformation = сellInformationEnumerator.Current;
+                var cellInformation = сellInformationEnumerator.Current;
                 cachingLibraryElements.Add(new LibraryElement(cellInformation.Name, cellInformation.Description));
             }
 
@@ -134,7 +134,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Подготовить строку для поиска в библиотеке
         /// </summary>
-        private string StringIdPrepare(string name) => name?.Trim('{', '}') ?? String.Empty;
+        private static string StringIdPrepare(string name) => name?.Trim('{', '}') ?? String.Empty;
 
         /// <summary>
         /// Найти замену имени ячейки по описанию
@@ -153,7 +153,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             _cachLibraryElements?.
             Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name).
             Map(name => new ResultAppValue<string>(name))
-            ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"База подписей не установлена").
+            ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, "База подписей не установлена").
                Map(error => new ResultAppValue<string>(error));
     }
 }

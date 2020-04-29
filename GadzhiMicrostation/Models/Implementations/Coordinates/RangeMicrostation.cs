@@ -14,19 +14,8 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
     /// <summary>
     /// Координаты и размеры
     /// </summary>
-    public class RangeMicrostation
+    public readonly struct RangeMicrostation : IEquatable<RangeMicrostation>
     {
-        /// <summary>
-        /// Координаты верхнего левого угла
-        /// </summary>
-        public PointMicrostation LowLeftPoint { get; }
-
-        /// <summary>
-        /// Координаты правого нижнего угла
-        /// </summary>
-        public PointMicrostation HighRightPoint { get; }
-        public RangeMicrostation() { }
-
         public RangeMicrostation(PointMicrostation lowLeftPoint,
                                  PointMicrostation highRightPoint)
         {
@@ -47,6 +36,16 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         }
 
         /// <summary>
+        /// Координаты верхнего левого угла
+        /// </summary>
+        public PointMicrostation LowLeftPoint { get; }
+
+        /// <summary>
+        /// Координаты правого нижнего угла
+        /// </summary>
+        public PointMicrostation HighRightPoint { get; }
+
+        /// <summary>
         /// Ширина с учетом поворота
         /// </summary>
         public double Width => Math.Abs(LowLeftPoint.X - HighRightPoint.X);
@@ -59,8 +58,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Корректны ли значения координат
         /// </summary>
-        public bool IsValid => LowLeftPoint != null && HighRightPoint != null &&
-                               Width > 0 && Height > 0;
+        public bool IsValid => Width > 0 && Height > 0;
 
         /// <summary>
         /// Точка вставки элемента с учетом поворота
@@ -104,7 +102,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// </summary>    
         public static IResultAppValue<RangeMicrostation> StringToRange(string rangeInString) =>
             StampSettingsMicrostation.SeparateAttributeValue(rangeInString).
-            WhereContinue(rangeListString => ValidateRangeString(rangeListString),
+            WhereContinue(ValidateRangeString,
                 okFunc: rangeListString => new ResultAppValue<IList<string>>(rangeListString),
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.RangeNotValid, "Некорректный диапазон координат из атрибутов").
                               ToResultApplicationValue<IList<string>>()).
@@ -117,6 +115,27 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// </summary>   
         public static bool ValidateRangeString(IList<string> rangeListString) =>
             rangeListString?.Count == 6 &&
-            rangeListString.All(dimension => Double.TryParse(dimension, out double dimensionValid));
+            rangeListString.All(dimension => Double.TryParse(dimension, out double _));
+
+        #region IEquatable
+        public override bool Equals(object obj) => obj != null && Equals((RangeMicrostation)obj);
+
+        public bool Equals(RangeMicrostation other) =>
+            other.LowLeftPoint == LowLeftPoint && other.HighRightPoint == HighRightPoint;
+
+
+        public static bool operator ==(RangeMicrostation left, RangeMicrostation right) => left.Equals(right);
+       
+        public static bool operator !=(RangeMicrostation left, RangeMicrostation right) => !(left == right);
+
+        public override int GetHashCode()
+        {
+            var hashCode = 17;
+            hashCode = hashCode * 31 + LowLeftPoint .GetHashCode();
+            hashCode = hashCode * 31 + HighRightPoint.GetHashCode();
+
+            return hashCode;
+        }
+        #endregion
     }
 }

@@ -25,10 +25,13 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public ResultCollection(IEnumerable<T> collection)
           : this(collection, Enumerable.Empty<IErrorCommon>()) { }
 
-        public ResultCollection(IEnumerable<T> collection, IEnumerable<IErrorCommon> errors)
-            : base(collection, errors)
+        public ResultCollection(IEnumerable<T> collection, IEnumerable<IErrorCommon> errors, IErrorCommon errorNull = null)
+            : base(errors)
         {
-            if (!ValidateCollection(collection)) throw new NullReferenceException(nameof(collection));
+            var collectionList = collection?.ToList();
+            InitializeValue(collectionList, errorNull);
+
+            if (!ValidateCollection(collectionList)) throw new NullReferenceException(nameof(collection));
         }
 
         /// <summary>

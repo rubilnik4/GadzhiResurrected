@@ -5,23 +5,8 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
     /// <summary>
     /// Координатная точка
     /// </summary>
-    public struct PointMicrostation : IEquatable<PointMicrostation>
+    public readonly struct PointMicrostation : IEquatable<PointMicrostation>
     {
-        /// <summary>
-        /// Координата X
-        /// </summary>
-        public double X { get; set; }
-
-        /// <summary>
-        /// Координата Y
-        /// </summary>
-        public double Y { get; set; }
-
-        /// <summary>
-        /// Координата Z
-        /// </summary>
-        public double Z { get; set; }
-
         public PointMicrostation(double x, double y)
         {
             X = x;
@@ -37,6 +22,21 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         }
 
         /// <summary>
+        /// Координата X
+        /// </summary>
+        public double X { get; }
+
+        /// <summary>
+        /// Координата Y
+        /// </summary>
+        public double Y { get; }
+
+        /// <summary>
+        /// Координата Z
+        /// </summary>
+        public double Z { get; }
+
+        /// <summary>
         /// Операция сложения с другой точкой
         /// </summary>       
         public PointMicrostation Add(PointMicrostation point) =>
@@ -45,14 +45,12 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Операция сложения по оси X
         /// </summary>       
-        public PointMicrostation AddX(double xCoorditate) =>
-            new PointMicrostation(this.X + xCoorditate, this.Y , this.Z);
+        public PointMicrostation AddX(double xCoorditate) => Add(new PointMicrostation(xCoorditate, 0, 0));
 
         /// <summary>
         /// Операция сложения по оси Y
         /// </summary>       
-        public PointMicrostation AddY(double yCoorditate) =>
-            new PointMicrostation(this.X, this.Y + yCoorditate, this.Z);
+        public PointMicrostation AddY(double yCoorditate) => Add(new PointMicrostation(0, yCoorditate, 0));
 
         /// <summary>
         /// Операция вычитания по оси X
@@ -63,14 +61,12 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Операция вычитания по оси Y
         /// </summary>   
-        public PointMicrostation SubtractX(double xCoorditate) =>
-            new PointMicrostation(this.X - xCoorditate, this.Y , this.Z);
+        public PointMicrostation SubtractX(double xCoorditate) => Subtract(new PointMicrostation(xCoorditate, 0, 0));
 
         /// <summary>
         /// Операция вычитания с другой точкой
         /// </summary>   
-        public PointMicrostation SubtractY(double yCoorditate) =>
-            new PointMicrostation(this.X , this.Y - yCoorditate, this.Z);
+        public PointMicrostation SubtractY(double yCoorditate) => Subtract(new PointMicrostation(0, yCoorditate, 0));
 
         /// <summary>
         /// Операция умножения
@@ -78,36 +74,35 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         public PointMicrostation Multiply(double factor) =>
             new PointMicrostation(this.X * factor, this.Y * factor, this.Z * factor);
 
-        public override bool Equals(object obj)
-        {
-            return Equals((PointMicrostation)obj);
-        }
+        /// <summary>
+        /// Число для сравнения координат
+        /// </summary>
+        private const double TOLERANCE = 0.0001;
 
-        public bool Equals(PointMicrostation other)
-        {           
-            return other.X == X && other.Y == Y && other.Z == Z;
-        }
+        /// <summary>
+        /// Сравнение координат
+        /// </summary>
+        private static bool CompareCoordinate(double first, double second) => Math.Abs(first - second) < TOLERANCE;
+
+        #region IEquatable
+        public override bool Equals(object obj) => obj != null && Equals((PointMicrostation)obj);
+
+        public bool Equals(PointMicrostation other) =>
+            CompareCoordinate(other.X, X) && CompareCoordinate(other.Y, Y) && CompareCoordinate(other.Z, Z);
+
+        public static bool operator ==(PointMicrostation left, PointMicrostation right) => left.Equals(right);
+
+        public static bool operator !=(PointMicrostation left, PointMicrostation right) => !(left == right);
 
         public override int GetHashCode()
         {
-            int hashCode = 17;
+            var hashCode = 17;
             hashCode = hashCode * 31 + X.GetHashCode();
             hashCode = hashCode * 31 + Y.GetHashCode();
             hashCode = hashCode * 31 + Z.GetHashCode();
 
             return hashCode;
         }
-
-        public static bool operator ==(PointMicrostation left, PointMicrostation right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(PointMicrostation left, PointMicrostation right)
-        {
-            return !(left == right);
-        }
-
-
+        #endregion
     }
 }

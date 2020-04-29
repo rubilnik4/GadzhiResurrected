@@ -23,7 +23,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
                                string stackTrace)
         {
             FileConvertErrorType = fileConvertErrorType;
-            ErrorDescription = errorDescription ?? string.Empty;
+            ErrorDescription = errorDescription ?? String.Empty;
             ExceptionMessage = exceptionMessage;
             StackTrace = stackTrace;
         }

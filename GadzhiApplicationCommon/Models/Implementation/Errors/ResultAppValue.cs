@@ -1,6 +1,5 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +17,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
 
         public ResultAppValue(IEnumerable<IErrorApplication> errors)
         {
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
-            if (!ValidateCollection(errors)) throw new NullReferenceException(nameof(errors));
+            var errorCollection = errors?.ToList() ?? throw new ArgumentNullException(nameof(errors));
+            if (!ValidateCollection(errorCollection)) throw new NullReferenceException(nameof(errors));
 
-            Errors = errors;
+            Errors = errorCollection;
         }
 
         public ResultAppValue(TValue value, IErrorApplication errorNull = null)
@@ -29,6 +28,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
 
         public ResultAppValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
             : this(errors)
+        {
+            InitializeValue(value, errorNull);
+        }
+
+        protected void InitializeValue(TValue value, IErrorApplication errorNull = null)
         {
             if (value == null && errorNull != null)
             {
@@ -45,12 +49,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Список значений
         /// </summary>
-        public TValue Value { get; }
+        public TValue Value { get; private set; }
 
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorApplication> Errors { get; }
+        public IEnumerable<IErrorApplication> Errors { get; private set; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -58,7 +62,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public bool HasErrors => Errors.Any();
 
         /// <summary>
-        /// Отсуствие ошибок
+        /// Отсутствие ошибок
         /// </summary>
         public bool OkStatus => !HasErrors;
 
@@ -66,7 +70,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// Добавить ошибку
         /// </summary>      
         public IResultAppValue<TValue> ConcatErrors(IEnumerable<IErrorApplication> errors) =>
-            errors != null && ValidateCollection(errors) ?
+            errors != null ?
             Value.WhereContinue(value => value != null,
                 okFunc: value => new ResultAppValue<TValue>(value, Errors.Union(errors)),
                 badFunc: value => new ResultAppValue<TValue>(Errors.Union(errors))) :
@@ -83,9 +87,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public IResultAppValue<TValue> Execute() => new ResultAppValue<TValue>(Value, Errors.ToList());
 
         /// <summary>
-        /// Проверить ошибки на корретность
+        /// Проверить ошибки на корректность
         /// </summary>      
-        protected bool ValidateCollection<T>(IEnumerable<T> collection) =>
+        protected static bool ValidateCollection<T>(IEnumerable<T> collection) =>
             collection?.All(t => t != null) == true;
     }
 }

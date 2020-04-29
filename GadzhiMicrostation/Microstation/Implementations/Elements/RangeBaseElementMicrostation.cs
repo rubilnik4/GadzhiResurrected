@@ -30,7 +30,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public bool IsVertical { get; }
 
-        public RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
+        protected RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
                                             bool isNeedCompress, bool isVertical)
             : base(element, ownerContainerMicrostation)
         {
@@ -55,13 +55,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         private RangeMicrostation RangeAttribute =>
             GetAttributeFromCachOrLoad(ElementMicrostationAttributes.Range).
-            Map(rangeInline => RangeMicrostation.StringToRange(rangeInline)).
+            Map(RangeMicrostation.StringToRange).
             WhereContinue(result => result.OkStatus,
                 okFunc: result => result.Value ,
                 badFunc: result => new RangeMicrostation());
 
         /// <summary>
-        /// Возможено ли сжатие элемента
+        /// Возможно ли сжатие элемента
         /// </summary>
         protected bool IsValidToCompress => RangeAttribute.IsValid;
 

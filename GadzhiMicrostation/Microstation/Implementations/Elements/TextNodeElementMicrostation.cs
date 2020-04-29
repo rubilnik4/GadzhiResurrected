@@ -4,6 +4,7 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 using System;
+// ReSharper disable All
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -58,8 +59,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             {
                 textElement.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
             });
-            /// необходимо сжатие самого элемента контейнера
-            _textNodeElement.ScaleAll(Origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
+            _textNodeElement.ScaleAll(Origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);  // необходимо сжатие самого элемента контейнера
             _textNodeElement.Rewrite();
             return this;
         }
@@ -77,13 +77,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
                 if (WidthAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioTextNode < WidthWithRotation)
                 {
-                    scaleFactor.X = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioTextNode;
+                    double scaleFactorX = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioTextNode;
+                    scaleFactor = new PointMicrostation(scaleFactorX, scaleFactor.Y, scaleFactor.Z);
                 }
 
                 if (HeightAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioTextNode < HeightWithRotation &&
                     _textNodeElement.TextLinesCount > 1) // коррекция высоты только при многострочном элементе
                 {
-                    scaleFactor.Y = (HeightAttributeWithRotationInUnits / HeightWithRotation) * StampSettingsMicrostation.CompressionRatioTextNode;
+                    double scaleFactorY = (HeightAttributeWithRotationInUnits / HeightWithRotation) * StampSettingsMicrostation.CompressionRatioTextNode;
+                    scaleFactor = new PointMicrostation(scaleFactor.X, scaleFactorY, scaleFactor.Z);
                 }
 
                 if (scaleFactor.X != 1 || scaleFactor.Y != 1)
