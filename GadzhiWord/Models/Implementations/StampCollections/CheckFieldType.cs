@@ -16,13 +16,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     public static class CheckFieldType
     {
         /// <summary>
-        /// Опередлить тип поля штампа
+        /// Определить тип поля штампа
         /// </summary>
         public static StampFieldType GetStampFieldType(ICellElement cellElement, ITableElement stampTable)
         {
-            StampFieldType stampFieldType = StampFieldType.Unknown;
+            var stampFieldType = StampFieldType.Unknown;
 
-            string cellText = StringAdditionalExtensions.PrepareCellTextToCompare(cellElement?.Text);
+            string cellText = cellElement?.Text.PrepareCellTextToCompare();
             if (IsFieldPersonSignature(cellText))
             {
                 stampFieldType = StampFieldType.PersonSignature;

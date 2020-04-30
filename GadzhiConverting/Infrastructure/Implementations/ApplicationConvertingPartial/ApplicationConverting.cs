@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// ReSharper disable All
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -53,34 +54,25 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        public FileExtention GetExportFileExtension(FileExtention fileExtentionMain)
-        {
-            switch (fileExtentionMain)
+        public FileExtention GetExportFileExtension(FileExtention fileExtentionMain) =>
+            fileExtentionMain switch
             {
-                case FileExtention.dgn:
-                    return FileExtention.dwg;
-                case FileExtention.docx:
-                    return FileExtention.docx;
-                default:
-                    throw new InvalidEnumArgumentException("Расширение экспортируемого файла не задано");
-            }
-        }
+                FileExtention.dgn => FileExtention.dwg,
+                FileExtention.docx => FileExtention.docx,
+                _ => throw new InvalidEnumArgumentException(nameof(fileExtentionMain), (int)fileExtentionMain, typeof(FileExtention))
+            };
+
 
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        private IResultValue<IApplicationLibrary> GetActiveLibraryByExtension(FileExtention fileExtention)
-        {
-            switch (fileExtention)
+        private IResultValue<IApplicationLibrary> GetActiveLibraryByExtension(FileExtention fileExtention) =>
+            fileExtention switch
             {
-                case FileExtention.dgn:
-                    return new ResultValue<IApplicationLibrary>(_applicationMicrostation);
-                case FileExtention.docx:
-                    return new ResultValue<IApplicationLibrary>(_applicationWord);
-                default:
-                    return new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtention} не найдена").
-                           ToResultValue<IApplicationLibrary>();
-            }
-        }      
+                FileExtention.dgn => new ResultValue<IApplicationLibrary>(_applicationMicrostation),
+                FileExtention.docx => new ResultValue<IApplicationLibrary>(_applicationWord),
+                _ => new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtention} не найдена").
+                     ToResultValue<IApplicationLibrary>()
+            };
     }
 }
