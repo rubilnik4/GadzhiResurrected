@@ -8,9 +8,9 @@ namespace GadzhiModules.Helpers.Converters
     public static class StatusProcessingProjectConverter
     {
         /// <summary>
-        /// Словарь статуса обработки проекта в строком значении
+        /// Словарь статуса обработки проекта в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<StatusProcessingProject, string> StatusProcessingProjectToString =>
+        public static IReadOnlyDictionary<StatusProcessingProject, string> StatusProcessingProjectString =>
             new Dictionary<StatusProcessingProject, string>
             {
                 { StatusProcessingProject.NeedToLoadFiles, "Перетащите барахлишко на экран" },
@@ -27,7 +27,7 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Список статусов, находящихся в процессе конвертирования
         /// </summary>
-        public static IReadOnlyList<StatusProcessingProject> ConvertingStatusProcessingProject =>
+        public static IReadOnlyList<StatusProcessingProject> StatusProcessingProjectIsConverting =>
              new List<StatusProcessingProject>()
              {
                 StatusProcessingProject.Converting,
@@ -40,10 +40,10 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать статус в наименование
         /// </summary>       
-        public static string ConvertStatusProcessingProjectToString(StatusProcessingProject statusProcessingProject)
+        public static string StatusProcessingProjectToString(StatusProcessingProject statusProcessingProject)
         {
             string statusProcessingProjectString = String.Empty;
-            StatusProcessingProjectToString?.TryGetValue(statusProcessingProject, out statusProcessingProjectString);
+            StatusProcessingProjectString?.TryGetValue(statusProcessingProject, out statusProcessingProjectString);
 
             return statusProcessingProjectString;
         }
@@ -51,13 +51,9 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать наименование в статус
         /// </summary>       
-        public static StatusProcessingProject ConvertStringToStatusProcessingProject(string statusProcessingProject)
-        {
-            StatusProcessingProject statusProcessingProjectOut = StatusProcessingProjectToString?.
-                                                        FirstOrDefault(status => status.Value == statusProcessingProject).Key ??
-                                                        StatusProcessingProject.NeedToLoadFiles;
-
-            return statusProcessingProjectOut;
-        }
+        public static StatusProcessingProject StringToStatusProcessingProject(string statusProcessingProject) =>
+             StatusProcessingProjectString?.
+             FirstOrDefault(status => status.Value == statusProcessingProject).Key 
+             ?? StatusProcessingProject.NeedToLoadFiles;
     }
 }

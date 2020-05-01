@@ -17,15 +17,15 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFile_AddOnePositions()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             var file = DefaultFileData.FileDataToTestTwoPositions[0];
 
             // Act  
             filesInfoProject.AddFile(file);
 
             // Assert 
-            Assert.AreEqual(filesInfoProject.FileDatas.Count, 1);
-            Assert.AreSame(filesInfoProject.FileDatas[filesInfoProject.FileDatas.Count - 1], file);
+            Assert.AreEqual(filesInfoProject.FilesData.Count, 1);
+            Assert.AreSame(filesInfoProject.FilesData[filesInfoProject.FilesData.Count - 1], file);
 
             filesInfoProject?.Dispose();
         }
@@ -37,7 +37,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFile_AddNull_NoException()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             FileData file = null;
 
             // Act
@@ -53,15 +53,15 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFiles_ByIEnumerableFileData_AddTwoPositions()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
 
             // Act  
             filesInfoProject.AddFiles(files);
 
             // Assert 
-            Assert.AreEqual(filesInfoProject.FileDatas.Count, files.Count);
-            Assert.AreSame(filesInfoProject.FileDatas[filesInfoProject.FileDatas.Count-1], files.Last());
+            Assert.AreEqual(filesInfoProject.FilesData.Count, files.Count);
+            Assert.AreSame(filesInfoProject.FilesData[filesInfoProject.FilesData.Count-1], files.Last());
 
             filesInfoProject?.Dispose();
         }
@@ -73,7 +73,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFiles_ByIEnumerableFileData_AddNull_NoException()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             List<FileData> files = null;
 
             // Act
@@ -89,7 +89,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFiles_ByIEnumerableFileData_AddListWithNull_NoException()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             List<FileData> files = new List<FileData>() { null };
 
             // Act           
@@ -105,16 +105,16 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFiles_ByString_AddTwoPositions()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
 
             // Act  
             filesInfoProject.AddFiles(files);
 
             // Assert           
-            Assert.AreEqual(filesInfoProject.FileDatas.Count, files.Count);
+            Assert.AreEqual(filesInfoProject.FilesData.Count, files.Count);
 
-            FileData fileLast = filesInfoProject.FileDatas[filesInfoProject.FileDatas.Count - 1];
+            FileData fileLast = filesInfoProject.FilesData[filesInfoProject.FilesData.Count - 1];
             Assert.AreEqual(fileLast.FileExtension, "dgn");
             Assert.AreEqual(fileLast.FileName, "secondName");
             Assert.AreEqual(fileLast.FilePath, "C:\\folder\\secondName.dgn");
@@ -129,7 +129,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFiles_ByString_AddNull_NoException()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             List<string> files = null;
 
             try
@@ -156,7 +156,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         public void AddFiles_ByString_AddListWithNull_NoException()
         {
             // Arrange     
-            var filesInfoProject = new FilesData();
+            var filesInfoProject = new PackageData();
             List<string> files = new List<string>() { null };
 
             // Act           
@@ -173,14 +173,14 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange     
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
-            var filesInfoProject = new FilesData(files);
+            var filesInfoProject = new PackageData(files);
             var filesToAdd = DefaultFileData.FileDataToTestFourPositions;
 
             // Act  
             filesInfoProject.AddFiles(filesToAdd);
 
             // Assert           
-            Assert.AreEqual(filesInfoProject.FileDatas.Count, 4);
+            Assert.AreEqual(filesInfoProject.FilesData.Count, 4);
 
             filesInfoProject?.Dispose();
         }
@@ -193,13 +193,13 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange 
             var files = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
-            var filesInfoProject = new FilesData(files);
+            var filesInfoProject = new PackageData(files);
 
             // Act           
             filesInfoProject.ClearFiles();
 
             // Assert    
-            Assert.AreEqual(filesInfoProject.FileDatas.Count, 0);
+            Assert.AreEqual(filesInfoProject.FilesData.Count, 0);
 
             filesInfoProject?.Dispose();
         }
@@ -212,7 +212,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange 
             var files = new List<FileData>(DefaultFileData.FileDataToTestThreePositions);
-            var filesInfoProject = new FilesData(files);
+            var filesInfoProject = new PackageData(files);
             var filesToRemove = new List<FileData>(DefaultFileData.FileDataToTestTwoPositions);
             FileData lastExpectedFile = DefaultFileData.FileDataToTestThreePositions[DefaultFileData.FileDataToTestThreePositions.Count - 1];
 
@@ -220,8 +220,8 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             filesInfoProject.RemoveFiles(filesToRemove);
 
             // Assert    
-            Assert.AreEqual(filesInfoProject.FileDatas.Count, 1);
-            Assert.AreEqual(filesInfoProject.FileDatas[DefaultFileData.FileDataToTestThreePositions.Count - 1], lastExpectedFile);
+            Assert.AreEqual(filesInfoProject.FilesData.Count, 1);
+            Assert.AreEqual(filesInfoProject.FilesData[DefaultFileData.FileDataToTestThreePositions.Count - 1], lastExpectedFile);
 
             filesInfoProject?.Dispose();
         }
@@ -234,7 +234,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
         {
             // Arrange     
             List<FileData> files = null;
-            var filesInfoProject = new FilesData(files);
+            var filesInfoProject = new PackageData(files);
 
             // Act
             filesInfoProject.RemoveFiles(files);

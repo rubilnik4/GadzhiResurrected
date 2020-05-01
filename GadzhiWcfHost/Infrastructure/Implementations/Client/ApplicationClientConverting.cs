@@ -32,32 +32,32 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
-        public async Task<FilesDataIntermediateResponseClient> QueueFilesDataAndGetResponse(FilesDataRequestClient filesDataRequest)
+        public async Task<PackageDataIntermediateResponseClient> QueueFilesDataAndGetResponse(PackageDataRequestClient packageDataRequest)
         {
-            filesDataRequest = _authentication.AuthenticateFilesData(filesDataRequest);
+            packageDataRequest = _authentication.AuthenticateFilesData(packageDataRequest);
 
-            await QueueFilesData(filesDataRequest);
+            await QueueFilesData(packageDataRequest);
 
-            return await GetIntermediateFilesDataResponseById(filesDataRequest.Id);
+            return await GetIntermediateFilesDataResponseById(packageDataRequest.Id);
         }
 
         /// <summary>
         /// Поставить файлы в очередь для обработки
         /// </summary>
-        private async Task QueueFilesData(FilesDataRequestClient filesDataRequest) =>      
-                await _filesDataClientService.QueueFilesData(filesDataRequest);
+        private async Task QueueFilesData(PackageDataRequestClient packageDataRequest) =>      
+                await _filesDataClientService.QueueFilesData(packageDataRequest);
        
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по Id номеру
         /// </summary>
-        public async Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId) =>      
+        public async Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId) =>      
                 await _filesDataClientService.GetFilesDataIntermediateResponseById(filesDataId);       
 
         /// <summary>
         /// Получить отконвертированные файлы по Id номеру
         /// </summary>
-        public async Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataId) =>
+        public async Task<PackageDataResponseClient> GetFilesDataResponseByID(Guid filesDataId) =>
                await _filesDataClientService.GetFilesDataResponseById(filesDataId);
 
         /// <summary>

@@ -13,37 +13,37 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        Task<FilesDataRequestClient> GetFilesDataToRequest();
+        Task<PackageDataRequestClient> GetFilesDataToRequest();
 
         /// <summary>
         /// Назначить всем файлам статус к отправке
         /// </summary>  
-        Task<FilesStatus> GetFilesInSending();
+        Task<PackageStatus> GetFilesInSending();
 
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest);
+        Task<PackageStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest);
 
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponseClient fileDataResponse);
+        Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataIntermediateResponseClient fileDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponseClient filesDataResponse);
+        Task<PackageStatus> GetFilesStatusCompleteResponseBeforeWriting(PackageDataResponseClient packageDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponseClient filesDataResponse);
+        Task<PackageStatus> GetFilesStatusCompleteResponseAndWritten(PackageDataResponseClient packageDataResponse);
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequestClient filesDataRequest,
-                                                                  FilesDataIntermediateResponseClient filesDataIntermediateResponse);
+        Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
+                                                                  PackageDataIntermediateResponseClient packageDataIntermediateResponse);
     }
 }

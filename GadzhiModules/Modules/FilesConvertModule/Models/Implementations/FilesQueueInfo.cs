@@ -1,70 +1,68 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using System;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 
-namespace GadzhiModules.Infrastructure.Implementations.Information
+namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 {
     /// <summary>
     /// Информация о количестве файлов в очереди на сервере
     /// </summary>
-    public class FilesQueueInfo
+    public readonly struct FilesQueueInfo : IEquatable<FilesQueueInfo>
     {
-        public FilesQueueInfo()
+        public FilesQueueInfo(int filesInQueueCount, int packagesInQueueCount, int firstFilesCountInQueue)
         {
-            Initialize();
-        }
-
-        /// <summary>
-        /// Инициализировать начальные переменные
-        /// </summary>
-        private void Initialize()
-        {
-            FilesInQueueCount = 0;
-            PackagesInQueueCount = 0;
-            FirstFilesCountInQueue = null;
+            FilesInQueueCount = filesInQueueCount;
+            PackagesInQueueCount = packagesInQueueCount;
+            FirstFilesCountInQueue = firstFilesCountInQueue;
         }
 
         /// <summary>
         /// Количество файлов в очереди
         /// </summary>     
-        public int FilesInQueueCount { get; private set; }
+        public int FilesInQueueCount { get; }
 
         /// <summary>
         /// Количество пакетов в очереди
         /// </summary>      
-        public int PackagesInQueueCount { get; private set; }
+        public int PackagesInQueueCount { get; }
 
         /// <summary>
         /// Первоначальное количество файлов в очереди. Для расчета процентов выполнения
         /// </summary>
-        public int? FirstFilesCountInQueue { get; private set; }
+        public int FirstFilesCountInQueue { get; }
 
         /// <summary>
-        /// Заполнить поля исходя из промежуточного запроса
+        /// Получить информацию о количестве файлов из промежуточного запроса
         /// </summary>        
-        public void ChangeByFileQueueStatus(FilesQueueStatus filesQueueStatus, StatusProcessingProject statusProcessingProject)
-        {
-            switch (statusProcessingProject)
+        public static FilesQueueInfo GetQueueInfoByStatus(QueueStatus queueStatus, StatusProcessingProject statusProcessingProject) =>
+            statusProcessingProject switch
             {
-                case StatusProcessingProject.Sending:
-                    Initialize();
-                    break;
-                case StatusProcessingProject.InQueue:
-                    if (filesQueueStatus != null)
-                    {
-                        FilesInQueueCount = filesQueueStatus.FilesInQueueCount;
-                        PackagesInQueueCount = filesQueueStatus.PackagesInQueueCount;
-                        if (FirstFilesCountInQueue == null)
-                        {
-                            FirstFilesCountInQueue = filesQueueStatus.FilesInQueueCount;
-                        }
-                    }
-                    break;
-                case StatusProcessingProject.End:
-                    Initialize();
-                    break;
-            }
+                StatusProcessingProject.InQueue => new FilesQueueInfo(queueStatus.FilesInQueueCount,
+                                                                      queueStatus.PackagesInQueueCount,
+                                                                      queueStatus.FilesInQueueCount),
+                _ => new FilesQueueInfo(),
+            };
 
+        #region IEquatable
+        public bool Equals(FilesQueueInfo other) =>
+            FilesInQueueCount == other.FilesInQueueCount &&
+            PackagesInQueueCount == other.PackagesInQueueCount &&
+            FirstFilesCountInQueue == other.FirstFilesCountInQueue;
 
+        public override bool Equals(object obj) => obj is FilesQueueInfo other && Equals(other);
+
+        public override int GetHashCode()
+        {
+            int hashCode = FilesInQueueCount;
+            hashCode = (hashCode * 397) ^ PackagesInQueueCount;
+            hashCode = (hashCode * 397) ^ FirstFilesCountInQueue;
+            return hashCode;
         }
+
+        public static bool operator ==(FilesQueueInfo left, FilesQueueInfo right) => left.Equals(right);
+
+        public static bool operator !=(FilesQueueInfo left, FilesQueueInfo right) => !(left == right);
+
+        #endregion
     }
 }

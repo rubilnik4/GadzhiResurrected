@@ -1,5 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information
 {
@@ -8,29 +9,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Inform
     /// </summary>
     public class FileStatus
     {
-        public FileStatus(string filePath,
-                          StatusProcessing statusProcessing,
-                          FileConvertErrorType error)
-        {
-            var errors = new List<FileConvertErrorType>();
-            if (error != FileConvertErrorType.NoError)
-            {
-                errors.Add(error);
-            }
+        public FileStatus(string filePath, StatusProcessing statusProcessing, FileConvertErrorType error)
+            :this(filePath, statusProcessing, new List<FileConvertErrorType>() { error })
+        { }
 
-            Initialize(filePath, statusProcessing, errors);
-        }
-
-        public FileStatus(string filePath,
-                          StatusProcessing statusProcessing,
-                          IEnumerable<FileConvertErrorType> errors)
-        {
-            Initialize(filePath, statusProcessing, errors);
-        }
-
-        private void Initialize(string filePath,
-                                StatusProcessing statusProcessing,
-                                IEnumerable<FileConvertErrorType> errors)
+        public FileStatus(string filePath, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> errors)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
@@ -40,16 +23,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Inform
         /// <summary>
         /// Путь файла
         /// </summary>
-        public string FilePath { get; private set; }
+        public string FilePath { get;  }
 
         /// <summary>
         /// Статус обработки файла
         /// </summary>
-        public StatusProcessing StatusProcessing { get; private set; }
+        public StatusProcessing StatusProcessing { get;  }
 
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<FileConvertErrorType> Errors { get; private set; }
+        public IEnumerable<FileConvertErrorType> Errors { get; }
     }
 }

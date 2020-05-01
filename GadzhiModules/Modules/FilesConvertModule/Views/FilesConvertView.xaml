@@ -10,6 +10,7 @@
         xmlns:dd="urn:gong-wpf-dragdrop"     
         mc:Ignorable="d"              
         xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"
+        xmlns:vmItems="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems"
         xmlns:bev="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"   
         xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"       
         d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
@@ -19,11 +20,11 @@
         <Grid.Resources>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
 
-            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
+            <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"
                                                    TrueValue="Visible" 
                                                    FalseValue="Collapsed"/>
           
-            <Brush x:Key="ColorGreenComplite">#2e7d32</Brush>
+            <Brush x:Key="ColorGreenComplete">#2e7d32</Brush>
             <Brush x:Key="ColorYellowInformation">#ffa500</Brush>
             <Brush x:Key="ColorRedAlert">#9b0000</Brush>
 
@@ -174,24 +175,24 @@
                                         Width="0.35*"                                     
                                         IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate DataType="vmItems:FileDataViewModelItem">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="Done"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
                                                          Visibility="{Binding IsNoError, 
-                                                                      Converter={StaticResource BooleanToVisibilityConverter}}"     
-                                                         Foreground ="{StaticResource ColorGreenComplite}"/>
+                                                                      Converter={StaticResource VisibilityConverter}}"     
+                                                         Foreground ="{StaticResource ColorGreenComplete}"/>
                                 
                                 <materialDesign:PackIcon Kind="Information"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
-                                                         Visibility="{Binding IsInformaticalError, 
-                                                                      Converter={StaticResource BooleanToVisibilityConverter}}"      
+                                                         Visibility="{Binding IsInformationError, 
+                                                                      Converter={StaticResource VisibilityConverter}}"      
                                                          Foreground ="{StaticResource ColorYellowInformation}"/>
                                 
                                 <materialDesign:PackIcon Kind="Error"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
                                                          Visibility="{Binding IsCriticalError, 
-                                                                      Converter={StaticResource BooleanToVisibilityConverter}}"     
+                                                                      Converter={StaticResource VisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorRedAlert}"/>
 
                                 <TextBlock Text="{Binding StatusProcessingName}"   
@@ -228,7 +229,7 @@
 
                     <ProgressBar Grid.Row="1"      
                                  Visibility="{Binding  IsConverting, 
-                                              Converter={StaticResource BooleanToVisibilityConverter}}"                                           
+                                              Converter={StaticResource VisibilityConverter}}"                                           
                                  IsIndeterminate="{Binding IsIndeterminateProgressBar}"
                                  Value="{Binding PercentageOfComplete, Mode=OneWay}"
                                  MinHeight="0"

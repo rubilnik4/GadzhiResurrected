@@ -48,7 +48,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                                                                  FilesDataResponseServer filesDataResponse)
         {
             if (filesDataEntity != null && filesDataResponse != null &&
-                !CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(filesDataEntity.StatusProcessingProject))
+                !CheckStatusProcessing.CompletedStatusProcessingProject.Contains(filesDataEntity.StatusProcessingProject))
             {
                 filesDataEntity.StatusProcessingProject = filesDataResponse.StatusProcessingProject;
 

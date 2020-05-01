@@ -1,7 +1,5 @@
 ﻿using GadzhiCommon.Converters;
-using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Collection;
-using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Infrastructure.Interfaces;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -21,11 +19,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         ///  Выбор файлов
         /// </summary>    
-        public async Task<IEnumerable<string>> OpenFileDialog(bool isMultiselect = false, string filter = "")
+        public async Task<IEnumerable<string>> OpenFileDialog(bool isMultiSelect = false, string filter = "")
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
             {
-                Multiselect = isMultiselect,
+                Multiselect = isMultiSelect,
                 Filter = filter,
             };
 
@@ -39,16 +37,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Выбор папки
         /// </summary>     
-        public async Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect = false)
+        public async Task<IEnumerable<string>> OpenFolderDialog(bool isMultiSelect = false)
         {
-            using (var commonOpenFileDialog = new CommonOpenFileDialog() { IsFolderPicker = true, Multiselect = isMultiselect })
+            using var commonOpenFileDialog = new CommonOpenFileDialog() { IsFolderPicker = true, Multiselect = isMultiSelect };
+            if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
-                {
-                    return await Task.FromResult(commonOpenFileDialog.FileNames);
-                }
-                return await Task.FromResult(new List<string>());
+                return await Task.FromResult(commonOpenFileDialog.FileNames);
             }
+            return await Task.FromResult(new List<string>());
         }
 
         /// <summary>
@@ -63,8 +59,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (errorConverting == null) throw new ArgumentNullException(nameof(errorConverting));
             string messageText = "Ошибка" + "\n" +
-                             ConverterErrorType.FileErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
-                             errorConverting.ErrorDescription;
+                                 ConverterErrorType.FileErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
+                                 errorConverting.ErrorDescription;
             MessageBox.Show(messageText);
         }
 
@@ -82,26 +78,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Диалоговое окно с подтверждением
         /// </summary>  
-        public bool ShowMessageOkCancel(string messageText)
-        {
-            var dialogResult = MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-
-            return dialogResult == DialogResult.OK ?
-                   true :
-                   false;
-        }
+        public bool ShowMessageOkCancel(string messageText) =>
+            MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK;
 
         /// <summary>
         /// Диалоговое окно с повтором и пропуском
         /// </summary>  
-        public bool ShowMessageRetryCancel(string messageText)
-        {
-            var dialogResul = MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
-
-            return dialogResul == DialogResult.Retry ?
-                   true :
-                   false;
-        }
+        public bool ShowMessageRetryCancel(string messageText) =>
+            MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question) == DialogResult.Retry;
 
         /// <summary>
         /// Обертка для функции с диалоговым окном повтора
@@ -112,8 +96,8 @@ namespace GadzhiModules.Infrastructure.Implementations
             do
             {
                 retry = false;
-                bool succsess = await asyncFunc();
-                if (!succsess)
+                bool success = await asyncFunc();
+                if (!success)
                 {
                     retry = ShowMessageRetryCancel(messageText);
                 }

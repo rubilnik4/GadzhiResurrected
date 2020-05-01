@@ -13,12 +13,12 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Выбор файлов
         /// </summary>     
-        Task<IEnumerable<string>> OpenFileDialog(bool isMultiselect, string filter);
+        Task<IEnumerable<string>> OpenFileDialog(bool isMultiSelect, string filter);
 
         /// <summary>
         /// Выбор папки
         /// </summary>     
-        Task<IEnumerable<string>> OpenFolderDialog(bool isMultiselect);
+        Task<IEnumerable<string>> OpenFolderDialog(bool isMultiSelect);
 
         /// <summary>
         /// Диалоговое окно с подтверждением

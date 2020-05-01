@@ -9,10 +9,10 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах для клиента
     /// </summary>
     [DataContract]
-    public class FilesDataRequestClient : FilesDataRequestBase
+    public class PackageDataRequestClient : FilesDataRequestBase
     {
         /// <summary>
-        /// Идентефикация пользователя
+        /// Идентификация пользователя
         /// </summary>
         [DataMember]
         public string IdentityName { get; set; }
@@ -21,12 +21,12 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IList<FileDataRequestClient> FileDatas { get; set; }
+        public IList<FileDataRequestClient> FilesData { get; set; }
 
         /// <summary>
         /// Удовлетворяет ли модель условиям для отправки
         /// </summary>
         [IgnoreDataMember]
-        public bool IsValid => FileDatas?.Any() == true;
+        public bool IsValid => FilesData?.Any() == true;
     }
 }

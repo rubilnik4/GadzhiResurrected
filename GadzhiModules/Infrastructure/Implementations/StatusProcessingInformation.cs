@@ -1,10 +1,11 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Infrastructure.Implementations.Information;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System;
 using System.Linq;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
+using static GadzhiModules.Helpers.Converters.StatusProcessingProjectConverter;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -16,32 +17,32 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        public IFilesData FilesInfoProject { get; }
+        public IPackageData PackageInfoProject { get; }
 
-        public StatusProcessingInformation(IFilesData filesInfoProject)
+        public StatusProcessingInformation(IPackageData packageInfoProject)
         {
-            FilesInfoProject = filesInfoProject;
+            PackageInfoProject = packageInfoProject;
         }
 
         /// <summary>
         /// Индикатор конвертирования файлов
-        /// </summary 
-        public bool IsConverting => StatusProcessingProjectConverter.ConvertingStatusProcessingProject.
-                                    Contains(FilesInfoProject.StatusProcessingProject);
+        /// </summary>
+        public bool IsConverting => StatusProcessingProjectConverter.StatusProcessingProjectIsConverting.
+                                    Contains(PackageInfoProject.StatusProcessingProject);
 
-        private FilesQueueInfo FilesQueueInfo => FilesInfoProject.FilesQueueInfo;
+        private FilesQueueInfo FilesQueueInfo => PackageInfoProject.FilesQueueInfo;
 
         /// <summary>
         /// Изменился ли статус запуска/остановки процесса конвертирования
         /// </summary>
-        public bool IsConvertingChanged => FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Sending ||
-                                           FilesInfoProject.StatusProcessingProject == StatusProcessingProject.End ||
-                                           FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Error;
+        public bool IsConvertingChanged => PackageInfoProject.StatusProcessingProject == StatusProcessingProject.Sending ||
+                                           PackageInfoProject.StatusProcessingProject == StatusProcessingProject.End ||
+                                           PackageInfoProject.StatusProcessingProject == StatusProcessingProject.Error;
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>
-        public StatusProcessingProject StatusProcessingProject => FilesInfoProject.StatusProcessingProject;
+        public StatusProcessingProject StatusProcessingProject => PackageInfoProject.StatusProcessingProject;
 
         /// <summary>
         /// Процент выполнения пакета конвертирования
@@ -51,56 +52,59 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Есть ли у текущего процесса процент выполнения
         /// </summary>
-        public bool HasStatusProcessPercentage => FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue ||
-                                                  FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Converting;
+        public bool HasStatusProcessPercentage => PackageInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue ||
+                                                  PackageInfoProject.StatusProcessingProject == StatusProcessingProject.Converting;
 
         /// <summary>
         /// Вычислить процент отконвертированных файлов
         /// </summary>
-        private int CalculatePercentageOfComplete()
-        {
-            double percentageOfComplete = 0;
-
-            if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue)
+        private int CalculatePercentageOfComplete() =>
+            PackageInfoProject.StatusProcessingProject switch
             {
-                double percentagePerform = 0;
-                if (FilesQueueInfo?.FilesInQueueCount != 0 && FilesQueueInfo?.FilesInQueueCount != 0)
-                {
-                    percentagePerform = ((double?)FilesQueueInfo?.FilesInQueueCount / (double)FilesQueueInfo?.FirstFilesCountInQueue) * 100 ?? 0;
-                }
-                percentageOfComplete = 100 - percentagePerform;
-            }
-            else if (FilesInfoProject?.StatusProcessingProject == StatusProcessingProject.Converting)
-            {
-                double numberOfComplete = FilesInfoProject.
-                                          FileDatas.Count(file => file.StatusProcessing == StatusProcessing.ConvertingComplete);
-                double numberTotal = FilesInfoProject.FileDatas.Count;
-
-                percentageOfComplete = (numberOfComplete / numberTotal) * 100;
-            }
-
-            return Convert.ToInt32(percentageOfComplete);
-        }
+                StatusProcessingProject.InQueue => CalculateInQueuePercentage(),
+                StatusProcessingProject.Converting => CalculateConvertingPercentage(),
+                _ => 0,
+            };
 
         /// <summary>
         /// Получить статус обработки проекта c процентом выполнения
         /// </summary>       
         public string GetStatusProcessingProjectName()
         {
-            string statusProcessingProjectName = StatusProcessingProjectConverter.
-                                                 ConvertStatusProcessingProjectToString(FilesInfoProject.
-                                                                                        StatusProcessingProject);
+            string statusProcessingProjectName = StatusProcessingProjectToString(PackageInfoProject.StatusProcessingProject);
 
-            if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.InQueue)
+            return PackageInfoProject.StatusProcessingProject switch
             {
-                statusProcessingProjectName += $". Впереди {FilesQueueInfo?.FilesInQueueCount ?? 0} файлика(ов)";
-            }
-            else if (FilesInfoProject.StatusProcessingProject == StatusProcessingProject.Converting)
-            {
-                statusProcessingProjectName += $". Выполнено {PercentageOfComplete}%";
-            }
+                StatusProcessingProject.InQueue => $"{statusProcessingProjectName}. Впереди {FilesQueueInfo.FilesInQueueCount} файлика(ов)",
+                StatusProcessingProject.Converting => $"{statusProcessingProjectName}. Выполнено {PercentageOfComplete}%",
+                _ => statusProcessingProjectName,
+            };
+        }
 
-            return statusProcessingProjectName;
+        /// <summary>
+        /// Вычислить процент отконвертированных файлов для очереди
+        /// </summary>
+        private int CalculateInQueuePercentage()
+        {
+            if (FilesQueueInfo.FilesInQueueCount == 0 ||
+                FilesQueueInfo.FirstFilesCountInQueue == 0) return 0;
+
+            double percentagePerform = (FilesQueueInfo.FilesInQueueCount / (double)FilesQueueInfo.FirstFilesCountInQueue) * 100;
+            return Convert.ToInt32(100 - percentagePerform);
+        }
+
+        /// <summary>
+        /// Вычислить процент отконвертированных файлов для текущего пакета
+        /// </summary>
+        private int CalculateConvertingPercentage()
+        {
+            double numberComplete = PackageInfoProject.FilesData.Count(file => file.StatusProcessing == StatusProcessing.ConvertingComplete);
+            double numberTotal = PackageInfoProject.FilesData.Count;
+
+            double percentagePerform = (numberTotal > 0) ?
+                                       (numberComplete / numberTotal) * 100 :
+                                        0;
+            return Convert.ToInt32(percentagePerform);
         }
     }
 }

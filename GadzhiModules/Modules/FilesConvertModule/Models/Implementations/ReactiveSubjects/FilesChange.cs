@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects
 {
@@ -12,8 +13,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
                            ActionType actionType,
                            bool isStatusProcessingProjectChanged)
         {
-            FilesDataProject = filesDataProject;
-            FileData = fileData;
+            FilesDataProject = filesDataProject ?? Enumerable.Empty<FileData>();
+            FileData = fileData ?? Enumerable.Empty<FileData>();
             ActionType = actionType;
             IsStatusProcessingProjectChanged = isStatusProcessingProjectChanged;
         }
@@ -24,7 +25,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Reacti
         public IEnumerable<FileData> FilesDataProject { get; }
 
         /// <summary>
-        /// Список изменямых файлов
+        /// Список изменяемых файлов
         /// </summary>
         public IEnumerable<FileData> FileData { get; }
 

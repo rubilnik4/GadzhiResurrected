@@ -89,9 +89,9 @@
     <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponseClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequestClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataResponseClient.cs" />
-    <Compile Include="TransferModels\FilesConvert\FilesDataIntermediateResponseClient.cs" />
-    <Compile Include="TransferModels\FilesConvert\FilesDataRequestClient.cs" />
-    <Compile Include="TransferModels\FilesConvert\FilesDataResponseClient.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataIntermediateResponseClient.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataRequestClient.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataResponseClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransferModels\FilesConvert\FilesQueueInfoResponse.cs" />
   </ItemGroup>

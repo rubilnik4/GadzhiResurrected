@@ -8,6 +8,7 @@ using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.ViewModels;
 using GadzhiModules.Modules.FilesConvertModule.Views;
 using Prism.Ioc;
@@ -47,11 +48,11 @@ namespace GadzhiModules.Modules.FilesConvertModule
             unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingClientService>>((unity) =>
                       ServiceConsumerFactory.Create<IFileConvertingClientService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
 
-            unityContainer.RegisterSingleton<IFilesData, FilesData>();
+            unityContainer.RegisterSingleton<IPackageData, PackageData>();
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();
             unityContainer.RegisterType<IFileDataProcessingStatusMark, FileDataProcessingStatusMark>();
-            unityContainer.RegisterType<IConverterClientFilesDataToDTO, ConverterClientFilesDataToDTO>();
-            unityContainer.RegisterType<IConverterClientFilesDataFromDTO, ConverterClientFilesDataFromDTO>();
+            unityContainer.RegisterType<IConverterClientPackageDataToDto, ConverterClientPackageDataToDto>();
+            unityContainer.RegisterType<IConverterClientPackageDataFromDto, ConverterClientPackageDataFromDto>();
         }
     }
 }

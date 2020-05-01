@@ -15,7 +15,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Список статусов, означающих завершенность конвертирования на стороне сервера
         /// </summary>       
-        public static IReadOnlyList<StatusProcessingProject> CompletedStatusProcessingProjectServer => new List<StatusProcessingProject>()
+        public static IReadOnlyList<StatusProcessingProject> CompletedStatusProcessingProject => new List<StatusProcessingProject>()
         {
             StatusProcessingProject.ConvertingComplete,
             StatusProcessingProject.Error,

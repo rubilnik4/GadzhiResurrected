@@ -12,17 +12,17 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу
         /// </summary> 
-        Task QueueFilesData(FilesDataRequestClient filesDataRequest);
+        Task QueueFilesData(PackageDataRequestClient packageDataRequest);
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID
         /// </summary>       
-        Task<FilesDataIntermediateResponseClient> GetFilesDataIntermediateResponseById(Guid id);
+        Task<PackageDataIntermediateResponseClient> GetFilesDataIntermediateResponseById(Guid id);
 
         /// <summary>
         /// Получить окончательный пакет отконвертированных файлов по номеру ID
         /// </summary>       
-        Task<FilesDataResponseClient> GetFilesDataResponseById(Guid id);
+        Task<PackageDataResponseClient> GetFilesDataResponseById(Guid id);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета. Переместить пакет в архив

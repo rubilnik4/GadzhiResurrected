@@ -1,17 +1,17 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System.Threading.Tasks;
+using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
 
 namespace GadzhiModules.Infrastructure.Interfaces.Converters
 {
     /// <summary>
     /// Конвертеры из локальной модели в трансферную
     /// </summary>  
-    public interface IConverterClientFilesDataToDTO
+    public interface IConverterClientPackageDataToDto
     {
         /// <summary>
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
-        Task<FilesDataRequestClient> ConvertToFilesDataRequest(IFilesData filesData);
+        Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData);
     }
 }

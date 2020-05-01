@@ -30,19 +30,19 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Сохранить файлы для конвертации в системе и отправить отчет
         /// </summary>      
-        public async Task<FilesDataIntermediateResponseClient> SendFiles(FilesDataRequestClient filesDataRequest) =>
-                await _applicationClientConverting.QueueFilesDataAndGetResponse(filesDataRequest);
+        public async Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequest) =>
+                await _applicationClientConverting.QueueFilesDataAndGetResponse(packageDataRequest);
 
         /// <summary>
         /// Проверить статус файлов по Id номеру
         /// </summary>      
-        public async Task<FilesDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid id) =>
+        public async Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid id) =>
                 await _applicationClientConverting.GetIntermediateFilesDataResponseById(id);
 
         /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
-        public async Task<FilesDataResponseClient> GetCompleteFiles(Guid id) =>
+        public async Task<PackageDataResponseClient> GetCompleteFiles(Guid id) =>
                 await _applicationClientConverting.GetFilesDataResponseByID(id);
 
         /// <summary>

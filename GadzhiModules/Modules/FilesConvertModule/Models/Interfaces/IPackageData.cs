@@ -1,20 +1,21 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Infrastructure.Implementations.Information;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
+using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
+// ReSharper disable UnusedMemberInSuper.Global
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
+namespace GadzhiModules.Modules.FilesConvertModule.Models.Interfaces
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
-    public interface IFilesData
+    public interface IPackageData: IDisposable
     {
         /// <summary>
-        /// ID идентефикатор
+        /// ID идентификатор
         /// </summary>    
         Guid Id { get; }
 
@@ -26,12 +27,12 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        IReadOnlyList<FileData> FileDatas { get; }
+        IReadOnlyList<FileData> FilesData { get; }
 
         /// <summary>
         /// Пути конвертируемых файлов
         /// </summary>     
-        IEnumerable<string> FileDatasPath { get; }
+        IEnumerable<string> FilesDataPath { get; }
 
         /// <summary>
         /// Статус выполнения проекта
@@ -51,7 +52,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        void AddFiles(IEnumerable<FileData> files);
+        void AddFiles(IEnumerable<FileData> filesData);
 
         /// <summary>
         /// Добавить файлы
@@ -66,15 +67,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        void RemoveFiles(IEnumerable<FileData> files);
+        void RemoveFiles(IEnumerable<FileData> filesData);
 
         /// <summary>
-        /// Измененить статус файлов и присвоить при необходимости ошибку
+        /// Изменить статус файлов и присвоить при необходимости ошибку
         /// </summary>
-        void ChangeFilesStatus(FilesStatus filesStatus);
+        void ChangeFilesStatus(PackageStatus packageStatus);
 
         /// <summary>
-        /// Измененить статус всех файлов и присвоить ошибку
+        /// Изменить статус всех файлов и присвоить ошибку
         /// </summary>
         void ChangeAllFilesStatusAndMarkError();
     }

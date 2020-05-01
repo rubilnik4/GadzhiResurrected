@@ -31,7 +31,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущей папке       
         /// </summary>    
-        IEnumerable<string> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths);
+        IEnumerable<string> GetFilesFromDirectoryAndSubs(IEnumerable<string> fileOrDirectoriesPaths);
 
         /// <summary>
         /// Удалить всю информацию из папки

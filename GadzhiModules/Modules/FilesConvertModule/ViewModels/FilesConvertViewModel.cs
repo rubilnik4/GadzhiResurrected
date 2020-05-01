@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 {
@@ -32,18 +33,16 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Подписка на обновление модели
         /// </summary>
-        private readonly IDisposable fileDataChangeSubscribe;
+        private readonly IDisposable _fileDataChangeSubscribe;
 
-        public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi,
-                                     IStatusProcessingInformation statusProcessingInformation)
-            : base()
+        public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
         {
             _applicationGadzhi = applicationGadzhi;
             _statusProcessingInformation = statusProcessingInformation;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            fileDataChangeSubscribe = _applicationGadzhi?.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            _fileDataChangeSubscribe = _applicationGadzhi?.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
@@ -100,8 +99,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>
         public IList<object> SelectedFilesData
         {
-            get { return _selectedFilesData; }
-            set { SetProperty(ref _selectedFilesData, value); }
+            get => _selectedFilesData;
+            set => SetProperty(ref _selectedFilesData, value);
         }
 
         /// <summary>
@@ -136,7 +135,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
         /// <summary>
         /// Индикатор конвертирования файлов
-        /// </summary 
+        /// </summary>
         public bool IsConverting => _statusProcessingInformation.IsConverting;
 
         /// <summary>
@@ -169,34 +168,23 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Очистить список файлов
         /// </summary> 
-        private void ClearFiles()
-        {
-            ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
-        }
+        private void ClearFiles() => ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
 
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary> 
-        private async Task AddFromFiles()
-        {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
-        }
+        private async Task AddFromFiles() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
 
         /// <summary>
         /// Добавить папки для конвертации
         /// </summary> 
-        private async Task AddFromFolders()
-        {
-            await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
-        }
+        private async Task AddFromFolders() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
 
         /// <summary>
         /// Добавить файлы и папки для конвертации
         /// </summary> 
-        private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths)
-        {
+        private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths) =>
             await ExecuteAndHandleErrorAsync(() => _applicationGadzhi.AddFromFilesOrDirectories(fileOrDirectoriesPaths));
-        }
 
         /// <summary>
         /// Удалить файлы из списка
@@ -205,7 +193,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         {
             var removeFiles = SelectedFilesData?.
                               OfType<FileDataViewModelItem>().
-                              Select(FileVm => FileVm.FileData);
+                              Select(fileVm => fileVm.FileData);
 
             ExecuteAndHandleError(() => _applicationGadzhi.RemoveFiles(removeFiles));
         }
@@ -213,19 +201,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// <summary>
         /// Конвертировать файлы
         /// </summary> 
-        private async Task ConvertingFiles()
-        {
+        private async Task ConvertingFiles() =>
             await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
                                              async () => await _applicationGadzhi.AbortPropertiesConverting());
-        }
 
         /// <summary>
         /// Удалить файлы из списка
         /// </summary> 
-        private void CloseApplication()
-        {
-            ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
-        }
+        private void CloseApplication() => ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
 
         #region FilesInfoUpdate
         /// <summary>
@@ -233,18 +216,17 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary> 
         private void OnFilesInfoUpdated(FilesChange fileChange)
         {
-            if (fileChange.ActionType != ActionType.StatusChange)
+            switch (fileChange.ActionType)
             {
-
-                if (fileChange.ActionType == ActionType.Add)
-                {
+                case ActionType.Add:
                     ActionOnTypeAdd(fileChange);
-                }
-                else if (fileChange.ActionType == ActionType.Remove || fileChange.ActionType == ActionType.Clear)
-                {
+                    break;
+                case ActionType.Remove:
+                case ActionType.Clear:
                     ActionOnTypeRemove(fileChange);
-                }
+                    break;
             }
+
             ActionOnTypeStatusChange(fileChange);
         }
 
@@ -253,8 +235,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>
         private void ActionOnTypeAdd(FilesChange filesChange)
         {
-            var FileDataViewModel = filesChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
-            FilesDataCollection.AddRange(FileDataViewModel);
+            var fileDataViewModel = filesChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
+            FilesDataCollection.AddRange(fileDataViewModel);
         }
 
         /// <summary>
@@ -270,8 +252,8 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             else
             {
                 FilesDataCollection.Clear();
-                var FileDataViewModel = filesChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData));
-                FilesDataCollection.AddRange(FileDataViewModel);
+                var fileDataViewModel = filesChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData));
+                FilesDataCollection.AddRange(fileDataViewModel);
             }
         }
 
@@ -283,7 +265,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
             var fileChangePath = filesChange?.FileData?.Select(file => file.FilePath);
             if (fileChangePath != null)
             {
-                var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath?.Contains(fileData.FilePath) == true);
+                var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath.Contains(fileData.FilePath));
                 foreach (var fileUpdate in filesDataNeedUpdate)
                 {
                     fileUpdate.UpdateStatusProcessing();
@@ -323,46 +305,41 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
 
 
         /// <summary>
-        /// Реализация Drag&Drop для ссылки на файлы
+        /// Реализация Drag Drop для ссылки на файлы
         /// </summary>       
         public void DragOver(IDropInfo dropInfo)
         {
-            if (dropInfo?.Data is IDataObject dataObject)
+            if (!(dropInfo?.Data is IDataObject dataObject)) return;
+
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            if (dataObject.GetDataPresent(DataFormats.FileDrop))
             {
-                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-                if (dataObject != null && dataObject.GetDataPresent(DataFormats.FileDrop))
-                {
-                    dropInfo.Effects = DragDropEffects.Copy;
-                }
+                dropInfo.Effects = DragDropEffects.Copy;
             }
         }
 
         public void Drop(IDropInfo dropInfo)
         {
-            if (dropInfo?.Data is DataObject dataObject)
-            {
-                if (dataObject != null && dataObject.ContainsFileDropList())
-                {
-                    var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
-                    Task.FromResult(AddFromFilesAndFolders(filePaths));
-                }
-            }
+            if (!(dropInfo?.Data is DataObject dataObject) ||
+                !dataObject.ContainsFileDropList()) return;
+
+            var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
+            Task.FromResult(AddFromFilesAndFolders(filePaths));
         }
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        private bool _disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    fileDataChangeSubscribe?.Dispose();
-                }
+            if (_disposedValue) return;
 
-                disposedValue = true;
+            if (disposing)
+            {
+                _fileDataChangeSubscribe?.Dispose();
             }
+
+            _disposedValue = true;
         }
 
         public void Dispose()

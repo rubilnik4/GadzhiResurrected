@@ -14,12 +14,12 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        Task<FilesDataIntermediateResponseClient> ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
+        Task<PackageDataIntermediateResponseClient> ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
                                                                                          FilesQueueInfo filesQueueInfo);
 
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
-        Task<FilesDataResponseClient> ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);
+        Task<PackageDataResponseClient> ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity);
     }
 }

@@ -26,6 +26,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// <summary>
         /// Добавить данные о пользователе для запроса на конвертацию
         /// </summary>        
-        FilesDataRequestClient AuthenticateFilesData(FilesDataRequestClient filesDataRequest);
+        PackageDataRequestClient AuthenticateFilesData(PackageDataRequestClient packageDataRequest);
     }
 }

@@ -56,9 +56,9 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу
         /// </summary>       
-        public async Task QueueFilesData(FilesDataRequestClient filesDataRequest)
+        public async Task QueueFilesData(PackageDataRequestClient packageDataRequest)
         {
-            FilesDataEntity filesDataEntity = _converterDataAccessFilesDataFromDTOClient.ConvertToFilesDataAccess(filesDataRequest);
+            FilesDataEntity filesDataEntity = _converterDataAccessFilesDataFromDTOClient.ConvertToFilesDataAccess(packageDataRequest);
 
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
@@ -70,9 +70,9 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID
         /// </summary>       
-        public async Task<FilesDataIntermediateResponseClient> GetFilesDataIntermediateResponseById(Guid id)
+        public async Task<PackageDataIntermediateResponseClient> GetFilesDataIntermediateResponseById(Guid id)
         {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse = null;
+            PackageDataIntermediateResponseClient packageDataIntermediateResponse = null;
 
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
@@ -81,29 +81,29 @@ namespace GadzhiDAL.Services.Implementations
 
                 FilesQueueInfo filesQueueInfo = await GetQueueCount(unitOfWork, filesDataEntity);
 
-                filesDataIntermediateResponse = await _converterDataAccessFilesDataToDTOClient.
+                packageDataIntermediateResponse = await _converterDataAccessFilesDataToDTOClient.
                                                        ConvertFilesDataAccessToIntermediateResponse(filesDataEntity, filesQueueInfo);
             }
 
-            return filesDataIntermediateResponse;
+            return packageDataIntermediateResponse;
         }
 
         /// <summary>
         /// Получить окончательный пакет отконвертированных файлов по номеру ID
         /// </summary>       
-        public async Task<FilesDataResponseClient> GetFilesDataResponseById(Guid id)
+        public async Task<PackageDataResponseClient> GetFilesDataResponseById(Guid id)
         {
-            FilesDataResponseClient filesDataResponse = null;
+            PackageDataResponseClient packageDataResponse = null;
 
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
                 FilesDataEntity filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(id.ToString());
-                filesDataResponse = await _converterDataAccessFilesDataToDTOClient.ConvertFilesDataAccessToResponse(filesDataEntity);
+                packageDataResponse = await _converterDataAccessFilesDataToDTOClient.ConvertFilesDataAccessToResponse(filesDataEntity);
 
                 await unitOfWork.CommitAsync();
             }
 
-            return filesDataResponse;
+            return packageDataResponse;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace GadzhiDAL.Services.Implementations
         {
             var filesDataTask = unitOfWork.Session.Query<FilesDataEntity>().
                                                     Where(package => filesDataEntity != null &&
-                                                                     !CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(package.StatusProcessingProject) &&
+                                                                     !CheckStatusProcessing.CompletedStatusProcessingProject.Contains(package.StatusProcessingProject) &&
                                                                      package.CreationDateTime < filesDataEntity.CreationDateTime);
 
             int packagesInQueueCount = await filesDataTask?.CountAsync();

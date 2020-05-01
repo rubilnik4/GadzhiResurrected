@@ -42,14 +42,13 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// </summary>
         void RemoveFiles(IEnumerable<FileData> fileOrDirectoriesPaths);
 
-
         /// <summary>
         /// Закрыть приложение
         /// </summary>
         void CloseApplication();
 
         /// <summary>
-        /// Конвертировать файлы на сервре
+        /// Конвертировать файлы на сервере
         /// </summary>
         Task ConvertingFiles();
 

@@ -7,23 +7,23 @@ namespace GadzhiModules.Infrastructure.Interfaces.Converters
     /// <summary>
     /// Конвертеры из трансферной модели в локальную
     /// </summary>  
-    public interface IConverterClientFilesDataFromDTO
+    public interface IConverterClientPackageDataFromDto
     {
         /// <summary>
         /// Конвертер пакета информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        FilesStatus ConvertToFilesStatusFromIntermediateResponse(FilesDataIntermediateResponseClient filesDataIntermediateResponse);
+        PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataIntermediateResponseClient packageDataIntermediateResponse);
 
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части перед сохранение
         /// </summary>      
-        FilesStatus ConvertToFilesStatus(FilesDataResponseClient filesDataResponse);
+        PackageStatus ToPackageStatus(PackageDataResponseClient packageDataResponse);
 
 
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части и сохранение файлов
         /// </summary>      
-        Task<FilesStatus> ConvertToFilesStatusAndSaveFiles(FilesDataResponseClient filesDataResponse);
+        Task<PackageStatus> ToFilesStatusAndSaveFiles(PackageDataResponseClient packageDataResponse);
 
     }
 }

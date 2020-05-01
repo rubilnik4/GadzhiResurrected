@@ -7,15 +7,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Inform
     /// <summary>
     /// Класс содержащий статус и ошибки при конвертировании для всего пакета
     /// </summary>
-    public class FilesStatus
+    public class PackageStatus
     {
-        public FilesStatus(IEnumerable<FileStatus> fileData,
-                           StatusProcessingProject statusProcessingProject,
-                           FilesQueueStatus filesQueueStatus = null)
+        public PackageStatus(IEnumerable<FileStatus> fileData, StatusProcessingProject statusProcessingProject, 
+                             QueueStatus queueStatus = new QueueStatus())
         {
-            FileStatus = fileData;
+            FileStatus = fileData ?? Enumerable.Empty<FileStatus>();
             StatusProcessingProject = statusProcessingProject;
-            FilesQueueStatus = filesQueueStatus;
+            QueueStatus = queueStatus;
         }
 
         /// <summary>
@@ -31,7 +30,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Inform
         /// <summary>
         /// Информация о количестве файлов в очереди на сервере
         /// </summary>
-        public FilesQueueStatus FilesQueueStatus { get; }
+        public QueueStatus QueueStatus { get; }
 
         /// <summary>
         /// Список файлов для изменения статуса

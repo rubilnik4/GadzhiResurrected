@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
 
 namespace GadzhiTest
 {
@@ -84,7 +85,7 @@ namespace GadzhiTest
             // Arrange
             Mock<IFileSystemOperations> mockFileSystemOperations = MockFileSystemOperationsFill();
 
-            var mockFileInfoProject = new Mock<IFilesData>();
+            var mockFileInfoProject = new Mock<IPackageData>();
             IEnumerable<string> filesPathOut = new List<string>();
             mockFileInfoProject.Setup(fileInfo => fileInfo.AddFiles(It.IsAny<IEnumerable<string>>()))
                                .Callback<IEnumerable<string>>(filesPath => filesPathOut = filesPath);
@@ -132,7 +133,7 @@ namespace GadzhiTest
 
             Mock<IFileSystemOperations> mockFileSeach = MockFileSystemOperationsFill(subDirectoryPath, filesInSubDirectory, subfolderGetFiles);
 
-            var mockFileInfoProject = new Mock<IFilesData>();
+            var mockFileInfoProject = new Mock<IPackageData>();
             IEnumerable<string> filesPathOut = new List<string>();
             mockFileInfoProject.Setup(fileInfo => fileInfo.AddFiles(It.IsAny<IEnumerable<string>>()))
                                .Callback<IEnumerable<string>>(filesPath => filesPathOut = filesPath);
@@ -173,7 +174,7 @@ namespace GadzhiTest
         {
             // Arrange            
             Mock<IFileSystemOperations> mockFileSeach = MockFileSystemOperationsFill();
-            var mockFileInfoProject = new Mock<IFilesData>();
+            var mockFileInfoProject = new Mock<IPackageData>();
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,
@@ -213,7 +214,7 @@ namespace GadzhiTest
         {
             // Arrange             
             Mock<IFileSystemOperations> mockFileSeach = MockFileSystemOperationsFill();
-            var mockFileInfoProject = new Mock<IFilesData>();
+            var mockFileInfoProject = new Mock<IPackageData>();
 
             var applicationGadzhi = new ApplicationGadzhi(MockDialogServiceStandard.Object,
                                                           mockFileSeach.Object,

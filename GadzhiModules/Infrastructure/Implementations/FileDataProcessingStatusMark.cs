@@ -3,12 +3,12 @@ using GadzhiCommon.Extentions.Collection;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -20,115 +20,97 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        private readonly IFilesData _filesInfoProject;
+        private readonly IPackageData _packageInfoProject;
 
         /// <summary>
         /// Конвертеры из локальной модели в трансферную
         /// </summary>  
-        private readonly IConverterClientFilesDataToDTO _converterClientFilesDataToDTO;
+        private readonly IConverterClientPackageDataToDto _converterClientPackageDataToDto;
 
         /// <summary>
         /// Конвертеры из трансферной модели в локальную
         /// </summary>  
-        private readonly IConverterClientFilesDataFromDTO _converterClientFilesDataFromDTO;
+        private readonly IConverterClientPackageDataFromDto _converterClientPackageDataFromDto;
 
-        public FileDataProcessingStatusMark(IFilesData filesInfoProject,
-                                            IConverterClientFilesDataToDTO converterClientFilesDataToDTO,
-                                            IConverterClientFilesDataFromDTO converterClientFilesDataFromDTO)
+        public FileDataProcessingStatusMark(IPackageData packageInfoProject,
+                                            IConverterClientPackageDataToDto converterClientPackageDataToDto,
+                                            IConverterClientPackageDataFromDto converterClientPackageDataFromDto)
         {
-            _filesInfoProject = filesInfoProject;
-            _converterClientFilesDataToDTO = converterClientFilesDataToDTO;
-            _converterClientFilesDataFromDTO = converterClientFilesDataFromDTO;
+            _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
+            _converterClientPackageDataToDto = converterClientPackageDataToDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataToDto));
+            _converterClientPackageDataFromDto = converterClientPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataFromDto));
         }
 
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        public async Task<FilesDataRequestClient> GetFilesDataToRequest()
-        {
-            return await _converterClientFilesDataToDTO.ConvertToFilesDataRequest(_filesInfoProject);
-        }
+        public async Task<PackageDataRequestClient> GetFilesDataToRequest() =>
+            await _converterClientPackageDataToDto.ToPackageDataRequest(_packageInfoProject);
 
         /// <summary>
         /// Назначить всем файлам статус к отправке
         /// </summary>  
-        public Task<FilesStatus> GetFilesInSending()
+        public Task<PackageStatus> GetFilesInSending()
         {
-            var filesInSending = _filesInfoProject?.
-                                 FileDatas?.
-                                 Select(file => new FileStatus(file.FilePath,
-                                                               StatusProcessing.Sending,
-                                                               FileConvertErrorType.IncorrectFileName));
+            var filesSending = _packageInfoProject?.FilesData?.
+                               Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending, FileConvertErrorType.IncorrectFileName));
 
-            var filesStatusInSendind = new FilesStatus(filesInSending,
-                                                       StatusProcessingProject.Sending);
-
-            return Task.FromResult(filesStatusInSendind);
+            var filesStatusInSending = new PackageStatus(filesSending, StatusProcessingProject.Sending);
+            return Task.FromResult(filesStatusInSending);
         }
 
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        public Task<FilesStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest)
+        public Task<PackageStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest)
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
-            var filesNotFound = _filesInfoProject?.
-                                FileDatasPath.
+            var filesNotFound = _packageInfoProject?.FilesDataPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
-                                Select(filePath => new FileStatus(filePath,
-                                                                  StatusProcessing.End,
-                                                                  FileConvertErrorType.FileNotFound));
-            var filesStatusInSendind = new FilesStatus(filesNotFound,
-                                                       StatusProcessingProject.Sending);
-            return Task.FromResult(filesStatusInSendind);
+                                Select(filePath => new FileStatus(filePath, StatusProcessing.End, FileConvertErrorType.FileNotFound));
+
+            var filesStatusInSending = new PackageStatus(filesNotFound, StatusProcessingProject.Sending);
+            return Task.FromResult(filesStatusInSending);
         }
 
         /// <summary>
         /// Поменять статус файлов после промежуточного отчета
         /// </summary>       
-        public Task<FilesStatus> GetFilesStatusIntermediateResponse(FilesDataIntermediateResponseClient filesDataIntermediateResponse)
+        public Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataIntermediateResponseClient packageDataIntermediateResponse)
         {
-            var filesStatusIntermediate = _converterClientFilesDataFromDTO.
-                                          ConvertToFilesStatusFromIntermediateResponse(filesDataIntermediateResponse);
-
+            var filesStatusIntermediate = _converterClientPackageDataFromDto.ToPackageStatusFromIntermediateResponse(packageDataIntermediateResponse);
             return Task.FromResult(filesStatusIntermediate);
         }
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        public Task<FilesStatus> GetFilesStatusCompleteResponseBeforeWriting(FilesDataResponseClient filesDataResponse)
+        public Task<PackageStatus> GetFilesStatusCompleteResponseBeforeWriting(PackageDataResponseClient packageDataResponse)
         {
-            var filesStatusResponseBeforeWriting = _converterClientFilesDataFromDTO.
-                                                   ConvertToFilesStatus(filesDataResponse);
+            var filesStatusResponseBeforeWriting = _converterClientPackageDataFromDto.ToPackageStatus(packageDataResponse);
             return Task.FromResult(filesStatusResponseBeforeWriting);
         }
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и записи файлов
         /// </summary>       
-        public async Task<FilesStatus> GetFilesStatusCompleteResponseAndWritten(FilesDataResponseClient filesDataResponse)
-        {
-            var filesStatusResponse = await _converterClientFilesDataFromDTO.
-                                            ConvertToFilesStatusAndSaveFiles(filesDataResponse);
-            return filesStatusResponse;
-        }
+        public async Task<PackageStatus> GetFilesStatusCompleteResponseAndWritten(PackageDataResponseClient packageDataResponse) =>
+            await _converterClientPackageDataFromDto.ToFilesStatusAndSaveFiles(packageDataResponse);
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        public async Task<FilesStatus> GetFilesStatusUnionAfterSendAndNotFound(FilesDataRequestClient filesDataRequest,
-                                                                               FilesDataIntermediateResponseClient filesDataIntermediateResponse)
+        public async Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
+                                                                   PackageDataIntermediateResponseClient packageDataIntermediateResponse)
         {
-            var filesNotFound = GetFilesNotFound(filesDataRequest?.FileDatas);
-            var filesChangedStatus = GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
+            var filesNotFound = GetFilesNotFound(packageDataRequest?.FilesData);
+            var filesChangedStatus = GetPackageStatusIntermediateResponse(packageDataIntermediateResponse);
             await Task.WhenAll(filesNotFound, filesChangedStatus);
 
-            var filesDataUnion = filesNotFound?.Result.FileStatus.UnionNotNull(filesChangedStatus.Result.FileStatus);
-            var filesStatusUnion = new FilesStatus(filesDataUnion,
-                                                   filesDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
-                                                   filesChangedStatus.Result.FilesQueueStatus);
-            return filesStatusUnion;
+            var filesDataUnion = filesNotFound.Result.FileStatus.UnionNotNull(filesChangedStatus.Result.FileStatus);
+            return new PackageStatus(filesDataUnion,
+                                     packageDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
+                                     filesChangedStatus.Result.QueueStatus);
         }
     }
 }

@@ -13,17 +13,17 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
         /// </summary>
-        Task<FilesDataIntermediateResponseClient> QueueFilesDataAndGetResponse(FilesDataRequestClient filesDataRequest);
+        Task<PackageDataIntermediateResponseClient> QueueFilesDataAndGetResponse(PackageDataRequestClient packageDataRequest);
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        Task<FilesDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerID);
+        Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerID);
 
         /// <summary>
         /// Получить отконвертированные файлы
         /// </summary>
-        Task<FilesDataResponseClient> GetFilesDataResponseByID(Guid filesDataServerID);
+        Task<PackageDataResponseClient> GetFilesDataResponseByID(Guid filesDataServerID);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета

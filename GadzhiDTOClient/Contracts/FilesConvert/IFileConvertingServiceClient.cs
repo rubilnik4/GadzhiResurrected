@@ -15,19 +15,19 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// Отправить файлы для конвертирования
         /// </summary>
         [OperationContract(IsInitiating = true, IsTerminating = false)]
-        Task<FilesDataIntermediateResponseClient> SendFiles(FilesDataRequestClient filesDataRequestClient);
+        Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequestClient);
 
         /// <summary>
         /// Проверить статус файлов
         /// </summary>   
         [OperationContract(IsInitiating = false, IsTerminating = false)]
-        Task<FilesDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataID);
+        Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataID);
 
         /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>  
         [OperationContract(IsInitiating = false, IsTerminating = false)]
-        Task<FilesDataResponseClient> GetCompleteFiles(Guid filesDataID);
+        Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataID);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета

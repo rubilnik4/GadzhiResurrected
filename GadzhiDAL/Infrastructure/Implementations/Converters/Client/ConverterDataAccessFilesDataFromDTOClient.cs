@@ -21,16 +21,16 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в модель базы данных
         /// </summary>      
-        public FilesDataEntity ConvertToFilesDataAccess(FilesDataRequestClient filesDataRequest)
+        public FilesDataEntity ConvertToFilesDataAccess(PackageDataRequestClient packageDataRequest)
         {
-            if (filesDataRequest != null)
+            if (packageDataRequest != null)
             {
-                var filesDataAccessToConvert = filesDataRequest?.FileDatas?.AsQueryable().
+                var filesDataAccessToConvert = packageDataRequest?.FilesData?.AsQueryable().
                                                Select(fileDTO => ConvertToFileDataAccess(fileDTO));
                
                 var filesDataEntity = new FilesDataEntity();
-                filesDataEntity.SetId(filesDataRequest.Id);
-                filesDataEntity.IdentityLocalName = filesDataRequest.IdentityName;
+                filesDataEntity.SetId(packageDataRequest.Id);
+                filesDataEntity.IdentityLocalName = packageDataRequest.IdentityName;
                 filesDataEntity.SetFileDataEntities(filesDataAccessToConvert);
 
                 return filesDataEntity;

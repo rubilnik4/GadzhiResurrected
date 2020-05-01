@@ -26,7 +26,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        public async Task<FilesDataIntermediateResponseClient> ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
+        public async Task<PackageDataIntermediateResponseClient> ConvertFilesDataAccessToIntermediateResponse(FilesDataEntity filesDataEntity,
                                                                                                             FilesQueueInfo filesQueueInfo)
         {
             if (filesDataEntity == null) return null;
@@ -35,7 +35,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                                  Select(fileData => ConvertFileDataAccessToIntermediateResponse(fileData));
             var filesData = await Task.WhenAll(filesDataTasks);
 
-            return new FilesDataIntermediateResponseClient()
+            return new PackageDataIntermediateResponseClient()
             {
                 Id = Guid.Parse(filesDataEntity.Id),
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
@@ -47,7 +47,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
-        public async Task<FilesDataResponseClient> ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity)
+        public async Task<PackageDataResponseClient> ConvertFilesDataAccessToResponse(FilesDataEntity filesDataEntity)
         {
             if (filesDataEntity == null) return null;
 
@@ -55,11 +55,11 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                                  Select(fileData => ConvertFileDataAccessToResponse(fileData));
             var filesData = await Task.WhenAll(filesDataTasks);
 
-            return new FilesDataResponseClient()
+            return new PackageDataResponseClient()
             {
                 Id = Guid.Parse(filesDataEntity.Id),
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                FileDatas = filesData,
+                FilesData = filesData,
             };
         }
 

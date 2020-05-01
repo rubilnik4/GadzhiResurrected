@@ -74,7 +74,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущих папках. Допустимо передавать пути файлов для дальнейшего объединения      
         /// </summary>    
-        public IEnumerable<string> GetFilesFromDirectoryAndSubDirectory(IEnumerable<string> fileOrDirectoriesPaths) =>
+        public IEnumerable<string> GetFilesFromDirectoryAndSubs(IEnumerable<string> fileOrDirectoriesPaths) =>
             fileOrDirectoriesPaths?.
             Where(directoryPath => IsDirectory(directoryPath) && IsDirectoryExist(directoryPath)).
             Map(directoriesPath => directoriesPath.UnionNotNull(

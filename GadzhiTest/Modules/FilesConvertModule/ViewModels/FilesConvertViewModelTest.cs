@@ -42,21 +42,21 @@
 //        private Mock<IApplicationGadzhi> ApplicationGadzhiTestAddInitialize()
 //        {
 //            var mockApplicationGadzhi = new Mock<IApplicationGadzhi>();
-//            var mockFileInfoProject = new Mock<IFilesData>();
+//            var mockFileInfoProject = new Mock<IPackageData>();
 
 //            var filesOutFromApplicationAdd = DefaultFileData.FileDataToTestOnlyPath;
 //            mockApplicationGadzhi.Setup(app => app.AddFromFilesOrDirectories(It.IsAny<IEnumerable<string>>())).
 //                                  Callback(() => mockFileInfoProject.Object.AddFiles(filesOutFromApplicationAdd));
-//            mockApplicationGadzhi.SetupGet(app => app.FilesInfoProject).Returns(mockFileInfoProject.Object);
+//            mockApplicationGadzhi.SetupGet(app => app.PackageInfoProject).Returns(mockFileInfoProject.Object);
 
 //            mockFileInfoProject.Setup(fileProject => fileProject.AddFiles(It.IsAny<IEnumerable<string>>())).
 //                               Callback<IEnumerable<string>>(filesPathToAdd =>
 //                               {
-//                                   var filesData = filesPathToAdd.Select(file => new FileData(file));
-//                                   var filesDataProject = new List<FileData>(filesData); //добавляем данные в модель
+//                                   var packageData = filesPathToAdd.Select(file => new FileData(file));
+//                                   var filesDataProject = new List<FileData>(packageData); //добавляем данные в модель
 
 //                                   mockFileInfoProject.Object.FileDataChange.OnNext(
-//                                       new FilesChange(filesData, filesData, ActionType.Add));
+//                                       new FilesChange(packageData, packageData, ActionType.Add));
 //                               });
 //            var fileDataChange = new Subject<FilesChange>();
 //            mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange)
@@ -71,13 +71,13 @@
 //        private Mock<IApplicationGadzhi> ApplicationGadzhiTestRemoveInitialize(IEnumerable<FileData> defaultFileData)
 //        {
 //            var mockApplicationGadzhi = new Mock<IApplicationGadzhi>();
-//            var mockFileInfoProject = new Mock<IFilesData>();
+//            var mockFileInfoProject = new Mock<IPackageData>();
 
 //            var filesOutFromApplicationAdd = defaultFileData;
 //            mockApplicationGadzhi.Setup(app => app.RemoveFiles(It.IsAny<IEnumerable<FileData>>())).
 //                                  Callback<IEnumerable<FileData>>(filesDataToRemove =>
 //                                        mockFileInfoProject.Object.RemoveFiles(filesDataToRemove));
-//            mockApplicationGadzhi.SetupGet(app => app.FilesInfoProject).Returns(mockFileInfoProject.Object);
+//            mockApplicationGadzhi.SetupGet(app => app.PackageInfoProject).Returns(mockFileInfoProject.Object);
 
 //            mockFileInfoProject.Setup(fileProject => fileProject.RemoveFiles(It.IsAny<IEnumerable<FileData>>())).
 //                               Callback<IEnumerable<FileData>>(filesDataToRemove =>
@@ -156,10 +156,10 @@
 //        {
 //            // Arrange
 //            var mockApplicationGadzhi = new Mock<IApplicationGadzhi>();
-//            var mockFileInfoProject = new Mock<IFilesData>();
+//            var mockFileInfoProject = new Mock<IPackageData>();
 
 //            mockApplicationGadzhi.Setup(app => app.AddFromFolders());
-//            mockApplicationGadzhi.SetupGet(app => app.FilesInfoProject).
+//            mockApplicationGadzhi.SetupGet(app => app.PackageInfoProject).
 //                                  Returns(mockFileInfoProject.Object);
 
 //            mockFileInfoProject.SetupGet(fileProject => fileProject.FileDataChange).

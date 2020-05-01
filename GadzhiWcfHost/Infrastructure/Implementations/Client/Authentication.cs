@@ -33,15 +33,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// <summary>
         /// Добавить данные о пользователе для запроса на конвертацию
         /// </summary>        
-        public FilesDataRequestClient AuthenticateFilesData(FilesDataRequestClient filesDataRequest)
+        public PackageDataRequestClient AuthenticateFilesData(PackageDataRequestClient packageDataRequest)
         {
-            if (filesDataRequest != null)
+            if (packageDataRequest != null)
             {
-                Id = filesDataRequest.Id;
-                filesDataRequest.IdentityName = IdentityName;
+                Id = packageDataRequest.Id;
+                packageDataRequest.IdentityName = IdentityName;
             }
 
-            return filesDataRequest;
+            return packageDataRequest;
         }
 
         /// <summary>

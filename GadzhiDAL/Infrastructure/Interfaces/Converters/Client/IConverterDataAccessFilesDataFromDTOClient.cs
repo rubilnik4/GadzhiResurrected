@@ -13,6 +13,6 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Client
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в модель базы данных
         /// </summary>      
-        FilesDataEntity ConvertToFilesDataAccess(FilesDataRequestClient filesDataRequest);
+        FilesDataEntity ConvertToFilesDataAccess(PackageDataRequestClient packageDataRequest);
     }
 }

@@ -7,9 +7,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
 {
     public class FileDataViewModelItem : BindableBase
     {
-        public FileDataViewModelItem(FileData filedata)
+        public FileDataViewModelItem(FileData fileData)
         {
-            FileData = filedata;
+            FileData = fileData;
         }
 
         /// <summary>
@@ -38,10 +38,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         public string ColorPrintName
         {
             get => ColorPrintConverter.ConvertColorPrintToString(FileData.ColorPrint);
-            set
-            {
-                FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
-            }
+            set => FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
         }
 
         /// <summary>
@@ -51,18 +48,18 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
                                               ConvertStatusProcessingToString(FileData.StatusProcessing);
 
         /// <summary>
-        /// Ошибка отсуствует
+        /// Ошибка отсутствует
         /// </summary>
         public bool IsNoError => IsEndStatus && FileData.StatusError == StatusError.NoError;
 
         /// <summary>
         /// Информационная ошибка
         /// </summary>
-        public bool IsInformaticalError => IsEndStatus &&  FileData.StatusError == StatusError.InformationError;
+        public bool IsInformationError => IsEndStatus &&  FileData.StatusError == StatusError.InformationError;
 
         /// <summary>
-        /// Ошибка отсуствует
-        /// </summary>
+        /// Ошибка отсутствует
+        /// /// </summary>
         public bool IsCriticalError => IsEndStatus &&  FileData.StatusError == StatusError.CriticalError;
 
         /// <summary>
@@ -78,7 +75,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
             RaisePropertyChanged(nameof(StatusProcessingName));            
             RaisePropertyChanged(nameof(IsEndStatus));
             RaisePropertyChanged(nameof(IsNoError));
-            RaisePropertyChanged(nameof(IsInformaticalError));
+            RaisePropertyChanged(nameof(IsInformationError));
             RaisePropertyChanged(nameof(IsCriticalError));
         }
 

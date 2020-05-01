@@ -1,10 +1,7 @@
 ﻿using ChannelAdam.ServiceModel;
-using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.Dialogs;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
@@ -19,6 +16,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
+using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiModules.Infrastructure.Implementations
@@ -26,12 +24,12 @@ namespace GadzhiModules.Infrastructure.Implementations
     /// <summary>
     /// Слой приложения, инфраструктура
     /// </summary>
-    public sealed class ApplicationGadzhi : IApplicationGadzhi, IDisposable
+    public sealed class ApplicationGadzhi : IApplicationGadzhi
     {
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        private readonly IFilesData _filesInfoProject;
+        private readonly IPackageData _packageInfoProject;
 
         /// <summary>
         /// Сервис конвертации
@@ -61,39 +59,39 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Параметры приложения
         /// </summary>
         private readonly IProjectSettings _projectSettings;
-        
+
         /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
         /// </summary>
-        private readonly CompositeDisposable _statusProcessingUpdaterSubsriptions;
+        private readonly CompositeDisposable _statusProcessingSubscriptions;
 
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IFileSystemOperations fileSystemOperations,
-                                 IFilesData filesInfoProject,
-                                 IServiceConsumer<IFileConvertingClientService> FileConvertingClientService,
+                                 IPackageData packageInfoProject,
+                                 IServiceConsumer<IFileConvertingClientService> fileConvertingClientService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation,
                                  IProjectSettings projectSettings)
         {
-            _dialogServiceStandard = dialogServiceStandard;
-            _fileSystemOperations = fileSystemOperations;
-            _filesInfoProject = filesInfoProject;
-            _fileConvertingClientService = FileConvertingClientService;
-            _fileDataProcessingStatusMark = fileDataProcessingStatusMark;
-            _statusProcessingInformation = statusProcessingInformation;
-            _projectSettings = projectSettings;
+            _dialogServiceStandard = dialogServiceStandard ?? throw new ArgumentNullException(nameof(dialogServiceStandard));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
+            _fileConvertingClientService = fileConvertingClientService ?? throw new ArgumentNullException(nameof(fileConvertingClientService));
+            _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
+            _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
 
-            _statusProcessingUpdaterSubsriptions = new CompositeDisposable();        
+            _statusProcessingSubscriptions = new CompositeDisposable();
         }
 
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange => _filesInfoProject.FileDataChange;
+        public ISubject<FilesChange> FileDataChange => _packageInfoProject.FileDataChange;
 
         /// <summary>
         /// Выполняется ли промежуточный запрос
-        /// </summary 
+        /// </summary>
         private bool IsIntermediateResponseInProgress { get; set; }
 
         /// <summary>
@@ -101,11 +99,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task AddFromFiles()
         {
-            if (!_statusProcessingInformation.IsConverting)
-            {
-                var filePaths = await _dialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
-                await AddFromFilesOrDirectories(filePaths);
-            }
+            if (_statusProcessingInformation.IsConverting) return;
+
+            var filePaths = await _dialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
+            await AddFromFilesOrDirectories(filePaths);
         }
 
         /// <summary>
@@ -113,11 +110,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>     
         public async Task AddFromFolders()
         {
-            if (!_statusProcessingInformation.IsConverting)
-            {
-                var directoryPaths = await _dialogServiceStandard.OpenFolderDialog(true);
-                await AddFromFilesOrDirectories(directoryPaths);
-            }
+            if (_statusProcessingInformation.IsConverting) return;
+
+            var directoryPaths = await _dialogServiceStandard.OpenFolderDialog(true);
+            await AddFromFilesOrDirectories(directoryPaths);
         }
 
         /// <summary>
@@ -125,14 +121,10 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public async Task AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths)
         {
-            if (!_statusProcessingInformation.IsConverting)
-            {
-                var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromDirectoryAndSubDirectory(fileOrDirectoriesPaths));
-                if (allFilePaths != null && allFilePaths.Any())
-                {
-                    _filesInfoProject.AddFiles(allFilePaths);
-                }
-            }
+            if (_statusProcessingInformation.IsConverting) return;
+
+            var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromDirectoryAndSubs(fileOrDirectoriesPaths));
+            _packageInfoProject.AddFiles(allFilePaths);
         }
 
         /// <summary>
@@ -140,10 +132,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>  
         public void ClearFiles()
         {
-            if (!_statusProcessingInformation.IsConverting)
-            {
-                _filesInfoProject.ClearFiles();
-            }
+            if (_statusProcessingInformation.IsConverting) return;
+
+            _packageInfoProject.ClearFiles();
         }
 
         /// <summary>
@@ -151,19 +142,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public void RemoveFiles(IEnumerable<FileData> filesToRemove)
         {
-            if (!_statusProcessingInformation.IsConverting)
-            {
-                _filesInfoProject.RemoveFiles(filesToRemove);
-            }
-        }
+            if (_statusProcessingInformation.IsConverting) return;
 
-        /// <summary>
-        /// Обновить статус конвертирования
-        /// </summary>
-        public void ChangeFilesStatusAndMarkError(FilesStatus filesStatus)
-        {
-
-            _filesInfoProject.ChangeFilesStatus(filesStatus);
+            _packageInfoProject.RemoveFiles(filesToRemove);
         }
 
         /// <summary>
@@ -171,50 +152,39 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         public void CloseApplication()
         {
-            if (_statusProcessingInformation.IsConverting)
+            if (_statusProcessingInformation.IsConverting &&
+                !_dialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
             {
-                if (!_dialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
-                {
-                    return;
-                }
+                return;
             }
             Application.Current.Shutdown();
         }
-
-        #region ConvertingFilesOnServer
 
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>
         public async Task ConvertingFiles()
         {
-            if (!_statusProcessingInformation.IsConverting)
-            {
-                if (_filesInfoProject?.FileDatas?.Any() == true)
-                {
-                    FilesDataRequestClient filesDataRequest = await PrepareFilesToSending();
-                    if (filesDataRequest.IsValid)
-                    {
-                        await SendFilesToConverting(filesDataRequest);
+            if (_statusProcessingInformation.IsConverting) return;
 
-                        SubsribeToIntermediateResponse();
-                    }
-                }
-                else
-                {
-                    await AbortPropertiesConverting(false);
-                    _dialogServiceStandard.ShowAndLogMessage("Необходимо загрузить файлы для конвертирования");
-                }
+            PackageDataRequestClient packageDataRequest = await PrepareFilesToSending();
+            if (!packageDataRequest.IsValid)
+            {
+                await AbortPropertiesConverting();
+                _dialogServiceStandard.ShowAndLogMessage("Необходимо загрузить файлы для конвертирования");
             }
+
+            await SendFilesToConverting(packageDataRequest);
+            SubscribeToIntermediateResponse();
         }
 
         /// <summary>
         /// Подготовить данные к отправке
         /// </summary>     
-        private async Task<FilesDataRequestClient> PrepareFilesToSending()
+        private async Task<PackageDataRequestClient> PrepareFilesToSending()
         {
             var filesStatusInSending = await _fileDataProcessingStatusMark.GetFilesInSending();
-            _filesInfoProject.ChangeFilesStatus(filesStatusInSending);
+            _packageInfoProject.ChangeFilesStatus(filesStatusInSending);
 
             var filesDataRequest = await _fileDataProcessingStatusMark.GetFilesDataToRequest();
             return filesDataRequest;
@@ -223,27 +193,24 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Отправить файлы для конвертации
         /// </summary>
-        /// <returns></returns>
-        private async Task SendFilesToConverting(FilesDataRequestClient filesDataRequest)
+        private async Task SendFilesToConverting(PackageDataRequestClient packageDataRequest)
         {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _fileConvertingClientService.
-                                                                                 Operations.
-                                                                                 SendFiles(filesDataRequest);
-            var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetFilesStatusUnionAfterSendAndNotFound(filesDataRequest, filesDataIntermediateResponse);
-            _filesInfoProject.ChangeFilesStatus(filesStatusAfterSending);
+            var packageDataResponse = await _fileConvertingClientService.Operations.SendFiles(packageDataRequest);
+            var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetPackageStatusAfterSend(packageDataRequest, packageDataResponse);
+            _packageInfoProject.ChangeFilesStatus(filesStatusAfterSending);
         }
 
         /// <summary>
         /// Подписаться на изменение статуса файлов при конвертировании
         /// </summary>
-        private void SubsribeToIntermediateResponse() =>       
-            _statusProcessingUpdaterSubsriptions.
+        private void SubscribeToIntermediateResponse() =>
+            _statusProcessingSubscriptions.
             Add(Observable.
                 Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
                 Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                 Subscribe(async _ => await ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
                                                                       () => IsIntermediateResponseInProgress = true,
-                                                                      async () => await AbortPropertiesConverting(false),
+                                                                      async () => await AbortPropertiesConverting(),
                                                                       () => IsIntermediateResponseInProgress = false)));
 
         /// <summary>
@@ -251,15 +218,15 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private async Task UpdateStatusProcessing()
         {
-            FilesDataIntermediateResponseClient filesDataIntermediateResponse = await _fileConvertingClientService.Operations.
-                                                                                CheckFilesStatusProcessing(_filesInfoProject.Id);
-            FilesStatus filesStatus = await _fileDataProcessingStatusMark.GetFilesStatusIntermediateResponse(filesDataIntermediateResponse);
-            _filesInfoProject.ChangeFilesStatus(filesStatus);
+            PackageDataIntermediateResponseClient packageDataResponse =  await _fileConvertingClientService.Operations.
+                                                                                CheckFilesStatusProcessing(_packageInfoProject.Id);
+            PackageStatus packageStatus = await _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse);
+            _packageInfoProject.ChangeFilesStatus(packageStatus);
 
-            if (CheckStatusProcessing.CompletedStatusProcessingProjectServer.Contains(filesDataIntermediateResponse.StatusProcessingProject))
+            if (CheckStatusProcessing.CompletedStatusProcessingProject.Contains(packageDataResponse.StatusProcessingProject))
             {
                 await GetCompleteFiles();
-                ClearSubsriptions();
+                ClearSubscriptions();
             }
         }
 
@@ -268,18 +235,18 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private async Task GetCompleteFiles()
         {
-            FilesDataResponseClient filesDataResponse = await _fileConvertingClientService.
-                                                        Operations.GetCompleteFiles(_filesInfoProject.Id);
+            PackageDataResponseClient packageDataResponse = await _fileConvertingClientService.
+                                                        Operations.GetCompleteFiles(_packageInfoProject.Id);
 
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
-                                         GetFilesStatusCompleteResponseBeforeWriting(filesDataResponse);
-            _filesInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
+                                         GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
+            _packageInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
             var filesStatusWrite = await _fileDataProcessingStatusMark.
-                                         GetFilesStatusCompleteResponseAndWritten(filesDataResponse);
-            _filesInfoProject.ChangeFilesStatus(filesStatusWrite);
+                                         GetFilesStatusCompleteResponseAndWritten(packageDataResponse);
+            _packageInfoProject.ChangeFilesStatus(filesStatusWrite);
 
-            await _fileConvertingClientService.Operations.SetFilesDataLoadedByClient(_filesInfoProject.Id);
+            await _fileConvertingClientService.Operations.SetFilesDataLoadedByClient(_packageInfoProject.Id);
         }
 
         /// <summary>
@@ -287,9 +254,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private async Task AbortConverting()
         {
-            if (_statusProcessingInformation?.IsConverting == true)
+            if (_statusProcessingInformation?.IsConverting == true && _packageInfoProject != null)
             {
-                await _fileConvertingClientService?.Operations?.AbortConvertingById(_filesInfoProject.Id);
+                await _fileConvertingClientService.Operations.AbortConvertingById(_packageInfoProject.Id);
             }
         }
 
@@ -306,34 +273,31 @@ namespace GadzhiModules.Infrastructure.Implementations
                 _fileConvertingClientService?.Dispose();
             }
 
-            ClearSubsriptions();
-            _filesInfoProject?.ChangeAllFilesStatusAndMarkError();
+            ClearSubscriptions();
+            _packageInfoProject?.ChangeAllFilesStatusAndMarkError();
         }
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования
         /// </summary>
-        private void ClearSubsriptions()
+        private void ClearSubscriptions()
         {
-            _statusProcessingUpdaterSubsriptions?.Dispose();
+            _statusProcessingSubscriptions?.Dispose();
         }
-        #endregion
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        private bool _disposedValue;
 
         void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue) return;
+            if (disposing)
             {
-                if (disposing)
-                {
 
-                }
-                AbortPropertiesConverting(true).ConfigureAwait(false);
-
-                disposedValue = true;
             }
+            AbortPropertiesConverting(true).ConfigureAwait(false);
+
+            _disposedValue = true;
         }
 
         ~ApplicationGadzhi()
