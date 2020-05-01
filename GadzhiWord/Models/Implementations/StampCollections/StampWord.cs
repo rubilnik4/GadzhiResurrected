@@ -23,7 +23,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         protected ITableElement TableStamp { get; }
 
-        public StampWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
+        protected StampWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
         {
             TableStamp = tableStamp;
             PaperSize = paperSize;

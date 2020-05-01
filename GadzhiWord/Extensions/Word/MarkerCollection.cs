@@ -12,7 +12,7 @@ namespace GadzhiWord.Extensions.Word
     public static class MarkerCollection
     {
         /// <summary>
-        /// Содержит ли коллекиця маркеров указанное поле
+        /// Содержит ли коллекция маркеров указанное поле
         /// </summary>        
         public static bool MarkerContain(this IEnumerable<string> markerCollection, string cellText) =>
             markerCollection?.Any(marker => cellText?.StartsWith(marker, StringComparison.CurrentCulture) == true) == true;

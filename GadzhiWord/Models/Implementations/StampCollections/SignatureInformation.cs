@@ -12,9 +12,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public class SignatureInformation : ISignatureInformation
     {
-        public SignatureInformation(string personName, (string personId, string signaturePath) personIdPath)
-           : this(personIdPath.personId, personName, personIdPath.signaturePath) { }
-       
         public SignatureInformation(string personId, string personName, string signaturePath)
         {
             PersonId = personId ?? throw new ArgumentNullException(nameof(personId));

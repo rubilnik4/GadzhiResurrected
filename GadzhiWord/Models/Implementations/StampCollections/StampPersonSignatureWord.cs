@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
     /// <summary>
-    /// Строка с ответсвенным лицом и подписью
+    /// Строка с ответственным лицом и подписью
     /// </summary>
     public class StampPersonSignatureWord : StampSignatureWord, IStampPersonSignatureWord
     {
         /// <summary>
         /// Количество ячеек в строке
         /// </summary>
-        public static int FieldsCount => 4;
+        public const int FIELDS_COUNT = 4;
        
         public StampPersonSignatureWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
                                         IStampFieldWord signature, IStampFieldWord dateSignature,
@@ -27,7 +27,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             : base(signature, signatureInformation?.SignaturePath)
         {
             PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(signatureInformation));
-            PersonName = signatureInformation?.PersonName;
+            PersonName = signatureInformation.PersonName;
 
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;

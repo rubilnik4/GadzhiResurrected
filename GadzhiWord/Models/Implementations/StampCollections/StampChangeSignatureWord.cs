@@ -15,7 +15,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Количество ячеек в строке
         /// </summary>
-        public static int FieldsCount => 6;
+        public const int FIELDS_COUNT = 6;
 
         public StampChangeSignatureWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots,
                                         IStampFieldWord typeOfChange, IStampFieldWord documentChange,
@@ -24,7 +24,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             : base(signature, signatureInformation?.SignaturePath)
         {
             PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(signatureInformation));
-            PersonName = signatureInformation?.PersonName;
+            PersonName = signatureInformation.PersonName;
 
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
@@ -49,7 +49,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public IStampFieldWord TypeOfChange { get; }
 
         /// <summary>
-        /// Номер докумета
+        /// Номер документа
         /// </summary>
         public IStampFieldWord DocumentChange { get; }
 

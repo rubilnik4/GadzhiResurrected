@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Word.Interfaces.Elements;
 using System;
@@ -7,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiWord.Extensions.StringAdditional;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -18,47 +19,32 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Определить тип поля штампа
         /// </summary>
-        public static StampFieldType GetStampFieldType(ICellElement cellElement, ITableElement stampTable)
-        {
-            var stampFieldType = StampFieldType.Unknown;
-
-            string cellText = cellElement?.Text.PrepareCellTextToCompare();
-            if (IsFieldPersonSignature(cellText))
+        public static StampFieldType GetStampFieldType(ICellElement cellElement, ITableElement stampTable) =>
+            cellElement switch
             {
-                stampFieldType = StampFieldType.PersonSignature;
-            }
-            else if (IsFieldChangeSignature(cellElement, stampTable))
-            {
-                stampFieldType = StampFieldType.ChangeSignature;
-            }
-
-            return stampFieldType;
-        }
+                _ when IsFieldPersonSignature(cellElement) => StampFieldType.PersonSignature,
+                _ when IsFieldChangeSignature(cellElement, stampTable) => StampFieldType.ChangeSignature,
+                _ => StampFieldType.Unknown
+            };
 
         /// <summary>
         /// Находится ли поле в строке с изменениями
         /// </summary>        
-        public static bool IsFieldChangeSignature(ICellElement cellElement, ITableElement stampTable)
-        {
-            (int rowIndex, int columnIndex) = (cellElement?.RowIndex ?? throw new ArgumentNullException(nameof(cellElement)),
-                                                       cellElement?.ColumnIndex ?? throw new ArgumentNullException(nameof(cellElement)));
-            if (columnIndex == 0)
-            {
-                stampTable?.RowsElementWord?.
-                            Any(row => row.Index >= rowIndex && stampTable?.HasCellElement(rowIndex, columnIndex) == true &&
-                                IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElementWord[columnIndex].Text));
-            }
-            return false;
-        }
-
+        public static bool IsFieldChangeSignature(ICellElement cellElement, ITableElement stampTable) =>
+            cellElement?.ColumnIndex == 0 &&
+            stampTable?.RowsElementWord?.
+                        Any(row => row.Index >= cellElement.RowIndex && 
+                                   stampTable.HasCellElement(cellElement.RowIndex, cellElement.ColumnIndex) &&
+                                   IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElementWord[cellElement.ColumnIndex].Text)) == true;
+        
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью
         /// </summary>        
-        public static bool IsFieldPersonSignature(string cellText, bool needToPrepareText = false) =>
-            StampSettingsWord.MarkersActionTypeSignature.MarkerContain(needToPrepareText ?
-                                                                       cellText.PrepareCellTextToCompare() :
-                                                                       cellText);
-
+        public static bool IsFieldPersonSignature(ICellElement cellElement) =>
+            cellElement?.
+                Text.PrepareCellTextToCompare().
+                Map(cellText => StampSettingsWord.MarkersActionTypeSignature.MarkerContain(cellText))
+            ?? false;
 
         /// <summary>
         /// Находится ли поле в строке заголовком изменений. Обработка входной строки

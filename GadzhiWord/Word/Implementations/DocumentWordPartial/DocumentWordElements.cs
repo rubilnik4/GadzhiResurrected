@@ -1,7 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
-using GadzhiWord.Extension.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Word.Implementations.Elements;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiWord.Extensions.StringAdditional;
 
 namespace GadzhiWord.Word.Implementations.DocumentWordPartial
 {

@@ -1,11 +1,6 @@
 ﻿using GadzhiWord.Word.Implementations.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GadzhiWord.Extension.StringAdditional
+namespace GadzhiWord.Extensions.StringAdditional
 {
     /// <summary>
     /// Методы расширения для строковых значений в классах библиотеки Word

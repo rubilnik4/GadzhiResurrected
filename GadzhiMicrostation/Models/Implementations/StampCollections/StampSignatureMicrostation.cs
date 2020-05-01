@@ -23,22 +23,22 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// </summary>
         private readonly Func<string, IResultAppValue<IStampFieldMicrostation>> _insertSignatureFunc;
 
-        public StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+        protected StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+            :this(insertSignatureFunc, null)
+        { }
+
+        protected StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                             IStampFieldMicrostation signature)
         {
             _insertSignatureFunc = insertSignatureFunc;
-            SignatureInitialize();
-        }
-
-        private void SignatureInitialize()
-        {
-            Signature = new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подпись не инициализирована").
-                        ToResultApplicationValue<IStampFieldMicrostation>();
+            Signature = new ResultAppValue<IStampFieldMicrostation>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                                                                                    "Подпись не инициализирована"));
         }
 
         /// <summary>
         /// Подпись
         /// </summary>
-        public override IResultAppValue<IStampFieldMicrostation> Signature { get; protected set; }
+        public override IResultAppValue<IStampFieldMicrostation> Signature { get; }
 
         /// <summary>
         /// Подпись. Элемент

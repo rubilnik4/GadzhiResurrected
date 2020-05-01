@@ -18,11 +18,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureWord : StampSignature<IStampFieldWord>, IStampSignatureWord
     {
-        public StampSignatureWord(IStampFieldWord signature, string signaturePath)
+        protected StampSignatureWord(IStampFieldWord signature, string signaturePath)
         {
-            Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                        "Подпись не инициализирована"));
             SignaturePath = signaturePath ?? throw new ArgumentNullException(nameof(signaturePath));
+            Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                            "Подпись не инициализирована"));
         }
 
         /// <summary>
@@ -33,12 +33,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Подпись
         /// </summary>
-        public override IResultAppValue<IStampFieldWord> Signature { get; protected set; }
+        public override IResultAppValue<IStampFieldWord> Signature { get; }
 
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public override bool IsSignatureValid => Signature.OkStatus && Signature.Value.CellElementStamp.HasPicture == true;
+        public override bool IsSignatureValid => Signature.OkStatus && Signature.Value.CellElementStamp.HasPicture;
 
         /// <summary>
         /// Вставить подпись

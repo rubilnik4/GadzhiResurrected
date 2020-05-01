@@ -7,7 +7,6 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial;
-using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -23,19 +22,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
     {
 
         /// <summary>
-        /// Строки с ответсвенным лицом и подписью Microstation
+        /// Строки с ответственным лицом и подписью Microstation
         /// </summary>
-        private IEnumerable<IStampPersonSignatureMicrostation> StampPersonSignaturesMicrostation { get; set; }
+        private IEnumerable<IStampPersonSignatureMicrostation> StampPersonSignaturesMicrostation { get;  }
 
         /// <summary>
         /// Строки с изменениями Microstation
         /// </summary>
-        private IEnumerable<IStampChangeSignatureMicrostation> StampChangeSignaturesMicrostation { get; set; }
+        private IEnumerable<IStampChangeSignatureMicrostation> StampChangeSignaturesMicrostation { get; }
 
         /// <summary>
         /// Строки с согласованиями Microstation
         /// </summary>
-        private IEnumerable<IStampApprovalSignatureMicrostation> StampApprovalSignaturesMicrostation { get; set; }
+        private IEnumerable<IStampApprovalSignatureMicrostation> StampApprovalSignaturesMicrostation { get;  }
 
         public StampMainMicrostation(ICellElementMicrostation stampCellElement)
             : base(stampCellElement)

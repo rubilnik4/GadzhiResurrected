@@ -12,16 +12,15 @@ namespace GadzhiWord.Word.Implementations.Converters
     /// </summary>
     public static class WordPaperSizeToString
     {
-        public static string ConvertingPaperSizeToString(WdPaperSize paperSize)
-        {
-            switch (paperSize)
+        /// <summary>
+        /// Преобразовать формат листа в строковое значение
+        /// </summary>
+        public static string ConvertingPaperSizeToString(WdPaperSize paperSize) =>
+            paperSize switch
             {
-                case WdPaperSize.wdPaperA3:
-                    return "A3";
-                case WdPaperSize.wdPaperA4:
-                    return "A4";
-            }
-            return String.Empty;
-        }
+                WdPaperSize.wdPaperA3 => "A3",
+                WdPaperSize.wdPaperA4 => "A4",
+                _ => String.Empty
+            };
     }
 }
