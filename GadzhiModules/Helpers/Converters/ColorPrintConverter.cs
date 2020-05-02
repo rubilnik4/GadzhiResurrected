@@ -8,9 +8,9 @@ namespace GadzhiModules.Helpers.Converters
     public static class ColorPrintConverter
     {
         /// <summary>
-        /// Словарь цвета печати в строком значении
+        /// Словарь цвета печати в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintToString =>
+        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintString =>
             new Dictionary<ColorPrint, string>
             {
                 { ColorPrint.BlackAndWhite, "Черно-белый" },
@@ -21,10 +21,10 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать цветовое значение в наименование цвета
         /// </summary>       
-        public static string ConvertColorPrintToString(ColorPrint colorPrint)
+        public static string ColorPrintToString(ColorPrint colorPrint)
         {
-            string colorPrintString = String.Empty;
-            ColorPrintToString?.TryGetValue(colorPrint, out colorPrintString);
+            var colorPrintString = String.Empty;
+            ColorPrintString?.TryGetValue(colorPrint, out colorPrintString);
 
             return colorPrintString;
         }
@@ -32,12 +32,8 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать наименование цвета в цветовое значение
         /// </summary>       
-        public static ColorPrint ConvertStringToColorPrint(string colorPrint)
-        {
-            ColorPrint colorPrintOut = ColorPrintToString?.FirstOrDefault(color => color.Value == colorPrint).Key ??
-                                                           ColorPrint.BlackAndWhite;
-
-            return colorPrintOut;
-        }
+        public static ColorPrint ConvertStringToColorPrint(string colorPrint) =>
+            ColorPrintString?.FirstOrDefault(color => color.Value == colorPrint).Key
+            ?? ColorPrint.BlackAndWhite;
     }
 }

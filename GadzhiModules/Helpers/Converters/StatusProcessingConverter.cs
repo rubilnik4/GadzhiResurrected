@@ -8,9 +8,9 @@ namespace GadzhiModules.Helpers.Converters
     public static class StatusProcessingConverter
     {
         /// <summary>
-        /// Словарь статуса обработки в строком значении
+        /// Словарь статуса обработки в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<StatusProcessing, string> StatusProcessingToString =>
+        public static IReadOnlyDictionary<StatusProcessing, string> StatusProcessingString =>
             new Dictionary<StatusProcessing, string>
             {
                 { StatusProcessing.NotSend, "На старте" },
@@ -25,10 +25,10 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать статус в наименование
         /// </summary>       
-        public static string ConvertStatusProcessingToString(StatusProcessing statusProcessing)
+        public static string StatusProcessingToString(StatusProcessing statusProcessing)
         {
-            string statusProcessingString = String.Empty;
-            StatusProcessingToString?.TryGetValue(statusProcessing, out statusProcessingString);
+            var statusProcessingString = String.Empty;
+            StatusProcessingString?.TryGetValue(statusProcessing, out statusProcessingString);
 
             return statusProcessingString;
         }
@@ -36,13 +36,8 @@ namespace GadzhiModules.Helpers.Converters
         /// <summary>
         /// Преобразовать наименование в статус
         /// </summary>       
-        public static StatusProcessing ConvertStringToStatusProcessing(string statusProcessing)
-        {
-            StatusProcessing statusProcessingOut = StatusProcessingToString?.
-                                                        FirstOrDefault(status => status.Value == statusProcessing).Key ??
-                                                        StatusProcessing.NotSend;
-
-            return statusProcessingOut;
-        }
+        public static StatusProcessing StringToStatusProcessing(string statusProcessing) =>
+            StatusProcessingString?.FirstOrDefault(status => status.Value == statusProcessing).Key
+            ?? StatusProcessing.NotSend;
     }
 }

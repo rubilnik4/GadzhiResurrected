@@ -37,7 +37,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// </summary>
         public string ColorPrintName
         {
-            get => ColorPrintConverter.ConvertColorPrintToString(FileData.ColorPrint);
+            get => ColorPrintConverter.ColorPrintToString(FileData.ColorPrint);
             set => FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
         }
 
@@ -45,7 +45,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewMo
         /// Статус обработки строковое значение
         /// </summary>
         public string StatusProcessingName => StatusProcessingConverter.
-                                              ConvertStatusProcessingToString(FileData.StatusProcessing);
+                                              StatusProcessingToString(FileData.StatusProcessing);
 
         /// <summary>
         /// Ошибка отсутствует

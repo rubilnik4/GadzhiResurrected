@@ -17,21 +17,21 @@ namespace GadzhiModules.Helpers.Wpf.Behaviors
             AssociatedObject.SelectionChanged -= AssociatedObjectSelectionChanged;
         }
 
-        void AssociatedObjectSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void AssociatedObjectSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var array = new object[AssociatedObject.SelectedItems.Count];
             AssociatedObject.SelectedItems.CopyTo(array, 0);
             SelectedItems = array;
         }
 
-        private static DependencyProperty SelectedItemsProperty =
+        private static readonly DependencyProperty SelectedItemsProperty =
             DependencyProperty.Register("SelectedItems", typeof(IList), typeof(DataGridSelectedItemsBlendBehavior),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public IList SelectedItems
         {
-            get { return (IList)GetValue(SelectedItemsProperty); }
-            set { SetValue(SelectedItemsProperty, value); }
+            get => (IList)GetValue(SelectedItemsProperty);
+            set => SetValue(SelectedItemsProperty, value);
         }
 
     }

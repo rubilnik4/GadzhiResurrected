@@ -1,29 +1,29 @@
-﻿using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Models.Interfaces.Errors;
-using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using GadzhiCommon.Infrastructure.Implementations;
+using Prism.Mvvm;
 
-namespace Helpers.GadzhiModules.BaseClasses.ViewModels
+namespace GadzhiModules.Helpers.BaseClasses.ViewModels
 {
     public abstract class ViewModelBase : BindableBase
-    { 
-        public ViewModelBase() { }
-
+    {
         /// <summary>
         /// Индикатор загрузки
         /// </summary>         
         private bool _isLoading;
+
+        /// <summary>
+        /// Индикатор загрузки
+        /// </summary>    
         protected bool IsLoading
         {
-            get { return _isLoading; }
-            set { SetProperty(ref _isLoading, value); }
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
         }
 
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок метода.
-        /// При наличие ошибок WCF останаливает процеес конвертации
+        /// При наличие ошибок WCF останавливает процесс конвертации
         /// </summary> 
         protected void ExecuteAndHandleError(Action method, Action applicationAbortionMethod = null) =>       
             ExecuteAndCatchErrors.ExecuteAndHandleError(method,

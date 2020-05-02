@@ -1,12 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems;
 using GongSolutions.Wpf.DragDrop;
-using Helpers.GadzhiModules.BaseClasses.ViewModels;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
@@ -14,6 +11,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using GadzhiModules.Helpers.BaseClasses.ViewModels;
+
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
@@ -142,7 +141,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// Типы цветов для печати
         /// </summary>
         public IEnumerable<string> ColorPrintToString => ColorPrintConverter.
-                                                         ColorPrintToString.
+                                                         ColorPrintString.
                                                          Select(color => color.Value);
 
         /// <summary>

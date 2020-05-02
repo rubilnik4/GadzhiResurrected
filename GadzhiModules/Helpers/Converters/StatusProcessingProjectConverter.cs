@@ -42,7 +42,7 @@ namespace GadzhiModules.Helpers.Converters
         /// </summary>       
         public static string StatusProcessingProjectToString(StatusProcessingProject statusProcessingProject)
         {
-            string statusProcessingProjectString = String.Empty;
+            var statusProcessingProjectString = String.Empty;
             StatusProcessingProjectString?.TryGetValue(statusProcessingProject, out statusProcessingProjectString);
 
             return statusProcessingProjectString;

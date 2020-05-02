@@ -150,7 +150,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
             if (packageStatus?.IsValid != true) return;
 
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(packageStatus.StatusProcessingProject);
-            FilesQueueInfo.ChangeByQueueStatus(packageStatus.QueueStatus, StatusProcessingProject);
+            FilesQueueInfo = FilesQueueInfo.GetQueueInfoByStatus(packageStatus.QueueStatus, StatusProcessingProject);
 
             //список файлов для изменений c откорректированным статусом
             var filesDataChanged =

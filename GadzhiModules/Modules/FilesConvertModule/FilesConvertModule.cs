@@ -23,9 +23,6 @@ namespace GadzhiModules.Modules.FilesConvertModule
 {
     public class FilesConvertModule : IModule
     {
-
-        public FilesConvertModule() { }     
-
         /// <summary>
         /// Привязка модулей к View
         /// </summary>
