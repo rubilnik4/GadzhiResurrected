@@ -13,17 +13,17 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>          
-        Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName);
+        Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName);
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse);
+        Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>        
-        Task UpdateFromResponse(FilesDataResponseServer filesDataResponse);
+        Task UpdateFromResponse(PackageDataResponseServer packageDataResponse);
 
         /// <summary>
         /// Удалить все устаревшие пакеты

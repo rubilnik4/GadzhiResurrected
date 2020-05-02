@@ -11,10 +11,10 @@ namespace GadzhiCommon.Helpers.Dialogs
         /// <summary>
         /// Список фильтров для диалоговых окон
         /// </summary>
-        public static readonly string DocAndDgn = "Files|*.doc;*.docx;*.dgn";
+        public static readonly string DocAndDgn = "Files|*.doc;*.docx;*.Dgn";
 
         /// <summary>
-        /// Входит ли расшерение в список
+        /// Входит ли расширение в список
         /// </summary>
         public static bool IsInDocAndDgnFileTypes(string path)
         {

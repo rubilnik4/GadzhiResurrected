@@ -8,16 +8,16 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Converters
     /// <summary>
     /// Конвертер из серверной модели в трансферную
     /// </summary>
-    public interface IConverterServerFilesDataToDTO
+    public interface IConverterServerFilesDataToDto
     {
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServer filesDataServer);
+        PackageDataIntermediateResponseServer FilesDataToIntermediateResponse(IPackageServer packageServer);
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServer filesDataServer);
+        Task<PackageDataResponseServer> FilesDataToResponse(IPackageServer packageServer);
     }
 }

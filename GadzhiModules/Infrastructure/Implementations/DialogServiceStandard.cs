@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Converters;
-using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Infrastructure.Interfaces;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GadzhiCommon.Extensions.Collection;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {

@@ -16,13 +16,11 @@ namespace GadzhiCommon.Helpers.Wcf
         /// <summary>
         /// Получить точку подключения через полное имя интерфейса
         /// </summary>
-        public string GetEndpointByInterfaceFullPath(Type interfaceType)
-        {
-            return _clientSection?.Endpoints.
-                                   Cast<ChannelEndpointElement>()?.
-                                   FirstOrDefault(endpont => endpont.Contract == interfaceType.ToString()).
-                                   Name;
-        }
-
+        public string GetEndpointByInterfaceFullPath(Type interfaceType) =>
+            _clientSection?.Endpoints.
+                            Cast<ChannelEndpointElement>().
+                            FirstOrDefault(endPoint => endPoint.Contract == interfaceType.ToString())?.
+                            Name
+            ?? String.Empty;
     }
 }

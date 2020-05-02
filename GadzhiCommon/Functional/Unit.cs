@@ -16,6 +16,7 @@ namespace GadzhiCommon.Functional
         /// </summary>
         public static Unit Value { get; } = new Unit();
 
+        #region IEquatable
         public bool Equals(Unit other) => true;
 
         public override int GetHashCode() => 0;
@@ -24,14 +25,9 @@ namespace GadzhiCommon.Functional
 
         public override string ToString() => "Unit";
 
-        public static bool operator ==(Unit left, Unit right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Unit left, Unit right) => left.Equals(right);
 
-        public static bool operator !=(Unit left, Unit right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(Unit left, Unit right) => !(left == right);
+        #endregion
     }
 }

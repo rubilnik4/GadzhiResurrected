@@ -123,7 +123,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromDirectoryAndSubs(fileOrDirectoriesPaths));
+            var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromPaths(fileOrDirectoriesPaths));
             _packageInfoProject.AddFiles(allFilePaths);
         }
 

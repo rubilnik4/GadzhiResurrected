@@ -1,6 +1,7 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GadzhiCommon.Helpers.FileSystem
 {
@@ -9,47 +10,35 @@ namespace GadzhiCommon.Helpers.FileSystem
     /// </summary>
     public class FileSavedCheck
     {
-        /// <summary>
-        /// Список ошибок
-        /// </summary>
-        private List<FileConvertErrorType> _errors;
-
-        public FileSavedCheck()
+        public FileSavedCheck(string filePath)
         {
-            IsSaved = false;
-            FilePath = String.Empty;
-            _errors = new List<FileConvertErrorType>();
+            if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
+            FilePath = filePath;
         }
 
-        /// <summary>
-        /// Сохранен ли файл
-        /// </summary>
-        public bool IsSaved { get; set; }
+        public FileSavedCheck(FileConvertErrorType error)
+            : this(new List<FileConvertErrorType>() {error})
+        { }
+
+        public FileSavedCheck(IEnumerable<FileConvertErrorType> errors)
+        {
+            if (errors == null || errors.Equals(Enumerable.Empty<FileConvertErrorType>())) throw new ArgumentNullException(nameof(errors));
+            Errors = errors.ToList();
+        }
 
         /// <summary>
         /// Путь сохранения
         /// </summary>
-        public string FilePath { get; set; }
+        public string FilePath { get; }
 
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IReadOnlyList<FileConvertErrorType> Errors => _errors;
+        public IEnumerable<FileConvertErrorType> Errors { get; }
 
         /// <summary>
-        /// Добавить ошибку в список
-        /// </summary>      
-        public void AddError(FileConvertErrorType error)
-        {
-            _errors.Add(error);
-        }
-
-        /// <summary>
-        /// Добавить ошибки в список
-        /// </summary>      
-        public void AddErrors(IEnumerable<FileConvertErrorType> errors)
-        {
-            _errors.AddRange(errors);
-        }
+        /// Сохранен ли файл
+        /// </summary>
+        public bool IsSaved => Errors.Any();
     }
 }

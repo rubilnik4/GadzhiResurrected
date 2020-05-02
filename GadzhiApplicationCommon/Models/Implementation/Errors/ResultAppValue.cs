@@ -34,14 +34,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
 
         protected void InitializeValue(TValue value, IErrorApplication errorNull = null)
         {
-            if (value == null && errorNull != null)
+            Errors = value switch
             {
-                Errors = Errors.Concat(errorNull);
-            }
-            else if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+                null when errorNull != null => Errors.Concat(errorNull),
+                null => throw new ArgumentNullException(nameof(value)),
+                _ => Errors
+            };
 
             Value = value;
         }

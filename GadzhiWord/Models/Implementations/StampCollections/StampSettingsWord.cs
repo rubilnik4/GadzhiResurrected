@@ -1,11 +1,12 @@
 ﻿using GadzhiApplicationCommon.Extensions.Collection;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiCommon.Extentions.Collection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Collection;
+
 // ReSharper disable All
 
 namespace GadzhiWord.Models.Implementations.StampCollections

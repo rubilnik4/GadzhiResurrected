@@ -42,8 +42,8 @@ namespace GadzhiConverting.DependencyInjection.GadzhiConverting
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
-            container.RegisterType<IConverterServerFilesDataFromDTO, ConverterServerFilesDataFromDTO>();
-            container.RegisterType<IConverterServerFilesDataToDTO, ConverterServerFilesDataToDTO>();
+            container.RegisterType<IConverterServerPackageDataFromDto, ConverterServerPackageDataFromDto>();
+            container.RegisterType<IConverterServerFilesDataToDto, ConverterServerFilesDataToDto>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
             var projectSettings = container.Resolve<IProjectSettings>();

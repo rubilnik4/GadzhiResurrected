@@ -26,7 +26,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         bool HasErrors { get; }
 
         /// <summary>
-        /// Отсуствие ошибок
+        /// Отсутствие ошибок
         /// </summary>
         bool OkStatus { get; }
 

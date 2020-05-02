@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extentions.Functional;
 
 namespace GadzhiWord.Models.Implementations.StampCollections

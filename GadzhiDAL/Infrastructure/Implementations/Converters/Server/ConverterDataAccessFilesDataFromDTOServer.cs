@@ -14,7 +14,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
     /// <summary>
     /// Конвертер из трансферной модели в модель базы данных
     /// </summary>      
-    public class ConverterDataAccessFilesDataFromDTOServer : IConverterDataAccessFilesDataFromDTOServer
+    public class ConverterDataAccessFilesDataFromDTOServer : IConverterDataAccessFilesDataFromDtoServer
     {
         public ConverterDataAccessFilesDataFromDTOServer()
         {
@@ -25,14 +25,14 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Обновить модель базы данных на основе промежуточного ответа
         /// </summary>      
         public FilesDataEntity UpdateFilesDataAccessFromIntermediateResponse(FilesDataEntity filesDataEntity,
-                                                                             FilesDataIntermediateResponseServer filesDataIntermediateResponse)
+                                                                             PackageDataIntermediateResponseServer packageDataIntermediateResponse)
         {
-            if (filesDataEntity != null && filesDataIntermediateResponse != null)
+            if (filesDataEntity != null && packageDataIntermediateResponse != null)
             {
-                filesDataEntity.StatusProcessingProject = filesDataIntermediateResponse.StatusProcessingProject;
+                filesDataEntity.StatusProcessingProject = packageDataIntermediateResponse.StatusProcessingProject;
 
                 var filesDataIntermediateEntity = filesDataEntity.FileDataEntities?.
-                                                  Join(filesDataIntermediateResponse?.FileDatas,
+                                                  Join(packageDataIntermediateResponse?.FilesData,
                                                   fileEntity => fileEntity.FilePath,
                                                   filesIntermediateResponse => filesIntermediateResponse.FilePath,
                                                   (fileEntity, fileIntermediateResponse) => UpdateFileDataAccessFromIntermediateResponse(fileEntity, fileIntermediateResponse)).
@@ -45,14 +45,14 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Обновить модель базы данных на основе окончательного ответа
         /// </summary>      
         public FilesDataEntity UpdateFilesDataAccessFromResponse(FilesDataEntity filesDataEntity,
-                                                                 FilesDataResponseServer filesDataResponse)
+                                                                 PackageDataResponseServer packageDataResponse)
         {
-            if (filesDataEntity != null && filesDataResponse != null &&
+            if (filesDataEntity != null && packageDataResponse != null &&
                 !CheckStatusProcessing.CompletedStatusProcessingProject.Contains(filesDataEntity.StatusProcessingProject))
             {
-                filesDataEntity.StatusProcessingProject = filesDataResponse.StatusProcessingProject;
+                filesDataEntity.StatusProcessingProject = packageDataResponse.StatusProcessingProject;
 
-                filesDataEntity.FileDataEntities?.Join(filesDataResponse?.FileDatas,
+                filesDataEntity.FileDataEntities?.Join(packageDataResponse?.FilesData,
                                                 fileEntity => fileEntity.FilePath,
                                                 fileResponse => fileResponse.FilePath,
                                                 (fileEntity, fileResponse) => UpdateFileDataAccessFromResponse(fileEntity, fileResponse)).
@@ -85,7 +85,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         {
             if (fileDataEntity != null && fileDataResponse != null)
             {
-                var fileDataSourceEntity = fileDataResponse.FileDatasSourceResponseServer?.AsQueryable().
+                var fileDataSourceEntity = fileDataResponse.FilesDataSourceResponseServer?.AsQueryable().
                                            Select(fileData => ToFileDataSourceAccess(fileData));
                 fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
                 fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorTypes.ToList();

@@ -1,11 +1,11 @@
-﻿using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDTOServer.TransferModels.FilesConvert
 {
     /// <summary>
     /// Класс содержащий промежуточные данные о конвертируемом файле для сервера
-    /// <summary>
+    /// </summary>
     [DataContract]
     public class FileDataIntermediateResponseServer : FileDataIntermediateResponseBase
     {

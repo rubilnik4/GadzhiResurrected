@@ -160,8 +160,8 @@
     <Compile Include="Infrastructure\Interfaces\Converters\Archive\IConverterToArchive.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataToDTOClient.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataFromDTOClient.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataFromDTOServer.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataToDTOServer.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataFromDtoServer.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataToDtoServer.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataSourceArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FilesDataArchiveMap.cs" />

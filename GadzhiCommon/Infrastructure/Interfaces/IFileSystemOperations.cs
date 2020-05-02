@@ -31,7 +31,12 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущей папке       
         /// </summary>    
-        IEnumerable<string> GetFilesFromDirectoryAndSubs(IEnumerable<string> fileOrDirectoriesPaths);
+        IEnumerable<string> GetFilesFromPaths(IEnumerable<string> fileOrDirectoriesPaths);
+
+        /// <summary>
+        /// Получить пути файлов из папок
+        /// </summary>
+        public IEnumerable<string> GetFilesFromDirectory(IEnumerable<string> directoriesPaths);
 
         /// <summary>
         /// Удалить всю информацию из папки
@@ -41,7 +46,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Представить файл в двоичном виде
         /// </summary>        
-        Task<byte[]> ConvertFileToByteAndZip(string filePath);
+        Task<(bool Success, byte[] Zip)> FileToByteAndZip(string filePath);
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
@@ -59,7 +64,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         bool CopyFile(string fileSource, string fileDestination);
 
         /// <summary>
-        /// Создать поддиректорию и пррисвоить идентефикатор
+        /// Создать поддиректорию и присвоить идентификатор
         /// </summary>     
         string CreateFolderByGuid(string startingPath);
 

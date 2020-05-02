@@ -16,22 +16,24 @@ namespace GadzhiCommon.Infrastructure.Implementations
     public static class ExecuteAndCatchErrors
     {
         /// <summary>
-        /// Отлов ошибок и вызов постметода       
+        /// Отлов ошибок и вызов метода       
         /// </summary> 
-        public static IResultError ExecuteAndHandleError(Action method, Action BeforeMethod = null, Action catchMethod = null,
+        public static IResultError ExecuteAndHandleError(Action method, Action beforeMethod = null, Action catchMethod = null,
                                                          Action finallyMethod = null, IErrorCommon errorMessage = null) =>
             ExecuteAndHandleError(() => { method.Invoke(); return Unit.Value; },
-                                  BeforeMethod, catchMethod,
+                                  beforeMethod, catchMethod,
                                   finallyMethod, errorMessage).
             ToResult();
 
         /// <summary>
-        /// Отлов ошибок и вызов постметода       
+        /// Отлов ошибок и вызов метода       
         /// </summary> 
-        public static IResultValue<T> ExecuteAndHandleError<T>(Func<T> method, Action beforeMethod = null, Action catchMethod = null, 
+        public static IResultValue<T> ExecuteAndHandleError<T>(Func<T> method, Action beforeMethod = null, Action catchMethod = null,
                                                                Action finallyMethod = null, IErrorCommon errorMessage = null)
         {
-            IResultValue<T> result = default;
+            if (method == null) throw new ArgumentNullException(nameof(method));
+
+            IResultValue<T> result;
 
             try
             {
@@ -54,17 +56,19 @@ namespace GadzhiCommon.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Отлов ошибок и вызов постметода асинхронно     
+        /// Отлов ошибок и вызов метода асинхронно     
         /// </summary> 
         public static async Task<IResultError> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action beforeMethod = null,
                                                                           Action catchMethod = null, Action finallyMethod = null)
         {
+            if (asyncMethod == null) throw new ArgumentNullException(nameof(asyncMethod));
+
             IResultError result = new ResultError();
 
             try
             {
                 beforeMethod?.Invoke();
-                await asyncMethod?.Invoke();
+                await asyncMethod.Invoke();
             }
             catch (Exception ex)
             {
@@ -82,34 +86,15 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить тип ошибки
         /// </summary>       
-        public static FileConvertErrorType GetTypeException(Exception ex)
-        {
-            FileConvertErrorType fileConvertErrorType = FileConvertErrorType.UnknownError;
-
-            if (fileConvertErrorType != FileConvertErrorType.UnknownError)
+        public static FileConvertErrorType GetTypeException(Exception exception) =>
+            exception switch
             {
-                if (ex is NullReferenceException)
-                {
-                    fileConvertErrorType = FileConvertErrorType.NullReference;
-                }
-                else if (ex is ArgumentNullException)
-                {
-                    fileConvertErrorType = FileConvertErrorType.ArgumentNullReference;
-                }
-                else if (ex is FormatException)
-                {
-                    fileConvertErrorType = FileConvertErrorType.FormatException;
-                }
-                else if (ex is TimeoutException)
-                {
-                    fileConvertErrorType = FileConvertErrorType.TimeOut;
-                }
-                else if (ex is CommunicationException)
-                {
-                    fileConvertErrorType = FileConvertErrorType.Communication;
-                }
-            }
-            return fileConvertErrorType;
-        }
+                NullReferenceException _ => FileConvertErrorType.NullReference,
+                ArgumentNullException _ => FileConvertErrorType.ArgumentNullReference,
+                FormatException _ => FileConvertErrorType.FormatException,
+                TimeoutException _ => FileConvertErrorType.TimeOut,
+                CommunicationException _ => FileConvertErrorType.Communication,
+                _ => FileConvertErrorType.UnknownError
+            };
     }
 }

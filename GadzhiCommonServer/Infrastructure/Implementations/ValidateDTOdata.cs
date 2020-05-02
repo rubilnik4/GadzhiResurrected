@@ -1,17 +1,17 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiCommonServer.Infrastructure.Implementations
 {
     /// <summary>
     /// Класс проверки входных данных
     /// </summary>
-    public static class ValidateDTOData
+    public static class ValidateDtoData
     {
         /// <summary>
         /// Проверить целостность выходных данных для конвертации

@@ -32,24 +32,24 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>           
-        public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)
+        public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)
         {
-            FilesDataRequestServer filesDataRequestServer = await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
-            _idPackage = filesDataRequestServer?.Id ?? Guid.Empty;
-            return filesDataRequestServer;
+            PackageDataRequestServer packageDataRequestServer = await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
+            _idPackage = packageDataRequestServer?.Id ?? Guid.Empty;
+            return packageDataRequestServer;
         }
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse) =>
-                await _filesDataServerService.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse) =>
+                await _filesDataServerService.UpdateFromIntermediateResponse(packageDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse) =>      
-                await _filesDataServerService.UpdateFromResponse(filesDataResponse);
+        public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>      
+                await _filesDataServerService.UpdateFromResponse(packageDataResponse);
 
         /// <summary>
         /// Удалить все устаревшие пакеты

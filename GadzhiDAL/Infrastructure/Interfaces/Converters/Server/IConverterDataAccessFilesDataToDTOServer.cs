@@ -8,11 +8,11 @@ namespace GadzhiDAL.Infrastructure.Interfaces.Converters.Server
     /// <summary>
     /// Конвертер из трансферной модели в модель базы данных
     /// </summary>      
-    public interface IConverterDataAccessFilesDataToDTOServer
+    public interface IConverterDataAccessFilesDataToDtoServer
     {
         /// <summary>
         /// Конвертировать из модели базы данных в запрос
         /// </summary>          
-        Task<FilesDataRequestServer> ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity);
+        Task<PackageDataRequestServer> ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity);
     }
 }

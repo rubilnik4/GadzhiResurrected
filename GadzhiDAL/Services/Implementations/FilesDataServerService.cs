@@ -31,16 +31,16 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Конвертер из трансферной модели в модель базы данных
         /// </summary>
-        private readonly IConverterDataAccessFilesDataFromDTOServer _converterDataAccessFilesDataFromDTOServer;
+        private readonly IConverterDataAccessFilesDataFromDtoServer _converterDataAccessFilesDataFromDTOServer;
 
         /// <summary>
         /// Конвертер из модели базы данных в трансферную
         /// </summary>
-        private readonly IConverterDataAccessFilesDataToDTOServer _converterDataAccessFilesDataToDTOServer;
+        private readonly IConverterDataAccessFilesDataToDtoServer _converterDataAccessFilesDataToDTOServer;
 
         public FilesDataServerService(IUnityContainer container,
-                                      IConverterDataAccessFilesDataFromDTOServer converterDataAccessFilesDataFromDTOServer,
-                                      IConverterDataAccessFilesDataToDTOServer converterDataAccessFilesDataToDTOServer)
+                                      IConverterDataAccessFilesDataFromDtoServer converterDataAccessFilesDataFromDTOServer,
+                                      IConverterDataAccessFilesDataToDtoServer converterDataAccessFilesDataToDTOServer)
         {
 
             _container = container;
@@ -51,9 +51,9 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>      
-        public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)
+        public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)
         {
-            FilesDataRequestServer filesDataRequest = null;
+            PackageDataRequestServer packageDataRequest = null;
 
             using (var unitOfWork = _container.Resolve<IUnitOfWork>())
             {
@@ -62,32 +62,32 @@ namespace GadzhiDAL.Services.Implementations
                                                   FirstOrDefaultAsync(ConditionConvertion(identityServerName));
 
                 filesDataEntity?.StartConverting(identityServerName);
-                filesDataRequest = await _converterDataAccessFilesDataToDTOServer.ConvertFilesDataAccessToRequest(filesDataEntity);
+                packageDataRequest = await _converterDataAccessFilesDataToDTOServer.ConvertFilesDataAccessToRequest(filesDataEntity);
 
                 await unitOfWork.CommitAsync();
             }
 
-            return filesDataRequest;
+            return packageDataRequest;
         }
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа. При отмене - удалить пакет
         /// </summary>      
-        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse)
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse)
         {
             StatusProcessingProject statusProcessingProject = StatusProcessingProject.Converting;
-            if (filesDataIntermediateResponse != null)
+            if (packageDataIntermediateResponse != null)
             {
                 using (var unitOfWork = _container.Resolve<IUnitOfWork>())
                 {
                     FilesDataEntity filesDataEntity = await unitOfWork.Session.
-                                                      LoadAsync<FilesDataEntity>(filesDataIntermediateResponse.Id.ToString());
+                                                      LoadAsync<FilesDataEntity>(packageDataIntermediateResponse.Id.ToString());
 
                     statusProcessingProject = filesDataEntity.StatusProcessingProject;
                     if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
                     {
                         filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                           UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, filesDataIntermediateResponse);
+                                           UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, packageDataIntermediateResponse);
                     }
 
                     await unitOfWork.CommitAsync();
@@ -99,17 +99,17 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Обновить информацию после окончательного ответа. При отмене - удалить пакет
         /// </summary>      
-        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse)
+        public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse)
         {
-            if (filesDataResponse != null)
+            if (packageDataResponse != null)
             {
                 using (var unitOfWork = _container.Resolve<IUnitOfWork>())
                 {
-                    var filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(filesDataResponse.Id.ToString());
+                    var filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(packageDataResponse.Id.ToString());
 
                     if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
                     {
-                        _converterDataAccessFilesDataFromDTOServer.UpdateFilesDataAccessFromResponse(filesDataEntity, filesDataResponse);
+                        _converterDataAccessFilesDataFromDTOServer.UpdateFilesDataAccessFromResponse(filesDataEntity, packageDataResponse);
                     }
 
                     await unitOfWork.CommitAsync();

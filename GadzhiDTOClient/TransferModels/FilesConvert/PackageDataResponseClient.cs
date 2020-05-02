@@ -1,7 +1,7 @@
-﻿using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDTOClient.TransferModels.FilesConvert
 {
@@ -9,7 +9,7 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     /// Класс содержащий данные о отконвертированных файлах для клиента
     /// </summary>
     [DataContract]
-    public class PackageDataResponseClient : FilesDataResponseBase
+    public class PackageDataResponseClient : PackageDataResponseBase
     {
         /// <summary>
         /// Данные о отконвертированных файлах

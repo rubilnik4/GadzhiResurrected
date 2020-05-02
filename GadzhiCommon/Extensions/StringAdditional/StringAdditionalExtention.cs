@@ -1,0 +1,55 @@
+﻿using System;
+using System.Globalization;
+using System.Linq;
+
+namespace GadzhiCommon.Extensions.StringAdditional
+{
+    /// <summary>
+    /// Методы расширения для строк
+    /// </summary>
+    public static class StringAdditionalExtensions
+    {
+        /// <summary>
+        /// Удалить часть строки
+        /// </summary>       
+        public static string TrimSubstring(this string stringOriginal, string substring) =>
+            (!String.IsNullOrEmpty(substring) &&
+             stringOriginal?.StartsWith(substring, StringComparison.OrdinalIgnoreCase) == true)
+                ? stringOriginal.Remove(0, substring.Length).Trim()
+                : stringOriginal;
+
+
+        /// <summary>
+        /// Сделать первую букву заглавной
+        /// </summary>        
+        public static string FirstCharToUpper(this string input) =>
+            input switch
+            {
+                null => "",
+                "" => "",
+                _ => input.FirstOrDefault().ToString(CultureInfo.CurrentCulture).ToUpper(CultureInfo.CurrentCulture) +
+                     input.Substring(1)
+            };
+
+        /// <summary>
+        /// Сделать первую букву маленькой
+        /// </summary>        
+        public static string FirstCharToLower(this string input)=>
+            input switch
+            {
+                null => "",
+                "" => "",
+                _ => input.FirstOrDefault().ToString(CultureInfo.CurrentCulture).ToLower(CultureInfo.CurrentCulture) +
+                     input.Substring(1)
+            };
+        
+
+        /// <summary>
+        /// Содержит ли подстроку без учета регистр
+        /// </summary>        
+        public static bool ContainsIgnoreCase(this string input, string substring) =>
+            !String.IsNullOrWhiteSpace(substring) && 
+            input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
+    }
+
+}

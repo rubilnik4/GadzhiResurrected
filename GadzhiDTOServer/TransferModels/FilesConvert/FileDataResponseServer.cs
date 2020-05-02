@@ -1,7 +1,7 @@
-﻿using GadzhiCommon.Models.Implementations.TransferModels.FilesConvert.Base;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDTOServer.TransferModels.FilesConvert
 {
@@ -15,7 +15,7 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
         /// Информация об отконвертированных файлах в серверной части
         /// </summary>
         [DataMember]
-        public IList<FileDataSourceResponseServer> FileDatasSourceResponseServer { get; set; }
+        public IList<FileDataSourceResponseServer> FilesDataSourceResponseServer { get; set; }
 
     }
 }

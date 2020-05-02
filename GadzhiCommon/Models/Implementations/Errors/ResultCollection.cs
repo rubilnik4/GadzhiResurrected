@@ -1,10 +1,10 @@
-﻿using GadzhiCommon.Extentions.Collection;
-using GadzhiCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Collection;
 
 namespace GadzhiCommon.Models.Implementations.Errors
 {
@@ -29,9 +29,9 @@ namespace GadzhiCommon.Models.Implementations.Errors
             : base(errors)
         {
             var collectionList = collection?.ToList();
-            InitializeValue(collectionList, errorNull);
-
             if (!ValidateCollection(collectionList)) throw new NullReferenceException(nameof(collection));
+
+            InitializeValue(collectionList, errorNull);
         }
 
         /// <summary>

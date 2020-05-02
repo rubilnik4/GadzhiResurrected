@@ -90,14 +90,18 @@
     <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponseServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequestServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataResponseServer.cs" />
-    <Compile Include="TransferModels\FilesConvert\FilesDataIntermediateResponseServer.cs" />
-    <Compile Include="TransferModels\FilesConvert\FilesDataRequestServer.cs" />
-    <Compile Include="TransferModels\FilesConvert\FilesDataResponseServer.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataIntermediateResponseServer.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataRequestServer.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataResponseServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOBase\GadzhiDTOBase.csproj">
+      <Project>{6CC66305-C66B-4D9B-9ECF-5089A5FE8369}</Project>
+      <Name>GadzhiDTOBase</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

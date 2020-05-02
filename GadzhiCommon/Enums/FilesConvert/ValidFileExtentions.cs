@@ -10,24 +10,24 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// <summary>
         /// Список допустимых расширений для конвертации
         /// </summary>
-        public static IReadOnlyDictionary<string, FileExtention> DocAndDgnFileTypes => new Dictionary<string, FileExtention>()
+        public static IReadOnlyDictionary<string, FileExtension> DocAndDgnFileTypes => new Dictionary<string, FileExtension>()
         {
-            { "doc", FileExtention.docx},
-            { "docx", FileExtention.docx},
-            { "dgn", FileExtention.dgn},
+            { "doc", FileExtension.Docx},
+            { "docx", FileExtension.Docx},
+            { "Dgn", FileExtension.Dgn},
         };
 
         /// <summary>
         /// Список допустимых расширений
         /// </summary>
-        public static IReadOnlyDictionary<string, FileExtention> FileTypesValid => new Dictionary<string, FileExtention>()
+        public static IReadOnlyDictionary<string, FileExtension> FileTypesValid => new Dictionary<string, FileExtension>()
         {
-            { "doc", FileExtention.docx},
-            { "docx", FileExtention.docx},
-            { "dgn", FileExtention.dgn},
-            { "pdf", FileExtention.pdf},
-            { "dwg", FileExtention.dwg},
-            { "xlsx", FileExtention.xlsx},
+            { "doc", FileExtension.Docx},
+            { "docx", FileExtension.Docx},
+            { "Dgn", FileExtension.Dgn},
+            { "pdf", FileExtension.Pdf},
+            { "dwg", FileExtension.Dwg},
+            { "xlsx", FileExtension.Xlsx},
         };
     }
 }

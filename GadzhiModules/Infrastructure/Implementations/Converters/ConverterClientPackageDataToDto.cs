@@ -7,6 +7,7 @@ using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
@@ -30,37 +31,39 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData)
         {
-            if (packageData == null) return null;
+            if (packageData == null) throw new ArgumentNullException(nameof(packageData));
 
             var filesRequestExistTask = packageData.FilesData?.
-                                            Where(file => _fileSystemOperations.IsFileExist(file.FilePath)).
-                                            Select(ToFileDataRequest)
-                                        ?? Enumerable.Empty<Task<FileDataRequestClient>>();
+                                        Where(file => _fileSystemOperations.IsFileExist(file.FilePath)).
+                                        Select(ToFileDataRequest)
+                                        ?? Enumerable.Empty<Task<(bool, FileDataRequestClient)>>();
 
             var filesRequestExist = await Task.WhenAll(filesRequestExistTask);
-            var filesRequestEnsuredWithBytes = filesRequestExist?.Where(file => file.FileDataSource != null);
+            var filesRequestEnsuredWithBytes = filesRequestExist.
+                                               Where(fileSuccess => fileSuccess.Success).
+                                               Select(fileSuccess => fileSuccess.FileDataSourceRequest);
 
             return new PackageDataRequestClient()
             {
                 Id = packageData.Id,
-                FilesData = filesRequestEnsuredWithBytes?.ToList() ?? new List<FileDataRequestClient>(),
+                FilesData = filesRequestEnsuredWithBytes.ToList(),
             };
         }
 
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
-        private async Task<FileDataRequestClient> ToFileDataRequest(FileData fileData)
+        private async Task<(bool Success, FileDataRequestClient FileDataSourceRequest)> ToFileDataRequest(FileData fileData)
         {
-            byte[] fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileData.FilePath);
-
-            return new FileDataRequestClient()
+            (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileData.FilePath);
+            var fileDataRequestClient = new FileDataRequestClient()
             {
                 ColorPrint = fileData.ColorPrint,
                 FilePath = fileData.FilePath,
                 StatusProcessing = fileData.StatusProcessing,
-                FileDataSource = fileDataSource,
+                FileDataSource = fileDataSourceZip,
             };
+            return (success, fileDataRequestClient);
         }
     }
 }

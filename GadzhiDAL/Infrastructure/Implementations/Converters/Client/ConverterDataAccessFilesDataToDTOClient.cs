@@ -39,7 +39,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 Id = Guid.Parse(filesDataEntity.Id),
                 StatusProcessingProject = filesDataEntity.StatusProcessingProject,
-                FileDatas = filesData,
+                FilesData = filesData,
                 FilesQueueInfo = ConvertFilesQueueInfoToResponse(filesQueueInfo),
             };
         }
@@ -99,7 +99,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                FileDatasSourceResponseClient = fileDataSourceResponseClient,
+                FilesDataSourceResponseClient = fileDataSourceResponseClient,
                 FileConvertErrorTypes = fileDataEntity.FileConvertErrorType.AsQueryable().ToList(),
             };
         }

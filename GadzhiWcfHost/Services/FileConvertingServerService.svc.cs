@@ -30,20 +30,20 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>           
-        public async Task<FilesDataRequestServer> GetFirstInQueuePackage(string identityServerName)=>
+        public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)=>
                 await _applicationServerConverting.GetFirstInQueuePackage(identityServerName);       
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(FilesDataIntermediateResponseServer filesDataIntermediateResponse) =>
-                await _applicationServerConverting.UpdateFromIntermediateResponse(filesDataIntermediateResponse);
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse) =>
+                await _applicationServerConverting.UpdateFromIntermediateResponse(packageDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task UpdateFromResponse(FilesDataResponseServer filesDataResponse) =>
-                await _applicationServerConverting.UpdateFromResponse(filesDataResponse);
+        public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>
+                await _applicationServerConverting.UpdateFromResponse(packageDataResponse);
 
         /// <summary>
         /// Удалить все устаревшие пакеты

@@ -2,7 +2,6 @@
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.Functional.Result;
-using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -15,8 +14,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Extensions;
-using static GadzhiConverting.Infrastructure.Implementations.ExecuteBindHandler;
+using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
@@ -72,7 +73,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
-        private IResultValue<FileExtention> IsDocumentValid(string filePathDocument) =>
+        private IResultValue<FileExtension> IsDocumentValid(string filePathDocument) =>
             filePathDocument.
             WhereContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
                 okFunc: filePath => new ResultValue<string>(filePath),
@@ -84,13 +85,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить допустимость использования расширения файла
         /// </summary>           
-        private IResultValue<FileExtention> ValidateFileExtension(string fileExtension) =>
+        private IResultValue<FileExtension> ValidateFileExtension(string fileExtension) =>
             ValidFileExtentions.DocAndDgnFileTypes.Select(pair => pair.Key).
             FirstOrDefault(extensionString => extensionString.ContainsIgnoreCase(fileExtension)).
             WhereContinue(extensionKey => !String.IsNullOrWhiteSpace(extensionKey),
-                   okFunc: extensionKey => new ResultValue<FileExtention>(ValidFileExtentions.DocAndDgnFileTypes[extensionKey]),
+                   okFunc: extensionKey => new ResultValue<FileExtension>(ValidFileExtentions.DocAndDgnFileTypes[extensionKey]),
                    badFunc: _ => new ErrorCommon(FileConvertErrorType.IncorrectExtension,
-                                                 $"Расширение файла {fileExtension} не соответствует типам расширений doc или dgn").
-                                 ToResultValue<FileExtention>());
+                                                 $"Расширение файла {fileExtension} не соответствует типам расширений doc или Dgn").
+                                 ToResultValue<FileExtension>());
     }
 }

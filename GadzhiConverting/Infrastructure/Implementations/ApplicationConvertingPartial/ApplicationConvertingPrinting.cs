@@ -2,10 +2,8 @@
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Extentions.Functional;
 using GadzhiCommon.Extentions.Functional.Result;
-using GadzhiCommon.Extentions.StringAdditional;
 using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -22,6 +20,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.StringAdditional;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {

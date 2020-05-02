@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Collection;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Collection;
 using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
 
 namespace GadzhiModules.Infrastructure.Implementations

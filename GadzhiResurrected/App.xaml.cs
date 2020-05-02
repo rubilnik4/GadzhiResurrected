@@ -17,14 +17,14 @@ namespace GadzhiResurrected
     /// <summary>
     /// Логика взаимодействия для App.xaml
     /// </summary>
-    public partial class App : PrismApplication
+    public partial class App
     {
         /// <summary>
         /// Запуск главного окна
         /// </summary>       
         protected override Window CreateShell()
         {
-            PrismApplication.Current.Exit += new ExitEventHandler(MainWindow_Closing);
+            PrismApplication.Current.Exit += MainWindow_Closing;
 
             return Container.Resolve<MainView>();
         }
@@ -32,14 +32,14 @@ namespace GadzhiResurrected
         /// <summary>
         /// Закрываем сессию на сервер при закрытии программы
         /// </summary>       
-        void MainWindow_Closing(object sender, ExitEventArgs e)
+        private void MainWindow_Closing(object sender, ExitEventArgs e)
         {
             Container.Resolve<IApplicationGadzhi>()?.Dispose();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            IUnityContainer unityContainer = containerRegistry.GetContainer();
+            var unityContainer = containerRegistry.GetContainer();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
             unityContainer.RegisterSingleton<IProjectSettings, ProjectSettings>();
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();

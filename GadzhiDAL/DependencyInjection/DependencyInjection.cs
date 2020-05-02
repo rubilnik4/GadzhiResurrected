@@ -30,8 +30,8 @@ namespace GadzhiDAL.DependencyInjection
                   .RegisterType<IConverterToArchive, ConverterToArchive>()
 
                  //регистрация клиенской части
-                 .RegisterType<IConverterDataAccessFilesDataFromDTOServer, ConverterDataAccessFilesDataFromDTOServer>()
-                 .RegisterType<IConverterDataAccessFilesDataToDTOServer, ConverterDataAccessFilesDataToDTOServer>()
+                 .RegisterType<IConverterDataAccessFilesDataFromDtoServer, ConverterDataAccessFilesDataFromDTOServer>()
+                 .RegisterType<IConverterDataAccessFilesDataToDtoServer, ConverterDataAccessFilesDataToDTOServer>()
                  .RegisterType<IFilesDataServerService, FilesDataServerService>()
 
                  //регистрация серверной части

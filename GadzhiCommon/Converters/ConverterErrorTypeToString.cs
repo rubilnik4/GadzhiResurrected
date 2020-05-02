@@ -11,12 +11,12 @@ namespace GadzhiCommon.Converters
     public static class ConverterErrorType
     {
         /// <summary>
-        /// Словарь типов ошибок в строком значении
+        /// Словарь типов ошибок в строковом значении
         /// </summary>
         public static IReadOnlyDictionary<FileConvertErrorType, string> ErrorTypeToString =>
             new Dictionary<FileConvertErrorType, string>
             {
-                { FileConvertErrorType.NoError , "Ошибка отсутсвует" },
+                { FileConvertErrorType.NoError , "Ошибка отсутствует" },
                 { FileConvertErrorType.FileNotFound , "Файл не найден" },
                 { FileConvertErrorType.IncorrectDataSource , "Некорректный файл данных" },
                 { FileConvertErrorType.IncorrectExtension  , "Некорректное расширение файла" },
@@ -27,7 +27,7 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.Communication , "Связь с сервером прервана" },
                 { FileConvertErrorType.NullReference , "Переменная не задана" },
                 { FileConvertErrorType.ArgumentNullReference , "Аргумент не задан" },
-                { FileConvertErrorType.FormatException , "Формат парсинга задан не верно" },
+                { FileConvertErrorType.FormatException , "Формат преобразования задан не верно" },
                 { FileConvertErrorType.AttemptingCount , "Превышено число попыток" },
                 { FileConvertErrorType.InternalError , "Внутренняя ошибка" },
                 { FileConvertErrorType.UnknownError, "Неизвестная ошибка" },
@@ -42,7 +42,7 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.PaperSizeNotFound  , "Формат принтера не найден" },
                 { FileConvertErrorType.PdfPrintingError  , "Ошибка печати PDF" },
                 { FileConvertErrorType.ExportError  , "Ошибка экспортирования файла" },
-                { FileConvertErrorType.SignatureNotFound  , "Подпись не найдена" },               
+                { FileConvertErrorType.SignatureNotFound  , "Подпись не найдена" },
             };
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace GadzhiCommon.Converters
         /// </summary>       
         public static string FileErrorTypeToString(FileConvertErrorType fileConvertErrorType)
         {
-            string fileConvertErrorTypeString = String.Empty;
+            var fileConvertErrorTypeString = String.Empty;
             ErrorTypeToString?.TryGetValue(fileConvertErrorType, out fileConvertErrorTypeString);
 
             return fileConvertErrorTypeString;
@@ -80,20 +80,16 @@ namespace GadzhiCommon.Converters
 
         public static StatusError FileErrorsTypeToStatusError(IEnumerable<FileConvertErrorType> fileConvertErrorsType)
         {
-            bool hasCriticalErrors = fileConvertErrorsType?.Any(error => CriticalErrorType?.Contains(error) == true) ?? false;
-            bool hasInformationErrors = fileConvertErrorsType?.Any(error => InformationalErrorType?.Contains(error) == true) ?? false;
+            var fileConvertErrorsTypeCollection = fileConvertErrorsType?.ToList() ?? new List<FileConvertErrorType>();
+            bool hasCriticalErrors = fileConvertErrorsTypeCollection.Any(error => CriticalErrorType?.Contains(error) == true);
+            bool hasInformationErrors = fileConvertErrorsTypeCollection.Any(error => InformationalErrorType?.Contains(error) == true);
 
-            StatusError statusError = StatusError.NoError;
-            if (hasInformationErrors && !hasCriticalErrors)
+            return (hasCriticalErrors, hasInformationErrors) switch
             {
-                statusError = StatusError.InformationError;
-            }
-            if (hasCriticalErrors)
-            {
-                statusError = StatusError.CriticalError;
-            }
-
-            return statusError;
+                (true, false) => StatusError.InformationError,
+                (_, true) => StatusError.CriticalError,
+                (_, _) => StatusError.NoError,
+            };
         }
     }
 }

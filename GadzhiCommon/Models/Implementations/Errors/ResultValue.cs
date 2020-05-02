@@ -1,10 +1,10 @@
-﻿using GadzhiCommon.Extentions.Functional;
-using GadzhiCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiCommon.Models.Implementations.Errors
 {
@@ -30,28 +30,17 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public ResultValue(TValue value, IEnumerable<IErrorCommon> errors, IErrorCommon errorNull = null)
             : this(errors)
         {
-            if (value == null && errorNull != null)
-            {
-                Errors = Errors.Concat(errorNull);
-            }
-            else if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            Value = value;
+            InitializeValue(value, errorNull);
         }
 
         protected void InitializeValue(TValue value, IErrorCommon errorNull = null)
         {
-            if (value == null && errorNull != null)
+            Errors = value switch
             {
-                Errors = Errors.Concat(errorNull);
-            }
-            else if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+                null when errorNull != null => Errors.Concat(errorNull),
+                null => throw new ArgumentNullException(nameof(value)),
+                _ => Errors
+            };
 
             Value = value;
         }
@@ -99,7 +88,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Проверить ошибки на корректность
         /// </summary>      
-        protected bool ValidateCollection<T>(IEnumerable<T> collection) =>
+        protected static bool ValidateCollection<T>(IEnumerable<T> collection) =>
             collection?.All(t => t != null) == true;
     }
 }

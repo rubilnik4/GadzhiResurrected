@@ -12,27 +12,22 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
     /// <summary>
     /// Конвертер из трансферной модели в модель базы данных
     /// </summary>      
-    public class ConverterDataAccessFilesDataToDTOServer : IConverterDataAccessFilesDataToDTOServer
+    public class ConverterDataAccessFilesDataToDTOServer : IConverterDataAccessFilesDataToDtoServer
     {
-        public ConverterDataAccessFilesDataToDTOServer()
-        {
-
-        }
-
         /// <summary>
         /// Конвертировать из модели базы данных в запрос
         /// </summary>          
-        public async Task<FilesDataRequestServer> ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
+        public async Task<PackageDataRequestServer> ConvertFilesDataAccessToRequest(FilesDataEntity filesDataEntity)
         {
             if (filesDataEntity != null)
             {
                 var filesData = await filesDataEntity.FileDataEntities?.AsQueryable().
                                       Select(fileData => ConvertFileDataAccessToRequest(fileData)).ToListAsync();              
-                return new FilesDataRequestServer()
+                return new PackageDataRequestServer()
                 {
                     Id = Guid.Parse(filesDataEntity.Id),
                     AttemptingConvertCount = filesDataEntity.AttemptingConvertCount,
-                    FileDatas = filesData,
+                    FilesData = filesData,
                 };
             }
 

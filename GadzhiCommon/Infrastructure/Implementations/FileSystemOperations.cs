@@ -1,8 +1,4 @@
-﻿using GadzhiCommon.Extentions.Collection;
-using GadzhiCommon.Extentions.Functional;
-using GadzhiCommon.Extentions.StringAdditional;
-using GadzhiCommon.Helpers.Dialogs;
-using GadzhiCommon.Infrastructure.Interfaces;
+﻿using GadzhiCommon.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +6,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.StringAdditional;
 
 namespace GadzhiCommon.Infrastructure.Implementations
 {
@@ -29,7 +28,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>      
         public static string ExtensionWithoutPointFromPath(string path) =>
            Path.GetExtension(path).
-           Map(extension => ExtensionWithoutPoint(extension));
+           Map(ExtensionWithoutPoint);
 
         /// <summary>
         /// Является ли путь папкой
@@ -74,94 +73,89 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Поиск файлов на один уровень ниже и в текущих папках. Допустимо передавать пути файлов для дальнейшего объединения      
         /// </summary>    
-        public IEnumerable<string> GetFilesFromDirectoryAndSubs(IEnumerable<string> fileOrDirectoriesPaths) =>
-            fileOrDirectoriesPaths?.
+        public IEnumerable<string> GetFilesFromPaths(IEnumerable<string> fileOrDirectoriesPaths) =>
+            fileOrDirectoriesPaths.
+            Map(paths => paths?.ToList() ?? new List<string>()).
+            Map(paths => GetFilesFromDirectory(paths).
+                         Union(paths.Where(IsFile)));
+
+        /// <summary>
+        /// Получить пути файлов из папок
+        /// </summary>
+        public IEnumerable<string> GetFilesFromDirectory(IEnumerable<string> directoriesPaths) =>
+            directoriesPaths ?? Enumerable.Empty<string>().
             Where(directoryPath => IsDirectory(directoryPath) && IsDirectoryExist(directoryPath)).
-            Map(directoriesPath => directoriesPath.UnionNotNull(
-                                   directoriesPath?.SelectMany(d => GetDirectories(d)))).
-            SelectMany(directoryPath => GetFiles(directoryPath)).
-            Map(filesPath => filesPath.UnionNotNull(
-                             fileOrDirectoriesPaths?.Where(f => IsFile(f))));
+            ToList().
+            Map(directoriesPath => directoriesPath.Union(directoriesPath.SelectMany(GetDirectories))).
+            SelectMany(GetFiles);
 
         /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
         public void DeleteAllDataInDirectory(string directoryPath)
         {
-            if (!String.IsNullOrWhiteSpace(directoryPath) && Directory.Exists(directoryPath))
-            {
-                var directoryInfo = new DirectoryInfo(directoryPath);
-                foreach (FileInfo file in directoryInfo.EnumerateFiles())
-                {
-                    if (!IsFileLocked(file))
-                    {
-                        file.Delete();
-                    }
-                }
-                foreach (DirectoryInfo dir in directoryInfo.EnumerateDirectories())
-                {
-                    try
-                    {
-                        dir.Delete(true);
-                    }
-                    catch (IOException)
-                    {
+            if (String.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath)) return;
 
-                    }
+            var directoryInfo = new DirectoryInfo(directoryPath);
+            foreach (var file in directoryInfo.EnumerateFiles())
+            {
+                if (!IsFileLocked(file))
+                {
+                    file.Delete();
                 }
+            }
+            foreach (var dir in directoryInfo.EnumerateDirectories())
+            {
+                try
+                {
+                    dir.Delete(true);
+                }
+                catch (IOException)
+                { }
             }
         }
 
         /// <summary>
         /// Представить файл в двоичном виде и запаковать
-        /// </summary>   
-        public async Task<byte[]> ConvertFileToByteAndZip(string filePath)
+        /// </summary>
+        public async Task<(bool Success, byte[] Zip)> FileToByteAndZip(string filePath)
         {
-            byte[] result = null;
-
-            //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не войдут в отправку
             try
             {
-                using (FileStream input = File.Open(filePath, FileMode.Open))
-                using (MemoryStream output = new MemoryStream())
-                {
-                    using (GZipStream zip = new GZipStream(output, CompressionMode.Compress))
-                    {
-                        await input.CopyToAsync(zip);
-                    }
-                    result = output.ToArray();
-                }
+                using var input = File.Open(filePath, FileMode.Open);
+                using var output = new MemoryStream();
+                using var zip = new GZipStream(output, CompressionMode.Compress);
+                await input.CopyToAsync(zip);
+
+                return (true, output.ToArray());
             }
-            finally
+            catch (IOException)
             { }
-            return result;
+
+            return (false, null);
         }
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
-        /// </summary>   
+        /// </summary>
         public async Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileBinary)
         {
-            bool success = false;
-
-            //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
             try
             {
                 if (fileBinary != null)
                 {
-                    using (MemoryStream input = new MemoryStream(fileBinary.ToArray()))
-                    using (GZipStream zip = new GZipStream(input, CompressionMode.Decompress))
-                    using (FileStream output = File.Create(filePath))
-                    {
-                        await zip.CopyToAsync(output);
-                    }
+                    using var input = new MemoryStream(fileBinary.ToArray());
+                    using var zip = new GZipStream(input, CompressionMode.Decompress);
+                    using var output = File.Create(filePath);
+                    await zip.CopyToAsync(output);
 
-                    success = true;
+                    return true;
                 }
             }
-            finally
+            catch (IOException)
             { }
-            return success;
+
+            return false;
         }
 
         /// <summary>
@@ -169,25 +163,21 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>   
         public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
         {
-            bool success = false;
-
-            //продолжаем процесс не смотря на ошибку. Файлы с ошибкой не будут конвертированы
             try
             {
                 if (!String.IsNullOrEmpty(filePath) && fileByte != null)
                 {
-                    using (FileStream sourceStream = File.Open(filePath, FileMode.OpenOrCreate))
-                    {
-                        sourceStream.Seek(0, SeekOrigin.End);
-                        await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
-                    }
+                    using var sourceStream = File.Open(filePath, FileMode.OpenOrCreate);
+                    sourceStream.Seek(0, SeekOrigin.End);
+                    await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
 
-                    success = true;
+                    return true;
                 }
             }
-            finally
+            catch (IOException)
             { }
-            return success;
+
+            return false;
         }
 
         /// <summary>
@@ -203,14 +193,14 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 File.Copy(fileSource, fileDestination, true);
                 return true;
             }
-            catch(IOException)
+            catch (IOException)
             {
                 return false;
-            }           
+            }
         }
 
         /// <summary>
-        /// Создать поддиректорию и присвоить идентефикатор
+        /// Создать поддиректорию и присвоить идентификатор
         /// </summary>     
         public string CreateFolderByGuid(string startingPath) => CreateFolderByName(startingPath, Guid.NewGuid().ToString());
 
@@ -218,21 +208,18 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Создать поддиректорию
         /// </summary>     
         public string CreateFolderByName(string startingPath, string folderName = "") =>
-             (startingPath.AddSlashesToPath() + folderName.AddSlashesToPath())?.
-             Map(createdPath => Directory.CreateDirectory(createdPath))?.
+             (startingPath.AddSlashesToPath() + folderName.AddSlashesToPath()).
+             Map(Directory.CreateDirectory)?.
              FullName;
 
         /// <summary>
         /// Проверка, используется ли файл
         /// </summary>
-        private bool IsFileLocked(FileInfo file)
+        private static bool IsFileLocked(FileInfo file)
         {
             try
             {
-                using (FileStream stream = file?.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
+                using var stream = file?.Open(FileMode.Open, FileAccess.Read, FileShare.None);
             }
             catch (IOException)
             {

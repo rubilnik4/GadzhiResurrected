@@ -1,6 +1,5 @@
 ﻿using System;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Collection;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTOClient.TransferModels.FilesConvert;
@@ -12,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Collection;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
@@ -48,11 +48,13 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataIntermediateResponseClient packageDataIntermediateResponse)
         {
-            var packageStatus = packageDataIntermediateResponse?.FileDatas?.Select(ToFileStatusFromIntermediateResponse);
+            if (packageDataIntermediateResponse == null) throw new ArgumentNullException(nameof(packageDataIntermediateResponse));
+
+            var packageStatus = packageDataIntermediateResponse.FilesData?.Select(ToFileStatusFromIntermediateResponse);
             var queueStatus = ConvertToQueueInfoFromResponse(packageDataIntermediateResponse?.FilesQueueInfo);
 
             return new PackageStatus(packageStatus,
-                                      packageDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Error,
+                                      packageDataIntermediateResponse.StatusProcessingProject,
                                       queueStatus);
         }
 
@@ -61,6 +63,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public PackageStatus ToPackageStatus(PackageDataResponseClient packageDataResponse)
         {
+            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
+
             var fileDataStatusResponse = ToPackageStatusFromResponse(packageDataResponse);
             return new PackageStatus(fileDataStatusResponse, StatusProcessingProject.Writing);
         }
@@ -70,6 +74,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<PackageStatus> ToFilesStatusAndSaveFiles(PackageDataResponseClient packageDataResponse)
         {
+            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
+
             var fileDataStatusResponse = await ToPackageStatusFromResponseAndSaveFiles(packageDataResponse);
             var filesStatus = new PackageStatus(fileDataStatusResponse, StatusProcessingProject.End);
             return filesStatus;
@@ -78,15 +84,15 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации из основной трансферной модели в класс клиентской части перед сохранением
         /// </summary>      
-        private IEnumerable<FileStatus> ToPackageStatusFromResponse(PackageDataResponseClient packageDataResponse) =>
-            packageDataResponse?.FilesData?.Select(ConvertToFileStatusFromResponse);
+        private static IEnumerable<FileStatus> ToPackageStatusFromResponse(PackageDataResponseClient packageDataResponse) =>
+            packageDataResponse.FilesData?.Select(ConvertToFileStatusFromResponse);
 
         /// <summary>
         /// Конвертер пакета информации из основной трансферной модели в класс клиентской части и сохранение файла
         /// </summary>      
         private async Task<IEnumerable<FileStatus>> ToPackageStatusFromResponseAndSaveFiles(PackageDataResponseClient packageDataResponse)
         {
-            var filesStatusTask = packageDataResponse?.FilesData?.Select(ToFileStatusFromResponseAndSaveFile);
+            var filesStatusTask = packageDataResponse.FilesData?.Select(ToFileStatusFromResponseAndSaveFile);
             var filesStatus = await Task.WhenAll(filesStatusTask ?? Enumerable.Empty<Task<FileStatus>>());
             return filesStatus;
         }
@@ -123,14 +129,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         private async Task<IEnumerable<FileConvertErrorType>> SaveFileDataSourceFromDtoResponse(FileDataResponseClient fileDataResponse)
         {
-            if (fileDataResponse.FileDatasSourceResponseClient == null)
+            if (fileDataResponse.FilesDataSourceResponseClient == null)
                 return new List<FileConvertErrorType>() { FileConvertErrorType.IncorrectDataSource };
 
             string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
             string convertingDirectoryName = Path.Combine(fileDirectoryName ?? throw new InvalidOperationException(nameof(fileDirectoryName)),
                                                           _projectSettings.DirectoryForSavingConvertedFiles);
 
-            var fileConvertErrorTypeTasks = fileDataResponse.FileDatasSourceResponseClient?.
+            var fileConvertErrorTypeTasks = fileDataResponse.FilesDataSourceResponseClient?.
                                             Select(fileData => SaveFileDataSourceFromDtoResponse(fileData, convertingDirectoryName));
             return await Task.WhenAll(fileConvertErrorTypeTasks);
         }

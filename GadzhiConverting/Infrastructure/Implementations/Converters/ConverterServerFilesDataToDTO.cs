@@ -1,7 +1,6 @@
 ﻿using ConvertingModels.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
-using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
@@ -14,76 +13,78 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// <summary>
     /// Конвертер из серверной модели в трансферную
     /// </summary>
-    public class ConverterServerFilesDataToDTO : IConverterServerFilesDataToDTO
+    public class ConverterServerFilesDataToDto : IConverterServerFilesDataToDto
     {
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConverterServerFilesDataToDTO(IFileSystemOperations fileSystemOperations)
+        public ConverterServerFilesDataToDto(IFileSystemOperations fileSystemOperations)
         {
-            _fileSystemOperations = fileSystemOperations;
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
         }
 
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public FilesDataIntermediateResponseServer ConvertFilesToIntermediateResponse(IFilesDataServer filesDataServer) =>
-            (filesDataServer != null) ?
-            new FilesDataIntermediateResponseServer()
+        public PackageDataIntermediateResponseServer FilesDataToIntermediateResponse(IPackageServer packageServer) =>
+            (packageServer != null) ?
+            new PackageDataIntermediateResponseServer()
             {
-                Id = filesDataServer.Id,
-                StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                FileDatas = filesDataServer.FileDatasServer?.Select(ConvertFileToIntermediateResponse).ToList(),
+                Id = packageServer.Id,
+                StatusProcessingProject = packageServer.StatusProcessingProject,
+                FilesData = packageServer.FilesDataServer?.Select(FileDataToIntermediateResponse).ToList(),
             } :
-            throw new ArgumentNullException(nameof(filesDataServer));
-
-
+            throw new ArgumentNullException(nameof(packageServer));
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
-        public async Task<FilesDataResponseServer> ConvertFilesToResponse(IFilesDataServer filesDataServer)
+        public async Task<PackageDataResponseServer> FilesDataToResponse(IPackageServer packageServer)
         {
-            var filesDataToResponseTasks = filesDataServer?.FileDatasServer?.Select(ConvertFileResponse);
+            if (packageServer == null) throw new ArgumentNullException(nameof(packageServer));
+
+            var filesDataToResponseTasks = packageServer.FilesDataServer?.Select(FileDataToResponse)
+                                           ?? Enumerable.Empty<Task<FileDataResponseServer>>();
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
 
-            return new FilesDataResponseServer()
+            return new PackageDataResponseServer()
             {
-                Id = filesDataServer.Id,
-                StatusProcessingProject = filesDataServer.StatusProcessingProject,
-                FileDatas = filesDataToResponse,
+                Id = packageServer.Id,
+                StatusProcessingProject = packageServer.StatusProcessingProject,
+                FilesData = filesDataToResponse,
             };
         }
 
         /// <summary>
         /// Конвертировать файл серверной модели в промежуточную
         /// </summary>
-        private FileDataIntermediateResponseServer ConvertFileToIntermediateResponse(IFileDataServer fileDataServer)
-        {
-            return new FileDataIntermediateResponseServer()
+        private static FileDataIntermediateResponseServer FileDataToIntermediateResponse(IFileDataServer fileDataServer) =>
+            new FileDataIntermediateResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
             };
-        }
 
         /// <summary>
         /// Конвертировать файл серверной модели в окончательный ответ
         /// </summary>
-        private async Task<FileDataResponseServer> ConvertFileResponse(IFileDataServer fileDataServer)
+        private async Task<FileDataResponseServer> FileDataToResponse(IFileDataServer fileDataServer)
         {
-            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(ConvertFileDataSourceResponse)
-                                       ?? Enumerable.Empty<Task<FileDataSourceResponseServer>>();
+            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(FileDataSourceToResponse)
+                                       ?? Enumerable.Empty<Task<(bool, FileDataSourceResponseServer)>>();
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);
+            var filesDataSourceWithBytes = filesDataSource.
+                                           Where(fileSuccess => fileSuccess.Success).
+                                           Select(fileSuccess => fileSuccess.FileDataSourceResponse);
 
             return new FileDataResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                FileDatasSourceResponseServer = filesDataSource,
+                FilesDataSourceResponseServer = filesDataSourceWithBytes.ToList(),
                 FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
             };
         }
@@ -91,17 +92,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать список отконвертированных файлов в окончательный ответ
         /// </summary>
-        private async Task<FileDataSourceResponseServer> ConvertFileDataSourceResponse(IFileDataSourceServer fileDataSourceServer)
+        private async Task<(bool Success, FileDataSourceResponseServer FileDataSourceResponse)> FileDataSourceToResponse(IFileDataSourceServer fileDataSourceServer)
         {
-            var fileDataSource = await _fileSystemOperations.ConvertFileToByteAndZip(fileDataSourceServer.FilePath);
+            (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePath);
 
-            return new FileDataSourceResponseServer()
+            var fileDataSourceResponseServer = new FileDataSourceResponseServer()
             {
                 FileName = Path.GetFileName(fileDataSourceServer.FilePath),
                 PaperSize = fileDataSourceServer.PaperSize,
                 PrinterName = fileDataSourceServer.PrinterName,
-                FileDataSource = fileDataSource,
+                FileDataSource = fileDataSourceZip,
             };
+            return (success, fileDataSourceResponseServer);
         }
     }
 }

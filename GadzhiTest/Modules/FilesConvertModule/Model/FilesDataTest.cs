@@ -115,9 +115,9 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
             Assert.AreEqual(filesInfoProject.FilesData.Count, files.Count);
 
             FileData fileLast = filesInfoProject.FilesData[filesInfoProject.FilesData.Count - 1];
-            Assert.AreEqual(fileLast.FileExtension, "dgn");
+            Assert.AreEqual(fileLast.FileExtension, "Dgn");
             Assert.AreEqual(fileLast.FileName, "secondName");
-            Assert.AreEqual(fileLast.FilePath, "C:\\folder\\secondName.dgn");
+            Assert.AreEqual(fileLast.FilePath, "C:\\folder\\secondName.Dgn");
 
             filesInfoProject?.Dispose();
         }
