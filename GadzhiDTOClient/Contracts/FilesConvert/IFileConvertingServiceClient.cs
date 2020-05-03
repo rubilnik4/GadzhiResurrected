@@ -9,7 +9,7 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
     /// Сервис для конвертирования файлов.Контракт используется клиентской частью
     /// </summary>
     [ServiceContract(SessionMode = SessionMode.Required)]
-    public interface IFileConvertingClientService : IDisposable
+    public interface IFileConvertingClientService
     {
         /// <summary>
         /// Отправить файлы для конвертирования

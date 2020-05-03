@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace GadzhiWcfHost.Services
 {
-    //Обязательно сверять путь с файлом App.config
     /// <summary>
     /// Сервис для конвертирования файлов. Контракт используется серверной частью
     /// </summary>   
@@ -55,27 +54,5 @@ namespace GadzhiWcfHost.Services
         /// Отмена операции по номеру ID
         /// </summary>
         public async Task AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _applicationServerConverting.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
     }
 }

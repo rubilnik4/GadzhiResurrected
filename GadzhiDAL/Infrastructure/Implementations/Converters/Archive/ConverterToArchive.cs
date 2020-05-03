@@ -1,6 +1,5 @@
 ﻿using GadzhiDAL.Entities.FilesConvert.Archive;
 using GadzhiDAL.Entities.FilesConvert.Main;
-using GadzhiDAL.Infrastructure.Interfaces.Converters.Archive;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,75 +12,61 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
     /// <summary>
     /// Конвертер в архивную версию
     /// </summary>    
-    public class ConverterToArchive : IConverterToArchive
+    public static class ConverterToArchive
     {
-        public ConverterToArchive()
-        {
-
-        }
 
         /// <summary>
         /// Конвертировать пакет в архивную версию базы данных
         /// </summary>    
-        public async Task<FilesDataArchiveEntity> ConvertFilesDataToArchive(FilesDataEntity filesDataEntity)
+        public static async Task<PackageDataArchiveEntity> PackageDataToArchive(PackageDataEntity packageDataEntity)
         {
-            if (filesDataEntity != null)
-            {
-                var filesDataArchiveEntity = new FilesDataArchiveEntity()
-                {
-                    CreationDateTime = filesDataEntity.CreationDateTime,
-                    IdentityLocalName = filesDataEntity.IdentityLocalName,
-                    IdentityServerName = filesDataEntity.IdentityServerName
-                };
-                filesDataArchiveEntity.SetId(Guid.Parse(filesDataEntity.Id));
+            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
 
-                var fileDataEntitiesTask = filesDataEntity.FileDataEntities?.AsQueryable().
-                                           Select(fileData => ConvertFileDataToArchive(fileData));
-                var fileDataEntities = await Task.WhenAll(fileDataEntitiesTask);
-                filesDataArchiveEntity.SetFileDataArchiveEntities(fileDataEntities);
-
-                return filesDataArchiveEntity;
-            }
-            else
+            var filesDataArchiveEntity = new PackageDataArchiveEntity()
             {
-                throw new ArgumentNullException(nameof(filesDataEntity));
-            }
+                CreationDateTime = packageDataEntity.CreationDateTime,
+                IdentityLocalName = packageDataEntity.IdentityLocalName,
+                IdentityServerName = packageDataEntity.IdentityServerName
+            };
+            filesDataArchiveEntity.SetId(Guid.Parse(packageDataEntity.Id));
+
+            var fileDataEntitiesTask = packageDataEntity.FileDataEntities.AsQueryable().
+                                       Select(fileData => FileDataToArchive(fileData));
+            var fileDataEntities = await Task.WhenAll(fileDataEntitiesTask);
+            filesDataArchiveEntity.SetFileDataArchiveEntities(fileDataEntities);
+
+            return filesDataArchiveEntity;
         }
 
         /// <summary>
         /// Конвертировать файл в архивную версию базы данных
         /// </summary>    
-        public async Task<FileDataArchiveEntity> ConvertFileDataToArchive(FileDataEntity fileDataEntity)
+        public static async Task<FileDataArchiveEntity> FileDataToArchive(FileDataEntity fileDataEntity)
         {
-            if (fileDataEntity != null)
-            {
-                var fileDataArchiveEntity = new FileDataArchiveEntity()
-                {
-                    ColorPrint = fileDataEntity.ColorPrint,
-                    FilePath = fileDataEntity.FilePath,
-                    FileConvertErrorTypeArchive = fileDataEntity.FileConvertErrorType.AsQueryable().ToList()
-                };
-                var fileDataSourceServerEntities = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().
-                                                   Select(fileDataSource => ConvertFileDataSourceToArchive(fileDataSource)).ToListAsync();
-                fileDataArchiveEntity.SetFileDataSourceArchiveEntities(fileDataSourceServerEntities);
+            if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
 
-                return fileDataArchiveEntity;
-            }
-            else
+            var fileDataArchiveEntity = new FileDataArchiveEntity()
             {
-                throw new ArgumentNullException(nameof(fileDataEntity));
-            }
+                ColorPrint = fileDataEntity.ColorPrint,
+                FilePath = fileDataEntity.FilePath,
+                FileConvertErrorTypeArchive = fileDataEntity.FileConvertErrorType.AsQueryable().ToList()
+            };
+            var fileDataSourceServerEntities = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().
+                                               Select(fileDataSource => FileDataSourceToArchive(fileDataSource)).ToListAsync();
+            fileDataArchiveEntity.SetFileDataSourceArchiveEntities(fileDataSourceServerEntities);
+
+            return fileDataArchiveEntity;
         }
 
         /// <summary>
-        /// КОнвертироват информацию о готовых файлах в архивную версию
+        /// Конвертировать информацию о готовых файлах в архивную версию
         /// </summary>     
-        public FileDataSourceArchiveEntity ConvertFileDataSourceToArchive(FileDataSourceEntity fileDataSourceEntity) =>
+        public static FileDataSourceArchiveEntity FileDataSourceToArchive(FileDataSourceEntity fileDataSourceEntity) =>
             new FileDataSourceArchiveEntity()
             {
-                FileName = fileDataSourceEntity?.FileName,
-                PaperSize = fileDataSourceEntity?.PaperSize,
-                PrinterName = fileDataSourceEntity?.PrinterName,
+                FileName = fileDataSourceEntity?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceEntity)),
+                PaperSize = fileDataSourceEntity.PaperSize,
+                PrinterName = fileDataSourceEntity.PrinterName,
             };
     }
 }

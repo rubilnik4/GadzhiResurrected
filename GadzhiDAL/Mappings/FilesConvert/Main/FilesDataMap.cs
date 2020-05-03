@@ -8,7 +8,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
     /// <summary>
     /// Структура в БД для конвертируемого пакета файлов
     /// </summary>
-    public class FilesDataMap : ClassMap<FilesDataEntity>
+    public class FilesDataMap : ClassMap<PackageDataEntity>
     {
         public FilesDataMap()
         {

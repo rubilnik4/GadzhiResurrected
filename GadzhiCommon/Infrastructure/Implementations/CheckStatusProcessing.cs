@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace GadzhiCommon.Infrastructure.Implementations
 {
@@ -28,6 +29,18 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public static IReadOnlyList<StatusProcessing> CompletedStatusProcessingServer => new List<StatusProcessing>()
         {
             StatusProcessing.ConvertingComplete,
-        };       
+        };
+
+        /// <summary>
+        /// Находится ли статус в списке завершенных на стороне севера
+        /// </summary>
+        public static bool IsCompletedStatusProcessingProject(StatusProcessingProject statusProcessingProject) =>
+            CompletedStatusProcessingProject.Contains(statusProcessingProject);
+
+        /// <summary>
+        /// Находится ли статус в списке завершенных на стороне севера
+        /// </summary>
+        public static bool IsCompletedStatusProcessingServer(StatusProcessing statusProcessing) =>
+            CompletedStatusProcessingServer.Contains(statusProcessing);
     }
 }

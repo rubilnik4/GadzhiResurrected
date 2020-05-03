@@ -8,7 +8,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     public abstract class EntityBase<TIdType> where TIdType : IEquatable<TIdType>
     {
         /// <summary>
-        /// Идентефикатор
+        /// Идентификатор
         /// </summary>
         public abstract TIdType Id { get; protected set; }
     }

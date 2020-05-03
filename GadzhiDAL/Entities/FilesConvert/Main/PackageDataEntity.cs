@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert.Base;
 using System;
@@ -11,17 +10,12 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FilesDataEntity : FilesDataEntityBase
+    public class PackageDataEntity : PackageDataEntityBase
     {
-        public FilesDataEntity()
-        {
-            StatusProcessingProject = StatusProcessingProject.InQueue;
-        }
-
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        public virtual StatusProcessingProject StatusProcessingProject { get; set; }
+        public virtual StatusProcessingProject StatusProcessingProject { get; set; } = StatusProcessingProject.InQueue;
 
         /// <summary>
         /// Количество попыток конвертирования
@@ -40,13 +34,14 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         {
             FileDataEntities = fileDataEntities?.Select(fileData =>
             {
-                fileData.FilesDataEntity = this;
+                fileData.PackageDataEntity = this;
                 return fileData;
-            })?.ToList();
+            }).ToList()
+            ?? new List<FileDataEntity>();
         }
 
         /// <summary>
-        /// Присовить статус конвертирования
+        /// Присвоить статус конвертирования
         /// </summary>
         public virtual void StartConverting(string identityServerName)
         {
@@ -56,21 +51,18 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         }
 
         /// <summary>
-        /// Присовить статус отмены конвертирования, если файл неотконвертирован
+        /// Присвоить статус отмены конвертирования, если файл необработан
         /// </summary>
-        public virtual void AbortConverting(ClientServer сlientServer)
+        public virtual void AbortConverting(ClientServer clientServer)
         {
             if (StatusProcessingProject != StatusProcessingProject.ConvertingComplete)
             {
-                switch (сlientServer)
+                StatusProcessingProject = clientServer switch
                 {
-                    case ClientServer.Client:
-                        StatusProcessingProject = StatusProcessingProject.Abort;
-                        break;
-                    case ClientServer.Server:
-                        StatusProcessingProject = StatusProcessingProject.InQueue;
-                        break;
-                }
+                    ClientServer.Client => StatusProcessingProject.Abort,
+                    ClientServer.Server => StatusProcessingProject.InQueue,
+                    _ => StatusProcessingProject
+                };
             }
         }
     }

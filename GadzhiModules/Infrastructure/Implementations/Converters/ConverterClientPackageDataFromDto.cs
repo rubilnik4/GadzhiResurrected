@@ -51,7 +51,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             if (packageDataIntermediateResponse == null) throw new ArgumentNullException(nameof(packageDataIntermediateResponse));
 
             var packageStatus = packageDataIntermediateResponse.FilesData?.Select(ToFileStatusFromIntermediateResponse);
-            var queueStatus = ConvertToQueueInfoFromResponse(packageDataIntermediateResponse?.FilesQueueInfo);
+            var queueStatus = ConvertToQueueInfoFromResponse(packageDataIntermediateResponse.FilesQueueInfo);
 
             return new PackageStatus(packageStatus,
                                       packageDataIntermediateResponse.StatusProcessingProject,
@@ -129,14 +129,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         private async Task<IEnumerable<FileConvertErrorType>> SaveFileDataSourceFromDtoResponse(FileDataResponseClient fileDataResponse)
         {
-            if (fileDataResponse.FilesDataSourceResponseClient == null)
+            if (fileDataResponse.FilesDataSource == null)
                 return new List<FileConvertErrorType>() { FileConvertErrorType.IncorrectDataSource };
 
             string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
             string convertingDirectoryName = Path.Combine(fileDirectoryName ?? throw new InvalidOperationException(nameof(fileDirectoryName)),
                                                           _projectSettings.DirectoryForSavingConvertedFiles);
 
-            var fileConvertErrorTypeTasks = fileDataResponse.FilesDataSourceResponseClient?.
+            var fileConvertErrorTypeTasks = fileDataResponse.FilesDataSource?.
                                             Select(fileData => SaveFileDataSourceFromDtoResponse(fileData, convertingDirectoryName));
             return await Task.WhenAll(fileConvertErrorTypeTasks);
         }

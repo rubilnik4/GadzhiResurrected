@@ -12,12 +12,6 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     public class PackageDataRequestClient : PackageDataRequestBase<FileDataRequestClient>
     {
         /// <summary>
-        /// Идентификация пользователя
-        /// </summary>
-        [DataMember]
-        public string IdentityName { get; set; }
-
-        /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]

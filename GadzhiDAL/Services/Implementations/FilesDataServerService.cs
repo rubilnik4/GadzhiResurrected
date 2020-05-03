@@ -2,15 +2,15 @@
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
-using GadzhiDAL.Infrastructure.Interfaces.Converters.Server;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
+using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
+using GadzhiDAL.Services.Interfaces;
 using Unity;
 
 namespace GadzhiDAL.Services.Implementations
@@ -24,25 +24,9 @@ namespace GadzhiDAL.Services.Implementations
         ///Контейнер зависимостей
         /// </summary>
         private readonly IUnityContainer _container;
-
-        /// <summary>
-        /// Конвертер из трансферной модели в модель базы данных
-        /// </summary>
-        private readonly IConverterDataAccessFilesDataFromDtoServer _converterDataAccessFilesDataFromDTOServer;
-
-        /// <summary>
-        /// Конвертер из модели базы данных в трансферную
-        /// </summary>
-        private readonly IConverterDataAccessFilesDataToDtoServer _converterDataAccessFilesDataToDTOServer;
-
-        public FilesDataServerService(IUnityContainer container,
-                                      IConverterDataAccessFilesDataFromDtoServer converterDataAccessFilesDataFromDTOServer,
-                                      IConverterDataAccessFilesDataToDtoServer converterDataAccessFilesDataToDTOServer)
+        public FilesDataServerService(IUnityContainer container)
         {
-
             _container = container;
-            _converterDataAccessFilesDataFromDTOServer = converterDataAccessFilesDataFromDTOServer;
-            _converterDataAccessFilesDataToDTOServer = converterDataAccessFilesDataToDTOServer;
         }
 
         /// <summary>
@@ -50,19 +34,14 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>      
         public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)
         {
-            PackageDataRequestServer packageDataRequest = null;
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var packageDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
+                                          FirstOrDefaultAsync(ConditionConverting(identityServerName));
 
-            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
-            {
-                FilesDataEntity filesDataEntity = await unitOfWork.Session.
-                                                  Query<FilesDataEntity>().
-                                                  FirstOrDefaultAsync(ConditionConvertion(identityServerName));
+            packageDataEntity?.StartConverting(identityServerName);
+            var packageDataRequest = await ConverterFilesDataEntitiesToDtoServer.PackageDataToRequest(packageDataEntity);
 
-                filesDataEntity?.StartConverting(identityServerName);
-                packageDataRequest = await _converterDataAccessFilesDataToDTOServer.ConvertFilesDataAccessToRequest(filesDataEntity);
-
-                await unitOfWork.CommitAsync();
-            }
+            await unitOfWork.CommitAsync();
 
             return packageDataRequest;
         }
@@ -72,25 +51,19 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>      
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse)
         {
-            StatusProcessingProject statusProcessingProject = StatusProcessingProject.Converting;
-            if (packageDataIntermediateResponse != null)
+            if (packageDataIntermediateResponse == null) throw new ArgumentNullException(nameof(packageDataIntermediateResponse));
+
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageDataIntermediateResponse.Id.ToString());
+
+            if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, packageDataEntity))
             {
-                using (var unitOfWork = _container.Resolve<IUnitOfWork>())
-                {
-                    FilesDataEntity filesDataEntity = await unitOfWork.Session.
-                                                      LoadAsync<FilesDataEntity>(packageDataIntermediateResponse.Id.ToString());
-
-                    statusProcessingProject = filesDataEntity.StatusProcessingProject;
-                    if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
-                    {
-                        filesDataEntity = _converterDataAccessFilesDataFromDTOServer.
-                                           UpdateFilesDataAccessFromIntermediateResponse(filesDataEntity, packageDataIntermediateResponse);
-                    }
-
-                    await unitOfWork.CommitAsync();
-                }
+                packageDataEntity = ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromIntermediateResponse(packageDataEntity, packageDataIntermediateResponse);
             }
-            return statusProcessingProject;
+
+            await unitOfWork.CommitAsync();
+
+            return packageDataEntity.StatusProcessingProject;
         }
 
         /// <summary>
@@ -98,20 +71,18 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>      
         public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse)
         {
-            if (packageDataResponse != null)
+            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
+
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var filesDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageDataResponse.Id.ToString());
+
+            if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
             {
-                using (var unitOfWork = _container.Resolve<IUnitOfWork>())
-                {
-                    var filesDataEntity = await unitOfWork.Session.LoadAsync<FilesDataEntity>(packageDataResponse.Id.ToString());
-
-                    if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
-                    {
-                        _converterDataAccessFilesDataFromDTOServer.UpdateFilesDataAccessFromResponse(filesDataEntity, packageDataResponse);
-                    }
-
-                    await unitOfWork.CommitAsync();
-                }
+                ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromResponse(filesDataEntity, packageDataResponse);
             }
+
+            await unitOfWork.CommitAsync();
+
         }
 
         /// <summary>
@@ -119,16 +90,15 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>      
         public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion)
         {
-            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var filesDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
+                                        Where(filesData => filesData.CreationDateTime < dateDeletion).
+                                        ToListAsync();
+            foreach (var fileData in filesDataEntity)
             {
-                var filesDataEntity = await unitOfWork.Session.Query<FilesDataEntity>()?.
-                                            Where(filesData => filesData.CreationDateTime < dateDeletion).ToListAsync();
-                foreach (var fileData in filesDataEntity)
-                {
-                    await unitOfWork.Session.DeleteAsync(fileData);
-                }
-                await unitOfWork.CommitAsync();
+                await unitOfWork.Session.DeleteAsync(fileData);
             }
+            await unitOfWork.CommitAsync();
         }
 
         /// <summary>
@@ -136,36 +106,34 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>       
         public async Task AbortConvertingById(Guid id)
         {
-            using (var unitOfWork = _container.Resolve<IUnitOfWork>())
-            {
-                FilesDataEntity filesDataEntity = await unitOfWork.Session.GetAsync<FilesDataEntity>(id.ToString());
+            if (id == Guid.Empty) return;
 
-                filesDataEntity?.AbortConverting(ClientServer.Server);
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var packageDataEntity = await unitOfWork.Session.GetAsync<PackageDataEntity>(id.ToString());
 
-                await unitOfWork.CommitAsync();
-            }
+            packageDataEntity?.AbortConverting(ClientServer.Server);
+
+            await unitOfWork.CommitAsync();
         }
 
         /// <summary>
         /// Проверить статус пакета. При отмене - удалить
         /// </summary>
-        private async Task<bool> DeleteFilesDataOnAbortionStatus(IUnitOfWork unitOfWork, FilesDataEntity filesDataEntity)
+        private static async Task<bool> DeleteFilesDataOnAbortionStatus(IUnitOfWork unitOfWork, PackageDataEntity packageDataEntity)
         {
-            if (filesDataEntity.StatusProcessingProject == StatusProcessingProject.Abort)
+            if (packageDataEntity.StatusProcessingProject == StatusProcessingProject.Abort)
             {
-                await unitOfWork.Session.DeleteAsync(filesDataEntity);
+                await unitOfWork.Session.DeleteAsync(packageDataEntity);
             }
-            return filesDataEntity.StatusProcessingProject == StatusProcessingProject.Abort;
+            return packageDataEntity.StatusProcessingProject == StatusProcessingProject.Abort;
         }
 
         /// <summary>
         /// Условие при котором пакет берется из очереди на конвертацию
         /// </summary> 
-        private Expression<Func<FilesDataEntity, bool>> ConditionConvertion(string identityServerName)
-        {
-            return package => (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
-                               package.StatusProcessingProject == StatusProcessingProject.Converting &&
-                               package.IdentityServerName == identityServerName);
-        }
+        private static Expression<Func<PackageDataEntity, bool>> ConditionConverting(string identityServerName) =>
+            package => (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
+                        package.StatusProcessingProject == StatusProcessingProject.Converting &&
+                        package.IdentityServerName == identityServerName);
     }
 }

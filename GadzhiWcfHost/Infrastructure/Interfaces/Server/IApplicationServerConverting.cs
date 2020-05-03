@@ -8,7 +8,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
     /// <summary>
     /// Класс для отправки пакетов на сервер
     /// </summary>
-    public interface IApplicationServerConverting: IDisposable
+    public interface IApplicationServerConverting
     {
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование

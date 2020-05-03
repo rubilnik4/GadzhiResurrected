@@ -11,20 +11,15 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     /// </summary>
     public class FileDataEntity : FileDataEntityBase
     {
-        public FileDataEntity()
-        {
-            StatusProcessing = StatusProcessing.InQueue;           
-        }
-
         /// <summary>
         /// Статус обработки файла
         /// </summary>     
-        public virtual StatusProcessing StatusProcessing { get; set; }
+        public virtual StatusProcessing StatusProcessing { get; set; } = StatusProcessing.InQueue;
 
         /// <summary>
         /// Конвертируемый файл данных в формате zip GZipStream
         /// </summary>       
-        public virtual IList<byte> FileDataSourceClient { get; set; }
+        public virtual IList<byte> FileDataSource { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -39,7 +34,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// <summary>
         /// Ссылка на родительский класс
         /// </summary>
-        public virtual FilesDataEntity FilesDataEntity { get; set; }        
+        public virtual PackageDataEntity PackageDataEntity { get; set; }
 
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
@@ -50,7 +45,8 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
             {
                 fileDataSourceEntity.FileDataEntity = this;
                 return fileDataSourceEntity;
-            })?.ToList();
+            }).ToList()
+            ?? new List<FileDataSourceEntity>();
         }
     }
 }

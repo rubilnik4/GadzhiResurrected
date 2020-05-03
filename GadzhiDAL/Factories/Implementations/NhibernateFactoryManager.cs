@@ -12,30 +12,28 @@ namespace GadzhiDAL.Factories.Implementations
     /// <summary>
     /// Фабрика для создания сессии подключения к БД
     /// </summary>
-    public static class NhibernateFactoryManager
+    public static class NHibernateFactoryManager
     {
         private static Lazy<ISessionFactory> _lazySessionFactory;
 
         public static ISessionFactory Instance(FluentConfiguration config)
         {
-            if (config != null)
-            {
-                if (_lazySessionFactory != null && _lazySessionFactory.IsValueCreated)
-                    return _lazySessionFactory.Value;
+            if (config == null) throw new ArgumentNullException(nameof(config));
 
-                _lazySessionFactory = new Lazy<ISessionFactory>(config.BuildSessionFactory);
+            if (_lazySessionFactory != null && _lazySessionFactory.IsValueCreated)
                 return _lazySessionFactory.Value;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
+
+            _lazySessionFactory = new Lazy<ISessionFactory>(config.BuildSessionFactory);
+            return _lazySessionFactory.Value;
         }
 
-        public static FluentConfiguration SQLiteConfigurationFactory(string dataBasePath)
+        /// <summary>
+        /// Параметры для подключения базы данных SqLite
+        /// </summary>
+        public static FluentConfiguration SqLiteConfigurationFactory(string dataBasePath)
         {
             string directoryPath = Path.GetDirectoryName(dataBasePath);
-            if (!Directory.Exists(directoryPath))
+            if (!String.IsNullOrWhiteSpace(directoryPath) && !Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
@@ -49,6 +47,5 @@ namespace GadzhiDAL.Factories.Implementations
                     schema.Execute(false, true);
                 });
         }
-
     }
 }

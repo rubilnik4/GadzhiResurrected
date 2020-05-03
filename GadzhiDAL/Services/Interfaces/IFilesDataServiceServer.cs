@@ -1,9 +1,9 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDTOServer.TransferModels.FilesConvert;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiDAL.Services.Interfaces
 {
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах серверной части

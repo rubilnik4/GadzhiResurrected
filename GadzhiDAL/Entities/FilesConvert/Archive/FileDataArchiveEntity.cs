@@ -24,7 +24,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
         /// <summary>
         /// Ссылка на родительский класс
         /// </summary>
-        public virtual FilesDataArchiveEntity FilesDataArchiveEntity { get; set; }        
+        public virtual PackageDataArchiveEntity PackageDataArchiveEntity { get; set; }        
 
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
@@ -35,7 +35,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
             {
                 fileDataSourceArchiveEntity.FileDataArchiveEntity = this;
                 return fileDataSourceArchiveEntity;
-            })?.ToList();
+            }).ToList();
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using GadzhiDTOClient.TransferModels.FilesConvert;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiDAL.Services.Interfaces
 {
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
@@ -12,7 +12,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу
         /// </summary> 
-        Task QueueFilesData(PackageDataRequestClient packageDataRequest);
+        Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName);
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID

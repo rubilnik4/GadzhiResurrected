@@ -4,6 +4,7 @@ using GadzhiWcfHost.Infrastructure.Interfaces.Client;
 using Microsoft.VisualStudio.Threading;
 using System;
 using System.Threading.Tasks;
+using GadzhiDAL.Services.Interfaces;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
@@ -17,16 +18,9 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// </summary>
         private readonly IFilesDataClientService _filesDataClientService;
 
-        /// <summary>
-        /// Идентефикация пользователя
-        /// </summary>
-        private readonly IAuthentication _authentication;
-
-        public ApplicationClientConverting(IFilesDataClientService filesDataClientService,
-                                                  IAuthentication authentication)
+        public ApplicationClientConverting(IFilesDataClientService filesDataClientService)
         {
             _filesDataClientService = filesDataClientService;
-            _authentication = authentication;
         }
 
         /// <summary>
@@ -34,31 +28,30 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// </summary>
         public async Task<PackageDataIntermediateResponseClient> QueueFilesDataAndGetResponse(PackageDataRequestClient packageDataRequest)
         {
-            packageDataRequest = _authentication.AuthenticateFilesData(packageDataRequest);
+            if (packageDataRequest == null) return new PackageDataIntermediateResponseClient();
 
-            await QueueFilesData(packageDataRequest);
-
+            await QueueFilesData(packageDataRequest, Authentication.GetIdentityName());
             return await GetIntermediateFilesDataResponseById(packageDataRequest.Id);
         }
 
         /// <summary>
         /// Поставить файлы в очередь для обработки
         /// </summary>
-        private async Task QueueFilesData(PackageDataRequestClient packageDataRequest) =>      
-                await _filesDataClientService.QueueFilesData(packageDataRequest);
+        private async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName) =>      
+                await _filesDataClientService.QueueFilesData(packageDataRequest, identityName);
        
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по Id номеру
         /// </summary>
-        public async Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataId) =>      
-                await _filesDataClientService.GetFilesDataIntermediateResponseById(filesDataId);       
+        public async Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerId) =>      
+                await _filesDataClientService.GetFilesDataIntermediateResponseById(filesDataServerId);       
 
         /// <summary>
         /// Получить отконвертированные файлы по Id номеру
         /// </summary>
-        public async Task<PackageDataResponseClient> GetFilesDataResponseByID(Guid filesDataId) =>
-               await _filesDataClientService.GetFilesDataResponseById(filesDataId);
+        public async Task<PackageDataResponseClient> GetFilesDataResponseById(Guid filesDataServerId) =>
+               await _filesDataClientService.GetFilesDataResponseById(filesDataServerId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
@@ -69,38 +62,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        public async Task AbortConvertingById(Guid id)
-        {
-            if (!_authentication.IsClosed)
-            {
-                if (_authentication.Id != Guid.Empty)
-                {
-                    await _filesDataClientService?.AbortConvertingById(id);
-                }
-                _authentication.IsClosed = true;
-            }
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    AbortConvertingById(_authentication.Id).ConfigureAwait(false);
-                }
-            
-                disposedValue = true;
-            }
-        }
-        
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
+        public async Task AbortConvertingById(Guid id) => await _filesDataClientService.AbortConvertingById(id);
     }
 }

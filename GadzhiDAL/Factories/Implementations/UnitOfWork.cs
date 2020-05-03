@@ -10,37 +10,31 @@ namespace GadzhiDAL.Factories.Implementations
     /// <summary>
     /// Класс обертка для управления транзакциями
     /// </summary>
-    public sealed class UnitOfWork : IUnitOfWork, IDisposable
+    public sealed class UnitOfWork : IUnitOfWork
     {
-        /// <summary>
-        /// Фабрика для создания сессии подключения к БД
-        /// </summary>
-        private readonly ISessionFactory _sessionFactory;
-
         /// <summary>
         /// Сессия для подключения к базе
         /// </summary>
         public ISession Session { get; }
 
         /// <summary>
-        /// Открываемая транзацкия
+        /// Открываемая транзакция
         /// </summary>
         private ITransaction _transaction;
 
         public UnitOfWork(ISessionFactory sessionFactory)
         {
-            _sessionFactory = sessionFactory;
-            Session = _sessionFactory?.OpenSession();
+            if (sessionFactory == null) throw new ArgumentNullException(nameof(sessionFactory));
+
+            Session = sessionFactory.OpenSession();
             BeginTransaction();
         }
 
         /// <summary>
         /// Открыть транзакцию
         /// </summary>
-        private void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _transaction = Session.BeginTransaction(isolationLevel);
-        }
+        private void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted) =>
+            _transaction = Session.BeginTransaction(isolationLevel); 
 
         /// <summary>
         /// Подтвердить транзакцию
@@ -87,22 +81,21 @@ namespace GadzhiDAL.Factories.Implementations
         }
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        private bool _disposedValue;
 
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue) return;
+
+            if (disposing)
             {
-                if (disposing)
-                {
 
-                }
-
-                _transaction?.Dispose();
-                Session?.Dispose();
-
-                disposedValue = true;
             }
+
+            _transaction?.Dispose();
+            Session?.Dispose();
+
+            _disposedValue = true;
         }
 
         ~UnitOfWork()

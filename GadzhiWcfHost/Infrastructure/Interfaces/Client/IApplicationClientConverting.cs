@@ -8,7 +8,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
     /// <summary>
     /// Класс для сохранения, обработки, подготовки для отправки файлов
     /// </summary>
-    public interface IApplicationClientConverting: IDisposable
+    public interface IApplicationClientConverting
     {
         /// <summary>
         /// Поместить файлы для конвертации в очередь и отправить ответ
@@ -18,12 +18,12 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerID);
+        Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerId);
 
         /// <summary>
         /// Получить отконвертированные файлы
         /// </summary>
-        Task<PackageDataResponseClient> GetFilesDataResponseByID(Guid filesDataServerID);
+        Task<PackageDataResponseClient> GetFilesDataResponseById(Guid filesDataServerId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета

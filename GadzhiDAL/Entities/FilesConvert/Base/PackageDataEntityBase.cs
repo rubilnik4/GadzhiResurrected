@@ -10,37 +10,30 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public abstract class FilesDataEntityBase : EntityBase<string>
+    public abstract class PackageDataEntityBase : EntityBase<string>
     {
-        public FilesDataEntityBase()
-        {
-            CreationDateTime = DateTime.Now;           
-            IdentityLocalName = "";
-            IdentityServerName = "";
-        }
-
         /// <summary>
-        /// Идентефикатор
+        /// Идентификатор
         /// </summary>
         public override string Id { get; protected set; }
 
         /// <summary>
         /// Время создания запроса на конвертирование
         /// </summary>
-        public virtual DateTime CreationDateTime { get; set; }
+        public virtual DateTime CreationDateTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// Идентефикация имени локального пользователя
+        /// Идентификация имени локального пользователя
         /// </summary>
         public virtual string IdentityLocalName { get; set; }
 
         /// <summary>
-        /// Идентефикация имени сервера
+        /// Идентификация имени сервера
         /// </summary>
         public virtual string IdentityServerName { get; set; }
 
         /// <summary>
-        /// Установить идентефикатор
+        /// Установить идентификатор
         /// </summary>        
         public virtual void SetId(Guid id)
         {

@@ -11,7 +11,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FilesDataArchiveEntity : FilesDataEntityBase
+    public class PackageDataArchiveEntity : PackageDataEntityBase
     { 
         /// <summary>
         /// Данные о отконвертированных файлах
@@ -25,9 +25,9 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
         {
             FileDataArchiveEntities = fileDataArchiveEntities?.Select(fileDataArchive =>
             {
-                fileDataArchive.FilesDataArchiveEntity = this;
+                fileDataArchive.PackageDataArchiveEntity = this;
                 return fileDataArchive;
-            })?.ToList();
+            }).ToList();
         } 
     }
 }

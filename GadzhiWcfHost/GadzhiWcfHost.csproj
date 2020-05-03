@@ -171,9 +171,7 @@
     <Compile Include="Helpers\HostSystemInformation.cs" />
     <Compile Include="Infrastructure\Implementations\Client\ApplicationClientConverting.cs" />
     <Compile Include="Infrastructure\Implementations\Client\Authentication.cs" />
-    <Compile Include="Infrastructure\Implementations\Client\Information\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\Server\ApplicationServerConverting.cs" />
-    <Compile Include="Infrastructure\Interfaces\Client\IAuthentication.cs" />
     <Compile Include="Infrastructure\Interfaces\Client\IApplicationClientConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\Server\IApplicationServerConverting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -184,10 +182,7 @@
       <DependentUpon>FileConvertingClientService.svc</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\FilesConvert\Implementations\" />
-    <Folder Include="Models\FilesConvert\Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
@@ -209,6 +204,10 @@
     <ProjectReference Include="..\GadzhiDAL\GadzhiDAL.csproj">
       <Project>{71FC9A9C-F36D-452D-AEA6-D3044C11A656}</Project>
       <Name>GadzhiDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOBase\GadzhiDTOBase.csproj">
+      <Project>{6cc66305-c66b-4d9b-9ecf-5089a5fe8369}</Project>
+      <Name>GadzhiDTOBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiDTOClient\GadzhiDTOClient.csproj">
       <Project>{DE167026-7A41-4B2C-8F2A-00EA175E891E}</Project>

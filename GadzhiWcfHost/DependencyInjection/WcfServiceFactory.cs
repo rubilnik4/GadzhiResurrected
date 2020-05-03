@@ -24,12 +24,10 @@ namespace GadzhiWcfHost.DependencyInjection
             container
                 .RegisterType<IFileConvertingClientService, FileConvertingClientService>(new HierarchicalLifetimeManager())
                 .RegisterType<IFileConvertingServerService, FileConvertingServerService>(new HierarchicalLifetimeManager())
-                .RegisterType<IAuthentication, Authentication>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
 
-            GadzhiDALDependencyInjection.ConfigureContainer(container,
-                                                            HostSystemInformation.DataBasePath);
+            GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container, HostSystemInformation.DataBasePath);
         }
 
     }

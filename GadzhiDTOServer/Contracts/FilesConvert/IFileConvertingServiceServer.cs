@@ -10,7 +10,7 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
     /// Сервис для конвертирования файлов.Контракт используется серверной частью
     /// </summary>
     [ServiceContract(SessionMode = SessionMode.Required)]
-    public interface IFileConvertingServerService: IDisposable
+    public interface IFileConvertingServerService
     {
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование

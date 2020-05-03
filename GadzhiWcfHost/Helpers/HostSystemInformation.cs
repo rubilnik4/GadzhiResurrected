@@ -1,21 +1,24 @@
-﻿using GadzhiCommonServer.Infrastructure.Implementations;
+﻿using System;
+using GadzhiCommonServer.Infrastructure.Implementations;
 using System.IO;
+using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiWcfHost.Helpers
 {
+    /// <summary>
+    /// Информация о файлах на сервере
+    /// </summary>
     public static class HostSystemInformation
     {
-        public static string DataBasePath
-        {
-            get
-            {
-                string hostPath = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
-                var directoryPath = new DirectoryInfo(hostPath);
-                string dataBasePath = directoryPath.Parent.FullName + "\\" +
-                                      SettingsServer.DataBaseDirectoryDefault + "\\" +
-                                      SettingsServer.DataBaseNameDefault;
-                return dataBasePath;
-            }
-        }
+        /// <summary>
+        /// Получить путь к базе данных
+        /// </summary>
+        public static string DataBasePath =>
+            System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath.
+                Map(hostPath => new DirectoryInfo(hostPath)).
+                Map(directoryPath => directoryPath?.Parent?.FullName + "\\" +
+                                     SettingsServer.DataBaseDirectoryDefault + "\\" +
+                                     SettingsServer.DataBaseNameDefault);
+
     }
 }

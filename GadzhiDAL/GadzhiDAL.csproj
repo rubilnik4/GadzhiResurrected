@@ -140,28 +140,23 @@
     <Compile Include="DependencyInjection\DependencyInjection.cs" />
     <Compile Include="Entities\FilesConvert\Archive\FileDataArchiveEntity.cs" />
     <Compile Include="Entities\FilesConvert\Archive\FileDataSourceArchiveEntity.cs" />
-    <Compile Include="Entities\FilesConvert\Archive\FilesDataArchiveEntity.cs" />
+    <Compile Include="Entities\FilesConvert\Archive\PackageDataArchiveEntity.cs" />
     <Compile Include="Entities\FilesConvert\Base\EntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\FileDataEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\FileDataSourceEntityBase.cs" />
-    <Compile Include="Entities\FilesConvert\Base\FilesDataEntityBase.cs" />
+    <Compile Include="Entities\FilesConvert\Base\PackageDataEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
-    <Compile Include="Factories\Implementations\NhibernateFactoryManager.cs" />
+    <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataEntity.cs" />
-    <Compile Include="Entities\FilesConvert\Main\FilesDataEntity.cs" />
+    <Compile Include="Entities\FilesConvert\Main\PackageDataEntity.cs" />
     <Compile Include="Factories\Implementations\UnitOfWork.cs" />
     <Compile Include="Factories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Archive\ConverterToArchive.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterDataAccessFilesDataFromDTOClient.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterDataAccessFilesDataToDTOClient.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterDataAccessFilesDataToDTOServer.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterDataAccessFilesDataFromDTOServer.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Archive\IConverterToArchive.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataToDTOClient.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Client\IConverterDataAccessFilesDataFromDTOClient.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataFromDtoServer.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\Server\IConverterDataAccessFilesDataToDtoServer.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterFilesDataEntitiesFromDtoClient.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterFilesDataEntitiesToDtoClient.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterFilesDataEntitiesToDtoServer.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterFilesDataEntitiesFromDtoServer.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataSourceArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FilesDataArchiveMap.cs" />
@@ -173,7 +168,7 @@
     <Compile Include="Services\Implementations\FilesDataServerService.cs" />
     <Compile Include="Services\Implementations\FilesDataClientService.cs" />
     <Compile Include="Services\Interfaces\IFilesDataServiceServer.cs" />
-    <Compile Include="Services\Interfaces\IFilesDataServiceClient.cs" />
+    <Compile Include="Services\Interfaces\IFilesDataClientService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

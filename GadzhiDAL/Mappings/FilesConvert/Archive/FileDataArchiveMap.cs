@@ -1,9 +1,8 @@
 ﻿using FluentNHibernate.Mapping;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Archive;
-using NHibernate.Type;
 
-namespace GadzhiDAL.Mappings.FilesConvert.Main
+namespace GadzhiDAL.Mappings.FilesConvert.Archive
 {
     /// <summary>
     /// Структура в БД для конвертируемого файла
@@ -17,7 +16,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
             HasMany(x => x.FileConvertErrorTypeArchive).Element("FileConvertErrorTypeArchive");
             HasMany(x => x.FileDataSourceServerArchiveEntities).Inverse().Cascade.All();
-            References(x => x.FilesDataArchiveEntity);
+            References(x => x.PackageDataArchiveEntity);
         }
     }
 }

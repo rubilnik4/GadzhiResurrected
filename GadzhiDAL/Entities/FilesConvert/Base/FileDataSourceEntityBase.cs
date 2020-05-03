@@ -12,7 +12,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     public abstract class FileDataSourceEntityBase: EntityBase<int>
     {
         /// <summary>
-        /// Идентефикатор
+        /// Идентификатор
         /// </summary>
         public override int Id { get; protected set; }
 

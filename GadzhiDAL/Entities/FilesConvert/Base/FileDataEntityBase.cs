@@ -11,7 +11,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     public abstract class FileDataEntityBase : EntityBase<int>
     {       
         /// <summary>
-        /// Идентефикатор
+        /// Идентификатор
         /// </summary>
         public override int Id { get; protected set; }
 
@@ -23,8 +23,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Цвет печати
         /// </summary>       
-        public virtual ColorPrint ColorPrint { get; set; }       
-
-        
+        public virtual ColorPrint ColorPrint { get; set; } 
     }
 }
