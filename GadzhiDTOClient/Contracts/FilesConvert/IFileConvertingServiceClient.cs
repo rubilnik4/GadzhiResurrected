@@ -21,13 +21,13 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// Проверить статус файлов
         /// </summary>   
         [OperationContract(IsInitiating = false, IsTerminating = false)]
-        Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataID);
+        Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataId);
 
         /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>  
         [OperationContract(IsInitiating = false, IsTerminating = false)]
-        Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataID);
+        Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета

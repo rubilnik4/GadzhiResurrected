@@ -9,12 +9,12 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     /// Класс содержащий данные о конвертируемом файле для клиента
     /// </summary>
     [DataContract]
-    public class FileDataResponseClient : FileDataResponseBase
+    public class FileDataResponseClient : FileDataResponseBase<FileDataSourceResponseClient>
     {        
         /// <summary>
         /// Информация об отконвертированных файлах в клиентской части
         /// </summary>
-        [DataMember]
-        public IList<FileDataSourceResponseClient> FilesDataSourceResponseClient { get; set; }        
+        [DataMember] 
+        public override IList<FileDataSourceResponseClient> FilesDataSource{ get; set; }        
     }
 }

@@ -9,13 +9,13 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     /// Класс содержащий данные о конвертируемом файле для сервера
     /// </summary>
     [DataContract]
-    public class FileDataResponseServer : FileDataResponseBase
+    public class FileDataResponseServer : FileDataResponseBase<FileDataSourceResponseServer>
     {
         /// <summary>
         /// Информация об отконвертированных файлах в серверной части
         /// </summary>
         [DataMember]
-        public IList<FileDataSourceResponseServer> FilesDataSourceResponseServer { get; set; }
+        public override IList<FileDataSourceResponseServer> FilesDataSource { get; set; }
 
     }
 }

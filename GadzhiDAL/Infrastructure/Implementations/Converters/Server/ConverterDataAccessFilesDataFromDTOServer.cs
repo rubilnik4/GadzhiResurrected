@@ -66,12 +66,12 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Обновить модель файла данных на основе промежуточного ответа
         /// </summary>      
         public FileDataEntity UpdateFileDataAccessFromIntermediateResponse(FileDataEntity fileDataEntity,
-                                                                           FileDataIntermediateResponseServer fileDataIntermediateResponse)
+                                                                           FileDataIntermediateResponseServer fileDataResponse)
         {
-            if (fileDataEntity != null && fileDataIntermediateResponse != null)
+            if (fileDataEntity != null && fileDataResponse != null)
             {
-                fileDataEntity.StatusProcessing = fileDataIntermediateResponse.StatusProcessing;
-                fileDataEntity.FileConvertErrorType = fileDataIntermediateResponse.FileConvertErrorTypes.ToList();
+                fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
+                fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorTypes.ToList();
             }
 
             return fileDataEntity;

@@ -9,7 +9,7 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     /// Класс содержащий данные о конвертируемых файлах для сервера
     /// </summary>
     [DataContract]
-    public class PackageDataRequestServer : PackageDataRequestBase
+    public class PackageDataRequestServer : PackageDataRequestBase<FileDataRequestServer>
     {
         /// <summary>
         /// Количество попыток конвертирования
@@ -21,6 +21,6 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public IList<FileDataRequestServer> FilesData { get; set; }       
+        public override IList<FileDataRequestServer> FilesData { get; set; }       
     }
 }

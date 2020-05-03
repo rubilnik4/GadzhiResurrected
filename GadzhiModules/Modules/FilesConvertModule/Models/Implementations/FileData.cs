@@ -23,9 +23,9 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
                 throw new ArgumentNullException(nameof(filePath));
             }
             
-            if (Enum.TryParse(fileExtension, out FileExtention fileExtensiontype))
+            if (Enum.TryParse(fileExtension, out FileExtension fileExtensionType))
             {
-                FileExtension = fileExtensiontype;
+                FileExtension = fileExtensionType;
             }
             else
             {
@@ -47,7 +47,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public FileExtention FileExtension { get; }
+        public FileExtension FileExtension { get; }
 
         /// <summary>
         /// Имя файла

@@ -36,14 +36,14 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Проверить статус файлов по Id номеру
         /// </summary>      
-        public async Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid id) =>
-                await _applicationClientConverting.GetIntermediateFilesDataResponseById(id);
+        public async Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataId) =>
+                await _applicationClientConverting.GetIntermediateFilesDataResponseById(filesDataId);
 
         /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
-        public async Task<PackageDataResponseClient> GetCompleteFiles(Guid id) =>
-                await _applicationClientConverting.GetFilesDataResponseByID(id);
+        public async Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataId) =>
+                await _applicationClientConverting.GetFilesDataResponseByID(filesDataId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета

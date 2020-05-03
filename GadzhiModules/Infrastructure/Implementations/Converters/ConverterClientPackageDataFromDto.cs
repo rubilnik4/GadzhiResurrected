@@ -100,10 +100,10 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        private static FileStatus ToFileStatusFromIntermediateResponse(FileDataIntermediateResponseClient fileIntermediateResponse) =>
-            new FileStatus(fileIntermediateResponse.FilePath,
-                           fileIntermediateResponse.StatusProcessing,
-                           fileIntermediateResponse.FileConvertErrorTypes);
+        private static FileStatus ToFileStatusFromIntermediateResponse(FileDataIntermediateResponseClient fileResponse) =>
+            new FileStatus(fileResponse.FilePath,
+                           fileResponse.StatusProcessing,
+                           fileResponse.FileConvertErrorTypes);
 
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части перед сохранением
