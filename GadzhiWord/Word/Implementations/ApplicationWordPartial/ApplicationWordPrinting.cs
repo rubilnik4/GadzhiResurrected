@@ -2,7 +2,6 @@
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Models.Enums;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;

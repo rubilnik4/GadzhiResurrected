@@ -8,9 +8,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
     /// </summary>
     public class StampFieldBase : IEquatable<StampFieldBase>
     {
-        public StampFieldBase(string name,
-                              bool isNeedCompress = true,
-                              bool isVertical = false)
+        public StampFieldBase(string name, bool isNeedCompress = true, bool isVertical = false)
         {
             Name = name?.ToUpper(CultureInfo.CurrentCulture);
             IsNeedCompress = isNeedCompress;
@@ -32,16 +30,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// </summary>
         public bool IsVertical { get; }
 
-        public override bool Equals(object obj)
-        {
-            return Equals((StampFieldBase)obj);
-        }
+        #region IEquatable
+        public override bool Equals(object obj) => Equals((StampFieldBase)obj);
 
-        public bool Equals(StampFieldBase other)
-        {
-            return Name == other?.Name;
-        }
+        public bool Equals(StampFieldBase other) => Name == other?.Name;
 
         public override int GetHashCode() => Name.GetHashCode();
+        #endregion
     }
 }

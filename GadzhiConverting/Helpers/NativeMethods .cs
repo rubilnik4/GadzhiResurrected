@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
-namespace GadzhiWord.Helpers.Implementations
+namespace GadzhiConverting.Helpers
 {
     /// <summary>
     /// Работа с системой
@@ -18,7 +14,7 @@ namespace GadzhiWord.Helpers.Implementations
         internal static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
         internal delegate bool EventHandler(CtrlType sig);
-        internal static EventHandler _handler;
+        internal static EventHandler Handler;
 
         internal enum CtrlType
         {
@@ -31,7 +27,7 @@ namespace GadzhiWord.Helpers.Implementations
 
         /// <summary>
         /// Установить принтер по умолчанию
-        /// </sum>mary>        
+        /// </summary>        
         [DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool SetDefaultPrinter(string printerName);
     }

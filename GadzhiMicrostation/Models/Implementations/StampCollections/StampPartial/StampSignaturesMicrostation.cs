@@ -10,6 +10,7 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums;
 using static GadzhiApplicationCommon.Functional.MapFunctional;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial

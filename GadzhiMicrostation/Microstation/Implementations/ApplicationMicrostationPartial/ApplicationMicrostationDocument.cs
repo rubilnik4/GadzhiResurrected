@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -24,7 +25,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         public IResultAppValue<IDocumentLibrary> OpenDocument(string filePath) =>
             Application.OpenDesignFile(filePath, false).
-            Map(openDocument => new ResultAppValue<IDocumentLibrary>(new DocumentMicrostation(_application, this),
+            Map(openDocument => new ResultAppValue<IDocumentLibrary>(new DocumentMicrostationPartial.DocumentMicrostation(_application, this),
                                              new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Microstation не создан")));
     }
 }

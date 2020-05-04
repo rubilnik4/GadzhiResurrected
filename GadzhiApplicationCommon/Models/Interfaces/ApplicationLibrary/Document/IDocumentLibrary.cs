@@ -1,11 +1,11 @@
 ﻿using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
 {

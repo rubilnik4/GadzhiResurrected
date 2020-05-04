@@ -19,7 +19,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Units
         Yard,
         SurveyFeet,
         Feet,
-        dFeet,
+        DFeet,
         SurveyInches,
         Inches,
         MicroInches

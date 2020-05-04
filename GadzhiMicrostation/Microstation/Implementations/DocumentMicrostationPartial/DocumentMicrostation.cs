@@ -1,24 +1,23 @@
-﻿using GadzhiMicrostation.Microstation.Interfaces;
-using GadzhiMicrostation.Models.Enums;
-using MicroStationDGN;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using System.IO;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
-using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
-using GadzhiMicrostation.Extentions.Microstation;
+using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiMicrostation.Extensions.Microstation;
+using GadzhiMicrostation.Microstation.Interfaces;
+using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
+using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
+using MicroStationDGN;
 
-namespace GadzhiMicrostation.Microstation.Implementations
+namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPartial
 {
     /// <summary>
     /// Файл Microstation
@@ -112,8 +111,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// Экспорт файла в Dwg
         /// </summary>      
         public string Export(string filePath) =>
-           (Path.GetFileNameWithoutExtension(filePath) + "." + FileExtentionMicrostation.dwg.ToString()).
-           Map(fileName => Path.Combine(Path.GetDirectoryName(filePath), fileName)).
+           (Path.GetFileNameWithoutExtension(filePath) + "." + FileExtensionMicrostation.Dwg).
+           Map(fileName => Path.Combine(Path.GetDirectoryName(filePath) ?? String.Empty, fileName)).
            Void(dwgFilePath => DesignFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));
 
         /// <summary>

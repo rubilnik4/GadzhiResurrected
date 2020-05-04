@@ -6,7 +6,6 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Word.Implementations.Converters;
 using GadzhiWord.Word.Interfaces;
 using Microsoft.Office.Interop.Word;

@@ -1,8 +1,8 @@
-﻿using GadzhiMicrostation.Extentions.StringAdditional;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using GadzhiMicrostation.Extensions.StringAdditional;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
@@ -34,26 +34,22 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Стадия проекта
         /// </summary>
-        public static StampFieldBase ProjectStage => new StampFieldBase("G_E_STADY_1",
-                                                                        isNeedCompress: false);
+        public static StampFieldBase ProjectStage => new StampFieldBase("G_E_STADY_1", isNeedCompress: false);
 
         /// <summary>
         /// Текущий лист
         /// </summary>
-        public static StampFieldBase CurrentSheet => new StampFieldBase("G_E_LISTNUM_1",
-                                                                        isNeedCompress: false);
+        public static StampFieldBase CurrentSheet => new StampFieldBase("G_E_LISTNUM_1", isNeedCompress: false);
 
         /// <summary>
         /// Всего листов
         /// </summary>
-        public static StampFieldBase TotalSheet => new StampFieldBase("G_E_LISTOV_1",
-                                                                      isNeedCompress: false);
+        public static StampFieldBase TotalSheet => new StampFieldBase("G_E_LISTOV_1", isNeedCompress: false);
 
         /// <summary>
         /// Формат
         /// </summary>
-        public static StampFieldBase PaperSize => new StampFieldBase("FORMAT",
-                                                                  isNeedCompress: false);
+        public static StampFieldBase PaperSize => new StampFieldBase("FORMAT", isNeedCompress: false);
 
         /// <summary>
         /// Список всех полей
@@ -72,7 +68,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
                 };
 
         /// <summary>
-        /// Маркер подписи в аттритубах
+        /// Маркер подписи в атрибутах
         /// </summary>
         public static string SignatureAttributeMarker => "NameSig";
 
@@ -85,15 +81,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Получить формат штампа
         /// </summary>      
-        public static string GetPaperSizeFromField(string fieldText) =>
-             fieldText?.TrimSubstring("Формат")?.Trim();
+        public static string GetPaperSizeFromField(string fieldText) => fieldText?.TrimSubstring("Формат")?.Trim();
 
         /// <summary>
-        /// Определить яляется ли строка названием ячейки штампа
+        /// Определить является ли строка названием ячейки штампа
         /// </summary>       
         public static bool IsStampName(string name)
         {
-            string cellElementName = name?.ToUpper(CultureInfo.CurrentCulture);
+            string cellElementName = name?.ToUpper(CultureInfo.CurrentCulture)
+                                     ?? String.Empty;
 
             return cellElementName.StartsWith("STAMP", StringComparison.Ordinal) &&
                    !cellElementName.Contains("STAMP_AUDIT") &&

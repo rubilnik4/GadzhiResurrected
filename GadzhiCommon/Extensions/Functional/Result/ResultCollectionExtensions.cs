@@ -1,13 +1,11 @@
-﻿using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiCommon.Models.Interfaces.Errors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 
-namespace GadzhiCommon.Extentions.Functional.Result
+namespace GadzhiCommon.Extensions.Functional.Result
 {
     /// <summary>
     /// Преобразование в ответ с коллекцией

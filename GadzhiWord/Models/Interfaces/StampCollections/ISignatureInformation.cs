@@ -12,7 +12,7 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
     public interface ISignatureInformation
     {
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         string PersonId { get; }
 

@@ -205,6 +205,10 @@
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOBase\GadzhiDTOBase.csproj">
+      <Project>{6cc66305-c66b-4d9b-9ecf-5089a5fe8369}</Project>
+      <Name>GadzhiDTOBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiDTOServer\GadzhiDTOServer.csproj">
       <Project>{b327c2a7-14ea-44b0-b3ce-6e4309b12771}</Project>
       <Name>GadzhiDTOServer</Name>

@@ -1,17 +1,14 @@
-﻿using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiCommon.Models.Interfaces.Errors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
 
-namespace GadzhiCommon.Extentions.Functional.Result
+namespace GadzhiCommon.Extensions.Functional.Result
 {
     /// <summary>
-    /// Обработка условий для результируещего ответа
+    /// Обработка условий для результирующего ответа
     /// </summary>
     public static class ResultWhereExtensions
     {
@@ -79,9 +76,9 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
-
-            return okFunc.Invoke(@this);
+            return @this.HasErrors 
+                ? new ResultValue<TValueOut>(@this.Errors) 
+                : okFunc.Invoke(@this);
         }
 
         /// <summary>
@@ -94,13 +91,13 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultCollection<TValueOut>(@this.Errors);
-
-            return okFunc.Invoke(@this);
+            return @this.HasErrors 
+                ? new ResultCollection<TValueOut>(@this.Errors) 
+                : okFunc.Invoke(@this);
         }
 
         /// <summary>
-        /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе в обертке при равестве параметров
+        /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе в обертке при равенстве параметров
         /// </summary>   
         public static IResultCollection<TValue> ResultValueEqualOkRawCollection<TValue>(this IResultCollection<TValue> @this,
                                                                                         Func<IResultCollection<TValue>,
@@ -109,9 +106,9 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultCollection<TValue>(@this.Value, @this.Errors);
-
-            return okFunc.Invoke(@this);
+            return @this.HasErrors 
+                ? new ResultCollection<TValue>(@this.Value, @this.Errors)
+                : okFunc.Invoke(@this);
         }
 
         /// <summary>
@@ -137,9 +134,9 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
-
-            return okFunc.Invoke(@this.Value);
+            return @this.HasErrors 
+                ? new ResultValue<TValueOut>(@this.Errors) 
+                : okFunc.Invoke(@this.Value);
         }
 
         /// <summary>
@@ -151,9 +148,9 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
 
             if (@this == null) return null;
-            if (@this.OkStatus) return @this;
-
-            return badFunc.Invoke(@this.Value);
+            return @this.OkStatus 
+                ? @this 
+                : badFunc.Invoke(@this.Value);
         }
 
         /// <summary>
@@ -166,9 +163,9 @@ namespace GadzhiCommon.Extentions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultValue<TValueOut>(@this.Errors);
-
-            return ExecuteBindResultValue(() => okFunc(@this.Value), errorMessage);
+            return @this.HasErrors 
+                ? new ResultValue<TValueOut>(@this.Errors)
+                : ExecuteBindResultValue(() => okFunc(@this.Value), errorMessage);
         }
     }
 }

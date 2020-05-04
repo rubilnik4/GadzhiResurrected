@@ -60,7 +60,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public ITextElementMicrostation DateSignatureElement => DateSignature.ElementStamp.AsTextElementMicrostation;
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         public override string PersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
 

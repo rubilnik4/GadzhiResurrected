@@ -1,4 +1,6 @@
-﻿namespace GadzhiMicrostation.Microstation.Implementations.Units
+﻿using static GadzhiMicrostation.Models.Implementations.Coordinates.PointMicrostation;
+
+namespace GadzhiMicrostation.Microstation.Implementations.Units
 {
     /// <summary>
     /// Коэффициенты преобразования координат в текущие
@@ -32,285 +34,285 @@
                                double subUnitsPerBaseDenominator,
                                double uorsPerStorageUnit)
         {
-            UnitTypes masterUnitsType = UnitsNumeratorDenominator.GetUnitTypes(masterUnitsPerBaseNumerator,
+            var masterUnitsType = UnitsNumeratorDenominator.GetUnitTypes(masterUnitsPerBaseNumerator,
                                                                                masterUerBaseDenominator);
 
-            UnitTypes subUnitsType = UnitsNumeratorDenominator.GetUnitTypes(subUnitsPerBaseNumerator,
-                                                                            subUnitsPerBaseDenominator);
+            var subUnitsType = UnitsNumeratorDenominator.GetUnitTypes(subUnitsPerBaseNumerator,
+                                                                      subUnitsPerBaseDenominator);
 
             double global = 1;
 
             if (masterUnitsType == UnitTypes.Inches &&
                 subUnitsType == UnitTypes.Mils &&
-                masterUnitsPerBaseNumerator == 10000d &&
-                masterUerBaseDenominator == 254d &&
-                subUnitsPerBaseNumerator == 10000000d &&
-                subUnitsPerBaseDenominator == 254d &&
-                uorsPerStorageUnit == 2.54d)
+                CompareCoordinate(masterUnitsPerBaseNumerator, 10000d) &&
+                CompareCoordinate(masterUerBaseDenominator, 254d) &&
+                CompareCoordinate(subUnitsPerBaseNumerator, 10000000d) &&
+                CompareCoordinate(subUnitsPerBaseDenominator, 254d) &&
+                CompareCoordinate(uorsPerStorageUnit, 2.54d))
             {
                 global = 50 / 1.25;
             }
 
             else if (masterUnitsType == UnitTypes.Feet &&
-                     subUnitsType == UnitTypes.dFeet &&
-                     masterUnitsPerBaseNumerator == 10000d &&
-                     masterUerBaseDenominator == 3048d &&
-                     subUnitsPerBaseNumerator == 1000000d &&
-                     subUnitsPerBaseDenominator == 3048d &&
-                     uorsPerStorageUnit == 100d)
+                     subUnitsType == UnitTypes.DFeet &&
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 10000d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 3048d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 3048d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 5 / 1.5235457063711912;
             }
 
             else if (masterUnitsType == UnitTypes.Centimeters &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 100d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 100d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 100;
             }
 
             else if (masterUnitsType == UnitTypes.Centimeters &&
                      subUnitsType == UnitTypes.Centimeters &&
-                     masterUnitsPerBaseNumerator == 100d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 100d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 10000d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 100d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 100d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 10000d))
             {
                 global = 100;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                   subUnitsType == UnitTypes.Meter &&
-                  masterUnitsPerBaseNumerator == 1d &&
-                  masterUerBaseDenominator == 1d &&
-                  subUnitsPerBaseNumerator == 1d &&
-                  subUnitsPerBaseDenominator == 1d &&
-                  uorsPerStorageUnit == 10d)
+                  CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                  CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                  CompareCoordinate(subUnitsPerBaseNumerator, 1d) &&
+                  CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                  CompareCoordinate(uorsPerStorageUnit, 10d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                  subUnitsType == UnitTypes.Meter &&
-                 masterUnitsPerBaseNumerator == 1d &&
-                 masterUerBaseDenominator == 1d &&
-                 subUnitsPerBaseNumerator == 1d &&
-                 subUnitsPerBaseDenominator == 1d &&
-                 uorsPerStorageUnit == 100d)
+                 CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                 CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                 CompareCoordinate(subUnitsPerBaseNumerator, 1d) &&
+                 CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                 CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                 subUnitsType == UnitTypes.Meter &&
-                masterUnitsPerBaseNumerator == 1d &&
-                masterUerBaseDenominator == 1d &&
-                subUnitsPerBaseNumerator == 1d &&
-                subUnitsPerBaseDenominator == 1d &&
-                uorsPerStorageUnit == 1000d)
+                CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                CompareCoordinate(subUnitsPerBaseNumerator, 1d) &&
+                CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                CompareCoordinate(uorsPerStorageUnit, 1000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                      subUnitsType == UnitTypes.Centimeters &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 100d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 100d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                      subUnitsType == UnitTypes.Centimeters &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 100d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 10000d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 100d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 10000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                     subUnitsType == UnitTypes.Centimeters &&
-                    masterUnitsPerBaseNumerator == 1d &&
-                    masterUerBaseDenominator == 1d &&
-                    subUnitsPerBaseNumerator == 100d &&
-                    subUnitsPerBaseDenominator == 1d &&
-                    uorsPerStorageUnit == 1d)
+                    CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                    CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                    CompareCoordinate(subUnitsPerBaseNumerator, 100d) &&
+                    CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                    CompareCoordinate(uorsPerStorageUnit, 1d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                      subUnitsType == UnitTypes.Centimeters &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 100d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 1000d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 100d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 1000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                      subUnitsType == UnitTypes.Centimeters &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 10d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 10000d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 10d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 10000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                     subUnitsType == UnitTypes.Decimeters &&
-                    masterUnitsPerBaseNumerator == 1d &&
-                    masterUerBaseDenominator == 1d &&
-                    subUnitsPerBaseNumerator == 10d &&
-                    subUnitsPerBaseDenominator == 1d &&
-                    uorsPerStorageUnit == 10000d)
+                    CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                    CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                    CompareCoordinate(subUnitsPerBaseNumerator, 10d) &&
+                    CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                    CompareCoordinate(uorsPerStorageUnit, 10000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                   subUnitsType == UnitTypes.Millimeters &&
-                  masterUnitsPerBaseNumerator == 1d &&
-                  masterUerBaseDenominator == 1d &&
-                  subUnitsPerBaseNumerator == 1000d &&
-                  subUnitsPerBaseDenominator == 1d &&
-                  uorsPerStorageUnit == 10000d)
+                  CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                  CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                  CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                  CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                  CompareCoordinate(uorsPerStorageUnit, 10000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                   subUnitsType == UnitTypes.Millimeters &&
-                  masterUnitsPerBaseNumerator == 1d &&
-                  masterUerBaseDenominator == 1d &&
-                  subUnitsPerBaseNumerator == 1000d &&
-                  subUnitsPerBaseDenominator == 1d &&
-                  uorsPerStorageUnit == 1000d)
+                  CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                  CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                  CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                  CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                  CompareCoordinate(uorsPerStorageUnit, 1000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                  subUnitsType == UnitTypes.Millimeters &&
-                 masterUnitsPerBaseNumerator == 1d &&
-                 masterUerBaseDenominator == 1d &&
-                 subUnitsPerBaseNumerator == 1000d &&
-                 subUnitsPerBaseDenominator == 1d &&
-                 uorsPerStorageUnit == 100000d)
+                 CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                 CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                 CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                 CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                 CompareCoordinate(uorsPerStorageUnit, 100000d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Meter &&
                      subUnitsType == UnitTypes.Micrometers &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 1000d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1000;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 1000d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 0.1d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 0.1d))
             {
                 global = 1000;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 1000d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1000;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 1d &&
-                     masterUerBaseDenominator == 0.001d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 1000d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 0.001d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 1000d))
             {
                 global = 1000;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                      subUnitsType == UnitTypes.Millimeters &&
-                     masterUnitsPerBaseNumerator == 1000d &&
-                     masterUerBaseDenominator == 1d &&
-                     subUnitsPerBaseNumerator == 1000d &&
-                     subUnitsPerBaseDenominator == 1d &&
-                     uorsPerStorageUnit == 100000d)
+                     CompareCoordinate(masterUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                     CompareCoordinate(subUnitsPerBaseNumerator, 1000d) &&
+                     CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                     CompareCoordinate(uorsPerStorageUnit, 100000d))
             {
                 global = 1000;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                    subUnitsType == UnitTypes.Micrometers &&
-                   masterUnitsPerBaseNumerator == 1000d &&
-                   masterUerBaseDenominator == 1d &&
-                   subUnitsPerBaseNumerator == 1000000d &&
-                   subUnitsPerBaseDenominator == 1d &&
-                   uorsPerStorageUnit == 100d)
+                   CompareCoordinate(masterUnitsPerBaseNumerator, 1000d) &&
+                   CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                   CompareCoordinate(subUnitsPerBaseNumerator, 1000000d) &&
+                   CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                   CompareCoordinate(uorsPerStorageUnit, 100d))
             {
                 global = 1000;
             }
 
             else if (masterUnitsType == UnitTypes.Millimeters &&
                   subUnitsType == UnitTypes.Micrometers &&
-                  masterUnitsPerBaseNumerator == 1000d &&
-                  masterUerBaseDenominator == 1d &&
-                  subUnitsPerBaseNumerator == 1000000d &&
-                  subUnitsPerBaseDenominator == 1d &&
-                  uorsPerStorageUnit == 0.1d)
+                  CompareCoordinate(masterUnitsPerBaseNumerator, 1000d) &&
+                  CompareCoordinate(masterUerBaseDenominator, 1d) &&
+                  CompareCoordinate(subUnitsPerBaseNumerator, 1000000d) &&
+                  CompareCoordinate(subUnitsPerBaseDenominator, 1d) &&
+                  CompareCoordinate(uorsPerStorageUnit, 0.1d))
             {
                 global = 1000;
             }

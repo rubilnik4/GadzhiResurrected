@@ -3,13 +3,11 @@
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
-    /// Строка с ответсвенным лицом и подписью
+    /// Строка с ответственным лицом и подписью
     /// </summary>
     public class StampFieldPersonSignature
     {
-        public StampFieldPersonSignature(string actionType,
-                              string responsiblePerson,
-                              string date)
+        public StampFieldPersonSignature(string actionType, string responsiblePerson, string date)
         {
             ActionType = new StampFieldBase(actionType, isNeedCompress: false);
             ResponsiblePerson = new StampFieldBase(responsiblePerson);
@@ -32,7 +30,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         public StampFieldBase DateSignature { get; }
 
         /// <summary>
-        /// Список всех полей в строке с ответсвенным лицом и подписью
+        /// Список всех полей в строке с ответственным лицом и подписью
         /// </summary>
         public HashSet<StampFieldBase> StampPersonSignatureFields => new HashSet<StampFieldBase>()
         {

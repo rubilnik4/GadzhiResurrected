@@ -13,26 +13,21 @@ namespace GadzhiMicrostation.Helpers
         /// <summary>
         /// Генератор случайных чисел
         /// </summary>
-        private static readonly Random random = new Random();
+        private static readonly Random Random = new Random();
 
         /// <summary>
         /// Блокировка потока
         /// </summary>
-        private static readonly object syncLock = new object();
-
-        /// <summary>
-        /// Получить случайное число
-        /// </summary>
-        public static int RandomNumber(int max) => random.Next(0, max);      
+        private static readonly object SyncLock = new object();
 
         /// <summary>
         /// Получить случайное число
         /// </summary>
         public static int RandomNumber(int min, int max)
         {
-            lock (syncLock)
+            lock (SyncLock)
             {
-                return random.Next(min, max);
+                return Random.Next(min, max);
             }
         }
     }

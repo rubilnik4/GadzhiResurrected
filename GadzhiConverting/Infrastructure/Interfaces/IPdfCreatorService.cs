@@ -14,7 +14,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
     public interface IPdfCreatorService 
     {  
         /// <summary>
-        /// СОздать PDF файл с выполнением отложенной печати 
+        /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
         IResultError PrintPdfWithExecuteAction(string filePath, Func<IResultError> printFunc);
 

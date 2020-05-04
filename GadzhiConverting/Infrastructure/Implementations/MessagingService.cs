@@ -1,6 +1,5 @@
-﻿using GadzhiApplicationCommon.Extensions.Collection;
-using GadzhiCommon.Converters;
-using GadzhiCommon.Extentions.Functional;
+﻿using GadzhiCommon.Converters;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Extensions.Collection;
-using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -68,9 +66,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         protected virtual void ShowError(IErrorCommon errorConverting) =>
             errorConverting?.
             Map(error => new List<string>()
-            { "Ошибка | " + ConverterErrorType.FileErrorTypeToString(error.FileConvertErrorType),
-             errorConverting?.ErrorDescription,
-             errorConverting?.ExceptionMessage}).
+            { 
+                "Ошибка | " + ConverterErrorType.FileErrorTypeToString(error.FileConvertErrorType),
+                errorConverting.ErrorDescription,
+                errorConverting.ExceptionMessage}).
             Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).
             Map(messageText => { Console.WriteLine(messageText); return Unit.Value; });
     }

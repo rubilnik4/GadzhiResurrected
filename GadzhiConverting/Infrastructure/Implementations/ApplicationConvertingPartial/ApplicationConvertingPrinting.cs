@@ -1,18 +1,11 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Functional;
-using GadzhiCommon.Extentions.Functional.Result;
-using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Extensions;
-using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Models.Implementations.FilesConvert;
-using GadzhiConverting.Models.Interfaces;
 using GadzhiConverting.Models.Interfaces.Printers;
-using GadzhiWord.Helpers.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
@@ -21,7 +14,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiConverting.Helpers;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -65,8 +61,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        private IResultError SetDefaultPrinter(string printerName) =>
-            PrinterSettings.InstalledPrinters?.Cast<string>()?.
+        private static IResultError SetDefaultPrinter(string printerName) =>
+            PrinterSettings.InstalledPrinters.Cast<string>().
             WhereNull(printersInstall => printersInstall.Any(printerInstall => printerInstall.ContainsIgnoreCase(printerName)) &&
                                          NativeMethods.SetDefaultPrinter(printerName))?.
             Map(_ => new ResultError())
@@ -79,9 +75,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, 
                                              ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            IResultError printPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
+            IResultError PrintPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
                                          ToResultFromApplication();
-            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, printPdfCommand);
+            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand);
         }
     }
 }

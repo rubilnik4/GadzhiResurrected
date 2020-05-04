@@ -1,5 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiCommon.Extentions.Functional;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Extensions;
@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiConverting.Models.Converters
 {
@@ -18,7 +17,7 @@ namespace GadzhiConverting.Models.Converters
     public static class ResultApplicationConverter
     {
         /// <summary>
-        /// Преобразовать результирующий отвеа модуля конвертации в основной
+        /// Преобразовать результирующий ответа модуля конвертации в основной
         /// </summary>      
         public static IResultError ToResult(IResultApplication resultApplication) =>
             resultApplication?.

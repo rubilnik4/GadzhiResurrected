@@ -1,8 +1,8 @@
-﻿using GadzhiConverting.DependencyInjection.GadzhiConverting;
-using GadzhiConverting.Infrastructure.Interfaces;
-using GadzhiWord.Helpers.Implementations;
+﻿using GadzhiConverting.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using GadzhiConverting.DependencyInjection;
+using GadzhiConverting.Helpers;
 using Unity;
 
 namespace GadzhiConverting
@@ -13,8 +13,8 @@ namespace GadzhiConverting
 
         static void Main()
         {
-            NativeMethods._handler += new NativeMethods.EventHandler(Handler);
-            NativeMethods.SetConsoleCtrlHandler(NativeMethods._handler, true);
+            NativeMethods.Handler += new NativeMethods.EventHandler(Handler);
+            NativeMethods.SetConsoleCtrlHandler(NativeMethods.Handler, true);
 
             BootStrapUnity.ConfigureContainer(_container);
           

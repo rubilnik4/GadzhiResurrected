@@ -1,12 +1,12 @@
 ﻿using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
@@ -22,9 +22,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 
         public StampContainer(IEnumerable<IStamp> stamps, string filePath)
         {
-            Stamps = new ResultAppCollection<IStamp>(stamps,
-                                                     new ErrorApplication(ErrorApplicationType.StampNotFound, 
-                                                                          $"Штампы в файле {Path.GetFileName(filePath)} не найдены"));
+            var errorNull = new ErrorApplication(ErrorApplicationType.StampNotFound, $"Штампы в файле {Path.GetFileName(filePath)} не найдены");
+            Stamps = new ResultAppCollection<IStamp>(stamps, errorNull);
         }
     }
 }

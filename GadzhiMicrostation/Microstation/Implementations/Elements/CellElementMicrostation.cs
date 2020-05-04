@@ -1,11 +1,10 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
-using GadzhiMicrostation.Extentions.Microstation;
-using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
@@ -13,26 +12,24 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Элемент ячейки типа Microstation
     /// </summary>
+    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
     public class CellElementMicrostation : RangeBaseElementMicrostation<ICellElementMicrostation>, ICellElementMicrostation
     {
-        /// <summary>
-        /// Экземпляр ячейки Microstation определяющей штамп
-        /// </summary>
-        protected CellElement CellElement { get; private set; }
-
-        public CellElementMicrostation(CellElement cellElement,
-                                      IOwnerMicrostation ownerContainerMicrostation)
+        public CellElementMicrostation(CellElement cellElement, IOwnerMicrostation ownerContainerMicrostation)
            : this(cellElement, ownerContainerMicrostation, false, false)
         { }
 
-        public CellElementMicrostation(CellElement cellElement,
-                                       IOwnerMicrostation ownerContainerMicrostation,
-                                       bool isNeedCompress,
-                                       bool isVertical)
+        public CellElementMicrostation(CellElement cellElement, IOwnerMicrostation ownerContainerMicrostation,
+                                       bool isNeedCompress, bool isVertical)
             : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
             CellElement = cellElement;
         }
+
+        /// <summary>
+        /// Экземпляр ячейки Microstation определяющей штамп
+        /// </summary>
+        protected CellElement CellElement { get; }
 
         /// <summary>
         /// Имя ячейки
@@ -67,17 +64,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Дочерние элементы с оригиналами Microstation
         /// </summary>
-        private IDictionary<IElementMicrostation, Element> SubElementsPair
-        {
-            get
-            {
-                if (_subElementsPair == null)
-                {
-                    _subElementsPair = GetSubElementsPair();
-                }
-                return _subElementsPair;
-            }
-        }
+        private IDictionary<IElementMicrostation, Element> SubElementsPair 
+            => _subElementsPair ??= GetSubElementsPair();
 
         /// <summary>
         /// Дочерние элементы
@@ -111,7 +99,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         private IDictionary<IElementMicrostation, Element> GetSubElementsPair() =>
             CellElement.GetCellSubElements().
-            Where(element => element.IsConvertableToMicrostation()).
+            Where(element => element.IsConvertibleToMicrostation()).
             ToDictionary(element => element.ToElementMicrostation(this),
                          element => element);
 

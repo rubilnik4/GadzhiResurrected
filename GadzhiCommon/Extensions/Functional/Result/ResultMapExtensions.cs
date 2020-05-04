@@ -1,11 +1,7 @@
-﻿using GadzhiCommon.Models.Implementations.Errors;
+﻿using System;
 using GadzhiCommon.Models.Interfaces.Errors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace GadzhiCommon.Extentions.Functional
+namespace GadzhiCommon.Extensions.Functional.Result
 {
     /// <summary>
     /// Преобразование внутреннего типа результирующего ответа
@@ -30,7 +26,7 @@ namespace GadzhiCommon.Extentions.Functional
         {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this?.OkStatus == true) action?.Invoke(@this.Value);
+            if (@this.OkStatus) action?.Invoke(@this.Value);
             return @this;
         }
     }

@@ -11,11 +11,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
     public interface IApplicationMicrostationCommands
     {
         /// <summary>
-        /// Создать ячейку на освнове шаблона в библиотеке
+        /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         IResultAppValue<ICellElementMicrostation> CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
                                                               IModelMicrostation modelMicrostation,
-                                                              Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
+                                                              Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
                                                               string cellDescription = null);
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// </summary>       
         IResultAppValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                             IModelMicrostation modelMicrostation,
-                                                            Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
+                                                            Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
                                                             string cellDescription = null);
 
         /// <summary>

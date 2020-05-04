@@ -2,13 +2,13 @@
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
 {

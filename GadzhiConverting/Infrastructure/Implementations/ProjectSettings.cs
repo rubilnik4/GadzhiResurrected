@@ -13,7 +13,7 @@ using System.Reflection;
 namespace GadzhiConverting.Infrastructure.Implementations
 {
     /// <summary>
-    /// Параметры приолжения
+    /// Параметры приложения
     /// </summary>
     public class ProjectSettings : IProjectSettings
     {
@@ -58,7 +58,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Время через которое осуществляется удаление ненужных пакетов на сервере
         /// </summary>
-        public int IntervalHouresToDeleteUnusedPackages => 12;
+        public int IntervalHoursToDeleteUnusedPackages => 12;
 
         /// <summary>
         /// Получить имя компьютера

@@ -1,4 +1,4 @@
-﻿namespace GadzhiMicrostation.Models.Enums
+﻿namespace GadzhiApplicationCommon.Models.Enums
 {
     /// <summary>
     /// Тип ошибки при конвертации в приложении

@@ -20,7 +20,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         }
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         public string PersonId { get; }
 

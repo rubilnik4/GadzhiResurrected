@@ -2,6 +2,7 @@
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -12,24 +13,13 @@ namespace GadzhiMicrostation.Microstation.Converters
     /// </summary>
     public static class ConvertElementMicrostationTypes
     {
-        public static MsdElementType? ConvertToMsdMicrostation(ElementMicrostationType elementMicrostationType)
-        {
-            MsdElementType? msdElementType = null;
-
-            if (elementMicrostationType == ElementMicrostationType.TextElement)
+        public static MsdElementType ToMsdMicrostation(ElementMicrostationType elementMicrostationType) =>
+            elementMicrostationType switch
             {
-                msdElementType = MsdElementType.msdElementTypeText;
-            }
-            else if (elementMicrostationType == ElementMicrostationType.TextNodeElement)
-            {
-                msdElementType = MsdElementType.msdElementTypeTextNode;
-            }
-            else if (elementMicrostationType == ElementMicrostationType.CellElement)
-            {
-                msdElementType = MsdElementType.msdElementTypeCellHeader;
-            }
-
-            return msdElementType;
-        }
+                ElementMicrostationType.TextElement => MsdElementType.msdElementTypeText,
+                ElementMicrostationType.TextNodeElement => MsdElementType.msdElementTypeTextNode,
+                ElementMicrostationType.CellElement => MsdElementType.msdElementTypeCellHeader,
+                _ => throw new InvalidEnumArgumentException(nameof(elementMicrostationType), (int)elementMicrostationType, typeof(ElementMicrostationType))
+            };
     }
 }

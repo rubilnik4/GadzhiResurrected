@@ -1,13 +1,7 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.Interfaces.Errors;
-using GadzhiConverting.Models.Interfaces.FilesConvert;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using GadzhiCommon.Enums.FilesConvert;
 
-namespace ConvertingModels.Models.Interfaces.FilesConvert
+namespace GadzhiConverting.Models.Interfaces.FilesConvert
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
@@ -17,7 +11,7 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        FileExtention FileExtentionType { get; }
+        FileExtension FileExtension { get; }
 
         /// <summary>
         /// Путь файла на сервере
@@ -83,11 +77,11 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
+        IEnumerable<IFileDataSourceServer> FilesDataSourceServer { get; }
 
         /// <summary>
         /// Установить количество попыток конвертирования
         /// </summary>       
-        IFileDataServer SetAttemtingCount(int attemptingCount);
+        IFileDataServer SetAttemptingCount(int attemptingCount);
     }
 }

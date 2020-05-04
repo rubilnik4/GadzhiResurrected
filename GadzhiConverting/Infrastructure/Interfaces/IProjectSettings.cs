@@ -28,7 +28,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Время через которое осуществляется удаление ненужных пакетов на сервере
         /// </summary>
-        int IntervalHouresToDeleteUnusedPackages { get; }
+        int IntervalHoursToDeleteUnusedPackages { get; }
 
         /// <summary>
         /// Получить имя компьютера

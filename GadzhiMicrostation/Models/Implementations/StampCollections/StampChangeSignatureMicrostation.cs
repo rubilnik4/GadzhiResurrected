@@ -67,12 +67,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public ITextElementMicrostation TypeOfChangeElement => TypeOfChange.ElementStamp.AsTextElementMicrostation;
 
         /// <summary>
-        /// Номер докумета
+        /// Номер документа
         /// </summary>
         public IStampFieldMicrostation DocumentChange { get; }
 
         /// <summary>
-        /// Номер докумета. Элемент
+        /// Номер документа. Элемент
         /// </summary>
         public ITextElementMicrostation DocumentChangeElement => DocumentChange.ElementStamp.AsTextElementMicrostation;
 
@@ -87,7 +87,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public ITextElementMicrostation DateChangeElement => DateChange.ElementStamp.AsTextElementMicrostation;       
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         public override string PersonId { get; }
 

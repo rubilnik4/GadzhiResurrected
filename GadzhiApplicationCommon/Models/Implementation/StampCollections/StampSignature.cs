@@ -24,7 +24,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         public abstract bool IsSignatureValid { get; }
 
         /// <summary>
-        /// Идентефикатор личности
+        /// Идентификатор личности
         /// </summary>    
         public abstract string PersonId { get; }
 

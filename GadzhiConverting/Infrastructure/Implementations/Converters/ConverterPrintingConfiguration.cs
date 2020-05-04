@@ -22,7 +22,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             var systemPrinters = PrinterSettings.InstalledPrinters.Cast<string>();
             var printersPdf = config.PrintersPdfCollection.Where(printer => systemPrinters?.
                                                            Contains(printer.Name, StringComparer.OrdinalIgnoreCase) == true).
-                                                           Select(printer => ToPrinterInformation(printer));
+                                                           Select(ToPrinterInformation);
             return new PrintersInformation(printersPdf);
         }
 
@@ -31,6 +31,5 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>       
         private static IPrinterInformation ToPrinterInformation(PrinterInformationElement printerInformationElement) =>
              new PrinterInformation(printerInformationElement?.Name, printerInformationElement?.PrefixSearchPaperSize);
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
@@ -12,30 +13,23 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Список всех полей
         /// </summary>
-        private static IDictionary<string, StampFieldBase> StampBaseFields
-        {
-            get
-            {
-                var stampControlNames = StampFieldMain.GetStampMainFields();
-                stampControlNames.UnionWith(StampFieldPersonSignatures.GetFieldsPersonSignatures());
-                stampControlNames.UnionWith(StampFieldChanges.GetFieldsChangeSignatures());
-                stampControlNames.UnionWith(StampFieldApprovals.GetFieldsApprovalSignatures());
-
-                return stampControlNames.ToDictionary(p => p.Name);
-            }
-        }
+        private static IDictionary<string, StampFieldBase> StampBaseFields =>
+            StampFieldMain.GetStampMainFields().
+            Union(StampFieldPersonSignatures.GetFieldsPersonSignatures()).
+            Union(StampFieldChanges.GetFieldsChangeSignatures()).
+            Union(StampFieldApprovals.GetFieldsApprovalSignatures()).
+            ToDictionary(p => p.Name);
 
         /// <summary>
-        /// 
+        /// Имена элементов полей
         /// </summary>
         public static HashSet<string> StampControlNames => new HashSet<string>(StampBaseFields.Keys);
 
         /// <summary>
         /// Содержится ли поле в списке Штампа
         /// </summary>       
-        public static bool ContainControlName(string controlName) => !String.IsNullOrEmpty(controlName) && 
+        public static bool ContainControlName(string controlName) => !String.IsNullOrEmpty(controlName) &&
                                                                       StampControlNames.Contains(controlName);
-          
 
         /// <summary>
         /// Получить список параметров по имени элемента

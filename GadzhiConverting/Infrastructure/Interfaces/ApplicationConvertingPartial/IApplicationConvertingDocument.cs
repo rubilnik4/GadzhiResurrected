@@ -1,5 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial
 {
@@ -35,7 +35,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
                                                                ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
 
         /// <summary>
-        /// Экпортировать файл
+        /// Экспортировать файл
         /// </summary>
         IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, string filePath);
 

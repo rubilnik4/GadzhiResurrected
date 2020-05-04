@@ -1,5 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Infrastructure.Interfaces;
+﻿using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
@@ -29,14 +28,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
         public PackageDataIntermediateResponseServer FilesDataToIntermediateResponse(IPackageServer packageServer) =>
-            (packageServer != null) ?
-            new PackageDataIntermediateResponseServer()
-            {
-                Id = packageServer.Id,
-                StatusProcessingProject = packageServer.StatusProcessingProject,
-                FilesData = packageServer.FilesDataServer?.Select(FileDataToIntermediateResponse).ToList(),
-            } :
-            throw new ArgumentNullException(nameof(packageServer));
+            (packageServer != null)
+                ? new PackageDataIntermediateResponseServer()
+                {
+                    Id = packageServer.Id,
+                    StatusProcessingProject = packageServer.StatusProcessingProject,
+                    FilesData = packageServer.FilesDataServer?.Select(FileDataToIntermediateResponse).ToList(),
+                } 
+                : throw new ArgumentNullException(nameof(packageServer));
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
@@ -73,7 +72,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<FileDataResponseServer> FileDataToResponse(IFileDataServer fileDataServer)
         {
-            var filesDataSourceTasks = fileDataServer.FileDatasSourceServer?.Select(FileDataSourceToResponse)
+            var filesDataSourceTasks = fileDataServer.FilesDataSourceServer?.Select(FileDataSourceToResponse)
                                        ?? Enumerable.Empty<Task<(bool, FileDataSourceResponseServer)>>();
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);
             var filesDataSourceWithBytes = filesDataSource.
@@ -84,7 +83,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                FilesDataSourceResponseServer = filesDataSourceWithBytes.ToList(),
+                FilesDataSource = filesDataSourceWithBytes.ToList(),
                 FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
             };
         }

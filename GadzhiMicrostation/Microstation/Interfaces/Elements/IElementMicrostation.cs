@@ -10,7 +10,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     public interface IElementMicrostation : IOwnerMicrostation
     {
         /// <summary>
-        /// Идентефикатор элемента
+        /// идентификатор элемента
         /// </summary>
         long Id { get; }
 
@@ -70,22 +70,22 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         void Remove();
 
         /// <summary>
-        /// Получить значение аттрибута по его Id номеру
+        /// Получить значение атрибута по его Id номеру
         /// </summary>    
         string GetAttributeById(ElementMicrostationAttributes elementAttributes);
 
         /// <summary>
-        /// Записать значение аттрибута по его Id номеру
+        /// Записать значение атрибута по его Id номеру
         /// </summary>       
         void SetAttributeById(ElementMicrostationAttributes elementAttributes, string attributeValue);
 
         /// <summary>
-        /// Получить имя элемента из аттрибутов
+        /// Получить имя элемента из атрибутов
         /// </summary>
         string AttributeControlName { get; set; }
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         string AttributePersonId { get; }
     }

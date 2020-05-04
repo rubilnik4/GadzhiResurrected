@@ -7,11 +7,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
     /// </summary>
     public class StampFieldChange
     {
-        public StampFieldChange(string numberChange,
-                           string numberOfPlots,
-                           string typeOfChange,
-                           string documentChange,
-                           string dataChange)
+        public StampFieldChange(string numberChange, string numberOfPlots, string typeOfChange, string documentChange,
+                                string dataChange)
         {
             NumberChange = new StampFieldBase(numberChange, isNeedCompress: false);
             NumberOfPlots = new StampFieldBase(numberOfPlots, isNeedCompress: false);
@@ -36,7 +33,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         public StampFieldBase TypeOfChange { get; }
 
         /// <summary>
-        /// Номер докумета
+        /// Номер документа
         /// </summary>
         public StampFieldBase DocumentChange { get; }
 
@@ -44,7 +41,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// Дата изменения
         /// </summary>
         public StampFieldBase DateChange { get; }
-
 
         /// <summary>
         /// Список всех полей

@@ -1,13 +1,12 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Extentions;
+using GadzhiCommon.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using GadzhiCommon.Extensions;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
@@ -19,28 +18,29 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Стартовое количество попыток конвертирования
         /// </summary>
-        public const int AttemptingDefaultCount = 1;
+        public const int ATTEMPTING_DEFAULT_COUNT = 1;
 
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, FileConvertErrorType fileConvertErrorType)
          : this(fileDataServer, statusProcessing, new List<FileConvertErrorType>() { fileConvertErrorType }) { }
 
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> fileConvertErrorType)
-          : this(fileDataServer, statusProcessing, fileDataServer.NonNull().FileDatasSourceServer, fileConvertErrorType) { }
+          : this(fileDataServer, statusProcessing, fileDataServer.NonNull().FilesDataSourceServer, fileConvertErrorType) { }
+        
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing,
-                              IEnumerable<IFileDataSourceServer> fileDatasSourceServer, IEnumerable<FileConvertErrorType> fileConvertErrorType)
+                              IEnumerable<IFileDataSourceServer> filesDataSourceServer, IEnumerable<FileConvertErrorType> fileConvertErrorType)
         : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient,
                fileDataServer.NonNull().ColorPrint, statusProcessing,
-               fileDataServer.NonNull().AttemptingConvertCount, fileDatasSourceServer, fileConvertErrorType)
+               fileDataServer.NonNull().AttemptingConvertCount, filesDataSourceServer, fileConvertErrorType)
         { }
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint, StatusProcessing statusProcessing,
                               IEnumerable<FileConvertErrorType> fileConvertErrorType)
-            : this(filePathServer, filePathClient, colorPrint, statusProcessing, AttemptingDefaultCount, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
+            : this(filePathServer, filePathClient, colorPrint, statusProcessing, ATTEMPTING_DEFAULT_COUNT, Enumerable.Empty<IFileDataSourceServer>(), fileConvertErrorType)
         { }
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint,
                               StatusProcessing statusProcessing, int attemptingConvertCount,
-                              IEnumerable<IFileDataSourceServer> fileDatasSourceServer, IEnumerable<FileConvertErrorType> filesConvertErrorType)
+                              IEnumerable<IFileDataSourceServer> filesDataSourceServer, IEnumerable<FileConvertErrorType> filesConvertErrorType)
         {
             if (String.IsNullOrWhiteSpace(filePathServer)) throw new ArgumentNullException(nameof(filePathServer));
             if (String.IsNullOrWhiteSpace(filePathClient)) throw new ArgumentNullException(nameof(filePathClient));
@@ -51,7 +51,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             }
             if (attemptingConvertCount <= 0) throw new ArgumentOutOfRangeException(nameof(attemptingConvertCount));
 
-            FileExtentionType = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];
+            FileExtension = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
@@ -59,13 +59,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             AttemptingConvertCount = attemptingConvertCount;
 
             FileConvertErrorTypes = filesConvertErrorType;
-            FileDatasSourceServer = fileDatasSourceServer;
+            FilesDataSourceServer = filesDataSourceServer;
         }
 
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtention FileExtentionType { get; }
+        public FileExtension FileExtension { get; }
 
         /// <summary>
         /// Путь файла на сервере
@@ -95,7 +95,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        public IEnumerable<IFileDataSourceServer> FileDatasSourceServer { get; }
+        public IEnumerable<IFileDataSourceServer> FilesDataSourceServer { get; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -135,24 +135,16 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Установить количество попыток конвертирования
         /// </summary>       
-        public IFileDataServer SetAttemtingCount(int attemptingCount) =>
+        public IFileDataServer SetAttemptingCount(int attemptingCount) =>
             new FileDataServer(FilePathServer, FilePathClient, ColorPrint, StatusProcessing, 
-                               attemptingCount, FileDatasSourceServer, FileConvertErrorTypes);
+                               attemptingCount, FilesDataSourceServer, FileConvertErrorTypes);
 
-        public override bool Equals(object obj)
-        {
-            return obj is FileDataServer fileDataServer &&
-                   Equals(fileDataServer);
-        }
+        #region IEquatable
+        public override bool Equals(object obj) => obj is FileDataServer fileDataServer && Equals(fileDataServer);
 
-        public bool Equals(FileDataServer other)
-        {
-            return FilePathServer == other?.FilePathServer;
-        }
+        public bool Equals(FileDataServer other) => FilePathServer == other?.FilePathServer;
 
-        public override int GetHashCode()
-        {
-            return -1576186305 + FilePathServer.GetHashCode();
-        }
+        public override int GetHashCode() => -1576186305 + FilePathServer.GetHashCode();
+        #endregion
     }
 }

@@ -32,3 +32,6 @@ dotnet_diagnostic.CA2227.severity = none
 
 # AD0002: Analyzer Driver Failure
 dotnet_diagnostic.AD0002.severity = none
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none

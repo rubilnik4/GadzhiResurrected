@@ -1,5 +1,4 @@
-﻿using GadzhiMicrostation.Extentions.StringAdditional;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
+﻿using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
@@ -17,6 +16,9 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiMicrostation.Extensions.StringAdditional;
+
 // ReSharper disable All
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
@@ -33,22 +35,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         public IResultAppValue<ICellElementMicrostation> CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
                                                                      IModelMicrostation modelMicrostation,
-                                                                     Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
+                                                                     Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
                                                                      string cellDescription = null) =>
             ChangeCellNameByDescriptionIfNotFoundInLibrary(StringIdPrepare(cellName), cellDescription).
-            ResultValueOk(cellNameChanged => CreateCellElementWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParametrs));
+            ResultValueOk(cellNameChanged => CreateCellElementWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParameters));
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         public IResultAppValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                                    IModelMicrostation modelMicrostation,
-                                                                   Func<ICellElementMicrostation, ICellElementMicrostation> additionalParametrs = null,
+                                                                   Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
                                                                    string cellDescription = null)
         {
             AttachLibrary(MicrostationResources.SignatureMicrostationFileName);
 
-            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParametrs);
+            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParameters);
 
             DetachLibrary();
 

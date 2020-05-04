@@ -1,8 +1,6 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Functional;
-using GadzhiCommon.Extentions.Functional.Result;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -16,7 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.Functional.Result;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -45,10 +44,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public ConvertingFileData(IMessagingService messagingService, IApplicationConverting applicationConverting,
                                   IProjectSettings projectSettings, IFileSystemOperations fileSystemOperations)
         {
-            _messagingService = messagingService;
-            _applicationConverting = applicationConverting;
-            _projectSettings = projectSettings;
-            _fileSystemOperations = fileSystemOperations;
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+            _applicationConverting = applicationConverting ?? throw new ArgumentNullException(nameof(applicationConverting));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
         }
 
         /// <summary>
@@ -68,8 +67,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             LoadAndSaveDocument(fileDataServer).
             ResultValueOkBind(document => GetSavedFileDataSource(document).ToResultCollection().
                                           Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
-                                          Map(fileDatas =>  CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
-                                                                                       Map(closeResult => fileDatas.ConcatErrors(closeResult.Errors)).
+                                          Map(filesData =>  CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
+                                                                                       Map(closeResult => filesData.ConcatErrors(closeResult.Errors)).
                                                                                        ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
@@ -83,8 +82,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             fileDataSourceServer.
             ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, printersInformation).
                                                           Map(saveResult.ConcatResult).
-                                                          Map(fileDatas => ExportFile(documentLibrary, fileDataServer).
-                                                                           Map(fileDatas.ConcatResultValue)));
+                                                          Map(filesData => ExportFile(documentLibrary, fileDataServer).
+                                                                           Map(filesData.ConcatResultValue)));
         /// <summary>
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
@@ -100,7 +99,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultValue<IDocumentLibrary> LoadAndSaveDocument(IFileDataServer fileDataServer) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
-            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtentionType)).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtension)).
             ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(fileDataServer.FilePathServer, savingPath).
                                             WhereContinue(copyResult => copyResult,
                                                 okFunc: _ => new ResultValue<string>(savingPath),
@@ -112,7 +111,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Получить путь к сохраненному файлу для обработки
         /// </summary>        
-        private IResultValue<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary) =>
+        private static IResultValue<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary) =>
             new FileDataSourceServer(documentLibrary.FullName).
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource));
 
@@ -120,7 +119,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                    IPrintersInformation printersInformation) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
-            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtention.pdf)).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtension.Pdf)).
             ResultValueOkBind(filePdfPath => _applicationConverting.CreatePdfFile(documentLibrary, filePdfPath, fileDataServer.ColorPrint,
                                                                                   printersInformation?.PrintersPdf.FirstOrDefault())).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
@@ -132,7 +131,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
-            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, _applicationConverting.GetExportFileExtension(fileDataServer.FileExtentionType))).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, _applicationConverting.GetExportFileExtension(fileDataServer.FileExtension))).
             ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, fileExportPath));
 
         /// <summary>
@@ -145,12 +144,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать папку для сохранения отконвертированных файлов по типу расширения
         /// </summary>       
-        private IResultValue<string> CreateSavingPathByExtension(string filePathServer, FileExtention fileExtention) =>
+        private IResultValue<string> CreateSavingPathByExtension(string filePathServer, FileExtension fileExtension) =>
             new ResultValue<string>(filePathServer).
             ResultValueOk(Path.GetDirectoryName).
-            ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtention.ToString())).
+            ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtension.ToString())).
             ResultValueOk(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
                                                                                   Path.GetFileNameWithoutExtension(filePathServer),
-                                                                                  fileExtention.ToString()));
+                                                                                  fileExtension.ToString()));
     }
 }

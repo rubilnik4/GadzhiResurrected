@@ -22,7 +22,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         bool IsSignatureValid { get; }
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         string PersonId { get; }
 

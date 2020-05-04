@@ -1,16 +1,11 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions;
-using GadzhiCommon.Extentions.Functional;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiCommon.Extensions;
-using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
@@ -19,22 +14,22 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// </summary>
     public class PackageServer : IPackageServer
     {
-        public PackageServer(IPackageServer packageServer, IEnumerable<IFileDataServer> fileDatasServer)
+        public PackageServer(IPackageServer packageServer, IEnumerable<IFileDataServer> filesDataServer)
             : this(packageServer.NonNull().Id, packageServer.NonNull().AttemptingConvertCount,
-                  packageServer.NonNull().StatusProcessingProject, fileDatasServer)
+                  packageServer.NonNull().StatusProcessingProject, filesDataServer)
         { }
 
         public PackageServer(Guid id, int attemptingConvertCount, StatusProcessingProject statusProcessingProject,
-                               IEnumerable<IFileDataServer> fileDatasServer)
+                               IEnumerable<IFileDataServer> filesDataServer)
         {
             Id = id;
             AttemptingConvertCount = attemptingConvertCount;
             StatusProcessingProject = statusProcessingProject;
-            FilesDataServer = fileDatasServer ?? throw new ArgumentNullException(nameof(fileDatasServer));
+            FilesDataServer = filesDataServer ?? throw new ArgumentNullException(nameof(filesDataServer));
         }
 
         /// <summary>
-        /// ID идентефикатор
+        /// ID Идентификатор
         /// </summary>
         public Guid Id { get; }
 
@@ -61,13 +56,12 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Корректна ли модель
         /// </summary>
-        public bool IsValid => IsValidByFileDatas &&
-                               IsValidByAttemptingCount;
+        public bool IsValid => IsFilesDataValid && IsValidByAttemptingCount;
 
         /// <summary>
         /// Присутствуют ли файлы для конвертации
         /// </summary>
-        public bool IsValidByFileDatas => FilesDataServer?.Any() == true;
+        public bool IsFilesDataValid => FilesDataServer?.Any() == true;
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования
@@ -80,7 +74,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public IPackageServer SetErrorToAllFiles() =>
             FilesDataServer.Select(fileData => new FileDataServer(fileData, StatusProcessing.ConvertingComplete,
                                                                   FileConvertErrorType.UnknownError)).
-            Map(fileDatas => new PackageServer(Id, AttemptingConvertCount, StatusProcessingProject, fileDatas));
+            Map(filesData => new PackageServer(Id, AttemptingConvertCount, StatusProcessingProject, filesData));
 
         /// <summary>
         /// Присвоить статус обработки проекта
@@ -97,6 +91,6 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             FilesDataServer.
             Where(fileData => !fileData.Equals(fileDataServer)).
             Append(fileDataServer).
-            Map(fileDatas => new PackageServer(this, fileDatas));
+            Map(filesData => new PackageServer(this, filesData));
     }
 }

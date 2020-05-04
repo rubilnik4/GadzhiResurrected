@@ -1,5 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using System;
 using System.Collections;
@@ -7,19 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     /// <summary>
-    /// Отконвертированный файл серверной части в базовом варианте
+    /// Обработанный файл серверной части в базовом варианте
     /// </summary>
     public class FileDataSourceServer : IFileDataSourceServer
     {
         public FileDataSourceServer(string filePath)
             : this(filePath, "-", "-")
-        {
-
-        }
+        { }
 
         public FileDataSourceServer(string filePath, string paperSize, string printerName)
         {
@@ -31,7 +29,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             }
 
             FilePath = filePath;
-            FileExtensionType = ValidFileExtentions.FileTypesValid[fileType];
+            FileExtension = ValidFileExtentions.FileTypesValid[fileType];
             PaperSize = paperSize;
             PrinterName = printerName;
         }
@@ -44,7 +42,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtention FileExtensionType { get; }
+        public FileExtension FileExtension { get; }
 
         /// <summary>
         /// Формат печати

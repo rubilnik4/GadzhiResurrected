@@ -11,15 +11,15 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// Базовая ячейка штампа
     /// </summary>
     public abstract class StampField : IStampField
-    {        
+    {
+        protected StampField(StampFieldType stampFieldType)
+        {           
+            StampFieldType = stampFieldType;
+        }
+
         /// <summary>
         /// Тип поля в штампе
         /// </summary>
         public StampFieldType StampFieldType { get; }
-
-        public StampField(StampFieldType stampFieldType)
-        {           
-            StampFieldType = stampFieldType;
-        }
     }
 }

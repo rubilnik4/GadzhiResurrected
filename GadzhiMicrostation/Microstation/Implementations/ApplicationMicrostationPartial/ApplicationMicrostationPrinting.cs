@@ -1,22 +1,21 @@
 ﻿using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
-using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
-using GadzhiMicrostation.Extentions.StringAdditional;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiMicrostation.Extensions.StringAdditional;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -24,7 +23,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     /// Печать Microstation
     /// </summary>
     public partial class ApplicationMicrostation : IApplicationLibraryPrinting
-    {  
+    {
         /// <summary>
         /// Команда печати
         /// </summary>
@@ -47,11 +46,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             ResultValueOk(rangeInPoints => Application.CreateShapeElement1(null, rangeInPoints, MsdFillMode.msdFillModeNotFilled)).
             ResultVoidOk(shape =>
             {
-                Fence fence = Application.ActiveDesignFile.Fence;
+                var fence = Application.ActiveDesignFile.Fence;
                 fence.Undefine();
 
                 Application.CadInputQueue.SendKeyin("view on 1");
-                View view = Application.ActiveDesignFile.Views[1];
+                var view = Application.ActiveDesignFile.Views[1];
 
                 fence.DefineFromElement(view, (Element)shape);
 
@@ -85,25 +84,27 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>       
         public void SetPrintColor(ColorPrintApplication colorPrint)
         {
-            void setColorMode(string colorCommand) => Application.CadInputQueue.SendCommand($"PRINT colormode {colorCommand}");
+            void SetColorMode(string colorCommand) => Application.CadInputQueue.SendCommand($"PRINT colormode {colorCommand}");
             switch (colorPrint)
             {
                 case ColorPrintApplication.BlackAndWhite:
-                    setColorMode("monochrome");
+                    SetColorMode("monochrome");
                     return;
                 case ColorPrintApplication.GrayScale:
-                    setColorMode("grayscale");
+                    SetColorMode("grayscale");
                     return;
                 case ColorPrintApplication.Color:
-                    setColorMode("color");
+                    SetColorMode("color");
                     return;
+                default:
+                    throw new InvalidEnumArgumentException(nameof(colorPrint), (int)colorPrint, typeof(ColorPrintApplication));
             }
         }
 
         /// <summary>
         /// Получить формат принтера по формату штампа
         /// </summary>      
-        private IResultAppValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+        private static IResultAppValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
             new PageSettings().
             Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>()).
             FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize)).
@@ -111,29 +112,27 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                                                    $"Формат печати {drawSize} не найден")));
 
         /// <summary>
-        /// Проверить соответсвие формата
+        /// Проверить соответствие формата
         /// </summary>    
-        private bool CheckPaperSizeName(string paperName, string drawPaperSize, string prefixSearchPaperSize)
+        private static bool CheckPaperSizeName(string paperName, string drawPaperSize, string prefixSearchPaperSize)
         {
+            if (paperName?.ContainsIgnoreCase(drawPaperSize) != true ||
+                paperName.ContainsIgnoreCase(prefixSearchPaperSize) != true) return false;
+
+            int indexSubstringStart = paperName.IndexOf(drawPaperSize, StringComparison.OrdinalIgnoreCase);
+            int indexSubstringEnd = indexSubstringStart + drawPaperSize.Length;
+
             bool success = false;
-
-            if (paperName?.ContainsIgnoreCase(drawPaperSize) == true &&
-                paperName?.ContainsIgnoreCase(prefixSearchPaperSize) == true)
+            if (indexSubstringEnd >= paperName.Length)
             {
-                int indexSubstringStart = paperName.IndexOf(drawPaperSize, StringComparison.OrdinalIgnoreCase);
-                int indexSubstringEnd = indexSubstringStart + drawPaperSize.Length;
-
-                if (indexSubstringEnd >= paperName.Length)
+                success = true; //дальше символов нет
+            }
+            else
+            {
+                char postDrawFormat = paperName[indexSubstringEnd];
+                if (!Char.IsNumber(postDrawFormat) && postDrawFormat != 'x' && postDrawFormat != 'х')
                 {
-                    success = true; //дальше символов нет
-                }
-                else
-                {
-                    char postDrawFormat = paperName[indexSubstringEnd];
-                    if (!Char.IsNumber(postDrawFormat) && postDrawFormat != 'x' && postDrawFormat != 'х')
-                    {
-                        success = true; //не число и не содержит знаков
-                    }
+                    success = true; //не число и не содержит знаков
                 }
             }
             return success;

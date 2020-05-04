@@ -15,10 +15,9 @@ using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPar
 using GadzhiWord.Word.Implementations;
 using GadzhiWord.Word.Implementations.ApplicationWordPartial;
 using Unity;
-using Unity.Injection;
 using Unity.Lifetime;
 
-namespace GadzhiConverting.DependencyInjection.GadzhiConverting
+namespace GadzhiConverting.DependencyInjection
 {
     /// <summary>
     /// Класс для регистрации зависимостей

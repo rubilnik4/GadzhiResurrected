@@ -1,7 +1,5 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extentions.Functional;
-using GadzhiCommon.Extentions.Functional.Result;
+﻿using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -14,9 +12,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
-using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Extensions;
+using GadzhiConverting.Models.Interfaces.FilesConvert;
 using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
@@ -32,7 +31,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         public IResultValue<IDocumentLibrary> OpenDocument(string filePath) =>
             IsDocumentValid(filePath).
-            ResultValueOkBind(extension => GetActiveLibraryByExtension(extension)).
+            ResultValueOkBind(GetActiveLibraryByExtension).
             ResultValueOkTry(activeLibrary => activeLibrary.OpenDocument(filePath).ToResultValueFromApplication(),
                              new ErrorCommon(FileConvertErrorType.FileNotOpen, $"Ошибка открытия файла {filePath}"));
 
@@ -54,7 +53,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             ToResultCollection();
 
         /// <summary>
-        /// Экпортировать файл
+        /// Экспортировать файл
         /// </summary>
         public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, string filePath) =>
            ExecuteAndHandleError(() => documentLibrary.Export(filePath),
@@ -65,8 +64,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Закрыть файл
         /// </summary>
         public IResultError CloseDocument(IDocumentLibrary documentLibrary, string filePath) =>
-            ExecuteAndHandleError(() => documentLibrary.Close(),
-                          catchMethod: () => documentLibrary.CloseApplication(),
+            ExecuteAndHandleError(documentLibrary.Close,
+                          catchMethod: documentLibrary.CloseApplication,
                           errorMessage: new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка закрытия файла {filePath}")).
             ToResult();
 
@@ -79,8 +78,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 okFunc: filePath => new ResultValue<string>(filePath),
                 badFunc: filePath => new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл {filePath} не найден").
                                      ToResultValue<string>()).
-            ResultValueOk(filePath => FileSystemOperations.ExtensionWithoutPointFromPath(filePath)).
-            ResultValueOkBind(fileExtension => ValidateFileExtension(fileExtension));
+            ResultValueOk(FileSystemOperations.ExtensionWithoutPointFromPath).
+            ResultValueOkBind(ValidateFileExtension);
 
         /// <summary>
         /// Проверить допустимость использования расширения файла

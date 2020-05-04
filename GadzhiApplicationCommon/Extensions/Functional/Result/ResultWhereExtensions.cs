@@ -8,7 +8,7 @@ using System.Text;
 namespace GadzhiApplicationCommon.Extensions.Functional.Result
 {
     /// <summary>
-    /// Обработка условий для результируещего ответа
+    /// Обработка условий для результирующего ответа
     /// </summary>
     public static class ResultWhereExtensions
     {
@@ -94,9 +94,9 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultAppValue<TValueOut>(@this.Errors);
-
-            return okFunc.Invoke(@this.Value);
+            return @this.HasErrors 
+                ? new ResultAppValue<TValueOut>(@this.Errors) 
+                : okFunc.Invoke(@this.Value);
         }
 
         /// <summary>
@@ -108,9 +108,9 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
 
             if (@this == null) return null;
-            if (@this.OkStatus) return @this;
-
-            return badFunc.Invoke(@this.Value);
+            return @this.OkStatus 
+                ? @this 
+                : badFunc.Invoke(@this.Value);
         }
 
         /// <summary>
@@ -121,9 +121,9 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
 
             if (@this == null) return null;
-            if (@this.HasErrors) return new ResultApplication(@this.Errors);
-
-            return okFunc.Invoke();
+            return @this.HasErrors 
+                ? new ResultApplication(@this.Errors) 
+                : okFunc.Invoke();
         }
     }
 }

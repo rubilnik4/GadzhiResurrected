@@ -12,7 +12,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
                                           where TField : IStampField
     {
         /// <summary>
-        /// Строки с ответсвенным лицом и подписью
+        /// Строки с ответственным лицом и подписью
         /// </summary>
         IEnumerable<IStampPersonSignature<TField>> StampPersonSignatures { get; }
     }

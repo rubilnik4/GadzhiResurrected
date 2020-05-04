@@ -10,16 +10,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     public static class StampSettingsMicrostation
     {
         /// <summary>
-        /// Символ разделяющий параметры внутри аттрибута
+        /// Символ разделяющий параметры внутри атрибута
         /// </summary>
         public static string SeparatorAttribute => "$@";
 
         /// <summary>
-        /// Разделить значение аттрибута через символ-разделитель
+        /// Разделить значение атрибута через символ-разделитель
         /// </summary>
         public static IList<string> SeparateAttributeValue(string valueField) =>
             valueField?.
-            Split(new string[] { SeparatorAttribute }, StringSplitOptions.None).
+            Split(new[] { SeparatorAttribute }, StringSplitOptions.None).
             ToList()
             ?? new List<string>();
 

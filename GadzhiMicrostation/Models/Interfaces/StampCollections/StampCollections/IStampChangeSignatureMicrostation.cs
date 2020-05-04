@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections
         ITextElementMicrostation TypeOfChangeElement { get; }
 
         /// <summary>
-        /// Номер докумета. Элемент
+        /// Номер документа. Элемент
         /// </summary>
         ITextElementMicrostation DocumentChangeElement { get; }
 

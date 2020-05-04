@@ -31,7 +31,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public bool IsVertical { get; }
 
         protected RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
-                                            bool isNeedCompress, bool isVertical)
+                                               bool isNeedCompress, bool isVertical)
             : base(element, ownerContainerMicrostation)
         {
             _element = element;
@@ -54,7 +54,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
         private RangeMicrostation RangeAttribute =>
-            GetAttributeFromCachOrLoad(ElementMicrostationAttributes.Range).
+            GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.Range).
             Map(RangeMicrostation.StringToRange).
             WhereContinue(result => result.OkStatus,
                 okFunc: result => result.Value ,

@@ -1,9 +1,6 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiCommon.Extentions.Functional;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Converters;
-using GadzhiConverting.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

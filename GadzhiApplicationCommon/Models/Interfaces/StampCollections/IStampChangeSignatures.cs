@@ -27,7 +27,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         TField TypeOfChange { get; }
 
         /// <summary>
-        /// Номер докумета
+        /// Номер документа
         /// </summary>
         TField DocumentChange { get; }       
 

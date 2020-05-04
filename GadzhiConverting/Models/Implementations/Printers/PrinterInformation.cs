@@ -10,24 +10,18 @@ namespace GadzhiConverting.Models.Implementations.Printers
     /// <summary>
     /// Информация о принтере
     /// </summary>
-    public class PrinterInformation: IPrinterInformation
+    public class PrinterInformation : IPrinterInformation
     {
         public PrinterInformation(string printerName)
            : this(printerName, null)
-        {
-        }
+        { }
 
         public PrinterInformation(string name, string prefixSearchPaperSize)
         {
-            if (!String.IsNullOrWhiteSpace(name))
-            {
-                Name = name;
-                PrefixSearchPaperSize = prefixSearchPaperSize;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+
+            Name = name;
+            PrefixSearchPaperSize = prefixSearchPaperSize;
         }
 
         /// <summary>

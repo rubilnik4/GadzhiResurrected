@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -21,8 +22,6 @@ namespace GadzhiMicrostation.Microstation.Implementations
     /// </summary>
     public class ModelMicrostation : IModelMicrostation
     {
-
-
         /// <summary>
         /// Экземпляр модели или листа
         /// </summary>
@@ -33,15 +32,14 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
 
-        public ModelMicrostation(ModelReference modelMicrostation,
-                                 IApplicationMicrostation applicationMicrostation)
+        public ModelMicrostation(ModelReference modelMicrostation, IApplicationMicrostation applicationMicrostation)
         {
-            _modelMicrostation = modelMicrostation;
-            ApplicationMicrostation = applicationMicrostation;
+            _modelMicrostation = modelMicrostation ?? throw new ArgumentNullException(nameof(modelMicrostation));
+            ApplicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
         }
 
         /// <summary>
-        /// Порядковый идентефикационный номер
+        /// Порядковый идентификационный номер
         /// </summary>
         public string IdName => _modelMicrostation.Name;
 
@@ -64,51 +62,46 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// </summary>       
         public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation) =>
             GetModelElements(new List<ElementMicrostationType>() { includeTypeMicrostation }).
-                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));
+                   Select(element => ConvertMicrostationElements.ToMicrostationElement(element, ToOwnerMicrostation()));
 
         /// <summary>
         /// Найти элементы в модели по типам
         /// </summary>       
         public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(IEnumerable<ElementMicrostationType> includeTypesMicrostation = null) =>
             GetModelElements(includeTypesMicrostation).
-                   Select(element => ConvertMicrostationElements.ConvertToMicrostationElement(element, ToOwnerMicrostation()));        
+                   Select(element => ConvertMicrostationElements.ToMicrostationElement(element, ToOwnerMicrostation()));
 
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
         public IEnumerable<IStamp> FindStamps() =>
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
-            Cast<CellElement>().
+            Select(element => element.AsCellElement).
             Where(cellElement => StampFieldMain.IsStampName(cellElement.Name)).
-            Select(cellElement => new CellElementMicrostation(cellElement, ToOwnerMicrostation())).
-            Select(cellElement => new StampMainMicrostation(cellElement)).
+            Select(cellElement => new CellElementMicrostation(cellElement, ToOwnerMicrostation()).
+                                  Map(cellMicrostation => new StampMainMicrostation(cellMicrostation))).
             Cast<IStamp>();
 
         /// <summary>
         /// Найти элементы библиотеки Microstation в модели по типам
         /// </summary>       
-        private IEnumerable<Element> GetModelElements(IEnumerable<ElementMicrostationType> includeTypesMicrostation = null)
+        private IEnumerable<Element> GetModelElements(IEnumerable<ElementMicrostationType> includeTypesMicrostation)
         {
-            if (_modelMicrostation != null)
+            var elementScanCriteria = new ElementScanCriteria();
+            elementScanCriteria.ExcludeAllTypes();
+
+            var includeTypes = includeTypesMicrostation?.Select(ConvertElementMicrostationTypes.ToMsdMicrostation)
+                               ?? Enumerable.Empty<MsdElementType>();
+
+            foreach (var msdElementType in includeTypes)
             {
-                var elementScanCriteria = new ElementScanCriteria();
-                elementScanCriteria.ExcludeAllTypes();
+                elementScanCriteria.IncludeType(msdElementType);
+            }
 
-                var includeTypes = includeTypesMicrostation?.Select(ConvertElementMicrostationTypes.ConvertToMsdMicrostation);
-                if (includeTypes != null)
-                {
-                    foreach (MsdElementType type in includeTypes)
-                    {
-                        elementScanCriteria.IncludeType(type);
-                    }
-                }
-
-                ElementEnumerator elementEnumerator = _modelMicrostation.Scan(elementScanCriteria);
-
-                while (elementEnumerator.MoveNext())
-                {
-                    yield return (Element)elementEnumerator.Current;
-                }
+            var elementEnumerator = _modelMicrostation.Scan(elementScanCriteria);
+            while (elementEnumerator.MoveNext())
+            {
+                yield return (Element)elementEnumerator.Current;
             }
         }
 

@@ -8,11 +8,23 @@ using MicroStationDGN;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
     public abstract class ElementMicrostation : IElementMicrostation
     {
+        protected ElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation)
+        {
+            _element = element ?? throw new ArgumentNullException(nameof(element));
+            OwnerContainerMicrostation = ownerContainerMicrostation ?? throw new ArgumentNullException(nameof(ownerContainerMicrostation));
+            ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
+            ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
+
+            AttributeCaching = new Dictionary<ElementMicrostationAttributes, string>();
+        }
+
+
         /// <summary>
         /// Экземпляр элемента Microstation
         /// </summary>
@@ -21,7 +33,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Родительский элемент
         /// </summary>
-        protected IOwnerMicrostation OwnerContainerMicrostation { get; private set; }
+        protected IOwnerMicrostation OwnerContainerMicrostation { get; }
 
         /// <summary>
         /// Класс для работы с приложением Microstation
@@ -33,19 +45,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public IModelMicrostation ModelMicrostation { get; }
 
-        public ElementMicrostation(Element element,
-                                   IOwnerMicrostation ownerContainerMicrostation)
-        {
-            _element = element ?? throw new ArgumentNullException(nameof(element));
-            OwnerContainerMicrostation = ownerContainerMicrostation;
-            ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
-            ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
-
-            AttributeCaching = new Dictionary<ElementMicrostationAttributes, string>();
-        }
 
         /// <summary>
-        /// Идентефикатор элемента
+        /// идентификатор элемента
         /// </summary>
         public long Id => _element.ID64;
 
@@ -87,28 +89,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Тип элемента Microstation
         /// </summary>
-        public ElementMicrostationType ElementType
-        {
-            get
+        public ElementMicrostationType ElementType =>
+            this switch
             {
-                if (IsTextElementMicrostation)
-                {
-                    return ElementMicrostationType.TextElement;
-                }
-                else if (IsTextNodeElementMicrostation)
-                {
-                    return ElementMicrostationType.TextNodeElement;
-                }
-                else if (IsCellElementMicrostation)
-                {
-                    return ElementMicrostationType.CellElement;
-                }
-                else
-                {
-                    return ElementMicrostationType.Element;
-                }
-            }
-        }
+                _ when IsTextElementMicrostation => ElementMicrostationType.TextElement,
+                _ when IsTextNodeElementMicrostation => ElementMicrostationType.TextNodeElement,
+                _ when IsCellElementMicrostation => ElementMicrostationType.CellElement,
+                _ => throw new InvalidOperationException("Element type not found"),
+            };
 
         /// <summary>
         /// Переместить элемент
@@ -142,7 +130,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public void Remove()
         {
-            DLong parentId = _element.ParentID;
+            var parentId = _element.ParentID;
             if (parentId.High == 0 && parentId.Low == 0)
             {
                 ModelMicrostation.RemoveElement(Id);
@@ -154,57 +142,55 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
-        /// Кэшированные аттрибуты элемента
+        /// Кэшированные атрибуты элемента
         /// </summary>
         protected IDictionary<ElementMicrostationAttributes, string> AttributeCaching { get; }
 
         /// <summary>
-        /// Получить значение аттрибута по его Id номеру
+        /// Получить значение атрибута по его Id номеру
         /// </summary>       
         public string GetAttributeById(ElementMicrostationAttributes elementAttribute) =>
-            GetAttributeFromCachOrLoad(elementAttribute);
+            GetAttributeFromCacheOrLoad(elementAttribute);
 
         /// <summary>
-        /// Записать значение аттрибута по его Id номеру
+        /// Записать значение атрибута по его Id номеру
         /// </summary>       
         public void SetAttributeById(ElementMicrostationAttributes elementAttribute, string attributeValue) =>
-            SetAttributeToCachAndUpload(elementAttribute, attributeValue);
+            SetAttributeToCacheAndUpload(elementAttribute, attributeValue);
 
         /// <summary>
-        /// Имя элемента из аттрибутов
+        /// Имя элемента из атрибутов
         /// </summary>
         public string AttributeControlName
         {
-            get => GetAttributeFromCachOrLoad(ElementMicrostationAttributes.ControlName);
-            set => SetAttributeToCachAndUpload(ElementMicrostationAttributes.ControlName, value);
+            get => GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.ControlName);
+            set => SetAttributeToCacheAndUpload(ElementMicrostationAttributes.ControlName, value);
         }
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
-        public string AttributePersonId => GetAttributeFromCachOrLoad(ElementMicrostationAttributes.PersonId);
+        public string AttributePersonId => GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.PersonId);
 
         /// <summary>
-        /// Получить аттрибут из кэша или выгрузить из Microstation
+        /// Получить атрибут из кэша или выгрузить из Microstation
         /// </summary>       
-        protected string GetAttributeFromCachOrLoad(ElementMicrostationAttributes attributeElement)
+        protected string GetAttributeFromCacheOrLoad(ElementMicrostationAttributes attributeElement)
         {
             if (AttributeCaching.ContainsKey(attributeElement))
             {
                 return AttributeCaching[attributeElement];
             }
-            else
-            {
-                var attribute = _element.GetAttributeById(attributeElement);
-                AttributeCaching[attributeElement] = attribute;
-                return attribute;
-            }
+
+            string attribute = _element.GetAttributeById(attributeElement);
+            AttributeCaching[attributeElement] = attribute;
+            return attribute;
         }
 
         /// <summary>
-        /// Добавить аттрибут в кэш
+        /// Добавить атрибут в кэш
         /// </summary>        
-        protected void SetAttributeToCachAndUpload(ElementMicrostationAttributes elementAttribute, string attributeValue)
+        protected void SetAttributeToCacheAndUpload(ElementMicrostationAttributes elementAttribute, string attributeValue)
         {
             _element.SetAttributeById(elementAttribute, attributeValue);
             AttributeCaching[elementAttribute] = attributeValue;

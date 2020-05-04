@@ -2,13 +2,13 @@
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extentions.Functional;
 

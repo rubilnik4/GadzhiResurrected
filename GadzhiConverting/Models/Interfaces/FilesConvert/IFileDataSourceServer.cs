@@ -1,14 +1,10 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using GadzhiCommon.Enums.FilesConvert;
 
-namespace ConvertingModels.Models.Interfaces.FilesConvert
+namespace GadzhiConverting.Models.Interfaces.FilesConvert
 {
     /// <summary>
-    /// Отконвертированный файл серверной части
+    /// Обработанный файл серверной части
     /// </summary>
     public interface  IFileDataSourceServer: IEnumerable<IFileDataSourceServer>
     {
@@ -20,7 +16,7 @@ namespace ConvertingModels.Models.Interfaces.FilesConvert
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        FileExtention FileExtensionType { get; }
+        FileExtension FileExtension { get; }
 
         /// <summary>
         /// Формат печати

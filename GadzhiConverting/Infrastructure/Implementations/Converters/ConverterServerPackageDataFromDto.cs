@@ -1,5 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Helpers.FileSystem;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommonServer.Infrastructure.Implementations;
@@ -34,8 +33,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         public ConverterServerPackageDataFromDto(IFileSystemOperations fileSystemOperations,
                                                IProjectSettings projectSettings)
         {
-            _fileSystemOperations = fileSystemOperations;
-            _projectSettings = projectSettings;
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
         }
 
         /// <summary>

@@ -18,14 +18,14 @@ namespace GadzhiConverting.Configuration
         /// </summary>       
         public PrinterInformationElement this[int index]
         {
-            get => base.BaseGet(index) as PrinterInformationElement;           
+            get => BaseGet(index) as PrinterInformationElement;           
             set
             {
-                if (base.BaseGet(index) != null)
+                if (BaseGet(index) != null)
                 {
-                    base.BaseRemoveAt(index);
+                    BaseRemoveAt(index);
                 }
-                this.BaseAdd(index, value);
+                BaseAdd(index, value);
             }
         }
 
@@ -45,12 +45,20 @@ namespace GadzhiConverting.Configuration
             }
         }
 
+        /// <summary>
+        /// Создать новый элемент
+        /// </summary>
+        /// <returns></returns>
         protected override ConfigurationElement CreateNewElement() => new PrinterInformationElement();
         
-        protected override object GetElementKey(ConfigurationElement element) => ((PrinterInformationElement)element)?.Name;
+        /// <summary>
+        /// Получить ключ
+        /// </summary>
+        protected override object GetElementKey(ConfigurationElement element) => (element as PrinterInformationElement)?.Name 
+                                                                                 ?? String.Empty;
 
         /// <summary>
-        /// Linq интерфейс
+        /// Перечисление
         /// </summary>  
         public new IEnumerator<PrinterInformationElement> GetEnumerator()
         {

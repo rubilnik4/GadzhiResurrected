@@ -39,40 +39,37 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Операция сложения с другой точкой
         /// </summary>       
-        public PointMicrostation Add(PointMicrostation point) =>
-            new PointMicrostation(this.X + point.X, this.Y + point.Y, this.Z + point.Z);
+        public PointMicrostation Add(PointMicrostation point) => new PointMicrostation(X + point.X, Y + point.Y, Z + point.Z);
 
         /// <summary>
         /// Операция сложения по оси X
         /// </summary>       
-        public PointMicrostation AddX(double xCoorditate) => Add(new PointMicrostation(xCoorditate, 0, 0));
+        public PointMicrostation AddX(double xCoordinate) => Add(new PointMicrostation(xCoordinate, 0, 0));
 
         /// <summary>
         /// Операция сложения по оси Y
         /// </summary>       
-        public PointMicrostation AddY(double yCoorditate) => Add(new PointMicrostation(0, yCoorditate, 0));
+        public PointMicrostation AddY(double yCoordinate) => Add(new PointMicrostation(0, yCoordinate, 0));
 
         /// <summary>
         /// Операция вычитания по оси X
         /// </summary>   
-        public PointMicrostation Subtract(PointMicrostation point) =>
-            new PointMicrostation(this.X - point.X, this.Y - point.Y, this.Z - point.Z);
+        public PointMicrostation Subtract(PointMicrostation point) => new PointMicrostation(X - point.X, Y - point.Y, Z - point.Z);
 
         /// <summary>
         /// Операция вычитания по оси Y
         /// </summary>   
-        public PointMicrostation SubtractX(double xCoorditate) => Subtract(new PointMicrostation(xCoorditate, 0, 0));
+        public PointMicrostation SubtractX(double xCoordinate) => Subtract(new PointMicrostation(xCoordinate, 0, 0));
 
         /// <summary>
         /// Операция вычитания с другой точкой
         /// </summary>   
-        public PointMicrostation SubtractY(double yCoorditate) => Subtract(new PointMicrostation(0, yCoorditate, 0));
+        public PointMicrostation SubtractY(double yCoordinate) => Subtract(new PointMicrostation(0, yCoordinate, 0));
 
         /// <summary>
         /// Операция умножения
         /// </summary>       
-        public PointMicrostation Multiply(double factor) =>
-            new PointMicrostation(this.X * factor, this.Y * factor, this.Z * factor);
+        public PointMicrostation Multiply(double factor) => new PointMicrostation(X * factor, Y * factor, Z * factor);
 
         /// <summary>
         /// Число для сравнения координат
@@ -82,7 +79,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// <summary>
         /// Сравнение координат
         /// </summary>
-        private static bool CompareCoordinate(double first, double second) => Math.Abs(first - second) < TOLERANCE;
+        public static bool CompareCoordinate(double first, double second) => Math.Abs(first - second) < TOLERANCE;
 
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((PointMicrostation)obj);

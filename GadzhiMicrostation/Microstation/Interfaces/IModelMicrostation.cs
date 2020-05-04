@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
     public interface IModelMicrostation
     {
         /// <summary>
-        /// Порядковый идентефикационный номер
+        /// Порядковый идентификационный номер
         /// </summary>
         string IdName { get; }
 

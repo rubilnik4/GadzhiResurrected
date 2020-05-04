@@ -1,4 +1,4 @@
-﻿namespace GadzhiMicrostation.Models.Enums
+﻿namespace GadzhiApplicationCommon.Models.Enums
 {
     /// <summary>
     /// Типы цветов для печати

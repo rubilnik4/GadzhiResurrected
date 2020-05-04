@@ -8,10 +8,10 @@ namespace GadzhiApplicationCommon.Extensions.Collection
     /// <summary>
     /// Методы расширения для перечислений
     /// </summary>
-    public static class IEnumerableExtension
+    public static class EnumerableExtension
     {
         /// <summary>
-        /// ПРоверка перечесления на null
+        /// Проверка перечисления на null
         /// </summary>      
         public static IEnumerable<T> EmptyIfNullApp<T>(this IEnumerable<T> source) => source ?? Enumerable.Empty<T>();
 

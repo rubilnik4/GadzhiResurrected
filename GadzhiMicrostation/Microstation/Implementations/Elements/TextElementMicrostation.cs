@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Extensions.Microstation;
+﻿using System.Diagnostics.CodeAnalysis;
+using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
@@ -16,16 +17,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         private readonly TextElement _textElement;
 
-        public TextElementMicrostation(TextElement textElement,
-                                       IOwnerMicrostation ownerContainerMicrostation)
+        public TextElementMicrostation(TextElement textElement, IOwnerMicrostation ownerContainerMicrostation)
             : this(textElement, ownerContainerMicrostation, true, false)
-        {
-        }
+        { }
 
-        public TextElementMicrostation(TextElement textElement,
-                                       IOwnerMicrostation ownerContainerMicrostation,
-                                       bool isNeedCompress,
-                                       bool isVertical)
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        public TextElementMicrostation(TextElement textElement, IOwnerMicrostation ownerContainerMicrostation,
+                                       bool isNeedCompress, bool isVertical)
             : base((Element)textElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
             _textElement = textElement;
@@ -46,19 +44,15 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public override bool CompressRange()
         {
-            bool isComressed = false;
+            bool compressPerform = IsNeedCompress && IsValidToCompress &&
+                                   WidthAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioText < WidthWithRotation;
+            if (!compressPerform) return false;
 
-            if (IsNeedCompress && IsValidToCompress &&
-                WidthAttributeWithRotationInUnits * StampSettingsMicrostation.CompressionRatioText < WidthWithRotation)
-            {
-                double compressionLevel = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioText;
-                _textElement.TextStyle.Width *= compressionLevel;
-                _textElement.Rewrite();
+            double compressionLevel = (WidthAttributeWithRotationInUnits / WidthWithRotation) * StampSettingsMicrostation.CompressionRatioText;
+            _textElement.TextStyle.Width *= compressionLevel;
+            _textElement.Rewrite();
 
-                isComressed = true;
-            }
-
-            return isComressed;
+            return true;
         }
 
         /// <summary>

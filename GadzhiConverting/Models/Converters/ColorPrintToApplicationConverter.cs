@@ -1,9 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiConverting.Models.Converters
 {
@@ -15,19 +15,13 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Конвертировать тип цвета печати в версию для приложения
         /// </summary>
-        public static ColorPrintApplication ConvertingToApplication(ColorPrint colorPrint)
-        {
-            switch (colorPrint)
+        public static ColorPrintApplication ConvertingToApplication(ColorPrint colorPrint) =>
+            colorPrint switch
             {
-                case ColorPrint.BlackAndWhite:
-                    return ColorPrintApplication.BlackAndWhite;
-                case ColorPrint.Color:
-                    return ColorPrintApplication.Color;
-                case ColorPrint.GrayScale:
-                    return ColorPrintApplication.GrayScale;
-                default:
-                    return ColorPrintApplication.BlackAndWhite;
-            }
-        }
+                ColorPrint.BlackAndWhite => ColorPrintApplication.BlackAndWhite,
+                ColorPrint.Color => ColorPrintApplication.Color,
+                ColorPrint.GrayScale => ColorPrintApplication.GrayScale,
+                _ => ColorPrintApplication.BlackAndWhite
+            };
     }
 }

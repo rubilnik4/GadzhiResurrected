@@ -15,11 +15,11 @@ namespace GadzhiConverting.Configuration
         /// <summary>
         /// Имя секции в конфигурационном файле
         /// </summary>
-        private static string _sectionName => "PrintersInformationsSection";
+        private const string SECTION_NAME = "PrintersInformationSection";
 
         public static RegisterPrintersInformationSection GetConfig()
         {
-            return (RegisterPrintersInformationSection)ConfigurationManager.GetSection(_sectionName) ?? new RegisterPrintersInformationSection();
+            return (RegisterPrintersInformationSection)ConfigurationManager.GetSection(SECTION_NAME) ?? new RegisterPrintersInformationSection();
         }
 
         /// <summary>

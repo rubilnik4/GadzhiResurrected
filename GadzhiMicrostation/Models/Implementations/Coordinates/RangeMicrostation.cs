@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiMicrostation.Models.Implementations.Coordinates
 {
@@ -16,8 +17,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
     /// </summary>
     public readonly struct RangeMicrostation : IEquatable<RangeMicrostation>
     {
-        public RangeMicrostation(PointMicrostation lowLeftPoint,
-                                 PointMicrostation highRightPoint)
+        public RangeMicrostation(PointMicrostation lowLeftPoint, PointMicrostation highRightPoint)
         {
             LowLeftPoint = lowLeftPoint;
             HighRightPoint = highRightPoint;
@@ -26,7 +26,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         public RangeMicrostation(IList<double> points)
         {
             if (points == null) throw new ArgumentNullException(nameof(points));
-            if (points?.Count != 6) throw new ArgumentOutOfRangeException(nameof(points));
+            if (points.Count != 6) throw new ArgumentOutOfRangeException(nameof(points));
 
             LowLeftPoint = new PointMicrostation(Math.Min(points[0], points[3]),
                                                  Math.Min(points[1], points[4]), points[2]);

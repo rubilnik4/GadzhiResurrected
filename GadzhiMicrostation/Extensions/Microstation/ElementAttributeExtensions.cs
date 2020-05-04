@@ -12,25 +12,25 @@ namespace GadzhiMicrostation.Extensions.Microstation
     public static class ElementAttributeExtensions
     {
         /// <summary>
-        /// Получить значение аттрибута по его Id номеру
+        /// Получить значение атрибута по его Id номеру
         /// </summary>       
         public static string GetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute) =>
            AttributesElementsMicrostation.GetAttributeById(element, elementAttribute);
 
         /// <summary>
-        /// Записать значение аттрибута по его Id номеру
+        /// Записать значение атрибута по его Id номеру
         /// </summary>       
         public static void SetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute, string attributeValue) =>
            AttributesElementsMicrostation.SetAttributeById(element, elementAttribute, attributeValue);
 
         /// <summary>
-        /// Получить имя элемента из аттрибутов
+        /// Получить имя элемента из атрибутов
         /// </summary>
         public static string GetAttributeControlName(this Element element) =>
              AttributesElementsMicrostation.GetAttributeControlName(element);
 
         /// <summary>
-        /// Записать имя элемента из аттрибутов
+        /// Записать имя элемента из атрибутов
         /// </summary>
         public static void SetAttributeControlName(this Element element, string controlName) =>
              AttributesElementsMicrostation.SetAttributeControlName(element, controlName);
@@ -42,7 +42,7 @@ namespace GadzhiMicrostation.Extensions.Microstation
              AttributesElementsMicrostation.GetAttributeRange(element);
 
         /// <summary>
-        /// Получить идентефикатор личности
+        /// Получить идентификатор личности
         /// </summary>
         public static string GetAttributePersonId(this Element element) =>
               AttributesElementsMicrostation.GetAttributePersonId(element);

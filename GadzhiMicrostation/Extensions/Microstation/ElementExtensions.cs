@@ -1,12 +1,9 @@
-﻿using GadzhiMicrostation.Microstation.Converters;
+﻿using System.Collections.Generic;
+using GadzhiMicrostation.Microstation.Converters;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using MicroStationDGN;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace GadzhiMicrostation.Extentions.Microstation
+namespace GadzhiMicrostation.Extensions.Microstation
 {
     /// <summary>
     /// Методы расширения для элементов Microstation
@@ -17,20 +14,20 @@ namespace GadzhiMicrostation.Extentions.Microstation
         /// Преобразовать элемент Microstation в элемент-обертку
         /// </summary>      
         public static IElementMicrostation ToElementMicrostation(this Element element, IOwnerMicrostation owner) =>
-            ConvertMicrostationElements.ConvertToMicrostationElement(element, owner);
+            ConvertMicrostationElements.ToMicrostationElement(element, owner);
 
         /// <summary>
         /// Возможно ли конвертировать элемент Microstation в элемент-обертку
         /// </summary>    
-        public static bool IsConvertableToMicrostation(this Element element) =>
-            ConvertMicrostationElements.IsConvertableToMicrostation(element);
+        public static bool IsConvertibleToMicrostation(this Element element) =>
+            ConvertMicrostationElements.IsConvertibleToMicrostation(element);
 
         /// <summary>
-        /// Получить подэлементы ячейки
+        /// Получить дочерние элементы ячейки
         /// </summary>       
         public static IEnumerable<Element> GetCellSubElements(this CellElement cellElement)
         {
-            ElementEnumerator elementEnumerator = cellElement?.GetSubElements();
+            var elementEnumerator = cellElement?.GetSubElements();
             while (elementEnumerator?.MoveNext() == true)
             {
                 yield return (Element)elementEnumerator.Current;

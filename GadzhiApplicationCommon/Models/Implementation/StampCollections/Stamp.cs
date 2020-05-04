@@ -14,8 +14,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// </summary>
     public abstract class Stamp : IStamp
     {
-        public Stamp() { }
-
         /// <summary>
         /// Наименование
         /// </summary>

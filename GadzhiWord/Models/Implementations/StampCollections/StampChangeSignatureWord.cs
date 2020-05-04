@@ -59,7 +59,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public IStampFieldWord DateChange { get; }
 
         /// <summary>
-        /// Идентефикатор личности
+        /// идентификатор личности
         /// </summary>    
         public override string PersonId { get; }
 

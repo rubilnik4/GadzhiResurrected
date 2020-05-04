@@ -1,5 +1,4 @@
-﻿using ConvertingModels.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
     public interface IPackageServer
     {
         /// <summary>
-        /// ID идентефикатор
+        /// ID Идентификатор
         /// </summary>
         Guid Id { get; }
 
@@ -44,7 +43,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Присутствуют ли файлы для конвертации
         /// </summary>
-        bool IsValidByFileDatas { get; }
+        bool IsFilesDataValid { get; }
 
         /// <summary>
         /// Не превышает ли количество попыток конвертирования

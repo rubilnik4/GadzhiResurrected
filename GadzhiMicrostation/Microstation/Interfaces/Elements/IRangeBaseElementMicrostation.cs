@@ -41,6 +41,6 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// <summary>
         /// Копировать элемент
         /// </summary>     
-        TElement Copy(bool IsVertical);
+        TElement Copy(bool isVertical);
     }
 }
