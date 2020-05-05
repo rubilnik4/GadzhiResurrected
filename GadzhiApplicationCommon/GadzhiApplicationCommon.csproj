@@ -52,6 +52,7 @@
     <Compile Include="Extensions\Collection\IEnumerableExtension.cs" />
     <Compile Include="Extensions\Functional\ErrorExtension.cs" />
     <Compile Include="Extensions\Functional\MapExtensions.cs" />
+    <Compile Include="Extensions\Functional\Result\ResultCollectionExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultMapExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultWhereExtensions.cs" />
     <Compile Include="Extensions\Functional\WhereExtensions.cs" />

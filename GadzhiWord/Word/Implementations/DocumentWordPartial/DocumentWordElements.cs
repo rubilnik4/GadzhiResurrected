@@ -1,6 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Word.Implementations.Elements;
@@ -31,15 +30,15 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
                                                     SelectMany(section => section.Footers.ToIEnumerable()).
                                                     SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
                                                     Select(table => new TableElementWord(table, ToOwnerWord())).
-                                                    Where(tableElement => CheckFooterIsStamp(tableElement)).
+                                                    Where(CheckFooterIsStamp).
                                                     Select(tableElement => new StampMainWord(tableElement, PaperSize, OrientationType));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом
         /// </summary>
-        private bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
+        private static bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
-                                                                       Select(cell => StringAdditionalExtensions.PrepareCellTextToCompare(cell?.Text)).
+                                                                       Select(cell => cell.Text.PrepareCellTextToCompare()).
                                                                        Any(cellText => StampSettingsWord.MarkersMainStamp.MarkerContain(cellText));
 
         /// <summary>

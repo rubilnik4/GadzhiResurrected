@@ -44,10 +44,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultValue<IFileDataSourceServer> CreatePdfWithSignatures(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, ColorPrint colorPrint,
                                                                             IPrinterInformation pdfPrinterInformation) =>
             stamp.CompressFieldsRanges().
-            Map(_ => stamp.InsertSignatures().ToResultFromApplication()).
-            Map(errors => CreatePdf(documentLibrary, stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation).
-                          ConcatErrors(errors.Errors)).
-            Map(result => { stamp.DeleteSignatures(); return result; });
+            Map(_ => stamp.InsertSignatures()).
+            Map(signatures => CreatePdf(documentLibrary, stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation).
+                              ConcatErrors(signatures.Errors.ToErrorsConverting()).
+                              Void(_ => stamp.DeleteSignatures(signatures.Value)));
 
         /// <summary>
         /// Печать пдф

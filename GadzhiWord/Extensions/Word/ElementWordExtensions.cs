@@ -15,7 +15,7 @@ namespace GadzhiWord.Extensions.Word
         /// <summary>
         /// Получить номер страницы элемента
         /// </summary>
-        public static int GetPageNumber(this Range range) => range?.Information[WdInformation.wdActiveEndPageNumber];
+        public static int GetPageNumber(this Range range) => range.Information[WdInformation.wdActiveEndPageNumber];
 
         /// <summary>
         /// Получить разделы

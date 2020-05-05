@@ -18,18 +18,18 @@ namespace GadzhiWord.Word.Implementations.Converters
         public static string PrepareCellTextToCompare(string cellText)
         {
             string preparedText = cellText?.Replace("ё", "е").
-                                            Replace("c", "с").
-                                            Replace("у", "у").
-                                            Replace("o", "о").
-                                            Replace("..", ".").
-                                            Replace(((char)10).ToString(), String.Empty).
-                                            Replace(((char)11).ToString(), String.Empty).
-                                            Replace(((char)13).ToString(), String.Empty).
-                                            Replace(((char)160).ToString(), String.Empty).
-                                            Replace(((char)176).ToString(), String.Empty);
+                                      Replace("c", "с").
+                                      Replace("у", "у").
+                                      Replace("o", "о").
+                                      Replace("..", ".").
+                                      Replace(((char) 10).ToString(), String.Empty).
+                                      Replace(((char) 11).ToString(), String.Empty).
+                                      Replace(((char) 13).ToString(), String.Empty).
+                                      Replace(((char) 160).ToString(), String.Empty).
+                                      Replace(((char) 176).ToString(), String.Empty)
+                                  ?? String.Empty;
 
-            preparedText = Regex.Replace(preparedText, @"\s+", "");
-            return preparedText;
+            return Regex.Replace(preparedText, @"\s+", "");
         }
 
     }

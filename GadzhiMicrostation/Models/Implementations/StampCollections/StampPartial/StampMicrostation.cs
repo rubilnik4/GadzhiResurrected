@@ -22,10 +22,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public ICellElementMicrostation StampCellElement { get; }
 
-        public StampMicrostation(ICellElementMicrostation stampCellElement)
+        protected StampMicrostation(ICellElementMicrostation stampCellElement)
         {
             StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
-            StampSubControls = FindElementsInStampFields(stampCellElement?.SubElements, StampFieldElement.StampControlNames).ToList();
+            StampSubControls = FindElementsInStampFields(stampCellElement.SubElements, StampFieldElement.StampControlNames).ToList();
         }
 
         /// <summary>

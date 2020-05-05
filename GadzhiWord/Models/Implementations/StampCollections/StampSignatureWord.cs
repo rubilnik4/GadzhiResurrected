@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiCommon.Extentions.Functional;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -52,8 +51,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Удалить текущую подпись
         /// </summary>
-        public override void DeleteSignature() =>
+        public override IStampSignature<IStampFieldWord> DeleteSignature() =>
             Signature.
-            ResultVoidOk(signature => signature.CellElementStamp.DeleteAllPictures());
+            ResultVoidOk(signature => signature.CellElementStamp.DeleteAllPictures()).
+            Map(_ => this);
     }
 }

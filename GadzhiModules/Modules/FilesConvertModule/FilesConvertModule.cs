@@ -38,7 +38,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
         /// </summary>        
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            IUnityContainer unityContainer = containerRegistry.GetContainer();         
+            var unityContainer = containerRegistry.GetContainer();         
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));
 

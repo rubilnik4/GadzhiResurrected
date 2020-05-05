@@ -1,9 +1,5 @@
-﻿using GadzhiApplicationCommon.Extensions.Collection;
-using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Functional;
+﻿using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.Elements;
@@ -12,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Collection;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -41,7 +39,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         {
             _personIdTable = new Dictionary<string, (string, string)> {
                 { "anyone", ("id", tableStamp?.ApplicationWord.WordResources.SignatureWordFileName) }
-            };           
+            };
 
             StampPersonSignaturesWord = GetStampPersonSignatures().ToList();
             StampChangeSignaturesWord = GetStampChangeSignatures(StampPersonSignaturesWord.FirstOrDefault()).ToList();
@@ -65,21 +63,26 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public override IResultApplication InsertSignatures() =>
+        public override IResultAppCollection<IStampSignature<IStampField>> InsertSignatures() =>
             GetSignatures(StampPersonSignatures, StampChangeSignatures).
             Select(signature => signature.InsertSignature()).
-            Where(signature => !signature.IsSignatureValid).
-            Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Не найдена подпись {signature.PersonName}")).
             ToList().
-            ToResultApplication();
+            Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
+                                     (signaturesDeleted,
+                                      signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для вставки не инициализированы")));
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        public override IEnumerable<Unit> DeleteSignatures() =>
-            GetSignatures(StampPersonSignatures, StampChangeSignatures).
-            Where(signature => signature.IsSignatureValid).
-            Select(signature => { signature.DeleteSignature(); return Unit.Value; });
+        public override IResultAppCollection<IStampSignature<IStampField>> DeleteSignatures(IEnumerable<IStampSignature<IStampField>> signatures) =>
+            signatures.
+            Select(signature => signature.DeleteSignature()).
+            ToList().
+            Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
+                                     (signaturesDeleted,
+                                      signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для удаления не инициализированы")));
 
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
@@ -88,7 +91,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             FieldsStamp.
             Where(field => field.StampFieldType == StampFieldType.PersonSignature).
             Select(field => field.CellElementStamp.RowElementWord).
-            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FieldsCount).
+            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FIELDS_COUNT).
             Select(row =>
                 row.CellsElementWord[0].
                 Map(personCell => new StampPersonSignatureWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
@@ -103,7 +106,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         private IEnumerable<IStampChangeSignatureWord> GetStampChangeSignatures(ISignatureInformation personInformation) =>
             FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
             Select(field => field.CellElementStamp.RowElementWord).
-            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FieldsCount).
+            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FIELDS_COUNT).
             Select(row => new StampChangeSignatureWord(new StampFieldWord(row.CellsElementWord[0], StampFieldType.PersonSignature),
                                                        new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
                                                        new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),

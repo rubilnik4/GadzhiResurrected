@@ -25,15 +25,8 @@ namespace GadzhiWord.Word.Implementations.Elements
 
         public CellElementWord(Cell cellElement, ITableElement tableElementWord)
         {
-            if (cellElement != null)
-            {
-                _cellElement = cellElement;
-                _tableElementWord = tableElementWord;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(cellElement));
-            }
+            _cellElement = cellElement ?? throw new ArgumentNullException(nameof(cellElement));
+            _tableElementWord = tableElementWord ?? throw new ArgumentNullException(nameof(tableElementWord));
         }
 
         /// <summary>

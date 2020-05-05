@@ -32,17 +32,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private Application Application
-        {
-            get
-            {
-                if (_application == null)
-                {
-                    _application = WordInstance.Instance();
-                }
-                return _application;
-            }
-        }
+        private Application Application => _application ??= WordInstance.Instance();
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation

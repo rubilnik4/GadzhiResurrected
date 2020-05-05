@@ -1,7 +1,5 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -25,23 +23,22 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Найти элементы в словаре штампа по ключам
         /// </summary>
-        private IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<IElementMicrostation> cellSubElements,
-                                                                            IEnumerable<string> fieldsSearch,
-                                                                            ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
-                cellSubElements?.
+        private static IEnumerable<IElementMicrostation> FindElementsInStampFields(IEnumerable<IElementMicrostation> cellSubElements,
+                                                                                   IEnumerable<string> fieldsSearch,
+                                                                                   ElementMicrostationType elementMicrostationType = ElementMicrostationType.Element) =>
+                cellSubElements.
                 Where(subElement => (elementMicrostationType == ElementMicrostationType.Element ||
                                      subElement.ElementType == elementMicrostationType) &&
                                      subElement is IRangeBaseElementMicrostation<IElementMicrostation>).
                 Cast<IRangeBaseElementMicrostation<IElementMicrostation>>().
-                Where (subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).            
-                Select(subElement => subElement.Copy(StampFieldMain.IsControlVertical(subElement.AttributeControlName))).
-                Cast<IElementMicrostation>();
+                Where(subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).
+                Select(subElement => subElement.Copy(StampFieldMain.IsControlVertical(subElement.AttributeControlName)));
 
         /// <summary>
         /// Найти элементы в словаре штампа по ключам
         /// </summary>
         protected IEnumerable<IElementMicrostation> FindElementsInStampControls(IEnumerable<string> fieldsSearch,
-                                                                                ElementMicrostationType? elementMicrostationType = ElementMicrostationType.Element) =>
+                                                                                ElementMicrostationType elementMicrostationType = ElementMicrostationType.Element) =>
             FindElementsInStampFields(StampSubControls, fieldsSearch, elementMicrostationType);
 
         /// <summary>
@@ -49,30 +46,28 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public IStampFieldMicrostation GetFieldFromElements(IEnumerable<ITextElementMicrostation> elementsMicrostation,
                                                             HashSet<StampFieldBase> stampFields, StampFieldType stampFieldType) =>
-                elementsMicrostation?.Where(element => stampFields?.
-                                                       Select(field => field.Name).
-                                                       Contains(element.AttributeControlName) == true)?.
-                                      Select(field => new StampFieldMicrostation(field, stampFieldType))?.
-                                      FirstOrDefault();
+                elementsMicrostation.Where(element => stampFields.
+                                                      Select(field => field.Name).
+                                                      Contains(element.AttributeControlName)).
+                                     Select(field => new StampFieldMicrostation(field, stampFieldType)).
+                                     FirstOrDefault();
 
         /// <summary>
         /// Вписать текстовые поля в рамки
         /// </summary>
         public override IEnumerable<bool> CompressFieldsRanges() =>
             StampCellElement.SubElements.Select(element =>
-            {
-                switch (element.ElementType)
+                element.ElementType switch
                 {
-                    case ElementMicrostationType.TextElement:
-                        return element.AsTextElementMicrostation.CompressRange();                      
-                    case ElementMicrostationType.TextNodeElement:
-                        return element.AsTextNodeElementMicrostation.CompressRange().
-                               WhereOk(isCompressed => isCompressed,
-                               okFunc: isCompressed => { StampCellElement.FindAndChangeSubElement(element); 
-                                                         return isCompressed; });                       
-                    default:
-                        return false;
-                }              
-            });       
+                    ElementMicrostationType.TextElement => element.AsTextElementMicrostation.CompressRange(),
+                    ElementMicrostationType.TextNodeElement => element.AsTextNodeElementMicrostation.CompressRange().
+                        WhereOk(isCompressed => isCompressed, okFunc: isCompressed =>
+                        {
+                            StampCellElement.FindAndChangeSubElement(element);
+                            return isCompressed;
+                        }),
+                    _ => false
+                }
+            );
     }
 }

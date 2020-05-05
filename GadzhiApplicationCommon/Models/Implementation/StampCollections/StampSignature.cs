@@ -41,6 +41,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Удалить подпись
         /// </summary>
-        public abstract void DeleteSignature();
+        public abstract IStampSignature<TField> DeleteSignature();
     }
 }

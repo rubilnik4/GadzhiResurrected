@@ -1,9 +1,8 @@
-﻿
+﻿using System;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Elements;
-using System;
 
-namespace GadzhiMicrostation.Microstation.Implementations.Elements
+namespace GadzhiWord.Word.Implementations.Elements
 {
     /// <summary>
     /// Родительский элемент

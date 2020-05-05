@@ -1,5 +1,4 @@
-﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Extensions.Functional.Result;
+﻿using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
@@ -24,7 +23,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private IEnumerable<IStampApprovalSignatureMicrostation> GetStampApprovalRowsWithoutSignatures() =>
             StampFieldApprovals.GetStampRowApprovalSignatures().
                                 Select(approvalRow => approvalRow.StampApprovalSignatureFields.Select(field => field.Name)).
-                                Select(approvalNames => GetApprovalSignatureField(approvalNames));
+                                Select(GetApprovalSignatureField);
 
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
@@ -32,12 +31,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private IStampApprovalSignatureMicrostation GetApprovalSignatureField(IEnumerable<string> approvalNames)
         {
             var foundElements = FindElementsInStampControls(approvalNames, ElementMicrostationType.TextElement).
-                                Cast<ITextElementMicrostation>();
+                                Cast<ITextElementMicrostation>().
+                                ToList();
 
             var actionType = GetFieldFromElements(foundElements, StampFieldApprovals.GetFieldsDepartmentApproval(), StampFieldType.ApprovalSignature);
             var responsiblePerson = GetFieldFromElements(foundElements, StampFieldApprovals.GetFieldsResponsiblePerson(), StampFieldType.ApprovalSignature);
             var dateSignature = GetFieldFromElements(foundElements, StampFieldApprovals.GetFieldsDateSignature(), StampFieldType.ApprovalSignature);
-            var insertSignatureFunc = InsertApprovalSignatureFromLibrary(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
+            var insertSignatureFunc = InsertApprovalSignature(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
 
             return new StampApprovalSignatureMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc);
         }
@@ -45,9 +45,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertApprovalSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
-                                                                                                       IElementMicrostation dateSignatureElement) =>
-            (string personId) =>
+        private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertApprovalSignature(IElementMicrostation responsiblePersonElement,
+                                                                                               IElementMicrostation dateSignatureElement) =>
+            personId =>
                 InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation,
                                 responsiblePersonElement.AsTextElementMicrostation.Text)?.
                 ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.ApprovalSignature));

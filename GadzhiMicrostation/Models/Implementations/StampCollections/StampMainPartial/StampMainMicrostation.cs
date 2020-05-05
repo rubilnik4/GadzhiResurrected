@@ -1,17 +1,15 @@
-﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Functional;
-using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
 {
@@ -50,23 +48,27 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        protected override IResultApplication InsertSignaturesFromLibrary() =>
-            GetSignatures(StampPersonSignaturesMicrostation, StampChangeSignaturesMicrostation, StampApprovalSignaturesMicrostation).
+        protected override IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary() =>
+            GetSignatures(StampPersonSignaturesMicrostation, StampChangeSignaturesMicrostation,StampApprovalSignaturesMicrostation).
             Select(signature => signature.InsertSignature()).
-            Where(signature => !signature.IsSignatureValid).
-            Select(signature => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                     $"Не найдена подпись {signature.PersonName}")).
-            Cast<IErrorApplication>().
+            Cast<IStampSignature<IStampField>>().
             ToList().
-            ToResultApplication();
+            Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
+                             (signaturesDeleted,
+                              signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                              new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для вставки не инициализированы")));
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        public override IEnumerable<Unit> DeleteSignatures() =>
-            GetSignatures(StampPersonSignaturesMicrostation, StampChangeSignaturesMicrostation, StampApprovalSignaturesMicrostation).
-            Where(signature => signature.IsSignatureValid).
-            Select(signature => { signature.DeleteSignature(); return Unit.Value; });       
+        public override IResultAppCollection<IStampSignature<IStampField>> DeleteSignatures(IEnumerable<IStampSignature<IStampField>> signatures) =>
+            signatures.
+            Select(signature => signature.DeleteSignature()).
+            ToList().
+            Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
+                                     (signaturesDeleted, 
+                                      signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для удаления не инициализированы")));
 
         /// <summary>
         /// Тип штампа
@@ -94,9 +96,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить подписи
         /// </summary>        
-        private IEnumerable<IStampSignature<IStampFieldMicrostation>> GetSignatures(IEnumerable<IStampPersonSignatureMicrostation> personSignatures,
-                                                                                    IEnumerable<IStampChangeSignatureMicrostation> changeSignatures,
-                                                                                    IEnumerable<IStampApprovalSignatureMicrostation> approvalSignatures) =>
+        private static IEnumerable<IStampSignature<IStampFieldMicrostation>> GetSignatures(IEnumerable<IStampPersonSignatureMicrostation> personSignatures,
+                                                                                           IEnumerable<IStampChangeSignatureMicrostation> changeSignatures,
+                                                                                           IEnumerable<IStampApprovalSignatureMicrostation> approvalSignatures) =>
              ((IEnumerable<IStampSignature<IStampFieldMicrostation>>)personSignatures).
              Union((IEnumerable<IStampSignature<IStampFieldMicrostation>>)changeSignatures).
              Union((IEnumerable<IStampSignature<IStampFieldMicrostation>>)approvalSignatures);

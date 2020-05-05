@@ -32,10 +32,9 @@ namespace GadzhiWord.Word.Implementations.Elements
 
         public TableElementWord(Table tableElement, IOwnerWord ownerWord)
         {
-            _tableElement = tableElement;
-
-            ApplicationWord = ownerWord?.ApplicationWord ?? throw new ArgumentNullException(nameof(ownerWord));
-            DocumentWord = ownerWord?.DocumentWord ?? throw new ArgumentNullException(nameof(ownerWord));
+            _tableElement = tableElement ?? throw new ArgumentNullException(nameof(tableElement));
+            ApplicationWord = ownerWord.ApplicationWord ?? throw new ArgumentNullException(nameof(ownerWord));
+            DocumentWord = ownerWord.DocumentWord ;
         }
 
         /// <summary>
@@ -62,16 +61,15 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// </summary>       
         private List<IRowElement> GetRowsElement()
         {
-            var number = _tableElement.Rows.Count - 1;
             var rowsElementWord = Enumerable.Range(0, _tableElement.Rows.Count).
-                                             Select(index => new List<ICellElement>()).ToList();
+                                  Select(index => new List<ICellElement>()).ToList();
 
             foreach (var cell in CellsElementWord)
             {
                 var row = rowsElementWord[cell.RowIndex];
                 row.Add(cell);
             }
-            return rowsElementWord?.Select(row => new RowElementWord(row, this)).Cast<IRowElement>().ToList();
+            return rowsElementWord.Select(row => new RowElementWord(row)).Cast<IRowElement>().ToList();
         }
     }
 }

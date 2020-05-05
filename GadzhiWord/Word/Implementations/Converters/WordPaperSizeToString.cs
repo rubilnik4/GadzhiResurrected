@@ -15,7 +15,7 @@ namespace GadzhiWord.Word.Implementations.Converters
         /// <summary>
         /// Преобразовать формат листа в строковое значение
         /// </summary>
-        public static string ConvertingPaperSizeToString(WdPaperSize paperSize) =>
+        public static string PaperSizeToString(WdPaperSize paperSize) =>
             paperSize switch
             {
                 WdPaperSize.wdPaperA3 => "A3",

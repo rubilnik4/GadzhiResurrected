@@ -2,9 +2,7 @@
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -19,22 +17,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureMicrostation : StampSignature<IStampFieldMicrostation>
     {
+        protected StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                             IResultAppValue<IStampFieldMicrostation> signature)
+        {
+            InsertSignatureFunc = insertSignatureFunc ?? throw new ArgumentNullException(nameof(insertSignatureFunc));
+            Signature = signature ?? throw new ArgumentNullException(nameof(signature));
+        }
+
         /// <summary>
         /// Функция вставки подписи
         /// </summary>
-        private readonly Func<string, IResultAppValue<IStampFieldMicrostation>> _insertSignatureFunc;
-
-        protected StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
-            :this(insertSignatureFunc, null)
-        { }
-
-        protected StampSignatureMicrostation(Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
-                                             IStampFieldMicrostation signature)
-        {
-            _insertSignatureFunc = insertSignatureFunc;
-            Signature = new ResultAppValue<IStampFieldMicrostation>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
-                                                                                                    "Подпись не инициализирована"));
-        }
+        protected Func<string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
 
         /// <summary>
         /// Подпись
@@ -53,23 +46,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public override bool IsSignatureValid => Signature.OkStatus;
 
         /// <summary>
-        /// Вставить подпись
+        /// Получить пустое поле с подписью
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature()
-        {
-            Signature = _insertSignatureFunc?.Invoke(PersonId);
-            return this;
-        }
-
-        /// <summary>
-        /// Удалить текущую подпись
-        /// </summary>
-        public override void DeleteSignature() =>
-            Signature.
-            ResultVoidOk(signature =>
-            {
-                Signature.Value.ElementStamp.Remove();
-                SignatureInitialize();
-            });
+        public static IResultAppValue<IStampFieldMicrostation> GetNotInitializedSignature(string personName) =>
+            new ResultAppValue<IStampFieldMicrostation>(null, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                   $"Подпись не инициализирована {personName}"));
     }
 }

@@ -7,18 +7,21 @@ using Unity;
 
 namespace GadzhiConverting
 {
-    class Program
+    internal class Program
     {
-        private static readonly IUnityContainer _container = new UnityContainer();
+        /// <summary>
+        /// Контейнер инверсии зависимости
+        /// </summary>
+        private static readonly IUnityContainer Container = new UnityContainer();
 
-        static void Main()
+        private static void Main()
         {
-            NativeMethods.Handler += new NativeMethods.EventHandler(Handler);
+            NativeMethods.Handler += Handler;
             NativeMethods.SetConsoleCtrlHandler(NativeMethods.Handler, true);
 
-            BootStrapUnity.ConfigureContainer(_container);
-          
-            var applicationConverting = _container.Resolve<IConvertingService>();
+            BootStrapUnity.ConfigureContainer(Container);
+
+            var applicationConverting = Container.Resolve<IConvertingService>();
             applicationConverting.StartConverting();
 
             Console.ReadLine();
@@ -29,20 +32,8 @@ namespace GadzhiConverting
         /// </summary>
         private static bool Handler(NativeMethods.CtrlType sig)
         {
-            switch (sig)
-            {
-                case NativeMethods.CtrlType.CTRL_C_EVENT:
-                case NativeMethods.CtrlType.CTRL_LOGOFF_EVENT:
-                case NativeMethods.CtrlType.CTRL_SHUTDOWN_EVENT:
-                case NativeMethods.CtrlType.CTRL_CLOSE_EVENT:
-                default:
-                    {
-                        _container.Dispose();
-                        return false;
-                    }
-            }
+            Container.Dispose();
+            return false;
         }
     }
-
-
 }

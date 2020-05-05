@@ -42,11 +42,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        IResultApplication InsertSignatures();
+        IResultAppCollection<IStampSignature<IStampField>> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        IEnumerable<Unit> DeleteSignatures();
+        IResultAppCollection<IStampSignature<IStampField>> DeleteSignatures(IEnumerable<IStampSignature<IStampField>> signatures);
     }
 }

@@ -17,15 +17,9 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// </summary>
         private readonly List<ICellElement> _cellsElementWord;
 
-        /// <summary>
-        /// Родительская таблица
-        /// </summary>
-        private readonly ITableElement _tableElementWord;
-
-        public RowElementWord(List<ICellElement> cellsElementWord, ITableElement tableElementWord)
+        public RowElementWord(List<ICellElement> cellsElementWord)
         {
             _cellsElementWord = cellsElementWord ?? throw new ArgumentNullException(nameof(cellsElementWord));
-            _tableElementWord = tableElementWord ?? throw new ArgumentNullException(nameof(tableElementWord));
         }
 
         /// <summary>

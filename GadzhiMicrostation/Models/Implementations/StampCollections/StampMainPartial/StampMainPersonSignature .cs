@@ -24,7 +24,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private IEnumerable<IStampPersonSignatureMicrostation> GetStampPersonRowsWithoutSignatures() =>
             StampFieldPersonSignatures.GetStampRowPersonSignatures().
                                        Select(personRow => personRow.StampPersonSignatureFields.Select(field => field.Name)).
-                                       Select(personNames => GetPersonSignatureField(personNames));
+                                       Select(GetPersonSignatureField);
 
 
         /// <summary>
@@ -33,12 +33,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         private IStampPersonSignatureMicrostation GetPersonSignatureField(IEnumerable<string> personNames)
         {
             var foundElements = FindElementsInStampControls(personNames, ElementMicrostationType.TextElement).
-                                Cast<ITextElementMicrostation>();
+                                Cast<ITextElementMicrostation>().
+                                ToList();
 
             var actionType = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsActionType(), StampFieldType.PersonSignature);
             var responsiblePerson = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsResponsiblePerson(), StampFieldType.PersonSignature);
             var dateSignature = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsDateSignature(), StampFieldType.PersonSignature);
-            var insertSignatureFunc = InsertPersonSignatureFromLibrary(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
+            var insertSignatureFunc = InsertPersonSignature(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
 
             return new StampPersonSignatureMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc);
         }
@@ -46,9 +47,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>  
-        private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertPersonSignatureFromLibrary(IElementMicrostation responsiblePersonElement,
-                                                                                                     IElementMicrostation dateSignatureElement) =>
-            (string personId) =>
+        private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertPersonSignature(IElementMicrostation responsiblePersonElement,
+                                                                                             IElementMicrostation dateSignatureElement) =>
+            personId =>
                 InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation, 
                                 responsiblePersonElement.AsTextElementMicrostation.Text).
                 ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));

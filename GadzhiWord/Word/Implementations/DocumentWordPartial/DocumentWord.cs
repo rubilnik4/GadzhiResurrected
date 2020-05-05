@@ -54,7 +54,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Формат
         /// </summary>
-        private string PaperSize => WordPaperSizeToString.ConvertingPaperSizeToString(_document.PageSetup.PaperSize);
+        private string PaperSize => WordPaperSizeToString.PaperSizeToString(_document.PageSetup.PaperSize);
 
         /// <summary>
         /// Формат

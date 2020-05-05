@@ -14,11 +14,20 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public class StampPersonSignatureMicrostation : StampSignatureMicrostation,
                                                     IStampPersonSignatureMicrostation
-    {       
-        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
+    {
+        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType,
+                                                IStampFieldMicrostation responsiblePerson,
                                                 IStampFieldMicrostation dateSignature,
                                                 Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
-            : base(insertSignatureFunc)
+            : this(actionType, responsiblePerson, dateSignature, insertSignatureFunc, 
+                   GetNotInitializedSignature(responsiblePerson.ElementStamp.AsTextElementMicrostation.Text))
+        { }
+
+        public StampPersonSignatureMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
+                                                IStampFieldMicrostation dateSignature,
+                                                Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                                IResultAppValue<IStampFieldMicrostation> signature)
+            : base(insertSignatureFunc, signature)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
@@ -64,5 +73,18 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// Ответственное лицо
         /// </summary>    
         public override string PersonName => ResponsiblePersonElement.Text;
+
+        /// <summary>
+        /// Вставить подпись
+        /// </summary>
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature() =>
+            new StampPersonSignatureMicrostation(ActionType, ResponsiblePerson, DateSignature, InsertSignatureFunc,
+                                                 InsertSignatureFunc.Invoke(PersonId));
+
+        /// <summary>
+        /// Удалить подпись
+        /// </summary>
+        public override IStampSignature<IStampFieldMicrostation> DeleteSignature() =>
+            new StampPersonSignatureMicrostation(ActionType, ResponsiblePerson, DateSignature, InsertSignatureFunc);
     }
 }

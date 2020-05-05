@@ -10,7 +10,6 @@ namespace GadzhiWord.Extensions.StringAdditional
         /// <summary>
         /// Обработать текст ячейки
         /// </summary>        
-        public static string PrepareCellTextToCompare(this string cellText) =>
-            TextPrepare.PrepareCellTextToCompare(cellText);
+        public static string PrepareCellTextToCompare(this string cellText) => TextPrepare.PrepareCellTextToCompare(cellText);
     }
 }

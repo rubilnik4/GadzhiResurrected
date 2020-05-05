@@ -21,7 +21,12 @@ namespace GadzhiMicrostation.Helpers
         private static readonly object SyncLock = new object();
 
         /// <summary>
-        /// Получить случайное число
+        /// Получить случайное число до максимального предела
+        /// </summary>
+        public static int RandomNumber(int max) => RandomNumber(0, max);
+
+        /// <summary>
+        /// Получить случайное число от минимума до максимума
         /// </summary>
         public static int RandomNumber(int min, int max)
         {
