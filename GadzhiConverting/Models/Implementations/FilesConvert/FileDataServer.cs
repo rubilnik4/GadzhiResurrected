@@ -40,26 +40,25 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrint colorPrint,
                               StatusProcessing statusProcessing, int attemptingConvertCount,
-                              IEnumerable<IFileDataSourceServer> filesDataSourceServer, IEnumerable<FileConvertErrorType> filesConvertErrorType)
+                              IEnumerable<IFileDataSourceServer> filesDataSourceServer, 
+                              IEnumerable<FileConvertErrorType> filesConvertErrorType)
         {
             if (String.IsNullOrWhiteSpace(filePathServer)) throw new ArgumentNullException(nameof(filePathServer));
             if (String.IsNullOrWhiteSpace(filePathClient)) throw new ArgumentNullException(nameof(filePathClient));
+
             string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
-            if (!ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileType))
-            {
-                throw new KeyNotFoundException(nameof(filePathServer));
-            }
+            if (!ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileType)) throw new KeyNotFoundException(nameof(filePathServer));
             if (attemptingConvertCount <= 0) throw new ArgumentOutOfRangeException(nameof(attemptingConvertCount));
 
-            FileExtension = ValidFileExtentions.DocAndDgnFileTypes[fileType.ToLower(CultureInfo.CurrentCulture)];
+            FileExtension = ValidFileExtensions.GetDocAndDgnFileTypes(fileType);
             FilePathServer = filePathServer;
             FilePathClient = filePathClient;
             ColorPrint = colorPrint;
             StatusProcessing = statusProcessing;
             AttemptingConvertCount = attemptingConvertCount;
 
-            FileConvertErrorTypes = filesConvertErrorType;
-            FilesDataSourceServer = filesDataSourceServer;
+            FileConvertErrorTypes = filesConvertErrorType  ?? throw new ArgumentNullException(nameof(filesConvertErrorType));
+            FilesDataSourceServer = filesDataSourceServer ?? throw new ArgumentNullException(nameof(filesDataSourceServer));
         }
 
         /// <summary>

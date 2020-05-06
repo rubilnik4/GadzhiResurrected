@@ -26,13 +26,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
 
         public PackageData()
             : this(new List<FileData>())
-        {
-
-        }
+        { }
 
         public PackageData(List<FileData> filesData)
         {
-            Id = Guid.NewGuid();
+            Id = Guid.Empty;
             FilesQueueInfo = new FilesQueueInfo();
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
@@ -43,7 +41,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// <summary>
         /// ID идентификатор
         /// </summary>    
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         /// <summary>
         /// Подписка на изменение коллекции
@@ -69,6 +67,15 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         /// Информация о количестве файлов в очереди на сервере
         /// </summary>
         public FilesQueueInfo FilesQueueInfo { get; private set; }
+
+        /// <summary>
+        /// Сгенерировать идентификатор
+        /// </summary>
+        public Guid GenerateId()
+        {
+            Id = Guid.NewGuid();
+            return Id;
+        }
 
         /// <summary>
         /// Добавить файл

@@ -12,14 +12,5 @@ namespace GadzhiCommon.Helpers.Dialogs
         /// Список фильтров для диалоговых окон
         /// </summary>
         public static readonly string DocAndDgn = "Files|*.doc;*.docx;*.Dgn";
-
-        /// <summary>
-        /// Входит ли расширение в список
-        /// </summary>
-        public static bool IsInDocAndDgnFileTypes(string path)
-        {
-            string extensionWithoutPoint = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(path));
-            return ValidFileExtentions.DocAndDgnFileTypes?.Keys.Contains(extensionWithoutPoint) == true;
-        }
     }
 }

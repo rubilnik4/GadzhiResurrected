@@ -40,7 +40,7 @@ namespace GadzhiDAL.Factories.Implementations
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(dataBasePath))
-                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<FilesDataMap>())
+                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<PackageDataMap>())
                 .ExposeConfiguration(c =>
                 {
                     var schema = new SchemaUpdate(c);

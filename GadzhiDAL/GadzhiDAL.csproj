@@ -162,7 +162,7 @@
     <Compile Include="Mappings\FilesConvert\Archive\FilesDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\FileDataSourceMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\FileDataMap.cs" />
-    <Compile Include="Mappings\FilesConvert\Main\FilesDataMap.cs" />
+    <Compile Include="Mappings\FilesConvert\Main\PackageDataMap.cs" />
     <Compile Include="Models\Implementations\FilesQueueInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Implementations\FilesDataServerService.cs" />

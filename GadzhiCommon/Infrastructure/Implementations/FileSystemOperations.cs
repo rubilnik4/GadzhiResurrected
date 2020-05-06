@@ -21,7 +21,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Убрать точку из расширения файла и привести к нижнему регистру
         /// </summary>      
         public static string ExtensionWithoutPoint(string extension) =>
-            extension?.ToLower(CultureInfo.CurrentCulture).TrimStart('.');
+            extension?.ToLowerCaseCurrentCulture().TrimStart('.');
 
         /// <summary>
         /// Взять расширение. Убрать точку из расширения файла и привести к нижнему регистру
@@ -122,11 +122,18 @@ namespace GadzhiCommon.Infrastructure.Implementations
         {
             try
             {
+                //using var input = File.Open(filePath, FileMode.Open);
+                //using var output = new MemoryStream();
+                //using var zip = new GZipStream(output, CompressionMode.Compress);
+                //await input.CopyToAsync(zip);
+
+                //return (true, output.ToArray());
                 using var input = File.Open(filePath, FileMode.Open);
                 using var output = new MemoryStream();
-                using var zip = new GZipStream(output, CompressionMode.Compress);
-                await input.CopyToAsync(zip);
-
+                using (var zip = new GZipStream(output, CompressionMode.Compress))
+                {
+                    await input.CopyToAsync(zip);
+                }
                 return (true, output.ToArray());
             }
             catch (IOException)
@@ -138,19 +145,18 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>
-        public async Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileBinary)
+        public async Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileByte)
         {
+            if (String.IsNullOrEmpty(filePath) || fileByte == null) return false;
+
             try
             {
-                if (fileBinary != null)
-                {
-                    using var input = new MemoryStream(fileBinary.ToArray());
-                    using var zip = new GZipStream(input, CompressionMode.Decompress);
-                    using var output = File.Create(filePath);
-                    await zip.CopyToAsync(output);
+                using var input = new MemoryStream(fileByte.ToArray());
+                using var zip = new GZipStream(input, CompressionMode.Decompress);
+                using var output = File.Create(filePath);
+                await zip.CopyToAsync(output);
 
-                    return true;
-                }
+                return true;
             }
             catch (IOException)
             { }
@@ -163,16 +169,15 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>   
         public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
         {
+            if (String.IsNullOrEmpty(filePath) || fileByte == null) return false;
+
             try
             {
-                if (!String.IsNullOrEmpty(filePath) && fileByte != null)
-                {
-                    using var sourceStream = File.Open(filePath, FileMode.OpenOrCreate);
-                    sourceStream.Seek(0, SeekOrigin.End);
-                    await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
+                using var sourceStream = File.Open(filePath, FileMode.OpenOrCreate);
+                sourceStream.Seek(0, SeekOrigin.End);
+                await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
 
-                    return true;
-                }
+                return true;
             }
             catch (IOException)
             { }

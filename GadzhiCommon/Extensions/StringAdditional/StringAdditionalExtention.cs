@@ -34,22 +34,28 @@ namespace GadzhiCommon.Extensions.StringAdditional
         /// <summary>
         /// Сделать первую букву маленькой
         /// </summary>        
-        public static string FirstCharToLower(this string input)=>
+        public static string FirstCharToLower(this string input) =>
             input switch
             {
                 null => "",
                 "" => "",
-                _ => input.FirstOrDefault().ToString(CultureInfo.CurrentCulture).ToLower(CultureInfo.CurrentCulture) +
+                _ => input.FirstOrDefault().ToString(CultureInfo.CurrentCulture).ToLowerCaseCurrentCulture() +
                      input.Substring(1)
             };
-        
+
 
         /// <summary>
         /// Содержит ли подстроку без учета регистр
         /// </summary>        
         public static bool ContainsIgnoreCase(this string input, string substring) =>
-            !String.IsNullOrWhiteSpace(substring) && 
+            !String.IsNullOrWhiteSpace(substring) &&
             input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
+
+        /// <summary>
+        /// Перевести строку в нижний регистр с учетом текущего языка
+        /// </summary>
+        public static string ToLowerCaseCurrentCulture(this string input) => input?.ToLower(CultureInfo.CurrentCulture)
+                                                                             ?? String.Empty;
     }
 
 }

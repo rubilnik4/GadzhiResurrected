@@ -18,20 +18,14 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
         {
             string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
             string fileName = Path.GetFileNameWithoutExtension(filePath);
+
             if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
-            
-            if (Enum.TryParse(fileExtension, out FileExtension fileExtensionType))
-            {
-                FileExtension = fileExtensionType;
-            }
-            else
-            {
-                throw new FormatException(nameof(fileExtension));
-            }
+            if (!Enum.TryParse(fileExtension, true, out FileExtension fileExtensionType)) throw new FormatException(nameof(fileExtension));
 
+            FileExtension = fileExtensionType;
             FileName = fileName;
             FilePath = filePath;
 

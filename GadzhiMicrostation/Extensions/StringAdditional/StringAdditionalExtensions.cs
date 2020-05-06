@@ -39,7 +39,7 @@ namespace GadzhiMicrostation.Extensions.StringAdditional
             {
                 null => String.Empty,
                 "" => String.Empty,
-                _ => input.First().ToString(CultureInfo.CurrentCulture).ToLower(CultureInfo.CurrentCulture) +
+                _ => input.First().ToString().ToLowerCaseCurrentCulture() +
                      input.Substring(1)
             };
 
@@ -54,5 +54,11 @@ namespace GadzhiMicrostation.Extensions.StringAdditional
         /// Является ли строка пустой
         /// </summary>       
         public static bool IsNullOrWhiteSpace(this string text) => String.IsNullOrEmpty(text?.Trim());
+
+        /// <summary>
+        /// Перевести строку в нижний регистр с учетом текущего языка
+        /// </summary>
+        public static string ToLowerCaseCurrentCulture(this string input) => input?.ToLower(CultureInfo.CurrentCulture)
+                                                                             ?? String.Empty;
     }
 }

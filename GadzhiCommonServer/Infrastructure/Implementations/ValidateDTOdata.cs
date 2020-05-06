@@ -24,8 +24,7 @@ namespace GadzhiCommonServer.Infrastructure.Implementations
             string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest?.FilePath);
 
             bool isValidName = !String.IsNullOrWhiteSpace(fileName);
-            bool isValidExtension = !String.IsNullOrWhiteSpace(fileExtension) &&
-                                    ValidFileExtentions.DocAndDgnFileTypes.Keys.Contains(fileExtension, StringComparer.OrdinalIgnoreCase);
+            bool isValidExtension = ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileExtension);
             bool isValidDataSource = fileDataRequest?.FileDataSource != null;
 
             if (!isValidName)

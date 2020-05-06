@@ -50,6 +50,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Текущий статус конвертирования
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
+
         /// <summary>
         /// Получение файлов для изменения статуса
         /// </summary>     
@@ -236,7 +237,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private async Task GetCompleteFiles()
         {
             PackageDataResponseClient packageDataResponse = await _fileConvertingClientService.
-                                                        Operations.GetCompleteFiles(_packageInfoProject.Id);
+                                                                  Operations.GetCompleteFiles(_packageInfoProject.Id);
 
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
                                          GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
@@ -274,6 +275,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             }
 
             ClearSubscriptions();
+            _statusProcessingSubscriptions?.Dispose();
             _packageInfoProject?.ChangeAllFilesStatusAndMarkError();
         }
 
@@ -282,7 +284,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private void ClearSubscriptions()
         {
-            _statusProcessingSubscriptions?.Dispose();
+            _statusProcessingSubscriptions?.Clear();
         }
 
         #region IDisposable Support

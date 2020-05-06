@@ -23,13 +23,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         {
             if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
             string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
-            if (!ValidFileExtentions.FileTypesValid.Keys.Contains(fileType))
+            if (!ValidFileExtensions.ContainsInFileTypesValid(fileType))
             {
                 throw new KeyNotFoundException(nameof(filePath));
             }
 
             FilePath = filePath;
-            FileExtension = ValidFileExtentions.FileTypesValid[fileType];
+            FileExtension = ValidFileExtensions.GetFileTypesValid(fileType);
             PaperSize = paperSize;
             PrinterName = printerName;
         }

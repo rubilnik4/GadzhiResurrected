@@ -28,7 +28,7 @@ namespace GadzhiConverting.Models.Converters
         /// Преобразовать внутренний тип ошибок библиотеки в основной тип
         /// </summary>       
         public static FileConvertErrorType ToFileConvertErrorType(ErrorApplicationType errorApplicationType) =>
-            Enum.TryParse(errorApplicationType.ToString(), out FileConvertErrorType fileConvertErrorType) ?
+            Enum.TryParse(errorApplicationType.ToString(), true, out FileConvertErrorType fileConvertErrorType) ?
             fileConvertErrorType :
             throw new FormatException(nameof(FileConvertErrorType));
     }

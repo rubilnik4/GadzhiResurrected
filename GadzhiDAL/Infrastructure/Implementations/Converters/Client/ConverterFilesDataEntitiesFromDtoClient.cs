@@ -1,4 +1,5 @@
-﻿using GadzhiDAL.Entities.FilesConvert.Main;
+﻿using System;
+using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System.Linq;
@@ -18,13 +19,14 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         {
             if (packageDataRequest == null) return null;
 
-            var filesDataAccessToConvert = packageDataRequest.FilesData?.AsQueryable().
-                                           Select(fileData => ToFileData(fileData));
+            var packageDataAccess = packageDataRequest.FilesData?.AsQueryable().
+                                    Select(fileData => ToFileData(fileData));
 
             var filesDataEntity = new PackageDataEntity();
             filesDataEntity.SetId(packageDataRequest.Id);
             filesDataEntity.IdentityLocalName = identityName;
-            filesDataEntity.SetFileDataEntities(filesDataAccessToConvert);
+            filesDataEntity.IdentityServerName = String.Empty;
+            filesDataEntity.SetFileDataEntities(packageDataAccess);
 
             return filesDataEntity;
         }

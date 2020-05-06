@@ -6,39 +6,39 @@ using System.Threading.Tasks;
 namespace GadzhiDTOClient.Contracts.FilesConvert
 {
     /// <summary>
-    /// Сервис для конвертирования файлов.Контракт используется клиентской частью
+    /// Сервис для конвертирования файлов. Контракт используется клиентской частью
     /// </summary>
-    [ServiceContract(SessionMode = SessionMode.Required)]
+    [ServiceContract]
     public interface IFileConvertingClientService
     {
         /// <summary>
         /// Отправить файлы для конвертирования
         /// </summary>
-        [OperationContract(IsInitiating = true, IsTerminating = false)]
+        [OperationContract]
         Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequestClient);
 
         /// <summary>
         /// Проверить статус файлов
         /// </summary>   
-        [OperationContract(IsInitiating = false, IsTerminating = false)]
+        [OperationContract]
         Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataId);
 
         /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>  
-        [OperationContract(IsInitiating = false, IsTerminating = false)]
+        [OperationContract]
         Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary> 
-        [OperationContract(IsInitiating = false, IsTerminating = true)]
+        [OperationContract]
         Task SetFilesDataLoadedByClient(Guid filesDataId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>   
-        [OperationContract(IsInitiating = false, IsTerminating = true)]
+        [OperationContract]
         Task AbortConvertingById(Guid id);
     }
 }

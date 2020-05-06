@@ -51,7 +51,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
-        Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileBinary);
+        Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileByte);
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить

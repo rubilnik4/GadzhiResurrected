@@ -57,7 +57,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>      
         private async Task<IFileDataServer> ToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest, string packageGuid)
         {
-            FileSavedCheck fileSavedCheck = await SaveFileFromDtoRequest(fileDataRequest, packageGuid);
+            var fileSavedCheck = await SaveFileFromDtoRequest(fileDataRequest, packageGuid);
 
             return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath, fileDataRequest.ColorPrint,
                                       StatusProcessing.InQueue, fileSavedCheck.Errors);
@@ -74,7 +74,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             string directoryPath = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, packageGuid);
             string filePath = Path.Combine(directoryPath, Path.GetFileName(fileDataRequest.FilePath));
             if (String.IsNullOrWhiteSpace(directoryPath) ||
-                await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataRequest.FileDataSource))
+                !await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataRequest.FileDataSource))
             {
                 return new FileSavedCheck(FileConvertErrorType.RejectToSave);
             }

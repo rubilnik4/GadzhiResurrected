@@ -14,10 +14,11 @@ namespace GadzhiCommon.Helpers.FileSystem
         {
             if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
             FilePath = filePath;
+            Errors = Enumerable.Empty<FileConvertErrorType>();
         }
 
         public FileSavedCheck(FileConvertErrorType error)
-            : this(new List<FileConvertErrorType>() {error})
+            : this(new List<FileConvertErrorType>() { error })
         { }
 
         public FileSavedCheck(IEnumerable<FileConvertErrorType> errors)

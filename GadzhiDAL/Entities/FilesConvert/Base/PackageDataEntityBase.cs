@@ -25,12 +25,12 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Идентификация имени локального пользователя
         /// </summary>
-        public virtual string IdentityLocalName { get; set; }
+        public virtual string IdentityLocalName { get; set; } = String.Empty;
 
         /// <summary>
         /// Идентификация имени сервера
         /// </summary>
-        public virtual string IdentityServerName { get; set; }
+        public virtual string IdentityServerName { get; set; } = String.Empty;
 
         /// <summary>
         /// Установить идентификатор

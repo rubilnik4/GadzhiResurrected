@@ -84,11 +84,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить допустимость использования расширения файла
         /// </summary>           
-        private IResultValue<FileExtension> ValidateFileExtension(string fileExtension) =>
-            ValidFileExtentions.DocAndDgnFileTypes.Select(pair => pair.Key).
-            FirstOrDefault(extensionString => extensionString.ContainsIgnoreCase(fileExtension)).
-            WhereContinue(extensionKey => !String.IsNullOrWhiteSpace(extensionKey),
-                   okFunc: extensionKey => new ResultValue<FileExtension>(ValidFileExtentions.DocAndDgnFileTypes[extensionKey]),
+        private static IResultValue<FileExtension> ValidateFileExtension(string fileExtension) =>
+            fileExtension.
+            WhereContinue(_ => ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileExtension),
+                   okFunc: extensionKey => new ResultValue<FileExtension>(ValidFileExtensions.GetDocAndDgnFileTypes(extensionKey)),
                    badFunc: _ => new ErrorCommon(FileConvertErrorType.IncorrectExtension,
                                                  $"Расширение файла {fileExtension} не соответствует типам расширений doc или Dgn").
                                  ToResultValue<FileExtension>());

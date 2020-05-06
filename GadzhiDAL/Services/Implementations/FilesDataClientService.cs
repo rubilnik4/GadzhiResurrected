@@ -105,15 +105,16 @@ namespace GadzhiDAL.Services.Implementations
         /// </summary>
         private static async Task<FilesQueueInfo> GetQueueCount(IUnitOfWork unitOfWork, PackageDataEntity packageDataEntity)
         {
-            var filesData = unitOfWork.Session.Query<PackageDataEntity>().
-                            Where(package => packageDataEntity != null &&
-                                             !CheckStatusProcessing.IsCompletedStatusProcessingProject(package.StatusProcessingProject) &&
-                                             package.CreationDateTime < packageDataEntity.CreationDateTime);
+            var packageData = unitOfWork.Session.Query<PackageDataEntity>().
+                              Where(package => !CheckStatusProcessing.CompletedStatusProcessingProject.
+                                                   Contains(package.StatusProcessingProject) &&
+                                               package.CreationDateTime < packageDataEntity.CreationDateTime);
 
-            int packagesInQueueCount = await filesData.CountAsync();
-            int filesInQueueCount = await filesData.SelectMany(package => package.FileDataEntities).
-                                                    Where(file => !CheckStatusProcessing.IsCompletedStatusProcessingServer(file.StatusProcessing)).
-                                                    CountAsync();
+            int packagesInQueueCount = await packageData.CountAsync();
+            int filesInQueueCount = await packageData.SelectMany(package => package.FileDataEntities).
+                                                      Where(file => !CheckStatusProcessing.CompletedStatusProcessingServer.
+                                                                Contains(file.StatusProcessing)).
+                                                      CountAsync();
 
             return new FilesQueueInfo(filesInQueueCount, packagesInQueueCount);
         }

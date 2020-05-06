@@ -33,7 +33,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Установить тип поворота
         /// </summary>       
         public void SetPrintingOrientation(OrientationType orientation) =>
-             Application.CadInputQueue.SendCommand($"PRINT orientation {orientation.ToString().ToLower(CultureInfo.CurrentCulture)}");
+             Application.CadInputQueue.SendCommand($"PRINT orientation {orientation.ToString().ToLowerCaseCurrentCulture()}");
 
         /// <summary>
         /// Установить границы печати по рамке

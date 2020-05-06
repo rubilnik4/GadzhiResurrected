@@ -3,7 +3,6 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Models.Enums;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;

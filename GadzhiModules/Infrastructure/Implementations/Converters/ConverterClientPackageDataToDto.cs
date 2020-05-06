@@ -7,7 +7,6 @@ using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
@@ -45,7 +44,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
 
             return new PackageDataRequestClient()
             {
-                Id = packageData.Id,
+                Id = packageData.GenerateId(),
                 FilesData = filesRequestEnsuredWithBytes.ToList(),
             };
         }

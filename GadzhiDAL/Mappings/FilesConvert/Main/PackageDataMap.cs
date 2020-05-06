@@ -1,6 +1,5 @@
 ﻿using FluentNHibernate.Mapping;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Main;
 
 namespace GadzhiDAL.Mappings.FilesConvert.Main
@@ -8,9 +7,9 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
     /// <summary>
     /// Структура в БД для конвертируемого пакета файлов
     /// </summary>
-    public class FilesDataMap : ClassMap<PackageDataEntity>
+    public class PackageDataMap : ClassMap<PackageDataEntity>
     {
-        public FilesDataMap()
+        public PackageDataMap()
         {
             Id(x => x.Id);
             Map(x => x.CreationDateTime).Not.Nullable();

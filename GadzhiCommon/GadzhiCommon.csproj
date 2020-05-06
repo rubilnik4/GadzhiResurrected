@@ -91,7 +91,7 @@
     <Compile Include="Enums\FilesConvert\StatusError.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
-    <Compile Include="Enums\FilesConvert\ValidFileExtentions.cs" />
+    <Compile Include="Enums\FilesConvert\ValidFileExtensions.cs" />
     <Compile Include="Extensions\Collection\EnumerableExtension.cs" />
     <Compile Include="Extensions\Functional\ErrorExtension.cs" />
     <Compile Include="Extensions\Functional\ExecuteBindHandler.cs" />

@@ -12,7 +12,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Interfaces
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах
     /// </summary>
-    public interface IPackageData: IDisposable
+    public interface IPackageData : IDisposable
     {
         /// <summary>
         /// ID идентификатор
@@ -43,6 +43,11 @@ namespace GadzhiModules.Modules.FilesConvertModule.Models.Interfaces
         /// Информация о количестве файлов в очереди на сервере
         /// </summary>
         FilesQueueInfo FilesQueueInfo { get; }
+
+        /// <summary>
+        /// Сгенерировать идентификатор
+        /// </summary>
+        public Guid GenerateId();
 
         /// <summary>
         /// Добавить файл
