@@ -5,6 +5,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiApplicationCommon.Models.Implementation.Errors
 {
@@ -29,9 +30,17 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             : base(errors)
         {
             var collectionList = collection?.ToList();
-            InitializeValue(collectionList, errorNull);
 
-            if (!ValidateCollection(collectionList)) throw new NullReferenceException(nameof(collection));
+            Errors = collectionList?.Count switch
+            {
+                null when errorNull != null => Errors.Concat(errorNull),
+                0 when errorNull != null => Errors.Concat(errorNull),
+                null => throw new ArgumentNullException(nameof(collection)),
+                0 => throw new ArgumentNullException(nameof(collection)),
+                _ => Errors
+            };
+
+            Value = collectionList;
         }
 
         /// <summary>
@@ -40,7 +49,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public IResultAppCollection<T> ConcatResult(IResultAppCollection<T> resultCollection) =>
             resultCollection != null ?
             new ResultAppCollection<T>(Value.Union(resultCollection.Value),
-                                    Errors.Union(resultCollection.Errors ?? Enumerable.Empty<IErrorApplication>())) :
+                                       Errors.Union(resultCollection.Errors ?? Enumerable.Empty<IErrorApplication>())) :
             this;
 
         /// <summary>
@@ -48,19 +57,28 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// </summary>      
         public IResultAppCollection<T> ConcatResultValue(IResultAppValue<T> resultValue) =>
             resultValue != null ?
-            new ResultAppCollection<T>(resultValue.Value != null ?
-                                            Value.Concat(new List<T>() { resultValue.Value }) :
-                                            Value,
-                                        Errors.UnionNotNullApp(resultValue.Errors)) :
+            new ResultAppCollection<T>(resultValue.Value != null
+                                           ? Value.Concat(new List<T>() { resultValue.Value })
+                                           : Value,
+                                       Errors.Union(resultValue.Errors)) :
             throw new ArgumentNullException(nameof(resultValue));
 
         /// <summary>
         /// Добавить значение
         /// </summary>       
         public IResultAppCollection<T> ConcatValue(T value) =>
-            value != null ?
-            new ResultAppCollection<T>(Value.Concat(new List<T>() { value }), Errors) :
-            throw new ArgumentNullException(nameof(value));
+            value != null
+                ? new ResultAppCollection<T>(Value.Concat(new List<T>() { value }), Errors)
+                : throw new ArgumentNullException(nameof(value));
+
+        /// <summary>
+        /// Добавить значения
+        /// </summary>       
+        public IResultAppCollection<T> ConcatValues(IEnumerable<T> values) =>
+            values.ToList().
+            Map(valueCollection => ValidateCollection(valueCollection)
+                                    ? new ResultAppCollection<T>(Value.Concat(valueCollection), Errors)
+                                    : throw new NullReferenceException(nameof(valueCollection)));
 
         /// <summary>
         /// Выполнить отложенные функции

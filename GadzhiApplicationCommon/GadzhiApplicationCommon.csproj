@@ -85,7 +85,7 @@
     <Compile Include="Models\Interfaces\StampCollections\IStampField.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampMain.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampChangeSignatures.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampApprovalSignatures.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampApproval.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampPersonSignatures.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampSignature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

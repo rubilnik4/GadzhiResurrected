@@ -10,7 +10,7 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью Word
     /// </summary>
-    public interface IStampPersonSignatureWord : IStampPersonSignature<IStampFieldWord>, IStampSignatureWord
+    public interface IStampPersonWord : IStampPerson<IStampFieldWord>, IStampSignatureWord
     {
     }
 }

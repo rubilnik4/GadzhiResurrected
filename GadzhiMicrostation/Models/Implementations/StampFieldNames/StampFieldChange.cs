@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using GadzhiMicrostation.Models.Interfaces.StampFieldNames;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Строка с изменениями
     /// </summary>
-    public class StampFieldChange
+    public class StampFieldChange : IStampFieldSignature
     {
         public StampFieldChange(string numberChange, string numberOfPlots, string typeOfChange, string documentChange,
                                 string dataChange)
@@ -45,7 +46,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<StampFieldBase> StampChangeSignatureFields => new HashSet<StampFieldBase>()
+        public HashSet<StampFieldBase> StampSignatureFields => new HashSet<StampFieldBase>()
         {
             NumberChange,
             NumberOfPlots,

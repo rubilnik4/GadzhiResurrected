@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Collection;
@@ -27,12 +28,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Строки с ответственным лицом и подписью Word
         /// </summary>
-        public IReadOnlyCollection<IStampPersonSignatureWord> StampPersonSignaturesWord { get; }
+        public IResultAppCollection<IStampPersonWord> StampPersonsWord { get; }
 
         /// <summary>
         /// Строки с изменениями Word
         /// </summary>
-        public IReadOnlyCollection<IStampChangeSignatureWord> StampChangeSignaturesWord { get; }
+        public IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
 
         public StampMainWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
             : base(tableStamp, paperSize, orientationType)
@@ -41,19 +42,20 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                 { "anyone", ("id", tableStamp?.ApplicationWord.WordResources.SignatureWordFileName) }
             };
 
-            StampPersonSignaturesWord = GetStampPersonSignatures().ToList();
-            StampChangeSignaturesWord = GetStampChangeSignatures(StampPersonSignaturesWord.FirstOrDefault()).ToList();
+            StampPersonsWord = GetStampPersonSignatures();
+            StampChangesWord = GetStampChangeSignatures(StampPersonsWord.Value?.FirstOrDefault());
         }
 
         /// <summary>
         /// Строки с ответственным лицом и подписью Word
         /// </summary>
-        public IEnumerable<IStampPersonSignature<IStampFieldWord>> StampPersonSignatures => StampPersonSignaturesWord;
-
+        public IResultAppCollection<IStampPerson<IStampFieldWord>> StampPersons =>
+            new ResultAppCollection<IStampPerson<IStampFieldWord>>(StampPersonsWord.Value, StampPersonsWord.Errors);
         /// <summary>
         /// Строки с изменениями Word
         /// </summary>
-        public IEnumerable<IStampChangeSignature<IStampFieldWord>> StampChangeSignatures => StampChangeSignaturesWord;
+        public IResultAppCollection<IStampChange<IStampFieldWord>> StampChanges =>
+            new ResultAppCollection<IStampChange<IStampFieldWord>>(StampChangesWord.Value, StampChangesWord.Errors);
 
         /// <summary>
         /// Тип штампа
@@ -64,13 +66,18 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Вставить подписи
         /// </summary>
         public override IResultAppCollection<IStampSignature<IStampField>> InsertSignatures() =>
-            GetSignatures(StampPersonSignatures, StampChangeSignatures).
-            Select(signature => signature.InsertSignature()).
-            ToList().
-            Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
-                                     (signaturesDeleted,
-                                      signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
-                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для вставки не инициализированы")));
+            GetSignatures(StampPersonsWord, StampChangesWord).
+            ResultValueOk(signatures => signatures.
+                                        Select(signature => signature.InsertSignature()).
+                                        Cast<IStampSignature<IStampField>>().
+                                        ToList()).
+            ToResultCollection();
+        //Select(signature => signature.InsertSignature()).
+        //ToList().
+        //Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
+        //                         (signaturesDeleted,
+        //                          signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+        //                          new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для вставки не инициализированы")));
 
         /// <summary>
         /// Удалить подписи
@@ -87,40 +94,46 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
-        private IEnumerable<IStampPersonSignatureWord> GetStampPersonSignatures() =>
+        private IResultAppCollection<IStampPersonWord> GetStampPersonSignatures() =>
             FieldsStamp.
             Where(field => field.StampFieldType == StampFieldType.PersonSignature).
             Select(field => field.CellElementStamp.RowElementWord).
-            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FIELDS_COUNT).
+            Where(row => row.CellsElementWord?.Count >= StampPersonWord.FIELDS_COUNT).
             Select(row =>
                 row.CellsElementWord[0].
-                Map(personCell => new StampPersonSignatureWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
+                Map(personCell => new StampPersonWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
                                                                new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
                                                                new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
                                                                new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                               GetSignatureInformationByPersonName(personCell.Text))));
+                                                               GetSignatureInformationByPersonName(personCell.Text)))).
+            Map(personRows => new ResultAppCollection<IStampPersonWord>(personRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                         "Штамп основных подписей не найден")));
 
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IEnumerable<IStampChangeSignatureWord> GetStampChangeSignatures(ISignatureInformation personInformation) =>
+        private IResultAppCollection<IStampChangeWord> GetStampChangeSignatures(ISignatureInformation personInformation) =>
             FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
             Select(field => field.CellElementStamp.RowElementWord).
-            Where(row => row.CellsElementWord?.Count >= StampPersonSignatureWord.FIELDS_COUNT).
-            Select(row => new StampChangeSignatureWord(new StampFieldWord(row.CellsElementWord[0], StampFieldType.PersonSignature),
-                                                       new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                                       new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                                       new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                       new StampFieldWord(row.CellsElementWord[4], StampFieldType.PersonSignature),
-                                                       new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                       personInformation));
+            Where(row => row.CellsElementWord?.Count >= StampPersonWord.FIELDS_COUNT).
+            Select(row => new StampChangeWord(new StampFieldWord(row.CellsElementWord[0], StampFieldType.PersonSignature),
+                                              new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
+                                              new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
+                                              new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                              new StampFieldWord(row.CellsElementWord[4], StampFieldType.PersonSignature),
+                                              new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                              personInformation)).
+            Map(changeRows => new ResultAppCollection<IStampChangeWord>(changeRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                         "Штамп подписей замены не найден")));
+
 
         /// <summary>
         /// Получить подписи
         /// </summary>        
-        private static IEnumerable<IStampSignature<IStampFieldWord>> GetSignatures(IEnumerable<IStampSignature<IStampFieldWord>> personSignatures,
-                                                                                   IEnumerable<IStampSignature<IStampFieldWord>> changeSignatures) =>
-             personSignatures.UnionNotNull(changeSignatures);
+        private static IResultAppCollection<IStampSignature<IStampFieldWord>> GetSignatures(IResultAppCollection<IStampPersonWord> personSignatures,
+                                                                                            IResultAppCollection<IStampChangeWord> changeSignatures) =>
+             personSignatures.Cast<IStampPersonWord, IStampSignature<IStampFieldWord>>().
+                              ConcatValues(changeSignatures.Value);
 
         /// <summary>
         /// Получить информацию об ответственном лице по имени

@@ -29,5 +29,10 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// Добавить значение
         /// </summary>       
         IResultCollection<T> ConcatValue(T value);
+
+        /// <summary>
+        /// Добавить значения
+        /// </summary>       
+        IResultCollection<T> ConcatValues(IEnumerable<T> values);
     }
 }

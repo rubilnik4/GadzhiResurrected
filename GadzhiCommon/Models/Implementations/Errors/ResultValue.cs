@@ -30,11 +30,6 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public ResultValue(TValue value, IEnumerable<IErrorCommon> errors, IErrorCommon errorNull = null)
             : this(errors)
         {
-            InitializeValue(value, errorNull);
-        }
-
-        protected void InitializeValue(TValue value, IErrorCommon errorNull = null)
-        {
             Errors = value switch
             {
                 null when errorNull != null => Errors.Concat(errorNull),
@@ -48,12 +43,12 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Список значений
         /// </summary>
-        public TValue Value { get; private set; }
+        public TValue Value { get; protected set; }
 
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorCommon> Errors { get; private set; }
+        public IEnumerable<IErrorCommon> Errors { get; protected set; }
 
         /// <summary>
         /// Присутствуют ли ошибки

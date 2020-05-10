@@ -7,8 +7,7 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
-using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
-using MicroStationDGN;
+using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {

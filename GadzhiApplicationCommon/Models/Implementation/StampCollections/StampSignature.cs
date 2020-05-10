@@ -10,7 +10,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// <summary>
     /// Базовая структура подписи
     /// </summary>
-    public abstract class StampSignature<TField> : IStampSignature <TField>
+    public abstract class StampSignature<TField> : IStampSignature<TField>
                                                    where TField : IStampField
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public abstract bool IsSignatureValid { get; }
+        public abstract bool IsSignatureValid();
 
         /// <summary>
         /// Идентификатор личности
@@ -32,6 +32,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// Ответственное лицо
         /// </summary>    
         public abstract string PersonName { get; }
+
+        /// <summary>
+        /// Корректно ли заполнено поле ответственного лица
+        /// </summary>
+        public bool IsPersonFieldValid() => !String.IsNullOrEmpty(PersonId);
 
         /// <summary>
         /// Вставить подпись

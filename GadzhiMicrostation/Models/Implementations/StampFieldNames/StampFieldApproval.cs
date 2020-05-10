@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using GadzhiMicrostation.Models.Interfaces.StampFieldNames;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
 {
     /// <summary>
     /// Строка с согласованием
     /// </summary>
-    public class StampFieldApproval
+    public class StampFieldApproval: IStampFieldSignature
     {
         public StampFieldApproval(string departmentApproval, string responsiblePerson, string date)
         {
@@ -32,7 +33,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// <summary>
         /// Список всех полей
         /// </summary>
-        public HashSet<StampFieldBase> StampApprovalSignatureFields => new HashSet<StampFieldBase>()
+        public HashSet<StampFieldBase> StampSignatureFields => new HashSet<StampFieldBase>()
         {
             DepartmentApproval,
             ResponsiblePerson,

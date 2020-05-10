@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью
     /// </summary>
-    public interface IStampPersonSignature<out TField> : IStampSignature<TField>
+    public interface IStampPerson<out TField> : IStampSignature<TField>
                                                          where TField : IStampField
     {
         /// <summary>

@@ -5,11 +5,12 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
-using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
 {
@@ -21,37 +22,29 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
-        private IEnumerable<IStampPersonSignatureMicrostation> GetStampPersonRowsWithoutSignatures() =>
-            StampFieldPersonSignatures.GetStampRowPersonSignatures().
-                                       Select(personRow => personRow.StampPersonSignatureFields.Select(field => field.Name)).
-                                       Select(GetPersonSignatureField);
-
+        private IResultAppCollection<IStampPersonMicrostation> GetStampPersonRows() =>
+            GetStampSignatureRows(StampFieldType.PersonSignature, GetPersonSignatureField).
+            Map(signatureRows => new ResultAppCollection<IStampPersonMicrostation>(signatureRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                                       "Штамп основных подписей не найден")));
 
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
         /// </summary>
-        private IStampPersonSignatureMicrostation GetPersonSignatureField(IEnumerable<string> personNames)
+        private IResultAppValue<IStampPersonMicrostation> GetPersonSignatureField(IEnumerable<string> personNames)
         {
             var foundElements = FindElementsInStampControls(personNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>().
                                 ToList();
+            if (foundElements.Count == 0) return new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Поля основных подписей не найдены").
+                                                 ToResultApplicationValue<IStampPersonMicrostation>();
 
-            var actionType = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsActionType(), StampFieldType.PersonSignature);
-            var responsiblePerson = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsResponsiblePerson(), StampFieldType.PersonSignature);
-            var dateSignature = GetFieldFromElements(foundElements, StampFieldPersonSignatures.GetFieldsDateSignature(), StampFieldType.PersonSignature);
-            var insertSignatureFunc = InsertPersonSignature(responsiblePerson.ElementStamp, dateSignature.ElementStamp);
+            var actionType = GetFieldFromElements(foundElements, StampFieldPersons.GetFieldsActionType(), StampFieldType.PersonSignature);
+            var responsiblePerson = GetFieldFromElements(foundElements, StampFieldPersons.GetFieldsResponsiblePerson(), StampFieldType.PersonSignature);
+            var dateSignature = GetFieldFromElements(foundElements, StampFieldPersons.GetFieldsDateSignature(), StampFieldType.PersonSignature);
+            var insertSignatureFunc = InsertSignatureFunc(responsiblePerson.ElementStamp, dateSignature.ElementStamp, StampFieldType.PersonSignature);
 
-            return new StampPersonSignatureMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc);
+            return new StampPersonMicrostation(actionType, responsiblePerson, dateSignature, insertSignatureFunc).
+                   Map(stampPersonSignature => new ResultAppValue<IStampPersonMicrostation>(stampPersonSignature));
         }
-
-        /// <summary>
-        /// Функция вставки подписей из библиотеки
-        /// </summary>  
-        private Func<string, IResultAppValue<IStampFieldMicrostation>> InsertPersonSignature(IElementMicrostation responsiblePersonElement,
-                                                                                             IElementMicrostation dateSignatureElement) =>
-            personId =>
-                InsertSignature(personId, responsiblePersonElement.AsTextElementMicrostation, dateSignatureElement.AsTextElementMicrostation, 
-                                responsiblePersonElement.AsTextElementMicrostation.Text).
-                ResultValueOk(signature => new StampFieldMicrostation(signature, StampFieldType.PersonSignature));
     }
 }

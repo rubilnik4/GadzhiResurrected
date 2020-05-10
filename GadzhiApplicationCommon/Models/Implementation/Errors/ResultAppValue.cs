@@ -29,11 +29,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public ResultAppValue(TValue value, IEnumerable<IErrorApplication> errors, IErrorApplication errorNull = null)
             : this(errors)
         {
-            InitializeValue(value, errorNull);
-        }
-
-        protected void InitializeValue(TValue value, IErrorApplication errorNull = null)
-        {
             Errors = value switch
             {
                 null when errorNull != null => Errors.Concat(errorNull),
@@ -47,12 +42,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Список значений
         /// </summary>
-        public TValue Value { get; private set; }
+        public TValue Value { get; protected  set; }
 
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorApplication> Errors { get; private set; }
+        public IEnumerable<IErrorApplication> Errors { get; protected set; }
 
         /// <summary>
         /// Присутствуют ли ошибки

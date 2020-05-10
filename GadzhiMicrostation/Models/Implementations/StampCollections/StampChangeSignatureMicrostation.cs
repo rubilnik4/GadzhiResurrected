@@ -1,21 +1,21 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
 {
     /// <summary>
     /// Строка с изменениями Microstation
     /// </summary>
-    public class StampChangeSignatureMicrostation : StampSignatureMicrostation,
-                                                    IStampChangeSignatureMicrostation
+    public class StampChangeMicrostation : StampSignatureMicrostation,
+                                                    IStampChangeMicrostation
     {
-        public StampChangeSignatureMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
+        public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation dateChange, string personId, string personName,
                                                 Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
@@ -23,7 +23,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                    GetNotInitializedSignature(personName))
         { }
 
-        public StampChangeSignatureMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
+        public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                                 IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                                 IStampFieldMicrostation dateChange, string personId, string personName,
                                                 Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
@@ -105,14 +105,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// Вставить подпись
         /// </summary>
         public override IStampSignature<IStampFieldMicrostation> InsertSignature() =>
-            new StampChangeSignatureMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
+            new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
                                                  InsertSignatureFunc, InsertSignatureFunc.Invoke(PersonId));
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
         public override IStampSignature<IStampFieldMicrostation> DeleteSignature() =>
-            new StampChangeSignatureMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
+            new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
                                                  InsertSignatureFunc);
     }
 }

@@ -15,7 +15,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// </summary>
         private static IDictionary<string, StampFieldBase> StampBaseFields =>
             StampFieldMain.GetStampMainFields().
-            Union(StampFieldPersonSignatures.GetFieldsPersonSignatures()).
+            Union(StampFieldPersons.GetFieldsPersonSignatures()).
             Union(StampFieldChanges.GetFieldsChangeSignatures()).
             Union(StampFieldApprovals.GetFieldsApprovalSignatures()).
             ToDictionary(p => p.Name);

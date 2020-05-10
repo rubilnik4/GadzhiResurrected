@@ -19,10 +19,10 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        bool IsSignatureValid { get; }
+        bool IsSignatureValid();
 
         /// <summary>
-        /// идентификатор личности
+        /// Идентификатор личности
         /// </summary>    
         string PersonId { get; }
 
@@ -30,6 +30,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// Ответственное лицо
         /// </summary>    
         string PersonName { get; }
+
+        /// <summary>
+        /// Корректно ли заполнено поле ответственного лица
+        /// </summary>
+        bool IsPersonFieldValid();
 
         /// <summary>
         /// Вставить подпись

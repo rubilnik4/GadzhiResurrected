@@ -38,7 +38,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public override bool IsSignatureValid => Signature.OkStatus && Signature.Value.CellElementStamp.HasPicture;
+        public override bool IsSignatureValid() => Signature.OkStatus && Signature.Value.CellElementStamp.HasPicture;
 
         /// <summary>
         /// Вставить подпись

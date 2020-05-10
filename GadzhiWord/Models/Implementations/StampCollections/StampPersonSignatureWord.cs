@@ -1,8 +1,4 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
+﻿using GadzhiWord.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +10,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с ответственным лицом и подписью
     /// </summary>
-    public class StampPersonSignatureWord : StampSignatureWord, IStampPersonSignatureWord
+    public class StampPersonWord : StampSignatureWord, IStampPersonWord
     {
         /// <summary>
         /// Количество ячеек в строке
         /// </summary>
         public const int FIELDS_COUNT = 4;
        
-        public StampPersonSignatureWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
+        public StampPersonWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
                                         IStampFieldWord signature, IStampFieldWord dateSignature,
                                         ISignatureInformation signatureInformation)
             : base(signature, signatureInformation?.SignaturePath)

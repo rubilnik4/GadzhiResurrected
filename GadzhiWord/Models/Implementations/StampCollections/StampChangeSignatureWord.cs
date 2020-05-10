@@ -10,14 +10,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Строка с изменениями Word
     /// </summary>
-    public class StampChangeSignatureWord : StampSignatureWord, IStampChangeSignatureWord
+    public class StampChangeWord : StampSignatureWord, IStampChangeWord
     {       
         /// <summary>
         /// Количество ячеек в строке
         /// </summary>
         public const int FIELDS_COUNT = 6;
 
-        public StampChangeSignatureWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots,
+        public StampChangeWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots,
                                         IStampFieldWord typeOfChange, IStampFieldWord documentChange,
                                         IStampFieldWord signature, IStampFieldWord dateChange,
                                         ISignatureInformation signatureInformation)

@@ -49,7 +49,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// </summary>
         public static HashSet<StampFieldBase> GetFieldsChangeSignatures() =>
             new HashSet<StampFieldBase>(GetStampRowChangesSignatures().
-                                        SelectMany(rowChange => rowChange.StampChangeSignatureFields));
+                                        SelectMany(rowChange => rowChange.StampSignatureFields));
 
         /// <summary>
         /// Список полей с номером изменения

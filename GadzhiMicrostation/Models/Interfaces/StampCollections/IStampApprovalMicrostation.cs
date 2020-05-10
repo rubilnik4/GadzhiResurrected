@@ -1,17 +1,13 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace GadzhiMicrostation.Models.Interfaces.StampCollections.StampCollections
+namespace GadzhiMicrostation.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Строка с согласованием Microstation
     /// </summary>
-    public interface IStampApprovalSignatureMicrostation : IStampApprovalSignatures<IStampFieldMicrostation>
+    public interface IStampApprovalMicrostation : IStampApproval<IStampFieldMicrostation>, IStampSignatureMicrostation
     {
         /// <summary>
         /// Тип действия

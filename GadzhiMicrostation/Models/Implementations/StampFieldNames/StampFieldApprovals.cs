@@ -42,7 +42,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// </summary>
         public static HashSet<StampFieldBase> GetFieldsApprovalSignatures() =>
             new HashSet<StampFieldBase>(GetStampRowApprovalSignatures().
-                                        SelectMany(rowApproval => rowApproval.StampApprovalSignatureFields));
+                                        SelectMany(rowApproval => rowApproval.StampSignatureFields));
 
         /// <summary>
         /// Отдел согласования
