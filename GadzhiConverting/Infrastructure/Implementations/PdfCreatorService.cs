@@ -28,12 +28,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private bool _readyState;
 
-
         /// <summary>
         /// Время ожидания на создание PDF файла
         /// </summary>
-        private static int _waitingPrintingLimitInSeconds = 60;
-
+        private const int WAITING_PRINTING_LIMIT_IN_SECONDS = 60;
 
         /// <summary>
         /// Инициализировать модуль PDFCreator
@@ -57,7 +55,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Установить опции печати
         /// </summary>   
-        private IResultValue<PDFCreator.clsPDFCreator> SetPrinterOptions(string filePath) =>
+        private static IResultValue<PDFCreator.clsPDFCreator> SetPrinterOptions(string filePath) =>
             new ResultValue<PDFCreator.clsPDFCreator>(PdfCreatorInitialize()).
             ResultValueContinue(pdfCreator => pdfCreator.cStart("/NoProcessingAtStartup"),
                 okFunc: pdfCreator => pdfCreator,
@@ -90,7 +88,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             var printFunctionResult = printFunction.Invoke();
             int waitingLimit = 0;
-            while (!_readyState && waitingLimit < _waitingPrintingLimitInSeconds)
+            while (!_readyState && waitingLimit < WAITING_PRINTING_LIMIT_IN_SECONDS && printFunctionResult.OkStatus)
             {
                 waitingLimit += 1;
                 Thread.Sleep(1000);
@@ -122,23 +120,20 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Событие готовности печати PDF
         /// </summary>
-        private void PdfCreatorReady()
-        {
-            _readyState = true;
-        }
+        private void PdfCreatorReady() => _readyState = true;
 
         /// <summary>
         /// Уничтожить все предыдущие процессы
         /// </summary>
-        private static IEnumerable<string> KillAllPreviousProcess() =>
-            Process.GetProcesses().
-            Where(process => process.ProcessName.ContainsIgnoreCase("pdfcreator")).
-            Select(process =>
+        private static void KillAllPreviousProcess()
+        {
+            foreach (var process in Process.GetProcesses())
             {
-                string processName = process.ProcessName;
-                process.Kill();
-                return processName;
-            }).
-            ToList();
+                if (process.ProcessName.ContainsIgnoreCase("pdfcreator"))
+                {
+                    process.Kill();
+                }
+            }
+        }
     }
 }

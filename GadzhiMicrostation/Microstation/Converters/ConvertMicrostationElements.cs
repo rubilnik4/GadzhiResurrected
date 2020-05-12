@@ -21,6 +21,7 @@ namespace GadzhiMicrostation.Microstation.Converters
             element switch
             {
                 null => throw new ArgumentNullException(nameof(element)),
+                _ when element.IsLineElement => new LineElementMicrostation(element.AsLineElement, ownerContainerMicrostation),
                 _ when element.IsTextElement => new TextElementMicrostation(element.AsTextElement, ownerContainerMicrostation),
                 _ when element.IsTextNodeElement => new TextNodeElementMicrostation(element.AsTextNodeElement, ownerContainerMicrostation),
                 _ when element.IsCellElement => new CellElementMicrostation(element.AsCellElement, ownerContainerMicrostation),
@@ -31,6 +32,7 @@ namespace GadzhiMicrostation.Microstation.Converters
         /// Возможно ли конвертировать элемент Microstation в элемент-обертку
         /// </summary>    
         public static bool IsConvertibleToMicrostation(Element element) =>
+            element?.IsLineElement == true ||
             element?.IsTextElement == true ||
             element?.IsTextNodeElement == true ||
             element?.IsCellElement == true;

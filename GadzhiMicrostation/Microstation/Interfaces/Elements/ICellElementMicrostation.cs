@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using GadzhiMicrostation.Models.Enums;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {
@@ -23,8 +25,28 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         IEnumerable<IElementMicrostation> SubElements { get; }
 
         /// <summary>
+        /// Получить дочерние элементы по типу
+        /// </summary>
+        IEnumerable<IElementMicrostation> GetSubElementsByType(ElementMicrostationType elementMicrostationType);
+
+        /// <summary>
         /// Найти и изменить вложенный в штамп элемент.Только для внешних операций типа Scale, Move
         /// </summary>
         void FindAndChangeSubElement(IElementMicrostation elementMicrostation);
+
+        /// <summary>
+        /// Переместить элемент
+        /// </summary>
+        ICellElementMicrostation Move(PointMicrostation offset);
+
+        /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        ICellElementMicrostation Rotate(PointMicrostation origin, double degree);
+
+        /// <summary>
+        /// Масштабировать элемент
+        /// </summary>
+        ICellElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);
     }
 }

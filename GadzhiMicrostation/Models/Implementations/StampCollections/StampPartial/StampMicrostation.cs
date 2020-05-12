@@ -35,12 +35,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Формат
         /// </summary>
-        public override string PaperSize =>
-            StampCellElement.SubElements?.
-            FirstOrDefault(subElement => subElement.IsTextElementMicrostation &&
-                                         StampFieldMain.IsFormatField(subElement.AsTextElementMicrostation.Text))?.
-            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)) 
-            ?? String.Empty;
+        public override string PaperSize => StampCellElement.SubElements?.
+                                            FirstOrDefault(subElement => subElement.IsTextElementMicrostation &&
+                                                                         StampFieldMain.IsFormatField(subElement.AsTextElementMicrostation.Text))?.
+                                            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)) 
+                                            ?? String.Empty;
 
         /// <summary>
         /// Тип расположения штампа

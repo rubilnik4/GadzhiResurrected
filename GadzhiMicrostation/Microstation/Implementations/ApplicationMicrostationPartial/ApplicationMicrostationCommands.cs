@@ -3,14 +3,11 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
-using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiMicrostation.Models.Implementations.StampCollections;
 using GadzhiMicrostation.Helpers;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
@@ -19,8 +16,6 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Extensions.StringAdditional;
 
-// ReSharper disable All
-
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
     public partial class ApplicationMicrostation : IApplicationMicrostationCommands
@@ -28,7 +23,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Кэшированная библиотека элементов
         /// </summary>
-        private IList<LibraryElement> _cachLibraryElements;
+        private IList<LibraryElement> _cacheLibraryElements;
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке и проверить наличие такой в библиотеке
@@ -44,9 +39,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
         public IResultAppValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
-                                                                   IModelMicrostation modelMicrostation,
-                                                                   Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
-                                                                   string cellDescription = null)
+                                                                                    IModelMicrostation modelMicrostation,
+                                                                                    Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
+                                                                                    string cellDescription = null)
         {
             AttachLibrary(MicrostationResources.SignatureMicrostationFileName);
 
@@ -63,7 +58,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         public void AttachLibrary(string libraryPath)
         {
             _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath);
-            _cachLibraryElements = CachingLibraryElements();
+            _cacheLibraryElements = CachingLibraryElements();
         }
 
         /// <summary>
@@ -72,9 +67,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         public void DetachLibrary()
         {
             _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
-            _cachLibraryElements = null;
+            _cacheLibraryElements = null;
         }
-
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
@@ -83,14 +77,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                        IModelMicrostation modelMicrostation,
                                                                        Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null)
         {
-            CellElement cellElement = _application.CreateCellElement2(StringIdPrepare(cellName),
+            var cellElement = _application.CreateCellElement2(StringIdPrepare(cellName),
                                                                       _application.Point3dFromXY(origin.X, origin.Y),
                                                                       _application.Point3dFromXY(1, 1),
                                                                       false, _application.Matrix3dIdentity());
-            if (modelMicrostation == null) throw new ArgumentNullException(nameof(modelMicrostation));
 
-            var cellDefaultOrigin = new CellElementMicrostation(cellElement, modelMicrostation?.ToOwnerMicrostation());
-            ICellElementMicrostation cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
+            var cellDefaultOrigin = new CellElementMicrostation(cellElement, modelMicrostation.ToOwnerMicrostation());
+            var cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
@@ -114,13 +107,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>
         private IList<LibraryElement> CachingLibraryElements()
         {
-            CellInformationEnumerator сellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
-            сellInformationEnumerator.Reset();
+            var cellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
+            cellInformationEnumerator.Reset();
 
             var cachingLibraryElements = new List<LibraryElement>();
-            while (сellInformationEnumerator.MoveNext())
+            while (cellInformationEnumerator.MoveNext())
             {
-                var cellInformation = сellInformationEnumerator.Current;
+                var cellInformation = cellInformationEnumerator.Current;
                 cachingLibraryElements.Add(new LibraryElement(cellInformation.Name, cellInformation.Description));
             }
 
@@ -131,7 +124,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Содержится ли текущая ячейка в библиотеке 
         /// </summary>       
         private bool IsCellContainsInLibrary(string cellName) =>
-            _cachLibraryElements?.Any(libraryElement => libraryElement.Name == cellName) == true;
+            _cacheLibraryElements?.Any(libraryElement => libraryElement.Name == cellName) == true;
 
         /// <summary>
         /// Подготовить строку для поиска в библиотеке
@@ -142,7 +135,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Найти замену имени ячейки по описанию
         /// </summary>
         private IResultAppValue<string> FindCellNameByDescription(string cellDescription) =>
-            _cachLibraryElements?.
+            _cacheLibraryElements?.
             FirstOrDefault(libraryElement => libraryElement.Description.ContainsIgnoreCase(cellDescription))?.
             Map(libraryElement => new ResultAppValue<string>(libraryElement.Name))
             ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по фамилии {cellDescription} не найдена").
@@ -152,8 +145,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Вернуть случайное имя
         /// </summary>
         private IResultAppValue<string> GetCellNameRandom() =>
-            _cachLibraryElements?.
-            Map(cach => cach[RandomInstance.RandomNumber(cach.Count)].Name).
+            _cacheLibraryElements?.
+            Map(cache => cache[RandomInstance.RandomNumber(cache.Count)].Name).
             Map(name => new ResultAppValue<string>(name))
             ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, "База подписей не установлена").
                Map(error => new ResultAppValue<string>(error));

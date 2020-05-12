@@ -82,7 +82,7 @@ namespace GadzhiMicrostation.Models.Implementations.Coordinates
         /// </summary>
         public PointMicrostation OriginCenter =>
             new PointMicrostation(LowLeftPoint.X + Math.Abs(LowLeftPoint.X - HighRightPoint.X) / 2,
-                                  LowLeftPoint.Y - Math.Abs(LowLeftPoint.Y - HighRightPoint.Y) / 2,
+                                  LowLeftPoint.Y + Math.Abs(LowLeftPoint.Y - HighRightPoint.Y) / 2,
                                   0);
 
         /// <summary>

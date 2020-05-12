@@ -64,7 +64,7 @@
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\RandomInstance.cs" />
-    <Compile Include="Microstation\Converters\ConvertElementMicrostationTypes.cs" />
+    <Compile Include="Microstation\Converters\ConvertingElementMicrostationTypes.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
     <Compile Include="Microstation\Converters\ConvertMicrostationElements.cs" />
     <Compile Include="Microstation\Implementations\ApplicationMicrostationPartial\ApplicationMicrostation.cs" />
@@ -76,12 +76,14 @@
     <Compile Include="Microstation\Implementations\AttributesElementsMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\CellElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\ElementMicrostation.cs" />
+    <Compile Include="Microstation\Implementations\Elements\LineElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\OwnerMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\RangeBaseElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextNodeElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\MicrostationResources.cs" />
     <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationPrinting.cs" />
+    <Compile Include="Microstation\Interfaces\Elements\ILineElementMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainApprovalSignature.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonSignature .cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeSignature.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Models\Implementations\StampCollections\StampPersonSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampApprovalMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSignatureMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampSignatureRange.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldApprovals.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldBase.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldChange.cs" />

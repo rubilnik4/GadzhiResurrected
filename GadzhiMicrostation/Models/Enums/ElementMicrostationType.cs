@@ -6,6 +6,7 @@
     public enum ElementMicrostationType
     {
         Element,
+        LineElement,
         TextElement,
         TextNodeElement,
         CellElement

@@ -90,7 +90,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
             var elementScanCriteria = new ElementScanCriteria();
             elementScanCriteria.ExcludeAllTypes();
 
-            var includeTypes = includeTypesMicrostation?.Select(ConvertElementMicrostationTypes.ToMsdMicrostation)
+            var includeTypes = includeTypesMicrostation?.Select(ConvertingElementMicrostationTypes.ToMsdMicrostation)
                                ?? Enumerable.Empty<MsdElementType>();
 
             foreach (var msdElementType in includeTypes)

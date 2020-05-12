@@ -20,6 +20,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         bool IsTextElementMicrostation { get; }
 
         /// <summary>
+        /// Является ли базовый элемент Microstation линией
+        /// </summary>       
+        bool IsLineElementMicrostation { get; }
+
+        /// <summary>
         /// Является ли базовый элемент Microstation текстовым полем
         /// </summary>       
         bool IsTextNodeElementMicrostation { get; }
@@ -28,6 +33,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Является ли базовый элемент Microstation ячейкой
         /// </summary>       
         bool IsCellElementMicrostation { get; }
+
+        /// <summary>
+        /// Преобразование базового элемента Microstation в линию
+        /// </summary>       
+        ILineElementMicrostation AsLineElementMicrostation { get; }
 
         /// <summary>
         /// Преобразование базового элемента Microstation в текстовый элемент
@@ -48,21 +58,6 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Тип элемента Microstation
         /// </summary>
         ElementMicrostationType ElementType { get; }
-
-        /// <summary>
-        /// Переместить элемент
-        /// </summary>
-        IElementMicrostation Move(PointMicrostation origin);
-
-        /// <summary>
-        /// Повернуть элемент
-        /// </summary>
-        IElementMicrostation Rotate(PointMicrostation origin, double degree);
-
-        /// <summary>
-        /// Масштабировать элемент
-        /// </summary>
-        IElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor);
 
         /// <summary>
         /// Удалить текущий элемент

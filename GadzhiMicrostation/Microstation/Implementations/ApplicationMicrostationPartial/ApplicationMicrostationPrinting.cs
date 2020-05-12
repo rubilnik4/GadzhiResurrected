@@ -4,7 +4,6 @@ using MicroStationDGN;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;

@@ -17,14 +17,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval,
                                                   IStampFieldMicrostation responsiblePerson,
                                                   IStampFieldMicrostation dateSignature,
-                                                  Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                                  Func<string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(departmentApproval, responsiblePerson, dateSignature, insertSignatureFunc,
                    GetNotInitializedSignature(responsiblePerson.ElementStamp.AsTextElementMicrostation.Text))
         { }
 
         public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
                                                   IStampFieldMicrostation dateSignature,
-                                                  Func<string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                                  Func<string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                                   IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
@@ -78,7 +78,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// </summary>
         public override IStampSignature<IStampFieldMicrostation> InsertSignature() =>
             new StampApprovalMicrostation(DepartmentApproval, ResponsiblePerson, DateSignature, InsertSignatureFunc,
-                                                   InsertSignatureFunc.Invoke(PersonId));
+                                                   InsertSignatureFunc.Invoke(PersonId, PersonName));
 
         /// <summary>
         /// Удалить подпись

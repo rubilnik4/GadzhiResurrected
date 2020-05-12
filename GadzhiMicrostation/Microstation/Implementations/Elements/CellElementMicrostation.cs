@@ -6,45 +6,46 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GadzhiMicrostation.Models.Enums;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
     /// <summary>
     /// Элемент ячейки типа Microstation
     /// </summary>
-    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
     public class CellElementMicrostation : RangeBaseElementMicrostation<ICellElementMicrostation>, ICellElementMicrostation
     {
+        /// <summary>
+        /// Экземпляр ячейки Microstation
+        /// </summary>
+        private readonly CellElement _cellElement;
+
         public CellElementMicrostation(CellElement cellElement, IOwnerMicrostation ownerContainerMicrostation)
            : this(cellElement, ownerContainerMicrostation, false, false)
         { }
 
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public CellElementMicrostation(CellElement cellElement, IOwnerMicrostation ownerContainerMicrostation,
                                        bool isNeedCompress, bool isVertical)
             : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
-            CellElement = cellElement;
+            _cellElement = cellElement;
         }
 
         /// <summary>
-        /// Экземпляр ячейки Microstation определяющей штамп
+        /// Имя ячейки
         /// </summary>
-        protected CellElement CellElement { get; }
+        public string Name => _cellElement.Name;
 
         /// <summary>
         /// Имя ячейки
         /// </summary>
-        public string Name => CellElement.Name;
-
-        /// <summary>
-        /// Имя ячейки
-        /// </summary>
-        public string Description => CellElement.Description;
+        public string Description => _cellElement.Description;
 
         /// <summary>
         /// Масштаб штампа
         /// </summary>
-        private double Scale => CellElement.Scale.X;
+        private double Scale => _cellElement.Scale.X;
 
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно коэффициента сжатия штампа
@@ -54,7 +55,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Координаты базовой точки
         /// </summary>
-        public override PointMicrostation Origin => CellElement.Origin.ToPointMicrostation();
+        public override PointMicrostation Origin => _cellElement.Origin.ToPointMicrostation();
 
         /// <summary>
         /// Дочерние элементы с оригиналами Microstation
@@ -64,8 +65,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Дочерние элементы с оригиналами Microstation
         /// </summary>
-        private IDictionary<IElementMicrostation, Element> SubElementsPair 
-            => _subElementsPair ??= GetSubElementsPair();
+        private IDictionary<IElementMicrostation, Element> SubElementsPair => _subElementsPair ??= GetSubElementsPair();
 
         /// <summary>
         /// Дочерние элементы
@@ -78,17 +78,24 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public override bool CompressRange() => throw new NotImplementedException();
 
         /// <summary>
+        /// Получить дочерние элементы по типу
+        /// </summary>
+        public IEnumerable<IElementMicrostation> GetSubElementsByType(ElementMicrostationType elementMicrostationType) =>
+            SubElements.
+            Where(subElement => subElement.ElementType == elementMicrostationType);
+
+        /// <summary>
         /// Найти и изменить вложенный в штамп элемент.Только для внешних операций типа Scale, Move
         /// </summary>
         public void FindAndChangeSubElement(IElementMicrostation elementMicrostation)
         {
-            CellElement.ResetElementEnumeration();
-            while (CellElement.MoveToNextElement(true))
+            _cellElement.ResetElementEnumeration();
+            while (_cellElement.MoveToNextElement())
             {
-                var elementCurrent = CellElement.CopyCurrentElement();
+                var elementCurrent = _cellElement.CopyCurrentElement();
                 if (elementCurrent.ID64 == elementMicrostation?.Id)
                 {
-                    CellElement.ReplaceCurrentElement(SubElementsPair[elementMicrostation]);
+                    _cellElement.ReplaceCurrentElement(SubElementsPair[elementMicrostation]);
                     break;
                 }
             }
@@ -98,15 +105,32 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Получить дочерние элементы
         /// </summary>
         private IDictionary<IElementMicrostation, Element> GetSubElementsPair() =>
-            CellElement.GetCellSubElements().
+            _cellElement.GetCellSubElements().
             Where(element => element.IsConvertibleToMicrostation()).
             ToDictionary(element => element.ToElementMicrostation(this),
                          element => element);
 
         /// <summary>
+        /// Переместить элемент
+        /// </summary>
+        public ICellElementMicrostation Move(PointMicrostation offset) => Move<ICellElementMicrostation>(offset);
+
+        /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        public ICellElementMicrostation Rotate(PointMicrostation origin, double degree) =>
+            Rotate<ICellElementMicrostation>(origin, degree);
+
+        /// <summary>
+        /// Масштабировать элемент
+        /// </summary>
+        public ICellElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor) =>
+            ScaleAll<ICellElementMicrostation>(origin, scaleFactor);
+
+        /// <summary>
         /// Копировать элемент
-        /// </summary>     
-        public override ICellElementMicrostation Copy(bool isVertical) =>
-            new CellElementMicrostation(CellElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
+        /// </summary>
+        public override ICellElementMicrostation Clone(bool isVertical) =>
+            new CellElementMicrostation(_cellElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
     }
 }

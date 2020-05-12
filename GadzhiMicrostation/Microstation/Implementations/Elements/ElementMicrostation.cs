@@ -12,7 +12,7 @@ using System.ComponentModel;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
-    public abstract class ElementMicrostation : IElementMicrostation
+    public abstract class ElementMicrostation: IElementMicrostation
     {
         protected ElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation)
         {
@@ -20,8 +20,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             OwnerContainerMicrostation = ownerContainerMicrostation ?? throw new ArgumentNullException(nameof(ownerContainerMicrostation));
             ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
             ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
-
-            AttributeCaching = new Dictionary<ElementMicrostationAttributes, string>();
         }
 
 
@@ -45,7 +43,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>
         public IModelMicrostation ModelMicrostation { get; }
 
-
         /// <summary>
         /// идентификатор элемента
         /// </summary>
@@ -55,6 +52,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Коэффициент преобразования координат в текущие относительно родительского элемента
         /// </summary>
         public virtual double UnitScale => OwnerContainerMicrostation.UnitScale;
+
+        /// <summary>
+        /// Является ли базовый элемент Microstation линией
+        /// </summary>       
+        public bool IsLineElementMicrostation => this is ILineElementMicrostation;
 
         /// <summary>
         /// Является ли базовый элемент Microstation текстовым
@@ -70,6 +72,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// Является ли базовый элемент Microstation ячейкой
         /// </summary>       
         public bool IsCellElementMicrostation => this is ICellElementMicrostation;
+
+        /// <summary>
+        /// Преобразование базового элемента Microstation в линию
+        /// </summary>       
+        public ILineElementMicrostation AsLineElementMicrostation => (ILineElementMicrostation)this;
 
         /// <summary>
         /// Преобразование базового элемента Microstation в текстовый элемент
@@ -92,6 +99,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public ElementMicrostationType ElementType =>
             this switch
             {
+                _ when IsLineElementMicrostation => ElementMicrostationType.LineElement,
                 _ when IsTextElementMicrostation => ElementMicrostationType.TextElement,
                 _ when IsTextNodeElementMicrostation => ElementMicrostationType.TextNodeElement,
                 _ when IsCellElementMicrostation => ElementMicrostationType.CellElement,
@@ -101,29 +109,38 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Переместить элемент
         /// </summary>
-        public virtual IElementMicrostation Move(PointMicrostation offset)
+        protected virtual TElement Move<TElement>(PointMicrostation offset)
+            where TElement : IElementMicrostation
         {
             _element.Move(offset.ToPoint3d());
-            return this;
+            return Clone<TElement>();
         }
 
         /// <summary>
         /// Повернуть элемент
         /// </summary>
-        public virtual IElementMicrostation Rotate(PointMicrostation origin, double degree)
+        protected virtual TElement Rotate<TElement>(PointMicrostation origin, double degree)
+            where TElement : IElementMicrostation
         {
             _element.AsCellElement.RotateAboutZ(origin.ToPoint3d(), degree * (Math.PI / 180));
-            return this;
+            return Clone<TElement>();
         }
 
         /// <summary>
         /// Масштабировать элемент
         /// </summary>
-        public virtual IElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
+        protected virtual TElement ScaleAll<TElement>(PointMicrostation origin, PointMicrostation scaleFactor)
+            where TElement : IElementMicrostation
         {
             _element.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
-            return this;
+            return Clone<TElement>();
         }
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>
+        protected abstract TElement Clone<TElement>()
+            where TElement : IElementMicrostation;
 
         /// <summary>
         /// Удалить текущий элемент
@@ -144,7 +161,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Кэшированные атрибуты элемента
         /// </summary>
-        protected IDictionary<ElementMicrostationAttributes, string> AttributeCaching { get; }
+        protected IDictionary<ElementMicrostationAttributes, string> AttributeCaching { get; } =
+            new Dictionary<ElementMicrostationAttributes, string>();
 
         /// <summary>
         /// Получить значение атрибута по его Id номеру

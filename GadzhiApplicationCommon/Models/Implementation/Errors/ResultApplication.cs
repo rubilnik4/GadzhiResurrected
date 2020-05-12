@@ -25,9 +25,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// Добавить ошибку
         /// </summary>      
         public new IResultApplication ConcatErrors(IEnumerable<IErrorApplication> errors) =>
-            errors != null && ValidateCollection(errors) ?
-            new ResultApplication(Errors.Union(Errors)) :
-            this;
+            new ResultApplication(base.ConcatErrors(errors).Errors);
 
         /// <summary>
         /// Преобразовать в результирующий ответ с параметром

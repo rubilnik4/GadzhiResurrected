@@ -72,12 +72,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                                         Cast<IStampSignature<IStampField>>().
                                         ToList()).
             ToResultCollection();
-        //Select(signature => signature.InsertSignature()).
-        //ToList().
-        //Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
-        //                         (signaturesDeleted,
-        //                          signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
-        //                          new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для вставки не инициализированы")));
 
         /// <summary>
         /// Удалить подписи

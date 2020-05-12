@@ -56,7 +56,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId, ITextElementMicrostation previousField,
                                                                             ITextElementMicrostation nextField, string personName = null) =>
-            GetSignatureRange(StampCellElement.Origin, StampCellElement.UnitScale, previousField, nextField).
+            StampSignatureRange.GetSignatureRange(StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
+                                                                   Select(element => element.AsLineElementMicrostation).
+                                                                   Map(lineElements => new ResultAppCollection<ILineElementMicrostation>(lineElements)),
+                                                  previousField, nextField, previousField.IsVertical).
             ResultValueOkBind(signatureRange => StampCellElement.ApplicationMicrostation.
                                                 CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
                                                                              StampCellElement.ModelMicrostation,
@@ -66,85 +69,53 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Получить строки с ответственным лицом/отделом без подписи
         /// </summary>
-        protected static IEnumerable<TSignatureField> GetStampSignatureRows<TSignatureField>
-                (StampFieldType stampFieldType, Func<IEnumerable<string>, IResultAppValue<TSignatureField>> getSignatureField)
+        protected static IEnumerable<TSignatureField> GetStampSignatureRows<TSignatureField>(StampFieldType stampFieldType,
+                                                                                             Func<IEnumerable<string>, IResultAppValue<TSignatureField>> getSignatureField)
                 where TSignatureField : IStampSignatureMicrostation =>
             StampFieldSignatures.GetFieldsBySignatureType(stampFieldType).
             Select(getSignatureField).
-            Where(resultSignature => resultSignature.OkStatus && !resultSignature.Value.IsPersonFieldValid()).
-            Select(resultApproval => resultApproval.Value);
+            Where(resultSignature => resultSignature.OkStatus && resultSignature.Value.IsPersonFieldValid()).
+            Select(resultSignature => resultSignature.Value).
+            WhereContinue(signatures => signatures.Any(),
+                          okFunc: signatures => signatures,
+                          badFunc: signatures => null);
 
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        protected Func<string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc(IElementMicrostation previousElement,
-                                                                                             IElementMicrostation nextElement,
-                                                                                             StampFieldType stampFieldType) =>
-            personId =>
-                InsertSignature(personId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation,
-                                previousElement.AsTextElementMicrostation.Text)?.
+        protected Func<string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc(IElementMicrostation previousElement,
+                                                                                                     IElementMicrostation nextElement,
+                                                                                                     StampFieldType stampFieldType) =>
+            (personId, personName) =>
+                InsertSignature(personId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation, personName).
                 ResultValueOk(signature => new StampFieldMicrostation(signature, stampFieldType));
-
-        //Определяется как правая верхняя точка поля Фамилии и как левая нижняя точка Даты
-        /// <summary>
-        /// Получить координаты и размеры поля для вставки подписей
-        /// </summary>       
-        private static IResultAppValue<RangeMicrostation> GetSignatureRange(PointMicrostation stampOrigin, double unitScale,
-                                                    ITextElementMicrostation previousField, ITextElementMicrostation nextField) =>
-            Map(GetSignatureLowLeft(previousField), GetSignatureHighRight(nextField),
-                (previous, next) => previous.OkStatus && next.OkStatus
-                    ? new ResultAppValue<RangeMicrostation>(new RangeMicrostation(previous.Value, next.Value))
-                    : previous.Errors.Concat(next.Errors).ToResultApplicationValue<RangeMicrostation>()).
-            ResultValueOk(rangeCellCoordinates => rangeCellCoordinates.Scale(unitScale).
-                                                                       Offset(stampOrigin));
-
-        /// <summary>
-        /// Получить нижнюю левую точку поля
-        /// </summary>       
-        private static IResultAppValue<PointMicrostation> GetSignatureLowLeft(ITextElementMicrostation fieldText) =>
-          new ResultAppValue<ITextElementMicrostation>(fieldText, new ErrorApplication(ErrorApplicationType.ArgumentNullReference,
-                                                                                       "Не задан диапазон поля подписи LowLeft")).
-          ResultValueOk(field => !field.IsVertical ?
-                                 new PointMicrostation(field.RangeAttributeInUnits.HighRightPoint.X, field.RangeAttributeInUnits.LowLeftPoint.Y) :
-                                 new PointMicrostation(field.RangeAttributeInUnits.LowLeftPoint.X, field.RangeAttributeInUnits.HighRightPoint.Y));
-
-        /// <summary>
-        /// Получить верхнюю правую точку поля
-        /// </summary>       
-        private static IResultAppValue<PointMicrostation> GetSignatureHighRight(ITextElementMicrostation fieldText) =>
-          new ResultAppValue<ITextElementMicrostation>(fieldText, new ErrorApplication(ErrorApplicationType.ArgumentNullReference,
-                                                                                       "Не задан диапазон поля подписи HighRight")).
-          ResultValueOk(field => !field.IsVertical ?
-                                 new PointMicrostation(field.RangeAttributeInUnits.LowLeftPoint.X, field.RangeAttributeInUnits.HighRightPoint.Y) :
-                                 new PointMicrostation(field.RangeAttributeInUnits.HighRightPoint.X, field.RangeAttributeInUnits.LowLeftPoint.Y));
 
         /// <summary>
         /// Параметры ячейки подписи
         /// </summary>
-        private static Func<ICellElementMicrostation, ICellElementMicrostation> CreateSignatureCell(RangeMicrostation signatureRange, bool isVertical) =>
-            cellElement => cellElement.Copy(isVertical).
-                           Map(cell => SignatureMove(cell, signatureRange, isVertical)).
-                           Map(cell => SignatureRotate(cell, signatureRange, isVertical)).
+        private static Func<ICellElementMicrostation, ICellElementMicrostation> CreateSignatureCell(RangeMicrostation signatureRange,
+                                                                                                    bool isVertical) =>
+            cellElement => cellElement.Clone(isVertical).
+                           Map(cell => SignatureMove(cell, signatureRange)).
+                           Map(cell => SignatureRotate(cell, isVertical)).
                            Map(cell => SignatureScale(cell, signatureRange)).
                            Void(cell => cell.SetAttributeById(ElementMicrostationAttributes.Signature, StampFieldMain.SignatureAttributeMarker));
 
         /// <summary>
         /// Переместить ячейку подписи
         /// </summary>
-        private static ICellElementMicrostation SignatureMove(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
-            signatureCell.Origin.
-            Subtract(signatureCell.Origin).
-            WhereOk(_ => isVertical,
-                okFunc: originMinusLowLeft => originMinusLowLeft.SubtractY(signatureRange.Width)).
+        private static ICellElementMicrostation SignatureMove(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange) =>
+            signatureRange.OriginCenter .
+                          Subtract(signatureCell.Range.OriginCenter).
             Map(originMinusLowLeft => (ICellElementMicrostation)signatureCell.Move(originMinusLowLeft));
 
         /// <summary>
         /// Повернуть ячейку подписи
         /// </summary>       
-        private static ICellElementMicrostation SignatureRotate(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange, bool isVertical) =>
-            GetRotatePoint(signatureRange, isVertical).
+        private static ICellElementMicrostation SignatureRotate(ICellElementMicrostation signatureCell, bool isVertical) =>
+            signatureCell.
             WhereContinue(_ => isVertical,
-                okFunc: rotatePoint => (ICellElementMicrostation)signatureCell.Rotate(rotatePoint, 90),
+                okFunc: rotatePoint => (ICellElementMicrostation)signatureCell.Rotate(signatureCell.Range.OriginCenter, 90),
                 badFunc: _ => signatureCell);
 
         /// <summary>
@@ -155,15 +126,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                   signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText).
             Map(scaleFactor => GetScalePoint(signatureRange).
                                Map(scalePoint => (ICellElementMicrostation)signatureCell.ScaleAll(scalePoint, scaleFactor)));
-
-        /// <summary>
-        /// Получить точку для поворота
-        /// </summary>
-        private static PointMicrostation GetRotatePoint(RangeMicrostation signatureRange, bool isVertical) =>
-            signatureRange.
-            WhereContinue(_ => isVertical,
-                okFunc: range => range.LowLeftPoint,
-                badFunc: range => new PointMicrostation(range.HighRightPoint.X, range.LowLeftPoint.Y));
 
         /// <summary>
         /// Получить точку для масштабирования

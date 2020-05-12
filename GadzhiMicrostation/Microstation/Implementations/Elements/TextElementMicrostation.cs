@@ -37,7 +37,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Координаты текстового элемента
         /// </summary>
-        public override PointMicrostation Origin => _textElement.get_Origin().ToPointMicrostation();
+        private PointMicrostation? _origin;
+
+        /// <summary>
+        /// Координаты текстового элемента
+        /// </summary>
+        public override PointMicrostation Origin => _origin ??= _textElement.get_Origin().ToPointMicrostation();
 
         /// <summary>
         /// Вписать текстовый элемент в рамку
@@ -56,9 +61,26 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Переместить элемент
+        /// </summary>
+        public ITextElementMicrostation Move(PointMicrostation offset) => Move<ITextElementMicrostation>(offset);
+
+        /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        public ITextElementMicrostation Rotate(PointMicrostation origin, double degree) =>
+            Rotate<ITextElementMicrostation>(origin, degree);
+
+        /// <summary>
+        /// Масштабировать элемент
+        /// </summary>
+        public ITextElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor) =>
+            ScaleAll<ITextElementMicrostation>(origin, scaleFactor);
+
+        /// <summary>
         /// Копировать элемент
-        /// </summary>     
-        public override ITextElementMicrostation Copy(bool isVertical) =>
+        /// </summary>
+        public override ITextElementMicrostation Clone(bool isVertical) =>
             new TextElementMicrostation(_textElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
     }
 }

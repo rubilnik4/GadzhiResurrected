@@ -36,7 +36,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица
         /// </summary>
-        public bool IsPersonFieldValid() => !String.IsNullOrEmpty(PersonId);
+        public virtual bool IsPersonFieldValid() => !String.IsNullOrEmpty(PersonId);
 
         /// <summary>
         /// Вставить подпись

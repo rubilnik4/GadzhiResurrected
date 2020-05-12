@@ -5,8 +5,8 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// <summary>
     /// Базовый класс для элементов находящихся в рамке
     /// </summary>
-    public interface IRangeBaseElementMicrostation<out TElement> : IElementMicrostation
-                                              where TElement : class
+    public interface IRangeBaseElementMicrostation<out TElementRange >: IElementMicrostation
+        where TElementRange: IRangeBaseElementMicrostation<TElementRange>
     {
         /// <summary>
         /// Необходимо ли сжатие в рамке
@@ -40,7 +40,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 
         /// <summary>
         /// Копировать элемент
-        /// </summary>     
-        TElement Copy(bool isVertical);
+        /// </summary>
+        TElementRange Clone(bool isVertical);
     }
 }

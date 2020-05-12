@@ -11,11 +11,12 @@ namespace GadzhiMicrostation.Microstation.Converters
     /// <summary>
     /// Преобразовать тип элемента во внутренние типы Microstation
     /// </summary>
-    public static class ConvertElementMicrostationTypes
+    public static class ConvertingElementMicrostationTypes
     {
         public static MsdElementType ToMsdMicrostation(ElementMicrostationType elementMicrostationType) =>
             elementMicrostationType switch
             {
+                ElementMicrostationType.LineElement => MsdElementType.msdElementTypeLine,
                 ElementMicrostationType.TextElement => MsdElementType.msdElementTypeText,
                 ElementMicrostationType.TextNodeElement => MsdElementType.msdElementTypeTextNode,
                 ElementMicrostationType.CellElement => MsdElementType.msdElementTypeCellHeader,

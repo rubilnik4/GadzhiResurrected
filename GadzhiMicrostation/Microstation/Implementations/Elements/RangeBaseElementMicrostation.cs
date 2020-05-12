@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
@@ -12,8 +11,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// <summary>
     /// Базовый класс для элементов находящихся в рамке
     /// </summary>
-    public abstract class RangeBaseElementMicrostation<TElement> : ElementMicrostation, IRangeBaseElementMicrostation<TElement>
-                                                                   where TElement : class
+    public abstract class RangeBaseElementMicrostation<TElementRange> : ElementMicrostation, IRangeBaseElementMicrostation<TElementRange>
+        where TElementRange: IRangeBaseElementMicrostation<TElementRange>
     {
         /// <summary>
         /// Экземпляр элемента Microstation
@@ -47,18 +46,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Размеры ячейки элемента в текущих координатах
         /// </summary>
-        public RangeMicrostation Range => new RangeMicrostation(_element.Range.Low.ToPointMicrostation(),
-                                                                _element.Range.High.ToPointMicrostation());
+        private RangeMicrostation? _range;
+
+        /// <summary>
+        /// Размеры ячейки элемента в текущих координатах
+        /// </summary>
+        public RangeMicrostation Range => _range ??= new RangeMicrostation(_element.Range.Low.ToPointMicrostation(),
+                                                                           _element.Range.High.ToPointMicrostation());
 
         /// <summary>
         /// Размеры ячейки элемента в стандартно заданных координатах
         /// </summary>
-        private RangeMicrostation RangeAttribute =>
-            GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.Range).
-            Map(RangeMicrostation.StringToRange).
-            WhereContinue(result => result.OkStatus,
-                okFunc: result => result.Value ,
-                badFunc: result => new RangeMicrostation());
+        private RangeMicrostation RangeAttribute => GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.Range).
+                                                    Map(RangeMicrostation.StringToRange).
+                                                    WhereContinue(result => result.OkStatus,
+                                                                  okFunc: result => result.Value,
+                                                                  badFunc: result => new RangeMicrostation());
 
         /// <summary>
         /// Возможно ли сжатие элемента
@@ -97,7 +100,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
 
         /// <summary>
         /// Копировать элемент
-        /// </summary>     
-        public abstract TElement Copy(bool isVertical);
+        /// </summary>
+        public abstract TElementRange Clone(bool isVertical);
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>
+        protected override TElement Clone<TElement>() => (TElement)(IElementMicrostation)Clone(IsVertical);
     }
 }

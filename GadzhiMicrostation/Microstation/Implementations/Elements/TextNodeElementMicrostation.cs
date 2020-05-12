@@ -33,27 +33,52 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public override PointMicrostation Origin => _textNodeElement.Origin.ToPointMicrostation();
 
         /// <summary>
-        /// Переместить текстовое поле
+        /// Переместить элемент
         /// </summary>
-        public override IElementMicrostation Move(PointMicrostation offset) => throw new NotImplementedException();
+        public ITextNodeElementMicrostation Move(PointMicrostation offset) => Move<ITextNodeElementMicrostation>(offset);
 
         /// <summary>
         /// Повернуть элемент
         /// </summary>
-        public override IElementMicrostation Rotate(PointMicrostation origin, double degree) => throw new NotImplementedException();
+        public ITextNodeElementMicrostation Rotate(PointMicrostation origin, double degree) =>
+            Rotate<ITextNodeElementMicrostation>(origin, degree);
+
+        /// <summary>
+        /// Масштабировать элемент
+        /// </summary>
+        public ITextNodeElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor) =>
+            ScaleAll<ITextNodeElementMicrostation>(origin, scaleFactor);
+
+        /// <summary>
+        /// Копировать элемент
+        /// </summary>
+        public override ITextNodeElementMicrostation Clone(bool isVertical) =>
+            new TextNodeElementMicrostation(_textNodeElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
+
+        /// <summary>
+        /// Переместить текстовое поле
+        /// </summary>
+        protected override TElement Move<TElement>(PointMicrostation offset) => throw new NotImplementedException();
+
+        /// <summary>
+        /// Повернуть элемент
+        /// </summary>
+        protected override TElement Rotate<TElement>(PointMicrostation origin, double degree) => throw new NotImplementedException();
 
         /// <summary>
         /// Масштабировать текстовое поле
         /// </summary>
-        public override IElementMicrostation ScaleAll(PointMicrostation origin, PointMicrostation scaleFactor)
+        protected override TElement ScaleAll<TElement>(PointMicrostation origin, PointMicrostation scaleFactor)
         {
             ChangeTextElementsInNode(textElement =>
             {
                 textElement.ScaleAll(origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
             });
-            _textNodeElement.ScaleAll(Origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);  // необходимо сжатие самого элемента контейнера
+
+            // необходимо сжатие самого элемента контейнера
+            _textNodeElement.ScaleAll(Origin.ToPoint3d(), scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
             _textNodeElement.Rewrite();
-            return this;
+            return (TElement)Clone<ITextNodeElementMicrostation>();
         }
 
         /// <summary>
@@ -99,11 +124,5 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                 textElement.Rewrite();
             }
         }
-
-        /// <summary>
-        /// Копировать элемент
-        /// </summary>     
-        public override ITextNodeElementMicrostation Copy(bool isVertical) =>
-            new TextNodeElementMicrostation(_textNodeElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
     }
 }

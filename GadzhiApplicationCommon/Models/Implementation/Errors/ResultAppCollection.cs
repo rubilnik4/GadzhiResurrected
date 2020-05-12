@@ -31,16 +31,14 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         {
             var collectionList = collection?.ToList();
 
-            Errors = collectionList?.Count switch
+            Errors = collectionList switch
             {
                 null when errorNull != null => Errors.Concat(errorNull),
-                0 when errorNull != null => Errors.Concat(errorNull),
                 null => throw new ArgumentNullException(nameof(collection)),
-                0 => throw new ArgumentNullException(nameof(collection)),
                 _ => Errors
             };
 
-            Value = collectionList;
+            Value = collectionList ?? Enumerable.Empty<T>();
         }
 
         /// <summary>
