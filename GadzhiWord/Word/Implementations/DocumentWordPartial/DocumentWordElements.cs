@@ -6,9 +6,12 @@ using GadzhiWord.Word.Implementations.Elements;
 using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 
 namespace GadzhiWord.Word.Implementations.DocumentWordPartial
@@ -31,7 +34,9 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
                                                     SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
                                                     Select(table => new TableElementWord(table, ToOwnerWord())).
                                                     Where(CheckFooterIsStamp).
-                                                    Select(tableElement => new StampMainWord(tableElement, PaperSize, OrientationType));
+                                                    Select((tableElement, stampIndex) => new StampMainWord(tableElement, 
+                                                                                                           new StampIdentifier(stampIndex),
+                                                                                                           PaperSize, OrientationType));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом

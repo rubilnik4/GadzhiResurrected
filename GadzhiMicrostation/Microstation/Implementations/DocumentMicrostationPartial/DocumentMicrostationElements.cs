@@ -20,6 +20,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// Найти таблицы-штампы во всех моделях и листах
         /// </summary>
         private static IEnumerable<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation) => 
-            modelsMicrostation.SelectMany(model => model.FindStamps()).ToList();
+            modelsMicrostation.SelectMany((model, modelIndex) => model.FindStamps(modelIndex)).ToList();
     }
 }

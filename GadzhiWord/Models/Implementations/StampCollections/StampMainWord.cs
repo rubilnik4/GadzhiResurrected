@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Collection;
 
@@ -35,8 +36,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
 
-        public StampMainWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
-            : base(tableStamp, paperSize, orientationType)
+        public StampMainWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType)
+            : base(tableStamp, id, paperSize, orientationType)
         {
             _personIdTable = new Dictionary<string, (string, string)> {
                 { "anyone", ("id", tableStamp?.ApplicationWord.WordResources.SignatureWordFileName) }

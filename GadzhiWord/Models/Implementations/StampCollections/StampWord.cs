@@ -18,17 +18,19 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampWord : Stamp
     {
-        /// <summary>
-        /// Элемент таблица
-        /// </summary>
-        protected ITableElement TableStamp { get; }
-
-        protected StampWord(ITableElement tableStamp, string paperSize, OrientationType orientationType)
+        protected StampWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType)
+            : base(id)
         {
             TableStamp = tableStamp;
             PaperSize = paperSize;
             Orientation = orientationType;
         }
+
+        /// <summary>
+        /// Элемент таблица
+        /// </summary>
+        protected ITableElement TableStamp { get; }
+
         /// <summary>
         /// Наименование
         /// </summary>

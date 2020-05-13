@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {
@@ -58,6 +59,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public double UnitScale => UnitsMicrostation.Global;
 
         /// <summary>
+        /// Выбрать текущую модель
+        /// </summary>
+        public void Activate() => _modelMicrostation.Activate();
+
+        /// <summary>
         /// Найти элементы в модели по типу
         /// </summary>       
         public IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation) =>
@@ -74,12 +80,12 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        public IEnumerable<IStamp> FindStamps() =>
+        public IEnumerable<IStamp> FindStamps(int modelIndex) =>
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
-            Select(element => element.AsCellElement).
-            Where(cellElement => StampFieldMain.IsStampName(cellElement.Name)).
-            Select(cellElement => new CellElementMicrostation(cellElement, ToOwnerMicrostation()).
-                                  Map(cellMicrostation => new StampMainMicrostation(cellMicrostation))).
+            Where(element => StampFieldMain.IsStampName(element.AsCellElement.Name)).
+            Select((element, stampIndex) => new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
+                                            Map(cellMicrostation => new StampMainMicrostation(cellMicrostation,
+                                                                                              new StampIdentifier(modelIndex, stampIndex)))).
             Cast<IStamp>();
 
         /// <summary>

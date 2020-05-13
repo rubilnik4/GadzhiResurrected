@@ -97,6 +97,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
             ResultValueContinue(stamp => stamp is IStampMicrostation,
                 okFunc: stamp => (IStampMicrostation)stamp,
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Штамп не соответствует формату Microstation")).
+            ResultVoidOk(stamp => stamp.StampCellElement.ModelMicrostation.Activate()).
             ResultValueOkBind(stamp => ApplicationMicrostation.SetPrintingFenceByRange(stamp.StampCellElement.Range).
                                        ToResultApplicationValue(stamp)).
             ResultValueOkBind(stamp => ApplicationMicrostation.SetPrinterPaperSize(stamp.PaperSize, prefixSearchPaperSize).
