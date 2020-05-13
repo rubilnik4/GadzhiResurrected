@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
@@ -26,13 +27,18 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                                        bool isNeedCompress, bool isVertical)
             : base((Element)textElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
-            _textElement = textElement;
+            _textElement = textElement ?? throw new ArgumentNullException(nameof(textElement));
         }
 
         /// <summary>
         /// Текст элемента
         /// </summary>
-        public string Text => _textElement?.Text;
+        private string _text;
+
+        /// <summary>
+        /// Текст элемента
+        /// </summary>
+        public string Text => _text ??= String.Copy(_textElement.Text);
 
         /// <summary>
         /// Координаты текстового элемента

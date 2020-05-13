@@ -122,12 +122,6 @@ namespace GadzhiCommon.Infrastructure.Implementations
         {
             try
             {
-                //using var input = File.Open(filePath, FileMode.Open);
-                //using var output = new MemoryStream();
-                //using var zip = new GZipStream(output, CompressionMode.Compress);
-                //await input.CopyToAsync(zip);
-
-                //return (true, output.ToArray());
                 using var input = File.Open(filePath, FileMode.Open);
                 using var output = new MemoryStream();
                 using (var zip = new GZipStream(output, CompressionMode.Compress))

@@ -29,11 +29,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                 cellSubElements.
                 Where(subElement => (elementMicrostationType == ElementMicrostationType.Element ||
                                      subElement.ElementType == elementMicrostationType) &&
-                                     subElement is IRangeBaseElementMicrostation).
-                Cast<IRangeBaseElementMicrostation>().
+                                     subElement is IRangeBaseElementMicrostation<IElementMicrostation>).
+                Cast<IRangeBaseElementMicrostation<IElementMicrostation>>().
                 Where(subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).
-                Select(subElement => subElement.Clone(StampFieldMain.IsControlVertical(subElement.AttributeControlName))).
-                Cast<IElementMicrostation>();
+                Select(subElement => subElement.Clone(StampFieldMain.IsControlVertical(subElement.AttributeControlName)));
 
         /// <summary>
         /// Найти элементы в словаре штампа по ключам

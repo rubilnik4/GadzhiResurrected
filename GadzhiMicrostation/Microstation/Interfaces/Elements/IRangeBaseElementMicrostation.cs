@@ -6,7 +6,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
     /// Базовый класс для элементов находящихся в рамке
     /// </summary>
     public interface IRangeBaseElementMicrostation<out TElementRange >: IElementMicrostation
-        where TElementRange: IRangeBaseElementMicrostation<TElementRange>
+        where TElementRange: IElementMicrostation
     {
         /// <summary>
         /// Необходимо ли сжатие в рамке

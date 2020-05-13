@@ -24,7 +24,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                                            bool isNeedCompress, bool isVertical)
             : base((Element)textNodeElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
-            _textNodeElement = textNodeElement;
+            _textNodeElement = textNodeElement ?? throw new ArgumentNullException(nameof(textNodeElement));
         }
 
         /// <summary>

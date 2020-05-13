@@ -24,7 +24,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public LineElementMicrostation(LineElement lineElement, IOwnerMicrostation ownerContainerMicrostation)
            : base((Element)lineElement, ownerContainerMicrostation)
         {
-            _lineElement = lineElement;
+            _lineElement = lineElement ?? throw new ArgumentNullException(nameof(lineElement));
         }
 
         /// <summary>

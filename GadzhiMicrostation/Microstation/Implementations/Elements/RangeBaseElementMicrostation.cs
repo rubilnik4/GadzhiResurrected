@@ -12,7 +12,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     /// Базовый класс для элементов находящихся в рамке
     /// </summary>
     public abstract class RangeBaseElementMicrostation<TElementRange> : ElementMicrostation, IRangeBaseElementMicrostation<TElementRange>
-        where TElementRange: IRangeBaseElementMicrostation<TElementRange>
+        where TElementRange: IElementMicrostation
     {
         /// <summary>
         /// Экземпляр элемента Microstation

@@ -29,23 +29,38 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                                        bool isNeedCompress, bool isVertical)
             : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress, isVertical)
         {
-            _cellElement = cellElement;
+            _cellElement = cellElement ?? throw new ArgumentNullException(nameof(cellElement));
         }
 
         /// <summary>
         /// Имя ячейки
         /// </summary>
-        public string Name => _cellElement.Name;
+        private string _name;
 
         /// <summary>
         /// Имя ячейки
         /// </summary>
-        public string Description => _cellElement.Description;
+        public string Name => _name ??= _cellElement.Name;
+
+        /// <summary>
+        /// Имя ячейки
+        /// </summary>
+        private string _description;
+
+        /// <summary>
+        /// Имя ячейки
+        /// </summary>
+        public string Description => _description ??= _cellElement.Description;
 
         /// <summary>
         /// Масштаб штампа
         /// </summary>
-        private double Scale => _cellElement.Scale.X;
+        private double? _scale;
+
+        /// <summary>
+        /// Масштаб штампа
+        /// </summary>
+        private double Scale => _scale ??= _cellElement.Scale.X;
 
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно коэффициента сжатия штампа
@@ -55,7 +70,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Координаты базовой точки
         /// </summary>
-        public override PointMicrostation Origin => _cellElement.Origin.ToPointMicrostation();
+        private PointMicrostation? _origin;
+
+        /// <summary>
+        /// Координаты базовой точки
+        /// </summary>
+        public override PointMicrostation Origin => _origin ??= _cellElement.Origin.ToPointMicrostation();
 
         /// <summary>
         /// Дочерние элементы с оригиналами Microstation

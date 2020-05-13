@@ -44,8 +44,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public override OrientationType Orientation => StampCellElement.Range.Width >= StampCellElement.Range.Height ?
-                                                       OrientationType.Landscape :
-                                                       OrientationType.Portrait;
+        public override OrientationType Orientation => 
+            StampCellElement.Range.Width >= StampCellElement.Range.Height 
+            ? OrientationType.Landscape
+            : OrientationType.Portrait;
     }
 }

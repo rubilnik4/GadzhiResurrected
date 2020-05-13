@@ -18,7 +18,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         {
             _element = element ?? throw new ArgumentNullException(nameof(element));
             OwnerContainerMicrostation = ownerContainerMicrostation ?? throw new ArgumentNullException(nameof(ownerContainerMicrostation));
-            ApplicationMicrostation = OwnerContainerMicrostation?.ApplicationMicrostation;
+            ApplicationMicrostation = OwnerContainerMicrostation.ApplicationMicrostation;
             ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
         }
 

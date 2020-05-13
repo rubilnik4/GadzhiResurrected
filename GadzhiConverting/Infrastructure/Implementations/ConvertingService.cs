@@ -10,6 +10,7 @@ using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -188,15 +189,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
             {
                 case StatusProcessingProject.ConvertingComplete:
                 case StatusProcessingProject.Error:
-                {
-                    _messagingService.ShowAndLogMessage("Отправка данных в базу...");
+                    {
+                        _messagingService.ShowAndLogMessage("Отправка данных в базу...");
 
-                    PackageDataResponseServer packageDataResponse = await _converterServerFilesDataToDto.FilesDataToResponse(packageServer);
-                    await _fileConvertingServerService.Operations.UpdateFromResponse(packageDataResponse);
+                        PackageDataResponseServer packageDataResponse = await _converterServerFilesDataToDto.FilesDataToResponse(packageServer);
+                        await _fileConvertingServerService.Operations.UpdateFromResponse(packageDataResponse);
 
-                    _messagingService.ShowAndLogMessage("Конвертация пакета закончена");
-                    break;
-                }
+                        _messagingService.ShowAndLogMessage("Конвертация пакета закончена");
+                        break;
+                    }
                 //в случае если пользователь отменил конвертацию
                 case StatusProcessingProject.Abort:
                     _messagingService.ShowAndLogMessage("Конвертация пакета прервана");
