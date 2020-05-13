@@ -106,7 +106,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         private static IResultAppValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
             new PageSettings().
             Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>()).
-            FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, drawSize, prefixSearchPaperSize)).
+            FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, PreparePaperSize(drawSize), prefixSearchPaperSize)).
             Map(paperSize => new ResultAppValue<string>(paperSize?.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
                                                                                                    $"Формат печати {drawSize} не найден")));
 
@@ -136,5 +136,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             return success;
         }
+
+        private static string PreparePaperSize(string drawPaperSize) => 
+            drawPaperSize?.Replace('х', 'x').
+                           Trim();
     }
 }

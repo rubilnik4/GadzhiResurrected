@@ -19,6 +19,6 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Файл данных в формате zip GZipStream
         /// </summary>
         [DataMember]
-        public IList<byte> FileDataSource { get; set; }
+        public byte[] FileDataSource { get; set; }
     }
 }

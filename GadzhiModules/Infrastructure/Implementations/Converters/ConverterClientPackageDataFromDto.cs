@@ -152,7 +152,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtension.ToUpper(CultureInfo.CurrentCulture));
 
             if (String.IsNullOrWhiteSpace(directoryPath)) return FileConvertErrorType.RejectToSave;
-            if (fileDataSourceResponseClient.FileDataSource?.Count == 0) return FileConvertErrorType.FileNotFound;
+            if (fileDataSourceResponseClient.FileDataSource.Length == 0) return FileConvertErrorType.FileNotFound;
 
             string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
             Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource);

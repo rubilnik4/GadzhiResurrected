@@ -114,7 +114,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             new FileDataSourceResponseClient()
             {
                 FileName = fileDataSourceEntity?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceEntity)),
-                FileDataSource = fileDataSourceEntity.FileDataSource?.AsQueryable().ToList(),
+                FileDataSource = fileDataSourceEntity.FileDataSource?.AsQueryable().ToArray(),
             };
     }
 }

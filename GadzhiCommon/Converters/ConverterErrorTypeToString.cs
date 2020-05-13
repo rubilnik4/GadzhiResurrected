@@ -86,8 +86,8 @@ namespace GadzhiCommon.Converters
 
             return (hasCriticalErrors, hasInformationErrors) switch
             {
-                (true, false) => StatusError.InformationError,
-                (_, true) => StatusError.CriticalError,
+                (false, true) => StatusError.InformationError,
+                (true, _) => StatusError.CriticalError,
                 (_, _) => StatusError.NoError,
             };
         }
