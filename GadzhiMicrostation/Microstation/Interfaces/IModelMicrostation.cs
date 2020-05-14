@@ -27,6 +27,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         double UnitScale { get; }
 
         /// <summary>
+        /// Выбрать текущую модель
+        /// </summary>
+        void Activate();
+
+        /// <summary>
         /// Найти элементы в модели по типу
         /// </summary>       
         IEnumerable<IElementMicrostation> GetModelElementsMicrostation(ElementMicrostationType includeTypeMicrostation);
@@ -39,7 +44,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        IEnumerable<IStamp> FindStamps();
+        IEnumerable<IStamp> FindStamps(int modelIndex);
 
         /// <summary>
         /// Удалить элемент

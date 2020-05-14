@@ -12,6 +12,7 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
 {
@@ -20,7 +21,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
     /// </summary>
     public partial class StampMainMicrostation : StampMicrostation, IStampMain<IStampFieldMicrostation>
     {
-
         /// <summary>
         /// Строки с ответственным лицом и подписью Microstation
         /// </summary>
@@ -36,8 +36,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         private IResultAppCollection<IStampApprovalMicrostation> StampApprovalsMicrostation { get; }
 
-        public StampMainMicrostation(ICellElementMicrostation stampCellElement)
-            : base(stampCellElement)
+        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id)
+            : base(stampCellElement, id)
         {
             StampPersonsMicrostation = GetStampPersonRows();
 

@@ -71,6 +71,7 @@
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampField.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampIdentifier.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampSignature.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />

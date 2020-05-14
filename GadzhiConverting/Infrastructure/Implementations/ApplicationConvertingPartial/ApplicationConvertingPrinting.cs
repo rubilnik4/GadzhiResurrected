@@ -9,6 +9,7 @@ using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
+using System.Runtime.Remoting.Messaging;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -33,7 +35,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                              ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
             documentLibrary.StampContainer.Stamps.ToResultCollectionFromApplication().
             ResultValueOkBind(stamps => stamps.Select(stamp =>
-                                        CreatePdfWithSignatures(documentLibrary, stamp, filePath, colorPrint, pdfPrinterInformation)).
+                                        CreatePdfWithSignatures(documentLibrary, stamp, 
+                                                                GetFilePathWithStampIndex(filePath, stamp.Id.ToFilePathPrefix()),
+                                                                colorPrint, pdfPrinterInformation)).
                                         ToList().
                                         ToResultCollection()).
             ToResultCollection();
@@ -72,12 +76,20 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Команда печати PDF
         /// </summary>
-        private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, 
+        private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath,
                                              ColorPrint colorPrint, string prefixSearchPaperSize)
         {
             IResultError PrintPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
-                                         ToResultFromApplication();
+                                              ToResultFromApplication();
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand);
         }
+
+        /// <summary>
+        /// Путь к сохранению файла печати с учетом количества штампов
+        /// </summary>
+        private static string GetFilePathWithStampIndex(string filePath, string stampId) =>
+            Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
+            Path.GetFileNameWithoutExtension(filePath) + stampId +
+            Path.GetExtension(filePath);
     }
 }

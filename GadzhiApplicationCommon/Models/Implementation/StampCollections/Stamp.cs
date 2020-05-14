@@ -14,6 +14,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// </summary>
     public abstract class Stamp : IStamp
     {
+        protected Stamp(StampIdentifier id)
+        {
+            Id = id;
+        }
+
+        /// <summary>
+        /// Идентификатор штампа
+        /// </summary>
+        public StampIdentifier Id { get; }
+
         /// <summary>
         /// Наименование
         /// </summary>

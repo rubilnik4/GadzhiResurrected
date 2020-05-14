@@ -16,16 +16,18 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
+        protected StampMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id)
+            : base(id)
+        {
+            StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));         
+
+            StampSubControls = FindElementsInStampFields(stampCellElement.SubElements, StampFieldElement.StampControlNames).ToList();
+        }
+
         /// <summary>
         /// Элемент ячейка, определяющая штамп
         /// </summary>
         public ICellElementMicrostation StampCellElement { get; }
-
-        protected StampMicrostation(ICellElementMicrostation stampCellElement)
-        {
-            StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
-            StampSubControls = FindElementsInStampFields(stampCellElement.SubElements, StampFieldElement.StampControlNames).ToList();
-        }
 
         /// <summary>
         /// Наименование

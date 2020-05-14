@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// </summary>
     public interface IStamp
     {
+        /// <summary>
+        /// Идентификатор штампа
+        /// </summary>
+        public StampIdentifier Id { get; }
+
         /// <summary>
         /// Наименование
         /// </summary>

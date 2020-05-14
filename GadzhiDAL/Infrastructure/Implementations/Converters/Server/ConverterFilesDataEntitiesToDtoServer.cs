@@ -41,6 +41,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 FilePath = fileDataEntity?.FilePath ?? throw new ArgumentNullException(nameof(fileDataEntity)),
                 StatusProcessing = fileDataEntity.StatusProcessing,
+                ColorPrint = fileDataEntity.ColorPrint,
                 FileDataSource = fileDataEntity.FileDataSource.AsQueryable().ToArray(),
             };
         }
