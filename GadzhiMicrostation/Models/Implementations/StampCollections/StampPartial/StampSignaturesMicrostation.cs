@@ -12,6 +12,7 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using static GadzhiApplicationCommon.Functional.MapFunctional;
 
@@ -27,15 +28,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public override IResultAppCollection<IStampSignature<IStampField>> InsertSignatures() =>
             StampCellElement.ApplicationMicrostation.
-            Void(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.MicrostationResources.SignatureMicrostationFileName)).
-            Void(_ => DeleteSignaturesPrevious()).
-            Map(_ => InsertSignaturesFromLibrary()).
-            Void(_ => StampCellElement.ApplicationMicrostation.DetachLibrary());
+            Map(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.MicrostationResources.SignatureMicrostationFileName)).
+            ResultVoidOk(_ => DeleteSignaturesPrevious()).
+            ResultValueOkBind(InsertSignaturesFromLibrary).
+            ResultVoidOk(_ => StampCellElement.ApplicationMicrostation.DetachLibrary()).
+            ToResultCollection();
 
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        protected abstract IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary();
+        protected abstract IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements);
 
         /// <summary>
         /// Удалить предыдущие подписи
@@ -54,14 +56,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId, ITextElementMicrostation previousField,
+        protected IResultAppValue<ICellElementMicrostation> InsertSignature(IList<LibraryElement> libraryElements, string personId,
+                                                                            ITextElementMicrostation previousField,
                                                                             ITextElementMicrostation nextField, string personName = null) =>
             StampSignatureRange.GetSignatureRange(StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
                                                                    Select(element => element.AsLineElementMicrostation).
                                                                    Map(lineElements => new ResultAppCollection<ILineElementMicrostation>(lineElements)),
                                                   previousField, nextField, previousField.IsVertical).
             ResultValueOkBind(signatureRange => StampCellElement.ApplicationMicrostation.
-                                                CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
+                                                CreateCellElementFromLibrary(libraryElements, personId, signatureRange.OriginPoint,
                                                                              StampCellElement.ModelMicrostation,
                                                                              CreateSignatureCell(signatureRange, previousField.IsVertical),
                                                                              personName));
@@ -83,11 +86,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        protected Func<string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc(IElementMicrostation previousElement,
-                                                                                                     IElementMicrostation nextElement,
-                                                                                                     StampFieldType stampFieldType) =>
-            (personId, personName) =>
-                InsertSignature(personId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation, personName).
+        protected Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc
+            (IElementMicrostation previousElement, IElementMicrostation nextElement, StampFieldType stampFieldType) =>
+            (libraryElements, personId, personName) =>
+                InsertSignature(libraryElements, personId, previousElement.AsTextElementMicrostation,
+                                nextElement.AsTextElementMicrostation, personName).
                 ResultValueOk(signature => new StampFieldMicrostation(signature, stampFieldType));
 
         /// <summary>
@@ -105,9 +108,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Переместить ячейку подписи
         /// </summary>
         private static ICellElementMicrostation SignatureMove(ICellElementMicrostation signatureCell, RangeMicrostation signatureRange) =>
-            signatureRange.OriginCenter .
+            signatureRange.OriginCenter.
                           Subtract(signatureCell.Range.OriginCenter).
-            Map(originMinusLowLeft => (ICellElementMicrostation)signatureCell.Move(originMinusLowLeft));
+            Map(signatureCell.Move);
 
         /// <summary>
         /// Повернуть ячейку подписи
@@ -115,7 +118,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         private static ICellElementMicrostation SignatureRotate(ICellElementMicrostation signatureCell, bool isVertical) =>
             signatureCell.
             WhereContinue(_ => isVertical,
-                okFunc: rotatePoint => (ICellElementMicrostation)signatureCell.Rotate(signatureCell.Range.OriginCenter, 90),
+                okFunc: rotatePoint => signatureCell.Rotate(signatureCell.Range.OriginCenter, 90),
                 badFunc: _ => signatureCell);
 
         /// <summary>
@@ -125,7 +128,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             new PointMicrostation(signatureRange.Width / signatureCell.Range.Width * StampSettingsMicrostation.CompressionRatioText,
                                   signatureRange.Height / signatureCell.Range.Height * StampSettingsMicrostation.CompressionRatioText).
             Map(scaleFactor => GetScalePoint(signatureRange).
-                               Map(scalePoint => (ICellElementMicrostation)signatureCell.ScaleAll(scalePoint, scaleFactor)));
+                               Map(scalePoint => signatureCell.ScaleAll(scalePoint, scaleFactor)));
 
         /// <summary>
         /// Получить точку для масштабирования

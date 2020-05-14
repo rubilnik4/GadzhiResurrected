@@ -24,7 +24,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         public ProjectSettings(IFileSystemOperations fileSystemOperations)
         {
-            _fileSystemOperations = fileSystemOperations;
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
 
             ConvertingResources = PutResourcesToDataFolder();
         }
@@ -43,7 +43,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Папка с ресурсами и библиотеками
         /// </summary>
-        public string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources\\";
+        public string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources" + Path.DirectorySeparatorChar;
 
         /// <summary>
         /// Информация о установленных в системе принтерах

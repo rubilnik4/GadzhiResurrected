@@ -18,7 +18,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Список ошибок
         /// </summary>
-        IEnumerable<IErrorCommon> Errors { get; }
+        IReadOnlyList<IErrorCommon> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -39,10 +39,5 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// Преобразовать в результирующий тип
         /// </summary>
         IResultError ToResult();
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        IResultValue<TValue> Execute();
     }
 }

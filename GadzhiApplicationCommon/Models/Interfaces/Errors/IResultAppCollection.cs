@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
     /// <summary>
     /// Ответ с коллекцией
     /// </summary>
-    public interface IResultAppCollection<T> : IResultAppValue<IEnumerable<T>>
+    public interface IResultAppCollection<T> : IResultAppValue<IList<T>>
     {
         /// <summary>
         /// Добавить ответ с коллекцией
@@ -19,11 +19,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// Добавить ответ со значением
         /// </summary>      
         IResultAppCollection<T> ConcatResultValue(IResultAppValue<T> resultValue);
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        new IResultAppCollection<T> Execute();
 
         /// <summary>
         /// Добавить значение

@@ -32,10 +32,5 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// Преобразовать в результирующий ответ с параметром
         /// </summary>      
         public IResultValue<T> ToResultValue<T>(T value) => new ResultValue<T>(value, Errors);
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        public new IResultError Execute() => new ResultError(Errors.ToList());
     }
 }

@@ -18,9 +18,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public const int FIELDS_COUNT = 6;
 
         public StampChangeWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots,
-                                        IStampFieldWord typeOfChange, IStampFieldWord documentChange,
-                                        IStampFieldWord signature, IStampFieldWord dateChange,
-                                        ISignatureInformation signatureInformation)
+                               IStampFieldWord typeOfChange, IStampFieldWord documentChange,
+                               IStampFieldWord signature, IStampFieldWord dateChange,
+                               ISignatureInformation signatureInformation)
             : base(signature, signatureInformation?.SignaturePath)
         {
             PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(signatureInformation));

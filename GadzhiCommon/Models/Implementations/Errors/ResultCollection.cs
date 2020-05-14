@@ -12,16 +12,16 @@ namespace GadzhiCommon.Models.Implementations.Errors
     /// <summary>
     /// Ответ с коллекцией
     /// </summary>
-    public class ResultCollection<T> : ResultValue<IEnumerable<T>>, IResultCollection<T>
+    public class ResultCollection<T> : ResultValue<IReadOnlyList<T>>, IResultCollection<T>
     {
         public ResultCollection()
-          : base(Enumerable.Empty<T>()) { }
+          : this(Enumerable.Empty<T>()) { }
 
         public ResultCollection(IErrorCommon error)
-            : base(Enumerable.Empty<T>(), error.AsEnumerable()) { }
+            : this(Enumerable.Empty<T>(), error.AsEnumerable()) { }
 
         public ResultCollection(IEnumerable<IErrorCommon> errors)
-           : base(Enumerable.Empty<T>(), errors) { }
+           : base(new List<T>(), errors) { }
 
         public ResultCollection(IEnumerable<T> collection)
           : this(collection, Enumerable.Empty<IErrorCommon>()) { }
@@ -33,12 +33,12 @@ namespace GadzhiCommon.Models.Implementations.Errors
 
             Errors = collectionList switch
             {
-                null when errorNull != null => Errors.Concat(errorNull),
+                null when errorNull != null => Errors.Concat(errorNull).ToList(),
                 null => throw new ArgumentNullException(nameof(collection)),
                 _ => Errors
             };
 
-            Value = collectionList ?? Enumerable.Empty<T>(); ;
+            Value = collectionList ?? new List<T>();
         }
 
         /// <summary>
@@ -78,9 +78,5 @@ namespace GadzhiCommon.Models.Implementations.Errors
                                     ? new ResultCollection<T>(Value.Concat(valueCollection), Errors)
                                     : throw new NullReferenceException(nameof(valueCollection)));
 
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        public new IResultCollection<T> Execute() => new ResultCollection<T>(Value.ToList(), Errors.ToList());
     }
 }

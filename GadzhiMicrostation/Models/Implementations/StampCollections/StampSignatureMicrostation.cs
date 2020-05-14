@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
@@ -17,7 +19,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureMicrostation : StampSignature<IStampFieldMicrostation>
     {
-        protected StampSignatureMicrostation(Func<string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+        protected StampSignatureMicrostation(Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                              IResultAppValue<IStampFieldMicrostation> signature)
         {
             InsertSignatureFunc = insertSignatureFunc ?? throw new ArgumentNullException(nameof(insertSignatureFunc));
@@ -27,7 +29,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Функция вставки подписи
         /// </summary>
-        protected Func<string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
+        protected Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
 
         /// <summary>
         /// Подпись

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -43,7 +44,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> InsertSignature() =>
+        public override IStampSignature<IStampFieldWord> InsertSignature(IList<LibraryElement> libraryElements) =>
             Signature.
             ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(SignaturePath)).
             Map(_ => this);

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
@@ -16,14 +17,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     {
         public StampPersonMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
                                        IStampFieldMicrostation dateSignature,
-                                       Func<string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                       Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(actionType, responsiblePerson, dateSignature, insertSignatureFunc, 
                    GetNotInitializedSignature(responsiblePerson.ElementStamp.AsTextElementMicrostation.Text))
         { }
 
         public StampPersonMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
                                        IStampFieldMicrostation dateSignature,
-                                       Func<string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                       Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                        IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
@@ -75,9 +76,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature() =>
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature(IList<LibraryElement> libraryElements) =>
             new StampPersonMicrostation(ActionType, ResponsiblePerson, DateSignature, InsertSignatureFunc,
-                                        InsertSignatureFunc.Invoke(PersonId, PersonName));
+                                        InsertSignatureFunc.Invoke(libraryElements, PersonId, PersonName));
 
         /// <summary>
         /// Удалить подпись

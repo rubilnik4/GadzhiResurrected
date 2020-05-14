@@ -18,7 +18,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// <summary>
         /// Список ошибок
         /// </summary>
-        IEnumerable<IErrorApplication> Errors { get; }
+        IList<IErrorApplication> Errors { get; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -26,7 +26,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         bool HasErrors { get; }
 
         /// <summary>
-        /// Отсуствие ошибок
+        /// Отсутствие ошибок
         /// </summary>
         bool OkStatus { get; }
 
@@ -39,10 +39,5 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// Преобразовать в результирующий тип
         /// </summary>
         IResultApplication ToResultApplication();
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        IResultAppValue<TValue> Execute();
     }
 }

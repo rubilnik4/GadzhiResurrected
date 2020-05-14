@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {
@@ -39,7 +40,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        IStampSignature<TField> InsertSignature();
+        IStampSignature<TField> InsertSignature(IList<LibraryElement> libraryElements);
 
         /// <summary>
         /// Удалить текущую подпись

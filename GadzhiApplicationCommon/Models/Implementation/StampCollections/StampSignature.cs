@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
@@ -41,7 +42,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public abstract IStampSignature<TField> InsertSignature();
+        public abstract IStampSignature<TField> InsertSignature(IList<LibraryElement> libraryElements);
 
         /// <summary>
         /// Удалить подпись

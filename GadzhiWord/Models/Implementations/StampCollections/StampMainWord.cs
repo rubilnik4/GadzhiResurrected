@@ -12,6 +12,7 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -68,7 +69,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public override IResultAppCollection<IStampSignature<IStampField>> InsertSignatures() =>
             GetSignatures(StampPersonsWord, StampChangesWord).
             ResultValueOk(signatures => signatures.
-                                        Select(signature => signature.InsertSignature()).
+                                        Select(signature => signature.InsertSignature(new List<LibraryElement>())).
                                         Cast<IStampSignature<IStampField>>().
                                         ToList()).
             ToResultCollection();

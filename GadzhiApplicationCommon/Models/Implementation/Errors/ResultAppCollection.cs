@@ -12,16 +12,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
     /// <summary>
     /// Ответ с коллекцией
     /// </summary>
-    public class ResultAppCollection<T> : ResultAppValue<IEnumerable<T>>, IResultAppCollection<T>
+    public class ResultAppCollection<T> : ResultAppValue<IList<T>>, IResultAppCollection<T>
     {
         public ResultAppCollection()
-          : base(Enumerable.Empty<T>()) { }
+          : this(Enumerable.Empty<T>()) { }
 
         public ResultAppCollection(IErrorApplication error)
-            : base(Enumerable.Empty<T>(), error.AsEnumerable()) { }
+            : this(Enumerable.Empty<T>(), error.AsEnumerable()) { }
 
         public ResultAppCollection(IEnumerable<IErrorApplication> errors)
-           : base(Enumerable.Empty<T>(), errors) { }
+           : base(new List<T>(), errors) { }
 
         public ResultAppCollection(IEnumerable<T> collection, IErrorApplication errorNull = null)
           : this(collection, Enumerable.Empty<IErrorApplication>(), errorNull) { }
@@ -33,12 +33,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
 
             Errors = collectionList switch
             {
-                null when errorNull != null => Errors.Concat(errorNull),
+                null when errorNull != null => Errors.Concat(errorNull).ToList(),
                 null => throw new ArgumentNullException(nameof(collection)),
                 _ => Errors
             };
 
-            Value = collectionList ?? Enumerable.Empty<T>();
+            Value = collectionList ?? new List<T>();
         }
 
         /// <summary>
@@ -77,10 +77,5 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
             Map(valueCollection => ValidateCollection(valueCollection)
                                     ? new ResultAppCollection<T>(Value.Concat(valueCollection), Errors)
                                     : throw new NullReferenceException(nameof(valueCollection)));
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        public new IResultAppCollection<T> Execute() => new ResultAppCollection<T>(Value.ToList(), Errors.ToList());
     }
 }

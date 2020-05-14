@@ -21,18 +21,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
     public partial class ApplicationMicrostation : IApplicationMicrostationCommands
     {
         /// <summary>
-        /// Кэшированная библиотека элементов
-        /// </summary>
-        private IList<LibraryElement> _cacheLibraryElements;
-
-        /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке и проверить наличие такой в библиотеке
         /// </summary>       
-        public IResultAppValue<ICellElementMicrostation> CreateCellElementFromLibrary(string cellName, PointMicrostation origin,
-                                                                     IModelMicrostation modelMicrostation,
-                                                                     Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
-                                                                     string cellDescription = null) =>
-            ChangeCellNameByDescriptionIfNotFoundInLibrary(StringIdPrepare(cellName), cellDescription).
+        public IResultAppValue<ICellElementMicrostation> CreateCellElementFromLibrary(IList<LibraryElement> libraryElements, string cellName, PointMicrostation origin,
+                                                                                      IModelMicrostation modelMicrostation,
+                                                                                      Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
+                                                                                      string cellDescription = null) =>
+            ChangeCellNameByDescriptionIfNotFoundInLibrary(libraryElements, StringIdPrepare(cellName), cellDescription).
             ResultValueOk(cellNameChanged => CreateCellElementWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParameters));
 
         /// <summary>
@@ -41,34 +36,25 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         public IResultAppValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
                                                                                     IModelMicrostation modelMicrostation,
                                                                                     Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
-                                                                                    string cellDescription = null)
-        {
-            AttachLibrary(MicrostationResources.SignatureMicrostationFileName);
-
-            var cellElementMicrostation = CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParameters);
-
-            DetachLibrary();
-
-            return cellElementMicrostation;
-        }
+                                                                                    string cellDescription = null) =>
+            AttachLibrary(MicrostationResources.SignatureMicrostationFileName).
+            ResultValueOkBind(libraryElements => CreateCellElementFromLibrary(libraryElements, cellName, origin, modelMicrostation, additionalParameters)).
+            ResultVoidOk(_ => DetachLibrary());
 
         /// <summary>
         /// Подключить библиотеку
         /// </summary>      
-        public void AttachLibrary(string libraryPath)
-        {
-            _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath);
-            _cacheLibraryElements = CachingLibraryElements();
-        }
+        public IResultAppCollection<LibraryElement> AttachLibrary(string libraryPathMicrostation) =>
+            new ResultAppValue<string>(libraryPathMicrostation, new ErrorApplication(ErrorApplicationType.FileNotFound,
+                                                                          "Не задан путь к библиотеке подписей Microstation")).
+            ResultVoidOk(libraryPath => _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath)).
+            ResultValueOkBind(_ => new ResultAppCollection<LibraryElement>(CachingLibraryElements()))
+            as IResultAppCollection<LibraryElement>;
 
         /// <summary>
         /// Отключить библиотеку
         /// </summary>      
-        public void DetachLibrary()
-        {
-            _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
-            _cacheLibraryElements = null;
-        }
+        public void DetachLibrary() => _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
@@ -93,38 +79,37 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Замена имени ячейки по описанию в случае отсутствия в библиотеке
         /// </summary>       
-        private IResultAppValue<string> ChangeCellNameByDescriptionIfNotFoundInLibrary(string cellName, string cellDescription) =>
+        private static IResultAppValue<string> ChangeCellNameByDescriptionIfNotFoundInLibrary(IList<LibraryElement> libraryElements,
+                                                                                              string cellName, string cellDescription) =>
             new ResultAppValue<string>(cellName, new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Отсутствует Id {cellName} подписи")).
-            ResultValueContinue(nameInLibrary => !String.IsNullOrEmpty(cellName) && IsCellContainsInLibrary(nameInLibrary),
+            ResultValueContinue(nameInLibrary => !String.IsNullOrEmpty(cellName) && IsCellContainsInLibrary(libraryElements, nameInLibrary),
                 okFunc: nameInLibrary => nameInLibrary,
                 badFunc: _ => new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по Id {cellName} не найдена")).
-            ResultValueBadBind(_ => FindCellNameByDescription(cellDescription)).
-            ResultValueBadBind(_ => GetCellNameRandom());
+            ResultValueBadBind(_ => FindCellNameByDescription(libraryElements, cellDescription)).
+            ResultValueBadBind(_ => GetCellNameRandom(libraryElements));
 
 
         /// <summary>
         /// Кэшировать элементы
         /// </summary>
-        private IList<LibraryElement> CachingLibraryElements()
+        private IEnumerable<LibraryElement> CachingLibraryElements()
         {
             var cellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
             cellInformationEnumerator.Reset();
 
-            var cachingLibraryElements = new List<LibraryElement>();
+            // var cachingLibraryElements = new List<LibraryElement>();
             while (cellInformationEnumerator.MoveNext())
             {
                 var cellInformation = cellInformationEnumerator.Current;
-                cachingLibraryElements.Add(new LibraryElement(cellInformation.Name, cellInformation.Description));
+                yield return new LibraryElement(cellInformation.Name, cellInformation.Description);
             }
-
-            return cachingLibraryElements;
         }
 
         /// <summary>
         /// Содержится ли текущая ячейка в библиотеке 
         /// </summary>       
-        private bool IsCellContainsInLibrary(string cellName) =>
-            _cacheLibraryElements?.Any(libraryElement => libraryElement.Name == cellName) == true;
+        private static bool IsCellContainsInLibrary(IEnumerable<LibraryElement> libraryElements, string cellName) =>
+            libraryElements.Any(libraryElement => libraryElement.Name == cellName);
 
         /// <summary>
         /// Подготовить строку для поиска в библиотеке
@@ -134,9 +119,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Найти замену имени ячейки по описанию
         /// </summary>
-        private IResultAppValue<string> FindCellNameByDescription(string cellDescription) =>
-            _cacheLibraryElements?.
-            FirstOrDefault(libraryElement => libraryElement.Description.ContainsIgnoreCase(cellDescription))?.
+        private static IResultAppValue<string> FindCellNameByDescription(IEnumerable<LibraryElement> libraryElements, 
+                                                                         string cellDescription) =>
+            libraryElements.
+            FirstOrDefault(libraryElement => libraryElement.Description.ContainsIgnoreCase(cellDescription)).
             Map(libraryElement => new ResultAppValue<string>(libraryElement.Name))
             ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по фамилии {cellDescription} не найдена").
                Map(error => new ResultAppValue<string>(error));
@@ -144,11 +130,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Вернуть случайное имя
         /// </summary>
-        private IResultAppValue<string> GetCellNameRandom() =>
-            _cacheLibraryElements?.
+        private static IResultAppValue<string> GetCellNameRandom(IList<LibraryElement> libraryElements) =>
+            libraryElements.
             Map(cache => cache[RandomInstance.RandomNumber(cache.Count)].Name).
-            Map(name => new ResultAppValue<string>(name))
-            ?? new ErrorApplication(ErrorApplicationType.SignatureNotFound, "База подписей не установлена").
-               Map(error => new ResultAppValue<string>(error));
+            Map(name => new ResultAppValue<string>(name));
     }
 }

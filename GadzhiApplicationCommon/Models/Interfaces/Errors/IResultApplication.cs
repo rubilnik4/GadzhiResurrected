@@ -20,10 +20,5 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// Преобразовать в результирующий ответ с параметром
         /// </summary>      
         IResultAppValue<T> ToResultApplicationValue<T>(T value);
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        new IResultApplication Execute();
     }
 }

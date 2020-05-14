@@ -10,6 +10,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
@@ -49,10 +50,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        protected override IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary() =>
+        protected override IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
             GetSignatures(StampPersonsMicrostation, StampChangesMicrostation, StampApprovalsMicrostation).
             ResultValueOk(signatures => signatures.
-                                        Select(signature => signature.InsertSignature()).
+                                        Select(signature => signature.InsertSignature(libraryElements)).
                                         Cast<IStampSignature<IStampField>>().
                                         ToList()).
             ToResultCollection();

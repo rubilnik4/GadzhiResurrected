@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiMicrostation.Extensions.StringAdditional;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial

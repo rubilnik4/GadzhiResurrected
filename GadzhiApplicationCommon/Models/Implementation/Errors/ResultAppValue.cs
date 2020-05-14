@@ -31,7 +31,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         {
             Errors = value switch
             {
-                null when errorNull != null => Errors.Concat(errorNull),
+                null when errorNull != null => Errors.Concat(errorNull).ToList(),
                 null => throw new ArgumentNullException(nameof(value)),
                 _ => Errors
             };
@@ -47,7 +47,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<IErrorApplication> Errors { get; protected set; }
+        public IList<IErrorApplication> Errors { get; protected set; }
 
         /// <summary>
         /// Присутствуют ли ошибки
@@ -73,11 +73,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// Преобразовать в результирующий тип
         /// </summary>
         public IResultApplication ToResultApplication() => new ResultApplication(Errors);
-
-        /// <summary>
-        /// Выполнить отложенные функции
-        /// </summary>
-        public IResultAppValue<TValue> Execute() => new ResultAppValue<TValue>(Value, Errors.ToList());
 
         /// <summary>
         /// Проверить ошибки на корректность

@@ -42,10 +42,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         public ApplicationConverting(IApplicationLibrary applicationMicrostation, IApplicationLibrary applicationWord,
                                      IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService)
         {
-            _applicationMicrostation = applicationMicrostation;
-            _applicationWord = applicationWord;
-            _fileSystemOperations = fileSystemOperations;
-            _pdfCreatorService = pdfCreatorService;
+            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
+            _applicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _pdfCreatorService = pdfCreatorService ?? throw new ArgumentNullException(nameof(pdfCreatorService));
         }
 
         /// <summary>
