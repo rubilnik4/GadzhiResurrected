@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {

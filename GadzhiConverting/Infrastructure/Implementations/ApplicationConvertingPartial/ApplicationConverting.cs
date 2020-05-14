@@ -11,6 +11,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
+using GadzhiWord.Word.Interfaces;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -22,12 +25,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Модуль конвертации Microstation
         /// </summary>   
-        private readonly IApplicationLibrary _applicationMicrostation;
+        private readonly IApplicationLibrary<IDocumentMicrostation> _applicationMicrostation;
 
         /// <summary>
         /// Модуль конвертации Word
         /// </summary>   
-        private readonly IApplicationLibrary _applicationWord;
+        private readonly IApplicationLibrary<IDocumentWord> _applicationWord;
 
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -39,7 +42,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private readonly IPdfCreatorService _pdfCreatorService;
 
-        public ApplicationConverting(IApplicationLibrary applicationMicrostation, IApplicationLibrary applicationWord,
+        public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation, 
+                                     IApplicationLibrary<IDocumentWord> applicationWord,
                                      IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService)
         {
             _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
@@ -59,17 +63,16 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 _ => throw new InvalidEnumArgumentException(nameof(fileExtensionMain), (int)fileExtensionMain, typeof(FileExtension))
             };
 
-
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        private IResultValue<IApplicationLibrary> GetActiveLibraryByExtension(FileExtension fileExtension) =>
+        private IResultValue<IApplicationLibrary<IDocumentLibrary>> GetActiveLibraryByExtension(FileExtension fileExtension) =>
             fileExtension switch
             {
-                FileExtension.Dgn => new ResultValue<IApplicationLibrary>(_applicationMicrostation),
-                FileExtension.Docx => new ResultValue<IApplicationLibrary>(_applicationWord),
+                FileExtension.Dgn => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationMicrostation),
+                FileExtension.Docx => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
                 _ => new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtension} не найдена").
-                     ToResultValue<IApplicationLibrary>()
+                     ToResultValue<IApplicationLibrary<IDocumentLibrary>>()
             };
     }
 }

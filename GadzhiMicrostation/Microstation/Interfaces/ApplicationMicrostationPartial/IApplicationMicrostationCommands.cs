@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
@@ -27,6 +28,12 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
                                                             IModelMicrostation modelMicrostation,
                                                             Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
                                                             string cellDescription = null);
+
+        /// <summary>
+        /// Создать ячейку на основе шаблона в библиотеке
+        /// </summary>       
+        IResultAppValue<ICellElementMicrostation> CreateCellElementWithoutCheck(string cellName, PointMicrostation origin, IModelMicrostation modelMicrostation,
+                                                                              Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null);
 
         /// <summary>
         /// Подключить библиотеку

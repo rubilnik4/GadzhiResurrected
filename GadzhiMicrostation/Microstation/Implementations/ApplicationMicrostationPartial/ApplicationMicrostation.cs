@@ -29,17 +29,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private Application Application
-        {
-            get
-            {
-                if (_application == null)
-                {
-                    _application = MicrostationInstance.Instance();
-                }
-                return _application;
-            }
-        }
+        private Application Application => _application ??= MicrostationInstance.Instance();
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation

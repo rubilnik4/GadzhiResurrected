@@ -13,7 +13,6 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Collection;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {

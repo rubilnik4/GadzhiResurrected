@@ -30,12 +30,18 @@ namespace MicrostationSignatures.Models.Implementations
         /// <summary>
         /// Подписи для Microstation
         /// </summary>
-        public static readonly string SignatureMicrostationFileName = ConvertingResourcesFolder + "SignatureMicrostation.cel";
+        public static string SignatureMicrostationFileName => ConvertingResourcesFolder + "SignatureMicrostation.cel";
 
         /// <summary>
         /// Штампы для Microstation
         /// </summary>
-        public static readonly string StampMicrostationFileName = ConvertingResourcesFolder + "StampMicrostation.cel";
+        public static string StampMicrostationFileName => ConvertingResourcesFolder + "StampMicrostation.cel";
+
+        /// <summary>
+        /// Папка для сохранения подписей
+        /// </summary>
+        public static string SignaturesSaveFolder => AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar +
+                                                     "Signatures";
 
         /// <summary>
         /// Папка с ресурсами и библиотеками
@@ -53,10 +59,17 @@ namespace MicrostationSignatures.Models.Implementations
         public string SignatureTemplateFilePath => _signatureTemplateFilePath ??= PutSignatureTemplateToDataFolder();
 
         /// <summary>
+        /// Размер изображения подписи в пикселях
+        /// </summary>
+        public static (int Width, int Height) JpegPixelSize => (640, 400);
+
+        /// <summary>
         /// Скопировать ресурсы и вернуть пути их расположения
         /// </summary>        
         private string PutSignatureTemplateToDataFolder()
         {
+            _fileSystemOperations.CreateFolderByName(SignaturesSaveFolder);
+
             _fileSystemOperations.CreateFolderByName(DataResourcesFolder);
 
             string templateFileName = Path.Combine(DataResourcesFolder, "SignatureTemplate.dgn");

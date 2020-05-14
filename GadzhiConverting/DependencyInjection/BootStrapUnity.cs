@@ -12,8 +12,10 @@ using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Microstation.Implementations;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
+using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 using GadzhiWord.Word.Implementations;
 using GadzhiWord.Word.Implementations.ApplicationWordPartial;
+using GadzhiWord.Word.Interfaces;
 using Unity;
 using Unity.Lifetime;
 
@@ -46,15 +48,15 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
             var projectSettings = container.Resolve<IProjectSettings>();
-            container.RegisterFactory<IApplicationLibrary>(nameof(ApplicationMicrostation), unity =>
+            container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>
                       new ApplicationMicrostation(new MicrostationResources(projectSettings.ConvertingResources.SignatureMicrostationFileName,
                                                                             projectSettings.ConvertingResources.StampMicrostationFileName)));
-            container.RegisterFactory<IApplicationLibrary>(nameof(ApplicationWord), unity =>
+            container.RegisterFactory<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord), unity =>
                       new ApplicationWord(new WordResources(projectSettings.ConvertingResources.SignatureWordFileName)));
 
             container.RegisterFactory<IApplicationConverting>(unity =>
-                new ApplicationConverting(unity.Resolve<IApplicationLibrary>(nameof(ApplicationMicrostation)),
-                                          unity.Resolve<IApplicationLibrary>(nameof(ApplicationWord)),                                        
+                new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),
+                                          unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord)),                                        
                                           unity.Resolve<IFileSystemOperations>(),
                                           unity.Resolve<IPdfCreatorService>()));
 

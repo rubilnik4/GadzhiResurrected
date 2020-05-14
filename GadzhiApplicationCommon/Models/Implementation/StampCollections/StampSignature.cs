@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {

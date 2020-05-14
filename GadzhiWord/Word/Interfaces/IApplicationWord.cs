@@ -11,7 +11,7 @@ namespace GadzhiWord.Word.Interfaces
     /// <summary>
     /// Класс для работы с приложением Word
     /// </summary>
-    public interface IApplicationWord : IApplicationLibrary
+    public interface IApplicationWord : IApplicationLibrary<IDocumentWord>
     {
         /// <summary>
         /// Ресурсы, используемые модулем Word

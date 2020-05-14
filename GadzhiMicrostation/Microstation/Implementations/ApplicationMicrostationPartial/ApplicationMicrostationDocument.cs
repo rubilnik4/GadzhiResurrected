@@ -11,20 +11,23 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPartial;
+using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
     /// <summary>
     /// Подкласс приложения Microstation для работы с файлом
     /// </summary>
-    public partial class ApplicationMicrostation : IApplicationLibraryDocument
+    public partial class ApplicationMicrostation : IApplicationLibraryDocument<IDocumentMicrostation>
     {
         /// <summary>
         /// Открыть файл
         /// </summary>
-        public IResultAppValue<IDocumentLibrary> OpenDocument(string filePath) =>
+        public IResultAppValue<IDocumentMicrostation> OpenDocument(string filePath) =>
             Application.OpenDesignFile(filePath, false).
-            Map(openDocument => new ResultAppValue<IDocumentLibrary>(new DocumentMicrostationPartial.DocumentMicrostation(_application, this),
-                                             new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Microstation не создан")));
+            Map(openDocument => new ResultAppValue<IDocumentMicrostation>((IDocumentMicrostation)new DocumentMicrostation(_application, this),
+                                                                          new ErrorApplication(ErrorApplicationType.FileNotOpen, 
+                                                                                               "Документ Microstation не создан")));
     }
 }

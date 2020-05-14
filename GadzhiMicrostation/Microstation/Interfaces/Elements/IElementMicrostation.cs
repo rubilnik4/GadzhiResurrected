@@ -1,6 +1,7 @@
 ﻿using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {
@@ -60,6 +61,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         ElementMicrostationType ElementType { get; }
 
         /// <summary>
+        /// Получить имя элемента из атрибутов
+        /// </summary>
+        string AttributeControlName { get; set; }
+
+        /// <summary>
+        /// идентификатор личности
+        /// </summary>    
+        string AttributePersonId { get; }
+
+        /// <summary>
         /// Удалить текущий элемент
         /// </summary>
         void Remove();
@@ -75,13 +86,8 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         void SetAttributeById(ElementMicrostationAttributes elementAttributes, string attributeValue);
 
         /// <summary>
-        /// Получить имя элемента из атрибутов
+        /// Построить изображение согласно размерам
         /// </summary>
-        string AttributeControlName { get; set; }
-
-        /// <summary>
-        /// идентификатор личности
-        /// </summary>    
-        string AttributePersonId { get; }
+        void DrawToEmfFile(string filePath, int width, int height);
     }
 }

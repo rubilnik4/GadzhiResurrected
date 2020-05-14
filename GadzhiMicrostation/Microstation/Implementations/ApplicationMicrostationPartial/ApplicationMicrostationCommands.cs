@@ -14,6 +14,7 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Extensions.StringAdditional;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
@@ -28,7 +29,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
                                                                                       Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null,
                                                                                       string cellDescription = null) =>
             ChangeCellNameByDescriptionIfNotFoundInLibrary(libraryElements, StringIdPrepare(cellName), cellDescription).
-            ResultValueOk(cellNameChanged => CreateCellElementWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParameters));
+            ResultValueOkBind(cellNameChanged => CreateCellElementWithoutCheck(cellNameChanged, origin, modelMicrostation, additionalParameters));
 
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
@@ -59,9 +60,9 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Создать ячейку на основе шаблона в библиотеке
         /// </summary>       
-        private ICellElementMicrostation CreateCellElementWithoutCheck(string cellName, PointMicrostation origin,
-                                                                       IModelMicrostation modelMicrostation,
-                                                                       Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null)
+        public IResultAppValue<ICellElementMicrostation> CreateCellElementWithoutCheck(string cellName, PointMicrostation origin,
+                                                                                       IModelMicrostation modelMicrostation,
+                                                                                       Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null)
         {
             var cellElement = _application.CreateCellElement2(StringIdPrepare(cellName),
                                                                       _application.Point3dFromXY(origin.X, origin.Y),
@@ -73,7 +74,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
 
             _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
-            return cellElementMicrostation;
+            return new ResultAppValue<ICellElementMicrostation>(cellElementMicrostation, 
+                                                                new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Элемент подписи не найден"));
         }
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Найти замену имени ячейки по описанию
         /// </summary>
-        private static IResultAppValue<string> FindCellNameByDescription(IEnumerable<LibraryElement> libraryElements, 
+        private static IResultAppValue<string> FindCellNameByDescription(IEnumerable<LibraryElement> libraryElements,
                                                                          string cellDescription) =>
             libraryElements.
             FirstOrDefault(libraryElement => libraryElement.Description.ContainsIgnoreCase(cellDescription)).

@@ -13,6 +13,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
+using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using MicroStationDGN;
@@ -22,7 +23,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
     /// <summary>
     /// Файл Microstation
     /// </summary>
-    public partial class DocumentMicrostation : IDocumentLibrary
+    public partial class DocumentMicrostation : IDocumentMicrostation
     {
         /// <summary>
         /// Экземпляр файла

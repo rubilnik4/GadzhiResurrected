@@ -82,6 +82,7 @@
     <Compile Include="Microstation\Implementations\Elements\TextElementMicrostation.cs" />
     <Compile Include="Microstation\Implementations\MicrostationResources.cs" />
     <Compile Include="Microstation\Interfaces\ApplicationMicrostationPartial\IApplicationMicrostationPrinting.cs" />
+    <Compile Include="Microstation\Interfaces\DocumentMicrostationPartial\IDocumentMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ILineElementMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainApprovalSignature.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonSignature .cs" />
@@ -183,7 +184,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

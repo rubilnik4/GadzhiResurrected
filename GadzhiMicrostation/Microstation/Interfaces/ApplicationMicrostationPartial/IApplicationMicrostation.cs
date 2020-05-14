@@ -1,13 +1,14 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiMicrostation.Microstation.Implementations;
 using System;
+using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
 {
     /// <summary>
     /// Класс для работы с приложением Microstation
     /// </summary>
-    public interface IApplicationMicrostation : IApplicationLibrary, IApplicationMicrostationCommands, IApplicationMicrostationPrinting
+    public interface IApplicationMicrostation : IApplicationLibrary<IDocumentMicrostation>, IApplicationMicrostationCommands, IApplicationMicrostationPrinting
     {
         /// <summary>
         /// Ресурсы, используемые модулем Microstation

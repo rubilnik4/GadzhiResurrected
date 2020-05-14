@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {

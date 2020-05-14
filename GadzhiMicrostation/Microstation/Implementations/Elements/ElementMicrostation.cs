@@ -9,10 +9,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
-    public abstract class ElementMicrostation: IElementMicrostation
+    public abstract class ElementMicrostation : IElementMicrostation
     {
         protected ElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation)
         {
@@ -165,18 +166,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             new Dictionary<ElementMicrostationAttributes, string>();
 
         /// <summary>
-        /// Получить значение атрибута по его Id номеру
-        /// </summary>       
-        public string GetAttributeById(ElementMicrostationAttributes elementAttribute) =>
-            GetAttributeFromCacheOrLoad(elementAttribute);
-
-        /// <summary>
-        /// Записать значение атрибута по его Id номеру
-        /// </summary>       
-        public void SetAttributeById(ElementMicrostationAttributes elementAttribute, string attributeValue) =>
-            SetAttributeToCacheAndUpload(elementAttribute, attributeValue);
-
-        /// <summary>
         /// Имя элемента из атрибутов
         /// </summary>
         public string AttributeControlName
@@ -189,6 +178,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// идентификатор личности
         /// </summary>    
         public string AttributePersonId => GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.PersonId);
+
+        /// <summary>
+        /// Получить значение атрибута по его Id номеру
+        /// </summary>       
+        public string GetAttributeById(ElementMicrostationAttributes elementAttribute) =>
+            GetAttributeFromCacheOrLoad(elementAttribute);
+
+        /// <summary>
+        /// Записать значение атрибута по его Id номеру
+        /// </summary>       
+        public void SetAttributeById(ElementMicrostationAttributes elementAttribute, string attributeValue) =>
+            SetAttributeToCacheAndUpload(elementAttribute, attributeValue);
+
+        /// <summary>
+        /// Построить изображение согласно размерам
+        /// </summary>
+        public void DrawToEmfFile(string filepath, int width, int height) => _element.DrawToFile(filepath, width, height);
 
         /// <summary>
         /// Получить атрибут из кэша или выгрузить из Microstation
