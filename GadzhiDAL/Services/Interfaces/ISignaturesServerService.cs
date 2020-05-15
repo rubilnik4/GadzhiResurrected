@@ -13,5 +13,10 @@ namespace GadzhiDAL.Services.Interfaces
         /// Записать подписи в базу данных
         /// </summary>      
         Task UploadSignatures(IList<SignatureDto> signaturesDto);
+
+        /// <summary>
+        /// Записать подписи Microstation в базу данных
+        /// </summary>      
+        Task UploadSignaturesMicrostation(SignatureMicrostationDto signatureMicrostationDto);
     }
 }

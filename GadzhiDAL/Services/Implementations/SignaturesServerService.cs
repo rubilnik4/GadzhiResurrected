@@ -14,7 +14,7 @@ namespace GadzhiDAL.Services.Implementations
     /// <summary>
     /// Получение и запись из БД подписей и идентификаторов
     /// </summary>
-    public class SignaturesServerService: ISignaturesServerService
+    public class SignaturesServerService : ISignaturesServerService
     {
         /// <summary>
         ///Контейнер зависимостей
@@ -36,9 +36,22 @@ namespace GadzhiDAL.Services.Implementations
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             foreach (var signatureEntity in signaturesEntity)
             {
-                await unitOfWork.Session.SaveAsync(signatureEntity);
+                await unitOfWork.Session.SaveOrUpdateAsync(signatureEntity);
             }
-          
+
+            await unitOfWork.CommitAsync();
+        }
+
+        /// <summary>
+        /// Записать подписи Microstation в базу данных
+        /// </summary>      
+        public async Task UploadSignaturesMicrostation(SignatureMicrostationDto signatureMicrostationDto)
+        {
+            var signatureMicrostationEntity = ConverterSignatures.SignatureMicrostationFromDto(signatureMicrostationDto);
+
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            await unitOfWork.Session.SaveOrUpdateAsync(signatureMicrostationEntity);
+
             await unitOfWork.CommitAsync();
         }
     }

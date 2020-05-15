@@ -29,7 +29,7 @@ namespace GadzhiCommon.Extensions.Functional
         }
 
         /// <summary>
-        /// Выполнить действие, вернуть тот же тип
+        /// Выполнить асинхронное действие, вернуть тот же тип
         /// </summary>       
         public static async Task<T> VoidAsync<T>(this Task<T> @this, Func<T, Task> action)
         {
@@ -37,6 +37,39 @@ namespace GadzhiCommon.Extensions.Functional
             var awaited = await @this;
             await action.Invoke(awaited);
             return awaited;
+        }
+
+        /// <summary>
+        /// Выполнить асинхронное действие
+        /// </summary>       
+        public static async Task VoidAsync(this Task @this, Func<Task> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            await @this;
+            await action.Invoke();
+        }
+
+        /// <summary>
+        /// Выполнить асинхронное действие
+        /// </summary>       
+        public static async Task<T> VoidAsync<T>(this Task<T> @this, Action<T> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            var awaitedThis = await @this;
+            action.Invoke(awaitedThis);
+
+            return awaitedThis;
+        }
+
+        /// <summary>
+        /// Выполнить асинхронное действие, вернуть тот же тип
+        /// </summary>       
+        public static async Task<T> VoidAsync<T>(this T @this, Func<T, Task> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            await action.Invoke(@this);
+            return @this;
         }
     }
 }

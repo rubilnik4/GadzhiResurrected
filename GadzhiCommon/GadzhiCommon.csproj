@@ -99,7 +99,9 @@
     <Compile Include="Extensions\Functional\MapAsyncExtension.cs" />
     <Compile Include="Extensions\Functional\MapExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultCollectionExtensions.cs" />
+    <Compile Include="Extensions\Functional\Result\ResultMapAsyncExtension.cs" />
     <Compile Include="Extensions\Functional\Result\ResultMapExtensions.cs" />
+    <Compile Include="Extensions\Functional\Result\ResultWhereAsyncExtension.cs" />
     <Compile Include="Extensions\Functional\Result\ResultWhereExtensions.cs" />
     <Compile Include="Extensions\Functional\WhereAsyncExtensions.cs" />
     <Compile Include="Extensions\Functional\WhereExtensions.cs" />

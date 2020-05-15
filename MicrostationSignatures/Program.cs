@@ -17,14 +17,14 @@ namespace MicrostationSignatures
         /// </summary>
         private static readonly IUnityContainer Container = new UnityContainer();
 
-        private static void Main()
+        private static async Task Main()
         {
             BootStrapUnity.ConfigureContainer(Container);
 
             var signaturesToJpeg = Container.Resolve<ISignaturesToJpeg>();
             var projectSignatureSettings = Container.Resolve<IProjectSignatureSettings>();
 
-            signaturesToJpeg.CreateJpegSignatures(projectSignatureSettings.SignatureTemplateFilePath);
+            await signaturesToJpeg.CreateJpegSignatures(projectSignatureSettings.SignatureTemplateFilePath);
 
             Console.ReadLine();
         }

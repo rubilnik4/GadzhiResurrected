@@ -1,7 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
 {
@@ -34,5 +36,15 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// Отмена операции по номеру ID
         /// </summary>         
         Task AbortConvertingById(Guid id);
+
+        /// <summary>
+        /// Загрузить подписи
+        /// </summary>
+        Task UploadSignatures(IList<SignatureDto> signaturesDto);
+
+        /// <summary>
+        /// Загрузить подписи Microstation
+        /// </summary>
+        Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto);
     }
 }

@@ -3,8 +3,11 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiDTOServer.TransferModels.Signatures;
+using System.Linq;
 
 namespace GadzhiWcfHost.Services
 {
@@ -54,5 +57,17 @@ namespace GadzhiWcfHost.Services
         /// Отмена операции по номеру ID
         /// </summary>
         public async Task AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
+
+        /// <summary>
+        /// Загрузить подписи
+        /// </summary>
+        public async Task UploadSignatures(IList<SignatureDto> signaturesDto) =>
+            await _applicationServerConverting.UploadSignatures(signaturesDto);
+
+        /// <summary>
+        /// Загрузить подписи Microstation
+        /// </summary>
+        public async Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto) =>
+            await _applicationServerConverting.UploadSignaturesMicrostation(signaturesMicrostationDto);
     }
 }

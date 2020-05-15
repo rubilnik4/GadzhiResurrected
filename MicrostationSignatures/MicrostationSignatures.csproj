@@ -34,12 +34,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChannelAdam.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5cc5a4db964eb79, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.Core.1.6.3\lib\net45\ChannelAdam.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ChannelAdam.Wcf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=947cb12151510e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.Wcf.2.1.1\lib\net45\ChannelAdam.Wcf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
+    <Compile Include="Infrastructure\Implementations\ConverterSignatureToDto.cs" />
     <Compile Include="Infrastructure\Implementations\JpegConverter.cs" />
     <Compile Include="Models\Implementations\SignatureLibrary.cs" />
     <Compile Include="Infrastructure\Implementations\SignaturesToJpeg.cs" />
@@ -92,6 +100,10 @@
     <ProjectReference Include="..\GadzhiConverting\GadzhiConverting.csproj">
       <Project>{947DB9A9-FE6A-4274-97FD-9568D28595D7}</Project>
       <Name>GadzhiConverting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOServer\GadzhiDTOServer.csproj">
+      <Project>{B327C2A7-14EA-44B0-B3CE-6E4309B12771}</Project>
+      <Name>GadzhiDTOServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiMicrostation\GadzhiMicrostation.csproj">
       <Project>{1C7A009E-1C9A-4CD7-9E5F-0C1F9DB895CD}</Project>

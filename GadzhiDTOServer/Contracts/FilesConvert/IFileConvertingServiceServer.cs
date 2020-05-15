@@ -1,8 +1,10 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiDTOServer.Contracts.FilesConvert
 {
@@ -41,6 +43,18 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// </summary>   
         [OperationContract]
         Task AbortConvertingById(Guid id);
+
+        /// <summary>
+        /// Загрузить подписи
+        /// </summary>
+        [OperationContract]
+        Task UploadSignatures(IList<SignatureDto> signaturesDto);
+
+        /// <summary>
+        /// Загрузить подписи Microstation
+        /// </summary>
+        [OperationContract]
+        Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto);
     }
 }
 

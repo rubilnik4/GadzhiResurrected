@@ -38,7 +38,7 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();
             container.RegisterSingleton<IConvertingService, ConvertingService>();
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) =>
-                      ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), new ContainerControlledLifetimeManager());
+                      ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint));
 
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();

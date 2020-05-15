@@ -22,6 +22,9 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using System.Runtime.CompilerServices;
+using ChannelAdam.ServiceModel;
+using GadzhiCommon.Functional;
+using GadzhiDTOServer.Contracts.FilesConvert;
 
 namespace MicrostationSignatures.Infrastructure.Implementations
 {
@@ -45,25 +48,33 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
+        /// <summary>
+        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
+        /// </summary>     
+        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
+
         public SignaturesToJpeg(IApplicationMicrostation applicationMicrostation, IMessagingService messagingService,
-                                IFileSystemOperations fileSystemOperations)
+                                IFileSystemOperations fileSystemOperations,
+                                IServiceConsumer<IFileConvertingServerService> fileConvertingServerService)
         {
             _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
         }
 
         /// <summary>
         /// Создать подписи из прикрепленной библиотеки Microstation в формате Jpeg
         /// </summary>
-        public void CreateJpegSignatures(string filePath) =>
-            MicrostationFileOpen(filePath).
-            ResultValueOkBind(CreateJpegFromSignature).
-            ResultVoid(_ => _applicationMicrostation.DetachLibrary()).
-            ResultVoid(_ => _applicationMicrostation.CloseApplication()).
-            Void(result => _messagingService.ShowAndLogMessage("----------------")).
-            Void(result => _messagingService.ShowAndLogMessage("Обработка ошибок")).
-            Void(result => _messagingService.ShowAndLogErrors(result.Errors));
+        public async Task<IResultError> CreateJpegSignatures(string filePath) =>
+            await MicrostationFileOpen(filePath).
+            ResultValueOkBindAsync(CreateJpegFromSignature).
+            ResultVoidAsync(_ => _applicationMicrostation.DetachLibrary()).
+            ResultVoidAsync(_ => _applicationMicrostation.CloseApplication()).
+            ResultVoidAsync(_ => _messagingService.ShowAndLogMessage("----------------")).
+            ResultVoidAsync(_ => _messagingService.ShowAndLogMessage("Обработка ошибок")).
+            VoidAsync(result => _messagingService.ShowAndLogErrors(result.Errors)).
+            MapAsync(result => result.ToResult());
 
         /// <summary>
         /// Открыть файл Microstation
@@ -80,12 +91,15 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Получить подписи и сохранить изображения
         /// </summary>
-        private IResultError CreateJpegFromSignature(IDocumentMicrostation documentMicrostation) =>
-            GetSignatures().
+        private async Task<IResultValue<Unit>> CreateJpegFromSignature(IDocumentMicrostation documentMicrostation) =>
+            await GetSignatures().
             ResultValueOkBind(signatures => signatures.
                                             Select(signature => CreateJpegFromCell(documentMicrostation.ModelsMicrostation[0], signature)).
                                             ToResultCollection()).
-            ToResult();
+            ResultVoid(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
+            ResultVoidAsync(UploadSignaturesToDataBase).
+            ResultVoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе")).
+            MapAsync(result => result.ToResult());
 
         /// <summary>
         /// Получить список имен и подписей
@@ -101,21 +115,23 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Сохранить изображение элемента ячейки Microstation
         /// </summary>
-        private IResultError CreateJpegFromCell(IModelMicrostation modelMicrostation, SignatureLibrary signatureLibrary) =>
+        private IResultValue<SignatureLibrary> CreateJpegFromCell(IModelMicrostation modelMicrostation, SignatureLibrary signatureLibrary) =>
             _applicationMicrostation.CreateCellElementWithoutCheck(signatureLibrary.Id, new PointMicrostation(0, 0), modelMicrostation).
             ToResultValueFromApplication().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.Fullname}")).
-            ResultVoidOk(cellSignature => DrawToJpeg(cellSignature, signatureLibrary)).
-            ResultVoidOk(cellSignature => cellSignature.Remove()).
-            ToResult();
+            ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
 
-        private void DrawToJpeg(IElementMicrostation cellSignature, SignatureLibrary signatureLibrary) =>
+        /// <summary>
+        /// Конвертировать ячейку Microstation в Jpeg
+        /// </summary>
+        private SignatureLibrary ToJpegByte(IElementMicrostation cellSignature, SignatureLibrary signatureLibrary) =>
             GetSignatureFileSavePath(signatureLibrary).
             Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Void(JpegConverter.ToJpegFromEmf).
-            Void(filePath => _fileSystemOperations.DeleteFile(filePath));
+            Map(filePathEmf => new SignatureLibrary(signatureLibrary.Id, signatureLibrary.Fullname, JpegConverter.ToJpegFromEmf(filePathEmf)).
+                               Void(_ => _fileSystemOperations.DeleteFile(filePathEmf))).
+            Void(_ => cellSignature.Remove());
 
         /// <summary>
         /// Получить имя для сохранения подписи
@@ -123,5 +139,12 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private static string GetSignatureFileSavePath(SignatureLibrary signatureLibrary) =>
             ProjectSignatureSettings.SignaturesSaveFolder + Path.DirectorySeparatorChar +
             signatureLibrary.Id + ".emf";
+
+        /// <summary>
+        /// Загрузить подписи в базу
+        /// </summary>
+        private async Task UploadSignaturesToDataBase(IReadOnlyList<SignatureLibrary> signaturesLibrary) =>
+            await ConverterSignatureToDto.SignaturesToDto(signaturesLibrary).
+            VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures));
     }
 }

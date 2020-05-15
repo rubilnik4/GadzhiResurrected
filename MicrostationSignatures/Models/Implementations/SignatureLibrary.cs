@@ -5,9 +5,14 @@ namespace MicrostationSignatures.Models.Implementations
     public readonly struct SignatureLibrary : IEquatable<SignatureLibrary>
     {
         public SignatureLibrary(string name, string description)
+            :this(name, description, null)
+        { }
+
+        public SignatureLibrary(string name, string description, byte[] signatureJpeg)
         {
-            Id = name;
-            Fullname = description;
+            Id = name ?? throw new ArgumentNullException(nameof(name));
+            Fullname = description ?? throw new ArgumentNullException(nameof(description));
+            SignatureJpeg = signatureJpeg;
         }
 
         /// <summary>
@@ -19,6 +24,11 @@ namespace MicrostationSignatures.Models.Implementations
         /// Описание
         /// </summary>
         public string Fullname { get; }
+
+        /// <summary>
+        /// Изображение подписи
+        /// </summary>
+        public byte[] SignatureJpeg { get; }
 
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((SignatureLibrary)obj);

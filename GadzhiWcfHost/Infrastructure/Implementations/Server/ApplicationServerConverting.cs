@@ -5,6 +5,8 @@ using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using System;
 using System.Threading.Tasks;
 using GadzhiDAL.Services.Interfaces;
+using System.Collections.Generic;
+using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Server
 {
@@ -18,9 +20,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// </summary>
         private readonly IFilesDataServerService _filesDataServerService;
 
-        public ApplicationServerConverting(IFilesDataServerService filesDataServerService)
+        /// <summary>
+        /// Сервис для добавления и получения данных о подписях
+        /// </summary>
+        private readonly ISignaturesServerService _signaturesServerService;
+
+        public ApplicationServerConverting(IFilesDataServerService filesDataServerService, ISignaturesServerService signaturesServerService)
         {
-            _filesDataServerService = filesDataServerService;
+            _filesDataServerService = filesDataServerService ?? throw new ArgumentNullException(nameof(filesDataServerService));
+            _signaturesServerService = signaturesServerService ?? throw new ArgumentNullException(nameof(signaturesServerService));
         }
 
         /// <summary>
@@ -51,5 +59,17 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// Отмена операции по номеру ID
         /// </summary>
         public async Task AbortConvertingById(Guid id) => await _filesDataServerService.AbortConvertingById(id);
+
+        /// <summary>
+        /// Загрузить подписи
+        /// </summary>
+        public async Task UploadSignatures(IList<SignatureDto> signaturesDto) =>
+            await _signaturesServerService.UploadSignatures(signaturesDto);
+
+        /// <summary>
+        /// Загрузить подписи Microstation
+        /// </summary>
+        public async Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto) =>
+            await _signaturesServerService.UploadSignaturesMicrostation(signaturesMicrostationDto);
     }
 }

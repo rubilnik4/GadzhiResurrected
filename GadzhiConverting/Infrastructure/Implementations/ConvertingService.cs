@@ -242,7 +242,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData)).
                         ResultValueBad(fileDataTask => Task.FromResult(fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1))).
-                        ResultValueBad(fileDataTask => fileDataTask.VoidAsync(async fileDataVoid => await ConvertingByCountLimit(fileDataVoid))).
+                        ResultValueBad(fileDataTask => fileDataTask.VoidAsync(ConvertingByCountLimit)).
                         Value);
 
         /// <summary>

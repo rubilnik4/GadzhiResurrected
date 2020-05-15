@@ -15,21 +15,19 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать изображение в Jpeg из Emf
         /// </summary>
-        public static void ToJpegFromEmf(string filePathEmf)
+        public static byte[] ToJpegFromEmf(string filePathEmf)
         {
             using var source = File.OpenRead(filePathEmf);
-            using var destination = File.OpenWrite(GetFilePathJpeg(filePathEmf));
-            SaveMetaFileAs(source, destination, format: ImageFormat.Jpeg, parameters: GetJpegEncoderParameters());
+            return MetaFileToByte(source, format: ImageFormat.Jpeg, parameters: GetJpegEncoderParameters());
         }
 
         /// <summary>
         /// Сохранить метафайл в определенном формате
         /// </summary>
-        public static void SaveMetaFileAs(Stream source, Stream destination, double scale = 4d, Color? backgroundColor = null,
+        public static byte[] MetaFileToByte(Stream source, double scale = 1d, Color? backgroundColor = null,
                                         ImageFormat format = null, EncoderParameters parameters = null)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            if (destination == null) throw new ArgumentNullException(nameof(destination));
 
             format ??= ImageFormat.Png;
             backgroundColor ??= GetBackgroundColor(format);
@@ -43,7 +41,10 @@ namespace MicrostationSignatures.Infrastructure.Implementations
                 g.Clear(backgroundColor.Value);
                 g.DrawImage(metaFile, 0, 0, bitmap.Width, bitmap.Height);
             }
-            bitmap.Save(destination, GetEncoder(format), parameters);
+
+            using var stream = new MemoryStream();
+            bitmap.Save(stream, GetEncoder(format), parameters);
+            return stream.ToArray();
         }
 
         /// <summary>
@@ -71,12 +72,6 @@ namespace MicrostationSignatures.Infrastructure.Implementations
 
             return new Size(width, height);
         }
-
-        /// <summary>
-        /// Путь для сохранение Jpeg изображения
-        /// </summary>
-        private static string GetFilePathJpeg(string filePathEmf) =>
-             Path.ChangeExtension(filePathEmf, "jpg");
 
         /// <summary>
         /// Найти кодировщик по соответствующему типу

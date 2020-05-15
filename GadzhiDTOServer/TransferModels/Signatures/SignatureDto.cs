@@ -12,7 +12,7 @@ namespace GadzhiDTOServer.TransferModels.Signatures
         /// Идентификатор
         /// </summary>
         [DataMember]
-        public string Id { get; protected set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Фамилия
