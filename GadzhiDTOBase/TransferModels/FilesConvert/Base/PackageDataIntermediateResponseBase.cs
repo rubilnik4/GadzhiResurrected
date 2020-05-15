@@ -8,6 +8,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// <summary>
     /// Класс содержащий промежуточные данные о конвертируемых файлах
     /// </summary>
+    [DataContract]
     public abstract class PackageDataIntermediateResponseBase<TFileDataResponse> where TFileDataResponse: FileDataIntermediateResponseBase
     {
         /// <summary>

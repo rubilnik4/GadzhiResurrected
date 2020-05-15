@@ -24,9 +24,10 @@ namespace GadzhiDAL.Services.Implementations
         ///Контейнер зависимостей
         /// </summary>
         private readonly IUnityContainer _container;
+
         public FilesDataServerService(IUnityContainer container)
         {
-            _container = container;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
         /// <summary>

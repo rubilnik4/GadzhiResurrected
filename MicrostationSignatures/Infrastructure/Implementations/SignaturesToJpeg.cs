@@ -83,8 +83,8 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private IResultError CreateJpegFromSignature(IDocumentMicrostation documentMicrostation) =>
             GetSignatures().
             ResultValueOkBind(signatures => signatures.
-                                        Select(signature => CreateJpegFromCell(documentMicrostation.ModelsMicrostation[0], signature)).
-                                        ToResultCollection()).
+                                            Select(signature => CreateJpegFromCell(documentMicrostation.ModelsMicrostation[0], signature)).
+                                            ToResultCollection()).
             ToResult();
 
         /// <summary>
@@ -109,18 +109,19 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             ResultVoidOk(cellSignature => cellSignature.Remove()).
             ToResult();
 
-        private static void DrawToJpeg(IElementMicrostation cellSignature, SignatureLibrary signatureLibrary) =>
-            GetSignatureFileSavePath(signatureLibrary.Fullname).
-            Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary.Fullname),
+        private void DrawToJpeg(IElementMicrostation cellSignature, SignatureLibrary signatureLibrary) =>
+            GetSignatureFileSavePath(signatureLibrary).
+            Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Void(JpegConverter.ToJpeg);
+            Void(JpegConverter.ToJpegFromEmf).
+            Void(filePath => _fileSystemOperations.DeleteFile(filePath));
 
         /// <summary>
         /// Получить имя для сохранения подписи
         /// </summary>
-        private static string GetSignatureFileSavePath(string fullName) =>
+        private static string GetSignatureFileSavePath(SignatureLibrary signatureLibrary) =>
             ProjectSignatureSettings.SignaturesSaveFolder + Path.DirectorySeparatorChar +
-            fullName + ".emf";
+            signatureLibrary.Id + ".emf";
     }
 }

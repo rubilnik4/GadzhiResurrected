@@ -11,7 +11,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
     {
         public PackageDataMap()
         {
-            Id(x => x.Id);
+            Id(x => x.Id).Not.Nullable();
             Map(x => x.CreationDateTime).Not.Nullable();
             Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>().Not.Nullable();
             Map(x => x.IdentityLocalName).Not.Nullable().Default("");

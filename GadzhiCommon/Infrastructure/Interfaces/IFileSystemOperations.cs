@@ -41,7 +41,12 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
-        void DeleteAllDataInDirectory(string directoryPath);      
+        void DeleteAllDataInDirectory(string directoryPath);
+
+        /// <summary>
+        /// Удалить файл
+        /// </summary>
+        void DeleteFile(string filePath);
 
         /// <summary>
         /// Представить файл в двоичном виде

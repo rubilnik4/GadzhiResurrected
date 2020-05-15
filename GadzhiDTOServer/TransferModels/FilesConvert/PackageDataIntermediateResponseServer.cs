@@ -8,6 +8,7 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     /// <summary>
     /// Класс содержащий промежуточные данные о конвертируемых файлах для сервера
     /// </summary>
+    [DataContract]
     public class PackageDataIntermediateResponseServer : PackageDataIntermediateResponseBase<FileDataIntermediateResponseServer>
     {
         /// <summary>

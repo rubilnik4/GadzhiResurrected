@@ -116,6 +116,15 @@ namespace GadzhiCommon.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Удалить файл
+        /// </summary>
+        public void DeleteFile(string filePath)
+        {
+            if (!IsFileExist(filePath)) throw new FileNotFoundException(filePath);
+            File.Delete(filePath);
+        }
+
+        /// <summary>
         /// Представить файл в двоичном виде и запаковать
         /// </summary>
         public async Task<(bool Success, byte[] Zip)> FileToByteAndZip(string filePath)

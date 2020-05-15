@@ -146,6 +146,7 @@
     <Compile Include="Entities\FilesConvert\Base\FileDataSourceEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\PackageDataEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
+    <Compile Include="Entities\Signatures\SignatureEntity.cs" />
     <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataEntity.cs" />
     <Compile Include="Entities\FilesConvert\Main\PackageDataEntity.cs" />
@@ -157,18 +158,22 @@
     <Compile Include="Infrastructure\Implementations\Converters\Client\ConverterFilesDataEntitiesToDtoClient.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterFilesDataEntitiesToDtoServer.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Server\ConverterFilesDataEntitiesFromDtoServer.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Signatures\ConverterSignatures.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataSourceArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FilesDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\FileDataSourceMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\FileDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\PackageDataMap.cs" />
+    <Compile Include="Mappings\Signatures\SignatureMap.cs" />
     <Compile Include="Models\Implementations\FilesQueueInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Implementations\FilesDataServerService.cs" />
     <Compile Include="Services\Implementations\FilesDataClientService.cs" />
+    <Compile Include="Services\Implementations\SignaturesServerService.cs" />
     <Compile Include="Services\Interfaces\IFilesDataServiceServer.cs" />
     <Compile Include="Services\Interfaces\IFilesDataClientService.cs" />
+    <Compile Include="Services\Interfaces\ISignaturesServerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
