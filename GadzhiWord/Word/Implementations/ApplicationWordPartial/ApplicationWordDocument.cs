@@ -1,6 +1,5 @@
 ﻿using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiWord.Word.Implementations.DocumentWordPartial;
 using System;
@@ -22,7 +21,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// Открыть документ
         /// </summary>
         public IResultAppValue<IDocumentWord> OpenDocument(string filePath) =>
-           new ResultAppValue<IDocumentWord>(new DocumentWord(_application.ActiveDocument, this),
+           new ResultAppValue<IDocumentWord>(new DocumentWord(Application.Documents.Open(filePath), this),
                                              new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Word не создан"));
     }
 }

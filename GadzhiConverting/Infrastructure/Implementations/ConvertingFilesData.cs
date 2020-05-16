@@ -56,7 +56,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer) =>
             await fileDataServer.
             Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
-            WhereContinueAsync(fileData => fileData.IsValidByAttemptingCount,
+            WhereContinueAsyncBind(fileData => fileData.IsValidByAttemptingCount,
                 okFunc: fileData => Task.Run(() => ConvertingFile(fileData, _projectSettings.PrintersInformation)),
                 badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
 

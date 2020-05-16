@@ -34,20 +34,28 @@ namespace GadzhiWord.Word.Implementations.Elements
         {
             _tableElement = tableElement ?? throw new ArgumentNullException(nameof(tableElement));
             ApplicationWord = ownerWord.ApplicationWord ?? throw new ArgumentNullException(nameof(ownerWord));
-            DocumentWord = ownerWord.DocumentWord ;
+            DocumentWord = ownerWord.DocumentWord;
         }
 
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        public IEnumerable<ICellElement> CellsElementWord => _tableElement?.Range.Cells.ToIEnumerable().
-                                                              Select(cell => new CellElementWord(cell, this));
+        private IReadOnlyList<ICellElement> _cellsElementWord;
+
+        /// <summary>
+        /// Получить ячейки таблицы
+        /// </summary>
+        public IReadOnlyList<ICellElement> CellsElementWord => _cellsElementWord ??= GetCellsElementWord();
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        public IList<IRowElement> RowsElementWord => GetRowsElement();
+        private IReadOnlyList<IRowElement> _rowsElementWord;
 
+        /// <summary>
+        /// Получить строки таблицы
+        /// </summary>
+        public IReadOnlyList<IRowElement> RowsElementWord => _rowsElementWord ??= GetRowsElement();
 
         /// <summary>
         /// Проверить существование ячейки 
@@ -55,11 +63,10 @@ namespace GadzhiWord.Word.Implementations.Elements
         public bool HasCellElement(int rowIndex, int columnIndex) =>
             RowsElementWord?.Count >= rowIndex && RowsElementWord[rowIndex].CellsElementWord?.Count >= columnIndex;
 
-
         /// <summary>
         /// Получить строки таблицы
         /// </summary>       
-        private List<IRowElement> GetRowsElement()
+        private IReadOnlyList<IRowElement> GetRowsElement()
         {
             var rowsElementWord = Enumerable.Range(0, _tableElement.Rows.Count).
                                   Select(index => new List<ICellElement>()).ToList();
@@ -69,7 +76,17 @@ namespace GadzhiWord.Word.Implementations.Elements
                 var row = rowsElementWord[cell.RowIndex];
                 row.Add(cell);
             }
-            return rowsElementWord.Select(row => new RowElementWord(row)).Cast<IRowElement>().ToList();
+            return rowsElementWord.Select(row => new RowElementWord(row)).
+                                   Cast<IRowElement>().
+                                   ToList();
         }
+
+        /// <summary>
+        /// Получить ячейки таблицы
+        /// </summary>
+        private IReadOnlyList<ICellElement> GetCellsElementWord() =>
+            _tableElement?.Range.Cells.ToIEnumerable().
+            Select(cell => new CellElementWord(cell, this)).
+            ToList();
     }
 }

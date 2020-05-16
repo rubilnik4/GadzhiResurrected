@@ -4,24 +4,28 @@ namespace MicrostationSignatures.Models.Implementations
 {
     public readonly struct SignatureLibrary : IEquatable<SignatureLibrary>
     {
-        public SignatureLibrary(string name, string description)
-            :this(name, description, null)
-        { }
-
-        public SignatureLibrary(string name, string description, byte[] signatureJpeg)
+        public SignatureLibrary(string id, string fullName, byte[] signatureJpeg)
+            : this(id, fullName)
         {
-            Id = name ?? throw new ArgumentNullException(nameof(name));
-            Fullname = description ?? throw new ArgumentNullException(nameof(description));
-            SignatureJpeg = signatureJpeg;
+            SignatureJpeg = ValidateSignatureJpeg(signatureJpeg)
+                            ? signatureJpeg
+                            : throw new ArgumentNullException(nameof(signatureJpeg));
+        }
+
+        public SignatureLibrary(string id, string fullName)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Fullname = fullName ?? throw new ArgumentNullException(nameof(fullName));
+            SignatureJpeg = null;
         }
 
         /// <summary>
-        /// Имя фрагмента
+        /// Идентификатор
         /// </summary>
         public string Id { get; }
 
         /// <summary>
-        /// Описание
+        /// Имя 
         /// </summary>
         public string Fullname { get; }
 
@@ -29,6 +33,12 @@ namespace MicrostationSignatures.Models.Implementations
         /// Изображение подписи
         /// </summary>
         public byte[] SignatureJpeg { get; }
+
+        /// <summary>
+        /// Проверить корректность данных
+        /// </summary>
+        public static bool ValidateSignatureJpeg(byte[] signatureJpeg) =>
+            signatureJpeg?.Length > 0;
 
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((SignatureLibrary)obj);

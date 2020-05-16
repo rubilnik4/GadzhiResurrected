@@ -10,7 +10,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Информация о подписи для модуля Word
     /// </summary>
-    public class SignatureInformation : ISignatureInformation
+    public readonly struct SignatureInformation: IEquatable<SignatureInformation>, ISignatureInformation
     {
         public SignatureInformation(string personId, string personName, string signaturePath)
         {
@@ -20,7 +20,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         }
 
         /// <summary>
-        /// идентификатор личности
+        /// Идентификатор личности
         /// </summary>    
         public string PersonId { get; }
 
@@ -33,5 +33,23 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Путь к файлу подписи
         /// </summary>
         public string SignaturePath { get; }
+
+        #region IEquatable
+        public override bool Equals(object obj) => obj != null && Equals((SignatureInformation)obj);
+
+        public bool Equals(SignatureInformation other) => other.PersonId == PersonId;
+
+        public static bool operator ==(SignatureInformation left, SignatureInformation right) => left.Equals(right);
+
+        public static bool operator !=(SignatureInformation left, SignatureInformation right) => !(left == right);
+
+        public override int GetHashCode()
+        {
+            var hashCode = 17;
+            hashCode = hashCode * 31 + PersonId.GetHashCode();
+
+            return hashCode;
+        }
+        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GadzhiConverting.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GadzhiConverting.DependencyInjection;
 using GadzhiConverting.Helpers;
 using Unity;
@@ -14,7 +15,7 @@ namespace GadzhiConverting
         /// </summary>
         private static readonly IUnityContainer Container = new UnityContainer();
 
-        private static void Main()
+        private static async Task Main()
         {
             NativeMethods.Handler += Handler;
             NativeMethods.SetConsoleCtrlHandler(NativeMethods.Handler, true);
@@ -22,7 +23,7 @@ namespace GadzhiConverting
             BootStrapUnity.ConfigureContainer(Container);
 
             var applicationConverting = Container.Resolve<IConvertingService>();
-            applicationConverting.StartConverting();
+            await applicationConverting.StartConverting();
 
             Console.ReadLine();
         }

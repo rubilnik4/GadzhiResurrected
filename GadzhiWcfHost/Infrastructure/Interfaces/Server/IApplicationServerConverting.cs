@@ -38,9 +38,19 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         Task AbortConvertingById(Guid id);
 
         /// <summary>
+        /// Загрузить подписи из базы данных по идентификаторам
+        /// </summary>      
+        Task<IList<SignatureDto>> GetSignatures(IList<string> ids);
+
+        /// <summary>
         /// Загрузить подписи
         /// </summary>
         Task UploadSignatures(IList<SignatureDto> signaturesDto);
+
+        /// <summary>
+        /// Получить подписи Microstation из базы данных
+        /// </summary>   
+        Task<SignatureMicrostationDto> GetSignaturesMicrostation();
 
         /// <summary>
         /// Загрузить подписи Microstation

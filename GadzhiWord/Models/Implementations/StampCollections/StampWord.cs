@@ -49,16 +49,22 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        protected IEnumerable<IStampFieldWord> FieldsStamp => GetFields();
+        private IReadOnlyList<IStampFieldWord> _fieldsStamp;
 
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        private IEnumerable<IStampFieldWord> GetFields() =>
+        protected IReadOnlyList<IStampFieldWord> FieldsStamp => _fieldsStamp ??= GetFields();
+
+        /// <summary>
+        /// Получить поля штампа
+        /// </summary>
+        private IReadOnlyList<IStampFieldWord> GetFields() =>
             TableStamp?.CellsElementWord?.
                         Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
                         Select(cell => new StampFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
-                        Where(field => field.StampFieldType != StampFieldType.Unknown);
+                        Where(field => field.StampFieldType != StampFieldType.Unknown).
+                        ToList();
 
         /// <summary>
         /// Вписать текстовые поля в рамки

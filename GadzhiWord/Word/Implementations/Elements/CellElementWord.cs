@@ -32,7 +32,12 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Текст ячейки
         /// </summary>
-        public string Text => _cellElement.Range.Text;
+        private string _text;
+
+        /// <summary>
+        /// Текст ячейки
+        /// </summary>
+        public string Text => _text ??= _cellElement.Range.Text;
 
         /// <summary>
         /// Родительский элемент строка
@@ -42,12 +47,22 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Номер строки
         /// </summary>
-        public int RowIndex => _cellElement.RowIndex - 1;
+        private int? _rowIndex;
+
+        /// <summary>
+        /// Номер строки
+        /// </summary>
+        public int RowIndex => _rowIndex ??= _cellElement.RowIndex - 1;
 
         /// <summary>
         /// Номер колонки
         /// </summary>
-        public int ColumnIndex => _cellElement.ColumnIndex - 1;
+        private int? _columnIndex;
+
+        /// <summary>
+        /// Номер колонки
+        /// </summary>
+        public int ColumnIndex => _columnIndex ??= _cellElement.ColumnIndex - 1;
 
         /// <summary>
         /// Присутствует ли картинка в ячейке

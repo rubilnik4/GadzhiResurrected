@@ -101,10 +101,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>      
-        public void StartConverting()
+        public async Task StartConverting()
         {
             _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
             KillPreviousRunProcesses();
+           // await SaveMicrostationSignatiresToResources();
 
             var subscribe = Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
                             Where(_ => !IsConverting).
@@ -140,7 +141,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task ConvertingPackage(IPackageServer packageServer) =>
             await packageServer.
-            WhereContinueAsync(fileData => fileData.IsValid,
+            WhereContinueAsyncBind(fileData => fileData.IsValid,
                 okFunc: fileData => fileData.
                                     Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {fileData.Id}")).
                                     Map(_ => ConvertingFilesData(fileData)).
@@ -263,6 +264,18 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await DeleteAllUnusedDataOnDisk();
             await QueueIsEmpty();
         }
+
+        /// <summary>
+        /// Загрузить подписи Microstation и сохранить в папку с ресурсами проекта
+        /// </summary>
+        private async Task SaveMicrostationSignatiresToResources() =>
+            await new ResultError().
+            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка подписей Microstation из базы данных...")).
+            ResultValueOkAsync(_ => _fileConvertingServerService.Operations.GetSignaturesMicrostation()).
+            ResultVoidOkAsync(_ => _messagingService.ShowAndLogMessage("Сохранение подписей Microstation из базы данных...")).
+            ResultVoidOkAsyncBind(signatures => _fileSystemOperations.UnzipFileAndSave(_projectSettings.ConvertingResources.SignatureMicrostationFileName,
+                                                                                       signatures.MicrostationDataBase)).
+            ResultVoidOkAsync(_ => _messagingService.ShowAndLogMessage("Подписи сохранены..."));
 
         /// <summary>
         /// Удалить все предыдущие запущенные процессы

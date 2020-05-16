@@ -29,5 +29,15 @@ namespace MicrostationSignatures.Infrastructure.Implementations
                 FullName = signatureLibrary.Fullname,
                 SignatureJpeg = signatureLibrary.SignatureJpeg,
             };
+
+        /// <summary>
+        /// Преобразовать подпись Microstation в трансферную модель
+        /// </summary>
+        public static SignatureMicrostationDto SignatureMicrostationToDto(SignatureLibraryMicrostation signatureLibraryMicrostation) =>
+            new SignatureMicrostationDto()
+            {
+                NameDatabase = signatureLibraryMicrostation.Fullname,
+                MicrostationDataBase = signatureLibraryMicrostation.SignatureMicrostation,
+            };
     }
 }

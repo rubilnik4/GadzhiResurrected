@@ -45,9 +45,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public IModelMicrostation ModelMicrostation { get; }
 
         /// <summary>
-        /// идентификатор элемента
+        /// Идентификатор элемента
         /// </summary>
-        public long Id => _element.ID64;
+        private long? _id;
+
+        /// <summary>
+        /// Идентификатор элемента
+        /// </summary>
+        public long Id => _id ??= _element.ID64;
 
         /// <summary>
         /// Коэффициент преобразования координат в текущие относительно родительского элемента

@@ -64,8 +64,9 @@
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Infrastructure\Implementations\ConverterSignatureToDto.cs" />
     <Compile Include="Infrastructure\Implementations\JpegConverter.cs" />
+    <Compile Include="Models\Implementations\SignatureLibraryMicrostation.cs" />
     <Compile Include="Models\Implementations\SignatureLibrary.cs" />
-    <Compile Include="Infrastructure\Implementations\SignaturesToJpeg.cs" />
+    <Compile Include="Infrastructure\Implementations\SignaturesUpload.cs" />
     <Compile Include="Infrastructure\Interfaces\ISignaturesToJpeg.cs" />
     <Compile Include="Models\Implementations\ProjectSignatureSettings.cs" />
     <Compile Include="Models\Interfaces\IProjectSignatureSettings.cs" />

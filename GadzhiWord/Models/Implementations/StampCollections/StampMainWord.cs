@@ -12,7 +12,6 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiCommon.Extensions.Collection;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -70,8 +69,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             GetSignatures(StampPersonsWord, StampChangesWord).
             ResultValueOk(signatures => signatures.
                                         Select(signature => signature.InsertSignature(new List<LibraryElement>())).
-                                        Cast<IStampSignature<IStampField>>().
-                                        ToList()).
+                                        Cast<IStampSignature<IStampField>>()).
             ToResultCollection();
 
         /// <summary>
@@ -97,10 +95,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             Select(row =>
                 row.CellsElementWord[0].
                 Map(personCell => new StampPersonWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
-                                                               new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                                               new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                                               new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                               GetSignatureInformationByPersonName(personCell.Text)))).
+                                                      new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
+                                                      new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
+                                                      new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                                      GetSignatureInformationByPersonName(personCell.Text)))).
             Map(personRows => new ResultAppCollection<IStampPersonWord>(personRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                          "Штамп основных подписей не найден")));
 
@@ -121,7 +119,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             Map(changeRows => new ResultAppCollection<IStampChangeWord>(changeRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                          "Штамп подписей замены не найден")));
 
-
         /// <summary>
         /// Получить подписи
         /// </summary>        
@@ -133,7 +130,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private SignatureInformation GetSignatureInformationByPersonName(string personName) =>
+        private ISignatureInformation GetSignatureInformationByPersonName(string personName) =>
             _personIdTable.FirstOrDefault().Value.
             Map(personId => new SignatureInformation(personName, personId.PersonId, personId.SignaturePath));
     }

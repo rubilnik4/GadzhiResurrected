@@ -59,10 +59,22 @@ namespace GadzhiWcfHost.Services
         public async Task AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
 
         /// <summary>
+        /// Загрузить подписи из базы данных по идентификаторам
+        /// </summary>      
+        public async Task<IList<SignatureDto>> GetSignatures(IList<string> ids) =>
+            await _applicationServerConverting.GetSignatures(ids);
+
+        /// <summary>
         /// Загрузить подписи
         /// </summary>
         public async Task UploadSignatures(IList<SignatureDto> signaturesDto) =>
             await _applicationServerConverting.UploadSignatures(signaturesDto);
+
+        /// <summary>
+        /// Получить подписи Microstation из базы данных
+        /// </summary>   
+        public async Task<SignatureMicrostationDto> GetSignaturesMicrostation() =>
+            await _applicationServerConverting.GetSignaturesMicrostation();
 
         /// <summary>
         /// Загрузить подписи Microstation

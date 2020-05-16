@@ -29,7 +29,7 @@ namespace MicrostationSignatures.DependencyInjection
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
 
             container.RegisterType<IProjectSignatureSettings, ProjectSignatureSettings>();
-            container.RegisterType<ISignaturesToJpeg, SignaturesToJpeg>();
+            container.RegisterType<ISignaturesToJpeg, SignaturesUpload>();
 
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();

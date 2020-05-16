@@ -13,12 +13,12 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        IEnumerable<ICellElement> CellsElementWord { get; }
+        IReadOnlyList<ICellElement> CellsElementWord { get; }
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        IList<IRowElement> RowsElementWord { get; }
+        IReadOnlyList<IRowElement> RowsElementWord { get; }
 
         /// <summary>
         /// Проверить существование ячейки 

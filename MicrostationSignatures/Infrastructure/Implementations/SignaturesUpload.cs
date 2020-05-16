@@ -21,7 +21,6 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Microstation.Interfaces;
 using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using System.Runtime.CompilerServices;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Functional;
 using GadzhiDTOServer.Contracts.FilesConvert;
@@ -31,7 +30,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
     /// <summary>
     /// Преобразование подписей Microstation в Jpeg
     /// </summary>
-    public class SignaturesToJpeg : ISignaturesToJpeg
+    public class SignaturesUpload : ISignaturesToJpeg
     {
         /// <summary>
         /// Модуль конвертации Microstation
@@ -53,7 +52,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>     
         private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
 
-        public SignaturesToJpeg(IApplicationMicrostation applicationMicrostation, IMessagingService messagingService,
+        public SignaturesUpload(IApplicationMicrostation applicationMicrostation, IMessagingService messagingService,
                                 IFileSystemOperations fileSystemOperations,
                                 IServiceConsumer<IFileConvertingServerService> fileConvertingServerService)
         {
@@ -64,18 +63,40 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Создать подписи из прикрепленной библиотеки Microstation в формате Jpeg
+        /// Создать подписи из прикрепленной библиотеки Microstation в формате Jpeg и отправить в базу данных
         /// </summary>
-        public async Task<IResultError> CreateJpegSignatures(string filePath) =>
+        public async Task<IResultError> SendJpegSignaturesToDataBase(string filePath) =>
             await MicrostationFileOpen(filePath).
             ResultValueOkBindAsync(CreateJpegFromSignature).
             ResultVoidAsync(_ => _applicationMicrostation.DetachLibrary()).
             ResultVoidAsync(_ => _applicationMicrostation.CloseApplication()).
-            ResultVoidAsync(_ => _messagingService.ShowAndLogMessage("----------------")).
-            ResultVoidAsync(_ => _messagingService.ShowAndLogMessage("Обработка ошибок")).
-            VoidAsync(result => _messagingService.ShowAndLogErrors(result.Errors)).
-            MapAsync(result => result.ToResult());
+            MapAsync(result => result.ToResult()).
+            VoidAsync(ShowErrors);
 
+        /// <summary>
+        /// Создать подписи Microstation в базу данных
+        /// </summary>
+        public async Task<IResultError> SendMicrostationSignaturesToDatabase(string filePathMicrostation) =>
+            await new ResultValue<string>(filePathMicrostation, new ErrorCommon(FileConvertErrorType.FileNotFound, "Не найден файл подписей Microstation")).
+            ResultVoid(_ => _messagingService.ShowAndLogMessage("Обработка подписей Microstation")).
+            ResultValueOkBindAsync(MicrostationDataBaseToZip).
+            ResultValueOkAsync(zip => new SignatureLibraryMicrostation("SignatureMicrostation", zip)).
+            ResultVoidAsyncBind(UploadSignaturesMicrostationToDataBase).
+            MapAsync(result => result.ToResult()).
+            VoidAsync(ShowErrors);
+
+        /// <summary>
+        /// Обработка ошибок
+        /// </summary>
+        private void ShowErrors(IResultError resultError) =>
+            resultError.
+            Void(_ => _messagingService.ShowAndLogMessage("----------------")).
+            WhereContinue(result => result.OkStatus,
+                okFunc: result => result.
+                                  Void(_ => _messagingService.ShowAndLogMessage("Обработка подписей успешно завершена")),
+                badFunc: result => result.
+                                   Void(_ => _messagingService.ShowAndLogMessage("Обработка ошибок")).
+                                   Void(_ => _messagingService.ShowAndLogErrors(result.Errors)));
         /// <summary>
         /// Открыть файл Microstation
         /// </summary>
@@ -96,9 +117,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             ResultValueOkBind(signatures => signatures.
                                             Select(signature => CreateJpegFromCell(documentMicrostation.ModelsMicrostation[0], signature)).
                                             ToResultCollection()).
-            ResultVoid(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
-            ResultVoidAsync(UploadSignaturesToDataBase).
-            ResultVoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе")).
+            ResultVoidAsyncBind(UploadSignaturesToDataBase).
             MapAsync(result => result.ToResult());
 
         /// <summary>
@@ -145,6 +164,27 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private async Task UploadSignaturesToDataBase(IReadOnlyList<SignatureLibrary> signaturesLibrary) =>
             await ConverterSignatureToDto.SignaturesToDto(signaturesLibrary).
-            VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures));
+            Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
+            VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
+            VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
+
+        /// <summary>
+        /// Запаковать файл базы Microstation и преобразовать в байтовый массив
+        /// </summary>
+        private Task<IResultValue<byte[]>> MicrostationDataBaseToZip(string filePath) =>
+            _fileSystemOperations.FileToByteAndZip(filePath).
+             WhereContinueAsync(successAndZip => successAndZip.Success,
+                                okFunc: successAndZip => (IResultValue<byte[]>)new ResultValue<byte[]>(successAndZip.Zip),
+                                badFunc: successAndZip => new ResultValue<byte[]>(new ErrorCommon(FileConvertErrorType.IncorrectDataSource,
+                                                                                                  "Невозможно преобразовать файл в формат zip")));
+
+        /// <summary>
+        /// Загрузить подписи Microstation в базу
+        /// </summary>
+        private async Task UploadSignaturesMicrostationToDataBase(SignatureLibraryMicrostation signatureLibraryMicrostation) =>
+            await ConverterSignatureToDto.SignatureMicrostationToDto(signatureLibraryMicrostation).
+                  Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
+                  VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignaturesMicrostation(signatures)).
+                  VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
     }
 }

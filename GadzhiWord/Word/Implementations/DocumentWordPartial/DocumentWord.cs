@@ -83,7 +83,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Экспорт файла
         /// </summary>      
-        public string Export(string filePath) => throw new NotImplementedException();
+        public string Export(string filePath) => filePath;
 
         /// <summary>
         /// Закрыть файл файл

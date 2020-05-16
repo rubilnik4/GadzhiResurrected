@@ -17,12 +17,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public const int FIELDS_COUNT = 4;
        
-        public StampPersonWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson,
-                                        IStampFieldWord signature, IStampFieldWord dateSignature,
-                                        ISignatureInformation signatureInformation)
-            : base(signature, signatureInformation?.SignaturePath)
+        public StampPersonWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson, IStampFieldWord signature, 
+                               IStampFieldWord dateSignature, ISignatureInformation signatureInformation)
+            : base(signature, signatureInformation.SignaturePath)
         {
-            PersonId = signatureInformation?.PersonId ?? throw new ArgumentNullException(nameof(signatureInformation));
+            PersonId = signatureInformation.PersonId;
             PersonName = signatureInformation.PersonName;
 
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));

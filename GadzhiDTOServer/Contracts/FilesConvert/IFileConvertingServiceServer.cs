@@ -45,10 +45,22 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         Task AbortConvertingById(Guid id);
 
         /// <summary>
+        /// Загрузить подписи из базы данных по идентификаторам
+        /// </summary>
+        [OperationContract]
+        Task<IList<SignatureDto>> GetSignatures(IList<string> ids);
+
+        /// <summary>
         /// Загрузить подписи
         /// </summary>
         [OperationContract]
         Task UploadSignatures(IList<SignatureDto> signaturesDto);
+
+        /// <summary>
+        /// Получить подписи Microstation из базы данных
+        /// </summary>
+        [OperationContract]
+        Task<SignatureMicrostationDto> GetSignaturesMicrostation();
 
         /// <summary>
         /// Загрузить подписи Microstation
