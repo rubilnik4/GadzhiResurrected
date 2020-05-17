@@ -21,7 +21,7 @@ namespace GadzhiCommon.Extensions.Functional
         /// <summary>
         /// Связывание типов с помощью функции
         /// </summary>       
-        public static async Task<TResult> BindAsync<TSource, TResult>(this Task<TSource> @this, Func<TSource, Task<TResult>> func)
+        public static async Task<TResult> MapAsyncBind<TSource, TResult>(this Task<TSource> @this, Func<TSource, Task<TResult>> func)
         {
             if (func == null) throw new ArgumentNullException(nameof(func));
             var awaited = await @this;

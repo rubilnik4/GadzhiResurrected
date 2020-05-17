@@ -1,15 +1,11 @@
-﻿using GadzhiConverting.Models.Implementations;
+﻿using System.Threading.Tasks;
+using GadzhiConverting.Models.Implementations;
 using GadzhiConverting.Models.Interfaces.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
 {
     public interface IProjectSettings
     {
-        /// <summary>
-        /// Пути ресурсов модулей конвертации
-        /// </summary>
-        ConvertingResources ConvertingResources { get; }
-
         /// <summary>
         /// Папка для конвертирования файлов
         /// </summary>
@@ -34,5 +30,10 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// Получить имя компьютера
         /// </summary>
         string NetworkName { get; }
+
+        /// <summary>
+        /// Пути ресурсов модулей конвертации
+        /// </summary>
+        public Task<ConvertingResources> ConvertingResources { get; }
     }
 }

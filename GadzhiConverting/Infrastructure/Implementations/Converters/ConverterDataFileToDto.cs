@@ -1,15 +1,15 @@
-﻿using GadzhiDTOServer.TransferModels.Signatures;
-using MicrostationSignatures.Models.Implementations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiDTOServer.TransferModels.Signatures;
 
-namespace MicrostationSignatures.Infrastructure.Implementations
+namespace GadzhiConverting.Infrastructure.Implementations.Converters
 {
     /// <summary>
     /// Преобразование подписи в трансферную модель
     /// </summary>
-    public static class ConverterSignatureToDto
+    public static class ConverterDataFileToDto
     {
         /// <summary>
         /// Преобразовать подписи в трансферную модель
@@ -20,9 +20,19 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             ?? throw new ArgumentNullException(nameof(signaturesLibrary));
 
         /// <summary>
+        /// Преобразовать подпись Microstation в трансферную модель
+        /// </summary>
+        public static MicrostationDataFileDto MicrostationDataFileToDto(MicrostationDataFile microstationDataFile) =>
+            new MicrostationDataFileDto()
+            {
+                NameDatabase = microstationDataFile.NameDatabase,
+                MicrostationDataBase = microstationDataFile.MicrostationDataBase,
+            };
+
+        /// <summary>
         /// Преобразовать подпись в трансферную модель
         /// </summary>
-        public static SignatureDto SignatureToDto(SignatureLibrary signatureLibrary) =>
+        private static SignatureDto SignatureToDto(SignatureLibrary signatureLibrary) =>
             new SignatureDto()
             {
                 Id = signatureLibrary.Id,
@@ -30,14 +40,5 @@ namespace MicrostationSignatures.Infrastructure.Implementations
                 SignatureJpeg = signatureLibrary.SignatureJpeg,
             };
 
-        /// <summary>
-        /// Преобразовать подпись Microstation в трансферную модель
-        /// </summary>
-        public static SignatureMicrostationDto SignatureMicrostationToDto(SignatureLibraryMicrostation signatureLibraryMicrostation) =>
-            new SignatureMicrostationDto()
-            {
-                NameDatabase = signatureLibraryMicrostation.Fullname,
-                MicrostationDataBase = signatureLibraryMicrostation.SignatureMicrostation,
-            };
     }
 }

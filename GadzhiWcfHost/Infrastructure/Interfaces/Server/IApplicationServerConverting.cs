@@ -38,6 +38,11 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         Task AbortConvertingById(Guid id);
 
         /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>      
+        Task<IList<SignatureDto>> GetSignaturesNames();
+
+        /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>      
         Task<IList<SignatureDto>> GetSignatures(IList<string> ids);
@@ -50,11 +55,21 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// <summary>
         /// Получить подписи Microstation из базы данных
         /// </summary>   
-        Task<SignatureMicrostationDto> GetSignaturesMicrostation();
+        Task<MicrostationDataFileDto> GetSignaturesMicrostation();
+
+        /// <summary>
+        /// Получить штампы Microstation из базы данных
+        /// </summary>   
+        Task<MicrostationDataFileDto> GetStampsMicrostation() ;
 
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
-        Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto);
+        Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto);
+
+        /// <summary>
+        /// Загрузить штампы Microstation
+        /// </summary>
+        Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto);
     }
 }

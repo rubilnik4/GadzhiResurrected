@@ -94,7 +94,7 @@
     <Compile Include="TransferModels\FilesConvert\PackageDataRequestServer.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataResponseServer.cs" />
     <Compile Include="TransferModels\Signatures\SignatureDto.cs" />
-    <Compile Include="TransferModels\Signatures\SignatureMicrostationDto.cs" />
+    <Compile Include="TransferModels\Signatures\MicrostationDataFileDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">

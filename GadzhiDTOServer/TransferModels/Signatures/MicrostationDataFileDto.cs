@@ -11,7 +11,7 @@ namespace GadzhiDTOServer.TransferModels.Signatures
     /// Идентификатор личности с подписью Microstation. Трансферная модель
     /// </summary>
     [DataContract]
-    public  class SignatureMicrostationDto
+    public  class MicrostationDataFileDto
     {
         /// <summary>
         /// Наименование базы

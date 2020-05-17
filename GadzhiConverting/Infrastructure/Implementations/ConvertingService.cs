@@ -5,7 +5,6 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
-using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
@@ -39,7 +38,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IProjectSettings _projectSettings;
 
         /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
+        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
         /// </summary>     
         private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
 
@@ -101,11 +100,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>      
-        public async Task StartConverting()
+        public void StartConverting()
         {
             _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
             KillPreviousRunProcesses();
-           // await SaveMicrostationSignatiresToResources();
 
             var subscribe = Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
                             Where(_ => !IsConverting).
@@ -118,12 +116,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
         /// </summary>        
-        public async Task ConvertingFirstInQueuePackage()
+        private async Task ConvertingFirstInQueuePackage()
         {
             _messagingService.ShowAndLogMessage("Запрос пакета в базе...");
 
-            PackageDataRequestServer packageDataRequest = await _fileConvertingServerService.Operations.
-                                                                GetFirstInQueuePackage(_projectSettings.NetworkName);
+            var packageDataRequest = await _fileConvertingServerService.Operations.GetFirstInQueuePackage(_projectSettings.NetworkName);
             if (packageDataRequest != null)
             {
                 var filesDataServer = await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageDataRequest);
@@ -178,7 +175,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private async Task<IPackageServer> SendIntermediateResponse(IPackageServer packageServer) =>
             await _converterServerFilesDataToDto.FilesDataToIntermediateResponse(packageServer).
             Map(Task.FromResult).
-            BindAsync(fileDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(fileDataRequest)).
+            MapAsyncBind(fileDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(fileDataRequest)).
             MapAsync(packageServer.SetStatusProcessingProject);
 
         /// <summary>
@@ -230,8 +227,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 ResultOkBad(
                     okFunc: fileData => ConvertingByCountLimit(fileData).
                                         MapAsync(packageServer.ChangeFileDataServer).
-                                        BindAsync(SendIntermediateResponse).
-                                        BindAsync(ConvertingFilesData),
+                                        MapAsyncBind(SendIntermediateResponse).
+                                        MapAsyncBind(ConvertingFilesData),
                     badFunc: _ => Task.FromResult(packageServer)).
                 Value;
 
@@ -264,18 +261,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await DeleteAllUnusedDataOnDisk();
             await QueueIsEmpty();
         }
-
-        /// <summary>
-        /// Загрузить подписи Microstation и сохранить в папку с ресурсами проекта
-        /// </summary>
-        private async Task SaveMicrostationSignatiresToResources() =>
-            await new ResultError().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка подписей Microstation из базы данных...")).
-            ResultValueOkAsync(_ => _fileConvertingServerService.Operations.GetSignaturesMicrostation()).
-            ResultVoidOkAsync(_ => _messagingService.ShowAndLogMessage("Сохранение подписей Microstation из базы данных...")).
-            ResultVoidOkAsyncBind(signatures => _fileSystemOperations.UnzipFileAndSave(_projectSettings.ConvertingResources.SignatureMicrostationFileName,
-                                                                                       signatures.MicrostationDataBase)).
-            ResultVoidOkAsync(_ => _messagingService.ShowAndLogMessage("Подписи сохранены..."));
 
         /// <summary>
         /// Удалить все предыдущие запущенные процессы

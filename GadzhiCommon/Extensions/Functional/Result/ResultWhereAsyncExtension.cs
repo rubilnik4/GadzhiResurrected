@@ -55,5 +55,21 @@ namespace GadzhiCommon.Extensions.Functional.Result
                 ? new ResultValue<TValueOut>(@this.Errors)
                 : await okFunc.Invoke(@this.Value);
         }
+
+        /// <summary>
+        /// Выполнение положительного условия результирующего ответа со связыванием или возвращение предыдущей ошибки в результирующем ответе асинхронно
+        /// </summary>   
+        public static async Task<IResultValue<TValueOut>> ResultValueOkBindAsync<TValueIn, TValueOut>(this Task<IResultValue<TValueIn>> @this,
+                                                                                                      Func<TValueIn, Task<IResultValue<TValueOut>>> okFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
+            var awaitedThis = await @this;
+
+            return awaitedThis.HasErrors
+                ? new ResultValue<TValueOut>(awaitedThis.Errors)
+                : await okFunc.Invoke(awaitedThis.Value);
+        }
     }
 }

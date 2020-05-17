@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using GadzhiDAL.Entities.FilesConvert.Base;
 
-namespace GadzhiDAL.Entities.Signatures
+namespace GadzhiDAL.Models.Implementations
 {
     /// <summary>
     /// Идентификатор личности с подписью для Microstation
     /// </summary>
-    public class SignatureMicrostationEntity : EntityBase<int>
+    public class MicrostationDataFileEntity : EntityBase<string>
     {
         /// <summary>
         /// Идентификатор
         /// </summary>
-        public override int Id { get; protected set; }
+        public override string Id { get; protected set; }
 
         /// <summary>
         /// Наименование базы
@@ -26,5 +22,13 @@ namespace GadzhiDAL.Entities.Signatures
         /// База подписей Microstation
         /// </summary>       
         public virtual IList<byte> MicrostationDataBase { get; set; }
+
+        /// <summary>
+        /// Установить идентификатор
+        /// </summary>        
+        public virtual void SetId(string id)
+        {
+            Id = id;
+        }
     }
 }

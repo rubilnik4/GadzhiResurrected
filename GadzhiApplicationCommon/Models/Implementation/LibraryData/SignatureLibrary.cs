@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MicrostationSignatures.Models.Implementations
+namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
 {
-    public readonly struct SignatureLibrary : IEquatable<SignatureLibrary>
+    public class SignatureLibrary
     {
         public SignatureLibrary(string id, string fullName, byte[] signatureJpeg)
             : this(id, fullName)
@@ -39,23 +39,5 @@ namespace MicrostationSignatures.Models.Implementations
         /// </summary>
         public static bool ValidateSignatureJpeg(byte[] signatureJpeg) =>
             signatureJpeg?.Length > 0;
-
-        #region IEquatable
-        public override bool Equals(object obj) => obj != null && Equals((SignatureLibrary)obj);
-
-        public bool Equals(SignatureLibrary other) => other.Id == Id;
-
-        public static bool operator ==(SignatureLibrary left, SignatureLibrary right) => left.Equals(right);
-
-        public static bool operator !=(SignatureLibrary left, SignatureLibrary right) => !(left == right);
-
-        public override int GetHashCode()
-        {
-            var hashCode = 17;
-            hashCode = hashCode * 31 + Id.GetHashCode();
-
-            return hashCode;
-        }
-        #endregion
     }
 }

@@ -22,7 +22,9 @@ using GadzhiMicrostation.Microstation.Interfaces;
 using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using ChannelAdam.ServiceModel;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiCommon.Functional;
+using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 
 namespace MicrostationSignatures.Infrastructure.Implementations
@@ -74,16 +76,28 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             VoidAsync(ShowErrors);
 
         /// <summary>
-        /// Создать подписи Microstation в базу данных
+        /// Отправить подписи Microstation в базу данных
         /// </summary>
         public async Task<IResultError> SendMicrostationSignaturesToDatabase(string filePathMicrostation) =>
             await new ResultValue<string>(filePathMicrostation, new ErrorCommon(FileConvertErrorType.FileNotFound, "Не найден файл подписей Microstation")).
             ResultVoid(_ => _messagingService.ShowAndLogMessage("Обработка подписей Microstation")).
             ResultValueOkBindAsync(MicrostationDataBaseToZip).
-            ResultValueOkAsync(zip => new SignatureLibraryMicrostation("SignatureMicrostation", zip)).
-            ResultVoidAsyncBind(UploadSignaturesMicrostationToDataBase).
+            ResultValueOkAsync(zip => new MicrostationDataFile("MicrostationSignatureDataBase", zip)).
+            ResultVoidAsyncBind(UploadMicrostationDataToDataBase).
             MapAsync(result => result.ToResult()).
             VoidAsync(ShowErrors);
+
+        /// <summary>
+        /// Отправить штампы Microstation в базу данных
+        /// </summary>
+        public async Task<IResultError> SendMicrostationStampsToDatabase(string filePathMicrostation) =>
+            await new ResultValue<string>(filePathMicrostation, new ErrorCommon(FileConvertErrorType.FileNotFound, "Не найден файл подписей Microstation")).
+                  ResultVoid(_ => _messagingService.ShowAndLogMessage("Обработка штампов Microstation")).
+                  ResultValueOkBindAsync(MicrostationDataBaseToZip).
+                  ResultValueOkAsync(zip => new MicrostationDataFile("MicrostationStampDataBase", zip)).
+                  ResultVoidAsyncBind(UploadMicrostationDataToDataBase).
+                  MapAsync(result => result.ToResult()).
+                  VoidAsync(ShowErrors);
 
         /// <summary>
         /// Обработка ошибок
@@ -163,7 +177,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Загрузить подписи в базу
         /// </summary>
         private async Task UploadSignaturesToDataBase(IReadOnlyList<SignatureLibrary> signaturesLibrary) =>
-            await ConverterSignatureToDto.SignaturesToDto(signaturesLibrary).
+            await ConverterDataFileToDto.SignaturesToDto(signaturesLibrary).
             Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
             VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
             VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
@@ -179,10 +193,10 @@ namespace MicrostationSignatures.Infrastructure.Implementations
                                                                                                   "Невозможно преобразовать файл в формат zip")));
 
         /// <summary>
-        /// Загрузить подписи Microstation в базу
+        /// Загрузить данные Microstation в базу
         /// </summary>
-        private async Task UploadSignaturesMicrostationToDataBase(SignatureLibraryMicrostation signatureLibraryMicrostation) =>
-            await ConverterSignatureToDto.SignatureMicrostationToDto(signatureLibraryMicrostation).
+        private async Task UploadMicrostationDataToDataBase(MicrostationDataFile microstationDataFile) =>
+            await ConverterDataFileToDto.MicrostationDataFileToDto(microstationDataFile).
                   Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
                   VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignaturesMicrostation(signatures)).
                   VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));

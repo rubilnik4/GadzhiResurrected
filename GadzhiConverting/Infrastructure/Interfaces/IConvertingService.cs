@@ -11,11 +11,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>      
-        Task StartConverting();
-
-        /// <summary>
-        /// Получить пакет на конвертирование и запустить процесс
-        /// </summary>        
-        Task ConvertingFirstInQueuePackage();
+        void StartConverting();
     }
 }

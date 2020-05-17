@@ -45,6 +45,12 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         Task AbortConvertingById(Guid id);
 
         /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>
+        [OperationContract]
+        Task<IList<SignatureDto>> GetSignaturesNames();
+
+        /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>
         [OperationContract]
@@ -57,16 +63,28 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         Task UploadSignatures(IList<SignatureDto> signaturesDto);
 
         /// <summary>
+        /// Получить штампы Microstation из базы данных
+        /// </summary>
+        [OperationContract]
+        Task<MicrostationDataFileDto> GetStampsMicrostation();
+
+        /// <summary>
         /// Получить подписи Microstation из базы данных
         /// </summary>
         [OperationContract]
-        Task<SignatureMicrostationDto> GetSignaturesMicrostation();
+        Task<MicrostationDataFileDto> GetSignaturesMicrostation();
 
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
         [OperationContract]
-        Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto);
+        Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto);
+
+        /// <summary>
+        /// Загрузить штампы Microstation
+        /// </summary>
+        [OperationContract]
+        Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto);
     }
 }
 

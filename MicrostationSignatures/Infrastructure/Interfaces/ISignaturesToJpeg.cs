@@ -17,5 +17,10 @@ namespace MicrostationSignatures.Infrastructure.Interfaces
         /// Создать подписи Microstation в базу данных
         /// </summary>
         Task<IResultError> SendMicrostationSignaturesToDatabase(string filePathMicrostation);
+
+        /// <summary>
+        /// Отправить штампы Microstation в базу данных
+        /// </summary>
+        Task<IResultError> SendMicrostationStampsToDatabase(string filePathMicrostation);
     }
 }

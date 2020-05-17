@@ -10,6 +10,11 @@ namespace GadzhiDAL.Services.Interfaces
     public interface ISignaturesServerService
     {
         /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>      
+        Task<IList<SignatureDto>> GetSignaturesNames();
+
+        /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>      
         Task<IList<SignatureDto>> GetSignatures(IList<string> ids);
@@ -20,13 +25,13 @@ namespace GadzhiDAL.Services.Interfaces
         Task UploadSignatures(IList<SignatureDto> signaturesDto);
 
         /// <summary>
-        /// Получить подписи Microstation из базы данных
+        /// Получить данные Microstation из базы данных
         /// </summary>      
-        Task<SignatureMicrostationDto> GetSignaturesMicrostation();
+        Task<MicrostationDataFileDto> GetMicrostationDataFile(string idDataFile);
 
         /// <summary>
-        /// Записать подписи Microstation в базу данных
+        /// Записать данные Microstation в базу данных
         /// </summary>      
-        Task UploadSignaturesMicrostation(SignatureMicrostationDto signatureMicrostationDto);
+        Task UploadMicrostationDataFile(MicrostationDataFileDto microstationDataFileDto, string idDataFile);
     }
 }

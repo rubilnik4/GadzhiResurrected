@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiWord.Word.Implementations
 {
@@ -10,14 +11,14 @@ namespace GadzhiWord.Word.Implementations
     /// </summary>
     public class WordResources
     {
-        public WordResources(string signatureWordFileName)
+        public WordResources(IReadOnlyList<SignatureLibrary> signatureNames)
         {
-            SignatureWordFileName = signatureWordFileName;          
+            SignatureNames = signatureNames;          
         }
 
         /// <summary>
-        /// Подписи для Word
+        /// Имена для подписей
         /// </summary>
-        public string SignatureWordFileName { get; }      
+        public IReadOnlyList<SignatureLibrary> SignatureNames { get; }      
     }
 }

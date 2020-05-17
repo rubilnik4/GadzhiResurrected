@@ -1,4 +1,5 @@
-﻿using ChannelAdam.ServiceModel;
+﻿using System.Threading.Tasks;
+using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
@@ -29,7 +30,7 @@ namespace GadzhiConverting.DependencyInjection
         /// <summary>
         /// Зарегистрировать зависимости
         /// </summary>
-        public static void ConfigureContainer(IUnityContainer container)
+        public static async Task ConfigureContainer(IUnityContainer container)
         {
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
@@ -38,7 +39,7 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterSingleton<IConvertingFileData, ConvertingFileData>();
             container.RegisterSingleton<IConvertingService, ConvertingService>();
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) =>
-                      ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint));
+                      ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), FactoryLifetime.Singleton);
 
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();
@@ -48,15 +49,18 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
             var projectSettings = container.Resolve<IProjectSettings>();
+            var convertingResources = await projectSettings.ConvertingResources;
+
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>
-                      new ApplicationMicrostation(new MicrostationResources(projectSettings.ConvertingResources.SignatureMicrostationFileName,
-                                                                            projectSettings.ConvertingResources.StampMicrostationFileName)));
+                      new ApplicationMicrostation(new MicrostationResources(convertingResources.SignaturesMicrostation.Value,
+                                                                            convertingResources.StampMicrostation.Value)));
             container.RegisterFactory<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord), unity =>
-                      new ApplicationWord(new WordResources(projectSettings.ConvertingResources.SignatureWordFileName)));
+                      new ApplicationWord(new WordResources(convertingResources.SignatureNames)));
 
             container.RegisterFactory<IApplicationConverting>(unity =>
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),
-                                          unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord)),                                        
+                                          unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord)),
+                                          unity.Resolve <IServiceConsumer<IFileConvertingServerService>>(),
                                           unity.Resolve<IFileSystemOperations>(),
                                           unity.Resolve<IPdfCreatorService>()));
 

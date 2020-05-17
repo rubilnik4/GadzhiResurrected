@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiDAL.Entities.Signatures;
+using GadzhiDAL.Models.Implementations;
 using GadzhiDTOServer.TransferModels.Signatures;
 using NHibernate.Linq;
 
-namespace GadzhiDAL.Infrastructure.Implementations.Converters.Signatures
+namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
 {
     /// <summary>
     /// Преобразование идентификатора с подписью в модель базы банных и трансферную
     /// </summary>
-    public static class ConverterSignatures
+    public static class ConverterDataFile
     {
         /// <summary>
         /// Преобразовать идентификаторы с подписью в модель базы банных
@@ -23,26 +24,28 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Signatures
         /// <summary>
         /// Преобразовать идентификаторы с подписью в трансферную модель
         /// </summary>
-        public static async Task<IList<SignatureDto>> SignaturesFromDto(IList<SignatureEntity> signatureEntities)
+        public static async Task<IList<SignatureDto>> SignaturesFromDto(IList<SignatureEntity> signatureEntities, bool signatureLoad)
         {
-            if (signatureEntities == null ) throw new ArgumentNullException(nameof(signatureEntities));
+            if (signatureEntities == null) throw new ArgumentNullException(nameof(signatureEntities));
             return await signatureEntities.AsQueryable().
-                                           Select(signatire => SignatureToDto(signatire)).
+                                           Select(signatire => SignatureToDto(signatire, signatureLoad)).
                                            ToListAsync();
         }
 
         /// <summary>
         /// Преобразовать идентификатор с подписью Microstation в модель базы банных
         /// </summary>
-        public static SignatureMicrostationEntity SignatureMicrostationFromDto(SignatureMicrostationDto signatureMicrostationDto)
+        public static MicrostationDataFileEntity MicrostationDataFileFromDto(MicrostationDataFileDto microstationDataFileDto, string idDataFile)
         {
-            if (signatureMicrostationDto == null) throw new ArgumentNullException(nameof(signatureMicrostationDto));
+            if (microstationDataFileDto == null) throw new ArgumentNullException(nameof(microstationDataFileDto));
+            if (String.IsNullOrEmpty(idDataFile)) throw new ArgumentNullException(nameof(idDataFile));
 
-            var signatureMicrostationEntity = new SignatureMicrostationEntity()
+            var signatureMicrostationEntity = new MicrostationDataFileEntity()
             {
-                NameDatabase = signatureMicrostationDto.NameDatabase,
-                MicrostationDataBase = signatureMicrostationDto.MicrostationDataBase,
+                NameDatabase = microstationDataFileDto.NameDatabase,
+                MicrostationDataBase = microstationDataFileDto.MicrostationDataBase,
             };
+            signatureMicrostationEntity.SetId(idDataFile);
 
             return signatureMicrostationEntity;
         }
@@ -50,14 +53,14 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Signatures
         /// <summary>
         /// Преобразовать идентификатор с подписью Microstation в трансферную модель
         /// </summary>
-        public static SignatureMicrostationDto SignatureMicrostationToDto(SignatureMicrostationEntity signatureMicrostationEntity)
+        public static MicrostationDataFileDto SignatureMicrostationToDto(MicrostationDataFileEntity microstationDataFileEntity)
         {
-            if (signatureMicrostationEntity == null) throw new ArgumentNullException(nameof(signatureMicrostationEntity));
+            if (microstationDataFileEntity == null) throw new ArgumentNullException(nameof(microstationDataFileEntity));
 
-            var signatureMicrostationDto = new SignatureMicrostationDto()
+            var signatureMicrostationDto = new MicrostationDataFileDto()
             {
-                NameDatabase = signatureMicrostationEntity.NameDatabase,
-                MicrostationDataBase = signatureMicrostationEntity.MicrostationDataBase.ToArray(),
+                NameDatabase = microstationDataFileEntity.NameDatabase,
+                MicrostationDataBase = microstationDataFileEntity.MicrostationDataBase.ToArray(),
             };
 
             return signatureMicrostationDto;
@@ -83,13 +86,15 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Signatures
         /// <summary>
         /// Преобразовать идентификатор с подписью в трансферную модель
         /// </summary>
-        private static SignatureDto SignatureToDto(SignatureEntity signatureEntity) =>
-            (signatureEntity != null) 
+        private static SignatureDto SignatureToDto(SignatureEntity signatureEntity, bool signatureLoad) =>
+            (signatureEntity != null)
             ? new SignatureDto()
             {
                 Id = signatureEntity.Id,
                 FullName = signatureEntity.FullName,
-                SignatureJpeg = signatureEntity.SignatureJpeg.AsQueryable().ToArray(),
+                SignatureJpeg = signatureLoad
+                                ? signatureEntity.SignatureJpeg.AsQueryable().ToArray()
+                                : null,
             }
             : throw new ArgumentNullException(nameof(signatureEntity));
     }

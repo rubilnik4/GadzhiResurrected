@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiDAL.Entities.Signatures;
 using GadzhiDAL.Factories.Interfaces;
-using GadzhiDAL.Infrastructure.Implementations.Converters.Signatures;
+using GadzhiDAL.Infrastructure.Implementations.Converters.DataFile;
+using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces;
 using GadzhiDTOServer.TransferModels.Signatures;
 using NHibernate.Linq;
@@ -28,19 +29,18 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
-        /// Записать подписи в базу данных
+        /// Загрузить имена из базы данных
         /// </summary>      
-        public async Task UploadSignatures(IList<SignatureDto> signaturesDto)
+        public async Task<IList<SignatureDto>> GetSignaturesNames()
         {
-            var signaturesEntity = ConverterSignatures.SignaturesFromDto(signaturesDto);
-
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            foreach (var signatureEntity in signaturesEntity)
-            {
-                await unitOfWork.Session.SaveOrUpdateAsync(signatureEntity);
-            }
+
+            var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().ToListAsync();
+            var signaturesDto = await ConverterDataFile.SignaturesFromDto(signatureEntities, false);
 
             await unitOfWork.CommitAsync();
+
+            return signaturesDto;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace GadzhiDAL.Services.Implementations
             var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().
                                                      Where(signature => ids.Contains(signature.Id)).
                                                      ToListAsync();
-            var signaturesDto = await ConverterSignatures.SignaturesFromDto(signatureEntities);
+            var signaturesDto = await ConverterDataFile.SignaturesFromDto(signatureEntities, true);
 
             await unitOfWork.CommitAsync();
 
@@ -61,14 +61,30 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
-        /// Получить подписи Microstation из базы данных
+        /// Записать подписи в базу данных
         /// </summary>      
-        public async Task<SignatureMicrostationDto> GetSignaturesMicrostation()
+        public async Task UploadSignatures(IList<SignatureDto> signaturesDto)
+        {
+            var signaturesEntity = ConverterDataFile.SignaturesFromDto(signaturesDto);
+
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            foreach (var signatureEntity in signaturesEntity)
+            {
+                await unitOfWork.Session.SaveOrUpdateAsync(signatureEntity);
+            }
+
+            await unitOfWork.CommitAsync();
+        }
+
+        /// <summary>
+        /// Получить данные Microstation из базы данных
+        /// </summary>      
+        public async Task<MicrostationDataFileDto> GetMicrostationDataFile(string idDataFile)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
-            var signatureMicrostationEntity = await unitOfWork.Session.Query<SignatureMicrostationEntity>().FirstOrDefaultAsync();
-            var signatureMicrostationDto = ConverterSignatures.SignatureMicrostationToDto(signatureMicrostationEntity);
+            var signatureMicrostationEntity = await unitOfWork.Session.LoadAsync<MicrostationDataFileEntity>(idDataFile);
+            var signatureMicrostationDto = ConverterDataFile.SignatureMicrostationToDto(signatureMicrostationEntity);
 
             await unitOfWork.CommitAsync();
 
@@ -76,11 +92,11 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
-        /// Записать подписи Microstation в базу данных
+        /// Записать данные Microstation в базу данных
         /// </summary>      
-        public async Task UploadSignaturesMicrostation(SignatureMicrostationDto signatureMicrostationDto)
+        public async Task UploadMicrostationDataFile(MicrostationDataFileDto microstationDataFileDto, string idDataFile)
         {
-            var signatureMicrostationEntity = ConverterSignatures.SignatureMicrostationFromDto(signatureMicrostationDto);
+            var signatureMicrostationEntity = ConverterDataFile.MicrostationDataFileFromDto(microstationDataFileDto, idDataFile);
 
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             await unitOfWork.Session.SaveOrUpdateAsync(signatureMicrostationEntity);

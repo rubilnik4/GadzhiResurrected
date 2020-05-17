@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GadzhiDAL.Services.Interfaces;
 using System.Collections.Generic;
 using GadzhiDTOServer.TransferModels.Signatures;
+using GadzhiDAL.Entities.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Server
 {
@@ -61,6 +62,12 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         public async Task AbortConvertingById(Guid id) => await _filesDataServerService.AbortConvertingById(id);
 
         /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>      
+        public async Task<IList<SignatureDto>> GetSignaturesNames() =>
+            await _signaturesServerService.GetSignaturesNames();
+
+        /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignatures(IList<string> ids) =>
@@ -75,13 +82,25 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Получить подписи Microstation из базы данных
         /// </summary>   
-        public async Task<SignatureMicrostationDto> GetSignaturesMicrostation ()=>
-            await _signaturesServerService.GetSignaturesMicrostation();
+        public async Task<MicrostationDataFileDto> GetSignaturesMicrostation ()=>
+            await _signaturesServerService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
+
+        /// <summary>
+        /// Получить штампы Microstation из базы данных
+        /// </summary>   
+        public async Task<MicrostationDataFileDto> GetStampsMicrostation() =>
+            await _signaturesServerService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_STAMPS_ID);
 
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
-        public async Task UploadSignaturesMicrostation(SignatureMicrostationDto signaturesMicrostationDto) =>
-            await _signaturesServerService.UploadSignaturesMicrostation(signaturesMicrostationDto);
+        public async Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
+            await _signaturesServerService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
+
+        /// <summary>
+        /// Загрузить штампы Microstation
+        /// </summary>
+        public async Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
+            await _signaturesServerService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_STAMPS_ID);
     }
 }

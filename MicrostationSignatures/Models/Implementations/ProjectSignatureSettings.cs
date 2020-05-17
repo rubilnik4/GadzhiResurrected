@@ -30,7 +30,7 @@ namespace MicrostationSignatures.Models.Implementations
         /// <summary>
         /// Подписи для Microstation
         /// </summary>
-        public static string SignatureMicrostationFileName => ConvertingResourcesFolder + "SignatureMicrostation.cel";
+        public static string SignatureMicrostationFileName => ConvertingResourcesFolder + "MicrostationDataBase.cel";
 
         /// <summary>
         /// Штампы для Microstation

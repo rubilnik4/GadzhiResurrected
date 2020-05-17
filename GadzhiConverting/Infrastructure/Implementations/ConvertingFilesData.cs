@@ -27,7 +27,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IMessagingService _messagingService;
 
         /// <summary>
-        /// Обработка и конвертирование файла DGN
+        /// Обработка и конвертирование файла
         /// </summary>
         private readonly IApplicationConverting _applicationConverting;
 

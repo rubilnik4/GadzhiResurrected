@@ -1,14 +1,16 @@
 ﻿using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommonServer.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Models.Implementations;
-using GadzhiConverting.Models.Implementations.Printers;
 using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using ChannelAdam.ServiceModel;
+using GadzhiDTOServer.Contracts.FilesConvert;
+using System.Linq;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -18,21 +20,27 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ProjectSettings : IProjectSettings
     {
         /// <summary>
+        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
+        /// </summary>     
+        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
+
+        /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ProjectSettings(IFileSystemOperations fileSystemOperations)
-        {
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-
-            ConvertingResources = PutResourcesToDataFolder();
-        }
-
         /// <summary>
-        /// Пути ресурсов модулей конвертации
+        /// Класс для отображения изменений и логгирования
         /// </summary>
-        public ConvertingResources ConvertingResources { get; }
+        private readonly IMessagingService _messagingService;
+
+        public ProjectSettings(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
+                               IFileSystemOperations fileSystemOperations, IMessagingService messagingService)
+        {
+            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+        }
 
         /// <summary>
         /// Папка для конвертирования файлов
@@ -66,31 +74,49 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public string NetworkName => Environment.UserDomainName + "\\" + Environment.MachineName;
 
         /// <summary>
+        /// Пути ресурсов модулей конвертации
+        /// </summary>
+        private Task<ConvertingResources> _convertingResources;
+
+        /// <summary>
+        /// Пути ресурсов модулей конвертации
+        /// </summary>
+        public Task<ConvertingResources> ConvertingResources => _convertingResources ??= GetConvertingResourcesLoaded();
+
+        /// <summary>
+        /// Загрузить стартовый набор ресурсов для начала конвертирования
+        /// </summary>
+        public async Task<ConvertingResources> GetConvertingResourcesLoaded()
+        {
+            var convertingResources = GetConvertingResourcesLazy();
+
+            _messagingService.ShowAndLogMessage("Обработка предварительных данных...");
+            await convertingResources.LoadData();
+            _messagingService.ShowAndLogMessage("Загрузка подписей и штампов завершена...");
+
+            var errors = convertingResources.SignaturesMicrostation.Errors.
+                                             Concat(convertingResources.StampMicrostation.Errors).ToList();
+            if (errors.Count > 0)
+            {
+                _messagingService.ShowAndLogMessage("Обнаружены ошибки...");
+                _messagingService.ShowAndLogErrors(errors);
+            }
+
+            _messagingService.ShowAndLogMessage("Обработка предварительных данных завершена...");
+            return convertingResources;
+        }
+
+        /// <summary>
         /// Скопировать ресурсы и вернуть пути их расположения
         /// </summary>        
-        private ConvertingResources PutResourcesToDataFolder()
+        private ConvertingResources GetConvertingResourcesLazy()
         {
             _fileSystemOperations.CreateFolderByName(DataResourcesFolder);
-
-            string signatureWordFileName = Path.Combine(DataResourcesFolder, "signatureWord.jpg");
-            if (!_fileSystemOperations.IsFileExist(signatureWordFileName))
-            {
-                Properties.Resources.SignatureWord.Save(signatureWordFileName);
-            }
-
             string signatureMicrostationFileName = Path.Combine(DataResourcesFolder, "signatureMicrostation.cel");
-            if (!_fileSystemOperations.IsFileExist(signatureMicrostationFileName))
-            {
-                _fileSystemOperations.SaveFileFromByte(signatureMicrostationFileName, Properties.Resources.SignatureMicrostation);
-            }
-
             string stampMicrostationFileName = Path.Combine(DataResourcesFolder, "stampMicrostation.cel");
-            if (!_fileSystemOperations.IsFileExist(stampMicrostationFileName))
-            {
-                _fileSystemOperations.SaveFileFromByte(stampMicrostationFileName, Properties.Resources.StampMicrostation);
-            }
 
-            return new ConvertingResources(signatureWordFileName, signatureMicrostationFileName, stampMicrostationFileName);
+            return new ConvertingResources(signatureMicrostationFileName, stampMicrostationFileName,
+                                           _fileConvertingServerService, _fileSystemOperations);
         }
     }
 }

@@ -6,9 +6,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiCommon.Infrastructure.Implementations
 {
@@ -166,6 +169,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
 
             return false;
         }
+
+        /// <summary>
+        /// Распаковать, сохранить файл и вернуть его путь
+        /// </summary>
+        public Task<IResultValue<string>> UnzipFileAndSaveWithResult(string filepath, IList<byte> fileToSave) =>
+            UnzipFileAndSave(filepath, fileToSave).
+            WhereContinueAsync(successZip => successZip,
+                               okFunc: _ => new ResultValue<string>(filepath),
+                               badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotFound, "Файл подписей Microstation не сохранен").
+                                             ToResultValue<string>());
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить

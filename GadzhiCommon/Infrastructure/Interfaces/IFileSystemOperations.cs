@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiCommon.Infrastructure.Interfaces
 {
@@ -54,6 +55,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         Task<(bool Success, byte[] Zip)> FileToByteAndZip(string filePath);
 
         /// <summary>
+        /// Распаковать, сохранить файл и вернуть его путь
+        /// </summary>
+        Task<IResultValue<string>> UnzipFileAndSaveWithResult(string filepath, IList<byte> fileToSave);
+
+        /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
         Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileByte);
@@ -61,7 +67,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
-        Task<bool> SaveFileFromByte(string filePath, byte[] fileByte);
+        Task<bool> SaveFileFromByte(string filePath, IList<byte> fileByte);
 
         /// <summary>
         /// Копировать файл

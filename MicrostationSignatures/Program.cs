@@ -27,6 +27,7 @@ namespace MicrostationSignatures
 
             await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
             await signaturesToJpeg.SendMicrostationSignaturesToDatabase(ProjectSignatureSettings.SignatureMicrostationFileName);
+            await signaturesToJpeg.SendMicrostationStampsToDatabase(ProjectSignatureSettings.StampMicrostationFileName);
 
             Console.ReadLine();
         }
