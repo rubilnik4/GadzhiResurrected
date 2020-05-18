@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// Базовая структура подписи
     /// </summary>
     public abstract class StampSignature<TField> : IStampSignature<TField>
-                                                   where TField : IStampField
+        where TField : IStampField
     {
         /// <summary>
         /// Подпись
@@ -41,7 +42,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public abstract IStampSignature<TField> InsertSignature(IList<LibraryElement> libraryElements);
+        public abstract IStampSignature<TField> InsertSignature(SignatureFile signatureFile);
 
         /// <summary>
         /// Удалить подпись

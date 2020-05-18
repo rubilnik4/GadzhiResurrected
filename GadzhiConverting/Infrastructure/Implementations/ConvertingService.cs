@@ -33,11 +33,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IConvertingFileData _convertingFileData;
 
         /// <summary>
-        /// Параметры приложения
-        /// </summary>
-        private readonly IProjectSettings _projectSettings;
-
-        /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
         /// </summary>     
         private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
@@ -63,7 +58,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IFileSystemOperations _fileSystemOperations;
 
         public ConvertingService(IConvertingFileData convertingFileData,
-                                 IProjectSettings projectSettings,
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
                                  IConverterServerFilesDataToDto converterServerFilesDataToDto,
@@ -71,7 +65,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IFileSystemOperations fileSystemOperations)
         {
             _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
             _converterServerPackageDataFromDto = converterServerPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataFromDto));
             _converterServerFilesDataToDto = converterServerFilesDataToDto ?? throw new ArgumentNullException(nameof(converterServerFilesDataToDto));
@@ -105,7 +98,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
             KillPreviousRunProcesses();
 
-            var subscribe = Observable.Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToServer)).
+            var subscribe = Observable.Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToServer)).
                             Where(_ => !IsConverting).
                             Subscribe(async _ => await ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
                                                                       beforeMethod: () => IsConverting = true,
@@ -120,7 +113,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _messagingService.ShowAndLogMessage("Запрос пакета в базе...");
 
-            var packageDataRequest = await _fileConvertingServerService.Operations.GetFirstInQueuePackage(_projectSettings.NetworkName);
+            var packageDataRequest = await _fileConvertingServerService.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName);
             if (packageDataRequest != null)
             {
                 var filesDataServer = await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageDataRequest);
@@ -284,7 +277,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             var dateTimeNow = DateTime.Now;
             var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedDataCheck).Ticks);
-            if (timeElapsed.TotalHours > _projectSettings.IntervalHoursToDeleteUnusedPackages)
+            if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
                 _messagingService.ShowAndLogMessage("Очистка неиспользуемых пакетов...");
                 await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
@@ -301,10 +294,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             var dateTimeNow = DateTime.Now;
             var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.ConvertingDataFolderCheck).Ticks);
-            if (timeElapsed.TotalHours > _projectSettings.IntervalHoursToDeleteUnusedPackages)
+            if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
                 _messagingService.ShowAndLogMessage("Очистка пространства на жестком диске...");
-                await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(_projectSettings.ConvertingDirectory));
+                await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory));
 
                 Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();

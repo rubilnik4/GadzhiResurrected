@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// Строка с ответственным лицом и подписью
     /// </summary>
     public interface IStampPerson<out TField> : IStampSignature<TField>
-                                                         where TField : IStampField
+        where TField : IStampField
     {
         /// <summary>
         /// Тип действия

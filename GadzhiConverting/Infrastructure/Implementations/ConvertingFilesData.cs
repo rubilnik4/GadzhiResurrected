@@ -32,21 +32,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IApplicationConverting _applicationConverting;
 
         /// <summary>
-        /// Параметры приложения
-        /// </summary>
-        private readonly IProjectSettings _projectSettings;
-
-        /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
         public ConvertingFileData(IMessagingService messagingService, IApplicationConverting applicationConverting,
-                                  IProjectSettings projectSettings, IFileSystemOperations fileSystemOperations)
+                                  IFileSystemOperations fileSystemOperations)
         {
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
             _applicationConverting = applicationConverting ?? throw new ArgumentNullException(nameof(applicationConverting));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
         }
 
@@ -57,7 +51,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await fileDataServer.
             Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             WhereContinueAsyncBind(fileData => fileData.IsValidByAttemptingCount,
-                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, _projectSettings.PrintersInformation)),
+                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, ProjectSettings.PrintersInformation)),
                 badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
 
         /// <summary>

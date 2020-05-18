@@ -57,18 +57,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        protected IResultAppValue<ICellElementMicrostation> InsertSignature(IList<LibraryElement> libraryElements, string personId,
-                                                                            ITextElementMicrostation previousField,
-                                                                            ITextElementMicrostation nextField, string personName = null) =>
+        protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId, ITextElementMicrostation previousField,
+                                                                            ITextElementMicrostation nextField) =>
             StampSignatureRange.GetSignatureRange(StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
                                                                    Select(element => element.AsLineElementMicrostation).
                                                                    Map(lineElements => new ResultAppCollection<ILineElementMicrostation>(lineElements)),
                                                   previousField, nextField, previousField.IsVertical).
             ResultValueOkBind(signatureRange => StampCellElement.ApplicationMicrostation.
-                                                CreateCellElementFromLibrary(libraryElements, personId, signatureRange.OriginPoint,
+                                                CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
                                                                              StampCellElement.ModelMicrostation,
-                                                                             CreateSignatureCell(signatureRange, previousField.IsVertical),
-                                                                             personName));
+                                                                             CreateSignatureCell(signatureRange, previousField.IsVertical)));
 
         /// <summary>
         /// Получить строки с ответственным лицом/отделом без подписи
@@ -87,11 +85,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        protected Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc
+        protected Func<string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc
             (IElementMicrostation previousElement, IElementMicrostation nextElement, StampFieldType stampFieldType) =>
-            (libraryElements, personId, personName) =>
-                InsertSignature(libraryElements, personId, previousElement.AsTextElementMicrostation,
-                                nextElement.AsTextElementMicrostation, personName).
+            (personId, personName) =>
+                InsertSignature(personId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation).
                 ResultValueOk(signature => new StampFieldMicrostation(signature, stampFieldType));
 
         /// <summary>

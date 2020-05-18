@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {
@@ -9,7 +10,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// Строка с изменениями
     /// </summary>
     public interface IStampChange<out TField> : IStampSignature<TField>
-                                                         where TField : IStampField
+        where TField : IStampField
     {
         /// <summary>
         /// Номер изменения

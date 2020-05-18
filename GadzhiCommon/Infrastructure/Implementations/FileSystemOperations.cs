@@ -181,7 +181,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                                              ToResultValue<string>());
 
         /// <summary>
-        /// Распаковать файл из двоичного вида и сохранить
+        /// Сохранить файл на диск из двоичного кода
         /// </summary>   
         public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
         {

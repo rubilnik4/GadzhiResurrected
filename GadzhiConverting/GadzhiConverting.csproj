@@ -140,6 +140,7 @@
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingPrinting.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterDataFileFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterDataFileToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\SignaturesFunctionSync.cs" />
     <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConvertingDocument.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterDataFileFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\IPdfCreatorService.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDto.cs" />

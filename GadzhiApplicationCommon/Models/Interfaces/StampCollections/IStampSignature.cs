@@ -3,14 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Базовая структура подписи
     /// </summary>
-    public interface IStampSignature<out TField> where TField : IStampField
+    public interface IStampSignature<out TField> 
+        where TField : IStampField
     {
         /// <summary>
         /// Подпись
@@ -40,7 +41,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        IStampSignature<TField> InsertSignature(IList<LibraryElement> libraryElements);
+        IStampSignature<TField> InsertSignature(SignatureFile signatureFile);
 
         /// <summary>
         /// Удалить текущую подпись

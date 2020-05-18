@@ -3,18 +3,10 @@
 namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
 {
     /// <summary>
-    /// Имя с идентификатором и подпись
+    /// Имя с идентификатором и сохраненным файлом изображения
     /// </summary>
     public class SignatureLibrary: IEquatable<SignatureLibrary>
     {
-        public SignatureLibrary(string id, string fullName, byte[] signatureJpeg)
-            : this(id, fullName)
-        {
-            SignatureJpeg = ValidateSignatureJpeg(signatureJpeg)
-                            ? signatureJpeg
-                            : throw new ArgumentNullException(nameof(signatureJpeg));
-        }
-
         public SignatureLibrary(string id)
             :this(id, String.Empty) { }
 
@@ -22,7 +14,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             Fullname = fullName ?? throw new ArgumentNullException(nameof(fullName));
-            SignatureJpeg = null;
         }
 
         /// <summary>
@@ -35,17 +26,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public string Fullname { get; }
 
-        /// <summary>
-        /// Изображение подписи
-        /// </summary>
-        public byte[] SignatureJpeg { get; }
-
-        /// <summary>
-        /// Проверить корректность данных
-        /// </summary>
-        public static bool ValidateSignatureJpeg(byte[] signatureJpeg) =>
-            signatureJpeg?.Length > 0;
-
+     
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((SignatureLibrary)obj);
 

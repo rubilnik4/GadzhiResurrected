@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 

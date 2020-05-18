@@ -47,11 +47,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private readonly IPdfCreatorService _pdfCreatorService;
 
-        /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
-        /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
-
         public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation, 
                                      IApplicationLibrary<IDocumentWord> applicationWord,
                                      IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
@@ -61,18 +56,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             _applicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
             _pdfCreatorService = pdfCreatorService ?? throw new ArgumentNullException(nameof(pdfCreatorService));
-            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
         }
-
-        /// <summary>
-        /// Имена и идентификаторы подписантов
-        /// </summary>
-        private Task<IReadOnlyList<SignatureLibrary>> _signatureNames;
-
-        /// <summary>
-        /// Имена и идентификаторы подписантов
-        /// </summary>
-        public Task<IReadOnlyList<SignatureLibrary>> SignatureNames => _signatureNames ??= GetSignatureNames();
 
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
@@ -96,12 +80,5 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                 _ => new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtension} не найдена").
                      ToResultValue<IApplicationLibrary<IDocumentLibrary>>()
             };
-
-        /// <summary>
-        /// Получить имена и идентификаторы подписантов
-        /// </summary>
-        private async Task<IReadOnlyList<SignatureLibrary>> GetSignatureNames() =>
-            await _fileConvertingServerService.Operations.GetSignaturesNames().
-                  MapAsync(signatures => ConverterDataFileFromDto.SignaturesFromDto(signatures, false));
     }
 }

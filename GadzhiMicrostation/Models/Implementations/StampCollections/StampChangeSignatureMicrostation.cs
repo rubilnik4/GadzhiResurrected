@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
 {
@@ -19,7 +19,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                        IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                        IStampFieldMicrostation dateChange, string personId, string personName,
-                                       Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                       Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(numberChange, numberOfPlots, typeOfChange, documentChange, dateChange, personId, personName, insertSignatureFunc,
                    GetNotInitializedSignature(personName))
         { }
@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                        IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
                                        IStampFieldMicrostation dateChange, string personId, string personName,
-                                       Func<IList<LibraryElement>, string, string, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                       Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                        IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
@@ -111,9 +111,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature(IList<LibraryElement> libraryElements) =>
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature(SignatureFile signatureFile) =>
             new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
-                                        InsertSignatureFunc, InsertSignatureFunc.Invoke(libraryElements, PersonId, PersonName));
+                                        InsertSignatureFunc, InsertSignatureFunc.Invoke(signatureFile));
 
         /// <summary>
         /// Удалить подпись

@@ -70,6 +70,8 @@
     <Compile Include="Models\Implementation\Errors\ResultAppValue.cs" />
     <Compile Include="Models\Implementation\Errors\ResultAppCollection.cs" />
     <Compile Include="Models\Implementation\LibraryData\MicrostationDataFile.cs" />
+    <Compile Include="Models\Implementation\LibraryData\SignatureFileData.cs" />
+    <Compile Include="Models\Implementation\LibraryData\SignatureFile.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureLibrary.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignaturesLibrarySearching.cs" />
     <Compile Include="Models\Implementation\StampCollections\LibraryElement.cs" />

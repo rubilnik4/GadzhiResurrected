@@ -25,16 +25,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        /// <summary>
-        /// Параметры приложения
-        /// </summary>
-        private readonly IProjectSettings _projectSettings;
-
-        public ConverterServerPackageDataFromDto(IFileSystemOperations fileSystemOperations,
-                                               IProjectSettings projectSettings)
+        public ConverterServerPackageDataFromDto(IFileSystemOperations fileSystemOperations)
         {
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
         }
 
         /// <summary>
@@ -71,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             (bool isValid, var errorsFromValidation) = ValidateDtoData.IsFileDataRequestValid(fileDataRequest);
             if (!isValid) return new FileSavedCheck(errorsFromValidation);
 
-            string directoryPath = _fileSystemOperations.CreateFolderByName(_projectSettings.ConvertingDirectory, packageGuid);
+            string directoryPath = _fileSystemOperations.CreateFolderByName(ProjectSettings.ConvertingDirectory, packageGuid);
             string filePath = Path.Combine(directoryPath, Path.GetFileName(fileDataRequest.FilePath));
             if (String.IsNullOrWhiteSpace(directoryPath) ||
                 !await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataRequest.FileDataSource))

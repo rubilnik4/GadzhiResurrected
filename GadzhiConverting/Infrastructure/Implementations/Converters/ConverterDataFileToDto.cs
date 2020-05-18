@@ -14,7 +14,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи в трансферную модель
         /// </summary>
-        public static IList<SignatureDto> SignaturesToDto(IReadOnlyList<SignatureLibrary> signaturesLibrary) =>
+        public static IList<SignatureDto> SignaturesToDto(IReadOnlyList<SignatureFileData> signaturesLibrary) =>
             signaturesLibrary?.
             Select(SignatureToDto).ToList()
             ?? throw new ArgumentNullException(nameof(signaturesLibrary));
@@ -32,12 +32,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подпись в трансферную модель
         /// </summary>
-        private static SignatureDto SignatureToDto(SignatureLibrary signatureLibrary) =>
+        private static SignatureDto SignatureToDto(SignatureFileData signatureFileData) =>
             new SignatureDto()
             {
-                Id = signatureLibrary.Id,
-                FullName = signatureLibrary.Fullname,
-                SignatureJpeg = signatureLibrary.SignatureJpeg,
+                Id = signatureFileData.Id,
+                FullName = signatureFileData.Fullname,
+                SignatureJpeg = signatureFileData.SignatureFileDataSource,
             };
 
     }

@@ -65,7 +65,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileByte);
 
         /// <summary>
-        /// Распаковать файл из двоичного вида и сохранить
+        /// Сохранить файл на диск из двоичного кода
         /// </summary>   
         Task<bool> SaveFileFromByte(string filePath, byte[] fileByte);
 

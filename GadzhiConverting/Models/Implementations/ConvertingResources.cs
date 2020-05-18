@@ -125,6 +125,6 @@ namespace GadzhiConverting.Models.Implementations
         /// </summary>
         private async Task<IReadOnlyList<SignatureLibrary>> GetSignatureNames() =>
             await _fileConvertingServerService.Operations.GetSignaturesNames().
-                  MapAsync(signatures => ConverterDataFileFromDto.SignaturesFromDto(signatures, false));
+                  MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto);
     }
 }

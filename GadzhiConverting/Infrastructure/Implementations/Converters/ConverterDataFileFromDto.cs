@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -9,14 +13,35 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// <summary>
     /// Преобразование подписи в трансферную модель
     /// </summary>
-    public static class ConverterDataFileFromDto
+    public class ConverterDataFileFromDto : IConverterDataFileFromDto
     {
         /// <summary>
-        /// Преобразовать подписи в трансферную модель
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IFileSystemOperations _fileSystemOperations;
+
+        public ConverterDataFileFromDto(IFileSystemOperations fileSystemOperations)
+        {
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+        }
+
+        /// <summary>
+        /// Преобразовать подписи из трансферной модели
         /// </summary>
-        public static IReadOnlyList<SignatureLibrary> SignaturesFromDto(IList<SignatureDto> signaturesDto, bool signatureLoad) =>
+        public static IReadOnlyList<SignatureLibrary> SignaturesLibraryFromDto(IList<SignatureDto> signaturesDto) =>
             signaturesDto?.
-            Select(signature => SignatureFromDto(signature, signatureLoad)).ToList()
+            Select(SignatureLibraryFromDto).ToList()
+            ?? throw new ArgumentNullException(nameof(signaturesDto));
+
+        /// <summary>
+        /// Преобразовать подписи из трансферной модели и сохранить изображения
+        /// </summary>
+        public IReadOnlyList<SignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
+            signaturesDto?.
+            Select(signatureDto => SignatureFileFromDto(signatureDto, signatureFolder)).
+            Where(successAndSignature => successAndSignature.success).
+            Select(successAndSignature => successAndSignature.signatureFile).
+            ToList()
             ?? throw new ArgumentNullException(nameof(signaturesDto));
 
         /// <summary>
@@ -28,13 +53,23 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             : throw new ArgumentNullException(nameof(microstationDataFileDto));
 
         /// <summary>
-        /// Преобразовать подпись в трансферную модель
+        /// Преобразовать подпись из трансферной модели
         /// </summary>
-        private static SignatureLibrary SignatureFromDto(SignatureDto signatureDto, bool signatureLoad) =>
+        private static SignatureLibrary SignatureLibraryFromDto(SignatureDto signatureDto) =>
             (signatureDto != null)
-                ? signatureLoad
-                    ? new SignatureLibrary(signatureDto.Id, signatureDto.FullName, signatureDto.SignatureJpeg)
-                    : new SignatureLibrary(signatureDto.Id, signatureDto.FullName)
+                ? new SignatureLibrary(signatureDto.Id, signatureDto.FullName)
                 : throw new ArgumentNullException(nameof(signatureDto));
+
+        /// <summary>
+        /// Преобразовать подпись из трансферной модели и сохранить файл подписи
+        /// </summary>
+        private (bool success, SignatureFile signatureFile) SignatureFileFromDto(SignatureDto signatureDto, string signatureFolder)
+        {
+            if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
+            bool success = _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.Id, SignatureFile.SaveFormat),
+                                                                  signatureDto.SignatureJpeg).Result;
+
+            return (success, new SignatureFile(signatureDto.Id, signatureDto.FullName, signatureFolder));
+        }
     }
 }

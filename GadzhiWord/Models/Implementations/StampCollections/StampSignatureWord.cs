@@ -38,9 +38,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> InsertSignature(SignatureLibrary signatureLibrary) =>
+        public override IStampSignature<IStampFieldWord> InsertSignature(SignatureFile signatureFile) =>
             Signature.
-            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureLibrary)).
+            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath)).
             Map(_ => this);
 
         /// <summary>

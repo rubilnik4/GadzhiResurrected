@@ -45,33 +45,39 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Папка для конвертирования файлов
         /// </summary>
-        public string ConvertingDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                             "//Converting.gitignore";
+        public static string ConvertingDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                                                    "//Converting.gitignore";
 
         /// <summary>
         /// Папка с ресурсами и библиотеками
         /// </summary>
-        public string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources" + Path.DirectorySeparatorChar;
+        public static string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources" + Path.DirectorySeparatorChar;
 
+        /// <summary>
+        /// Папка для временного хранения подписей
+        /// </summary>
+        public static string DataSignaturesFolder => DataResourcesFolder + Path.DirectorySeparatorChar +
+                                                     "Signatures" + Path.DirectorySeparatorChar;
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        public IPrintersInformation PrintersInformation => ConverterPrintingConfiguration.ToPrintersInformation();
+        public static IPrintersInformation PrintersInformation => ConverterPrintingConfiguration.ToPrintersInformation();
 
         /// <summary>
         /// Время через которое осуществляется проверка пакетов на сервере
         /// </summary>
-        public int IntervalSecondsToServer => 5;
+        public static int IntervalSecondsToServer => 5;
 
         /// <summary>
         /// Время через которое осуществляется удаление ненужных пакетов на сервере
         /// </summary>
-        public int IntervalHoursToDeleteUnusedPackages => 12;
+        public static int IntervalHoursToDeleteUnusedPackages => 12;
 
         /// <summary>
         /// Получить имя компьютера
         /// </summary>
-        public string NetworkName => Environment.UserDomainName + "\\" + Environment.MachineName;
+        public static string NetworkName => Environment.UserDomainName + Path.DirectorySeparatorChar +
+                                            Environment.MachineName;
 
         /// <summary>
         /// Пути ресурсов модулей конвертации
@@ -112,6 +118,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private ConvertingResources GetConvertingResourcesLazy()
         {
             _fileSystemOperations.CreateFolderByName(DataResourcesFolder);
+            _fileSystemOperations.CreateFolderByName(DataSignaturesFolder);
+
             string signatureMicrostationFileName = Path.Combine(DataResourcesFolder, "signatureMicrostation.cel");
             string stampMicrostationFileName = Path.Combine(DataResourcesFolder, "stampMicrostation.cel");
 

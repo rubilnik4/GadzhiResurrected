@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
@@ -9,8 +10,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Основные поля штампа
     /// </summary>
-    public interface IStampMain<TField> : IStamp 
-                                          where TField : IStampField
+    public interface IStampMain<TField> : IStamp
+        where TField : IStampField
     {
         /// <summary>
         /// Строки с ответственным лицом и подписью

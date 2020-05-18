@@ -5,7 +5,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// <summary>
     /// Фрагмент библиотеки Microstation
     /// </summary>
-    public readonly struct LibraryElement : IEquatable<LibraryElement>
+    public class LibraryElement : IEquatable<LibraryElement>
     {
         public LibraryElement(string name, string description)
         {
@@ -26,9 +26,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((LibraryElement)obj);
 
-        public bool Equals(LibraryElement other) => other.Name == Name && other.Description == Description;
+        public bool Equals(LibraryElement other) => other?.Name == Name && other.Description == Description;
 
-        public static bool operator ==(LibraryElement left, LibraryElement right) => left.Equals(right);
+        public static bool operator ==(LibraryElement left, LibraryElement right) => left?.Equals(right) == true;
 
         public static bool operator !=(LibraryElement left, LibraryElement right) => !(left == right);
 
