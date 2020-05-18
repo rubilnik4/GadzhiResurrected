@@ -20,7 +20,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public StampChangeWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots, IStampFieldWord typeOfChange,
                                IStampFieldWord documentChange, IStampFieldWord signature, IStampFieldWord dateChange,
                                ISignatureInformation signatureInformation)
-            : base(signature, signatureInformation.SignaturePath)
+            : base(signature)
         {
             PersonId = signatureInformation.PersonId;
             PersonName = signatureInformation.PersonName;

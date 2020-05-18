@@ -50,14 +50,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Collection\IEnumerableExtension.cs" />
-    <Compile Include="Extensions\Functional\ErrorExtension.cs" />
+    <Compile Include="Extensions\Functional\ErrorExtensions.cs" />
     <Compile Include="Extensions\Functional\MapExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultCollectionExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultMapExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultWhereExtensions.cs" />
     <Compile Include="Extensions\Functional\WhereExtensions.cs" />
+    <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Functional\MapFunctional.cs" />
     <Compile Include="Functional\Unit.cs" />
+    <Compile Include="Helpers\RandomInstance.cs" />
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />
     <Compile Include="Models\Enums\ErrorApplicationType.cs" />
     <Compile Include="Models\Enums\OrientationType.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Models\Implementation\Errors\ResultAppCollection.cs" />
     <Compile Include="Models\Implementation\LibraryData\MicrostationDataFile.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureLibrary.cs" />
+    <Compile Include="Models\Implementation\LibraryData\SignaturesLibrarySearching.cs" />
     <Compile Include="Models\Implementation\StampCollections\LibraryElement.cs" />
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />

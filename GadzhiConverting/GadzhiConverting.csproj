@@ -131,8 +131,8 @@
     <Compile Include="Configuration\RegisterPrintersInformationSection.cs" />
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Extensions\ColorPrintExtensions.cs" />
-    <Compile Include="Extensions\ErrorExtensions.cs" />
-    <Compile Include="Extensions\ResultExtensions.cs" />
+    <Compile Include="Extensions\ErrorExtensionsFromApplication.cs" />
+    <Compile Include="Extensions\ResultExtensionsFromApplication.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\NativeMethods .cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConverting.cs" />

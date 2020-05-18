@@ -10,8 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiCommon.Extensions.Functional.Result;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -20,11 +22,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public class StampMainWord : StampWord, IStampMain<IStampFieldWord>
     {
-        /// <summary>
-        /// Таблица соответствия между фамилией и идентификатором с подписью
-        /// </summary>
-        private readonly IReadOnlyDictionary<string, (string PersonId, string SignaturePath)> _personIdTable;
-
         /// <summary>
         /// Строки с ответственным лицом и подписью Word
         /// </summary>
@@ -38,10 +35,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public StampMainWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType)
             : base(tableStamp, id, paperSize, orientationType)
         {
-            _personIdTable = new Dictionary<string, (string, string)> {
-                { "anyone", ("id", tableStamp?.ApplicationWord.WordResources.SignatureWordFileName) }
-            };
-
             StampPersonsWord = GetStampPersonSignatures();
             StampChangesWord = GetStampChangeSignatures(StampPersonsWord.Value?.FirstOrDefault());
         }
@@ -94,13 +87,15 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             Where(row => row.CellsElementWord?.Count >= StampPersonWord.FIELDS_COUNT).
             Select(row =>
                 row.CellsElementWord[0].
-                Map(personCell => new StampPersonWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
-                                                      new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                                      new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                                      new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                      GetSignatureInformationByPersonName(personCell.Text)))).
-            Map(personRows => new ResultAppCollection<IStampPersonWord>(personRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                                         "Штамп основных подписей не найден")));
+                Map(personCell => GetSignatureInformationByPersonName(personCell.Text).
+                                  ResultValueOk(signature =>
+                                                    new StampPersonWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
+                                                                        new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
+                                                                        new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
+                                                                        new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
+                                                                        signature)
+                                                    as IStampPersonWord))).
+            ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп основных подписей не найден"));
 
         /// <summary>
         /// Получить строки с изменениями
@@ -130,8 +125,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private ISignatureInformation GetSignatureInformationByPersonName(string personName) =>
-            _personIdTable.FirstOrDefault().Value.
-            Map(personId => new SignatureInformation(personName, personId.PersonId, personId.SignaturePath));
+        private IResultAppValue<ISignatureInformation> GetSignatureInformationByPersonName(string personName) =>
+            SignaturesLibrarySearching.FindByFullNameOrRandom(personName).
+            ResultValueOk(signature => new SignatureInformation(signature.Id, signature.Fullname));
     }
 }

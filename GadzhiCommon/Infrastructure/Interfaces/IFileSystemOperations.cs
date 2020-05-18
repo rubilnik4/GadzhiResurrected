@@ -67,7 +67,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>   
-        Task<bool> SaveFileFromByte(string filePath, IList<byte> fileByte);
+        Task<bool> SaveFileFromByte(string filePath, byte[] fileByte);
 
         /// <summary>
         /// Копировать файл

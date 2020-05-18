@@ -14,7 +14,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiMicrostation.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -137,8 +137,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             return success;
         }
 
+        /// <summary>
+        /// Преобразовать формат бумаги к корректному виду
+        /// </summary>
         private static string PreparePaperSize(string drawPaperSize) => 
-            drawPaperSize?.Replace('х', 'x').
-                           Trim();
+            drawPaperSize?.Replace('х', 'x').Trim();
     }
 }

@@ -10,13 +10,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Информация о подписи для модуля Word
     /// </summary>
-    public readonly struct SignatureInformation: IEquatable<SignatureInformation>, ISignatureInformation
+    public class SignatureInformation: IEquatable<SignatureInformation>, ISignatureInformation
     {
-        public SignatureInformation(string personId, string personName, string signaturePath)
+        public SignatureInformation(string personId, string personName)
         {
             PersonId = personId ?? throw new ArgumentNullException(nameof(personId));
             PersonName = personName ?? throw new ArgumentNullException(nameof(personName));
-            SignaturePath = signaturePath ?? throw new ArgumentNullException(nameof(signaturePath));
         }
 
         /// <summary>
@@ -29,17 +28,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>    
         public string PersonName { get; }
 
-        /// <summary>
-        /// Путь к файлу подписи
-        /// </summary>
-        public string SignaturePath { get; }
-
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((SignatureInformation)obj);
 
-        public bool Equals(SignatureInformation other) => other.PersonId == PersonId;
+        public bool Equals(SignatureInformation other) => other?.PersonId == PersonId;
 
-        public static bool operator ==(SignatureInformation left, SignatureInformation right) => left.Equals(right);
+        public static bool operator ==(SignatureInformation left, SignatureInformation right) => left?.Equals(right) == true;
 
         public static bool operator !=(SignatureInformation left, SignatureInformation right) => !(left == right);
 

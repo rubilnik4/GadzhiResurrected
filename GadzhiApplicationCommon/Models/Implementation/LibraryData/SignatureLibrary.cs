@@ -2,7 +2,10 @@
 
 namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
 {
-    public class SignatureLibrary
+    /// <summary>
+    /// Имя с идентификатором и подпись
+    /// </summary>
+    public class SignatureLibrary: IEquatable<SignatureLibrary>
     {
         public SignatureLibrary(string id, string fullName, byte[] signatureJpeg)
             : this(id, fullName)
@@ -11,6 +14,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
                             ? signatureJpeg
                             : throw new ArgumentNullException(nameof(signatureJpeg));
         }
+
+        public SignatureLibrary(string id)
+            :this(id, String.Empty) { }
 
         public SignatureLibrary(string id, string fullName)
         {
@@ -39,5 +45,23 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public static bool ValidateSignatureJpeg(byte[] signatureJpeg) =>
             signatureJpeg?.Length > 0;
+
+        #region IEquatable
+        public override bool Equals(object obj) => obj != null && Equals((SignatureLibrary)obj);
+
+        public bool Equals(SignatureLibrary other) => other?.Id == Id;
+
+        public static bool operator ==(SignatureLibrary left, SignatureLibrary right) => left?.Equals(right) == true;
+
+        public static bool operator !=(SignatureLibrary left, SignatureLibrary right) => !(left == right);
+
+        public override int GetHashCode()
+        {
+            var hashCode = 17;
+            hashCode = hashCode * 31 + Id.GetHashCode();
+
+            return hashCode;
+        }
+        #endregion
     }
 }

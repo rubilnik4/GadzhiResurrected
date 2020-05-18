@@ -1,13 +1,9 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using System;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiConverting.Models.Converters
 {

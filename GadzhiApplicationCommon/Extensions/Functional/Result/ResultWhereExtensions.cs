@@ -106,8 +106,8 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
                                                                          Func<TValue, IResultAppValue<TValue>> badFunc)
         {
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this == null) return null;
             return @this.OkStatus 
                 ? @this 
                 : badFunc.Invoke(@this.Value);

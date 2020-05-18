@@ -1,18 +1,13 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GadzhiConverting.Extensions
 {
     /// <summary>
     /// Преобразование результирующего ответа модуля конвертации в основной
     /// </summary>
-    public static class ResultExtensions
+    public static class ResultExtensionsFromApplication
     {
         /// <summary>
         /// Преобразовать результирующий ответ модуля конвертации в основной

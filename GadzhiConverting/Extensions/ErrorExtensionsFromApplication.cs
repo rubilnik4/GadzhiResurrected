@@ -13,7 +13,7 @@ namespace GadzhiConverting.Extensions
     /// <summary>
     /// Преобразование внутреннего класса ошибок библиотеки в основной
     /// </summary>
-    public static class ErrorExtensions
+    public static class ErrorExtensionsFromApplication
     {
         /// <summary>
         /// Преобразовать внутренний класс ошибок библиотеки в основной
@@ -26,6 +26,6 @@ namespace GadzhiConverting.Extensions
         /// </summary>
         public static IEnumerable<IErrorCommon> ToErrorsConverting(this IEnumerable<IErrorApplication> errorsApplication) =>
             errorsApplication?.Select(error => error.ToErrorConverting())
-            ?? throw new ArgumentNullException (nameof(errorsApplication));
+            ?? throw new ArgumentNullException(nameof(errorsApplication));
     }   
 }

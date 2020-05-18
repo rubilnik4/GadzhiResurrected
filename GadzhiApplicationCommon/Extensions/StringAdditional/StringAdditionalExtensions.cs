@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace GadzhiMicrostation.Extensions.StringAdditional
+namespace GadzhiApplicationCommon.Extensions.StringAdditional
 {
     /// <summary>
     /// Методы расширения для строк

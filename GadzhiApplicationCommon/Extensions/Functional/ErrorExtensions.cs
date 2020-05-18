@@ -1,16 +1,13 @@
-﻿using GadzhiApplicationCommon.Models.Implementation.Errors;
+﻿using System.Collections.Generic;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GadzhiApplicationCommon.Extensions.Functional
 {
     /// <summary>
-    /// Методы расширения для ошибок
+    /// Преобразование внутреннего класса ошибок библиотеки в основной
     /// </summary>
-    public static class ErrorExtension
+    public static class ErrorExtensions
     {
         /// <summary>
         /// Преобразовать коллекцию ошибок в результирующий ответ с параметром
@@ -23,5 +20,5 @@ namespace GadzhiApplicationCommon.Extensions.Functional
         /// </summary>       
         public static IResultAppValue<TValue> ToResultApplicationValue<TValue>(this IEnumerable<IErrorApplication> @this) =>
             new ResultAppValue<TValue>(@this);
-    }
+    }   
 }

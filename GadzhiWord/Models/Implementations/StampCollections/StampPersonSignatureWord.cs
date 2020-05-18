@@ -19,7 +19,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
        
         public StampPersonWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson, IStampFieldWord signature, 
                                IStampFieldWord dateSignature, ISignatureInformation signatureInformation)
-            : base(signature, signatureInformation.SignaturePath)
+            : base(signature)
         {
             PersonId = signatureInformation.PersonId;
             PersonName = signatureInformation.PersonName;

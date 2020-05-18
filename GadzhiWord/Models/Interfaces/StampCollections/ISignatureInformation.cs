@@ -20,10 +20,5 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
         /// Ответственное лицо
         /// </summary>    
         string PersonName { get; }
-
-        /// <summary>
-        /// Путь к файлу подписи
-        /// </summary>
-        string SignaturePath { get; }
     }
 }

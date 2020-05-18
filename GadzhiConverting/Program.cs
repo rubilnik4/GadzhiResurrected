@@ -20,10 +20,10 @@ namespace GadzhiConverting
             NativeMethods.Handler += Handler;
             NativeMethods.SetConsoleCtrlHandler(NativeMethods.Handler, true);
 
-            BootStrapUnity.ConfigureContainer(Container);
+            await BootStrapUnity.ConfigureContainer(Container);
 
             var applicationConverting = Container.Resolve<IConvertingService>();
-            await applicationConverting.StartConverting();
+            applicationConverting.StartConverting();
 
             Console.ReadLine();
         }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -18,17 +19,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureWord : StampSignature<IStampFieldWord>, IStampSignatureWord
     {
-        protected StampSignatureWord(IStampFieldWord signature, string signaturePath)
+        protected StampSignatureWord(IStampFieldWord signature)
         {
-            SignaturePath = signaturePath ?? throw new ArgumentNullException(nameof(signaturePath));
             Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                             "Подпись не инициализирована"));
         }
-
-        /// <summary>
-        /// Путь файла подписи
-        /// </summary>
-        public string SignaturePath { get; }
 
         /// <summary>
         /// Подпись
@@ -43,9 +38,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> InsertSignature(IList<LibraryElement> libraryElements) =>
+        public override IStampSignature<IStampFieldWord> InsertSignature(SignatureLibrary signatureLibrary) =>
             Signature.
-            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(SignaturePath)).
+            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureLibrary)).
             Map(_ => this);
 
         /// <summary>

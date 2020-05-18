@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
@@ -50,12 +51,13 @@ namespace GadzhiConverting.DependencyInjection
 
             var projectSettings = container.Resolve<IProjectSettings>();
             var convertingResources = await projectSettings.ConvertingResources;
+            var signaturesLibrarySearching = new SignaturesLibrarySearching(convertingResources.SignatureNames);
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>
                       new ApplicationMicrostation(new MicrostationResources(convertingResources.SignaturesMicrostation.Value,
                                                                             convertingResources.StampMicrostation.Value)));
             container.RegisterFactory<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord), unity =>
-                      new ApplicationWord(new WordResources(convertingResources.SignatureNames)));
+                      new ApplicationWord(new WordResources(signaturesLibrarySearching)));
 
             container.RegisterFactory<IApplicationConverting>(unity =>
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),

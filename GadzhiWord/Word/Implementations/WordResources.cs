@@ -11,14 +11,14 @@ namespace GadzhiWord.Word.Implementations
     /// </summary>
     public class WordResources
     {
-        public WordResources(IReadOnlyList<SignatureLibrary> signatureNames)
+        public WordResources(SignaturesLibrarySearching signaturesLibrarySearching)
         {
-            SignatureNames = signatureNames;          
+            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));          
         }
 
         /// <summary>
-        /// Имена для подписей
+        /// Поиск имен с идентификатором и подписью
         /// </summary>
-        public IReadOnlyList<SignatureLibrary> SignatureNames { get; }      
+        public SignaturesLibrarySearching SignaturesLibrarySearching { get; }      
     }
 }

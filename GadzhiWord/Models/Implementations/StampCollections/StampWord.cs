@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
@@ -18,12 +19,21 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampWord : Stamp
     {
+        /// <summary>
+        /// Таблица соответствия между фамилией и идентификатором с подписью
+        /// </summary>
+        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
+
         protected StampWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType)
             : base(id)
         {
-            TableStamp = tableStamp;
-            PaperSize = paperSize;
+            TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
+            PaperSize = !String.IsNullOrWhiteSpace(paperSize) 
+                        ? paperSize
+                        : throw new ArgumentNullException(nameof(paperSize));
             Orientation = orientationType;
+
+            SignaturesLibrarySearching = tableStamp.ApplicationWord.WordResources.SignaturesLibrarySearching;
         }
 
         /// <summary>

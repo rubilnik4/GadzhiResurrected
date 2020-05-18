@@ -15,18 +15,22 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         /// <summary>
         /// Преобразовать коллекцию ответов в ответ с коллекцией
         /// </summary>
-        public static IResultAppCollection<T> ToResultCollection<T>(this IEnumerable<IResultAppValue<T>> @this) =>
+        public static IResultAppCollection<T> ToResultCollection<T>(this IEnumerable<IResultAppValue<T>> @this, IErrorApplication errorNull = null) =>
             @this != null 
                 ? @this.Aggregate((IResultAppCollection<T>)new ResultAppCollection<T>(), (resultCollection, resultValue) =>
-                                      resultCollection.ConcatResultValue(resultValue)) 
+                                      resultCollection.ConcatResultValue(resultValue)).
+                        WhereBad(result => result.Value.Count > 0, 
+                            badFunc: result => errorNull != null 
+                                               ? new ResultAppCollection<T>(errorNull) 
+                                               : result)
                 : throw new ArgumentNullException(nameof(@this));
 
         /// <summary>
         /// Преобразовать коллекцию ответов в ответ с коллекцией
         /// </summary>
-        public static IResultAppCollection<T> ToResultCollection<T>(this IResultAppValue<IEnumerable<T>> @this) =>
+        public static IResultAppCollection<T> ToResultCollection<T>(this IResultAppValue<IEnumerable<T>> @this, IErrorApplication errorNull = null) =>
             @this != null
-                ? new ResultAppCollection<T>(@this.Value.EmptyIfNullApp(), @this.Errors) 
+                ? new ResultAppCollection<T>(@this.Value, @this.Errors, errorNull) 
                 : throw new ArgumentNullException(nameof(@this));
 
         /// <summary>
