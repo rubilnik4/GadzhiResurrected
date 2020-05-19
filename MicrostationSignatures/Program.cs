@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MicrostationSignatures.DependencyInjection;
 using MicrostationSignatures.Infrastructure.Interfaces;
+using MicrostationSignatures.Models.Enums;
 using MicrostationSignatures.Models.Implementations;
 using MicrostationSignatures.Models.Interfaces;
 using Unity;
@@ -25,9 +26,11 @@ namespace MicrostationSignatures
             var signaturesToJpeg = Container.Resolve<ISignaturesToJpeg>();
             var projectSignatureSettings = Container.Resolve<IProjectSignatureSettings>();
 
-            await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
-            await signaturesToJpeg.SendMicrostationSignaturesToDatabase(ProjectSignatureSettings.SignatureMicrostationFileName);
-            await signaturesToJpeg.SendMicrostationStampsToDatabase(ProjectSignatureSettings.StampMicrostationFileName);
+           // await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
+            await signaturesToJpeg.SendMicrostationDataToDatabase(ProjectSignatureSettings.SignatureMicrostationFileName, 
+                                                                        MicrostationDataType.Signature);
+            await signaturesToJpeg.SendMicrostationDataToDatabase(ProjectSignatureSettings.StampMicrostationFileName,
+                                                                  MicrostationDataType.Stamp);
 
             Console.ReadLine();
         }

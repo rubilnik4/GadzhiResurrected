@@ -65,6 +65,7 @@
     <Compile Include="Infrastructure\Implementations\JpegConverter.cs" />
     <Compile Include="Infrastructure\Implementations\SignaturesUpload.cs" />
     <Compile Include="Infrastructure\Interfaces\ISignaturesToJpeg.cs" />
+    <Compile Include="Models\Enums\MicrostationDataType.cs" />
     <Compile Include="Models\Implementations\ProjectSignatureSettings.cs" />
     <Compile Include="Models\Interfaces\IProjectSignatureSettings.cs" />
     <Compile Include="Program.cs" />

@@ -12,14 +12,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// <summary>
     /// Конвертер из серверной модели в трансферную
     /// </summary>
-    public class ConverterServerFilesDataToDto : IConverterServerFilesDataToDto
+    public class ConverterServerPackageDataToDto : IConverterServerPackageDataToDto
     {
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConverterServerFilesDataToDto(IFileSystemOperations fileSystemOperations)
+        public ConverterServerPackageDataToDto(IFileSystemOperations fileSystemOperations)
         {
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
         }
@@ -93,11 +93,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<(bool Success, FileDataSourceResponseServer FileDataSourceResponse)> FileDataSourceToResponse(IFileDataSourceServer fileDataSourceServer)
         {
-            (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePath);
+            (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePathServer);
 
             var fileDataSourceResponseServer = new FileDataSourceResponseServer()
             {
-                FileName = Path.GetFileName(fileDataSourceServer.FilePath),
+                FileName = fileDataSourceServer.FileNameClient,
                 PaperSize = fileDataSourceServer.PaperSize,
                 PrinterName = fileDataSourceServer.PrinterName,
                 FileDataSource = fileDataSourceZip,

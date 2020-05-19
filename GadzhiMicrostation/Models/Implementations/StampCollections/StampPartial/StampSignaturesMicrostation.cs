@@ -76,10 +76,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             StampFieldSignatures.GetFieldsBySignatureType(stampFieldType).
             Select(getSignatureField).
             Where(resultSignature => resultSignature.OkStatus && resultSignature.Value.IsPersonFieldValid()).
-            Select(resultSignature => resultSignature.Value).
-            WhereContinue(signatures => signatures.Any(),
-                          okFunc: signatures => signatures,
-                          badFunc: signatures => null);
+            Select(resultSignature => resultSignature.Value);
 
         /// <summary>
         /// Функция вставки подписей из библиотеки

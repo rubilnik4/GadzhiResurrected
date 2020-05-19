@@ -65,7 +65,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             if (!isValid) return new FileSavedCheck(errorsFromValidation);
 
             string directoryPath = _fileSystemOperations.CreateFolderByName(ProjectSettings.ConvertingDirectory, packageGuid);
-            string filePath = Path.Combine(directoryPath, Path.GetFileName(fileDataRequest.FilePath));
+            string filePath = Path.Combine(directoryPath, Guid.NewGuid() + Path.GetExtension(fileDataRequest.FilePath));
             if (String.IsNullOrWhiteSpace(directoryPath) ||
                 !await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataRequest.FileDataSource))
             {

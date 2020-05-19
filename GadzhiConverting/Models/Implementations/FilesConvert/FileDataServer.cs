@@ -13,7 +13,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле в базовом виде
     /// </summary>
-    public class FileDataServer : IFileDataServer, IEquatable<FileDataServer>
+    public class FileDataServer : FilePath, IFileDataServer
     {
         /// <summary>
         /// Стартовое количество попыток конвертирования
@@ -42,17 +42,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
                               StatusProcessing statusProcessing, int attemptingConvertCount,
                               IEnumerable<IFileDataSourceServer> filesDataSourceServer, 
                               IEnumerable<FileConvertErrorType> filesConvertErrorType)
+            :base(filePathServer, filePathClient)
         {
-            if (String.IsNullOrWhiteSpace(filePathServer)) throw new ArgumentNullException(nameof(filePathServer));
-            if (String.IsNullOrWhiteSpace(filePathClient)) throw new ArgumentNullException(nameof(filePathClient));
-
-            string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePathServer);
-            if (!ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileType)) throw new KeyNotFoundException(nameof(filePathServer));
-            if (attemptingConvertCount <= 0) throw new ArgumentOutOfRangeException(nameof(attemptingConvertCount));
-
-            FileExtension = ValidFileExtensions.GetDocAndDgnFileTypes(fileType);
-            FilePathServer = filePathServer;
-            FilePathClient = filePathClient;
             ColorPrint = colorPrint;
             StatusProcessing = statusProcessing;
             AttemptingConvertCount = attemptingConvertCount;
@@ -60,31 +51,6 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             FileConvertErrorTypes = filesConvertErrorType  ?? throw new ArgumentNullException(nameof(filesConvertErrorType));
             FilesDataSourceServer = filesDataSourceServer ?? throw new ArgumentNullException(nameof(filesDataSourceServer));
         }
-
-        /// <summary>
-        /// Тип расширения файла
-        /// </summary>
-        public FileExtension FileExtension { get; }
-
-        /// <summary>
-        /// Путь файла на сервере
-        /// </summary>
-        public string FilePathServer { get; }
-
-        /// <summary>
-        /// Путь файла на клиенте
-        /// </summary>
-        public string FilePathClient { get; }
-
-        /// <summary>
-        /// Имя файла на клиенте
-        /// </summary>
-        public string FileNameClient => Path.GetFileName(FilePathClient);
-
-        /// <summary>
-        /// Имя файла без расширения на клиенте
-        /// </summary>
-        public string FileNameWithoutExtensionClient => Path.GetFileNameWithoutExtension(FilePathClient);
 
         /// <summary>
         /// Цвет печати
@@ -135,15 +101,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Установить количество попыток конвертирования
         /// </summary>       
         public IFileDataServer SetAttemptingCount(int attemptingCount) =>
-            new FileDataServer(FilePathServer, FilePathClient, ColorPrint, StatusProcessing, 
+            new FileDataServer(FilePathServer, FileNameClient, ColorPrint, StatusProcessing, 
                                attemptingCount, FilesDataSourceServer, FileConvertErrorTypes);
-
-        #region IEquatable
-        public override bool Equals(object obj) => obj is FileDataServer fileDataServer && Equals(fileDataServer);
-
-        public bool Equals(FileDataServer other) => FilePathServer == other?.FilePathServer;
-
-        public override int GetHashCode() => -1576186305 + FilePathServer.GetHashCode();
-        #endregion
     }
 }

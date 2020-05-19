@@ -45,7 +45,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертер из серверной модели в трансферную
         /// </summary>
-        private readonly IConverterServerFilesDataToDto _converterServerFilesDataToDto;
+        private readonly IConverterServerPackageDataToDto _converterServerPackageDataToDto;
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -60,14 +60,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public ConvertingService(IConvertingFileData convertingFileData,
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
-                                 IConverterServerFilesDataToDto converterServerFilesDataToDto,
+                                 IConverterServerPackageDataToDto converterServerPackageDataToDto,
                                  IMessagingService messagingService,
                                  IFileSystemOperations fileSystemOperations)
         {
             _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
             _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
             _converterServerPackageDataFromDto = converterServerPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataFromDto));
-            _converterServerFilesDataToDto = converterServerFilesDataToDto ?? throw new ArgumentNullException(nameof(converterServerFilesDataToDto));
+            _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
 
@@ -166,7 +166,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Отправить промежуточный отчет
         /// </summary>
         private async Task<IPackageServer> SendIntermediateResponse(IPackageServer packageServer) =>
-            await _converterServerFilesDataToDto.FilesDataToIntermediateResponse(packageServer).
+            await _converterServerPackageDataToDto.FilesDataToIntermediateResponse(packageServer).
             Map(Task.FromResult).
             MapAsyncBind(fileDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(fileDataRequest)).
             MapAsync(packageServer.SetStatusProcessingProject);
@@ -183,7 +183,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                     {
                         _messagingService.ShowAndLogMessage("Отправка данных в базу...");
 
-                        PackageDataResponseServer packageDataResponse = await _converterServerFilesDataToDto.FilesDataToResponse(packageServer);
+                        PackageDataResponseServer packageDataResponse = await _converterServerPackageDataToDto.FilesDataToResponse(packageServer);
                         await _fileConvertingServerService.Operations.UpdateFromResponse(packageDataResponse);
 
                         _messagingService.ShowAndLogMessage("Конвертация пакета закончена");

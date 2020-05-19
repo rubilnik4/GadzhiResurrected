@@ -1,4 +1,6 @@
-﻿namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
+﻿using System;
+
+namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
 {
     /// <summary>
     /// Имя с идентификатором

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
+using MicrostationSignatures.Models.Enums;
 
 namespace MicrostationSignatures.Infrastructure.Interfaces
 {
@@ -16,11 +17,6 @@ namespace MicrostationSignatures.Infrastructure.Interfaces
         /// <summary>
         /// Создать подписи Microstation в базу данных
         /// </summary>
-        Task<IResultError> SendMicrostationSignaturesToDatabase(string filePathMicrostation);
-
-        /// <summary>
-        /// Отправить штампы Microstation в базу данных
-        /// </summary>
-        Task<IResultError> SendMicrostationStampsToDatabase(string filePathMicrostation);
+        Task<IResultError> SendMicrostationDataToDatabase(string filePathMicrostation, MicrostationDataType microstationDataType);
     }
 }

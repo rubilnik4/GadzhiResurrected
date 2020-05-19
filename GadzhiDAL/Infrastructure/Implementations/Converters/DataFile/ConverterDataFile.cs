@@ -24,12 +24,12 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
         /// <summary>
         /// Преобразовать идентификаторы с подписью в трансферную модель
         /// </summary>
-        public static async Task<IList<SignatureDto>> SignaturesFromDto(IList<SignatureEntity> signatureEntities, bool signatureLoad)
+        public static IList<SignatureDto> SignaturesToDto(IList<SignatureEntity> signatureEntities, bool signatureLoad)
         {
             if (signatureEntities == null) throw new ArgumentNullException(nameof(signatureEntities));
-            return await signatureEntities.AsQueryable().
-                                           Select(signatire => SignatureToDto(signatire, signatureLoad)).
-                                           ToListAsync();
+            return signatureEntities.AsQueryable().
+                                     Select(signatire => SignatureToDto(signatire, signatureLoad)).
+                                     ToList();
         }
 
         /// <summary>

@@ -13,7 +13,6 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Extensions.Functional.Result;
-using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Extensions;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
@@ -38,27 +37,27 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        public IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, string filePath) =>
-            ExecuteAndHandleError(() => documentLibrary.SaveAs(filePath),
-                                  errorMessage: new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла{filePath}")).
-            ResultValueOk(_ => new FileDataSourceServer(filePath));
+        public IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFilePath filePath) =>
+            ExecuteAndHandleError(() => documentLibrary.SaveAs(filePath.FilePathServer),
+                                  errorMessage: new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла {filePath.FileNameClient}")).
+            ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, string filePath,
+        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                       ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
             ExecuteBindResultValue(() => CreatePdfInDocument(documentLibrary, filePath, colorPrint, pdfPrinterInformation),
-                                         new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath}")).
+                                         new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath.FileNameClient}")).
             ToResultCollection();
 
         /// <summary>
         /// Экспортировать файл
         /// </summary>
-        public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, string filePath) =>
-           ExecuteAndHandleError(() => documentLibrary.Export(filePath),
-                         errorMessage: new ErrorCommon(FileConvertErrorType.ExportError, $"Ошибка экспорта файла {filePath}")).
-            ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(fileExportPath));
+        public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath) =>
+           ExecuteAndHandleError(() => documentLibrary.Export(filePath.FilePathServer),
+                         errorMessage: new ErrorCommon(FileConvertErrorType.ExportError, $"Ошибка экспорта файла {filePath.FileNameClient}")).
+            ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
 
         /// <summary>
         /// Закрыть файл

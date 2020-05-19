@@ -36,7 +36,7 @@ namespace GadzhiDAL.Services.Implementations
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
             var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().ToListAsync();
-            var signaturesDto = await ConverterDataFile.SignaturesFromDto(signatureEntities, false);
+            var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, false);
 
             await unitOfWork.CommitAsync();
 
@@ -53,7 +53,7 @@ namespace GadzhiDAL.Services.Implementations
             var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().
                                                      Where(signature => ids.Contains(signature.Id)).
                                                      ToListAsync();
-            var signaturesDto = await ConverterDataFile.SignaturesFromDto(signatureEntities, true);
+            var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, true);
 
             await unitOfWork.CommitAsync();
 

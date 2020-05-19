@@ -1,6 +1,4 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Implementations;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,36 +11,21 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     /// <summary>
     /// Обработанный файл серверной части в базовом варианте
     /// </summary>
-    public class FileDataSourceServer : IFileDataSourceServer
+    public class FileDataSourceServer : FilePath, IFileDataSourceServer
     {
-        public FileDataSourceServer(string filePath)
-            : this(filePath, "-", "-")
+        public FileDataSourceServer(string filePathServer, string filePathClient)
+            : this(filePathServer, filePathClient, "-", "-")
         { }
 
-        public FileDataSourceServer(string filePath, string paperSize, string printerName)
+        public FileDataSourceServer(string filePathServer, string filePathClient, string paperSize, string printerName)
+            : base(filePathServer, filePathClient)
         {
-            if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
-            string fileType = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
-            if (!ValidFileExtensions.ContainsInFileTypesValid(fileType))
-            {
-                throw new KeyNotFoundException(nameof(filePath));
-            }
+            if (String.IsNullOrWhiteSpace(paperSize)) throw new ArgumentNullException(nameof(paperSize));
+            if (String.IsNullOrWhiteSpace(printerName)) throw new ArgumentNullException(nameof(printerName));
 
-            FilePath = filePath;
-            FileExtension = ValidFileExtensions.GetFileTypesValid(fileType);
             PaperSize = paperSize;
             PrinterName = printerName;
         }
-
-        /// <summary>
-        /// Путь файла
-        /// </summary>
-        public string FilePath { get; }
-
-        /// <summary>
-        /// Тип расширения файла
-        /// </summary>
-        public FileExtension FileExtension { get; }
 
         /// <summary>
         /// Формат печати

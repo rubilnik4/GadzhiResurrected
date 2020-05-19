@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 
 namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial
 {
@@ -26,18 +27,18 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Сохранить документ
         /// </summary>
-        IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, string filePath);
+        IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFilePath filePath);
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, string filePath,
+        IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation);
 
         /// <summary>
         /// Экспортировать файл
         /// </summary>
-        IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, string filePath);
+        IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath);
 
         /// <summary>
         /// Закрыть файл

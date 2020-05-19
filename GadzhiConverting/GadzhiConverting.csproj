@@ -146,7 +146,7 @@
     <Compile Include="Infrastructure\Implementations\ConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
-    <Compile Include="Infrastructure\Implementations\Converters\ConverterServerFilesDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
     <Compile Include="Infrastructure\Implementations\LoggerService.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
@@ -155,7 +155,7 @@
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterDataFileFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\IPdfCreatorService.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataFromDto.cs" />
-    <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerFilesDataToDto.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataToDto.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFilesData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
@@ -163,6 +163,8 @@
     <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
     <Compile Include="Models\Converters\ResultApplicationConverter.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FilePath.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IFilePath.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FileDataServer.cs" />

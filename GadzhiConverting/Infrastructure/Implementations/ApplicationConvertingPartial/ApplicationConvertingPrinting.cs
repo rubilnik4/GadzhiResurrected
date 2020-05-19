@@ -31,12 +31,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
-        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, string filePath,
+        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                              ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
             documentLibrary.StampContainer.Stamps.ToResultCollectionFromApplication().
             ResultValueOkBind(stamps => stamps.Select(stamp =>
                                         CreatePdfWithSignatures(documentLibrary, stamp, 
-                                                                GetFilePathWithStampIndex(filePath, stamp.Id.ToFilePathPrefix()),
+                                                                new FilePath(GetFilePathWithStampIndex(filePath.FilePathServer, stamp.Id.ToFilePathPrefix()),
+                                                                             GetFilePathWithStampIndex(filePath.FilePathClient, stamp.Id.ToFilePathPrefix())),
                                                                 colorPrint, pdfPrinterInformation)).
                                         ToList().
                                         ToResultCollection()).
@@ -45,7 +46,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
         /// </summary>       
-        private IResultValue<IFileDataSourceServer> CreatePdfWithSignatures(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, ColorPrint colorPrint,
+        private IResultValue<IFileDataSourceServer> CreatePdfWithSignatures(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath, ColorPrint colorPrint,
                                                                             IPrinterInformation pdfPrinterInformation) =>
             stamp.CompressFieldsRanges().
             Map(_ => stamp.InsertSignatures()).
@@ -56,11 +57,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Печать пдф
         /// </summary>
-        private IResultValue<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IStamp stamp, string filePath, ColorPrint colorPrint,
-                                                              string paperSize, IPrinterInformation pdfPrinterInformation) =>
+        private IResultValue<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath, 
+                                                              ColorPrint colorPrint, string paperSize, IPrinterInformation pdfPrinterInformation) =>
             SetDefaultPrinter(pdfPrinterInformation.Name).
-            ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize)).
-            ResultValueOk(_ => (IFileDataSourceServer)new FileDataSourceServer(filePath, paperSize, pdfPrinterInformation.Name));
+            ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath.FilePathServer, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize)).
+            ResultValueOk(_ => (IFileDataSourceServer)new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient,
+                                                                               paperSize, pdfPrinterInformation.Name));
 
         /// <summary>
         /// Установить принтер по умолчанию

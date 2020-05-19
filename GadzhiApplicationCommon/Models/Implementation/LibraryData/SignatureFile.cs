@@ -15,9 +15,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         public SignatureFile(string id, string fullName, string signatureFilePath)
             : base(id, fullName)
         {
-            SignatureFilePath =!signatureFilePath.IsNullOrWhiteSpace()
-                                   ? signatureFilePath 
-                                   : throw new ArgumentNullException(nameof(signatureFilePath));
+            SignatureFilePath = signatureFilePath ?? throw new ArgumentNullException(nameof(signatureFilePath));
         }
 
         /// <summary>

@@ -49,7 +49,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         protected override IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
             GetSignatures(StampPersonsMicrostation, StampChangesMicrostation, StampApprovalsMicrostation).
-            ResultValueOkBind(InsertSignatures).
+            ResultValueOkBind(signatures => InsertSignatures(signatures, 
+                                                             libraryElements.Select(libraryElement => libraryElement.Name).ToList())).
             ToResultCollection();
 
         /// <summary>
@@ -100,10 +101,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Вставить подписи и получить поля
         /// </summary>
-        private IResultAppCollection<IStampSignature<IStampField>> InsertSignatures(IEnumerable<IStampSignatureMicrostation> signatures) =>
+        private IResultAppCollection<IStampSignature<IStampField>> InsertSignatures(IEnumerable<IStampSignatureMicrostation> signatures, 
+                                                                                    IList<string> libraryIds) =>
             signatures.
             Select(signature => SignaturesLibrarySearching.
                                 FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonName).
+                                ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
+                                    okFunc: signatureLibrary => signatureLibrary,
+                                    badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                                                                      $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
                                 ResultValueOk(signatureLibrary => new SignatureFile(signatureLibrary.PersonId, 
                                                                                     signatureLibrary.PersonName, String.Empty)).
                                 ResultValueOk(signatureFile => (IStampSignature<IStampField>)signature.InsertSignature(signatureFile))).

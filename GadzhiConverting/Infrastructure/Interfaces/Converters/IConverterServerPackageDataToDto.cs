@@ -8,7 +8,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Converters
     /// <summary>
     /// Конвертер из серверной модели в трансферную
     /// </summary>
-    public interface IConverterServerFilesDataToDto
+    public interface IConverterServerPackageDataToDto
     {
         /// <summary>
         /// Конвертировать серверную модель в промежуточную

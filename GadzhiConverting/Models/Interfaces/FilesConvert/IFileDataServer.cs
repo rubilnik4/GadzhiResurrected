@@ -1,43 +1,18 @@
 ﻿using System.Collections.Generic;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 
 namespace GadzhiConverting.Models.Interfaces.FilesConvert
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
     /// </summary>
-    public interface IFileDataServer
+    public interface IFileDataServer: IFilePath
     {
-        /// <summary>
-        /// Тип расширения файла
-        /// </summary>
-        FileExtension FileExtension { get; }
-
-        /// <summary>
-        /// Путь файла на сервере
-        /// </summary>
-        string FilePathServer { get; }
-
-        /// <summary>
-        /// Путь файла на клиенте
-        /// </summary>
-        string FilePathClient { get; }
-
-        /// <summary>
-        /// Имя файла на клиенте
-        /// </summary>
-        string FileNameClient { get; }
-
-        /// <summary>
-        /// Имя файла без расширения на клиенте
-        /// </summary>
-        string FileNameWithoutExtensionClient { get; }
-
         /// <summary>
         /// Цвет печати
         /// </summary>
         ColorPrint ColorPrint { get; }
-
 
         /// <summary>
         /// Статус обработки файла

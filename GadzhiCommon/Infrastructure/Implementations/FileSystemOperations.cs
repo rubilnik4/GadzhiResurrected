@@ -86,11 +86,12 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Получить пути файлов из папок
         /// </summary>
         public IEnumerable<string> GetFilesFromDirectory(IEnumerable<string> directoriesPaths) =>
-            directoriesPaths ?? Enumerable.Empty<string>().
+            directoriesPaths?.
             Where(directoryPath => IsDirectory(directoryPath) && IsDirectoryExist(directoryPath)).
             ToList().
             Map(directoriesPath => directoriesPath.Union(directoriesPath.SelectMany(GetDirectories))).
-            SelectMany(GetFiles);
+            SelectMany(GetFiles)
+            ?? Enumerable.Empty<string>();
 
         /// <summary>
         /// Удалить всю информацию из папки

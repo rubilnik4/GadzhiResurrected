@@ -59,11 +59,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadAndSaveDocument(fileDataServer).
-            ResultValueOkBind(document => GetSavedFileDataSource(document).ToResultCollection().
-                                          Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
-                                          Map(filesData =>  CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
-                                                                                       Map(closeResult => filesData.ConcatErrors(closeResult.Errors)).
-                                                                                       ToResultCollection())).
+            ResultValueOkBind(document => 
+                GetSavedFileDataSource(document, fileDataServer).
+                ToResultCollection().
+                Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
+                Map(filesData => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
+                                 Map(closeResult => filesData.ConcatErrors(closeResult.Errors)).
+                                 ToResultCollection())).
             Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
                                              result.Errors.Select(error => error.FileConvertErrorType)));
 
@@ -90,31 +92,35 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Загрузить файл и сохранить в папку для обработки
         /// </summary>   
-        private IResultValue<IDocumentLibrary> LoadAndSaveDocument(IFileDataServer fileDataServer) =>
+        private IResultValue<IDocumentLibrary> LoadAndSaveDocument(IFilePath filePath) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
-            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, fileDataServer.FileExtension)).
-            ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(fileDataServer.FilePathServer, savingPath).
-                                            WhereContinue(copyResult => copyResult,
-                                                okFunc: _ => new ResultValue<string>(savingPath),
-                                                badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
-                                                              ToResultValue<string>())).
-            ResultValueOkBind(_ => _applicationConverting.OpenDocument(fileDataServer?.FilePathServer)).
+            ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer, filePath.FileExtension)).
+            ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath).
+                                                                  WhereContinue(copyResult => copyResult,
+                                                                                okFunc: _ => new ResultValue<string>(savingPath),
+                                                                                badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
+                                                                                    ToResultValue<string>())).
+            ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>
         /// Получить путь к сохраненному файлу для обработки
         /// </summary>        
-        private static IResultValue<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary) =>
-            new FileDataSourceServer(documentLibrary.FullName).
+        private static IResultValue<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary, IFilePath filePath) =>
+            new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient).
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource));
 
+        /// <summary>
+        /// Создать PDF
+        /// </summary>
         private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                    IPrintersInformation printersInformation) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtension.Pdf)).
-            ResultValueOkBind(filePdfPath => _applicationConverting.CreatePdfFile(documentLibrary, filePdfPath, fileDataServer.ColorPrint,
+            ResultValueOkBind(filePdfPath => _applicationConverting.CreatePdfFile(documentLibrary, fileDataServer.ChangeServerPath(filePdfPath),
+                                                                                  fileDataServer.ColorPrint,
                                                                                   printersInformation?.PrintersPdf.FirstOrDefault())).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
             ToResultCollection();
@@ -122,11 +128,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Экспортировать в другие форматы
         /// </summary>
-        private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer) =>
+        private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFilePath filePath) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
-            ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, _applicationConverting.GetExportFileExtension(fileDataServer.FileExtension))).
-            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, fileExportPath));
+            ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer, 
+                                                               _applicationConverting.GetExportFileExtension(filePath.FileExtension))).
+            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath)));
 
         /// <summary>
         /// Закрыть файл

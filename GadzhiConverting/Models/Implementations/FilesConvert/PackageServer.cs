@@ -89,7 +89,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>      
         public IPackageServer ChangeFileDataServer(IFileDataServer fileDataServer) =>
             FilesDataServer.
-            Where(fileData => !fileData.Equals(fileDataServer)).
+            Where(fileData => fileData.FilePathServer != fileDataServer.FilePathServer).
             Append(fileDataServer).
             Map(filesData => new PackageServer(this, filesData));
     }

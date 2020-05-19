@@ -236,11 +236,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private async Task GetCompleteFiles()
         {
-            PackageDataResponseClient packageDataResponse = await _fileConvertingClientService.
-                                                                  Operations.GetCompleteFiles(_packageInfoProject.Id);
+            var packageDataResponse = await _fileConvertingClientService.Operations.GetCompleteFiles(_packageInfoProject.Id);
 
-            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.
-                                         GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
+            var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
             var filesStatusWrite = await _fileDataProcessingStatusMark.
