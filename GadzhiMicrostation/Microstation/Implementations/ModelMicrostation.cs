@@ -83,9 +83,10 @@ namespace GadzhiMicrostation.Microstation.Implementations
         public IEnumerable<IStamp> FindStamps(int modelIndex) =>
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
             Where(element => StampFieldMain.IsStampName(element.AsCellElement.Name)).
-            Select((element, stampIndex) => new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
-                                            Map(cellMicrostation => new StampMainMicrostation(cellMicrostation,
-                                                                                              new StampIdentifier(modelIndex, stampIndex)))).
+            Select((element, stampIndex) => 
+                       new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
+                           Map(cellMicrostation => new StampMainMicrostation(cellMicrostation, new StampIdentifier(modelIndex, stampIndex),
+                                                                             ApplicationMicrostation.MicrostationResources.SignaturesLibrarySearching))).
             Cast<IStamp>();
 
         /// <summary>

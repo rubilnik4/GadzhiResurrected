@@ -185,13 +185,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         public string AttributePersonId => GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.PersonId);
 
         /// <summary>
-        /// Получить значение атрибута по его Id номеру
+        /// Получить значение атрибута по его PersonId номеру
         /// </summary>       
         public string GetAttributeById(ElementMicrostationAttributes elementAttribute) =>
             GetAttributeFromCacheOrLoad(elementAttribute);
 
         /// <summary>
-        /// Записать значение атрибута по его Id номеру
+        /// Записать значение атрибута по его PersonId номеру
         /// </summary>       
         public void SetAttributeById(ElementMicrostationAttributes elementAttribute, string attributeValue) =>
             SetAttributeToCacheAndUpload(elementAttribute, attributeValue);

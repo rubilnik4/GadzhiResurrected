@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {
     /// <summary>
     /// Базовая структура подписи
     /// </summary>
-    public interface IStampSignature<out TField> 
+    public interface IStampSignature<out TField> : ISignatureLibrary
         where TField : IStampField
     {
         /// <summary>
@@ -24,16 +24,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         bool IsSignatureValid();
 
         /// <summary>
-        /// Идентификатор личности
-        /// </summary>    
-        string PersonId { get; }
-
-        /// <summary>
-        /// Ответственное лицо
-        /// </summary>    
-        string PersonName { get; }
-
-        /// <summary>
         /// Корректно ли заполнено поле ответственного лица
         /// </summary>
         bool IsPersonFieldValid();
@@ -41,7 +31,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        IStampSignature<TField> InsertSignature(SignatureFile signatureFile);
+        IStampSignature<TField> InsertSignature(ISignatureFile signatureFile);
 
         /// <summary>
         /// Удалить текущую подпись

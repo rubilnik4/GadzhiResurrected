@@ -19,12 +19,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampWord : Stamp
     {
-        /// <summary>
-        /// Таблица соответствия между фамилией и идентификатором с подписью
-        /// </summary>
-        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
-
-        protected StampWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType)
+        protected StampWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType, 
+                            SignaturesLibrarySearching signaturesLibrarySearching)
             : base(id)
         {
             TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
@@ -32,14 +28,18 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                         ? paperSize
                         : throw new ArgumentNullException(nameof(paperSize));
             Orientation = orientationType;
-
-            SignaturesLibrarySearching = tableStamp.ApplicationWord.WordResources.SignaturesLibrarySearching;
+            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
         }
 
         /// <summary>
         /// Элемент таблица
         /// </summary>
         protected ITableElement TableStamp { get; }
+
+        /// <summary>
+        /// Поиск имен с идентификатором и подписью
+        /// </summary>
+        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
 
         /// <summary>
         /// Наименование

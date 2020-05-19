@@ -74,6 +74,9 @@
     <Compile Include="Models\Implementation\LibraryData\SignatureFile.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureLibrary.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignaturesLibrarySearching.cs" />
+    <Compile Include="Models\Implementation\Resources\MicrostationResources.cs" />
+    <Compile Include="Models\Implementation\Resources\ResourcesApplication.cs" />
+    <Compile Include="Models\Implementation\Resources\ResourcesWord.cs" />
     <Compile Include="Models\Implementation\StampCollections\LibraryElement.cs" />
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
@@ -89,6 +92,9 @@
     <Compile Include="Models\Interfaces\Errors\IResultApplication.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultAppValue.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultAppCollection.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureFile.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureFileData.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStamp.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampField.cs" />

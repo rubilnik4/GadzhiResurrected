@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
@@ -20,14 +21,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval,
                                                   IStampFieldMicrostation responsiblePerson,
                                                   IStampFieldMicrostation dateSignature,
-                                                  Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                                  Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(departmentApproval, responsiblePerson, dateSignature, insertSignatureFunc,
                    GetNotInitializedSignature(responsiblePerson.ElementStamp.AsTextElementMicrostation.Text))
         { }
 
         public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
                                                   IStampFieldMicrostation dateSignature,
-                                                  Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                                  Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                                   IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
@@ -79,7 +80,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature(SignatureFile signatureFile) =>
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature(ISignatureFile signatureFile) =>
             new StampApprovalMicrostation(DepartmentApproval, ResponsiblePerson, DateSignature, InsertSignatureFunc,
                                           InsertSignatureFunc.Invoke(signatureFile));
 

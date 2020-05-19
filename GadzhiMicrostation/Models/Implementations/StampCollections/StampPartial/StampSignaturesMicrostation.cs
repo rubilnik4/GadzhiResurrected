@@ -12,10 +12,9 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
-using static GadzhiApplicationCommon.Functional.MapFunctional;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -85,10 +84,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        protected Func<string, string, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc
+        protected Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc
             (IElementMicrostation previousElement, IElementMicrostation nextElement, StampFieldType stampFieldType) =>
-            (personId, personName) =>
-                InsertSignature(personId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation).
+            (signatureLibrary) =>
+                InsertSignature(signatureLibrary.PersonId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation).
                 ResultValueOk(signature => new StampFieldMicrostation(signature, stampFieldType));
 
         /// <summary>

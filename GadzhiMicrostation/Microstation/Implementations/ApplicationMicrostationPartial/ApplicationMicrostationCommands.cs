@@ -8,12 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Extensions.StringAdditional;
-using GadzhiApplicationCommon.Helpers;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
@@ -57,7 +54,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// </summary>      
         public IResultAppCollection<LibraryElement> AttachLibrary(string libraryPathMicrostation) =>
             new ResultAppValue<string>(libraryPathMicrostation, new ErrorApplication(ErrorApplicationType.FileNotFound,
-                                                                          "Не задан путь к библиотеке подписей Microstation")).
+                                                                                     "Не задан путь к библиотеке подписей Microstation")).
             ResultVoidOk(libraryPath => _application.CadInputQueue.SendCommand("ATTACH LIBRARY " + libraryPath)).
             ResultValueOkBind(_ => new ResultAppCollection<LibraryElement>(CachingLibraryElements()))
             as IResultAppCollection<LibraryElement>;
@@ -75,7 +72,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             var cellInformationEnumerator = Application.GetCellInformationEnumerator(false, false);
             cellInformationEnumerator.Reset();
 
-            // var cachingLibraryElements = new List<LibraryElement>();
             while (cellInformationEnumerator.MoveNext())
             {
                 var cellInformation = cellInformationEnumerator.Current;

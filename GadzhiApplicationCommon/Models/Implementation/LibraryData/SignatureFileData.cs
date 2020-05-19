@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
 {
     /// <summary>
     /// Имя с идентификатором и изображением в байтовом виде
     /// </summary>
-    public class SignatureFileData : SignatureLibrary
+    public class SignatureFileData : SignatureLibrary, ISignatureFileData
     {
         public SignatureFileData(string id, string fullName, byte[] signatureFileData)
             : base(id, fullName)

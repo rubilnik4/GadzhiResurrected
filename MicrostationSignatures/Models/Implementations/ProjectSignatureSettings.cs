@@ -30,7 +30,7 @@ namespace MicrostationSignatures.Models.Implementations
         /// <summary>
         /// Подписи для Microstation
         /// </summary>
-        public static string SignatureMicrostationFileName => ConvertingResourcesFolder + "MicrostationDataBase.cel";
+        public static string SignatureMicrostationFileName => ConvertingResourcesFolder + "SignatureMicrostation.cel";
 
         /// <summary>
         /// Штампы для Microstation
@@ -73,10 +73,7 @@ namespace MicrostationSignatures.Models.Implementations
             _fileSystemOperations.CreateFolderByName(DataResourcesFolder);
 
             string templateFileName = Path.Combine(DataResourcesFolder, "SignatureTemplate.dgn");
-            if (!_fileSystemOperations.IsFileExist(templateFileName))
-            {
-                _fileSystemOperations.SaveFileFromByte(templateFileName, Properties.Resources.SignatureTemplate);
-            }
+            _fileSystemOperations.SaveFileFromByte(templateFileName, Properties.Resources.SignatureTemplate);
 
             return templateFileName;
         }

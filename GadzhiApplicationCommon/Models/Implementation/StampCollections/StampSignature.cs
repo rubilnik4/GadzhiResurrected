@@ -1,10 +1,10 @@
-﻿using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
@@ -42,7 +42,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public abstract IStampSignature<TField> InsertSignature(SignatureFile signatureFile);
+        public abstract IStampSignature<TField> InsertSignature(ISignatureFile signatureFile);
 
         /// <summary>
         /// Удалить подпись

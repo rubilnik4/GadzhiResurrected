@@ -76,12 +76,12 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         void Remove();
 
         /// <summary>
-        /// Получить значение атрибута по его Id номеру
+        /// Получить значение атрибута по его PersonId номеру
         /// </summary>    
         string GetAttributeById(ElementMicrostationAttributes elementAttributes);
 
         /// <summary>
-        /// Записать значение атрибута по его Id номеру
+        /// Записать значение атрибута по его PersonId номеру
         /// </summary>       
         void SetAttributeById(ElementMicrostationAttributes elementAttributes, string attributeValue);
 

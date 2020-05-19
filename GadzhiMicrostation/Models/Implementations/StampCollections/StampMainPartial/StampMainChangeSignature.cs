@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
@@ -21,16 +23,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IResultAppCollection<IStampChangeMicrostation> GetStampChangeRows(string personId, string personName) =>
-            GetStampSignatureRows(StampFieldType.ChangeSignature, changeNames =>  GetChangeSignatureField(changeNames, personId, personName)).
-            Map(signatureRows => new ResultAppCollection<IStampChangeMicrostation>(signatureRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                                                       "Штамп подписей замены не найден")));
+        private IResultAppCollection<IStampChangeMicrostation> GetStampChangeRows(ISignatureLibrary signatureLibrary) =>
+            new ResultAppValue<ISignatureLibrary>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                                                                         "Не найден идентификатор основной подписи")).
+            ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
+                                                             changeNames => GetChangeSignatureField(changeNames, signatureLibrary))).
+            ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
         /// </summary>
-        private IResultAppValue<IStampChangeMicrostation> GetChangeSignatureField(IEnumerable<string> changeNames,
-                                                                                  string personId, string personName)
+        private IResultAppValue<IStampChangeMicrostation> GetChangeSignatureField(IEnumerable<string> changeNames, ISignatureLibrary signatureLibrary)
         {
             var foundElements = FindElementsInStampControls(changeNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>().
@@ -46,7 +49,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             var insertSignatureFunc = InsertSignatureFunc(documentChange.ElementStamp, dateChange.ElementStamp, StampFieldType.ChangeSignature);
 
             return new StampChangeMicrostation(numberChange, numberOfPlots, typeOfChange, documentChange,
-                                               dateChange, personId, personName, insertSignatureFunc).
+                                               dateChange, signatureLibrary, insertSignatureFunc).
                    Map(stampChangeSignature => new ResultAppValue<IStampChangeMicrostation>(stampChangeSignature));
         }
     }

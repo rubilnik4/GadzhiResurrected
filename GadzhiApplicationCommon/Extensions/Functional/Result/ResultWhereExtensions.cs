@@ -59,7 +59,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>   
         public static IResultAppValue<TValueOut> ResultValueOk<TValueIn, TValueOut>(this IResultAppValue<TValueIn> @this,
-                                                                                            Func<TValueIn, TValueOut> okFunc)
+                                                                                    Func<TValueIn, TValueOut> okFunc)
 
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));

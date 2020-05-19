@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
@@ -28,7 +29,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели
         /// </summary>
-        public static IReadOnlyList<SignatureLibrary> SignaturesLibraryFromDto(IList<SignatureDto> signaturesDto) =>
+        public static IReadOnlyList<ISignatureLibrary> SignaturesLibraryFromDto(IList<SignatureDto> signaturesDto) =>
             signaturesDto?.
             Select(SignatureLibraryFromDto).ToList()
             ?? throw new ArgumentNullException(nameof(signaturesDto));
@@ -36,7 +37,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        public IReadOnlyList<SignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
+        public IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
             signaturesDto?.
             Select(signatureDto => SignatureFileFromDto(signatureDto, signatureFolder)).
             Where(successAndSignature => successAndSignature.success).
@@ -55,7 +56,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подпись из трансферной модели
         /// </summary>
-        private static SignatureLibrary SignatureLibraryFromDto(SignatureDto signatureDto) =>
+        private static ISignatureLibrary SignatureLibraryFromDto(SignatureDto signatureDto) =>
             (signatureDto != null)
                 ? new SignatureLibrary(signatureDto.Id, signatureDto.FullName)
                 : throw new ArgumentNullException(nameof(signatureDto));
@@ -63,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подпись из трансферной модели и сохранить файл подписи
         /// </summary>
-        private (bool success, SignatureFile signatureFile) SignatureFileFromDto(SignatureDto signatureDto, string signatureFolder)
+        private (bool success, ISignatureFile signatureFile) SignatureFileFromDto(SignatureDto signatureDto, string signatureFolder)
         {
             if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
             bool success = _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.Id, SignatureFile.SaveFormat),

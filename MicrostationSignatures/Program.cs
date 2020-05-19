@@ -25,7 +25,7 @@ namespace MicrostationSignatures
             var signaturesToJpeg = Container.Resolve<ISignaturesToJpeg>();
             var projectSignatureSettings = Container.Resolve<IProjectSignatureSettings>();
 
-            //await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
+            await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
             await signaturesToJpeg.SendMicrostationSignaturesToDatabase(ProjectSignatureSettings.SignatureMicrostationFileName);
             await signaturesToJpeg.SendMicrostationStampsToDatabase(ProjectSignatureSettings.StampMicrostationFileName);
 

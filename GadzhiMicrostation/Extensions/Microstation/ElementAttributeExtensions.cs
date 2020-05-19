@@ -12,13 +12,13 @@ namespace GadzhiMicrostation.Extensions.Microstation
     public static class ElementAttributeExtensions
     {
         /// <summary>
-        /// Получить значение атрибута по его Id номеру
+        /// Получить значение атрибута по его PersonId номеру
         /// </summary>       
         public static string GetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute) =>
            AttributesElementsMicrostation.GetAttributeById(element, elementAttribute);
 
         /// <summary>
-        /// Записать значение атрибута по его Id номеру
+        /// Записать значение атрибута по его PersonId номеру
         /// </summary>       
         public static void SetAttributeById(this Element element, ElementMicrostationAttributes elementAttribute, string attributeValue) =>
            AttributesElementsMicrostation.SetAttributeById(element, elementAttribute, attributeValue);

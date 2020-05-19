@@ -6,6 +6,7 @@ using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
@@ -13,6 +14,7 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Extensions.Functional.Result;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -32,8 +34,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
 
-        public StampMainWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType)
-            : base(tableStamp, id, paperSize, orientationType)
+        public StampMainWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType,
+                             SignaturesLibrarySearching signaturesLibrarySearching)
+            : base(tableStamp, id, paperSize, orientationType, signaturesLibrarySearching)
         {
             StampPersonsWord = GetStampPersonSignatures();
             StampChangesWord = GetStampChangeSignatures(StampPersonsWord.Value?.FirstOrDefault());
@@ -60,9 +63,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public override IResultAppCollection<IStampSignature<IStampField>> InsertSignatures() =>
             GetSignatures(StampPersonsWord, StampChangesWord).
-            ResultValueOk(signatures => signatures.
-                                        Select(signature => signature.InsertSignature(new List<LibraryElement>())).
-                                        Cast<IStampSignature<IStampField>>()).
+            ResultValueOk(GetStampSignaturesByIds).
             ToResultCollection();
 
         /// <summary>
@@ -84,35 +85,20 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             FieldsStamp.
             Where(field => field.StampFieldType == StampFieldType.PersonSignature).
             Select(field => field.CellElementStamp.RowElementWord).
-            Where(row => row.CellsElementWord?.Count >= StampPersonWord.FIELDS_COUNT).
-            Select(row =>
-                row.CellsElementWord[0].
-                Map(personCell => GetSignatureInformationByPersonName(personCell.Text).
-                                  ResultValueOk(signature =>
-                                                    new StampPersonWord(new StampFieldWord(personCell, StampFieldType.PersonSignature),
-                                                                        new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                                                        new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                                                        new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                                                        signature)
-                                                    as IStampPersonWord))).
+            Where(row => row.CellsElementWord.Count >= StampPersonWord.FIELDS_COUNT).
+            Select(GetStampPersonWordByRow).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп основных подписей не найден"));
 
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IResultAppCollection<IStampChangeWord> GetStampChangeSignatures(ISignatureInformation personInformation) =>
-            FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
-            Select(field => field.CellElementStamp.RowElementWord).
-            Where(row => row.CellsElementWord?.Count >= StampPersonWord.FIELDS_COUNT).
-            Select(row => new StampChangeWord(new StampFieldWord(row.CellsElementWord[0], StampFieldType.PersonSignature),
-                                              new StampFieldWord(row.CellsElementWord[1], StampFieldType.PersonSignature),
-                                              new StampFieldWord(row.CellsElementWord[2], StampFieldType.PersonSignature),
-                                              new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                              new StampFieldWord(row.CellsElementWord[4], StampFieldType.PersonSignature),
-                                              new StampFieldWord(row.CellsElementWord[3], StampFieldType.PersonSignature),
-                                              personInformation)).
-            Map(changeRows => new ResultAppCollection<IStampChangeWord>(changeRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                                         "Штамп подписей замены не найден")));
+        private IResultAppCollection<IStampChangeWord> GetStampChangeSignatures(ISignatureLibrary signatureLibrary) =>
+            new ResultAppValue<ISignatureLibrary>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Не найден идентификатор основной подписи")).
+            ResultValueOk(_ => FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
+                                           Select(field => field.CellElementStamp.RowElementWord).
+                                           Where(row => row.CellsElementWord.Count >= StampPersonWord.FIELDS_COUNT).
+                                           Select(row => GetStampChangeWordByRow(row, signatureLibrary))).
+            ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
         /// <summary>
         /// Получить подписи
@@ -125,8 +111,40 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private IResultAppValue<ISignatureInformation> GetSignatureInformationByPersonName(string personName) =>
+        private IResultAppValue<ISignatureLibrary> GetSignatureInformationByPersonName(string personName) =>
             SignaturesLibrarySearching.FindByFullNameOrRandom(personName).
-            ResultValueOk(signature => new SignatureInformation(signature.Id, signature.Fullname));
+            ResultValueOk(signature => new SignatureLibrary(signature.PersonId, signature.PersonName));
+
+        /// <summary>
+        /// Получить элементы подписей из базы по их идентификационным номерам
+        /// </summary>
+        private IEnumerable<IStampSignature<IStampField>> GetStampSignaturesByIds(IList<IStampSignature<IStampFieldWord>> signaturesStamp) =>
+            signaturesStamp.
+            Zip(signaturesStamp.Select(signatureStamp => signatureStamp.PersonId).
+                                Map(personIds => SignaturesLibrarySearching.GetSignaturesByIds(personIds)),
+                (signatureStamp, signatureFile) => signatureStamp.InsertSignature(signatureFile));
+
+        /// <summary>
+        /// Получить класс с ответственным лицом и подписью по строке Word
+        /// </summary>
+        private IResultAppValue<IStampPersonWord> GetStampPersonWordByRow(IRowElement personRow) =>
+            GetSignatureInformationByPersonName(personRow.CellsElementWord[0].Text).
+            ResultValueOk(signature => new StampPersonWord(new StampFieldWord(personRow.CellsElementWord[0], StampFieldType.PersonSignature),
+                                                           new StampFieldWord(personRow.CellsElementWord[1], StampFieldType.PersonSignature),
+                                                           new StampFieldWord(personRow.CellsElementWord[2], StampFieldType.PersonSignature),
+                                                           new StampFieldWord(personRow.CellsElementWord[3], StampFieldType.PersonSignature),
+                                                           signature));
+
+        /// <summary>
+        /// Получить класс с изменениями и подписью по строке Word
+        /// </summary>
+        private static IStampChangeWord GetStampChangeWordByRow(IRowElement changeRow, ISignatureLibrary signatureLibrary) =>
+            new StampChangeWord(new StampFieldWord(changeRow.CellsElementWord[0], StampFieldType.PersonSignature),
+                                new StampFieldWord(changeRow.CellsElementWord[1], StampFieldType.PersonSignature),
+                                new StampFieldWord(changeRow.CellsElementWord[2], StampFieldType.PersonSignature),
+                                new StampFieldWord(changeRow.CellsElementWord[3], StampFieldType.PersonSignature),
+                                new StampFieldWord(changeRow.CellsElementWord[4], StampFieldType.PersonSignature),
+                                new StampFieldWord(changeRow.CellsElementWord[3], StampFieldType.PersonSignature),
+                                signatureLibrary);
     }
 }

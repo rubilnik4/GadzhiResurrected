@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -14,7 +15,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи в трансферную модель
         /// </summary>
-        public static IList<SignatureDto> SignaturesToDto(IReadOnlyList<SignatureFileData> signaturesLibrary) =>
+        public static IList<SignatureDto> SignaturesToDto(IReadOnlyList<ISignatureFileData> signaturesLibrary) =>
             signaturesLibrary?.
             Select(SignatureToDto).ToList()
             ?? throw new ArgumentNullException(nameof(signaturesLibrary));
@@ -32,11 +33,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подпись в трансферную модель
         /// </summary>
-        private static SignatureDto SignatureToDto(SignatureFileData signatureFileData) =>
+        private static SignatureDto SignatureToDto(ISignatureFileData signatureFileData) =>
             new SignatureDto()
             {
-                Id = signatureFileData.Id,
-                FullName = signatureFileData.Fullname,
+                Id = signatureFileData.PersonId,
+                FullName = signatureFileData.PersonName,
                 SignatureJpeg = signatureFileData.SignatureFileDataSource,
             };
 

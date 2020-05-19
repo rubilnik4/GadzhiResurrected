@@ -9,8 +9,7 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
@@ -20,7 +19,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureMicrostation : StampSignature<IStampFieldMicrostation>
     {
-        protected StampSignatureMicrostation(Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+        protected StampSignatureMicrostation(Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                              IResultAppValue<IStampFieldMicrostation> signature)
         {
             InsertSignatureFunc = insertSignatureFunc ?? throw new ArgumentNullException(nameof(insertSignatureFunc));
@@ -30,7 +29,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Функция вставки подписи
         /// </summary>
-        protected Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
+        protected Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
 
         /// <summary>
         /// Подпись
@@ -53,6 +52,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// </summary>
         public static IResultAppValue<IStampFieldMicrostation> GetNotInitializedSignature(string personName) =>
             new ResultAppValue<IStampFieldMicrostation>(null, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                   $"Подпись не инициализирована {personName}"));
+                                                                                   $"Подпись не инициализирована {personName ?? String.Empty}"));
     }
 }

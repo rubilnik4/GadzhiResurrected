@@ -3,6 +3,7 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using MicroStationDGN;
 using System;
 using System.IO;
+using GadzhiApplicationCommon.Models.Implementation.Resources;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {

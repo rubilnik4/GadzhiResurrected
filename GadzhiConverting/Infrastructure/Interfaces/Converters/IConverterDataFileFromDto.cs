@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Interfaces.Converters
@@ -12,6 +12,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        public IReadOnlyList<SignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder);
+        public IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder);
     }
 }

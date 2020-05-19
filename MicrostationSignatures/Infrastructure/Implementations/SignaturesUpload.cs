@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
@@ -23,6 +21,7 @@ using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Functional;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
@@ -137,46 +136,47 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Получить список имен и подписей
         /// </summary>
-        private IResultCollection<SignatureLibrary> GetSignatures() =>
+        private IResultCollection<ISignatureLibrary> GetSignatures() =>
             _applicationMicrostation.AttachLibrary(ProjectSignatureSettings.SignatureMicrostationFileName).
             ToResultCollectionFromApplication().
             ResultVoid(_ => _messagingService.ShowAndLogMessage("Загрузка подписей")).
             ResultValueOk(libraryElements => libraryElements.
-                                             Select(libraryElement => new SignatureLibrary(libraryElement.Name, libraryElement.Description))).
+                                             Select(libraryElement => new SignatureLibrary(libraryElement.Name, libraryElement.Description)).
+                                             Cast<ISignatureLibrary>()).
             ToResultCollection();
 
         /// <summary>
         /// Сохранить изображение элемента ячейки Microstation
         /// </summary>
-        private IResultValue<SignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, SignatureLibrary signatureLibrary) =>
-            _applicationMicrostation.CreateCellElementWithoutCheck(signatureLibrary.Id, new PointMicrostation(0, 0), modelMicrostation).
+        private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibrary) =>
+            _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
             ToResultValueFromApplication().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.Fullname}")).
+            ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.PersonName}")).
             ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
 
         /// <summary>
         /// Конвертировать ячейку Microstation в Jpeg
         /// </summary>
-        private SignatureFileData ToJpegByte(IElementMicrostation cellSignature, SignatureLibrary signatureLibrary) =>
+        private ISignatureFileData ToJpegByte(IElementMicrostation cellSignature, ISignatureLibrary signatureLibrary) =>
             GetSignatureFileSavePath(signatureLibrary).
             Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Map(filePathEmf => new SignatureFileData(signatureLibrary.Id, signatureLibrary.Fullname, JpegConverter.ToJpegFromEmf(filePathEmf)).
+            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonName, JpegConverter.ToJpegFromEmf(filePathEmf)).
                                Void(_ => _fileSystemOperations.DeleteFile(filePathEmf))).
             Void(_ => cellSignature.Remove());
 
         /// <summary>
         /// Получить имя для сохранения подписи
         /// </summary>
-        private static string GetSignatureFileSavePath(SignatureLibrary signatureLibrary) =>
+        private static string GetSignatureFileSavePath(ISignatureLibrary signatureLibrary) =>
             ProjectSignatureSettings.SignaturesSaveFolder + Path.DirectorySeparatorChar +
-            signatureLibrary.Id + ".emf";
+            signatureLibrary.PersonId + ".emf";
 
         /// <summary>
         /// Загрузить подписи в базу
         /// </summary>
-        private async Task UploadSignaturesToDataBase(IReadOnlyList<SignatureFileData> signatureFileData) =>
+        private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
             await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
             Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
             VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).

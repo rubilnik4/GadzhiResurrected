@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Implementation.Resources;
 
 namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
 {
@@ -17,11 +18,11 @@ namespace GadzhiWord.Word.Implementations.ApplicationWordPartial
         /// <summary>
         /// Ресурсы, используемые модулем Word
         /// </summary>
-        public WordResources WordResources { get; }
+        public ResourcesWord ResourcesWord { get; }
 
-        public ApplicationWord(WordResources wordResources)
+        public ApplicationWord(ResourcesWord resourcesWord)
         {
-            WordResources = wordResources;
+            ResourcesWord = resourcesWord;
         }
 
         /// <summary>

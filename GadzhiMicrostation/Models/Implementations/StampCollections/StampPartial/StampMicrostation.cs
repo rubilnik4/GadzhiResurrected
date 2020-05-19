@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiMicrostation.Microstation.Implementations;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
@@ -16,10 +18,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
-        protected StampMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id)
+        protected StampMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id, SignaturesLibrarySearching signaturesLibrarySearching)
             : base(id)
         {
-            StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));         
+            StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
+            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
 
             StampSubControls = FindElementsInStampFields(stampCellElement.SubElements, StampFieldElement.StampControlNames).ToList();
         }
@@ -28,6 +31,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Элемент ячейка, определяющая штамп
         /// </summary>
         public ICellElementMicrostation StampCellElement { get; }
+
+        /// <summary>
+        /// Поиск имен с идентификатором и подписью
+        /// </summary>
+        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
 
         /// <summary>
         /// Наименование

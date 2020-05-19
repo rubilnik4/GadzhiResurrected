@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -38,7 +38,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> InsertSignature(SignatureFile signatureFile) =>
+        public override IStampSignature<IStampFieldWord> InsertSignature(ISignatureFile signatureFile) =>
             Signature.
             ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath)).
             Map(_ => this);

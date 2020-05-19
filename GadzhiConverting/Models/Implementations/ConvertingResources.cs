@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
@@ -57,17 +58,17 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        private Task<IReadOnlyList<SignatureLibrary>> SignatureNamesTask => GetSignatureNames();
+        private Task<IReadOnlyList<ISignatureLibrary>> SignatureNamesTask => GetSignatureNames();
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        private IReadOnlyList<SignatureLibrary> _signatureNames;
+        private IReadOnlyList<ISignatureLibrary> _signatureNames;
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        public IReadOnlyList<SignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.Result;
+        public IReadOnlyList<ISignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.Result;
 
         /// <summary>
         /// Подписи Microstation
@@ -123,7 +124,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Загрузить имена для подписей
         /// </summary>
-        private async Task<IReadOnlyList<SignatureLibrary>> GetSignatureNames() =>
+        private async Task<IReadOnlyList<ISignatureLibrary>> GetSignatureNames() =>
             await _fileConvertingServerService.Operations.GetSignaturesNames().
                   MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto);
     }

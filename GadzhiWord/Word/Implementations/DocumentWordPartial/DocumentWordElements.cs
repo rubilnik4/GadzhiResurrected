@@ -29,14 +29,15 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Найти таблицы в колонтитулах
         /// </summary>
-        private IEnumerable<IStamp> FindStamps() => _document.Sections.ToIEnumerable().
-                                                    SelectMany(section => section.Footers.ToIEnumerable()).
-                                                    SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
-                                                    Select(table => new TableElementWord(table, ToOwnerWord())).
-                                                    Where(CheckFooterIsStamp).
-                                                    Select((tableElement, stampIndex) => new StampMainWord(tableElement, 
-                                                                                                           new StampIdentifier(stampIndex),
-                                                                                                           PaperSize, OrientationType));
+        private IEnumerable<IStamp> FindStamps() => 
+            _document.Sections.ToIEnumerable().
+            SelectMany(section => section.Footers.ToIEnumerable()).
+            SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
+            Select(table => new TableElementWord(table, ToOwnerWord())).
+            Where(CheckFooterIsStamp).
+            Select((tableElement, stampIndex) => new StampMainWord(tableElement, new StampIdentifier(stampIndex),
+                                                                   PaperSize, OrientationType,
+                                                                   ApplicationWord.ResourcesWord.SignaturesLibrarySearching));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом

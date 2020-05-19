@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Implementation.Resources;
 
 namespace GadzhiWord.Word.Interfaces
 {
@@ -16,6 +17,6 @@ namespace GadzhiWord.Word.Interfaces
         /// <summary>
         /// Ресурсы, используемые модулем Word
         /// </summary>
-        WordResources WordResources { get; }
+        ResourcesWord ResourcesWord { get; }
     }
 }

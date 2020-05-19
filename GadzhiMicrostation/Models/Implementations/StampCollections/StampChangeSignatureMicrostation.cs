@@ -8,6 +8,7 @@ using System.Text;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
 {
@@ -18,23 +19,21 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     {
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                        IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
-                                       IStampFieldMicrostation dateChange, string personId, string personName,
-                                       Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
-            : this(numberChange, numberOfPlots, typeOfChange, documentChange, dateChange, personId, personName, insertSignatureFunc,
-                   GetNotInitializedSignature(personName))
+                                       IStampFieldMicrostation dateChange, ISignatureLibrary signatureLibrary,
+                                       Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+            : this(numberChange, numberOfPlots, typeOfChange, documentChange, dateChange, signatureLibrary, insertSignatureFunc,
+                   GetNotInitializedSignature(signatureLibrary?.PersonName))
         { }
 
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                        IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
-                                       IStampFieldMicrostation dateChange, string personId, string personName,
-                                       Func<SignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                       IStampFieldMicrostation dateChange, ISignatureLibrary signatureLibrary,
+                                       Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                        IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
-            if (String.IsNullOrEmpty(personId)) throw new ArgumentNullException(nameof(personId));
-
-            PersonId = personId;
-            PersonName = personName;
+            PersonId = signatureLibrary?.PersonId ?? throw new ArgumentNullException(nameof(signatureLibrary));
+            PersonName = signatureLibrary.PersonName;
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
@@ -111,15 +110,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature(SignatureFile signatureFile) =>
-            new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature(ISignatureFile signatureFile) =>
+            new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, signatureFile,
                                         InsertSignatureFunc, InsertSignatureFunc.Invoke(signatureFile));
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
         public override IStampSignature<IStampFieldMicrostation> DeleteSignature() =>
-            new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, PersonId, PersonName,
-                                        InsertSignatureFunc);
+            new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange,
+                                        new SignatureLibrary(PersonId, PersonName), InsertSignatureFunc);
     }
 }

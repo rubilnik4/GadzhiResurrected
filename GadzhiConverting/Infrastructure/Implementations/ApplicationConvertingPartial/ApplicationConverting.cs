@@ -49,7 +49,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
 
         public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation, 
                                      IApplicationLibrary<IDocumentWord> applicationWord,
-                                     IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                      IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService)
         {
             _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));

@@ -9,8 +9,8 @@ using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
@@ -36,14 +36,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         private IResultAppCollection<IStampApprovalMicrostation> StampApprovalsMicrostation { get; }
 
-        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id)
-            : base(stampCellElement, id)
+        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id, SignaturesLibrarySearching signaturesLibrarySearching)
+            : base(stampCellElement, id, signaturesLibrarySearching)
         {
             StampPersonsMicrostation = GetStampPersonRows();
-
-            var firstPerson = StampPersonsMicrostation.Value?.FirstOrDefault();
-            StampChangesMicrostation = GetStampChangeRows(firstPerson?.PersonId, firstPerson?.PersonName);
-
+            StampChangesMicrostation = GetStampChangeRows(StampPersonsMicrostation.Value?.FirstOrDefault());
             StampApprovalsMicrostation = GetStampApprovalRows();
         }
 
@@ -52,10 +49,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         protected override IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
             GetSignatures(StampPersonsMicrostation, StampChangesMicrostation, StampApprovalsMicrostation).
-            ResultValueOk(signatures => signatures.
-                                        Select(signature => signature.InsertSignature(libraryElements)).
-                                        Cast<IStampSignature<IStampField>>().
-                                        ToList()).
+            ResultValueOkBind(InsertSignatures).
             ToResultCollection();
 
         /// <summary>
@@ -102,5 +96,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
              personSignatures.Cast<IStampPersonMicrostation, IStampSignatureMicrostation>().
                               ConcatValues(changeSignatures.Value.Cast<IStampSignatureMicrostation>()).
                               ConcatValues(approvalSignatures.Value.Cast<IStampSignatureMicrostation>());
+
+        /// <summary>
+        /// Вставить подписи и получить поля
+        /// </summary>
+        private IResultAppCollection<IStampSignature<IStampField>> InsertSignatures(IEnumerable<IStampSignatureMicrostation> signatures) =>
+            signatures.
+            Select(signature => SignaturesLibrarySearching.
+                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonName).
+                                ResultValueOk(signatureLibrary => new SignatureFile(signatureLibrary.PersonId, 
+                                                                                    signatureLibrary.PersonName, String.Empty)).
+                                ResultValueOk(signatureFile => (IStampSignature<IStampField>)signature.InsertSignature(signatureFile))).
+            ToResultCollection();
     }
 }
