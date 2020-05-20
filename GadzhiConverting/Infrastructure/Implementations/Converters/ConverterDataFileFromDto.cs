@@ -37,7 +37,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        public IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
+        public IList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
             signaturesDto?.
             Select(signatureDto => SignatureFileFromDto(signatureDto, signatureFolder)).
             Where(successAndSignature => successAndSignature.success).
@@ -69,7 +69,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
             bool success = _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.Id, SignatureFile.SaveFormat),
                                                                   signatureDto.SignatureJpeg).Result;
-
+            
             return (success, new SignatureFile(signatureDto.Id, signatureDto.FullName, signatureFolder));
         }
     }

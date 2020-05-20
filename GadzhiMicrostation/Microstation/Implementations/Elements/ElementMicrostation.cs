@@ -113,6 +113,25 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             };
 
         /// <summary>
+        /// Вес линий элемента
+        /// </summary>
+        private int? _lineWeight;
+
+        /// <summary>
+        /// Вес линий элемента
+        /// </summary>
+        public int LineWeight
+        {
+            get => _lineWeight ??= _element.LineWeight;
+            set
+            {
+                int lineWeight = (value >= 0) ? value : 0;
+                _lineWeight = lineWeight;
+                _element.LineWeight = lineWeight;
+            }
+        }
+
+        /// <summary>
         /// Переместить элемент
         /// </summary>
         protected virtual TElement Move<TElement>(PointMicrostation offset)

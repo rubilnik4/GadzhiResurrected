@@ -140,6 +140,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibrary) =>
             _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
+            ResultVoidOk(cellElement => cellElement.LineWeight = 5).
             ToResultValueFromApplication().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.PersonName}")).
             ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
@@ -192,7 +193,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
                   {
                       MicrostationDataType.Signature => _fileConvertingServerService.Operations.UploadSignaturesMicrostation(dataFile),
                       MicrostationDataType.Stamp => _fileConvertingServerService.Operations.UploadStampsMicrostation(dataFile),
-                      _ => throw new ArgumentOutOfRangeException(nameof(microstationDataType), microstationDataType, "Не найден тип данных Microstation")
+                      _ => throw new ArgumentOutOfRangeException(nameof(microstationDataType), microstationDataType, @"Не найден тип данных Microstation")
                   }).
                   VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
     }

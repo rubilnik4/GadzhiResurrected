@@ -26,9 +26,9 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
 
             var filesDataIntermediateEntity = packageDataEntity.FileDataEntities?.
                                               Join(packageDataIntermediateResponse.FilesData,
-                                              fileEntity => fileEntity.FilePath,
-                                              filesIntermediateResponse => filesIntermediateResponse.FilePath,
-                                              UpdateFileDataFromIntermediateResponse).
+                                                   fileEntity => fileEntity.FilePath,
+                                                   filesIntermediateResponse => filesIntermediateResponse.FilePath,
+                                                   UpdateFileDataFromIntermediateResponse).
                                               ToList();
             packageDataEntity.SetFileDataEntities(filesDataIntermediateEntity);
 

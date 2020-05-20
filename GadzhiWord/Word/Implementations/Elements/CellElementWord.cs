@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiWord.Extensions.StringAdditional;
 
 namespace GadzhiWord.Word.Implementations.Elements
 {
@@ -37,7 +38,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Текст ячейки
         /// </summary>
-        public string Text => _text ??= _cellElement.Range.Text;
+        public string Text => _text ??= _cellElement.Range.Text.PrepareCellTextToCompare();
 
         /// <summary>
         /// Родительский элемент строка

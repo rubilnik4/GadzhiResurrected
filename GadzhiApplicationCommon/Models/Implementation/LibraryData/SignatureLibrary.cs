@@ -11,10 +11,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         public SignatureLibrary(string id)
             :this(id, String.Empty) { }
 
-        public SignatureLibrary(string id, string fullName)
+        public SignatureLibrary(string personId, string personName)
         {
-            PersonId = id ?? throw new ArgumentNullException(nameof(id));
-            PersonName = fullName ?? throw new ArgumentNullException(nameof(fullName));
+            PersonId = personId ?? throw new ArgumentNullException(nameof(personId));
+            PersonName = personName ?? throw new ArgumentNullException(nameof(personName));
         }
 
         /// <summary>

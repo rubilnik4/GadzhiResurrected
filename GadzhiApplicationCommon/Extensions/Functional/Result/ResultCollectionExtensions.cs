@@ -30,7 +30,10 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         /// </summary>
         public static IResultAppCollection<T> ToResultCollection<T>(this IResultAppValue<IEnumerable<T>> @this, IErrorApplication errorNull = null) =>
             @this != null
-                ? new ResultAppCollection<T>(@this.Value, @this.Errors, errorNull) 
+                ? new ResultAppCollection<T>(@this.OkStatus 
+                                                 ? @this.Value 
+                                                 : @this.Value ?? Enumerable.Empty<T>(), 
+                                             @this.Errors, errorNull) 
                 : throw new ArgumentNullException(nameof(@this));
 
         /// <summary>

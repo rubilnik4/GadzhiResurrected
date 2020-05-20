@@ -59,7 +59,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
             LoadAndSaveDocument(fileDataServer).
-            ResultValueOkBind(document => 
+            ResultValueOkBind(document =>
                 GetSavedFileDataSource(document, fileDataServer).
                 ToResultCollection().
                 Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
@@ -79,7 +79,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, printersInformation).
                                                           Map(saveResult.ConcatResult).
                                                           Map(filesData => ExportFile(documentLibrary, fileDataServer).
-                                                                           Map(filesData.ConcatResultValue)));
+                                                                           Map(filesData.ConcatResultValue))).
+                                                          Map(CheckDataSourceExistence);
         /// <summary>
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
@@ -131,9 +132,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFilePath filePath) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
-            ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer, 
+            ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer,
                                                                _applicationConverting.GetExportFileExtension(filePath.FileExtension))).
-            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath)));
+            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath))).
+            Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>
         /// Закрыть файл
@@ -152,5 +154,23 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOk(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
                                                                                   Path.GetFileNameWithoutExtension(filePathServer),
                                                                                   fileExtension.ToString()));
+
+        /// <summary>
+        /// Проверить наличие сохраненных файлов
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> CheckDataSourceExistence(IResultCollection<IFileDataSourceServer> fileDataSourceResult) =>
+            fileDataSourceResult.Value.
+            Where(fileDataSource => !_fileSystemOperations.IsFileExist(fileDataSource.FilePathServer)).
+            ToList() .
+            Map(fileDataSources => new
+            {
+                fileDataSources,
+                errors = fileDataSources.Select(fileDataSource => new ErrorCommon(FileConvertErrorType.FileNotFound, 
+                                                                                  $"Файл {fileDataSource.FilePathServer} не найден"))
+            }).
+            Void(filesOrErrors => _messagingService.ShowAndLogErrors(filesOrErrors.errors)).
+            Map(filesOrErrors => new ResultCollection<IFileDataSourceServer>(fileDataSourceResult.Value.Except(filesOrErrors.fileDataSources),
+                                                                             fileDataSourceResult.Errors.Concat(filesOrErrors.errors)));
+
     }
 }

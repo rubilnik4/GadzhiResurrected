@@ -25,16 +25,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Функция загрузки подписей из базы данных по идентификаторам
         /// </summary>
-        private readonly Func<IEnumerable<string>, IEnumerable<ISignatureFile>> _getSignatures;
+        private readonly Func<IEnumerable<string>, IList<ISignatureFile>> _getSignatures;
 
         public SignaturesLibrarySearching(IEnumerable<ISignatureLibrary> signaturesLibrary,
-                                          Func<IEnumerable<string>, IEnumerable<ISignatureFile>> getSignatures)
+                                          Func<IEnumerable<string>, IList<ISignatureFile>> getSignatures)
         {
             if (signaturesLibrary == null) throw new ArgumentNullException(nameof(signaturesLibrary));
+            _getSignatures = getSignatures ?? throw new ArgumentNullException(nameof(getSignatures));
 
             _signaturesLibrary = new SortedList<string, ISignatureLibrary>(signaturesLibrary.ToDictionary(signature => signature.PersonId,
                                                                                                          signature => signature));
-            _getSignatures = getSignatures ?? throw new ArgumentNullException(nameof(getSignatures));
         }
 
         /// <summary>
@@ -67,7 +67,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// Найти подпись по имени
         /// </summary>
         public ISignatureLibrary FindByFullName(string fullName) =>
-            FullNames.IndexOf(fullName.ToLowerCaseCurrentCulture()).
+            fullName.ToLowerCaseCurrentCulture().
+            Map(fullNameLower => FullNames.FindIndex(fullNamesDataBase => fullNamesDataBase.Contains(fullNameLower))).
             WhereContinue(foundIndex => foundIndex > -1,
                 okFunc: foundIndex => _signaturesLibrary.Values[foundIndex],
                 badFunc: foundIndex => null);
@@ -112,6 +113,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>
-        public IEnumerable<ISignatureFile> GetSignaturesByIds(IEnumerable<string> ids) => _getSignatures(ids);
+        public IList<ISignatureFile> GetSignaturesByIds(IEnumerable<string> ids) => _getSignatures(ids);
     }
 }

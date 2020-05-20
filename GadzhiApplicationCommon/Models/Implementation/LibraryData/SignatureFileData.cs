@@ -11,8 +11,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// </summary>
     public class SignatureFileData : SignatureLibrary, ISignatureFileData
     {
-        public SignatureFileData(string id, string fullName, byte[] signatureFileData)
-            : base(id, fullName)
+        public SignatureFileData(string id, string personName, byte[] signatureFileData)
+            : base(id, personName)
         {
             SignatureFileDataSource = ValidateSignatureFileDate(signatureFileData)
                 ? signatureFileData

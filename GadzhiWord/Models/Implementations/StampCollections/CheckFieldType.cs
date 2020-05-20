@@ -31,11 +31,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Находится ли поле в строке с изменениями
         /// </summary>        
         public static bool IsFieldChangeSignature(ICellElement cellElement, ITableElement stampTable) =>
-            cellElement?.ColumnIndex == 0 &&
+            cellElement?.ColumnIndex == 0 && 
             stampTable?.RowsElementWord?.
-                        Any(row => row.Index >= cellElement.RowIndex && 
-                                   stampTable.HasCellElement(cellElement.RowIndex, cellElement.ColumnIndex) &&
-                                   IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElementWord[cellElement.ColumnIndex].Text)) == true;
+            Any(row => row.Index > cellElement.RowIndex && 
+                       stampTable.HasCellElement(cellElement.RowIndex, cellElement.ColumnIndex) &&
+                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElementWord[cellElement.ColumnIndex].Text)) == true;
         
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью

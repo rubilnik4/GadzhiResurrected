@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
@@ -12,10 +13,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// </summary>
     public class SignatureFile : SignatureLibrary, ISignatureFile
     {
-        public SignatureFile(string id, string fullName, string signatureFilePath)
-            : base(id, fullName)
+        public SignatureFile(string personId, string personName, string signatureFolderPath)
+            : base(personId, personName)
         {
-            SignatureFilePath = signatureFilePath ?? throw new ArgumentNullException(nameof(signatureFilePath));
+            if (signatureFolderPath == null) throw new ArgumentNullException(nameof(signatureFolderPath));
+            SignatureFilePath = GetFilePathByFolder(signatureFolderPath, personId);
         }
 
         /// <summary>
@@ -27,5 +29,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// Формат хранения файла
         /// </summary>
         public static string SaveFormat => "jpg";
+
+        /// <summary>
+        /// Сформировать путь для сохранения подписи
+        /// </summary>
+        public static string GetFilePathByFolder(string signatureFolderPath, string personId) =>
+            Path.Combine(signatureFolderPath, personId + "." + SaveFormat);
     }
 }

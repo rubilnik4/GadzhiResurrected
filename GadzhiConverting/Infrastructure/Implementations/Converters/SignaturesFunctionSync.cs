@@ -19,7 +19,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
-        public static Func<IEnumerable<string>, IEnumerable<ISignatureFile>> GetSignaturesSync(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
+        public static Func<IEnumerable<string>, IList<ISignatureFile>> GetSignaturesSync(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                                                                                IConverterDataFileFromDto converterDataFileFromDto,
                                                                                                string signatureFolder) => 
             (idSignatures) => fileConvertingServerService.Operations.GetSignatures(idSignatures.ToList()).Result.

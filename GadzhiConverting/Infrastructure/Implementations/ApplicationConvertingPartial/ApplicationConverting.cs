@@ -64,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             fileExtensionMain switch
             {
                 FileExtension.Dgn => FileExtension.Dwg,
-                FileExtension.Docx => FileExtension.Docx,
+                FileExtension.Docx => FileExtension.Xlsx,
                 _ => throw new InvalidEnumArgumentException(nameof(fileExtensionMain), (int)fileExtensionMain, typeof(FileExtension))
             };
 

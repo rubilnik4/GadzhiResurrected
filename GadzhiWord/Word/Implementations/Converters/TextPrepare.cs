@@ -22,6 +22,7 @@ namespace GadzhiWord.Word.Implementations.Converters
                                       Replace("у", "у").
                                       Replace("o", "о").
                                       Replace("..", ".").
+                                      Replace(((char) 7).ToString(), String.Empty).
                                       Replace(((char) 10).ToString(), String.Empty).
                                       Replace(((char) 11).ToString(), String.Empty).
                                       Replace(((char) 13).ToString(), String.Empty).

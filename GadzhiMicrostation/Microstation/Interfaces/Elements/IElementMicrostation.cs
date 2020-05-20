@@ -61,6 +61,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         ElementMicrostationType ElementType { get; }
 
         /// <summary>
+        /// Вес линий элемента
+        /// </summary>
+        int LineWeight { get; set; }
+
+        /// <summary>
         /// Получить имя элемента из атрибутов
         /// </summary>
         string AttributeControlName { get; set; }

@@ -51,7 +51,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Папка с ресурсами и библиотеками
         /// </summary>
-        public static string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources" + Path.DirectorySeparatorChar;
+        public static string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources";
 
         /// <summary>
         /// Папка для временного хранения подписей

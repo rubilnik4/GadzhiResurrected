@@ -157,8 +157,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
             Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource);
 
-            await _dialogServiceStandard.
-                  RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool, $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
+            await _dialogServiceStandard.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool, 
+                                                                   $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
 
             return FileConvertErrorType.NoError;
         }
