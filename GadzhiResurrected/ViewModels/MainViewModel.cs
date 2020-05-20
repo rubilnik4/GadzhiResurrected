@@ -23,6 +23,6 @@ namespace GadzhiResurrected.ViewModels
         /// <summary>
         /// Название модуля для конвертации файлов
         /// </summary>
-        public string FilesConvertRegionName => RegionNames.FilesConvertModule;
+        public string GadzhiConvertingRegionName => RegionNames.GadzhiConvertingModule;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information
+namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information
 {
     /// <summary>
     /// Информация о количестве файлов в очереди на сервере

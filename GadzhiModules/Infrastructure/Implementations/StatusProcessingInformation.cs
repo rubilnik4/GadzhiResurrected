@@ -3,8 +3,9 @@ using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using System;
 using System.Linq;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using static GadzhiModules.Helpers.Converters.StatusProcessingProjectConverter;
 
 namespace GadzhiModules.Infrastructure.Implementations

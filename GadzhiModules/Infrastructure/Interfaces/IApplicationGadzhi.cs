@@ -1,9 +1,9 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 
 namespace GadzhiModules.Infrastructure.Interfaces
 {

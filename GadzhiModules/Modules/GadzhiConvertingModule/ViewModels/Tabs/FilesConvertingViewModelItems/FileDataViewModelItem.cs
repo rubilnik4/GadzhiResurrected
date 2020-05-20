@@ -1,9 +1,9 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using Prism.Mvvm;
 
-namespace GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems
+namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems
 {
     public class FileDataViewModelItem : BindableBase
     {

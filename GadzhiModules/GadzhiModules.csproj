@@ -50,6 +50,9 @@
     <Reference Include="CommonServiceLocator, Version=2.0.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.5\lib\net47\CommonServiceLocator.dll</HintPath>
     </Reference>
+    <Reference Include="Dragablz, Version=0.0.3.203, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dragablz.0.0.3.203\lib\net45\Dragablz.dll</HintPath>
+    </Reference>
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
       <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
     </Reference>
@@ -173,8 +176,8 @@
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\QueueStatus.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FilesQueueInfo.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientPackageDataFromDto.cs" />
@@ -182,24 +185,32 @@
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
-    <Compile Include="Modules\FilesConvertModule\FilesConvertModule.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\PackageStatus.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\Information\FileStatus.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\ActionType.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\ReactiveSubjects\FilesChange.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\FileData.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Implementations\PackageData.cs" />
-    <Compile Include="Modules\FilesConvertModule\Models\Interfaces\IPackageData.cs" />
-    <Compile Include="Modules\FilesConvertModule\ViewModels\FilesConvertViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\GadzhiConvertingModule.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\PackageStatus.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\FileStatus.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\ReactiveSubjects\ActionType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\ReactiveSubjects\FilesChange.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FileData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\PackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ConvertingSettingsViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModel.cs" />
     <Compile Include="Helpers\BaseClasses\ViewModels\ViewModelBase.cs" />
-    <Compile Include="Modules\FilesConvertModule\ViewModels\FilesConvertViewModelItems\FileDataViewModelItem.cs" />
-    <Compile Include="Modules\FilesConvertModule\Views\FilesConvertView.xaml.cs">
-      <DependentUpon>FilesConvertView.xaml</DependentUpon>
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ConvertingSettingsView.xaml.cs">
+      <DependentUpon>ConvertingSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesConvertingView.xaml.cs">
+      <DependentUpon>FilesConvertingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Implementations\DialogServiceStandard.cs" />
     <Compile Include="Infrastructure\Interfaces\IApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Interfaces\IDialogServiceStandart.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml.cs">
+      <DependentUpon>GadzhiConvertingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\RegionNames.cs" />
   </ItemGroup>
@@ -211,9 +222,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Modules\FilesConvertModule\Views\FilesConvertView.xaml">
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ConvertingSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesConvertingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +262,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0-beta3.final\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0-beta3.final\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -185,12 +185,12 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Сохранить файл на диск из двоичного кода
         /// </summary>   
         public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
-        {
+        { 
             if (String.IsNullOrEmpty(filePath) || fileByte == null) return false;
 
             try
             {
-                using var sourceStream = File.Open(filePath, FileMode.OpenOrCreate);
+                using var sourceStream = File.Create(filePath);
                 sourceStream.Seek(0, SeekOrigin.End);
                 await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
 

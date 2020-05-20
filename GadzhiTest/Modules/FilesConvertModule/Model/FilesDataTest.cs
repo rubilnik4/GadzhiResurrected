@@ -1,9 +1,9 @@
-﻿using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiTest.DefaultData.Model;
+﻿using GadzhiTest.DefaultData.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 
 namespace GadzhiTest.Modules.FilesConvertModule.Model
 {

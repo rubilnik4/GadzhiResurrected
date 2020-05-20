@@ -1,8 +1,8 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using GadzhiCommon.Enums.FilesConvert;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information
+namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information
 {
     /// <summary>
     /// Класс содержащий статус и ошибки при конвертировании для всего пакета

@@ -2,7 +2,7 @@
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule;
+using GadzhiModules.Modules.GadzhiConvertingModule;
 using GadzhiResurrected.ViewModels;
 using GadzhiResurrected.Views;
 using Prism.Ioc;
@@ -61,7 +61,7 @@ namespace GadzhiResurrected
         /// </summary>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<FilesConvertModule>();
+            moduleCatalog.AddModule<GadzhiConvertingModule>();
         }
     }
 }

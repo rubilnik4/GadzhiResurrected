@@ -20,6 +20,6 @@
         >
     
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="{Binding FilesConvertRegionName}" />
+        <ContentControl prism:RegionManager.RegionName="{Binding GadzhiConvertingRegionName}" />
     </Grid>
 </Window>

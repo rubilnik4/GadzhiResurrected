@@ -121,7 +121,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         private IResultAppCollection<IStampSignature<IStampField>> GetStampSignaturesByIds(IList<IStampSignature<IStampFieldWord>> signaturesStamp) =>
             new ResultAppCollection<string>(signaturesStamp.Select(signatureStamp => signatureStamp.PersonId)).
-            ResultValueOk(personIds => SignaturesLibrarySearching.GetSignaturesByIds(personIds)).
+            ResultValueOkBind(personIds => SignaturesLibrarySearching.GetSignaturesByIds(personIds)).
             ResultValueContinue(signaturesFile => signaturesFile.Count == signaturesStamp.Count,
                 okFunc: signaturesFile => signaturesFile,
                 badFunc: signaturesFile => new ErrorApplication(ErrorApplicationType.SignatureNotFound,

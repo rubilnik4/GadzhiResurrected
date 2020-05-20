@@ -2,13 +2,14 @@
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
-using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
-// ReSharper disable UnusedMemberInSuper.Global
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Interfaces
+namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах

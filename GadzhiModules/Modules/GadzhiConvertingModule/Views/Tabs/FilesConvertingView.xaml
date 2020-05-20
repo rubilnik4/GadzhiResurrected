@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GadzhiModules.Modules.FilesConvertModule.Views.FilesConvertView"
+﻿<UserControl x:Class="GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.FilesConvertingView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,14 +9,13 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:dd="urn:gong-wpf-dragdrop"     
         mc:Ignorable="d"              
-        xmlns:vm="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels"
-        xmlns:vmItems="clr-namespace:GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems"
         xmlns:bev="clr-namespace:GadzhiModules.Helpers.Wpf.Behaviors"   
-        xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"       
-        d:DataContext="{d:DesignInstance Type=vm:FilesConvertViewModel, IsDesignTimeCreatable=False}"
+        xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
+        xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
+        xmlns:viewModeItems="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems"
+        d:DataContext="{d:DesignInstance Type=viewModelTabs:FilesConvertingViewModel, IsDesignTimeCreatable=False}"
         >
     <Grid>
-        <!--Ссылка на корневую ViewModel-->
         <Grid.Resources>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
 
@@ -160,9 +159,9 @@
                                     Header="Цвет печати"
                                     Width="0.4*" 
                                     IsEditable="True"   
-                                    IsReadOnly="{Binding Path=DataContext.(vm:FilesConvertViewModel.IsConverting), Source={StaticResource ProxyElement}}"
+                                    IsReadOnly="{Binding Path=DataContext.(viewModelTabs:FilesConvertingViewModel.IsConverting), Source={StaticResource ProxyElement}}"
                                     SelectedValueBinding="{Binding ColorPrintName}"
-                                    ItemsSourceBinding="{Binding Path=DataContext.(vm:FilesConvertViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">
+                                    ItemsSourceBinding="{Binding Path=DataContext.(viewModelTabs:FilesConvertingViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">
 
                     <materialDesign:DataGridComboBoxColumn.ElementStyle>
                         <Style TargetType="ComboBox">
@@ -175,7 +174,7 @@
                                         Width="0.35*"                                     
                                         IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="vmItems:FileDataViewModelItem">
+                        <DataTemplate DataType="viewModeItems:FileDataViewModelItem">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="Done"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
@@ -205,11 +204,11 @@
             </DataGrid.Columns>
 
             <i:Interaction.Behaviors>
-                <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding Path=(vm:FilesConvertViewModel.SelectedFilesData), Mode=TwoWay}" />
+                <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding Path=(viewModelTabs:FilesConvertingViewModel.SelectedFilesData), Mode=TwoWay}" />
             </i:Interaction.Behaviors>
 
             <DataGrid.InputBindings>
-                <KeyBinding Command="{Binding Path=(vm:FilesConvertViewModel.RemoveFilesDelegateCommand)}" Key="Delete" />
+                <KeyBinding Command="{Binding Path=(viewModelTabs:FilesConvertingViewModel.RemoveFilesDelegateCommand)}" Key="Delete" />
             </DataGrid.InputBindings>
         </DataGrid>
 

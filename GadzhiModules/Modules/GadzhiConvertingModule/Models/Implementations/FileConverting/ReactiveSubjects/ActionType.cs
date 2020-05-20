@@ -1,4 +1,4 @@
-﻿namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects
+﻿namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects
 {
     /// <summary>
     /// Тип действия для реактивного свойства

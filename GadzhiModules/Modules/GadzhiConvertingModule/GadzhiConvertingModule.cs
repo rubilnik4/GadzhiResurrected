@@ -1,27 +1,24 @@
 ﻿using ChannelAdam.ServiceModel;
 using GadzhiCommon.Helpers.Wcf;
-using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.ViewModels;
-using GadzhiModules.Modules.FilesConvertModule.Views;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Views;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
 using Unity;
 using Unity.Lifetime;
 
-namespace GadzhiModules.Modules.FilesConvertModule
+namespace GadzhiModules.Modules.GadzhiConvertingModule
 {
-    public class FilesConvertModule : IModule
+    public class GadzhiConvertingModule : IModule
     {
         /// <summary>
         /// Привязка модулей к View
@@ -29,8 +26,7 @@ namespace GadzhiModules.Modules.FilesConvertModule
         public void OnInitialized(IContainerProvider containerProvider)
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();          
-            regionManager.RegisterViewWithRegion(RegionNames.FilesConvertModule, typeof(FilesConvertView));
-           
+            regionManager.RegisterViewWithRegion(RegionNames.GadzhiConvertingModule, typeof(GadzhiConvertingView));
         }
 
         /// <summary>

@@ -1,13 +1,12 @@
-﻿using GadzhiCommon.Converters;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Helpers.FileSystem;
-using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using GadzhiCommon.Converters;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations
+namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле

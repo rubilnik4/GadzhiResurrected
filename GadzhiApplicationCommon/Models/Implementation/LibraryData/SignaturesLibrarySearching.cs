@@ -68,7 +68,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public ISignatureLibrary FindByFullName(string fullName) =>
             fullName.ToLowerCaseCurrentCulture().
-            Map(fullNameLower => FullNames.FindIndex(fullNamesDataBase => fullNamesDataBase.Contains(fullNameLower))).
+            Map(fullNameLower => FullNames.FindIndex(fullNamesDataBase => GetSurnameFromFullname(fullNamesDataBase) == fullNameLower)).
             WhereContinue(foundIndex => foundIndex > -1,
                 okFunc: foundIndex => _signaturesLibrary.Values[foundIndex],
                 badFunc: foundIndex => null);
@@ -113,6 +113,28 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>
-        public IList<ISignatureFile> GetSignaturesByIds(IEnumerable<string> ids) => _getSignatures(ids);
+        public IResultAppCollection<ISignatureFile> GetSignaturesByIds(IEnumerable<string> personsId) =>
+            new ResultAppCollection<string>(personsId).
+            ResultValueOkBind(ids => new ResultAppCollection<ISignatureFile>(_getSignatures(ids), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                                       "Подписи в базе не найдены")).
+                                     ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(ids, signaturesFile))).
+            ToResultCollection();
+
+        /// <summary>
+        /// Связать значения подписей с базой данных один к одному
+        /// </summary>
+        private static IResultAppCollection<ISignatureFile> SignatureLeftJoinWithDataBase(IEnumerable<string> personIds, IList<ISignatureFile> signaturesFile) =>
+            personIds.
+            Select(id => signaturesFile.FirstOrDefault(signatureFile => signatureFile.PersonId == id)).
+            Select(signatureFile => new ResultAppValue<ISignatureFile>(signatureFile, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                           "Подпись в базе не найдена"))).
+            Select(signatureResult => (IResultAppValue<ISignatureFile>)signatureResult).
+            ToResultCollection();
+
+        /// <summary>
+        /// Получить фамилию из полной строки базы данных
+        /// </summary>
+        private static string GetSurnameFromFullname(string fullName) =>
+            fullName?.Split(null)[0] ?? String.Empty;
     }
 }

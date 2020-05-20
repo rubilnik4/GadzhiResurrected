@@ -8,6 +8,7 @@ using GadzhiDAL.Services.Interfaces;
 using System.Collections.Generic;
 using GadzhiDTOServer.TransferModels.Signatures;
 using GadzhiDAL.Entities.Signatures;
+using System.Linq;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Server
 {
@@ -71,7 +72,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignatures(IList<string> ids) =>
-            await _signaturesServerService.GetSignatures(ids);
+            await _signaturesServerService.GetSignatures(ids.Distinct().ToList());
 
         /// <summary>
         /// Загрузить подписи

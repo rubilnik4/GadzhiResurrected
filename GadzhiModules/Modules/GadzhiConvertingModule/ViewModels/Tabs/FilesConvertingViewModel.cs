@@ -1,23 +1,21 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
-using GadzhiModules.Modules.FilesConvertModule.ViewModels.FilesConvertViewModelItems;
-using GongSolutions.Wpf.DragDrop;
-using Prism.Commands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
+using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems;
+using GongSolutions.Wpf.DragDrop;
+using Prism.Commands;
 
-// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
-
-namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
+namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
-    public class FilesConvertViewModel : ViewModelBase, IDropTarget, IDisposable
+    public class FilesConvertingViewModel : ViewModelBase, IDropTarget, IDisposable
     {
         /// <summary>
         /// Слой инфраструктуры
@@ -34,7 +32,7 @@ namespace GadzhiModules.Modules.FilesConvertModule.ViewModels
         /// </summary>
         private readonly IDisposable _fileDataChangeSubscribe;
 
-        public FilesConvertViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
+        public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
         {
             _applicationGadzhi = applicationGadzhi;
             _statusProcessingInformation = statusProcessingInformation;

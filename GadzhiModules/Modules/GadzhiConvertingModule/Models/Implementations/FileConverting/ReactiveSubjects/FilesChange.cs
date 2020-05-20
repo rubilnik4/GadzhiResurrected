@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects
+namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects
 {
     /// <summary>
     /// Отправка изменений для реактивного свойства

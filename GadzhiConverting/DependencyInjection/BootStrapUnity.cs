@@ -71,8 +71,7 @@ namespace GadzhiConverting.DependencyInjection
 
             var convertingResources = await projectSettings.ConvertingResources;
             var signaturesLibrarySearching = new SignaturesLibrarySearching(convertingResources.SignatureNames,
-                                                                            GetSignaturesSync(fileConvertingServerService, 
-                                                                                              converterDataFileFromDto, 
+                                                                            GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
                                                                                               ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>

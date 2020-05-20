@@ -1,6 +1,7 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System.Threading.Tasks;
-using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Infrastructure.Interfaces.Converters
 {

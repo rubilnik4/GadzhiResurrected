@@ -5,9 +5,6 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.Information;
-using GadzhiModules.Modules.FilesConvertModule.Models.Implementations.ReactiveSubjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +13,11 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
-using GadzhiModules.Modules.FilesConvertModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiModules.Infrastructure.Implementations
