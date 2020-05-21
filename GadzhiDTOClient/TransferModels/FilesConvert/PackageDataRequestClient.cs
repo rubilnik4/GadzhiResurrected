@@ -18,12 +18,6 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
         public override IList<FileDataRequestClient> FilesData { get; set; }
 
         /// <summary>
-        /// Параметры конвертации
-        /// </summary>
-        [DataMember]
-        public ConvertingSettingsRequestClient ConvertingSettings { get; set; }
-
-        /// <summary>
         /// Удовлетворяет ли модель условиям для отправки
         /// </summary>
         [IgnoreDataMember]

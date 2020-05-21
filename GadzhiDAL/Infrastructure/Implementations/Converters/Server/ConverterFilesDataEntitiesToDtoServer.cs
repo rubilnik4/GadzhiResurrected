@@ -1,5 +1,7 @@
 ﻿using GadzhiDAL.Entities.FilesConvert.Main;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiDTOServer.TransferModels.FilesConvert;
+using Microsoft.CodeAnalysis.Operations;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
@@ -27,10 +29,22 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 Id = Guid.Parse(packageDataEntity.Id),
                 AttemptingConvertCount = packageDataEntity.AttemptingConvertCount,
+                ConvertingSettings = ConvertingSettingsToRequest(packageDataEntity.ConvertingSettings),
                 FilesData = filesData,
             };
 
         }
+
+        /// <summary>
+        /// Преобразовать параметры конвертации в трансферную модель
+        /// </summary>
+        private static ConvertingSettingsRequest ConvertingSettingsToRequest(ConvertingSettingsComponent convertingSettings) =>
+            (convertingSettings != null)
+                ? new ConvertingSettingsRequest()
+                {
+                    Department = convertingSettings.Department
+                }
+                : throw new ArgumentNullException(nameof(convertingSettings));
 
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос

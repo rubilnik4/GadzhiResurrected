@@ -163,7 +163,9 @@
     <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
     <Compile Include="Models\Converters\ResultApplicationConverter.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\ConvertingSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilePath.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IConvertingSettings.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFilePath.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrintersInformation.cs" />

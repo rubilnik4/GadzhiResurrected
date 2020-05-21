@@ -5,6 +5,7 @@ using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -55,13 +56,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
-        private static ConvertingSettingsRequestClient ToConvertingSettingsRequest(IConvertingSettings convertingSetting)=>
+        private static ConvertingSettingsRequest ToConvertingSettingsRequest(IConvertingSettings convertingSetting)=>
             (convertingSetting != null) 
-                ? new ConvertingSettingsRequestClient()
+                ? new ConvertingSettingsRequest()
                 {
                     Department = convertingSetting.Department
                 }
                 : throw new ArgumentNullException(nameof(convertingSetting));
+
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      

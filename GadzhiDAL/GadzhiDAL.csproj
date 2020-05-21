@@ -145,6 +145,7 @@
     <Compile Include="Entities\FilesConvert\Base\FileDataEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\FileDataSourceEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\PackageDataEntityBase.cs" />
+    <Compile Include="Entities\FilesConvert\Main\ConvertingSettingsComponent.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
     <Compile Include="Entities\Signatures\MicrostationDataFiles.cs" />
     <Compile Include="Entities\Signatures\SignatureEntity.cs" />

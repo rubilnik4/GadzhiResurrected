@@ -11,7 +11,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Co
     public class ConvertingSettings : IConvertingSettings
     {
         public ConvertingSettings()
-        : this(Departments[0])
+            : this(Departments[0])
         { }
 
         public ConvertingSettings(string department)
@@ -22,7 +22,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Co
         /// <summary>
         /// Отдел
         /// </summary>
-        public string Department { get; }
+        public string Department { get; set; }
 
         /// <summary>
         /// Отделы

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
-namespace GadzhiDTOClient.TransferModels.FilesConvert
+namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
 {
     /// <summary>
     /// Параметры конвертации. Трансферная модель
     /// </summary>
     [DataContract]
-    public class ConvertingSettingsRequestClient
+    public class ConvertingSettingsRequest
     {
         /// <summary>
         /// Отдел

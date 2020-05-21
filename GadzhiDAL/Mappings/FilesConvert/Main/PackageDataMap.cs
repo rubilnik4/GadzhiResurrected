@@ -17,10 +17,13 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Map(x => x.IdentityLocalName).Not.Nullable().Default("");
             Map(x => x.IdentityServerName).Not.Nullable().Default("");
             Map(x => x.AttemptingConvertCount).Not.Nullable();
+            Component(x => x.ConvertingSettings, m =>
+                {
+                    m.Map(x => x.Department).Not.Nullable();
+                });
             HasMany(x => x.FileDataEntities)
                     .Inverse()
                     .Cascade.All();
-
         }
     }
 }

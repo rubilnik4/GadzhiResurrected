@@ -21,6 +21,11 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         IEnumerable<IFileDataServer> FilesDataServer { get; }
 
         /// <summary>
+        /// Параметры конвертации
+        /// </summary>
+        IConvertingSettings ConvertingSettings { get; }
+
+        /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
         StatusProcessingProject StatusProcessingProject { get; }

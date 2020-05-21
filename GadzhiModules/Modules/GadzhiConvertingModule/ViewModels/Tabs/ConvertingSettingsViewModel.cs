@@ -16,12 +16,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Параметры приложения
         /// </summary>
-        private readonly IProjectSettings _projectSettings;
+        private readonly IConvertingSettings _convertingSettings;
 
         public ConvertingSettingsViewModel(IProjectSettings projectSettings)
         {
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            Department = projectSettings.ConvertingSettings.Department;
+            _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
         }
 
         /// <summary>
@@ -32,16 +31,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Отдел
         /// </summary>
-        public string Department { get; set; }
+        public string Department
+        {
+            get => _convertingSettings.Department;
+            set => _convertingSettings.Department = value;
+        }
 
         /// <summary>
         /// Отделы
         /// </summary>
         public IReadOnlyList<string> Departments => ConvertingSettings.Departments;
-
-        /// <summary>
-        /// Сохранить изменения
-        /// </summary>
-        public void SaveSettingsChanges() => _projectSettings.UpdateConvertingSettings(Department);
     }
 }

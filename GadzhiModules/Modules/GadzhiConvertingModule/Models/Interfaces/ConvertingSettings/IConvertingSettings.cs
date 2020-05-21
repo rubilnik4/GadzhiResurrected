@@ -8,6 +8,6 @@
         /// <summary>
         /// Отдел
         /// </summary>
-        string Department { get; }
+        string Department { get; set; }
     }
 }

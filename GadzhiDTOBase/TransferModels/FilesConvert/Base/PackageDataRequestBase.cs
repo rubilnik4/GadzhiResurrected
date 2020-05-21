@@ -17,6 +17,12 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Параметры конвертации
+        /// </summary>
+        [DataMember]
+        public ConvertingSettingsRequest ConvertingSettings { get; set; }
+
+        /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]

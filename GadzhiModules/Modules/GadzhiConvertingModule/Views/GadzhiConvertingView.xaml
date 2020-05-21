@@ -6,15 +6,13 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://prismlibrary.com/"  
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"   
              xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels"
              xmlns:viewModelsBase="clr-namespace:GadzhiModules.Helpers.BaseClasses.ViewModels"
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              xmlns:viewTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs"
-             d:DataContext="{d:DesignInstance Type=viewModels:GadzhiConvertingViewModel, IsDesignTimeCreatable=False}"
->
+             d:DataContext="{d:DesignInstance Type=viewModels:GadzhiConvertingViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">
             <viewTabs:FilesConvertingView />
@@ -24,14 +22,13 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <dragablz:TabablzControl FixedHeaderCount="2"
-                                 ItemsSource="{Binding TabViewModels}"
-                                 SelectedItem="{Binding SelectedTab}">
-            <dragablz:TabablzControl.HeaderItemTemplate>
+        <TabControl Style="{StaticResource MaterialDesignTabControl}"
+                    ItemsSource="{Binding TabViewModels}">
+            <TabControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewModelsBase:ViewModelBase}">
                     <TextBlock Text="{Binding Title}" />
                 </DataTemplate>
-            </dragablz:TabablzControl.HeaderItemTemplate>
-        </dragablz:TabablzControl>
+            </TabControl.ItemTemplate>
+        </TabControl>
     </Grid>
 </UserControl>

@@ -25,6 +25,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
+        public virtual ConvertingSettingsComponent ConvertingSettings { get; set; }
+
+        /// <summary>
+        /// Данные о отконвертированных файлах
+        /// </summary>       
         public virtual IList<FileDataEntity> FileDataEntities { get; protected set; }
 
         /// <summary>

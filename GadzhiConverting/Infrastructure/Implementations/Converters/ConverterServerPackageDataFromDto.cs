@@ -6,6 +6,7 @@ using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
@@ -42,8 +43,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask ?? new List<Task<IFileDataServer>>());
 
             return new PackageServer(packageDataRequest.Id, packageDataRequest.AttemptingConvertCount,
-                                     StatusProcessingProject.Converting, filesDataServerToConvert);
+                                     StatusProcessingProject.Converting,
+                                     ToConvertingSettings(packageDataRequest.ConvertingSettings),
+                                     filesDataServerToConvert);
         }
+
+        /// <summary>
+        /// Преобразовать параметры конвертации из трансферной модели
+        /// </summary>
+        private IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) =>
+            (convertingSettingsRequest != null)
+                ? new ConvertingSettings(convertingSettingsRequest.Department)
+                : throw new ArgumentNullException(nameof(convertingSettingsRequest));
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
