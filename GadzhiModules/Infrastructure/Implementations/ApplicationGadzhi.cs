@@ -58,11 +58,6 @@ namespace GadzhiModules.Infrastructure.Implementations
         private readonly IFileDataProcessingStatusMark _fileDataProcessingStatusMark;
 
         /// <summary>
-        /// Параметры приложения
-        /// </summary>
-        private readonly IProjectSettings _projectSettings;
-
-        /// <summary>
         /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
         /// </summary>
         private readonly CompositeDisposable _statusProcessingSubscriptions;
@@ -72,8 +67,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                  IPackageData packageInfoProject,
                                  IServiceConsumer<IFileConvertingClientService> fileConvertingClientService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
-                                 IStatusProcessingInformation statusProcessingInformation,
-                                 IProjectSettings projectSettings)
+                                 IStatusProcessingInformation statusProcessingInformation)
         {
             _dialogServiceStandard = dialogServiceStandard ?? throw new ArgumentNullException(nameof(dialogServiceStandard));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
@@ -81,7 +75,6 @@ namespace GadzhiModules.Infrastructure.Implementations
             _fileConvertingClientService = fileConvertingClientService ?? throw new ArgumentNullException(nameof(fileConvertingClientService));
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
 
             _statusProcessingSubscriptions = new CompositeDisposable();
         }
@@ -208,7 +201,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         private void SubscribeToIntermediateResponse() =>
             _statusProcessingSubscriptions.
             Add(Observable.
-                Interval(TimeSpan.FromSeconds(_projectSettings.IntervalSecondsToIntermediateResponse)).
+                Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToIntermediateResponse)).
                 Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                 Subscribe(async _ => await ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
                                                                       () => IsIntermediateResponseInProgress = true,

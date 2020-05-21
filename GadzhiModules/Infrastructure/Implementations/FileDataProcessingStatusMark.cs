@@ -24,6 +24,11 @@ namespace GadzhiModules.Infrastructure.Implementations
         private readonly IPackageData _packageInfoProject;
 
         /// <summary>
+        /// Модель конвертируемых файлов
+        /// </summary>     
+        private readonly IProjectSettings _projectSettings;
+
+        /// <summary>
         /// Конвертеры из локальной модели в трансферную
         /// </summary>  
         private readonly IConverterClientPackageDataToDto _converterClientPackageDataToDto;
@@ -34,10 +39,12 @@ namespace GadzhiModules.Infrastructure.Implementations
         private readonly IConverterClientPackageDataFromDto _converterClientPackageDataFromDto;
 
         public FileDataProcessingStatusMark(IPackageData packageInfoProject,
+                                            IProjectSettings projectSettings,
                                             IConverterClientPackageDataToDto converterClientPackageDataToDto,
                                             IConverterClientPackageDataFromDto converterClientPackageDataFromDto)
         {
             _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _converterClientPackageDataToDto = converterClientPackageDataToDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataToDto));
             _converterClientPackageDataFromDto = converterClientPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataFromDto));
         }
@@ -46,7 +53,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
         public async Task<PackageDataRequestClient> GetFilesDataToRequest() =>
-            await _converterClientPackageDataToDto.ToPackageDataRequest(_packageInfoProject);
+            await _converterClientPackageDataToDto.ToPackageDataRequest(_packageInfoProject, _projectSettings.ConvertingSettings);
 
         /// <summary>
         /// Назначить всем файлам статус к отправке

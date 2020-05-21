@@ -8,6 +8,11 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
     public abstract class ViewModelBase : BindableBase
     {
         /// <summary>
+        /// Название
+        /// </summary>
+        public abstract string Title { get; }
+
+        /// <summary>
         /// Индикатор загрузки
         /// </summary>         
         private bool _isLoading;

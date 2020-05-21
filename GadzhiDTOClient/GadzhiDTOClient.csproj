@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\FilesConvert\IFileConvertingServiceClient.cs" />
+    <Compile Include="TransferModels\FilesConvert\ConvertingSettingsRequestClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataSourceResponseClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponseClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequestClient.cs" />

@@ -40,10 +40,6 @@ namespace GadzhiTest
         /// </summary>   
         Mock<IStatusProcessingInformation> MockStatusProcessingInformation;
 
-        /// <summary>
-        /// Параметры приложения
-        /// </summary>   
-        Mock<IProjectSettings> MockProjectSettings;
 
         [TestInitialize]
         public void ApplicationGadzhiTestInitialize()
@@ -52,7 +48,6 @@ namespace GadzhiTest
             MockFileConvertingService = new Mock<IServiceConsumer<IFileConvertingClientService>>();
             MockFileDataProcessingStatusMark = new Mock<IFileDataProcessingStatusMark>();       
             MockStatusProcessingInformation = new Mock<IStatusProcessingInformation>();
-            MockProjectSettings = new Mock<IProjectSettings>();
         }
 
         /// <summary>
@@ -95,8 +90,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,                                                      
-                                                          MockProjectSettings.Object);
+                                                          MockStatusProcessingInformation.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath[DefaultFileData.FileDataToTestOnlyPath.Count - 1];
@@ -143,8 +137,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,                                                       
-                                                          MockProjectSettings.Object);
+                                                          MockStatusProcessingInformation.Object);
 
             var files = new List<string>(DefaultFileData.FileDataToTestOnlyPath);
             files.AddRange(subDirectoryPath); //добавляем к тесту директории
@@ -181,8 +174,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,                                                          
-                                                          MockProjectSettings.Object);
+                                                          MockStatusProcessingInformation.Object);
 
             IEnumerable<string> files = null;
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath[DefaultFileData.FileDataToTestOnlyPath.Count - 1];
@@ -221,8 +213,7 @@ namespace GadzhiTest
                                                           mockFileInfoProject.Object,
                                                           MockFileConvertingService.Object,
                                                           MockFileDataProcessingStatusMark.Object,
-                                                          MockStatusProcessingInformation.Object,                                                   
-                                                          MockProjectSettings.Object);
+                                                          MockStatusProcessingInformation.Object);
 
             IEnumerable<string> files = new List<string> { null };
             var fileLastExpected = DefaultFileData.FileDataToTestOnlyPath[DefaultFileData.FileDataToTestOnlyPath.Count - 1];

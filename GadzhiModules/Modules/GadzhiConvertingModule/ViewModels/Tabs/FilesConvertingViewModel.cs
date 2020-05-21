@@ -34,8 +34,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
         public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
         {
-            _applicationGadzhi = applicationGadzhi;
-            _statusProcessingInformation = statusProcessingInformation;
+            _applicationGadzhi = applicationGadzhi ?? throw new ArgumentNullException(nameof(applicationGadzhi));
+            _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
@@ -43,6 +43,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
             InitializeDelegateCommands();
         }
+
+        /// <summary>
+        /// Название
+        /// </summary>
+        public override string Title => "Конвертушки";
 
         /// <summary>
         /// Инициализировать команды

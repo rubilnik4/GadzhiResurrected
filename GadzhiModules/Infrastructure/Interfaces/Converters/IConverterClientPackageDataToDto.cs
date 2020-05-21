@@ -1,6 +1,7 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System.Threading.Tasks;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Infrastructure.Interfaces.Converters
@@ -13,6 +14,6 @@ namespace GadzhiModules.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
-        Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData);
+        Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData, IConvertingSettings convertingSetting);
     }
 }

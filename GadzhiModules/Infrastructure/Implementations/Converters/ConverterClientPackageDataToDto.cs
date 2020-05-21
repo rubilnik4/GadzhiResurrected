@@ -6,8 +6,9 @@ using GadzhiModules.Infrastructure.Interfaces.Converters;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
@@ -29,7 +30,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
-        public async Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData)
+        public async Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData, IConvertingSettings convertingSetting)
         {
             if (packageData == null) throw new ArgumentNullException(nameof(packageData));
 
@@ -47,9 +48,20 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             {
                 Id = packageData.GenerateId(),
                 FilesData = filesRequestEnsuredWithBytes.ToList(),
+                ConvertingSettings = ToConvertingSettingsRequest(convertingSetting),
             };
         }
 
+        /// <summary>
+        /// Преобразовать параметры конвертации в трансферную модель
+        /// </summary>
+        private static ConvertingSettingsRequestClient ToConvertingSettingsRequest(IConvertingSettings convertingSetting)=>
+            (convertingSetting != null) 
+                ? new ConvertingSettingsRequestClient()
+                {
+                    Department = convertingSetting.Department
+                }
+                : throw new ArgumentNullException(nameof(convertingSetting));
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      

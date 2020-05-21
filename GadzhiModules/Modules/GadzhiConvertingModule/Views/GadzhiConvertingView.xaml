@@ -10,17 +10,28 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"   
              xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels"
+             xmlns:viewModelsBase="clr-namespace:GadzhiModules.Helpers.BaseClasses.ViewModels"
+             xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              xmlns:viewTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs"
              d:DataContext="{d:DesignInstance Type=viewModels:GadzhiConvertingViewModel, IsDesignTimeCreatable=False}"
 >
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">
+            <viewTabs:FilesConvertingView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModelTabs:ConvertingSettingsViewModel}">
+            <viewTabs:ConvertingSettingsView />
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
-        <dragablz:TabablzControl FixedHeaderCount="2">
-            <TabItem Header="Конвертушки">
-                <viewTabs:FilesConvertingView />
-            </TabItem>
-            <TabItem Header="Параметрюшки">
-                <viewTabs:ConvertingSettingsView />
-            </TabItem>
+        <dragablz:TabablzControl FixedHeaderCount="2"
+                                 ItemsSource="{Binding TabViewModels}"
+                                 SelectedItem="{Binding SelectedTab}">
+            <dragablz:TabablzControl.HeaderItemTemplate>
+                <DataTemplate DataType="{x:Type viewModelsBase:ViewModelBase}">
+                    <TextBlock Text="{Binding Title}" />
+                </DataTemplate>
+            </dragablz:TabablzControl.HeaderItemTemplate>
         </dragablz:TabablzControl>
     </Grid>
 </UserControl>

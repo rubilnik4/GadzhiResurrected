@@ -1,4 +1,6 @@
-﻿namespace GadzhiModules.Infrastructure.Implementations
+﻿using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
+
+namespace GadzhiModules.Infrastructure.Interfaces
 {
     /// <summary>
     /// Параметры приложения
@@ -6,13 +8,13 @@
     public interface IProjectSettings
     {
         /// <summary>
-        /// Время через которое осуществляются промежуточные запросы к серверу для проверки статуса файлов
+        /// Параметры конвертации
         /// </summary>
-        int IntervalSecondsToIntermediateResponse { get; }
+        public IConvertingSettings ConvertingSettings { get; }
 
         /// <summary>
-        /// Имя папка, куда копируются отконвертированные файлы
+        /// Обновить параметры конвертации
         /// </summary>
-        string DirectoryForSavingConvertedFiles { get; }
+        void UpdateConvertingSettings(string department);
     }
 }

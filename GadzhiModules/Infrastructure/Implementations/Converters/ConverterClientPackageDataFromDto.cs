@@ -26,20 +26,13 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
-        /// Параметры приложения
-        /// </summary>
-        private readonly IProjectSettings _projectSettings;
-
-        /// <summary>
         /// Стандартные диалоговые окна
         /// </summary>        
         private readonly IDialogServiceStandard _dialogServiceStandard;
 
-        public ConverterClientPackageDataFromDto(IFileSystemOperations fileSystemOperations, IProjectSettings projectSettings,
-                                                 IDialogServiceStandard dialogServiceStandard)
+        public ConverterClientPackageDataFromDto(IFileSystemOperations fileSystemOperations, IDialogServiceStandard dialogServiceStandard)
         {
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _dialogServiceStandard = dialogServiceStandard ?? throw new ArgumentNullException(nameof(dialogServiceStandard));
         }
 
@@ -134,7 +127,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
 
             string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
             string convertingDirectoryName = Path.Combine(fileDirectoryName ?? throw new InvalidOperationException(nameof(fileDirectoryName)),
-                                                          _projectSettings.DirectoryForSavingConvertedFiles);
+                                                          ProjectSettings.DirectoryForSavingConvertedFiles);
 
             var fileConvertErrorTypeTasks = fileDataResponse.FilesDataSource?.
                                             Select(fileData => SaveFileDataSourceFromDtoResponse(fileData, convertingDirectoryName));
