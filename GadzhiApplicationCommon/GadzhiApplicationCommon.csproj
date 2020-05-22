@@ -69,7 +69,9 @@
     <Compile Include="Models\Implementation\Errors\ResultApplication.cs" />
     <Compile Include="Models\Implementation\Errors\ResultAppValue.cs" />
     <Compile Include="Models\Implementation\Errors\ResultAppCollection.cs" />
+    <Compile Include="Models\Implementation\FilesConvert\ConvertingSettingsApplication.cs" />
     <Compile Include="Models\Implementation\LibraryData\MicrostationDataFile.cs" />
+    <Compile Include="Models\Implementation\LibraryData\PersonInformation.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureFileData.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureFile.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureLibrary.cs" />
@@ -80,6 +82,8 @@
     <Compile Include="Models\Implementation\StampCollections\LibraryElement.cs" />
     <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampDepartmentType.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampSettings.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampField.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampIdentifier.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampSignature.cs" />

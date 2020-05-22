@@ -7,6 +7,7 @@ using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Helpers;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
@@ -40,14 +41,14 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Список имен
         /// </summary>
-        private List<string> _fullNames;
+        private List<PersonInformation> _fullNames;
 
         /// <summary>
         /// Список имен
         /// </summary>
-        private List<string> FullNames => _fullNames ??= _signaturesLibrary.Values.
-                                                         Select(signature => signature.PersonName.ToLowerCaseCurrentCulture()).
-                                                         ToList();
+        private List<PersonInformation> PersonsInformation => _fullNames ??= _signaturesLibrary.Values.
+                                                                    Select(signature => PersonInformation.GetFromFullName(signature.PersonName)).
+                                                                    ToList();
 
         /// <summary>
         /// Найти подпись по идентификатору
@@ -66,9 +67,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Найти подпись по имени
         /// </summary>
-        public ISignatureLibrary FindByFullName(string fullName) =>
-            fullName.ToLowerCaseCurrentCulture().
-            Map(fullNameLower => FullNames.FindIndex(fullNamesDataBase => GetSurnameFromFullname(fullNamesDataBase) == fullNameLower)).
+        public ISignatureLibrary FindByFullName(string fullName, string department) =>
+            PersonsInformation.FindIndex(person => person.SurnameAndDepartmentEqual(fullName, department)).
+            WhereBad(foundIndex => foundIndex > -1,
+                badFunc: _ => PersonsInformation.FindIndex(person => person.SurnameEqual(fullName))).
             WhereContinue(foundIndex => foundIndex > -1,
                 okFunc: foundIndex => _signaturesLibrary.Values[foundIndex],
                 badFunc: foundIndex => null);
@@ -76,10 +78,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Найти подписи по именам
         /// </summary>
-        public IEnumerable<ISignatureLibrary> FindByFullNames(IEnumerable<string> fullNames) =>
-            fullNames?.Select(fullname => fullname.ToLowerCaseCurrentCulture()).
-            Map(fullNamesLower => fullNamesLower.Select(FindByFullName).
-                                                 Where(signature => signature != null));
+        public IEnumerable<ISignatureLibrary> FindByFullNames(IEnumerable<string> fullNames, string department = "") =>
+            fullNames.Select(fullName => FindByFullName(fullName, department)).
+                      Where(signature => signature != null);
 
         /// <summary>
         /// Получить случайную подпись
@@ -92,9 +93,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Найти подпись по имени или получить случайную
         /// </summary>
-        public IResultAppValue<ISignatureLibrary> FindByFullNameOrRandom(string fullName) =>
-            new ResultAppValue<ISignatureLibrary>(FindByFullName(fullName), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                                $"Подпись  по имени {fullName} не найдена")).
+        public IResultAppValue<ISignatureLibrary> FindByFullNameOrRandom(string fullName, string department) =>
+            new ResultAppValue<ISignatureLibrary>(FindByFullName(fullName, department), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                             $"Подпись  по имени {fullName} не найдена")).
                 ResultValueBadBind(_ => new ResultAppValue<ISignatureLibrary>(GetRandomSignature(),
                                                                              new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                   "База подписей пуста")));
@@ -102,10 +103,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Найти подпись по идентификатору или имени или получить случайную
         /// </summary>
-        public IResultAppValue<ISignatureLibrary> FindByIdOrFullNameOrRandom(string id, string fullName) =>
+        public IResultAppValue<ISignatureLibrary> FindByIdOrFullNameOrRandom(string id, string fullName, string department) =>
             new ResultAppValue<ISignatureLibrary>(FindById(id), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                     $"Подпись по идентификатору {id} не найдена")).
-            ResultValueBadBind(_ => FindByFullNameOrRandom(fullName)).
+            ResultValueBadBind(_ => FindByFullNameOrRandom(fullName, department)).
             ResultValueBadBind(_ => new ResultAppValue<ISignatureLibrary>(GetRandomSignature(),
                                                                           new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                "База подписей пуста")));
@@ -121,6 +122,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
             ToResultCollection();
 
         /// <summary>
+        /// Проверить отдел по его типу
+        /// </summary>
+        public string CheckDepartmentAccordingToType(string department, PersonDepartmentType departmentType) =>
+            departmentType switch
+            {
+                PersonDepartmentType.ChiefProject => "ГИПы",
+                _ => department,
+            };
+
+        /// <summary>
         /// Связать значения подписей с базой данных один к одному
         /// </summary>
         private static IResultAppCollection<ISignatureFile> SignatureLeftJoinWithDataBase(IEnumerable<string> personIds, IList<ISignatureFile> signaturesFile) =>
@@ -130,11 +141,5 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
                                                                                                            "Подпись в базе не найдена"))).
             Select(signatureResult => (IResultAppValue<ISignatureFile>)signatureResult).
             ToResultCollection();
-
-        /// <summary>
-        /// Получить фамилию из полной строки базы данных
-        /// </summary>
-        private static string GetSurnameFromFullname(string fullName) =>
-            fullName?.Split(null)[0] ?? String.Empty;
     }
 }

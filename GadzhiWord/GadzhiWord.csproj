@@ -125,8 +125,9 @@
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\StampCollections\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampChangeSignatureWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\AdditionalSettingsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPersonSignatureWord.cs" />

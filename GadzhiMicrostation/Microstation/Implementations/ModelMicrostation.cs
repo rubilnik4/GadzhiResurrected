@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations
@@ -80,12 +81,14 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        public IEnumerable<IStamp> FindStamps(int modelIndex) =>
+        public IEnumerable<IStamp> FindStamps(int modelIndex, ConvertingSettingsApplication convertingSettings) =>
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
             Where(element => StampFieldMain.IsStampName(element.AsCellElement.Name)).
             Select((element, stampIndex) => 
                        new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
-                           Map(cellMicrostation => new StampMainMicrostation(cellMicrostation, new StampIdentifier(modelIndex, stampIndex),
+                           Map(cellMicrostation => new StampMainMicrostation(cellMicrostation,
+                                                                             new StampSettings(new StampIdentifier(modelIndex, stampIndex),
+                                                                                               convertingSettings.Department),
                                                                              ApplicationMicrostation.MicrostationResources.SignaturesLibrarySearching))).
             Cast<IStamp>();
 

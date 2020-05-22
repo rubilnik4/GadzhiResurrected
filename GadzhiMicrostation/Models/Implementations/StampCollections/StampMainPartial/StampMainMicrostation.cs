@@ -36,8 +36,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         private IResultAppCollection<IStampApprovalMicrostation> StampApprovalsMicrostation { get; }
 
-        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id, SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(stampCellElement, id, signaturesLibrarySearching)
+        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings, 
+                                     SignaturesLibrarySearching signaturesLibrarySearching)
+            : base(stampCellElement, stampSettings, signaturesLibrarySearching)
         {
             StampPersonsMicrostation = GetStampPersonRows();
             StampChangesMicrostation = GetStampChangeRows(StampPersonsMicrostation.Value?.FirstOrDefault());
@@ -105,7 +106,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
                                                                                     IList<string> libraryIds) =>
             signatures.
             Select(signature => SignaturesLibrarySearching.
-                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonName).
+                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonName, StampSettings.Department).
                                 ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
                                     okFunc: signatureLibrary => signatureLibrary,
                                     badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 

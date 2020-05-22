@@ -1,79 +1,28 @@
-﻿using GadzhiApplicationCommon.Extensions.Collection;
+﻿using System;
 using GadzhiApplicationCommon.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GadzhiCommon.Extensions.Collection;
-
-// ReSharper disable All
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
-    /// <summary>
-    /// Дополнительные параметры штампа
-    /// </summary>
-    public static class StampSettingsWord
+    public class StampSettingsWord: StampSettings
     {
-        /// <summary>
-        /// Тип штампа в строковом обозначении
-        /// </summary>
-        public static IReadOnlyDictionary<StampType, string> StampTypeToString => new Dictionary<StampType, string>()
+        public StampSettingsWord(StampIdentifier id, string department, string paperSize, OrientationType orientationType)
+            :base(id, department)
         {
-            { StampType.Main, "Основной"},
-            { StampType.Additional, "Дополнительный"},
-        };
+            PaperSize = !String.IsNullOrWhiteSpace(paperSize)
+                      ? paperSize
+                      : throw new ArgumentNullException(nameof(paperSize));
+            Orientation = orientationType;
+        }
 
         /// <summary>
-        /// Маркеры основного штампа
+        /// Формат
         /// </summary>
-        public static IReadOnlyList<string> MarkersMainStamp => new List<string>()
-        {
-            "Разраб",
-            "Исполн",
-            "Составил",
-        };
+        public string PaperSize { get; }
 
         /// <summary>
-        /// Маркеры дополнительного штампа
+        /// Тип расположения штампа
         /// </summary>
-        public static IReadOnlyList<string> MarkersAdditionalStamp => new List<string>()
-        {
-            "Лист",
-        };
-
-        /// <summary>
-        /// Маркеры штампа
-        /// </summary>
-        public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.
-                                                            UnionNotNull(MarkersAdditionalStamp).
-                                                            ToList();
-
-        /// <summary>
-        /// Маркеры типа действия в строке с ответственным лицом
-        /// </summary>
-        public static IReadOnlyList<string> MarkersActionTypeSignature => new List<string>()
-        {
-            "Разраб",
-            "Исполн",
-            "Составил",
-            "Проверил",
-            "Вед.инж",
-            "Нач.гр",
-            "Гл.спец",
-            "Нач.сек",
-            "Нач.отд",
-            "Н.конт",
-            "ГИП"
-        };
-
-        /// <summary>
-        /// Маркеры строки заголовка изменений
-        /// </summary>
-        public static IReadOnlyList<string> MarkersChangeHeader => new List<string>()
-        {
-            "Изм."            
-        };
+        public OrientationType Orientation { get; }
     }
 }

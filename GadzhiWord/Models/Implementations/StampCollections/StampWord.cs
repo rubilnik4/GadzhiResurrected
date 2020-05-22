@@ -19,15 +19,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampWord : Stamp
     {
-        protected StampWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType, 
+        protected StampWord(ITableElement tableStamp, StampSettingsWord stampSettingsWord,
                             SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(id)
+            : base(stampSettingsWord)
         {
             TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
-            PaperSize = !String.IsNullOrWhiteSpace(paperSize) 
-                        ? paperSize
-                        : throw new ArgumentNullException(nameof(paperSize));
-            Orientation = orientationType;
+            PaperSize = stampSettingsWord?.PaperSize ?? throw new ArgumentNullException(nameof(stampSettingsWord));
+            Orientation = stampSettingsWord.Orientation;
             SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
         }
 
@@ -44,7 +42,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Наименование
         /// </summary>
-        public override string Name => $"{StampSettingsWord.StampTypeToString[StampType]}";
+        public override string Name => $"{AdditionalSettingsWord.StampTypeToString[StampType]}";
 
         /// <summary>
         /// Формат

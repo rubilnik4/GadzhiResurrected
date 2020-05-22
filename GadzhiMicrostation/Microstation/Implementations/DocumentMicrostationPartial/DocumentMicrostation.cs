@@ -39,9 +39,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         {
             _application = application ?? throw new ArgumentNullException(nameof(application));
             ApplicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
-
-            ModelsMicrostation = GetModelsMicrostation();
-            StampContainer = new StampContainer(FindStamps(ModelsMicrostation), DesignFile.FullName);
         }
 
         /// <summary>
@@ -52,7 +49,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Путь к файлу
         /// </summary>
-        public string FullName => DesignFile?.FullName;
+        private string _fullName;
+
+        /// <summary>
+        /// Путь к файлу
+        /// </summary>
+        public string FullName => _fullName ??= DesignFile.FullName;
 
         /// <summary>
         /// Загрузился ли файл
@@ -62,7 +64,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
-        public IList<IModelMicrostation> ModelsMicrostation { get; }
+        private IList<IModelMicrostation> _modelsMicrostation;
+
+        /// <summary>
+        /// Модели и листы в текущем файле
+        /// </summary>
+        public IList<IModelMicrostation> ModelsMicrostation  =>_modelsMicrostation ??= GetModelsMicrostation();
 
         /// <summary>
         /// Сохранить файл

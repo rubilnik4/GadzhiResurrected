@@ -15,15 +15,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// </summary>
     public abstract class Stamp : IStamp
     {
-        protected Stamp(StampIdentifier id)
+        protected Stamp(StampSettings stampSettings)
         {
-            Id = id;
+           
+            StampSettings = stampSettings ?? throw new ArgumentNullException(nameof(stampSettings));
         }
 
         /// <summary>
-        /// Идентификатор штампа
+        /// Параметры штампа
         /// </summary>
-        public StampIdentifier Id { get; }
+        public StampSettings StampSettings { get; }
 
         /// <summary>
         /// Наименование

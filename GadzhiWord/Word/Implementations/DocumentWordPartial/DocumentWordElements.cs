@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 
@@ -22,21 +23,29 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
     public partial class DocumentWord : IDocumentLibraryElements
     {
         /// <summary>
+        /// Загруженные штампы
+        /// </summary>
+        private IStampContainer _stampContainer;
+
+        /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        public IStampContainer StampContainer { get; }
+        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings)=>
+            _stampContainer ??= new StampContainer(FindStamps(convertingSettings), FullName);
 
         /// <summary>
         /// Найти таблицы в колонтитулах
         /// </summary>
-        private IEnumerable<IStamp> FindStamps() => 
+        private IEnumerable<IStamp> FindStamps(ConvertingSettingsApplication convertingSettings) =>
             _document.Sections.ToIEnumerable().
             SelectMany(section => section.Footers.ToIEnumerable()).
             SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
             Select(table => new TableElementWord(table, ToOwnerWord())).
             Where(CheckFooterIsStamp).
-            Select((tableElement, stampIndex) => new StampMainWord(tableElement, new StampIdentifier(stampIndex),
-                                                                   PaperSize, OrientationType,
+            Select((tableElement, stampIndex) => new StampMainWord(tableElement,
+                                                                   new StampSettingsWord(new StampIdentifier(stampIndex),
+                                                                                         convertingSettings?.Department, 
+                                                                                         PaperSize, OrientationType),
                                                                    ApplicationWord.ResourcesWord.SignaturesLibrarySearching));
 
         /// <summary>
@@ -45,7 +54,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         private static bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
                                                                        Select(cell => cell.Text.PrepareCellTextToCompare()).
-                                                                       Any(cellText => StampSettingsWord.MarkersMainStamp.MarkerContain(cellText));
+                                                                       Any(cellText => AdditionalSettingsWord.MarkersMainStamp.MarkerContain(cellText));
 
         /// <summary>
         /// Преобразовать к виду родительского элемента

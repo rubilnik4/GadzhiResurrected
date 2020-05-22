@@ -132,6 +132,7 @@
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Extensions\ColorPrintExtensions.cs" />
     <Compile Include="Extensions\ErrorExtensionsFromApplication.cs" />
+    <Compile Include="Extensions\ConvertingSettingsExtensions.cs" />
     <Compile Include="Extensions\ResultExtensionsFromApplication.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\NativeMethods .cs" />

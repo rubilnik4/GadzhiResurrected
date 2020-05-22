@@ -18,8 +18,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
-        protected StampMicrostation(ICellElementMicrostation stampCellElement, StampIdentifier id, SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(id)
+        protected StampMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings, 
+                                    SignaturesLibrarySearching signaturesLibrarySearching)
+            : base(stampSettings)
         {
             StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
             SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));

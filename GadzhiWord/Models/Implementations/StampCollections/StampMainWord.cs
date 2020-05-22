@@ -34,9 +34,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
 
-        public StampMainWord(ITableElement tableStamp, StampIdentifier id, string paperSize, OrientationType orientationType,
+        public StampMainWord(ITableElement tableStamp, StampSettingsWord stampSettingsWord,
                              SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(tableStamp, id, paperSize, orientationType, signaturesLibrarySearching)
+            : base(tableStamp, stampSettingsWord, signaturesLibrarySearching)
         {
             StampPersonsWord = GetStampPersonSignatures();
             StampChangesWord = GetStampChangeSignatures(StampPersonsWord.Value?.FirstOrDefault());
@@ -112,8 +112,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private IResultAppValue<ISignatureLibrary> GetSignatureInformationByPersonName(string personName) =>
-            SignaturesLibrarySearching.FindByFullNameOrRandom(personName).
+        private IResultAppValue<ISignatureLibrary> GetSignatureInformation(string personName, string department, 
+                                                                           PersonDepartmentType departmentType) =>
+            SignaturesLibrarySearching.CheckDepartmentAccordingToType(department, departmentType).
+            Map(departmentChecked => SignaturesLibrarySearching.FindByFullNameOrRandom(personName, departmentChecked)).
             ResultValueOk(signature => new SignatureLibrary(signature.PersonId, signature.PersonName));
 
         /// <summary>
@@ -137,7 +139,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Получить класс с ответственным лицом и подписью по строке Word
         /// </summary>
         private IResultAppValue<IStampPersonWord> GetStampPersonWordByRow(IRowElement personRow) =>
-            GetSignatureInformationByPersonName(personRow.CellsElementWord[1].Text).
+            CheckFieldType.GetDepartmentType(personRow.CellsElementWord[0].Text).
+            Map(departmentType => GetSignatureInformation(personRow.CellsElementWord[1].Text, StampSettings.Department, departmentType)).
             ResultValueOk(signature => new StampPersonWord(new StampFieldWord(personRow.CellsElementWord[0], StampFieldType.PersonSignature),
                                                            new StampFieldWord(personRow.CellsElementWord[1], StampFieldType.PersonSignature),
                                                            new StampFieldWord(personRow.CellsElementWord[2], StampFieldType.PersonSignature),

@@ -3,6 +3,7 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
+using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
 {
@@ -44,7 +45,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        IEnumerable<IStamp> FindStamps(int modelIndex);
+        IEnumerable<IStamp> FindStamps(int modelIndex, ConvertingSettingsApplication convertingSettings);
 
         /// <summary>
         /// Удалить элемент

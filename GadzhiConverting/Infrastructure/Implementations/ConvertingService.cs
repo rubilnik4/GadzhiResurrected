@@ -218,7 +218,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 FirstOrDefault(fileData => !packageServer.IsCompleted && !fileData.IsCompleted).
                 Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(FileConvertErrorType.ArgumentNullReference, nameof(IFileDataServer)))).
                 ResultOkBad(
-                    okFunc: fileData => ConvertingByCountLimit(fileData).
+                    okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
                                         MapAsync(packageServer.ChangeFileDataServer).
                                         MapAsyncBind(SendIntermediateResponse).
                                         MapAsyncBind(ConvertingFilesData),
@@ -228,12 +228,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл до превышения лимита
         /// </summary>       
-        private async Task<IFileDataServer> ConvertingByCountLimit(IFileDataServer fileDataServer) =>
+        private async Task<IFileDataServer> ConvertingByCountLimit(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
             await fileDataServer.WhereOkAsync(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
-                        ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData)).
+                        ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData, convertingSettings)).
                         ResultValueBad(fileDataTask => Task.FromResult(fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1))).
-                        ResultValueBad(fileDataTask => fileDataTask.VoidAsync(ConvertingByCountLimit)).
+                        ResultValueBad(fileDataTask => fileDataTask.VoidAsync(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, 
+                                                                                                                            convertingSettings))).
                         Value);
 
         /// <summary>

@@ -47,22 +47,22 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл
         /// </summary>
-        public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer) =>
+        public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
             await fileDataServer.
             Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             WhereContinueAsyncBind(fileData => fileData.IsValidByAttemptingCount,
-                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, ProjectSettings.PrintersInformation)),
+                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, convertingSettings, ProjectSettings.PrintersInformation)),
                 badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
 
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
+        private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IConvertingSettings convertingSettings, IPrintersInformation printersInformation) =>
             LoadAndSaveDocument(fileDataServer).
             ResultValueOkBind(document =>
                 GetSavedFileDataSource(document, fileDataServer).
                 ToResultCollection().
-                Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, printersInformation)).
+                Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, convertingSettings, printersInformation)).
                 Map(filesData => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
                                  Map(closeResult => filesData.ConcatErrors(closeResult.Errors)).
                                  ToResultCollection())).
@@ -73,10 +73,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Печать и экспорт файла
         /// </summary>
         private IResultCollection<IFileDataSourceServer> MakeConvertingFileActions(IResultCollection<IFileDataSourceServer> fileDataSourceServer,
-                                                                                   IDocumentLibrary documentLibrary,
-                                                                                   IFileDataServer fileDataServer, IPrintersInformation printersInformation) =>
+                                                                                   IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
+                                                                                   IConvertingSettings convertingSettings, IPrintersInformation printersInformation) =>
             fileDataSourceServer.
-            ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, printersInformation).
+            ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, convertingSettings, printersInformation).
                                                           Map(saveResult.ConcatResult).
                                                           Map(filesData => ExportFile(documentLibrary, fileDataServer).
                                                                            Map(filesData.ConcatResultValue))).
@@ -116,12 +116,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Создать PDF
         /// </summary>
         private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
-                                                                   IPrintersInformation printersInformation) =>
+                                                                   IConvertingSettings convertingSettings, IPrintersInformation printersInformation) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtension.Pdf)).
             ResultValueOkBind(filePdfPath => _applicationConverting.CreatePdfFile(documentLibrary, fileDataServer.ChangeServerPath(filePdfPath),
-                                                                                  fileDataServer.ColorPrint,
+                                                                                  convertingSettings, fileDataServer.ColorPrint,
                                                                                   printersInformation?.PrintersPdf.FirstOrDefault())).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
             ToResultCollection();

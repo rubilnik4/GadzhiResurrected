@@ -17,9 +17,9 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     public interface IStamp
     {
         /// <summary>
-        /// Идентификатор штампа
+        /// Параметры штампа
         /// </summary>
-        public StampIdentifier Id { get; }
+        StampSettings StampSettings { get; }
 
         /// <summary>
         /// Наименование

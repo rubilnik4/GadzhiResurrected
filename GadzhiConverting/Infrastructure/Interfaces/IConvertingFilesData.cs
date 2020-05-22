@@ -9,6 +9,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Запустить конвертирование файла
         /// </summary>
-        Task<IFileDataServer> Converting(IFileDataServer fileDataServer);
+        Task<IFileDataServer> Converting(IFileDataServer fileDataServer, IConvertingSettings convertingSettings);
     }
 }

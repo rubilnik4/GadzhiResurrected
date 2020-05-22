@@ -32,14 +32,15 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
         private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
+                                                                             IConvertingSettings convertingSettings,
                                                                              ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-            documentLibrary.StampContainer.Stamps.ToResultCollectionFromApplication().
-            ResultValueOkBind(stamps => stamps.Select(stamp =>
-                                        CreatePdfWithSignatures(documentLibrary, stamp, 
-                                                                new FilePath(GetFilePathWithStampIndex(filePath.FilePathServer, stamp.Id.ToFilePathPrefix()),
-                                                                             GetFilePathWithStampIndex(filePath.FilePathClient, stamp.Id.ToFilePathPrefix())),
-                                                                colorPrint, pdfPrinterInformation)).
-                                        ToList().
+            documentLibrary.GetStampContainer(convertingSettings.ToApplication()).Stamps.ToResultCollectionFromApplication().
+            ResultValueOkBind(stamps => 
+                stamps.Select(stamp =>
+                CreatePdfWithSignatures(documentLibrary, stamp, 
+                                        new FilePath(GetFilePathWithStampIndex(filePath.FilePathServer, stamp.StampSettings.Id.ToFilePathPrefix()),
+                                                     GetFilePathWithStampIndex(filePath.FilePathClient, stamp.StampSettings.Id.ToFilePathPrefix())),
+                                        colorPrint, pdfPrinterInformation)).ToList().
                                         ToResultCollection()).
             ToResultCollection();
 

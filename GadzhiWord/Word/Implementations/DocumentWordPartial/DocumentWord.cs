@@ -37,14 +37,17 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         {
             _document = document ?? throw new ArgumentNullException(nameof(document));
             ApplicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
-
-            StampContainer = new StampContainer(FindStamps(), document.FullName);
         }
 
         /// <summary>
         /// Путь к файлу
         /// </summary>
-        public string FullName => _document?.FullName;
+        private string _fullName;
+
+        /// <summary>
+        /// Путь к файлу
+        /// </summary>
+        public string FullName => _fullName ??= _document?.FullName;
 
         /// <summary>
         /// Загрузился ли файл
@@ -54,14 +57,25 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Формат
         /// </summary>
-        private string PaperSize => WordPaperSizeToString.PaperSizeToString(_document.PageSetup.PaperSize);
+        private string _paperSize;
 
         /// <summary>
         /// Формат
         /// </summary>
-        private OrientationType OrientationType => _document.PageSetup.Orientation == WdOrientation.wdOrientLandscape ?
-                                                    OrientationType.Landscape :
-                                                    OrientationType.Portrait;
+        private string PaperSize => _paperSize ??= WordPaperSizeToString.PaperSizeToString(_document.PageSetup.PaperSize);
+
+        /// <summary>
+        /// Формат
+        /// </summary>
+        private OrientationType? _orientationType;
+
+        /// <summary>
+        /// Формат
+        /// </summary>
+        private OrientationType OrientationType => 
+            _orientationType ??= _document.PageSetup.Orientation == WdOrientation.wdOrientLandscape 
+                                 ? OrientationType.Landscape 
+                                 : OrientationType.Portrait;
 
         /// <summary>
         /// Сохранить файл

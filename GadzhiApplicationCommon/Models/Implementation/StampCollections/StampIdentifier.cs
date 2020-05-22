@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// <summary>
     /// Идентификатор штампа
     /// </summary>
-    public readonly struct StampIdentifier : IEquatable<StampIdentifier>
+    public class StampIdentifier : IEquatable<StampIdentifier>
     {
         public StampIdentifier(int stampIndex)
             : this(0, stampIndex) { }
@@ -53,11 +53,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 
         public override bool Equals(object obj) => obj != null && Equals((StampIdentifier)obj);
 
-        public bool Equals(StampIdentifier other) => Id == other.Id;
+        public bool Equals(StampIdentifier other) => Id == other?.Id;
 
         public override int GetHashCode() => Id.GetHashCode();
 
-        public static bool operator ==(StampIdentifier left, StampIdentifier right) => left.Equals(right);
+        public static bool operator ==(StampIdentifier left, StampIdentifier right) => left?.Equals(right) == true;
 
         public static bool operator !=(StampIdentifier left, StampIdentifier right) => !(left == right);
         #endregion
