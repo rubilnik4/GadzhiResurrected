@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
-using GadzhiDTOServer.TransferModels.Signatures;
+using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Interfaces.Converters
 {

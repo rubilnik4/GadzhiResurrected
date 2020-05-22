@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiDAL.Services.Interfaces
@@ -7,12 +8,17 @@ namespace GadzhiDAL.Services.Interfaces
     /// <summary>
     /// Получение и запись из БД подписей и идентификаторов
     /// </summary>
-    public interface ISignaturesServerService
+    public interface ISignaturesService
     {
         /// <summary>
         /// Загрузить имена из базы данных
         /// </summary>      
         Task<IList<SignatureDto>> GetSignaturesNames();
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>      
+        Task<IList<string>> GetSignaturesDepartments();
 
         /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам

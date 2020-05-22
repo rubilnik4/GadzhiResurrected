@@ -1,7 +1,8 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
-using Microsoft.VisualStudio.Threading;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
 {
@@ -34,5 +35,15 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
         /// Отмена операции по номеру ID
         /// </summary>       
         Task AbortConvertingById(Guid id);
+
+        /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>      
+        Task<IList<SignatureDto>> GetSignaturesNames();
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>  
+        Task<IList<string>> GetSignaturesDepartments();
     }
 }

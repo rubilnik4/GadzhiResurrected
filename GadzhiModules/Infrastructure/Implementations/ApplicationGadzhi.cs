@@ -16,7 +16,6 @@ using System.Windows;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
@@ -270,6 +269,12 @@ namespace GadzhiModules.Infrastructure.Implementations
             _statusProcessingSubscriptions?.Dispose();
             _packageInfoProject?.ChangeAllFilesStatusAndMarkError();
         }
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>
+        public async Task<IList<string>> GetSignaturesDepartments() =>
+            await _fileConvertingClientService.Operations.GetSignaturesDepartments();
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования

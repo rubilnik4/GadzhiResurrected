@@ -7,6 +7,7 @@ using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.DataFile;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 using NHibernate.Linq;
 using Unity;
@@ -16,14 +17,14 @@ namespace GadzhiDAL.Services.Implementations
     /// <summary>
     /// Получение и запись из БД подписей и идентификаторов
     /// </summary>
-    public class SignaturesServerService : ISignaturesServerService
+    public class SignaturesService : ISignaturesService
     {
         /// <summary>
         ///Контейнер зависимостей
         /// </summary>
         private readonly IUnityContainer _container;
 
-        public SignaturesServerService(IUnityContainer container)
+        public SignaturesService(IUnityContainer container)
         {
             _container = container ?? throw new ArgumentNullException(nameof(container));
         }
@@ -41,6 +42,25 @@ namespace GadzhiDAL.Services.Implementations
             await unitOfWork.CommitAsync();
 
             return signaturesDto;
+        }
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>      
+        public async Task<IList<string>> GetSignaturesDepartments()
+        {
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+
+            var departments = await unitOfWork.Session.Query<SignatureEntity>().
+                                               Select(signature => signature.PersonInformation.Department).
+                                               Distinct().
+                                               ToListAsync();
+            await unitOfWork.CommitAsync();
+
+            return departments.Select(department => department.Trim()).
+                               Distinct().
+                               OrderBy(department => department).
+                               ToList();
         }
 
         /// <summary>

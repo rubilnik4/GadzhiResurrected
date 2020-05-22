@@ -5,6 +5,10 @@ using Microsoft.VisualStudio.Threading;
 using System;
 using System.Threading.Tasks;
 using GadzhiDAL.Services.Interfaces;
+using System.Collections;
+using System.Collections.Generic;
+using GadzhiDTOBase.TransferModels.Signatures;
+using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
@@ -18,9 +22,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// </summary>
         private readonly IFilesDataClientService _filesDataClientService;
 
-        public ApplicationClientConverting(IFilesDataClientService filesDataClientService)
+        /// <summary>
+        /// Сервис для добавления и получения данных о подписях
+        /// </summary>
+        private readonly ISignaturesService _signaturesService;
+
+        public ApplicationClientConverting(IFilesDataClientService filesDataClientService, ISignaturesService signaturesService)
         {
-            _filesDataClientService = filesDataClientService;
+            _filesDataClientService = filesDataClientService ?? throw new ArgumentNullException(nameof(filesDataClientService));
+            _signaturesService = signaturesService ?? throw new ArgumentNullException(nameof(signaturesService));
         }
 
         /// <summary>
@@ -63,5 +73,15 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// Отмена операции по номеру ID
         /// </summary>       
         public async Task AbortConvertingById(Guid id) => await _filesDataClientService.AbortConvertingById(id);
+
+        /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>      
+        public async Task<IList<SignatureDto>> GetSignaturesNames() => await _signaturesService.GetSignaturesNames();
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>  
+        public async Task<IList<string>> GetSignaturesDepartments() => await _signaturesService.GetSignaturesDepartments();
     }
 }

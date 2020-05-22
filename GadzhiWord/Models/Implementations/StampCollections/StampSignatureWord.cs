@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 
@@ -19,11 +20,23 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureWord : StampSignature<IStampFieldWord>, IStampSignatureWord
     {
-        protected StampSignatureWord(IStampFieldWord signature)
+        protected StampSignatureWord(IStampFieldWord signature,  ISignatureLibrary signatureLibrary)
         {
             Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                             "Подпись не инициализирована"));
+            PersonId = signatureLibrary?.PersonId ?? throw new ArgumentNullException(nameof(signatureLibrary));
+            PersonInformation = signatureLibrary.PersonInformation;
         }
+
+        /// <summary>
+        /// Идентификатор личности
+        /// </summary>    
+        public override string PersonId { get; }
+
+        /// <summary>
+        /// Ответственное лицо
+        /// </summary>    
+        public override PersonInformation PersonInformation { get; }
 
         /// <summary>
         /// Подпись

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace GadzhiDTOServer.TransferModels.Signatures
+namespace GadzhiDTOBase.TransferModels.Signatures
 {
     /// <summary>
     /// Идентификатор личности с подписью. Трансферная модель
@@ -18,7 +18,7 @@ namespace GadzhiDTOServer.TransferModels.Signatures
         /// Фамилия
         /// </summary>
         [DataMember]
-        public string FullName { get; set; }
+        public PersonInformationDto PersonInformation { get; set; }
 
         /// <summary>
         /// Подпись в формате Jpeg

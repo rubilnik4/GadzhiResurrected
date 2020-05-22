@@ -26,7 +26,7 @@ namespace GadzhiWcfHost.DependencyInjection
             container
                 .RegisterType<IFileConvertingClientService, FileConvertingClientService>(new HierarchicalLifetimeManager())
                 .RegisterType<IFileConvertingServerService, FileConvertingServerService>(new HierarchicalLifetimeManager())
-                .RegisterType<ISignaturesServerService, SignaturesServerService>(new HierarchicalLifetimeManager())
+                .RegisterType<ISignaturesService, SignaturesService>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
 

@@ -40,6 +40,22 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         public string Department { get; }
 
         /// <summary>
+        /// Полная информация
+        /// </summary>
+        public string FullName => $"{Surname} {Name} {Patronymic}".Trim();
+
+        /// <summary>
+        /// Полная информация
+        /// </summary>
+        public string FullInformation => $"{FullName} {Department}".Trim();
+
+        /// <summary>
+        /// Загружена ли информация о пользователе полностью
+        /// </summary>
+        public bool HasFullInformation => !Surname.IsNullOrWhiteSpace() && !Name.IsNullOrWhiteSpace() &&
+                                          !Patronymic.IsNullOrWhiteSpace() && !Department.IsNullOrWhiteSpace();
+
+        /// <summary>
         /// Проверка фамилии 
         /// </summary>
         public bool SurnameEqual(string surname) => String.Equals(Surname, surname, StringComparison.CurrentCultureIgnoreCase);

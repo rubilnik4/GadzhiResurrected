@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ConvertingSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
-using Prism.Mvvm;
+using Nito.AsyncEx;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -18,9 +17,17 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private readonly IConvertingSettings _convertingSettings;
 
-        public ConvertingSettingsViewModel(IProjectSettings projectSettings)
+        /// <summary>
+        /// Слой приложения, инфраструктура
+        /// </summary>
+        //private readonly IApplicationGadzhi _applicationGadzhi;
+
+        public ConvertingSettingsViewModel(IProjectSettings projectSettings, IApplicationGadzhi applicationGadzhi)
         {
+            if (applicationGadzhi == null) throw new ArgumentNullException(nameof(applicationGadzhi));
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
+
+            Departments = NotifyTaskCompletion.Create(applicationGadzhi.GetSignaturesDepartments());
         }
 
         /// <summary>
@@ -40,6 +47,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Отделы
         /// </summary>
-        public IReadOnlyList<string> Departments => ConvertingSettings.Departments;
+        public INotifyTaskCompletion<IList<string>> Departments { get; }
     }
 }

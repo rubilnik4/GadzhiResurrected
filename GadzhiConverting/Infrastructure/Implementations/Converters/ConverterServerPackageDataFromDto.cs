@@ -51,7 +51,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать параметры конвертации из трансферной модели
         /// </summary>
-        private IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) =>
+        private static IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) =>
             (convertingSettingsRequest != null)
                 ? new ConvertingSettings(convertingSettingsRequest.Department)
                 : throw new ArgumentNullException(nameof(convertingSettingsRequest));

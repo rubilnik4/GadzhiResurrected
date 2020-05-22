@@ -8,13 +8,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// </summary>
     public class SignatureLibrary: ISignatureLibrary
     {
-        public SignatureLibrary(string id)
-            :this(id, String.Empty) { }
 
-        public SignatureLibrary(string personId, string personName)
+        public SignatureLibrary(string personId, PersonInformation personInformation)
         {
             PersonId = personId ?? throw new ArgumentNullException(nameof(personId));
-            PersonName = personName ?? throw new ArgumentNullException(nameof(personName));
+            PersonInformation = personInformation;
         }
 
         /// <summary>
@@ -25,6 +23,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Имя 
         /// </summary>
-        public string PersonName { get; }
+        public PersonInformation PersonInformation { get; }
     }
 }

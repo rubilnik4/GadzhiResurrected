@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
-using GadzhiMicrostation.Microstation.Implementations.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections
@@ -18,18 +16,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public class StampApprovalMicrostation : StampSignatureMicrostation, IStampApprovalMicrostation
     {
-        public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval,
-                                                  IStampFieldMicrostation responsiblePerson,
-                                                  IStampFieldMicrostation dateSignature,
-                                                  Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+        public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
+                                         IStampFieldMicrostation dateSignature,
+                                         Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(departmentApproval, responsiblePerson, dateSignature, insertSignatureFunc,
                    GetNotInitializedSignature(responsiblePerson.ElementStamp.AsTextElementMicrostation.Text))
         { }
 
         public StampApprovalMicrostation(IStampFieldMicrostation departmentApproval, IStampFieldMicrostation responsiblePerson,
-                                                  IStampFieldMicrostation dateSignature,
-                                                  Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
-                                                  IResultAppValue<IStampFieldMicrostation> signature)
+                                         IStampFieldMicrostation dateSignature,
+                                         Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                         IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
@@ -75,7 +72,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public override string PersonName => ResponsiblePersonElement.Text;
+        public override PersonInformation PersonInformation => new PersonInformation(ResponsiblePersonElement.Text,
+                                                                                     String.Empty, String.Empty,
+                                                                                     DepartmentApprovalElement.Text);
 
         /// <summary>
         /// Вставить подпись

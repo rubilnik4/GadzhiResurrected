@@ -17,7 +17,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Параметры конвертации
         /// </summary>
-        public IConvertingSettings ConvertingSettings { get; private set; }
+        public IConvertingSettings ConvertingSettings { get; }
 
         /// <summary>
         /// Время через которое осуществляются промежуточные запросы к серверу для проверки статуса файлов
@@ -28,11 +28,5 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Имя папка, куда копируются отконвертированные файлы
         /// </summary>
         public static string DirectoryForSavingConvertedFiles => "Converted";
-
-        /// <summary>
-        /// Обновить параметры конвертации
-        /// </summary>
-        public void UpdateConvertingSettings(string department) =>
-            ConvertingSettings = new ConvertingSettings(department);
     }
 }

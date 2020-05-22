@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDAL.Services.Implementations;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using System;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using GadzhiDTOServer.TransferModels.Signatures;
 using GadzhiDAL.Entities.Signatures;
 using System.Linq;
+using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Server
 {
@@ -25,12 +25,12 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Сервис для добавления и получения данных о подписях
         /// </summary>
-        private readonly ISignaturesServerService _signaturesServerService;
+        private readonly ISignaturesService _signaturesService;
 
-        public ApplicationServerConverting(IFilesDataServerService filesDataServerService, ISignaturesServerService signaturesServerService)
+        public ApplicationServerConverting(IFilesDataServerService filesDataServerService, ISignaturesService signaturesService)
         {
             _filesDataServerService = filesDataServerService ?? throw new ArgumentNullException(nameof(filesDataServerService));
-            _signaturesServerService = signaturesServerService ?? throw new ArgumentNullException(nameof(signaturesServerService));
+            _signaturesService = signaturesService ?? throw new ArgumentNullException(nameof(signaturesService));
         }
 
         /// <summary>
@@ -66,42 +66,42 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// Загрузить имена из базы данных
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignaturesNames() =>
-            await _signaturesServerService.GetSignaturesNames();
+            await _signaturesService.GetSignaturesNames();
 
         /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignatures(IList<string> ids) =>
-            await _signaturesServerService.GetSignatures(ids.Distinct().ToList());
+            await _signaturesService.GetSignatures(ids.Distinct().ToList());
 
         /// <summary>
         /// Загрузить подписи
         /// </summary>
         public async Task UploadSignatures(IList<SignatureDto> signaturesDto) =>
-            await _signaturesServerService.UploadSignatures(signaturesDto);
+            await _signaturesService.UploadSignatures(signaturesDto);
 
         /// <summary>
         /// Получить подписи Microstation из базы данных
         /// </summary>   
         public async Task<MicrostationDataFileDto> GetSignaturesMicrostation ()=>
-            await _signaturesServerService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
+            await _signaturesService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
 
         /// <summary>
         /// Получить штампы Microstation из базы данных
         /// </summary>   
         public async Task<MicrostationDataFileDto> GetStampsMicrostation() =>
-            await _signaturesServerService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_STAMPS_ID);
+            await _signaturesService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_STAMPS_ID);
 
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
         public async Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
-            await _signaturesServerService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
+            await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
 
         /// <summary>
         /// Загрузить штампы Microstation
         /// </summary>
         public async Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
-            await _signaturesServerService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_STAMPS_ID);
+            await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_STAMPS_ID);
     }
 }

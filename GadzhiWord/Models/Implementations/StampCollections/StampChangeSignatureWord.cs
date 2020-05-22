@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -21,11 +22,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public StampChangeWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots, IStampFieldWord typeOfChange,
                                IStampFieldWord documentChange, IStampFieldWord signature, IStampFieldWord dateChange,
                                ISignatureLibrary signatureLibrary)
-            : base(signature)
+            : base(signature, signatureLibrary)
         {
-            PersonId = signatureLibrary?.PersonId ?? throw new ArgumentNullException(nameof(signatureLibrary)); 
-            PersonName = signatureLibrary.PersonName;
-
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
@@ -57,15 +55,5 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Дата изменения
         /// </summary>
         public IStampFieldWord DateChange { get; }
-
-        /// <summary>
-        /// идентификатор личности
-        /// </summary>    
-        public override string PersonId { get; }
-
-        /// <summary>
-        /// Ответственное лицо
-        /// </summary>    
-        public override string PersonName { get; }
     }
 }

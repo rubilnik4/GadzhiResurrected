@@ -7,6 +7,7 @@ using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
+using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -58,7 +59,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private static ISignatureLibrary SignatureLibraryFromDto(SignatureDto signatureDto) =>
             (signatureDto != null)
-                ? new SignatureLibrary(signatureDto.Id, signatureDto.FullName)
+                ? new SignatureLibrary(signatureDto.Id, PersonInformationFromDto(signatureDto.PersonInformation))
                 : throw new ArgumentNullException(nameof(signatureDto));
 
         /// <summary>
@@ -70,7 +71,15 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             bool success = _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.Id, SignatureFile.SaveFormat),
                                                                   signatureDto.SignatureJpeg).Result;
             
-            return (success, new SignatureFile(signatureDto.Id, signatureDto.FullName, signatureFolder));
+            return (success, new SignatureFile(signatureDto.Id, PersonInformationFromDto(signatureDto.PersonInformation), signatureFolder));
         }
+
+        /// <summary>
+        /// Преобразовать информацию о пользователе из трансферной модели
+        /// </summary>
+        private static PersonInformation PersonInformationFromDto(PersonInformationDto personInformation) =>
+            (personInformation != null)
+                ? new PersonInformation(personInformation.Surname, personInformation.Name, personInformation.Patronymic, personInformation.Department)
+                : throw new ArgumentNullException(nameof(personInformation));
     }
 }

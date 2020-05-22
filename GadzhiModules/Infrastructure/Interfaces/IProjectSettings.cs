@@ -11,10 +11,5 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Параметры конвертации
         /// </summary>
         public IConvertingSettings ConvertingSettings { get; }
-
-        /// <summary>
-        /// Обновить параметры конвертации
-        /// </summary>
-        void UpdateConvertingSettings(string department);
     }
 }

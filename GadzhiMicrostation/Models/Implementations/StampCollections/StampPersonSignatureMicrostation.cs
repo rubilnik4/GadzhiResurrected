@@ -72,7 +72,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public override string PersonName => ResponsiblePersonElement.Text;
+        public override PersonInformation PersonInformation => new PersonInformation(ResponsiblePersonElement.Text, String.Empty,
+                                                                                     String.Empty, String.Empty);
 
         /// <summary>
         /// Вставить подпись

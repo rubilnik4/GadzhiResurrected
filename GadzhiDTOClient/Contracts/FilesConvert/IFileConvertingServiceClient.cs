@@ -1,7 +1,9 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiDTOClient.Contracts.FilesConvert
 {
@@ -40,6 +42,18 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// </summary>   
         [OperationContract]
         Task AbortConvertingById(Guid id);
+
+        /// <summary>
+        /// Загрузить имена из базы данных
+        /// </summary>
+        [OperationContract]
+        Task<IList<SignatureDto>> GetSignaturesNames();
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>
+        [OperationContract]
+        Task<IList<string>> GetSignaturesDepartments();
     }
 }
 

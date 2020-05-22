@@ -22,7 +22,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
                                        IStampFieldMicrostation dateChange, ISignatureLibrary signatureLibrary,
                                        Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(numberChange, numberOfPlots, typeOfChange, documentChange, dateChange, signatureLibrary, insertSignatureFunc,
-                   GetNotInitializedSignature(signatureLibrary?.PersonName))
+                   GetNotInitializedSignature(signatureLibrary?.PersonInformation.FullName))
         { }
 
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
@@ -33,7 +33,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
             : base(insertSignatureFunc, signature)
         {
             PersonId = signatureLibrary?.PersonId ?? throw new ArgumentNullException(nameof(signatureLibrary));
-            PersonName = signatureLibrary.PersonName;
+            PersonInformation = signatureLibrary.PersonInformation;
             NumberChange = numberChange;
             NumberOfPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
@@ -99,7 +99,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public override string PersonName { get; }
+        public override PersonInformation PersonInformation { get; }
 
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица
@@ -119,6 +119,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// </summary>
         public override IStampSignature<IStampFieldMicrostation> DeleteSignature() =>
             new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange,
-                                        new SignatureLibrary(PersonId, PersonName), InsertSignatureFunc);
+                                        new SignatureLibrary(PersonId, PersonInformation), InsertSignatureFunc);
     }
 }

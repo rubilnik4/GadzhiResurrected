@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiDTOServer.TransferModels.Signatures;
 using System.Linq;
+using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Services
 {

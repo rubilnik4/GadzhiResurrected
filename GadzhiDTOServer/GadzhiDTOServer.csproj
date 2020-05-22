@@ -93,7 +93,6 @@
     <Compile Include="TransferModels\FilesConvert\PackageDataIntermediateResponseServer.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataRequestServer.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataResponseServer.cs" />
-    <Compile Include="TransferModels\Signatures\SignatureDto.cs" />
     <Compile Include="TransferModels\Signatures\MicrostationDataFileDto.cs" />
   </ItemGroup>
   <ItemGroup>

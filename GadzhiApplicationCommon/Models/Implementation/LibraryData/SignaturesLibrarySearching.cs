@@ -41,14 +41,14 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Список имен
         /// </summary>
-        private List<PersonInformation> _fullNames;
+        private List<PersonInformation> _personsInformation;
 
         /// <summary>
-        /// Список имен
+        /// Список по
         /// </summary>
-        private List<PersonInformation> PersonsInformation => _fullNames ??= _signaturesLibrary.Values.
-                                                                    Select(signature => PersonInformation.GetFromFullName(signature.PersonName)).
-                                                                    ToList();
+        private List<PersonInformation> PersonsInformation => _personsInformation ??= _signaturesLibrary.Values.
+                                                               Select(signature => signature.PersonInformation).
+                                                               ToList();
 
         /// <summary>
         /// Найти подпись по идентификатору
@@ -71,6 +71,15 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
             PersonsInformation.FindIndex(person => person.SurnameAndDepartmentEqual(fullName, department)).
             WhereBad(foundIndex => foundIndex > -1,
                 badFunc: _ => PersonsInformation.FindIndex(person => person.SurnameEqual(fullName))).
+            WhereContinue(foundIndex => foundIndex > -1,
+                okFunc: foundIndex => _signaturesLibrary.Values[foundIndex],
+                badFunc: foundIndex => null);
+
+        /// <summary>
+        /// Найти подпись по информации о пользователе
+        /// </summary>
+        public ISignatureLibrary FindByPersonInformation(PersonInformation personInformation) =>
+            PersonsInformation.IndexOf(personInformation).
             WhereContinue(foundIndex => foundIndex > -1,
                 okFunc: foundIndex => _signaturesLibrary.Values[foundIndex],
                 badFunc: foundIndex => null);
@@ -101,15 +110,30 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
                                                                                                   "База подписей пуста")));
 
         /// <summary>
+        /// Найти подпись по информации о пользователе или получить случайную
+        /// </summary>
+        public IResultAppValue<ISignatureLibrary> FindByPersonInformationOrRandom(PersonInformation personInformation) =>
+            new ResultAppValue<ISignatureLibrary>(FindByPersonInformation(personInformation),
+                                                  new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись  по имени {personInformation.FullName} не найдена")).
+                ResultValueBadBind(_ => new ResultAppValue<ISignatureLibrary>(GetRandomSignature(),
+                                                                              new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                   "База подписей пуста")));
+
+        /// <summary>
         /// Найти подпись по идентификатору или имени или получить случайную
         /// </summary>
         public IResultAppValue<ISignatureLibrary> FindByIdOrFullNameOrRandom(string id, string fullName, string department) =>
             new ResultAppValue<ISignatureLibrary>(FindById(id), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                     $"Подпись по идентификатору {id} не найдена")).
-            ResultValueBadBind(_ => FindByFullNameOrRandom(fullName, department)).
-            ResultValueBadBind(_ => new ResultAppValue<ISignatureLibrary>(GetRandomSignature(),
-                                                                          new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                               "База подписей пуста")));
+            ResultValueBadBind(_ => FindByFullNameOrRandom(fullName, department));
+
+        /// <summary>
+        /// Найти подпись по идентификатору или информации о пользователе или получить случайную
+        /// </summary>
+        public IResultAppValue<ISignatureLibrary> FindByIdOrPersonInformationOrRandom(string id, PersonInformation personInformation) =>
+            new ResultAppValue<ISignatureLibrary>(FindById(id), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                     $"Подпись по идентификатору {id} не найдена")).
+                ResultValueBadBind(_ => FindByPersonInformationOrRandom(personInformation));
 
         /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам

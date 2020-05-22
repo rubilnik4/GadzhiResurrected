@@ -112,11 +112,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private IResultAppValue<ISignatureLibrary> GetSignatureInformation(string personName, string department, 
+        private IResultAppValue<ISignatureLibrary> GetSignatureInformation(string personName, string department,
                                                                            PersonDepartmentType departmentType) =>
             SignaturesLibrarySearching.CheckDepartmentAccordingToType(department, departmentType).
-            Map(departmentChecked => SignaturesLibrarySearching.FindByFullNameOrRandom(personName, departmentChecked)).
-            ResultValueOk(signature => new SignatureLibrary(signature.PersonId, signature.PersonName));
+            Map(departmentChecked => SignaturesLibrarySearching.FindByFullNameOrRandom(personName, departmentChecked));
 
         /// <summary>
         /// Получить элементы подписей из базы по их идентификационным номерам

@@ -131,7 +131,9 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             ToResultCollectionFromApplication().
             ResultVoid(_ => _messagingService.ShowAndLogMessage("Загрузка подписей")).
             ResultValueOk(libraryElements => libraryElements.
-                                             Select(libraryElement => new SignatureLibrary(libraryElement.Name, libraryElement.Description)).
+                                             Select(libraryElement => new SignatureLibrary(libraryElement.Name, 
+                                                                                           PersonInformation.GetFromFullName(libraryElement.Description))).
+                                             Where(signature => signature.PersonInformation.HasFullInformation).
                                              Cast<ISignatureLibrary>()).
             ToResultCollection();
 
@@ -142,7 +144,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
             ResultVoidOk(cellElement => cellElement.LineWeight = 5).
             ToResultValueFromApplication().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.PersonName}")).
+            ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.PersonInformation.FullName}")).
             ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
 
         /// <summary>
@@ -153,7 +155,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonName, JpegConverter.ToJpegFromEmf(filePathEmf)).
+            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonInformation, JpegConverter.ToJpegFromEmf(filePathEmf)).
                                Void(_ => _fileSystemOperations.DeleteFile(filePathEmf))).
             Void(_ => cellSignature.Remove());
 

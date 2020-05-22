@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
 {
@@ -13,8 +14,8 @@ namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
         string PersonId { get; }
 
         /// <summary>
-        /// Имя 
+        /// Информация о пользователе
         /// </summary>
-        string PersonName { get; }
+        PersonInformation PersonInformation { get; }
     }
 }

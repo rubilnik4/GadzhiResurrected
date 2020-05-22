@@ -31,7 +31,7 @@
                   Grid.Column="1" 
                   materialDesign:HintAssist.Hint="Выберите отдел"
                   SelectedItem="{Binding Department}"
-                  ItemsSource="{Binding Departments}">
+                  ItemsSource="{Binding Departments.Result}">
         </ComboBox>
     </Grid>
 </UserControl>

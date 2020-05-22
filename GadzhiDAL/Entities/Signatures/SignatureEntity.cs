@@ -16,9 +16,9 @@ namespace GadzhiDAL.Entities.Signatures
         public override string Id { get; protected set; }
 
         /// <summary>
-        /// Фамилия
+        /// Информация о пользователе
         /// </summary>
-        public virtual string FullName { get; set; }
+        public virtual PersonInformationComponent PersonInformation { get; set; }
 
         /// <summary>
         /// Подпись в формате Jpeg

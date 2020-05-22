@@ -13,8 +13,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// </summary>
     public class SignatureFile : SignatureLibrary, ISignatureFile
     {
-        public SignatureFile(string personId, string personName, string signatureFolderPath)
-            : base(personId, personName)
+        public SignatureFile(string personId, PersonInformation personInformation, string signatureFolderPath)
+            : base(personId, personInformation)
         {
             if (signatureFolderPath == null) throw new ArgumentNullException(nameof(signatureFolderPath));
             SignatureFilePath = GetFilePathByFolder(signatureFolderPath, personId);

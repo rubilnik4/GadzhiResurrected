@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
@@ -32,7 +33,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public abstract string PersonName { get; }
+        public abstract PersonInformation PersonInformation { get; }
 
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица

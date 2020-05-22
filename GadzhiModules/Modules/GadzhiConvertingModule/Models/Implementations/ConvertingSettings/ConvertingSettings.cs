@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ConvertingSettings

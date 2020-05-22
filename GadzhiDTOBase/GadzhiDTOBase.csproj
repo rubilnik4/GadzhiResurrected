@@ -52,6 +52,8 @@
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataIntermediateResponseBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataRequestBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataResponseBase.cs" />
+    <Compile Include="TransferModels\Signatures\PersonInformationDto.cs" />
+    <Compile Include="TransferModels\Signatures\SignatureDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiCommon\GadzhiCommon.csproj">
@@ -59,5 +61,6 @@
       <Name>GadzhiCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

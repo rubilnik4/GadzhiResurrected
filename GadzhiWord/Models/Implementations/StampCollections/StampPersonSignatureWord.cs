@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -20,11 +21,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
        
         public StampPersonWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson, IStampFieldWord signature, 
                                IStampFieldWord dateSignature, ISignatureLibrary signatureLibrary)
-            : base(signature)
+            : base(signature, signatureLibrary)
         {
-            PersonId = signatureLibrary?.PersonId ?? throw new ArgumentNullException(nameof(signatureLibrary));
-            PersonName = signatureLibrary.PersonName;
-
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
             DateSignature = dateSignature;      
@@ -44,15 +42,5 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Дата
         /// </summary>
         public IStampFieldWord DateSignature { get; }
-
-        /// <summary>
-        /// идентификатор личности
-        /// </summary>    
-        public override string PersonId { get; }
-
-        /// <summary>
-        /// Ответственное лицо
-        /// </summary>    
-        public override string PersonName { get; }
     }
 }

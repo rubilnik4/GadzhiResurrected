@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiDAL.Entities.Signatures;
 using GadzhiDAL.Models.Implementations;
+using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
-using NHibernate.Linq;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
 {
@@ -75,7 +75,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
 
             var signatureEntity = new SignatureEntity()
             {
-                FullName = signatureDto.FullName,
+                PersonInformation = PersonInformationFromDto(signatureDto.PersonInformation),
                 SignatureJpeg = signatureDto.SignatureJpeg,
             };
             signatureEntity.SetId(signatureDto.Id);
@@ -83,19 +83,41 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
             return signatureEntity;
         }
 
+        private static PersonInformationComponent PersonInformationFromDto(PersonInformationDto personInformation) =>
+            (personInformation != null)
+                ? new PersonInformationComponent()
+                {
+                    Surname = personInformation.Surname,
+                    Name = personInformation.Name,
+                    Patronymic = personInformation.Patronymic,
+                    Department = personInformation.Department,
+                }
+                : throw new ArgumentNullException(nameof(personInformation));
+
         /// <summary>
         /// Преобразовать идентификатор с подписью в трансферную модель
         /// </summary>
         private static SignatureDto SignatureToDto(SignatureEntity signatureEntity, bool signatureLoad) =>
             (signatureEntity != null)
-            ? new SignatureDto()
-            {
-                Id = signatureEntity.Id,
-                FullName = signatureEntity.FullName,
-                SignatureJpeg = signatureLoad
+                ? new SignatureDto()
+                {
+                    Id = signatureEntity.Id,
+                    PersonInformation = PersonInformationToDto(signatureEntity.PersonInformation),
+                    SignatureJpeg = signatureLoad
                                 ? signatureEntity.SignatureJpeg.AsQueryable().ToArray()
                                 : null,
-            }
-            : throw new ArgumentNullException(nameof(signatureEntity));
+                }
+                : throw new ArgumentNullException(nameof(signatureEntity));
+
+        private static PersonInformationDto PersonInformationToDto(PersonInformationComponent personInformation) =>
+            (personInformation != null)
+                ? new PersonInformationDto()
+                {
+                    Surname = personInformation.Surname,
+                    Name = personInformation.Name,
+                    Patronymic = personInformation.Patronymic,
+                    Department = personInformation.Department,
+                }
+                : throw new ArgumentNullException(nameof(personInformation));
     }
 }

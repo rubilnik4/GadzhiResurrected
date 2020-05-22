@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -37,9 +38,20 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             new SignatureDto()
             {
                 Id = signatureFileData.PersonId,
-                FullName = signatureFileData.PersonName,
+                PersonInformation = PersonInformationToDto(signatureFileData.PersonInformation),
                 SignatureJpeg = signatureFileData.SignatureFileDataSource,
             };
 
+        /// <summary>
+        /// Преобразовать информацию о пользователе в  трансферную модель
+        /// </summary>
+        private static PersonInformationDto PersonInformationToDto(PersonInformation personInformation) =>
+            new PersonInformationDto()
+            {
+                Surname = personInformation.Surname,
+                Name = personInformation.Name,
+                Patronymic = personInformation.Patronymic,
+                Department = personInformation.Department,
+            };
     }
 }

@@ -148,6 +148,7 @@
     <Compile Include="Entities\FilesConvert\Main\ConvertingSettingsComponent.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
     <Compile Include="Entities\Signatures\MicrostationDataFiles.cs" />
+    <Compile Include="Entities\Signatures\PersonInformationComponent.cs" />
     <Compile Include="Entities\Signatures\SignatureEntity.cs" />
     <Compile Include="Models\Implementations\MicrostationDataFileEntity.cs" />
     <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
@@ -174,10 +175,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Implementations\FilesDataServerService.cs" />
     <Compile Include="Services\Implementations\FilesDataClientService.cs" />
-    <Compile Include="Services\Implementations\SignaturesServerService.cs" />
+    <Compile Include="Services\Implementations\SignaturesService.cs" />
     <Compile Include="Services\Interfaces\IFilesDataServiceServer.cs" />
     <Compile Include="Services\Interfaces\IFilesDataClientService.cs" />
-    <Compile Include="Services\Interfaces\ISignaturesServerService.cs" />
+    <Compile Include="Services\Interfaces\ISignaturesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

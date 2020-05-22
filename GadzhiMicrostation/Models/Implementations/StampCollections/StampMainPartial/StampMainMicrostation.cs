@@ -106,13 +106,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
                                                                                     IList<string> libraryIds) =>
             signatures.
             Select(signature => SignaturesLibrarySearching.
-                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonName, StampSettings.Department).
+                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonInformation.FullName, StampSettings.Department).
                                 ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
                                     okFunc: signatureLibrary => signatureLibrary,
                                     badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
                                                                                       $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
                                 ResultValueOk(signatureLibrary => new SignatureFile(signatureLibrary.PersonId, 
-                                                                                    signatureLibrary.PersonName, String.Empty)).
+                                                                                    signatureLibrary.PersonInformation, String.Empty)).
                                 ResultValueOk(signatureFile => (IStampSignature<IStampField>)signature.InsertSignature(signatureFile))).
             ToResultCollection();
     }

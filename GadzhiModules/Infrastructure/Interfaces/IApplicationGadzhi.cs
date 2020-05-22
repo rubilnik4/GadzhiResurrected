@@ -56,5 +56,10 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Сбросить индикаторы конвертации
         /// </summary>
         Task AbortPropertiesConverting(bool isDispose = false);
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>
+        Task<IList<string>> GetSignaturesDepartments();
     }
 }
