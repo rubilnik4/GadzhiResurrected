@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiCommon.Models.Implementations.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.TransferModels.Signatures;
-using GadzhiDTOServer.TransferModels.Signatures;
 
-namespace GadzhiConverting.Infrastructure.Implementations.Converters
+namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
 {
     /// <summary>
     /// Преобразование подписи в трансферную модель
@@ -20,16 +19,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             signaturesLibrary?.
             Select(SignatureToDto).ToList()
             ?? throw new ArgumentNullException(nameof(signaturesLibrary));
-
-        /// <summary>
-        /// Преобразовать подпись Microstation в трансферную модель
-        /// </summary>
-        public static MicrostationDataFileDto MicrostationDataFileToDto(MicrostationDataFile microstationDataFile) =>
-            new MicrostationDataFileDto()
-            {
-                NameDatabase = microstationDataFile.NameDatabase,
-                MicrostationDataBase = microstationDataFile.MicrostationDataBase,
-            };
 
         /// <summary>
         /// Преобразовать подпись в трансферную модель

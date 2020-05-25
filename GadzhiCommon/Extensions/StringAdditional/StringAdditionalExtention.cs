@@ -56,6 +56,22 @@ namespace GadzhiCommon.Extensions.StringAdditional
         /// </summary>
         public static string ToLowerCaseCurrentCulture(this string input) => input?.ToLower(CultureInfo.CurrentCulture)
                                                                              ?? String.Empty;
+
+        /// <summary>
+        /// Получить строку из массива или вернуть пустое значение
+        /// </summary>
+        public static string GetStringFromArrayOrEmpty(this string[] input, int index) =>
+            (input?.Length > index && index >= 0)
+                ? input[index]
+                : String.Empty;
+
+        /// <summary>
+        /// Преобразовать массив в строку начиная с индекса или вернуть пустое значение
+        /// </summary>
+        public static string JoinStringArrayFromIndexToEndOrEmpty(this string[] input, int startIndex) =>
+            (input?.Length > startIndex && startIndex >= 0)
+                ? String.Join(" ", input, startIndex, input.Length - startIndex)
+                : String.Empty;
     }
 
 }

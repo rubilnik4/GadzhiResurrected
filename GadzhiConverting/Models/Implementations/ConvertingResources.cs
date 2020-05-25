@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
-using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
+using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 
 namespace GadzhiConverting.Models.Implementations
@@ -110,7 +107,7 @@ namespace GadzhiConverting.Models.Implementations
         /// </summary>
         private async Task<IResultValue<string>> GetSignaturesMicrostation() =>
             await _fileConvertingServerService.Operations.GetSignaturesMicrostation().
-                  MapAsync(ConverterDataFileFromDto.MicrostationDataFileFromDto).
+                  MapAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
                   MapAsyncBind(signatures => _fileSystemOperations.UnzipFileAndSaveWithResult(_signatureMicrostationFileName, signatures.MicrostationDataBase));
 
         /// <summary>
@@ -118,7 +115,7 @@ namespace GadzhiConverting.Models.Implementations
         /// </summary>
         private async Task<IResultValue<string>> GetStampsMicrostation() =>
             await _fileConvertingServerService.Operations.GetStampsMicrostation().
-                  MapAsync(ConverterDataFileFromDto.MicrostationDataFileFromDto).
+                  MapAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
                   MapAsyncBind(stamps => _fileSystemOperations.UnzipFileAndSaveWithResult(_stampMicrostationFileName, stamps.MicrostationDataBase));
 
         /// <summary>
@@ -126,6 +123,6 @@ namespace GadzhiConverting.Models.Implementations
         /// </summary>
         private async Task<IReadOnlyList<ISignatureLibrary>> GetSignatureNames() =>
             await _fileConvertingServerService.Operations.GetSignaturesNames().
-                  MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto);
+            MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto);
     }
 }

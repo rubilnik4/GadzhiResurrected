@@ -31,6 +31,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         public bool IsConverting => StatusProcessingProjectConverter.StatusProcessingProjectIsConverting.
                                     Contains(PackageInfoProject.StatusProcessingProject);
 
+        /// <summary>
+        /// Информация о количестве файлов в очереди на сервере
+        /// </summary>
         private FilesQueueInfo FilesQueueInfo => PackageInfoProject.FilesQueueInfo;
 
         /// <summary>

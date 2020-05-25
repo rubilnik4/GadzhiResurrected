@@ -8,12 +8,15 @@ using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
+using GadzhiDTOBase.Infrastructure.Implementations.Converters;
+using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
@@ -70,8 +73,8 @@ namespace GadzhiConverting.DependencyInjection
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
 
             var convertingResources = await projectSettings.ConvertingResources;
-            var signaturesLibrarySearching = new SignaturesLibrarySearching(convertingResources.SignatureNames,
-                                                                            GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
+            var signaturesLibrarySearching = new SignaturesLibrarySearching(convertingResources.SignatureNames.ToApplication(),
+                                                                             GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
                                                                                               ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>

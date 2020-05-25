@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ConvertingSettings
@@ -10,12 +11,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Co
     public class ConvertingSettings : IConvertingSettings
     {
         public ConvertingSettings()
-            : this(Departments[0])
+            : this(String.Empty, null)
         { }
 
-        public ConvertingSettings(string department)
+        public ConvertingSettings(string department, ISignatureLibrary personSignature)
         {
             Department = department ?? String.Empty;
+            PersonSignature = personSignature;
         }
 
         /// <summary>
@@ -24,12 +26,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Co
         public string Department { get; set; }
 
         /// <summary>
-        /// Отделы
+        /// Подпись
         /// </summary>
-        public static IReadOnlyList<string> Departments => new List<string>
-        {
-            "ЭЛТО",
-            "АСО",
-        };
+        public ISignatureLibrary PersonSignature { get; set; }
     }
 }

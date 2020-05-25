@@ -1,7 +1,7 @@
 ﻿using System;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 
-namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
+namespace GadzhiCommon.Models.Implementations.LibraryData
 {
     /// <summary>
     /// Имя с идентификатором

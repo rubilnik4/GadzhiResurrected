@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
+using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -19,10 +21,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
-        public static Func<IEnumerable<string>, IList<ISignatureFile>> GetSignaturesSync(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
+        public static Func<IEnumerable<string>, IList<ISignatureFileApp>> GetSignaturesSync(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                                                                                IConverterDataFileFromDto converterDataFileFromDto,
                                                                                                string signatureFolder) => 
             (idSignatures) => fileConvertingServerService.Operations.GetSignatures(idSignatures.ToList()).Result.
-                              Map(signatures => converterDataFileFromDto.SignaturesFileFromDto(signatures, signatureFolder));
+                              Map(signatures => converterDataFileFromDto.SignaturesFileFromDto(signatures, signatureFolder)).
+                              ToApplication().ToList();
     }
 }

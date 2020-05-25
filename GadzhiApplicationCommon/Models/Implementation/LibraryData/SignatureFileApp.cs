@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
@@ -11,9 +7,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// <summary>
     /// Имя с идентификатором и подпись
     /// </summary>
-    public class SignatureFile : SignatureLibrary, ISignatureFile
+    public class SignatureFileApp : SignatureLibraryApp, ISignatureFileApp
     {
-        public SignatureFile(string personId, PersonInformation personInformation, string signatureFolderPath)
+        public SignatureFileApp(string personId, PersonInformationApp personInformation, string signatureFolderPath)
             : base(personId, personInformation)
         {
             if (signatureFolderPath == null) throw new ArgumentNullException(nameof(signatureFolderPath));

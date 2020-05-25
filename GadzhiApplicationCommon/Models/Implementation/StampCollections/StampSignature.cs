@@ -33,7 +33,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public abstract PersonInformation PersonInformation { get; }
+        public abstract PersonInformationApp PersonInformation { get; }
 
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица
@@ -43,7 +43,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public abstract IStampSignature<TField> InsertSignature(ISignatureFile signatureFile);
+        public abstract IStampSignature<TField> InsertSignature(ISignatureFileApp signatureFile);
 
         /// <summary>
         /// Удалить подпись

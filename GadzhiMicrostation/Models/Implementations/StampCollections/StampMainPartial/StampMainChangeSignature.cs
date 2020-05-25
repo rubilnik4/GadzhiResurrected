@@ -23,8 +23,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IResultAppCollection<IStampChangeMicrostation> GetStampChangeRows(ISignatureLibrary signatureLibrary) =>
-            new ResultAppValue<ISignatureLibrary>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+        private IResultAppCollection<IStampChangeMicrostation> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
+            new ResultAppValue<ISignatureLibraryApp>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
                                                                                          "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
                                                              changeNames => GetChangeSignatureField(changeNames, signatureLibrary))).
@@ -33,7 +33,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Преобразовать элементы Microstation в строку подписей
         /// </summary>
-        private IResultAppValue<IStampChangeMicrostation> GetChangeSignatureField(IEnumerable<string> changeNames, ISignatureLibrary signatureLibrary)
+        private IResultAppValue<IStampChangeMicrostation> GetChangeSignatureField(IEnumerable<string> changeNames, ISignatureLibraryApp signatureLibrary)
         {
             var foundElements = FindElementsInStampControls(changeNames, ElementMicrostationType.TextElement).
                                 Cast<ITextElementMicrostation>().

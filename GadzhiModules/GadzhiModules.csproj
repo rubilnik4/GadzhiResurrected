@@ -189,6 +189,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\ReactiveSubjects\FilesChange.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FileData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\PackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IFileData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ConvertingSettingsViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModel.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using GadzhiCommon.Models.Implementations.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
@@ -17,16 +19,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private readonly IConvertingSettings _convertingSettings;
 
-        /// <summary>
-        /// Слой приложения, инфраструктура
-        /// </summary>
-        //private readonly IApplicationGadzhi _applicationGadzhi;
-
         public ConvertingSettingsViewModel(IProjectSettings projectSettings, IApplicationGadzhi applicationGadzhi)
         {
             if (applicationGadzhi == null) throw new ArgumentNullException(nameof(applicationGadzhi));
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
 
+            PersonSignatures = NotifyTaskCompletion.Create(applicationGadzhi.GetSignaturesNames());
             Departments = NotifyTaskCompletion.Create(applicationGadzhi.GetSignaturesDepartments());
         }
 
@@ -34,6 +32,20 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Название
         /// </summary>
         public override string Title => "Параметрюшки";
+
+        /// <summary>
+        /// Подпись
+        /// </summary>
+        public ISignatureLibrary PersonSignature
+        {
+            get => _convertingSettings.PersonSignature;
+            set => _convertingSettings.PersonSignature = value;
+        }
+
+        /// <summary>
+        /// Подписи
+        /// </summary>
+        public INotifyTaskCompletion<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
 
         /// <summary>
         /// Отдел

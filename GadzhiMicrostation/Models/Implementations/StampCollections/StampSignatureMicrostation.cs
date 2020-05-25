@@ -19,7 +19,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureMicrostation : StampSignature<IStampFieldMicrostation>
     {
-        protected StampSignatureMicrostation(Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+        protected StampSignatureMicrostation(Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                              IResultAppValue<IStampFieldMicrostation> signature)
         {
             InsertSignatureFunc = insertSignatureFunc ?? throw new ArgumentNullException(nameof(insertSignatureFunc));
@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Функция вставки подписи
         /// </summary>
-        protected Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
+        protected Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc { get; }
 
         /// <summary>
         /// Подпись

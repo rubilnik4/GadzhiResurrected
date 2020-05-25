@@ -1,12 +1,11 @@
-﻿using System;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+﻿using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
 {
     /// <summary>
     /// Имя с идентификатором
     /// </summary>
-    public interface ISignatureLibrary
+    public interface ISignatureLibraryApp
     {
         /// <summary>
         /// Идентификатор
@@ -16,6 +15,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
         /// <summary>
         /// Информация о пользователе
         /// </summary>
-        PersonInformation PersonInformation { get; }
+        PersonInformationApp PersonInformation { get; }
     }
 }

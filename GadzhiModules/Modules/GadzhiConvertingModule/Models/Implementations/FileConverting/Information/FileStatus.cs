@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information
@@ -14,9 +16,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
 
         public FileStatus(string filePath, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> errors)
         {
-            FilePath = filePath;
+            FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
             StatusProcessing = statusProcessing;
-            Errors = errors;
+            Errors = errors?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(errors)); ;
         }
 
         /// <summary>
@@ -32,6 +34,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<FileConvertErrorType> Errors { get; }
+        public IReadOnlyCollection<FileConvertErrorType> Errors { get; }
     }
 }

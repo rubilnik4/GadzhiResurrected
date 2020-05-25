@@ -10,7 +10,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Базовая структура подписи
     /// </summary>
-    public interface IStampSignature<out TField> : ISignatureLibrary
+    public interface IStampSignature<out TField> : ISignatureLibraryApp
         where TField : IStampField
     {
         /// <summary>
@@ -31,7 +31,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        IStampSignature<TField> InsertSignature(ISignatureFile signatureFile);
+        IStampSignature<TField> InsertSignature(ISignatureFileApp signatureFile);
 
         /// <summary>
         /// Удалить текущую подпись

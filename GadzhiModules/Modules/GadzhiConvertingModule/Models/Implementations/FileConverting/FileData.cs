@@ -5,15 +5,20 @@ using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting
 {
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
     /// </summary>
-    public class FileData : IEquatable<FileData>
+    public class FileData : IFileData, IEquatable<IFileData>
     {
         public FileData(string filePath)
+            : this(filePath, ColorPrint.BlackAndWhite)
+        { }
+
+        public FileData(string filePath, ColorPrint colorPrint)
         {
             string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
             string fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -27,13 +32,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             FileExtension = fileExtensionType;
             FileName = fileName;
             FilePath = filePath;
-
-            ColorPrint = ColorPrint.BlackAndWhite;
-        }
-
-        public FileData(string filePath, ColorPrint colorPrint)
-            : this(filePath)
-        {
             ColorPrint = colorPrint;
         }
 
@@ -70,31 +68,27 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public IEnumerable<FileConvertErrorType> FileConvertErrorType { get; private set; }
+        public IReadOnlyCollection<FileConvertErrorType> FileConvertErrorType { get; private set; }
 
         /// <summary>
         /// Изменить статус и вид ошибки при необходимости
         /// </summary>
-        public void ChangeByFileStatus(FileStatus fileStatus)
+        public IFileData ChangeByFileStatus(FileStatus fileStatus)
         {
-            if (fileStatus != null)
-            {
-                StatusProcessing = fileStatus.StatusProcessing;
-                FileConvertErrorType = fileStatus.Errors;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(fileStatus));
-            }
+            if (fileStatus == null) throw new ArgumentNullException(nameof(fileStatus));
+
+            StatusProcessing = fileStatus.StatusProcessing;
+            FileConvertErrorType = fileStatus.Errors;
+            return this;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is FileData fileData &&
+            return obj is IFileData fileData &&
                    Equals(fileData);
         }
 
-        public bool Equals(FileData other)
+        public bool Equals(IFileData other)
         {
             return other?.FilePath == FilePath;
         }

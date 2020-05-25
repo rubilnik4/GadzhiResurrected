@@ -19,16 +19,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
     {
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                        IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
-                                       IStampFieldMicrostation dateChange, ISignatureLibrary signatureLibrary,
-                                       Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
+                                       IStampFieldMicrostation dateChange, ISignatureLibraryApp signatureLibrary,
+                                       Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
             : this(numberChange, numberOfPlots, typeOfChange, documentChange, dateChange, signatureLibrary, insertSignatureFunc,
                    GetNotInitializedSignature(signatureLibrary?.PersonInformation.FullName))
         { }
 
         public StampChangeMicrostation(IStampFieldMicrostation numberChange, IStampFieldMicrostation numberOfPlots,
                                        IStampFieldMicrostation typeOfChange, IStampFieldMicrostation documentChange,
-                                       IStampFieldMicrostation dateChange, ISignatureLibrary signatureLibrary,
-                                       Func<ISignatureLibrary, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
+                                       IStampFieldMicrostation dateChange, ISignatureLibraryApp signatureLibrary,
+                                       Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                        IResultAppValue<IStampFieldMicrostation> signature)
             : base(insertSignatureFunc, signature)
         {
@@ -99,7 +99,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public override PersonInformation PersonInformation { get; }
+        public override PersonInformationApp PersonInformation { get; }
 
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица
@@ -110,7 +110,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature(ISignatureFile signatureFile) =>
+        public override IStampSignature<IStampFieldMicrostation> InsertSignature(ISignatureFileApp signatureFile) =>
             new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange, signatureFile,
                                         InsertSignatureFunc, InsertSignatureFunc.Invoke(signatureFile));
 
@@ -119,6 +119,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections
         /// </summary>
         public override IStampSignature<IStampFieldMicrostation> DeleteSignature() =>
             new StampChangeMicrostation(NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange,
-                                        new SignatureLibrary(PersonId, PersonInformation), InsertSignatureFunc);
+                                        new SignatureLibraryApp(PersonId, PersonInformation), InsertSignatureFunc);
     }
 }

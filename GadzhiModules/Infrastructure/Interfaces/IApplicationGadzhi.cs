@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Infrastructure.Interfaces
 {
@@ -40,7 +41,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        void RemoveFiles(IEnumerable<FileData> fileOrDirectoriesPaths);
+        void RemoveFiles(IEnumerable<IFileData> fileOrDirectoriesPaths);
 
         /// <summary>
         /// Закрыть приложение
@@ -56,6 +57,11 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Сбросить индикаторы конвертации
         /// </summary>
         Task AbortPropertiesConverting(bool isDispose = false);
+
+        /// <summary>
+        /// Загрузить подписи из базы данных
+        /// </summary>
+        Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames();
 
         /// <summary>
         /// Загрузить отделы из базы данных

@@ -14,8 +14,8 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -92,8 +92,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IResultAppCollection<IStampChangeWord> GetStampChangeSignatures(ISignatureLibrary signatureLibrary) =>
-            new ResultAppValue<ISignatureLibrary>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+        private IResultAppCollection<IStampChangeWord> GetStampChangeSignatures(ISignatureLibraryApp signatureLibrary) =>
+            new ResultAppValue<ISignatureLibraryApp>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                          "Не найден идентификатор основной подписи")).
             ResultValueOk(_ => FieldsStamp.Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
                                            Select(field => field.CellElementStamp.RowElementWord).
@@ -112,7 +112,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private IResultAppValue<ISignatureLibrary> GetSignatureInformation(string personName, string department,
+        private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string department,
                                                                            PersonDepartmentType departmentType) =>
             SignaturesLibrarySearching.CheckDepartmentAccordingToType(department, departmentType).
             Map(departmentChecked => SignaturesLibrarySearching.FindByFullNameOrRandom(personName, departmentChecked));
@@ -149,7 +149,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить класс с изменениями и подписью по строке Word
         /// </summary>
-        private static IStampChangeWord GetStampChangeWordByRow(IRowElement changeRow, ISignatureLibrary signatureLibrary) =>
+        private static IStampChangeWord GetStampChangeWordByRow(IRowElement changeRow, ISignatureLibraryApp signatureLibrary) =>
             new StampChangeWord(new StampFieldWord(changeRow.CellsElementWord[0], StampFieldType.PersonSignature),
                                 new StampFieldWord(changeRow.CellsElementWord[1], StampFieldType.PersonSignature),
                                 new StampFieldWord(changeRow.CellsElementWord[2], StampFieldType.PersonSignature),

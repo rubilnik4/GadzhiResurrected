@@ -1,8 +1,8 @@
 ﻿using System;
-using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.StringAdditional;
 
-namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
+namespace GadzhiCommon.Models.Implementations.LibraryData
 {
     /// <summary>
     /// Информация о пользователе
@@ -11,7 +11,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     {
         public PersonInformation(string surname, string name, string patronymic, string department)
         {
-            Surname = !surname.IsNullOrWhiteSpace()
+            Surname = !String.IsNullOrWhiteSpace(surname)
                       ? surname
                       : throw new ArgumentNullException(nameof(surname));
             Name = name ?? String.Empty;
@@ -52,8 +52,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Загружена ли информация о пользователе полностью
         /// </summary>
-        public bool HasFullInformation => !Surname.IsNullOrWhiteSpace() && !Name.IsNullOrWhiteSpace() &&
-                                          !Patronymic.IsNullOrWhiteSpace() && !Department.IsNullOrWhiteSpace();
+        public bool HasFullInformation => !String.IsNullOrWhiteSpace(Surname) && !String.IsNullOrWhiteSpace(Name) &&
+                                          !String.IsNullOrWhiteSpace(Patronymic) && String.IsNullOrWhiteSpace(Department);
 
         /// <summary>
         /// Проверка фамилии 

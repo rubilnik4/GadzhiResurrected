@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -20,7 +19,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public const int FIELDS_COUNT = 4;
        
         public StampPersonWord(IStampFieldWord actionType, IStampFieldWord responsiblePerson, IStampFieldWord signature, 
-                               IStampFieldWord dateSignature, ISignatureLibrary signatureLibrary)
+                               IStampFieldWord dateSignature, ISignatureLibraryApp signatureLibrary)
             : base(signature, signatureLibrary)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));

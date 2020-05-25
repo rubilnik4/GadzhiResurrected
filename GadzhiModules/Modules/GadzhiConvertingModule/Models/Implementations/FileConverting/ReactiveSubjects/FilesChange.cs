@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects
 {
@@ -8,13 +9,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class FilesChange
     {
-        public FilesChange(IEnumerable<FileData> filesDataProject,
-                           IEnumerable<FileData> fileData,
+        public FilesChange(IReadOnlyCollection<IFileData> filesDataProject,
+                           IEnumerable<IFileData> fileData,
                            ActionType actionType,
                            bool isStatusProcessingProjectChanged)
         {
-            FilesDataProject = filesDataProject ?? Enumerable.Empty<FileData>();
-            FileData = fileData ?? Enumerable.Empty<FileData>();
+            FilesDataProject = filesDataProject ?? new List<IFileData>().AsReadOnly();
+            FileData = fileData?.ToList().AsReadOnly() ?? new List<IFileData>().AsReadOnly();
             ActionType = actionType;
             IsStatusProcessingProjectChanged = isStatusProcessingProjectChanged;
         }
@@ -22,12 +23,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Текущая модель
         /// </summary>
-        public IEnumerable<FileData> FilesDataProject { get; }
+        public IReadOnlyCollection<IFileData> FilesDataProject { get; }
 
         /// <summary>
         /// Список изменяемых файлов
         /// </summary>
-        public IEnumerable<FileData> FileData { get; }
+        public IReadOnlyCollection<IFileData> FileData { get; }
 
         /// <summary>
         /// Тип действия

@@ -5,7 +5,6 @@ using System.Reactive.Subjects;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting
@@ -18,7 +17,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Список файлов для обработки
         /// </summary>
-        private List<FileData> _filesData;
+        private readonly List<IFileData> _filesData;
 
         /// <summary>
         /// Подписка на изменение коллекции
@@ -26,16 +25,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         private readonly Subject<FilesChange> _fileDataChange;
 
         public PackageData()
-            : this(new List<FileData>())
+            : this(new List<IFileData>())
         { }
 
-        public PackageData(List<FileData> filesData)
+        public PackageData(IEnumerable<IFileData> filesData)
         {
             Id = Guid.Empty;
             FilesQueueInfo = new FilesQueueInfo();
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
-            _filesData = filesData;
+            _filesData = filesData?.ToList() ?? new List<IFileData>();
             _fileDataChange = new Subject<FilesChange>();
         }
 
@@ -52,12 +51,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public IReadOnlyList<FileData> FilesData => _filesData;
+        public IReadOnlyList<IFileData> FilesData => _filesData;
 
         /// <summary>
         /// Пути конвертируемых файлов
         /// </summary>
-        public IEnumerable<string> FilesDataPath => _filesData.Select(file => file.FilePath);
+        public IReadOnlyCollection<string> FilesDataPath => _filesData.Select(file => file.FilePath).
+                                                                       ToList().AsReadOnly();
 
         /// <summary>
         /// Статус выполнения проекта
@@ -81,9 +81,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Добавить файл
         /// </summary>
-        public void AddFile(FileData fileData)
+        public void AddFile(IFileData fileData)
         {
-            AddFiles(new List<FileData>() { fileData });
+            AddFiles(new List<IFileData>() { fileData });
         }
 
         /// <summary>
@@ -94,24 +94,20 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             var filesInfo = files?.Select(f => new FileData(f)).
                                    Where(CanFileDataBeAddedToList).
                                    ToList();
-            if (filesInfo != null)
-            {
-                AddFiles(filesInfo);
-            }
+            AddFiles(filesInfo ?? new List<FileData>());
         }
 
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        public void AddFiles(IEnumerable<FileData> filesData)
+        public void AddFiles(IEnumerable<IFileData> filesData)
         {
-            var filesInfo = filesData?.
-                            Where(CanFileDataBeAddedToList).
-                            ToList();
+            var filesInfo = filesData?.Where(CanFileDataBeAddedToList).
+                                       ToList();
 
             if (filesInfo == null) return;
 
-            _filesData?.AddRange(filesInfo);
+            _filesData.AddRange(filesInfo);
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
             UpdateFileData(new FilesChange(_filesData, filesInfo, ActionType.Add, isStatusProcessingProjectChanged));
         }
@@ -121,7 +117,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// </summary>
         public void ClearFiles()
         {
-            _filesData?.Clear();
+            _filesData.Clear();
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
             UpdateFileData(new FilesChange(_filesData, new List<FileData>(), ActionType.Clear, isStatusProcessingProjectChanged));
@@ -130,12 +126,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        public void RemoveFiles(IEnumerable<FileData> filesData)
+        public void RemoveFiles(IEnumerable<IFileData> filesData)
         {
             if (filesData == null) return;
             var filesDataCollection = filesData.ToList();
 
-            _filesData?.RemoveAll(filesDataCollection.Contains);
+            _filesData.RemoveAll(filesDataCollection.Contains);
 
             bool isStatusProcessingProjectChanged;
             if (_filesData == null || _filesData.Count == 0)
@@ -160,17 +156,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(packageStatus.StatusProcessingProject);
             FilesQueueInfo = FilesQueueInfo.GetQueueInfoByStatus(packageStatus.QueueStatus, StatusProcessingProject);
 
-            //список файлов для изменений c откорректированным статусом
-            var filesDataChanged =
-                packageStatus.FileStatus.
-                Select(fileStatus =>
-                {
-                    var fileData = _filesData?.FirstOrDefault(file => file.FilePath == fileStatus.FilePath);
-                    fileData?.ChangeByFileStatus(fileStatus);
-                    return fileData;
-                });
+            var filesDataChanged = packageStatus.FileStatus.
+                                   Select(fileStatus => _filesData.FirstOrDefault(file => file.FilePath == fileStatus.FilePath)?.
+                                                                   ChangeByFileStatus(fileStatus)).
+                                   Where(fileData => fileData != null);
 
-            //формируем данные для отправки изменений
             var fileChange = new FilesChange(_filesData, filesDataChanged, ActionType.StatusChange, isStatusProcessingProjectChanged);
             UpdateFileData(fileChange);
         }
@@ -183,9 +173,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             StatusProcessingProject = StatusProcessingProject.Error;
             FilesQueueInfo = new FilesQueueInfo();
 
-            var fileData = _filesData?.Select(file => new FileStatus(file.FilePath,
-                                                                     StatusProcessing.End,
-                                                                     FileConvertErrorType.AbortOperation));
+            var fileData = _filesData.Select(file => new FileStatus(file.FilePath, StatusProcessing.End, FileConvertErrorType.AbortOperation));
             var filesStatus = new PackageStatus(fileData, StatusProcessingProject.Error);
             ChangeFilesStatus(filesStatus);
         }
@@ -198,8 +186,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования
         /// </summary>
-        private bool CanFileDataBeAddedToList(FileData file) =>
-            file != null && _filesData?.Any(f => f.Equals(file)) == false;
+        private bool CanFileDataBeAddedToList(IFileData file) => file != null && _filesData.IndexOf(file) > -1;
 
         /// <summary>
         /// Установить статус конвертирования пакета
@@ -222,8 +209,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             {
                 _fileDataChange.Dispose();
             }
-
-            _filesData = null;
 
             _disposedValue = true;
         }

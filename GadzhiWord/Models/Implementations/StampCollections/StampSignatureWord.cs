@@ -20,7 +20,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampSignatureWord : StampSignature<IStampFieldWord>, IStampSignatureWord
     {
-        protected StampSignatureWord(IStampFieldWord signature,  ISignatureLibrary signatureLibrary)
+        protected StampSignatureWord(IStampFieldWord signature,  ISignatureLibraryApp signatureLibrary)
         {
             Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                             "Подпись не инициализирована"));
@@ -36,7 +36,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Ответственное лицо
         /// </summary>    
-        public override PersonInformation PersonInformation { get; }
+        public override PersonInformationApp PersonInformation { get; }
 
         /// <summary>
         /// Подпись
@@ -51,7 +51,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> InsertSignature(ISignatureFile signatureFile) =>
+        public override IStampSignature<IStampFieldWord> InsertSignature(ISignatureFileApp signatureFile) =>
             Signature.
             ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath)).
             Map(_ => this);

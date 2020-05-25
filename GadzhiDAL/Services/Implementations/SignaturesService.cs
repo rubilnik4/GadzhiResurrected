@@ -36,7 +36,10 @@ namespace GadzhiDAL.Services.Implementations
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
-            var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().ToListAsync();
+            var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().
+                                                     OrderBy(signature => signature.PersonInformation.Surname).
+                                                     ThenBy(signature => signature.PersonInformation.Name).
+                                                     ToListAsync();
             var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, false);
 
             await unitOfWork.CommitAsync();

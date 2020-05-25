@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 
-namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
+namespace GadzhiCommon.Models.Implementations.LibraryData
 {
     /// <summary>
     /// Имя с идентификатором и изображением в байтовом виде

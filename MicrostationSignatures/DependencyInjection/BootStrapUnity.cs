@@ -3,7 +3,6 @@ using System.Linq;
 using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.Resources;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
@@ -19,6 +18,9 @@ using Unity;
 using MicrostationSignatures.Models.Implementations;
 using MicrostationSignatures.Models.Interfaces;
 using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiDTOBase.Infrastructure.Implementations.Converters;
+using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 
 namespace MicrostationSignatures.DependencyInjection
 {
@@ -47,7 +49,7 @@ namespace MicrostationSignatures.DependencyInjection
 
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
             var converterDataFileFromDto = container.Resolve<IConverterDataFileFromDto>();
-            var signaturesLibrarySearching = new SignaturesLibrarySearching(Enumerable.Empty<ISignatureLibrary>(),
+            var signaturesLibrarySearching = new SignaturesLibrarySearching(Enumerable.Empty<ISignatureLibraryApp>(),
                                                                             GetSignaturesSync(fileConvertingServerService,
                                                                                               converterDataFileFromDto,
                                                                                               ProjectSettings.DataSignaturesFolder));

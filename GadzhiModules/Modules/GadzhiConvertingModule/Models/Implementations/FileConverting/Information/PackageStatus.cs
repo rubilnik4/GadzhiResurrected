@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 
@@ -12,7 +13,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public PackageStatus(IEnumerable<FileStatus> fileData, StatusProcessingProject statusProcessingProject, 
                              QueueStatus queueStatus = new QueueStatus())
         {
-            FileStatus = fileData ?? Enumerable.Empty<FileStatus>();
+            FileStatus = fileData?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(fileData));
             StatusProcessingProject = statusProcessingProject;
             QueueStatus = queueStatus;
         }
@@ -20,7 +21,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Список файлов для изменения статуса
         /// </summary>
-        public IEnumerable<FileStatus> FileStatus { get; }
+        public IReadOnlyCollection<FileStatus> FileStatus { get; }
 
         /// <summary>
         /// Статус обработки пакета

@@ -26,12 +26,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        IReadOnlyList<FileData> FilesData { get; }
+        IReadOnlyList<IFileData> FilesData { get; }
 
         /// <summary>
         /// Пути конвертируемых файлов
         /// </summary>     
-        IEnumerable<string> FilesDataPath { get; }
+        IReadOnlyCollection<string> FilesDataPath { get; }
 
         /// <summary>
         /// Статус выполнения проекта
@@ -51,12 +51,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Добавить файл
         /// </summary>
-        void AddFile(FileData file);
+        void AddFile(IFileData file);
 
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        void AddFiles(IEnumerable<FileData> filesData);
+        void AddFiles(IEnumerable<IFileData> filesData);
 
         /// <summary>
         /// Добавить файлы
@@ -71,7 +71,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        void RemoveFiles(IEnumerable<FileData> filesData);
+        void RemoveFiles(IEnumerable<IFileData> filesData);
 
         /// <summary>
         /// Изменить статус файлов и присвоить при необходимости ошибку

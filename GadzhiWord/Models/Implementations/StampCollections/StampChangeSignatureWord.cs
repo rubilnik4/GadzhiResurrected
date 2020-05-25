@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
@@ -21,7 +20,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
 
         public StampChangeWord(IStampFieldWord numberChange, IStampFieldWord numberOfPlots, IStampFieldWord typeOfChange,
                                IStampFieldWord documentChange, IStampFieldWord signature, IStampFieldWord dateChange,
-                               ISignatureLibrary signatureLibrary)
+                               ISignatureLibraryApp signatureLibrary)
             : base(signature, signatureLibrary)
         {
             NumberChange = numberChange;

@@ -13,10 +13,12 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiModules.Infrastructure.Implementations
@@ -134,7 +136,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Удалить файлы
         /// </summary>
-        public void RemoveFiles(IEnumerable<FileData> filesToRemove)
+        public void RemoveFiles(IEnumerable<IFileData> filesToRemove)
         {
             if (_statusProcessingInformation.IsConverting) return;
 
@@ -161,7 +163,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            PackageDataRequestClient packageDataRequest = await PrepareFilesToSending();
+            var packageDataRequest = await PrepareFilesToSending();
             if (!packageDataRequest.IsValid)
             {
                 await AbortPropertiesConverting();
@@ -269,6 +271,14 @@ namespace GadzhiModules.Infrastructure.Implementations
             _statusProcessingSubscriptions?.Dispose();
             _packageInfoProject?.ChangeAllFilesStatusAndMarkError();
         }
+
+        /// <summary>
+        /// Загрузить подписи из базы данных
+        /// </summary>
+        public async Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames() =>
+            await _fileConvertingClientService.Operations.GetSignaturesNames().
+            MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
+            MapAsync(signatures => signatures.ToList());
 
         /// <summary>
         /// Загрузить отделы из базы данных

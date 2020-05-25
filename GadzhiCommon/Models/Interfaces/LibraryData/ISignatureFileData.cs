@@ -1,4 +1,4 @@
-﻿namespace GadzhiApplicationCommon.Models.Interfaces.LibraryData
+﻿namespace GadzhiCommon.Models.Interfaces.LibraryData
 {
     /// <summary>
     /// Имя с идентификатором и изображением в байтовом виде
@@ -8,6 +8,6 @@
         /// <summary>
         /// Изображение подписи
         /// </summary>
-        public byte[] SignatureFileDataSource { get; }
+        byte[] SignatureFileDataSource { get; }
     }
 }

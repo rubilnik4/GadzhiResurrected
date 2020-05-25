@@ -111,7 +111,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
                                     okFunc: signatureLibrary => signatureLibrary,
                                     badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
                                                                                       $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
-                                ResultValueOk(signatureLibrary => new SignatureFile(signatureLibrary.PersonId, 
+                                ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId, 
                                                                                     signatureLibrary.PersonInformation, String.Empty)).
                                 ResultValueOk(signatureFile => (IStampSignature<IStampField>)signature.InsertSignature(signatureFile))).
             ToResultCollection();

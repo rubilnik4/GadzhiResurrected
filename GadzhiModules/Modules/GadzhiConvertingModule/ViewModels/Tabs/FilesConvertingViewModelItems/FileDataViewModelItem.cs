@@ -1,13 +1,13 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using Prism.Mvvm;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems
 {
     public class FileDataViewModelItem : BindableBase
     {
-        public FileDataViewModelItem(FileData fileData)
+        public FileDataViewModelItem(IFileData fileData)
         {
             FileData = fileData;
         }
@@ -15,7 +15,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// <summary>
         /// Модель данных для хранения информации о конвертируемом файле
         /// </summary>
-        public FileData FileData { get; }
+        public IFileData FileData { get; }
 
         /// <summary>
         /// Расширение файла

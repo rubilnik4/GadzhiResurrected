@@ -67,7 +67,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
         /// </summary>      
-        private async Task<(bool Success, FileDataRequestClient FileDataSourceRequest)> ToFileDataRequest(FileData fileData)
+        private async Task<(bool Success, FileDataRequestClient FileDataSourceRequest)> ToFileDataRequest(IFileData fileData)
         {
             (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileData.FilePath);
             var fileDataRequestClient = new FileDataRequestClient()

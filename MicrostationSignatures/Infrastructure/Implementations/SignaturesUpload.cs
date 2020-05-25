@@ -21,8 +21,9 @@ using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Functional;
+using GadzhiCommon.Models.Implementations.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using MicrostationSignatures.Models.Enums;
@@ -170,7 +171,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Загрузить подписи в базу
         /// </summary>
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
-            await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
+            await ConverterMicrostationDataToDto.SignaturesToDto(signatureFileData).
             Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
             VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
             VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
@@ -189,7 +190,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Загрузить данные Microstation в базу
         /// </summary>
         private async Task UploadMicrostationDataToDataBase(MicrostationDataFile microstationDataFile, MicrostationDataType microstationDataType) =>
-            await ConverterDataFileToDto.MicrostationDataFileToDto(microstationDataFile).
+            await ConverterMicrostationDataToDto.MicrostationDataFileToDto(microstationDataFile).
                   Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
                   VoidAsync(dataFile => microstationDataType switch
                   {

@@ -6,13 +6,13 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://prismlibrary.com/"  
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             
              mc:Ignorable="d" 
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:ConvertingSettingsViewModel, IsDesignTimeCreatable=False}"
              >
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -24,10 +24,29 @@
         <TextBlock Grid.Row="0"
                    Grid.Column="0" 
                    VerticalAlignment="Center" 
-                   Text="Отдел">
+                   Text="Подпись">
         </TextBlock>
 
         <ComboBox Grid.Row="0"
+                  Grid.Column="1" 
+                  materialDesign:HintAssist.Hint="Выберите подпись"
+                  SelectedItem="{Binding PersonSignature}"
+                  ItemsSource="{Binding PersonSignatures.Result}"
+                  DisplayMemberPath="PersonInformation.FullInformation">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0" 
+                   VerticalAlignment="Center" 
+                   Text="Отдел">
+        </TextBlock>
+
+        <ComboBox Grid.Row="1"
                   Grid.Column="1" 
                   materialDesign:HintAssist.Hint="Выберите отдел"
                   SelectedItem="{Binding Department}"

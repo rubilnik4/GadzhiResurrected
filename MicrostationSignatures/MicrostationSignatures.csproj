@@ -100,6 +100,10 @@
       <Project>{947DB9A9-FE6A-4274-97FD-9568D28595D7}</Project>
       <Name>GadzhiConverting</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOBase\GadzhiDTOBase.csproj">
+      <Project>{6CC66305-C66B-4D9B-9ECF-5089A5FE8369}</Project>
+      <Name>GadzhiDTOBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiDTOServer\GadzhiDTOServer.csproj">
       <Project>{B327C2A7-14EA-44B0-B3CE-6E4309B12771}</Project>
       <Name>GadzhiDTOServer</Name>
