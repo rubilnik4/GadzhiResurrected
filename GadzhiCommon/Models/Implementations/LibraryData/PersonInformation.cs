@@ -53,7 +53,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// Загружена ли информация о пользователе полностью
         /// </summary>
         public bool HasFullInformation => !String.IsNullOrWhiteSpace(Surname) && !String.IsNullOrWhiteSpace(Name) &&
-                                          !String.IsNullOrWhiteSpace(Patronymic) && String.IsNullOrWhiteSpace(Department);
+                                          !String.IsNullOrWhiteSpace(Patronymic) && !String.IsNullOrWhiteSpace(Department);
 
         /// <summary>
         /// Проверка фамилии 

@@ -10,6 +10,7 @@ using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
+using Nito.AsyncEx.Synchronous;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
 {
@@ -24,7 +25,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         public static Func<IEnumerable<string>, IList<ISignatureFileApp>> GetSignaturesSync(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                                                                                IConverterDataFileFromDto converterDataFileFromDto,
                                                                                                string signatureFolder) => 
-            (idSignatures) => fileConvertingServerService.Operations.GetSignatures(idSignatures.ToList()).Result.
+            (idSignatures) => fileConvertingServerService.Operations.GetSignatures(idSignatures.ToList()).WaitAndUnwrapException().
                               Map(signatures => converterDataFileFromDto.SignaturesFileFromDto(signatures, signatureFolder)).
                               ToApplication().ToList();
     }

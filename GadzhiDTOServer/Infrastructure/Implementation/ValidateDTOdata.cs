@@ -1,12 +1,11 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Implementations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
-namespace GadzhiCommonServer.Infrastructure.Implementations
+namespace GadzhiDTOServer.Infrastructure.Implementation
 {
     /// <summary>
     /// Класс проверки входных данных

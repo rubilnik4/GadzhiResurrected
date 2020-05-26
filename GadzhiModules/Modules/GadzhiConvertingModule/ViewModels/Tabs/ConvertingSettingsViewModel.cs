@@ -5,7 +5,7 @@ using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
-using Nito.AsyncEx;
+using Nito.Mvvm;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -24,8 +24,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             if (applicationGadzhi == null) throw new ArgumentNullException(nameof(applicationGadzhi));
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
 
-            PersonSignatures = NotifyTaskCompletion.Create(applicationGadzhi.GetSignaturesNames());
-            Departments = NotifyTaskCompletion.Create(applicationGadzhi.GetSignaturesDepartments());
+            PersonSignatures = NotifyTask.Create(applicationGadzhi.GetSignaturesNames());
+            Departments = NotifyTask.Create(applicationGadzhi.GetSignaturesDepartments());
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Подписи
         /// </summary>
-        public INotifyTaskCompletion<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
+        public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
 
         /// <summary>
         /// Отдел
@@ -59,6 +59,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Отделы
         /// </summary>
-        public INotifyTaskCompletion<IList<string>> Departments { get; }
+        public NotifyTask<IList<string>> Departments { get; }
     }
 }

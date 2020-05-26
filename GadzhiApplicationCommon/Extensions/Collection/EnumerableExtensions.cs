@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Extensions.Collection
     /// <summary>
     /// Методы расширения для перечислений
     /// </summary>
-    public static class EnumerableExtension
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// Проверка перечисления на null

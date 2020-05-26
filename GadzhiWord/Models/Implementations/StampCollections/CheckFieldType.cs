@@ -37,7 +37,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             stampTable?.RowsElementWord?.
             Any(row => row.Index > cellElement.RowIndex &&
                        stampTable.HasCellElement(cellElement.RowIndex, cellElement.ColumnIndex) &&
-                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElementWord[cellElement.ColumnIndex].Text)) == true;
+                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].Text)) == true;
 
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью

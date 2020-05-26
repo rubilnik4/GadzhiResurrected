@@ -30,7 +30,7 @@ namespace GadzhiWcfHost.Services
 
         /// <summary>
         /// Сохранить файлы для конвертации в системе и отправить отчет
-        /// </summary>      
+        /// </summary>
         public async Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequest) =>
                 await _applicationClientConverting.QueueFilesDataAndGetResponse(packageDataRequest);
 

@@ -13,7 +13,7 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        IList<ICellElement> CellsElementWord { get; }
+        IList<ICellElement> CellsElement { get; }
 
         /// <summary>
         /// Индекс строки

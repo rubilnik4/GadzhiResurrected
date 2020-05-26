@@ -100,9 +100,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             var subscribe = Observable.Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToServer)).
                             Where(_ => !IsConverting).
-                            Subscribe(async _ => await ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
+                            Subscribe(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
                                                                       beforeMethod: () => IsConverting = true,
-                                                                      finallyMethod: () => IsConverting = false));
+                                                                      finallyMethod: () => IsConverting = false)));
             _convertingUpdaterSubscriptions.Add(subscribe);
         }
 
@@ -232,9 +232,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await fileDataServer.WhereOkAsync(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData, convertingSettings)).
-                        ResultValueBad(fileDataTask => Task.FromResult(fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1))).
-                        ResultValueBad(fileDataTask => fileDataTask.VoidAsync(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, 
-                                                                                                                            convertingSettings))).
+                        ResultValueBad(_ => fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).
+                                            VoidAsync(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))).
                         Value);
 
         /// <summary>

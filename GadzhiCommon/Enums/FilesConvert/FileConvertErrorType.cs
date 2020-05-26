@@ -20,8 +20,7 @@
         AttemptingCount,
         InternalError,
         UnknownError,
-        
-        ApplicationNotLoad, //Microstation and Word Errors
+        ApplicationNotLoad, // Microstation and Word Errors
         LibraryNotFound,
         FileNotOpen,
         FileNotSaved,

@@ -25,6 +25,7 @@ using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
+using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using MicrostationSignatures.Models.Enums;
 
@@ -171,7 +172,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Загрузить подписи в базу
         /// </summary>
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
-            await ConverterMicrostationDataToDto.SignaturesToDto(signatureFileData).
+            await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
             Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
             VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
             VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));

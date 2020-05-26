@@ -8,7 +8,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional
     /// <summary>
     /// Методы расширения для проверки условий
     /// </summary>
-    public static class WhereExtension
+    public static class WhereExtensions
     {
         /// <summary>
         /// Условие возвращающее объект или null 

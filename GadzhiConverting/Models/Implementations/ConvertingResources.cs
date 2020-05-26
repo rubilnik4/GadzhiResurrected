@@ -11,6 +11,7 @@ using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
+using Nito.AsyncEx.Synchronous;
 
 namespace GadzhiConverting.Models.Implementations
 {
@@ -65,7 +66,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        public IReadOnlyList<ISignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.Result;
+        public IReadOnlyList<ISignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.WaitAndUnwrapException();
 
         /// <summary>
         /// Подписи Microstation
@@ -80,7 +81,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Подписи Microstation
         /// </summary>
-        public IResultValue<string> SignaturesMicrostation => _signaturesMicrostation ??= SignaturesMicrostationTask.Result;
+        public IResultValue<string> SignaturesMicrostation => _signaturesMicrostation ??= SignaturesMicrostationTask.WaitAndUnwrapException();
 
         /// <summary>
         /// Штампы для Microstation
@@ -95,7 +96,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Штампы для Microstation
         /// </summary>
-        public IResultValue<string> StampMicrostation => _stampMicrostation ??= StampMicrostationTask.Result;
+        public IResultValue<string> StampMicrostation => _stampMicrostation ??= StampMicrostationTask.WaitAndUnwrapException();
 
         /// <summary>
         /// Загрузить отложенные данные

@@ -25,7 +25,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        public IList<ICellElement> CellsElementWord => _cellsElementWord;
+        public IList<ICellElement> CellsElement => _cellsElementWord;
 
         /// <summary>
         /// Индекс строки

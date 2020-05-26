@@ -246,7 +246,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private void ActionOnTypeRemove(FilesChange filesChange)
         {
-            if (filesChange?.FileData?.Count() == 1)
+            if (filesChange?.FileData.Count == 1)
             {
                 var fileRemove = FilesDataCollection.First(f => f.FilePath == filesChange.FileData.First().FilePath);
                 FilesDataCollection.Remove(fileRemove);

@@ -22,12 +22,12 @@ namespace GadzhiWord.Word.Implementations.Converters
                                       Replace("у", "у").
                                       Replace("o", "о").
                                       Replace("..", ".").
-                                      Replace(((char) 7).ToString(), String.Empty).
-                                      Replace(((char) 10).ToString(), String.Empty).
-                                      Replace(((char) 11).ToString(), String.Empty).
-                                      Replace(((char) 13).ToString(), String.Empty).
-                                      Replace(((char) 160).ToString(), String.Empty).
-                                      Replace(((char) 176).ToString(), String.Empty)
+                                      Replace(((char)7).ToString(), String.Empty).
+                                      Replace(((char)10).ToString(), String.Empty).
+                                      Replace(((char)11).ToString(), String.Empty).
+                                      Replace(((char)13).ToString(), String.Empty).
+                                      Replace(((char)160).ToString(), String.Empty).
+                                      Replace(((char)176).ToString(), String.Empty)
                                   ?? String.Empty;
 
             return Regex.Replace(preparedText, @"\s+", "");
