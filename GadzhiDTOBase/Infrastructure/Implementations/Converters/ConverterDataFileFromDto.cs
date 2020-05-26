@@ -66,7 +66,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// </summary>
         private static ISignatureLibrary SignatureLibraryFromDto(SignatureDto signatureDto) =>
             (signatureDto != null)
-                ? new SignatureLibrary(signatureDto.Id, PersonInformationFromDto(signatureDto.PersonInformation))
+                ? new SignatureLibrary(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation))
                 : throw new ArgumentNullException(nameof(signatureDto));
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         private (bool success, ISignatureFile signatureFile) SignatureFileFromDto(SignatureDto signatureDto, string signatureFolder)
         {
             if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
-            bool success = _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.Id, SignatureFile.SaveFormat),
+            bool success = _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.PersonId, SignatureFile.SaveFormat),
                                                                   signatureDto.SignatureJpeg).Result;
 
-            return (success, new SignatureFile(signatureDto.Id, PersonInformationFromDto(signatureDto.PersonInformation), signatureFolder));
+            return (success, new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation), signatureFolder));
         }
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         private async Task<(bool success, ISignatureFile signatureFile)> SignatureFileFromDtoAsync(SignatureDto signatureDto, string signatureFolder)
         {
             if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
-            bool success = await _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.Id,
+            bool success = await _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.PersonId,
                                                                                                              SignatureFile.SaveFormat),
                                                                         signatureDto.SignatureJpeg);
 
-            return (success, new SignatureFile(signatureDto.Id, PersonInformationFromDto(signatureDto.PersonInformation), signatureFolder));
+            return (success, new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation), signatureFolder));
         }
 
         /// <summary>

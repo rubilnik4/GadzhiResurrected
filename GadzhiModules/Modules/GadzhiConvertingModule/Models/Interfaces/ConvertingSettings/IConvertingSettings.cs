@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Models.Interfaces.LibraryData;
+﻿using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings
 {
@@ -13,8 +14,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Convert
         string Department { get; set; }
 
         /// <summary>
-        /// Подпись
+        /// Личная подпись
         /// </summary>
         ISignatureLibrary PersonSignature { get; set; }
+
+        /// <summary>
+        /// Принцип именования PDF
+        /// </summary>
+        PdfNamingType PdfNamingType { get; set; }
     }
 }

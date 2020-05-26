@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace GadzhiModules.Helpers.Converters
 {
+    /// <summary>
+    /// Преобразование типа цвета в строку
+    /// </summary>
     public static class ColorPrintConverter
     {
         /// <summary>
@@ -23,9 +26,7 @@ namespace GadzhiModules.Helpers.Converters
         /// </summary>       
         public static string ColorPrintToString(ColorPrint colorPrint)
         {
-            var colorPrintString = String.Empty;
-            ColorPrintString?.TryGetValue(colorPrint, out colorPrintString);
-
+            ColorPrintString.TryGetValue(colorPrint, out string colorPrintString);
             return colorPrintString;
         }
 

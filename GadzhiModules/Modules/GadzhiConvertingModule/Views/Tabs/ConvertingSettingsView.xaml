@@ -7,50 +7,115 @@
              xmlns:prism="http://prismlibrary.com/"  
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+             xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:ConvertingSettingsViewModel, IsDesignTimeCreatable=False}"
              >
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
+                <Setter Property="Margin" Value="5 10 20 10" />
+            </Style>
+
+            <Style TargetType="{x:Type ProgressBar}" x:Key="PreLoadingProgressData" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
+                <Setter Property="Value" Value="0" />
+                <Setter Property="IsIndeterminate" Value="True" />
+                <Setter Property="Margin" Value="0 0 10 0" />
+            </Style>
+
+            <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"
+                                            TrueValue="Visible" 
+                                            FalseValue="Collapsed"/>
+        </Grid.Resources>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0" 
-                   VerticalAlignment="Center" 
-                   Text="Подпись">
-        </TextBlock>
+        <GroupBox Grid.Column="0" 
+                  Header="Личные данные"
+                  Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-        <ComboBox Grid.Row="0"
-                  Grid.Column="1" 
-                  materialDesign:HintAssist.Hint="Выберите подпись"
-                  SelectedItem="{Binding PersonSignature}"
-                  ItemsSource="{Binding PersonSignatures.Result}"
-                  DisplayMemberPath="PersonInformation.FullInformation">
-            <ComboBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ComboBox.ItemsPanel>
-        </ComboBox>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="1"
-                   Grid.Column="0" 
-                   VerticalAlignment="Center" 
-                   Text="Отдел">
-        </TextBlock>
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0" 
+                           VerticalAlignment="Center" 
+                           Text="Подпись">
+                </TextBlock>
+                <DockPanel Grid.Row="0" Grid.Column="1">
+                    <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                                 Visibility="{Binding PersonSignatures.IsNotCompleted, Converter={StaticResource VisibilityConverter}}" >
+                    </ProgressBar>
 
-        <ComboBox Grid.Row="1"
-                  Grid.Column="1" 
-                  materialDesign:HintAssist.Hint="Выберите отдел"
-                  SelectedItem="{Binding Department}"
-                  ItemsSource="{Binding Departments.Result}">
-        </ComboBox>
+                    <ComboBox materialDesign:HintAssist.Hint="Выберите подпись"
+                              SelectedItem="{Binding PersonSignature}"
+                              ItemsSource="{Binding PersonSignatures.Result}"
+                              DisplayMemberPath="PersonInformation.FullInformation">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                </DockPanel>
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0" 
+                           VerticalAlignment="Center" 
+                           Text="Отдел">
+                </TextBlock>
+                <DockPanel Grid.Row="1" Grid.Column="1">
+                    <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                                 Visibility="{Binding Departments.IsNotCompleted, Converter={StaticResource VisibilityConverter}}" >
+                    </ProgressBar>
+
+                    <ComboBox materialDesign:HintAssist.Hint="Выберите отдел"
+                              SelectedItem="{Binding Department}"
+                              ItemsSource="{Binding Departments.Result}">
+                    </ComboBox>
+                </DockPanel>
+               
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1"
+                  Header="Конвертирование"
+                  Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0"
+                       Grid.Column="0" 
+                       VerticalAlignment="Center" 
+                       Text="Именование PDF">
+                </TextBlock>
+                <ComboBox Grid.Row="0"
+                          Grid.Column="1" 
+                          SelectedValue="{Binding PdfNamingType}"
+                          SelectedValuePath="Key"
+                          ItemsSource="{Binding PdfNamingTypes}"
+                          DisplayMemberPath="Value"  >
+                </ComboBox>
+                </Grid>
+        </GroupBox>
+      
     </Grid>
 </UserControl>

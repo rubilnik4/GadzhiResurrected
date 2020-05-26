@@ -72,9 +72,7 @@ namespace GadzhiCommon.Converters
         /// </summary>       
         public static string FileErrorTypeToString(FileConvertErrorType fileConvertErrorType)
         {
-            var fileConvertErrorTypeString = String.Empty;
-            ErrorTypeToString?.TryGetValue(fileConvertErrorType, out fileConvertErrorTypeString);
-
+            ErrorTypeToString.TryGetValue(fileConvertErrorType, out string fileConvertErrorTypeString);
             return fileConvertErrorTypeString;
         }
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
+using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 using Nito.Mvvm;
 
@@ -60,5 +63,19 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Отделы
         /// </summary>
         public NotifyTask<IList<string>> Departments { get; }
+
+        /// <summary>
+        /// Принцип именования PDF
+        /// </summary>
+        public PdfNamingType PdfNamingType
+        {
+            get => _convertingSettings.PdfNamingType;
+            set => _convertingSettings.PdfNamingType = value;
+        }
+
+        /// <summary>
+        /// Принципы именования PDF
+        /// </summary>
+        public IReadOnlyDictionary<PdfNamingType, string> PdfNamingTypes => PdfNamingConverter.PdfNamingString;
     }
 }

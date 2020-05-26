@@ -42,7 +42,9 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             (convertingSettings != null)
                 ? new ConvertingSettingsRequest()
                 {
-                    Department = convertingSettings.Department
+                    PersonId = convertingSettings.PersonId,
+                    Department = convertingSettings.Department,
+                    PdfNamingType = convertingSettings.PdfNamingType,
                 }
                 : throw new ArgumentNullException(nameof(convertingSettings));
 

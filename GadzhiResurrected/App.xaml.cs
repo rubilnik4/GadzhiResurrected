@@ -10,6 +10,8 @@ using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Unity;
 using System.Windows;
+using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
+using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using Unity;
 
 namespace GadzhiResurrected

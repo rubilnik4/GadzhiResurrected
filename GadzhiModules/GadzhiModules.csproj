@@ -200,6 +200,9 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
+    <Compile Include="Helpers\Converters\PdfNamingConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiFileData.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiServices.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataToDto.cs" />
     <Compile Include="Helpers\Converters\StatusProcessingProjectConverter.cs" />
@@ -207,6 +210,8 @@
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
+    <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
+    <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
@@ -236,9 +241,9 @@
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesConvertingView.xaml.cs">
       <DependentUpon>FilesConvertingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Implementations\DialogServiceStandard.cs" />
-    <Compile Include="Infrastructure\Interfaces\IApplicationGadzhi.cs" />
+    <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhi.cs" />
     <Compile Include="Infrastructure\Interfaces\IDialogServiceStandard.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ConvertingSettings\ConvertingSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ConvertingSettings\IConvertingSettings.cs" />

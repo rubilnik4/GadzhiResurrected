@@ -1,4 +1,5 @@
 ﻿using FluentNHibernate.Mapping;
+using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Main;
 
@@ -19,7 +20,9 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Map(x => x.AttemptingConvertCount).Not.Nullable();
             Component(x => x.ConvertingSettings, m =>
                 {
+                    m.Map(x => x.PersonId).Not.Nullable();
                     m.Map(x => x.Department).Not.Nullable();
+                    m.Map(x => x.PdfNamingType).CustomType<PdfNamingType>().Not.Nullable();
                 });
             HasMany(x => x.FileDataEntities)
                     .Inverse()

@@ -8,6 +8,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems;
 using GongSolutions.Wpf.DragDrop;

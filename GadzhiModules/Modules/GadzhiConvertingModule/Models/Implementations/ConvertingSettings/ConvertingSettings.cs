@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 
@@ -11,14 +12,20 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Co
     public class ConvertingSettings : IConvertingSettings
     {
         public ConvertingSettings()
-            : this(String.Empty, null)
+            : this(null, String.Empty,  PdfNamingType.ByFile)
         { }
 
-        public ConvertingSettings(string department, ISignatureLibrary personSignature)
+        public ConvertingSettings( ISignatureLibrary personSignature, string department, PdfNamingType pdfNamingType)
         {
             Department = department ?? String.Empty;
             PersonSignature = personSignature;
+            PdfNamingType = pdfNamingType;
         }
+
+        /// <summary>
+        /// Личная подпись
+        /// </summary>
+        public ISignatureLibrary PersonSignature { get; set; }
 
         /// <summary>
         /// Отдел
@@ -26,8 +33,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Co
         public string Department { get; set; }
 
         /// <summary>
-        /// Подпись
+        /// Принцип именования PDF
         /// </summary>
-        public ISignatureLibrary PersonSignature { get; set; }
+        public PdfNamingType PdfNamingType { get; set; }
     }
 }

@@ -78,7 +78,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
                 PersonInformation = PersonInformationFromDto(signatureDto.PersonInformation),
                 SignatureJpeg = signatureDto.SignatureJpeg,
             };
-            signatureEntity.SetId(signatureDto.Id);
+            signatureEntity.SetId(signatureDto.PersonId);
 
             return signatureEntity;
         }
@@ -101,7 +101,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
             (signatureEntity != null)
                 ? new SignatureDto()
                 {
-                    Id = signatureEntity.Id,
+                    PersonId = signatureEntity.Id,
                     PersonInformation = PersonInformationToDto(signatureEntity.PersonInformation),
                     SignatureJpeg = signatureLoad
                                 ? signatureEntity.SignatureJpeg.AsQueryable().ToArray()

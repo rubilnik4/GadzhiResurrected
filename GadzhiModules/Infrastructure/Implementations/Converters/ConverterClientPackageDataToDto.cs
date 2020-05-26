@@ -6,10 +6,8 @@ using GadzhiModules.Infrastructure.Interfaces.Converters;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
@@ -56,11 +54,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
-        private static ConvertingSettingsRequest ToConvertingSettingsRequest(IConvertingSettings convertingSetting)=>
-            (convertingSetting != null) 
+        private static ConvertingSettingsRequest ToConvertingSettingsRequest(IConvertingSettings convertingSetting) =>
+            (convertingSetting != null)
                 ? new ConvertingSettingsRequest()
                 {
-                    Department = convertingSetting.Department
+                    PersonId = convertingSetting.PersonSignature.PersonId ?? String.Empty ,
+                    Department = convertingSetting.Department,
+                    PdfNamingType = convertingSetting.PdfNamingType,
+
                 }
                 : throw new ArgumentNullException(nameof(convertingSetting));
 
