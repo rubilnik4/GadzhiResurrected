@@ -18,7 +18,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        IEnumerable<IFileDataServer> FilesDataServer { get; }
+        IReadOnlyCollection<IFileDataServer> FilesDataServer { get; }
 
         /// <summary>
         /// Параметры конвертации

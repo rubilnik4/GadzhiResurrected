@@ -23,8 +23,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
         public static Func<IEnumerable<string>, IList<ISignatureFileApp>> GetSignaturesSync(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
-                                                                                               IConverterDataFileFromDto converterDataFileFromDto,
-                                                                                               string signatureFolder) => 
+                                                                                            IConverterDataFileFromDto converterDataFileFromDto,
+                                                                                            string signatureFolder) => 
             (idSignatures) => fileConvertingServerService.Operations.GetSignatures(idSignatures.ToList()).WaitAndUnwrapException().
                               Map(signatures => converterDataFileFromDto.SignaturesFileFromDto(signatures, signatureFolder)).
                               ToApplication().ToList();

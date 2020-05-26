@@ -37,7 +37,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        public IList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
+        public IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
             signaturesDto?.
             Select(signatureDto => SignatureFileFromDto(signatureDto, signatureFolder)).
             Where(successAndSignature => successAndSignature.success).
@@ -48,7 +48,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения асинхронно
         /// </summary>
-        public async Task<IList<ISignatureFile>> SignaturesFileFromDtoAsync(IList<SignatureDto> signaturesDto, string signatureFolder)
+        public async Task<IReadOnlyList<ISignatureFile>> SignaturesFileFromDtoAsync(IReadOnlyList<SignatureDto> signaturesDto, string signatureFolder)
         {
             if (signaturesDto == null) throw new ArgumentNullException(nameof(signaturesDto));
 

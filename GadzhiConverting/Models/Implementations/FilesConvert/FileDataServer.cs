@@ -48,8 +48,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             StatusProcessing = statusProcessing;
             AttemptingConvertCount = attemptingConvertCount;
 
-            FileConvertErrorTypes = filesConvertErrorType  ?? throw new ArgumentNullException(nameof(filesConvertErrorType));
-            FilesDataSourceServer = filesDataSourceServer ?? throw new ArgumentNullException(nameof(filesDataSourceServer));
+            FileConvertErrorTypes = filesConvertErrorType?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(filesConvertErrorType));
+            FilesDataSourceServer = filesDataSourceServer?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(filesDataSourceServer));
         }
 
         /// <summary>
@@ -60,12 +60,12 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        public IEnumerable<IFileDataSourceServer> FilesDataSourceServer { get; }
+        public IReadOnlyCollection<IFileDataSourceServer> FilesDataSourceServer { get; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public IEnumerable<FileConvertErrorType> FileConvertErrorTypes { get; }
+        public IReadOnlyCollection<FileConvertErrorType> FileConvertErrorTypes { get; }
 
         /// <summary>
         /// Статус обработки файла

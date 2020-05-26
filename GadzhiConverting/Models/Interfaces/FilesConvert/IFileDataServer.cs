@@ -47,12 +47,12 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        IEnumerable<FileConvertErrorType> FileConvertErrorTypes { get; }
+        IReadOnlyCollection<FileConvertErrorType> FileConvertErrorTypes { get; }
 
         /// <summary>
         /// Путь и тип отконвертированных файлов
         /// </summary>
-        IEnumerable<IFileDataSourceServer> FilesDataSourceServer { get; }
+        IReadOnlyCollection<IFileDataSourceServer> FilesDataSourceServer { get; }
 
         /// <summary>
         /// Установить количество попыток конвертирования

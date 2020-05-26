@@ -27,7 +27,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             AttemptingConvertCount = attemptingConvertCount;
             StatusProcessingProject = statusProcessingProject;
             ConvertingSettings = convertingSettings ?? throw new ArgumentNullException(nameof(convertingSettings));
-            FilesDataServer = filesDataServer ?? throw new ArgumentNullException(nameof(filesDataServer));
+            FilesDataServer = filesDataServer?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(filesDataServer));
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Файлы для конвертирования
         /// </summary>
-        public IEnumerable<IFileDataServer> FilesDataServer { get; }
+        public IReadOnlyCollection<IFileDataServer> FilesDataServer { get; }
 
         /// <summary>
         /// Параметры конвертации
