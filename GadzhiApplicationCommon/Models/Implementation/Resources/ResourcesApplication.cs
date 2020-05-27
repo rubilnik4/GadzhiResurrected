@@ -11,14 +11,14 @@ namespace GadzhiApplicationCommon.Models.Implementation.Resources
     /// </summary>
     public abstract class ResourcesApplication
     {
-        protected ResourcesApplication(SignaturesLibrarySearching signaturesLibrarySearching)
+        protected ResourcesApplication(SignaturesSearching signaturesSearching)
         {
-            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
+            SignaturesSearching = signaturesSearching ?? throw new ArgumentNullException(nameof(signaturesSearching));
         }
 
         /// <summary>
         /// Поиск имен с идентификатором и подписью
         /// </summary>
-        public SignaturesLibrarySearching SignaturesLibrarySearching { get; }
+        public SignaturesSearching SignaturesSearching { get; }
     }
 }

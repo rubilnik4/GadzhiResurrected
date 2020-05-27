@@ -1,7 +1,6 @@
 ﻿using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiDTOServer.TransferModels.FilesConvert;
-using Microsoft.CodeAnalysis.Operations;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;

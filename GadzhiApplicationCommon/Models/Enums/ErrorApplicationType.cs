@@ -10,6 +10,7 @@
         FileNotSaved,
         StampNotFound,
         FileNotFound,
+        FieldNotFound,
         RangeNotValid,
         PrinterNotInstall,
         PaperSizeNotFound,

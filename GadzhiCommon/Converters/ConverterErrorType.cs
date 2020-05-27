@@ -34,6 +34,7 @@ namespace GadzhiCommon.Converters
 
                 { FileConvertErrorType.ApplicationNotLoad , "Ошибка загрузки приложения" },
                 { FileConvertErrorType.LibraryNotFound , "Библиотека конвертации не найдена" },
+                { FileConvertErrorType.FieldNotFound , "Поле не найдено" },
                 { FileConvertErrorType.FileNotOpen , "Невозможно открыть файл" },
                 { FileConvertErrorType.FileNotSaved , "Невозможно сохранить файл" },
                 { FileConvertErrorType.StampNotFound , "Штампы не найдены" },

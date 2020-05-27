@@ -17,7 +17,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// <summary>
     /// Поиск имен с идентификатором и подписью
     /// </summary>
-    public class SignaturesLibrarySearching
+    public class SignaturesSearching
     {
         /// <summary>
         /// Имена с идентификатором и подписи
@@ -29,7 +29,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         private readonly Func<IEnumerable<string>, IList<ISignatureFileApp>> _getSignatures;
 
-        public SignaturesLibrarySearching(IEnumerable<ISignatureLibraryApp> signaturesLibrary,
+        public SignaturesSearching(IEnumerable<ISignatureLibraryApp> signaturesLibrary,
                                           Func<IEnumerable<string>, IList<ISignatureFileApp>> getSignatures)
         {
             if (signaturesLibrary == null) throw new ArgumentNullException(nameof(signaturesLibrary));

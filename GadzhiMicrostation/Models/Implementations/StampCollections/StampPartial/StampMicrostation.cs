@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
@@ -18,13 +19,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
         protected StampMicrostation(StampSettings stampSettings, ICellElementMicrostation stampCellElement, 
-                                    SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(stampSettings)
+                                    SignaturesSearching signaturesSearching)
+            : base(stampSettings, signaturesSearching)
         {
             StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
-            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
-
-            StampSubControls = FindElementsInStampFields(stampCellElement.SubElements, StampFieldElement.StampControlNames).ToList();
         }
 
         /// <summary>
@@ -33,9 +31,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         public ICellElementMicrostation StampCellElement { get; }
 
         /// <summary>
-        /// Поиск имен с идентификатором и подписью
+        /// Основные поля штампа
         /// </summary>
-        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
+        public override IStampBasicFields StampBasicFields { get; }
 
         /// <summary>
         /// Наименование

@@ -75,7 +75,7 @@
     <Compile Include="Models\Implementation\LibraryData\PersonInformationApp.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureFileApp.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureLibraryApp.cs" />
-    <Compile Include="Models\Implementation\LibraryData\SignaturesLibrarySearching.cs" />
+    <Compile Include="Models\Implementation\LibraryData\SignaturesSearching.cs" />
     <Compile Include="Models\Implementation\Resources\MicrostationResources.cs" />
     <Compile Include="Models\Implementation\Resources\ResourcesApplication.cs" />
     <Compile Include="Models\Implementation\Resources\ResourcesWord.cs" />

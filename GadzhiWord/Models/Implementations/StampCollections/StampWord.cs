@@ -22,8 +22,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     public abstract class StampWord : Stamp
     {
         protected StampWord(StampSettingsWord stampSettingsWord, ITableElement tableStamp, 
-                            SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(stampSettingsWord, signaturesLibrarySearching)
+                            SignaturesSearching signaturesSearching)
+            : base(stampSettingsWord, signaturesSearching)
         {
             TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
             PaperSize = stampSettingsWord?.PaperSize ?? throw new ArgumentNullException(nameof(stampSettingsWord));

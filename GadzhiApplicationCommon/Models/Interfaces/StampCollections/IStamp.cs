@@ -37,7 +37,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        IStampBasicFields StampMainFields { get; }
+        IStampBasicFields StampBasicFields { get; }
 
         /// <summary>
         /// Формат

@@ -28,9 +28,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ConvertingService : IConvertingService
     {
         /// <summary>
-        ///Контейнер зависимостей
+        /// Контейнер зависимостей
         /// </summary>
         private readonly IConvertingFileData _convertingFileData;
+
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private readonly IProjectSettings _projectSettings;
 
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
@@ -58,6 +63,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IFileSystemOperations _fileSystemOperations;
 
         public ConvertingService(IConvertingFileData convertingFileData,
+                                 IProjectSettings projectSettings,
                                  IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                  IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
                                  IConverterServerPackageDataToDto converterServerPackageDataToDto,
@@ -65,6 +71,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                  IFileSystemOperations fileSystemOperations)
         {
             _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
             _converterServerPackageDataFromDto = converterServerPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataFromDto));
             _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
@@ -93,18 +100,39 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>      
-        public void StartConverting()
+        public async Task StartConverting()
         {
+            if (await CheckSignatures() == false) return;
+
             _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
             KillPreviousRunProcesses();
 
+            SubscribeToDataBase();
+        }
+
+        /// <summary>
+        /// Проверить наличие базы подписей
+        /// </summary>
+        private async Task<bool> CheckSignatures() =>
+            await _projectSettings.ConvertingResources.
+            MapAsync(resources => resources.SignatureNames?.Count > 0).
+            WhereBadAsync(hasSignatures => hasSignatures,
+                badFunc: hasSignatures => hasSignatures.
+                         Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.SignatureNotFound, 
+                                                                                     "База подписей не загружена. Отмена запуска"))));
+
+        /// <summary>
+        /// Подписаться на обновление пакетов из базы данных
+        /// </summary>
+        private void SubscribeToDataBase()
+        {
             var subscribe = Observable.Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToServer)).
-                            Where(_ => !IsConverting).
-                            Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                                              beforeMethod: () => IsConverting = true,
-                                                                                              finallyMethod: () => IsConverting = false))).
-                            Concat().
-                            Subscribe();
+                                       Where(_ => !IsConverting).
+                                       Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
+                                                                                                         beforeMethod: () => IsConverting = true,
+                                                                                                         finallyMethod: () => IsConverting = false))).
+                                       Concat().
+                                       Subscribe();
             _convertingUpdaterSubscriptions.Add(subscribe);
         }
 
@@ -231,7 +259,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Конвертировать файл до превышения лимита
         /// </summary>       
         private async Task<IFileDataServer> ConvertingByCountLimit(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
-            await fileDataServer.WhereOkAsync(fileData => !fileData.IsCompleted,
+            await fileDataServer.WhereOkAsyncBind(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData, convertingSettings)).
                         ResultValueBad(_ => fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).

@@ -49,7 +49,7 @@ namespace MicrostationSignatures.DependencyInjection
 
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
             var converterDataFileFromDto = container.Resolve<IConverterDataFileFromDto>();
-            var signaturesLibrarySearching = new SignaturesLibrarySearching(Enumerable.Empty<ISignatureLibraryApp>(),
+            var signaturesLibrarySearching = new SignaturesSearching(Enumerable.Empty<ISignatureLibraryApp>(),
                                                                             GetSignaturesSync(fileConvertingServerService,
                                                                                               converterDataFileFromDto,
                                                                                               ProjectSettings.DataSignaturesFolder));

@@ -90,7 +90,7 @@ namespace GadzhiMicrostation.Microstation.Implementations
                                                                              new StampSettings(new StampIdentifier(modelIndex, stampIndex),
                                                                                                convertingSettings.PersonId, 
                                                                                                convertingSettings.PdfNamingType),
-                                                                             ApplicationMicrostation.MicrostationResources.SignaturesLibrarySearching))).
+                                                                             ApplicationMicrostation.MicrostationResources.SignaturesSearching))).
             Cast<IStamp>();
 
         /// <summary>

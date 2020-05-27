@@ -12,8 +12,9 @@ using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
-using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
 {
@@ -25,34 +26,45 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IResultAppCollection<IStampChangeMicrostation> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
+        private IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
             new ResultAppValue<ISignatureLibraryApp>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
-                                                                                         "Не найден идентификатор основной подписи")).
+                                                                                            "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
-                                                             changeNames => GetChangeSignatureField(changeNames, signatureLibrary))).
+                                                             changeNames => GetStampChangeRow(changeNames, signatureLibrary))).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
         /// <summary>
-        /// Преобразовать элементы Microstation в строку подписей
+        /// Преобразовать элементы Microstation в строку подписей изменений
         /// </summary>
-        private IResultAppValue<IStampChangeMicrostation> GetChangeSignatureField(IEnumerable<string> changeNames, ISignatureLibraryApp signatureLibrary)
-        {
-            var foundElements = FindElementsInStampControls(changeNames, ElementMicrostationType.TextElement).
-                                Cast<ITextElementMicrostation>().
-                                ToList();
-            if (foundElements.Count == 0) return new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Поля подписей замены не найдены").
-                                                 ToResultApplicationValue<IStampChangeMicrostation>();
+        private IResultAppValue<IStampChange> GetStampChangeRow(IEnumerable<string> changeNames, ISignatureLibraryApp personSignature) =>
+            FindElementsInStamp<ITextElementMicrostation>(changeNames, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                            "Поля подписей изменений не найдены")).
+            ResultValueOkBind(foundFields => GetStampChangeFromFields(foundFields, personSignature));
 
-            var numberChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberChange(), StampFieldType.ChangeSignature);
-            var numberOfPlots = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsNumberOfPlots(), StampFieldType.ChangeSignature);
-            var typeOfChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsTypeOfChange(), StampFieldType.ChangeSignature);
-            var documentChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsDocumentChange(), StampFieldType.ChangeSignature);
-            var dateChange = GetFieldFromElements(foundElements, StampFieldChanges.GetFieldsDateChange(), StampFieldType.ChangeSignature);
+        /// <summary>
+        /// Получить строку с подписью изменений из полей штампа
+        /// </summary>
+        private IResultAppValue<IStampChange> GetStampChangeFromFields(IList<ITextElementMicrostation> foundFields, ISignatureLibraryApp personSignature)
+        {
+            var numberChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsNumberChange(), StampFieldType.ChangeSignature);
+            var numberOfPlots = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsNumberOfPlots(), StampFieldType.ChangeSignature);
+            var typeOfChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsTypeOfChange(), StampFieldType.ChangeSignature);
+            var documentChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDocumentChange(), StampFieldType.ChangeSignature);
+            var dateChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDateChange(), StampFieldType.ChangeSignature);
             var insertSignatureFunc = InsertSignatureFunc(documentChange.ElementStamp, dateChange.ElementStamp, StampFieldType.ChangeSignature);
 
-            return new StampChangeMicrostation(numberChange, numberOfPlots, typeOfChange, documentChange,
-                                               dateChange, signatureLibrary, insertSignatureFunc).
-                   Map(stampChangeSignature => new ResultAppValue<IStampChangeMicrostation>(stampChangeSignature));
+            return GetStampChangeById(personSignature, insertSignatureFunc, numberChange, numberOfPlots, typeOfChange, documentChange, dateChange);
         }
+
+        /// <summary>
+        /// Сформировать строку с подписью изменений согласно идентификатору
+        /// </summary>
+        private static IResultAppValue<IStampChange> GetStampChangeById(ISignatureLibraryApp personSignature,
+                                                                 Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+                                                                 IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
+                                                                 IStampTextField documentChange, IStampTextField dateChange) => 
+            new StampChangeMicrostation(personSignature, insertSignatureFunc, numberChange, numberOfPlots, 
+                                        typeOfChange, documentChange, dateChange).
+            Map(stampChange => new ResultAppValue<IStampChange>(stampChange));
     }
 }

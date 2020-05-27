@@ -4,6 +4,9 @@ using GadzhiConverting.Models.Interfaces.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces
 {
+    /// <summary>
+    /// Параметры приложения
+    /// </summary>
     public interface IProjectSettings
     {
         /// <summary>

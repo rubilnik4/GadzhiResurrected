@@ -10,18 +10,18 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     {
         public StampBasicFields(IStampTextField code, IStampTextField currentSheetNumber)
         {
-            Code = code ?? throw new ArgumentNullException(nameof(code));
-            CurrentSheetNumber = currentSheetNumber ?? throw new ArgumentNullException(nameof(currentSheetNumber));
+            FullCode = code ?? throw new ArgumentNullException(nameof(code));
+            CurrentSheet = currentSheetNumber ?? throw new ArgumentNullException(nameof(currentSheetNumber));
         }
 
         /// <summary>
         /// Шифр
         /// </summary>
-        public IStampTextField Code { get; }
+        public IStampTextField FullCode { get; }
 
         /// <summary>
         /// Номер текущего листа
         /// </summary>
-        public IStampTextField CurrentSheetNumber { get; }
+        public IStampTextField CurrentSheet { get; }
     }
 }

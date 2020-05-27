@@ -74,9 +74,11 @@
     <Compile Include="Microstation\Interfaces\DocumentMicrostationPartial\IDocumentMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ILineElementMicrostation.cs" />
     <Compile Include="Models\Implementations\LibraryElement.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainApprovalSignature.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonSignature .cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeSignature.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampSignaturesMicrostation.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitTypes.cs" />
     <Compile Include="Microstation\Implementations\Units\UnitsNumeratorDenominator.cs" />
@@ -119,7 +121,9 @@
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldElement.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldPersons.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampFieldNames\StampFieldBasic.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldSignatures.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampFieldTextMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampFieldMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampFieldNames\IStampFieldSignature.cs" />

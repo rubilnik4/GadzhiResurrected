@@ -11,10 +11,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
     /// </summary>
     public static class StampFieldMain
     {
-        /// <summary>
-        /// Основной шифр
-        /// </summary>
-        public static StampFieldBase FullCode => new StampFieldBase("G_E_FULLCODE_1");
+
 
         /// <summary>
         /// Наименование проекта
@@ -37,11 +34,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         public static StampFieldBase ProjectStage => new StampFieldBase("G_E_STADY_1", isNeedCompress: false);
 
         /// <summary>
-        /// Текущий лист
-        /// </summary>
-        public static StampFieldBase CurrentSheet => new StampFieldBase("G_E_LISTNUM_1", isNeedCompress: false);
-
-        /// <summary>
         /// Всего листов
         /// </summary>
         public static StampFieldBase TotalSheet => new StampFieldBase("G_E_LISTOV_1", isNeedCompress: false);
@@ -57,15 +49,20 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         public static HashSet<StampFieldBase> GetStampMainFields() =>
                 new HashSet<StampFieldBase>()
                 {
-                    FullCode,
                     ProjectName,
                     ObjectName,
                     SheetName,
                     ProjectStage,
-                    CurrentSheet,
                     TotalSheet,
                     PaperSize,
                 };
+
+        /// <summary>
+        /// Список всех полей, включая базовые
+        /// </summary>
+        public static HashSet<StampFieldBase> GetStampMainAndBasicFields() =>
+            new HashSet<StampFieldBase>(GetStampMainFields().
+                                        Concat(StampFieldBasic.GetStampBasicFields()));
 
         /// <summary>
         /// Маркер подписи в атрибутах
@@ -77,7 +74,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
         /// </summary>      
         public static bool IsFormatField(string fieldText) => !String.IsNullOrEmpty(fieldText) &&
                                                                fieldText.StartsWith("Формат", StringComparison.Ordinal);
-      
+
         /// <summary>
         /// Получить формат штампа
         /// </summary>      

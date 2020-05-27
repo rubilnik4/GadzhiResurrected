@@ -73,7 +73,7 @@ namespace GadzhiConverting.DependencyInjection
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
 
             var convertingResources = await projectSettings.ConvertingResources;
-            var signaturesLibrarySearching = new SignaturesLibrarySearching(convertingResources.SignatureNames.ToApplication(),
+            var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.ToApplication(),
                                                                              GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
                                                                                               ProjectSettings.DataSignaturesFolder));
 

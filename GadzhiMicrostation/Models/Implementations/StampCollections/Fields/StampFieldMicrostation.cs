@@ -18,7 +18,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Fields
         }
 
         /// <summary>
-        /// Текстовый элемент, определяющий поле штампа
+        /// Элемент, определяющий поле штампа
         /// </summary>
         public IElementMicrostation ElementStamp { get; }
     }

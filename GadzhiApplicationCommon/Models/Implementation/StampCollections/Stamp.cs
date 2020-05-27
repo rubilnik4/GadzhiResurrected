@@ -17,10 +17,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// </summary>
     public abstract class Stamp : IStamp
     {
-        protected Stamp(StampSettings stampSettings, SignaturesLibrarySearching signaturesLibrarySearching)
+        protected Stamp(StampSettings stampSettings, SignaturesSearching signaturesSearching)
         {
             StampSettings = stampSettings ?? throw new ArgumentNullException(nameof(stampSettings));
-            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
+            SignaturesSearching = signaturesSearching ?? throw new ArgumentNullException(nameof(signaturesSearching));
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Поиск имен с идентификатором и подписью
         /// </summary>
-        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
+        protected SignaturesSearching SignaturesSearching { get; }
 
         /// <summary>
         /// Наименование
@@ -46,7 +46,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        public abstract IStampBasicFields StampMainFields { get; }
+        public abstract IStampBasicFields StampBasicFields { get; }
 
         /// <summary>
         /// Формат

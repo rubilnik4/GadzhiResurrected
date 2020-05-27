@@ -8,9 +8,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.Resources
     /// </summary>
     public class MicrostationResources: ResourcesApplication
     {
-        public MicrostationResources(SignaturesLibrarySearching signaturesLibrarySearching,
+        public MicrostationResources(SignaturesSearching signaturesSearching,
                                      string signatureMicrostationFileName, string stampMicrostationFileName)
-        : base(signaturesLibrarySearching)
+        : base(signaturesSearching)
         {
             if (String.IsNullOrEmpty(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
             if (String.IsNullOrEmpty(stampMicrostationFileName)) throw new ArgumentNullException(nameof(stampMicrostationFileName));

@@ -38,8 +38,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         private IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
 
         public StampMainWord(ITableElement tableStamp, StampSettingsWord stampSettingsWord,
-                             SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(tableStamp, stampSettingsWord, signaturesLibrarySearching)
+                             SignaturesSearching signaturesSearching)
+            : base(tableStamp, stampSettingsWord, signaturesSearching)
         {
             StampPersonsWord = GetStampPersonSignatures();
             StampChangesWord = GetStampChangeSignatures(StampPersonsWord.Value?.FirstOrDefault());
@@ -110,16 +110,16 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>      
         private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
                                                                               PersonDepartmentType departmentType) =>
-            SignaturesLibrarySearching.FindById(personId)?.PersonInformation.Department.
-            Map(department => SignaturesLibrarySearching.CheckDepartmentAccordingToType(department, departmentType)).
-            Map(departmentChecked => SignaturesLibrarySearching.FindByFullNameOrRandom(personName, departmentChecked));
+            SignaturesSearching.FindById(personId)?.PersonInformation.Department.
+            Map(department => SignaturesSearching.CheckDepartmentAccordingToType(department, departmentType)).
+            Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
 
         /// <summary>
         /// Получить элементы подписей из базы по их идентификационным номерам
         /// </summary>
         private IResultAppCollection<IStampSignature<IStampField>> GetStampSignaturesByIds(IList<IStampSignature<IStampFieldWord>> signaturesStamp) =>
             new ResultAppCollection<string>(signaturesStamp.Select(signatureStamp => signatureStamp.PersonId)).
-            ResultValueOkBind(personIds => SignaturesLibrarySearching.GetSignaturesByIds(personIds)).
+            ResultValueOkBind(personIds => SignaturesSearching.GetSignaturesByIds(personIds)).
             ResultValueContinue(signaturesFile => signaturesFile.Count == signaturesStamp.Count,
                 okFunc: signaturesFile => signaturesFile,
                 badFunc: signaturesFile => new ErrorApplication(ErrorApplicationType.SignatureNotFound,

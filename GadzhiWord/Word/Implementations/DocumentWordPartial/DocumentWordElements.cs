@@ -47,7 +47,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
                                                                                          convertingSettings.PersonId,
                                                                                          convertingSettings.PdfNamingType,
                                                                                          PaperSize, OrientationType),
-                                                                   ApplicationWord.ResourcesWord.SignaturesLibrarySearching));
+                                                                   ApplicationWord.ResourcesWord.SignaturesSearching));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом

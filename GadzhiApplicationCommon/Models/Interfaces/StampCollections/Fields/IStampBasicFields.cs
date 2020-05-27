@@ -8,11 +8,11 @@
         /// <summary>
         /// Шифр
         /// </summary>
-        IStampTextField Code { get; }
+        IStampTextField FullCode { get; }
 
         /// <summary>
         /// Номер текущего листа
         /// </summary>
-        IStampTextField CurrentSheetNumber { get; }
+        IStampTextField CurrentSheet { get; }
     }
 }

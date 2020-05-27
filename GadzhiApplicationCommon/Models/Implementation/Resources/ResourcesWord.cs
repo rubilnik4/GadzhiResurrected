@@ -8,8 +8,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.Resources
     /// </summary>
     public class ResourcesWord : ResourcesApplication
     {
-        public ResourcesWord(SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(signaturesLibrarySearching)
+        public ResourcesWord(SignaturesSearching signaturesSearching)
+            : base(signaturesSearching)
         { }
     }
 }

@@ -12,9 +12,7 @@ using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
@@ -24,12 +22,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
     /// </summary>
     public partial class StampMainMicrostation : StampMicrostation, IStampMain
     {
-        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings, 
-                                     SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(stampCellElement, stampSettings, signaturesLibrarySearching)
+        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings,
+                                     SignaturesSearching signaturesSearching)
+            : base(stampSettings, stampCellElement, signaturesSearching)
         {
             StampPersons = GetStampPersonRows();
-            StampChanges = GetStampChangeRows(StampPersons.Value?.FirstOrDefault());
+            StampChanges = GetStampChangeRows(StampPersons.Value?.FirstOrDefault()?.SignatureLibrary);
             StampApprovals = GetStampApprovalRows();
         }
 
@@ -68,10 +66,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         public override IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures) =>
             signatures.Select(signature => signature.DeleteSignature()).
             ToList().
-            Map(signaturesDeleted => 
+            Map(signaturesDeleted =>
                     new ResultAppCollection<IStampSignature>(signaturesDeleted,
                                                              signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
-                                                             new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                                             new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                   "Подписи для удаления не инициализированы")));
 
         /// <summary>
@@ -79,14 +77,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// </summary>
         private IResultAppCollection<IStampSignature> InsertSignatures(IEnumerable<IStampSignature> signatures, IList<string> libraryIds) =>
             signatures.
-            Select(signature => SignaturesLibrarySearching.
-                                FindByIdOrFullNameOrRandom(signature.SignatureLibrary.PersonId, 
+            Select(signature => SignaturesSearching.
+                                FindByIdOrFullNameOrRandom(signature.SignatureLibrary.PersonId,
                                                            signature.SignatureLibrary.PersonInformation.FullName, StampSettings.PersonId).
                                 ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
                                     okFunc: signatureLibrary => signatureLibrary,
-                                    badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                    badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                       $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
-                                ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId, 
+                                ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId,
                                                                                        signatureLibrary.PersonInformation, String.Empty)).
                                 ResultValueOk(signature.InsertSignature)).
             ToResultCollection();
