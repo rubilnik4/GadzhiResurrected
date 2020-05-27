@@ -17,7 +17,6 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 
@@ -26,7 +25,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// <summary>
     /// Основные поля штампа Word
     /// </summary>
-    public class StampMainWord : StampWord, IStampMain<IStampFieldWord>
+    public class StampMainWord : StampWord, IStampMain
     {
         /// <summary>
         /// Строки с ответственным лицом и подписью Word
@@ -106,15 +105,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                                            Select(row => GetStampChangeWordByRow(row, signatureLibrary))).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
-        /// <summary>
-        /// Получить подписи
-        /// </summary>        
-        private static IResultAppCollection<IStampSignature<IStampFieldWord>> GetSignatures(IResultAppCollection<IStampPersonWord> personSignatures,
-                                                                                            IResultAppCollection<IStampChangeWord> changeSignatures) =>
-             personSignatures.Cast<IStampPersonWord, IStampSignature<IStampFieldWord>>().
-                              ConcatValues(changeSignatures.Value);
-
-        /// <summary>
+      /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
         private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,

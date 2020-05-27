@@ -1,30 +1,27 @@
 ﻿using System;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
 {
     /// <summary>
     /// Строка с ответственным лицом и подписью Microstation
     /// </summary>
-    public class StampPersonMicrostation : StampSignatureMicrostation, IStampPersonMicrostation
+    public class StampPersonMicrostation : StampSignatureMicrostation, IStampPerson
     {
-        public StampPersonMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
-                                       IStampFieldMicrostation dateSignature,
-                                       Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
-            : this(actionType, responsiblePerson, dateSignature, insertSignatureFunc, 
-                   GetNotInitializedSignature(responsiblePerson.ElementStamp.AsTextElementMicrostation.Text))
+        public StampPersonMicrostation(ISignatureLibraryApp signatureLibrary,
+                                       Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+                                       IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
+            : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.Text), insertSignatureFunc,
+                   actionType, responsiblePerson, dateSignature)
         { }
 
-        public StampPersonMicrostation(IStampFieldMicrostation actionType, IStampFieldMicrostation responsiblePerson,
-                                       IStampFieldMicrostation dateSignature,
-                                       Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
-                                       IResultAppValue<IStampFieldMicrostation> signature)
-            : base(insertSignatureFunc, signature)
+        public StampPersonMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
+                                       Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+                                       IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
+            : base(signatureLibrary, signature, insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
@@ -34,55 +31,29 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// <summary>
         /// Тип действия
         /// </summary>
-        public IStampFieldMicrostation ActionType { get; }
-
-        /// <summary>
-        /// Тип действия. Элемент
-        /// </summary>
-        public ITextElementMicrostation ActionTypeElement => ActionType.ElementStamp.AsTextElementMicrostation;
+        public IStampTextField ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        public IStampFieldMicrostation ResponsiblePerson { get; }
-
-        /// <summary>
-        /// Ответственное лицо. Элемент
-        /// </summary>
-        public ITextElementMicrostation ResponsiblePersonElement => ResponsiblePerson.ElementStamp.AsTextElementMicrostation;
+        public IStampTextField ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        public IStampFieldMicrostation DateSignature { get; }
-
-        /// <summary>
-        /// Дата. Элемент
-        /// </summary>
-        public ITextElementMicrostation DateSignatureElement => DateSignature.ElementStamp.AsTextElementMicrostation;
-
-        /// <summary>
-        /// идентификатор личности
-        /// </summary>    
-        public override string PersonId => ResponsiblePerson.ElementStamp.AttributePersonId;
-
-        /// <summary>
-        /// Ответственное лицо
-        /// </summary>    
-        public override PersonInformationApp PersonInformation => new PersonInformationApp(ResponsiblePersonElement.Text, String.Empty,
-                                                                                           String.Empty, String.Empty);
+        public IStampTextField DateSignature { get; }
 
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> InsertSignature(ISignatureFileApp signatureFile) =>
-            new StampPersonMicrostation(ActionType, ResponsiblePerson, DateSignature, InsertSignatureFunc,
-                                        InsertSignatureFunc.Invoke(signatureFile));
+        public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
+            new StampPersonMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
+                                        ActionType, ResponsiblePerson, DateSignature);
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldMicrostation> DeleteSignature() =>
-            new StampPersonMicrostation(ActionType, ResponsiblePerson, DateSignature, InsertSignatureFunc);
+        public override IStampSignature DeleteSignature() =>
+            new StampPersonMicrostation(SignatureLibrary, InsertSignatureFunc, ActionType, ResponsiblePerson, DateSignature);
     }
 }

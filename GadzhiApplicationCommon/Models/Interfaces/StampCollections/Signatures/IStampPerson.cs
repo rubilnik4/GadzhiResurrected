@@ -5,22 +5,21 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
     /// <summary>
     /// Строка с ответственным лицом и подписью
     /// </summary>
-    public interface IStampPerson<out TField> : IStampSignature<TField>
-        where TField : IStampField
+    public interface IStampPerson: IStampSignature
     {
         /// <summary>
         /// Тип действия
         /// </summary>
-        TField ActionType { get; }
+        IStampTextField ActionType { get; }
 
         /// <summary>
         /// Ответственное лицо
         /// </summary>
-        TField ResponsiblePerson { get; }        
+        IStampTextField ResponsiblePerson { get; }
 
         /// <summary>
         /// Дата
         /// </summary>
-        TField DateSignature { get; } 
+        IStampTextField DateSignature { get; } 
     }
 }

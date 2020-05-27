@@ -11,17 +11,16 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Основные поля штампа
     /// </summary>
-    public interface IStampMain<TField> : IStamp
-        where TField : IStampField
+    public interface IStampMain : IStamp
     {
         /// <summary>
         /// Строки с ответственным лицом и подписью
         /// </summary>
-        IResultAppCollection<IStampPerson<TField>> StampPersons { get; }
+        IResultAppCollection<IStampPerson> StampPersons { get; }
 
         /// <summary>
         /// Строки с изменениями Word
         /// </summary>
-        IResultAppCollection<IStampChange<TField>> StampChanges { get; }
+        IResultAppCollection<IStampChange> StampChanges { get; }
     }
 }

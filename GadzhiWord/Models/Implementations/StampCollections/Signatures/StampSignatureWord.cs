@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiWord.Models.Interfaces.StampCollections;
@@ -15,49 +16,43 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Базовая структура подписи Microstation
     /// </summary>
-    public abstract class StampSignatureWord : StampSignature<IStampFieldWord>, IStampSignatureWord
+    public abstract class StampSignatureWord : StampSignature
     {
-        protected StampSignatureWord(IStampFieldWord signature,  ISignatureLibraryApp signatureLibrary)
+        /// <summary>
+        /// Подпись. Элемент Word
+        /// </summary>
+        private readonly IResultAppValue<IStampFieldWord> _signature;
+
+        protected StampSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature )
+            : base(signatureLibrary)
         {
-            Signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                            "Подпись не инициализирована"));
-            PersonId = signatureLibrary?.PersonId ?? throw new ArgumentNullException(nameof(signatureLibrary));
-            PersonInformation = signatureLibrary.PersonInformation;
+            _signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                             "Подпись не инициализирована"));
         }
-
-        /// <summary>
-        /// Идентификатор личности
-        /// </summary>    
-        public override string PersonId { get; }
-
-        /// <summary>
-        /// Ответственное лицо
-        /// </summary>    
-        public override PersonInformationApp PersonInformation { get; }
 
         /// <summary>
         /// Подпись
         /// </summary>
-        public override IResultAppValue<IStampFieldWord> Signature { get; }
+        public override IResultAppValue<IStampField> Signature => _signature;
 
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public override bool IsSignatureValid() => Signature.OkStatus && Signature.Value.CellElementStamp.HasPicture;
+        public override bool IsSignatureValid() => _signature.OkStatus && _signature.Value.CellElementStamp.HasPicture;
 
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> InsertSignature(ISignatureFileApp signatureFile) =>
-            Signature.
+        public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
+            _signature.
             ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath)).
             Map(_ => this);
 
         /// <summary>
         /// Удалить текущую подпись
         /// </summary>
-        public override IStampSignature<IStampFieldWord> DeleteSignature() =>
-            Signature.
+        public override IStampSignature DeleteSignature() =>
+            _signature.
             ResultVoidOk(signature => signature.CellElementStamp.DeleteAllPictures()).
             Map(_ => this);
     }

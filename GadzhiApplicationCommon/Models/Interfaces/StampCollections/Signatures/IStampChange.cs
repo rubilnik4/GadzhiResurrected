@@ -5,32 +5,31 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
     /// <summary>
     /// Строка с изменениями
     /// </summary>
-    public interface IStampChange<out TField> : IStampSignature<TField>
-        where TField : IStampField
+    public interface IStampChange: IStampSignature
     {
         /// <summary>
         /// Номер изменения
         /// </summary>
-        TField NumberChange { get; }
+        IStampTextField NumberChange { get; }
 
         /// <summary>
         /// Количество участков
         /// </summary>
-        TField NumberOfPlots { get; }
+        IStampTextField NumberOfPlots { get; }
 
         /// <summary>
         /// Тип изменения
         /// </summary>
-        TField TypeOfChange { get; }
+        IStampTextField TypeOfChange { get; }
 
         /// <summary>
         /// Номер документа
         /// </summary>
-        TField DocumentChange { get; }       
+        IStampTextField DocumentChange { get; }
 
         /// <summary>
         /// Дата изменения
         /// </summary>
-        TField DateChange { get; }
+        IStampTextField DateChange { get; }
     }
 }

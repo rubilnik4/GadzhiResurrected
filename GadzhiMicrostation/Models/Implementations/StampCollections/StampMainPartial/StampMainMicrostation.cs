@@ -22,52 +22,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
     /// <summary>
     /// Основные поля штампа Microstation
     /// </summary>
-    public partial class StampMainMicrostation : StampMicrostation, IStampMain<IStampFieldMicrostation>
+    public partial class StampMainMicrostation : StampMicrostation, IStampMain
     {
-        /// <summary>
-        /// Строки с ответственным лицом и подписью Microstation
-        /// </summary>
-        private IResultAppCollection<IStampPersonMicrostation> StampPersonsMicrostation { get; }
-
-        /// <summary>
-        /// Строки с изменениями Microstation
-        /// </summary>
-        private IResultAppCollection<IStampChangeMicrostation> StampChangesMicrostation { get; }
-
-        /// <summary>
-        /// Строки с согласованиями Microstation
-        /// </summary>
-        private IResultAppCollection<IStampApprovalMicrostation> StampApprovalsMicrostation { get; }
-
         public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings, 
                                      SignaturesLibrarySearching signaturesLibrarySearching)
             : base(stampCellElement, stampSettings, signaturesLibrarySearching)
         {
-            StampPersonsMicrostation = GetStampPersonRows();
-            StampChangesMicrostation = GetStampChangeRows(StampPersonsMicrostation.Value?.FirstOrDefault());
-            StampApprovalsMicrostation = GetStampApprovalRows();
+            StampPersons = GetStampPersonRows();
+            StampChanges = GetStampChangeRows(StampPersons.Value?.FirstOrDefault());
+            StampApprovals = GetStampApprovalRows();
         }
-
-        /// <summary>
-        /// Вставить подписи
-        /// </summary>
-        protected override IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
-            GetSignatures(StampPersonsMicrostation, StampChangesMicrostation, StampApprovalsMicrostation).
-            ResultValueOkBind(signatures => InsertSignatures(signatures, 
-                                                             libraryElements.Select(libraryElement => libraryElement.Name).ToList())).
-            ToResultCollection();
-
-        /// <summary>
-        /// Удалить подписи
-        /// </summary>
-        public override IResultAppCollection<IStampSignature<IStampField>> DeleteSignatures(IEnumerable<IStampSignature<IStampField>> signatures) =>
-            signatures.
-            Select(signature => signature.DeleteSignature()).
-            ToList().
-            Map(signaturesDeleted => new ResultAppCollection<IStampSignature<IStampField>>
-                                     (signaturesDeleted,
-                                      signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
-                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для удаления не инициализированы")));
 
         /// <summary>
         /// Тип штампа
@@ -77,46 +41,54 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Строки с ответственным лицом и подписью
         /// </summary>
-        public IResultAppCollection<IStampPerson<IStampFieldMicrostation>> StampPersons =>
-            StampPersonsMicrostation.Cast<IStampPersonMicrostation, IStampPerson<IStampFieldMicrostation>>();
+        public IResultAppCollection<IStampPerson> StampPersons { get; }
 
         /// <summary>
         /// Строки с изменениями
         /// </summary>
-        public IResultAppCollection<IStampChange<IStampFieldMicrostation>> StampChanges =>
-            StampChangesMicrostation.Cast<IStampChangeMicrostation, IStampChange<IStampFieldMicrostation>>();
+        public IResultAppCollection<IStampChange> StampChanges { get; }
 
         /// <summary>
         /// Строки с согласованиями
         /// </summary>
-        public IResultAppCollection<IStampApproval<IStampFieldMicrostation>> StampApprovals =>
-            StampApprovalsMicrostation.Cast<IStampApprovalMicrostation, IStampApproval<IStampFieldMicrostation>>();
+        public IResultAppCollection<IStampApproval> StampApprovals { get; }
 
         /// <summary>
-        /// Получить подписи
-        /// </summary>        
-        private static IResultAppCollection<IStampSignatureMicrostation> GetSignatures(IResultAppCollection<IStampPersonMicrostation> personSignatures,
-                                                                                       IResultAppCollection<IStampChangeMicrostation> changeSignatures,
-                                                                                       IResultAppCollection<IStampApprovalMicrostation> approvalSignatures) =>
-             personSignatures.Cast<IStampPersonMicrostation, IStampSignatureMicrostation>().
-                              ConcatValues(changeSignatures.Value.Cast<IStampSignatureMicrostation>()).
-                              ConcatValues(approvalSignatures.Value.Cast<IStampSignatureMicrostation>());
+        /// Вставить подписи
+        /// </summary>
+        protected override IResultAppCollection<IStampSignature> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
+            GetSignatures(StampPersons, StampChanges, StampApprovals).
+            ResultValueOkBind(signatures => InsertSignatures(signatures,
+                                                             libraryElements.Select(libraryElement => libraryElement.Name).ToList())).
+            ToResultCollection();
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        public override IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures) =>
+            signatures.Select(signature => signature.DeleteSignature()).
+            ToList().
+            Map(signaturesDeleted => 
+                    new ResultAppCollection<IStampSignature>(signaturesDeleted,
+                                                             signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                                                             new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                                                                  "Подписи для удаления не инициализированы")));
 
         /// <summary>
         /// Вставить подписи и получить поля
         /// </summary>
-        private IResultAppCollection<IStampSignature<IStampField>> InsertSignatures(IEnumerable<IStampSignatureMicrostation> signatures, 
-                                                                                    IList<string> libraryIds) =>
+        private IResultAppCollection<IStampSignature> InsertSignatures(IEnumerable<IStampSignature> signatures, IList<string> libraryIds) =>
             signatures.
             Select(signature => SignaturesLibrarySearching.
-                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonInformation.FullName, StampSettings.PersonId).
+                                FindByIdOrFullNameOrRandom(signature.SignatureLibrary.PersonId, 
+                                                           signature.SignatureLibrary.PersonInformation.FullName, StampSettings.PersonId).
                                 ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
                                     okFunc: signatureLibrary => signatureLibrary,
                                     badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
                                                                                       $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
                                 ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId, 
-                                                                                    signatureLibrary.PersonInformation, String.Empty)).
-                                ResultValueOk(signatureFile => (IStampSignature<IStampField>)signature.InsertSignature(signatureFile))).
+                                                                                       signatureLibrary.PersonInformation, String.Empty)).
+                                ResultValueOk(signature.InsertSignature)).
             ToResultCollection();
     }
 }

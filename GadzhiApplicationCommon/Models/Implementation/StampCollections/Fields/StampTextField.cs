@@ -11,6 +11,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// <summary>
         /// Текст поля в штампе
         /// </summary>
-        public abstract string TextField { get; }
+        public abstract string Text { get; }
     }
 }

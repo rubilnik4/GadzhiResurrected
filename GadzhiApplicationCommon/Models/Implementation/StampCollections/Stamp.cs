@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -15,15 +17,21 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// </summary>
     public abstract class Stamp : IStamp
     {
-        protected Stamp(StampSettings stampSettings)
+        protected Stamp(StampSettings stampSettings, SignaturesLibrarySearching signaturesLibrarySearching)
         {
             StampSettings = stampSettings ?? throw new ArgumentNullException(nameof(stampSettings));
+            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
         }
 
         /// <summary>
         /// Параметры штампа
         /// </summary>
         public StampSettings StampSettings { get; }
+
+        /// <summary>
+        /// Поиск имен с идентификатором и подписью
+        /// </summary>
+        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
 
         /// <summary>
         /// Наименование
@@ -58,11 +66,21 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public abstract IResultAppCollection<IStampSignature<IStampField>> InsertSignatures();
+        public abstract IResultAppCollection<IStampSignature> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        public abstract IResultAppCollection<IStampSignature<IStampField>> DeleteSignatures(IEnumerable<IStampSignature<IStampField>> signatures);
+        public abstract IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures);
+
+        /// <summary>
+        /// Объединить подписи подписи
+        /// </summary>        
+        protected static IResultAppCollection<IStampSignature> GetSignatures(IResultAppCollection<IStampPerson> personSignatures,
+                                                                           IResultAppCollection<IStampChange> changeSignatures,
+                                                                           IResultAppCollection<IStampApproval> approvalSignatures) =>
+             personSignatures.Cast<IStampPerson, IStampSignature>().
+                              ConcatValues(changeSignatures.Value.Cast<IStampSignature>()).
+                              ConcatValues(approvalSignatures.Value.Cast<IStampSignature>());
     }
 }

@@ -7,13 +7,17 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
     /// <summary>
     /// Базовая структура подписи
     /// </summary>
-    public interface IStampSignature<out TField> : ISignatureLibraryApp
-        where TField : IStampField
+    public interface IStampSignature
     {
+        /// <summary>
+        /// Имя с идентификатором
+        /// </summary>    
+        ISignatureLibraryApp SignatureLibrary { get; }
+
         /// <summary>
         /// Подпись
         /// </summary>
-        IResultAppValue<TField> Signature { get; }
+        IResultAppValue<IStampField> Signature { get; }
 
         /// <summary>
         /// Установлена ли подпись
@@ -26,13 +30,18 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
         bool IsPersonFieldValid();
 
         /// <summary>
+        /// Необходимо ли вставлять подпись в поле
+        /// </summary>
+        public abstract bool NeedToInsert();
+
+        /// <summary>
         /// Вставить подпись
         /// </summary>
-        IStampSignature<TField> InsertSignature(ISignatureFileApp signatureFile);
+        IStampSignature InsertSignature(ISignatureFileApp signatureFile);
 
         /// <summary>
         /// Удалить текущую подпись
         /// </summary>
-        IStampSignature<TField> DeleteSignature();
+        IStampSignature DeleteSignature();
     }
 }

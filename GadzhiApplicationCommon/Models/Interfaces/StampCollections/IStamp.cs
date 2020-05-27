@@ -57,11 +57,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        IResultAppCollection<IStampSignature<IStampField>> InsertSignatures();
+        IResultAppCollection<IStampSignature> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи
         /// </summary>
-        IResultAppCollection<IStampSignature<IStampField>> DeleteSignatures(IEnumerable<IStampSignature<IStampField>> signatures);
+        IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures);
     }
 }

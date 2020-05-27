@@ -1,5 +1,4 @@
 ﻿using System;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -10,13 +9,22 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatu
     /// <summary>
     /// Базовая структура подписи
     /// </summary>
-    public abstract class StampSignature<TField> : IStampSignature<TField>
-        where TField : IStampField
+    public abstract class StampSignature : IStampSignature
     {
+        protected StampSignature(ISignatureLibraryApp signatureLibrary)
+        {
+            SignatureLibrary = signatureLibrary ?? throw new ArgumentNullException(nameof(signatureLibrary));
+        }
+
+        /// <summary>
+        /// Имя с идентификатором
+        /// </summary>    
+        public ISignatureLibraryApp SignatureLibrary { get; }
+
         /// <summary>
         /// Подпись
         /// </summary>
-        public abstract IResultAppValue<TField> Signature { get; }
+        public abstract IResultAppValue<IStampField> Signature { get; }
 
         /// <summary>
         /// Установлена ли подпись
@@ -24,28 +32,23 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatu
         public abstract bool IsSignatureValid();
 
         /// <summary>
-        /// Идентификатор личности
-        /// </summary>    
-        public abstract string PersonId { get; }
-
-        /// <summary>
-        /// Ответственное лицо
-        /// </summary>    
-        public abstract PersonInformationApp PersonInformation { get; }
-
-        /// <summary>
         /// Корректно ли заполнено поле ответственного лица
         /// </summary>
-        public virtual bool IsPersonFieldValid() => !String.IsNullOrEmpty(PersonId);
+        public bool IsPersonFieldValid() => !String.IsNullOrEmpty(SignatureLibrary.PersonId);
+
+        /// <summary>
+        /// Необходимо ли вставлять подпись в поле
+        /// </summary>
+        public virtual bool NeedToInsert() => IsPersonFieldValid();
 
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        public abstract IStampSignature<TField> InsertSignature(ISignatureFileApp signatureFile);
+        public abstract IStampSignature InsertSignature(ISignatureFileApp signatureFile);
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
-        public abstract IStampSignature<TField> DeleteSignature();
+        public abstract IStampSignature DeleteSignature();
     }
 }

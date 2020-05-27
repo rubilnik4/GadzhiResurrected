@@ -121,11 +121,7 @@
     <Compile Include="Models\Implementations\StampCollections\StampSettingsMicrostation.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldSignatures.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampMicrostation.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampChangeMicrostation.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampPersonMicrostation.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampApprovalMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampFieldMicrostation.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampSignatureMicrostation.cs" />
     <Compile Include="Models\Interfaces\StampFieldNames\IStampFieldSignature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

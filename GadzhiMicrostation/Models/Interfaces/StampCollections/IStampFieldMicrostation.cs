@@ -1,5 +1,4 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 
 namespace GadzhiMicrostation.Models.Interfaces.StampCollections

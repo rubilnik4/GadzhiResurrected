@@ -21,25 +21,19 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public abstract class StampWord : Stamp
     {
-        protected StampWord(ITableElement tableStamp, StampSettingsWord stampSettingsWord,
+        protected StampWord(StampSettingsWord stampSettingsWord, ITableElement tableStamp, 
                             SignaturesLibrarySearching signaturesLibrarySearching)
-            : base(stampSettingsWord)
+            : base(stampSettingsWord, signaturesLibrarySearching)
         {
             TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
             PaperSize = stampSettingsWord?.PaperSize ?? throw new ArgumentNullException(nameof(stampSettingsWord));
             Orientation = stampSettingsWord.Orientation;
-            SignaturesLibrarySearching = signaturesLibrarySearching ?? throw new ArgumentNullException(nameof(signaturesLibrarySearching));
         }
 
         /// <summary>
         /// Элемент таблица
         /// </summary>
         protected ITableElement TableStamp { get; }
-
-        /// <summary>
-        /// Поиск имен с идентификатором и подписью
-        /// </summary>
-        protected SignaturesLibrarySearching SignaturesLibrarySearching { get; }
 
         /// <summary>
         /// Наименование

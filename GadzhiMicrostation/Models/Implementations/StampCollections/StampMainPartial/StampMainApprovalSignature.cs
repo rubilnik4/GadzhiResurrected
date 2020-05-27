@@ -11,6 +11,7 @@ using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
@@ -24,7 +25,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
-        private IResultAppCollection<IStampApprovalMicrostation> GetStampApprovalRows() =>
+        private IResultAppCollection<IStampApproval> GetStampApprovalRows() =>
             GetStampSignatureRows(StampFieldType.ApprovalSignature, GetApprovalSignatureField).
             Map(signatureRows => new ResultAppCollection<IStampApprovalMicrostation>(signatureRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                                        "Штамп подписей согласования не найден")));

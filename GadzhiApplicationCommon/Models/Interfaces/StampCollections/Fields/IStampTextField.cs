@@ -8,6 +8,6 @@
         /// <summary>
         /// Текст поля в штампе
         /// </summary>
-        string TextField { get; }
+        string Text { get; }
     }
 }

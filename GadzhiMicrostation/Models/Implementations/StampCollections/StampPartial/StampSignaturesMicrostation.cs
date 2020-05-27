@@ -31,7 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        public override IResultAppCollection<IStampSignature<IStampField>> InsertSignatures() =>
+        public override IResultAppCollection<IStampSignature> InsertSignatures() =>
             StampCellElement.ApplicationMicrostation.
             Map(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.MicrostationResources.SignatureMicrostationFileName)).
             ResultVoidOk(_ => DeleteSignaturesPrevious()).
@@ -42,7 +42,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        protected abstract IResultAppCollection<IStampSignature<IStampField>> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements);
+        protected abstract IResultAppCollection<IStampSignature> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements);
 
         /// <summary>
         /// Удалить предыдущие подписи
@@ -77,10 +77,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         protected static IEnumerable<TSignatureField> GetStampSignatureRows<TSignatureField>(StampFieldType stampFieldType,
                                                                                              Func<IEnumerable<string>, IResultAppValue<TSignatureField>> getSignatureField)
-                where TSignatureField : IStampSignatureMicrostation =>
+                where TSignatureField : IStampSignature =>
             StampFieldSignatures.GetFieldsBySignatureType(stampFieldType).
             Select(getSignatureField).
-            Where(resultSignature => resultSignature.OkStatus && resultSignature.Value.IsPersonFieldValid()).
+            Where(resultSignature => resultSignature.OkStatus && resultSignature.Value.NeedToInsert()).
             Select(resultSignature => resultSignature.Value);
 
         /// <summary>

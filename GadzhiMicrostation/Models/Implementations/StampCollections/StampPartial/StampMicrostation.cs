@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
-using GadzhiMicrostation.Microstation.Implementations;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
@@ -18,7 +17,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
-        protected StampMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings, 
+        protected StampMicrostation(StampSettings stampSettings, ICellElementMicrostation stampCellElement, 
                                     SignaturesLibrarySearching signaturesLibrarySearching)
             : base(stampSettings)
         {
@@ -55,9 +54,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public override OrientationType Orientation => 
+        public override StampOrientationType Orientation => 
             StampCellElement.Range.Width >= StampCellElement.Range.Height 
-            ? OrientationType.Landscape
-            : OrientationType.Portrait;
+            ? StampOrientationType.Landscape
+            : StampOrientationType.Portrait;
     }
 }
