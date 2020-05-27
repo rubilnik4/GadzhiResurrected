@@ -1,17 +1,24 @@
 ﻿using System;
+using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiApplicationCommon.Models.Implementation.FilesConvert
 {
     public class ConvertingSettingsApplication
     {
-        public ConvertingSettingsApplication(string department)
+        public ConvertingSettingsApplication(string personId, PdfNamingTypeApplication pdfNamingType)
         {
-            Department = department ?? String.Empty;
+            PersonId = personId ?? String.Empty;
+            PdfNamingType = pdfNamingType;
         }
 
         /// <summary>
-        /// Отдел
+        /// Идентификатор личной подпись
         /// </summary>
-        public string Department { get; }
+        public string PersonId { get; }
+
+        /// <summary>
+        /// Принцип именование PDF
+        /// </summary>
+        public PdfNamingTypeApplication PdfNamingType { get; }
     }
 }

@@ -54,7 +54,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private static IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) =>
             (convertingSettingsRequest != null)
-                ? new ConvertingSettings(convertingSettingsRequest.Department)
+                ? new ConvertingSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType)
                 : throw new ArgumentNullException(nameof(convertingSettingsRequest));
 
         /// <summary>

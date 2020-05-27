@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 
 namespace GadzhiMicrostation.Models.Interfaces.StampCollections

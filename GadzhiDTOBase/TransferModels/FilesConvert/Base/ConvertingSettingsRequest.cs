@@ -18,12 +18,6 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         public string PersonId { get; set; }
 
         /// <summary>
-        /// Отдел
-        /// </summary>
-        [DataMember]
-        public string Department { get; set; }
-
-        /// <summary>
         /// Принцип именования PDF
         /// </summary>
         [DataMember]

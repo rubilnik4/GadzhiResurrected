@@ -1,13 +1,15 @@
 ﻿using System;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
     public class StampSettingsWord: StampSettings
     {
-        public StampSettingsWord(StampIdentifier id, string department, string paperSize, OrientationType orientationType)
-            :base(id, department)
+        public StampSettingsWord(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType, 
+                                 string paperSize, StampOrientationType orientationType)
+            :base(id, personId, pdfNamingType)
         {
             PaperSize = !String.IsNullOrWhiteSpace(paperSize)
                       ? paperSize
@@ -23,6 +25,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public OrientationType Orientation { get; }
+        public StampOrientationType Orientation { get; }
     }
 }

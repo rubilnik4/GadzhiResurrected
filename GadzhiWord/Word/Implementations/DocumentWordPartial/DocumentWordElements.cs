@@ -44,7 +44,8 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
             Where(CheckFooterIsStamp).
             Select((tableElement, stampIndex) => new StampMainWord(tableElement,
                                                                    new StampSettingsWord(new StampIdentifier(stampIndex),
-                                                                                         convertingSettings?.Department, 
+                                                                                         convertingSettings.PersonId,
+                                                                                         convertingSettings.PdfNamingType,
                                                                                          PaperSize, OrientationType),
                                                                    ApplicationWord.ResourcesWord.SignaturesLibrarySearching));
 

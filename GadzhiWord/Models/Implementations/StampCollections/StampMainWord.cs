@@ -6,16 +6,20 @@ using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiWord.Models.Implementations.StampCollections.Fields;
+using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
@@ -27,12 +31,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Строки с ответственным лицом и подписью Word
         /// </summary>
-        public IResultAppCollection<IStampPersonWord> StampPersonsWord { get; }
+        private IResultAppCollection<IStampPersonWord> StampPersonsWord { get; }
 
         /// <summary>
         /// Строки с изменениями Word
         /// </summary>
-        public IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
+        private IResultAppCollection<IStampChangeWord> StampChangesWord { get; }
 
         public StampMainWord(ITableElement tableStamp, StampSettingsWord stampSettingsWord,
                              SignaturesLibrarySearching signaturesLibrarySearching)
@@ -47,6 +51,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public IResultAppCollection<IStampPerson<IStampFieldWord>> StampPersons =>
             new ResultAppCollection<IStampPerson<IStampFieldWord>>(StampPersonsWord.Value, StampPersonsWord.Errors);
+
         /// <summary>
         /// Строки с изменениями Word
         /// </summary>
@@ -112,9 +117,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
-        private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string department,
-                                                                           PersonDepartmentType departmentType) =>
-            SignaturesLibrarySearching.CheckDepartmentAccordingToType(department, departmentType).
+        private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
+                                                                              PersonDepartmentType departmentType) =>
+            SignaturesLibrarySearching.FindById(personId)?.PersonInformation.Department.
+            Map(department => SignaturesLibrarySearching.CheckDepartmentAccordingToType(department, departmentType)).
             Map(departmentChecked => SignaturesLibrarySearching.FindByFullNameOrRandom(personName, departmentChecked));
 
         /// <summary>
@@ -139,7 +145,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         private IResultAppValue<IStampPersonWord> GetStampPersonWordByRow(IRowElement personRow) =>
             CheckFieldType.GetDepartmentType(personRow.CellsElement[0].Text).
-            Map(departmentType => GetSignatureInformation(personRow.CellsElement[1].Text, StampSettings.Department, departmentType)).
+            Map(departmentType => GetSignatureInformation(personRow.CellsElement[1].Text, StampSettings.PersonId, departmentType)).
             ResultValueOk(signature => new StampPersonWord(new StampFieldWord(personRow.CellsElement[0], StampFieldType.PersonSignature),
                                                            new StampFieldWord(personRow.CellsElement[1], StampFieldType.PersonSignature),
                                                            new StampFieldWord(personRow.CellsElement[2], StampFieldType.PersonSignature),

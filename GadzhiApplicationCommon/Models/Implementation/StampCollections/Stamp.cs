@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Functional;
-using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
@@ -17,7 +17,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     {
         protected Stamp(StampSettings stampSettings)
         {
-           
             StampSettings = stampSettings ?? throw new ArgumentNullException(nameof(stampSettings));
         }
 
@@ -37,6 +36,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         public abstract StampType StampType { get; }
 
         /// <summary>
+        /// Основные поля штампа
+        /// </summary>
+        public abstract IStampBasicFields StampMainFields { get; }
+
+        /// <summary>
         /// Формат
         /// </summary>
         public abstract string PaperSize { get; }
@@ -44,7 +48,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public abstract OrientationType Orientation { get; }
+        public abstract StampOrientationType Orientation { get; }
 
         /// <summary>
         /// Сжать поля

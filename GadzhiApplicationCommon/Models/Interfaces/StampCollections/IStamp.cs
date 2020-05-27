@@ -6,7 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
@@ -32,6 +35,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         StampType StampType { get; }
 
         /// <summary>
+        /// Основные поля штампа
+        /// </summary>
+        IStampBasicFields StampMainFields { get; }
+
+        /// <summary>
         /// Формат
         /// </summary>
         string PaperSize { get; }
@@ -39,7 +47,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        OrientationType Orientation { get; }
+        StampOrientationType Orientation { get; }
 
         /// <summary>
         /// Сжать поля

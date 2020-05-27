@@ -6,8 +6,8 @@ using GadzhiModules.Infrastructure.Interfaces.Converters;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
@@ -58,8 +58,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             (convertingSetting != null)
                 ? new ConvertingSettingsRequest()
                 {
-                    PersonId = convertingSetting.PersonSignature.PersonId ?? String.Empty ,
-                    Department = convertingSetting.Department,
+                    PersonId = convertingSetting.PersonSignature.PersonId ?? String.Empty,
                     PdfNamingType = convertingSetting.PdfNamingType,
 
                 }

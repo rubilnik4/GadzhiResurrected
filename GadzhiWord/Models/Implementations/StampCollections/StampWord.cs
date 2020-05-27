@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.Elements;
 
@@ -52,7 +54,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public override OrientationType Orientation { get; }
+        public override StampOrientationType Orientation { get; }
 
         /// <summary>
         /// Получить поля штампа

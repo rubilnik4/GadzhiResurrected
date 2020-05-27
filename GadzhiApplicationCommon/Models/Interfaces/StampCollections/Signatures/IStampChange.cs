@@ -1,0 +1,36 @@
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+
+namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
+{
+    /// <summary>
+    /// Строка с изменениями
+    /// </summary>
+    public interface IStampChange<out TField> : IStampSignature<TField>
+        where TField : IStampField
+    {
+        /// <summary>
+        /// Номер изменения
+        /// </summary>
+        TField NumberChange { get; }
+
+        /// <summary>
+        /// Количество участков
+        /// </summary>
+        TField NumberOfPlots { get; }
+
+        /// <summary>
+        /// Тип изменения
+        /// </summary>
+        TField TypeOfChange { get; }
+
+        /// <summary>
+        /// Номер документа
+        /// </summary>
+        TField DocumentChange { get; }       
+
+        /// <summary>
+        /// Дата изменения
+        /// </summary>
+        TField DateChange { get; }
+    }
+}

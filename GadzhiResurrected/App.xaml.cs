@@ -12,6 +12,8 @@ using Prism.Unity;
 using System.Windows;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Unity;
 
 namespace GadzhiResurrected
@@ -42,11 +44,13 @@ namespace GadzhiResurrected
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var unityContainer = containerRegistry.GetContainer();
-            unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
-            unityContainer.RegisterSingleton<IProjectSettings, ProjectSettings>();
+
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
             unityContainer.RegisterType<IMessagingService, DialogServiceStandard>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
+            unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
+            unityContainer.RegisterFactory<IProjectSettings>(unity => 
+                new ProjectSettings(ApplicationGadzhi.GetConvertingSettingFromConfiguration()));
         }
 
         /// <summary>

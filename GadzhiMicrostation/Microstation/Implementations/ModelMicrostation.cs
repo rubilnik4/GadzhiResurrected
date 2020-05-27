@@ -88,7 +88,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
                        new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
                            Map(cellMicrostation => new StampMainMicrostation(cellMicrostation,
                                                                              new StampSettings(new StampIdentifier(modelIndex, stampIndex),
-                                                                                               convertingSettings.Department),
+                                                                                               convertingSettings.PersonId, 
+                                                                                               convertingSettings.PdfNamingType),
                                                                              ApplicationMicrostation.MicrostationResources.SignaturesLibrarySearching))).
             Cast<IStamp>();
 

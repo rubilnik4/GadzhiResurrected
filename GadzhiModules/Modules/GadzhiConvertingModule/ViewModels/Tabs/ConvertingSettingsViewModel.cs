@@ -7,7 +7,7 @@ using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ConvertingSettings;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Nito.Mvvm;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
@@ -28,7 +28,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
 
             PersonSignatures = NotifyTask.Create(applicationGadzhi.GetSignaturesNames());
-            Departments = NotifyTask.Create(applicationGadzhi.GetSignaturesDepartments());
         }
 
         /// <summary>
@@ -49,20 +48,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Подписи
         /// </summary>
         public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
-
-        /// <summary>
-        /// Отдел
-        /// </summary>
-        public string Department
-        {
-            get => _convertingSettings.Department;
-            set => _convertingSettings.Department = value;
-        }
-
-        /// <summary>
-        /// Отделы
-        /// </summary>
-        public NotifyTask<IList<string>> Departments { get; }
 
         /// <summary>
         /// Принцип именования PDF

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiMicrostation.Models.Interfaces.StampFieldNames;
 
 namespace GadzhiMicrostation.Models.Implementations.StampFieldNames

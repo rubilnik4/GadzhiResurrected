@@ -8,8 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {

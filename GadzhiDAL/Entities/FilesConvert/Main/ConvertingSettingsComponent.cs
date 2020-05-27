@@ -14,11 +14,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         public string PersonId { get; set; } = String.Empty;
 
         /// <summary>
-        /// Отдел
-        /// </summary>    
-        public virtual string Department { get; set; } = String.Empty;
-
-        /// <summary>
         /// Принцип именования PDF
         /// </summary>
         public PdfNamingType PdfNamingType { get; set; }

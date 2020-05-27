@@ -41,7 +41,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 ? new ConvertingSettingsComponent()
                 {
                     PersonId = convertingSettings.PersonId,
-                    Department = convertingSettings.Department,
                     PdfNamingType = convertingSettings.PdfNamingType,
                 }
                 : throw new ArgumentNullException(nameof(convertingSettings));

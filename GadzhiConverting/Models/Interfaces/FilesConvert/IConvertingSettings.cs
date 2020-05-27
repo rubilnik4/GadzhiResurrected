@@ -1,4 +1,7 @@
-﻿namespace GadzhiConverting.Models.Interfaces.FilesConvert
+﻿using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Models.Interfaces.LibraryData;
+
+namespace GadzhiConverting.Models.Interfaces.FilesConvert
 {
     /// <summary>
     /// Параметры конвертации
@@ -6,8 +9,13 @@
     public interface IConvertingSettings
     {
         /// <summary>
-        /// Отдел
+        /// Идентификатор личной подпись
         /// </summary>
-        string Department { get; }
+        string PersonId { get; }
+
+        /// <summary>
+        /// Принцип именование PDF
+        /// </summary>
+        PdfNamingType PdfNamingType { get; }
     }
 }

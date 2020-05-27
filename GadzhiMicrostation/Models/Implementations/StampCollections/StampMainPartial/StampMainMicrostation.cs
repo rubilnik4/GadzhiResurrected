@@ -8,11 +8,14 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
 {
@@ -106,7 +109,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
                                                                                     IList<string> libraryIds) =>
             signatures.
             Select(signature => SignaturesLibrarySearching.
-                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonInformation.FullName, StampSettings.Department).
+                                FindByIdOrFullNameOrRandom(signature.PersonId, signature.PersonInformation.FullName, StampSettings.PersonId).
                                 ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
                                     okFunc: signatureLibrary => signatureLibrary,
                                     badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound, 

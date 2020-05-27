@@ -221,6 +221,7 @@
     <Compile Include="Models\Converters\ColorPrintToApplicationConverter.cs" />
     <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
     <Compile Include="Models\Converters\ResultApplicationConverter.cs" />
+    <Compile Include="Models\Converters\SettingsApplicationConverter.cs" />
     <Compile Include="Models\Converters\SignatureLibraryConverter.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
     <Compile Include="Models\Implementations\FilesConvert\ConvertingSettings.cs" />

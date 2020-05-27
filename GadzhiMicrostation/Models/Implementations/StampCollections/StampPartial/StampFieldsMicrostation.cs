@@ -6,6 +6,8 @@ using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiMicrostation.Models.Implementations.StampCollections.Fields;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial

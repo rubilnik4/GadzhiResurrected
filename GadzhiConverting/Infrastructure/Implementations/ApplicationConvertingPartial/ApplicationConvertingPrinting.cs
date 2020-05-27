@@ -20,6 +20,8 @@ using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using System.Runtime.Remoting.Messaging;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiCommon.Enums.ConvertingSettings;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -35,9 +37,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                              IConvertingSettings convertingSettings,
                                                                              ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
             documentLibrary.GetStampContainer(convertingSettings.ToApplication()).Stamps.ToResultCollectionFromApplication().
-            ResultValueOkBind(stamps => 
+            ResultValueOkBind(stamps =>
                 stamps.Select(stamp =>
-                CreatePdfWithSignatures(documentLibrary, stamp, 
+                CreatePdfWithSignatures(documentLibrary, stamp,
                                         new FilePath(GetFilePathWithStampIndex(filePath.FilePathServer, stamp.StampSettings.Id.ToFilePathPrefix()),
                                                      GetFilePathWithStampIndex(filePath.FilePathClient, stamp.StampSettings.Id.ToFilePathPrefix())),
                                         colorPrint, pdfPrinterInformation)).ToList().
@@ -58,7 +60,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Печать пдф
         /// </summary>
-        private IResultValue<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath, 
+        private IResultValue<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath,
                                                               ColorPrint colorPrint, string paperSize, IPrinterInformation pdfPrinterInformation) =>
             SetDefaultPrinter(pdfPrinterInformation.Name).
             ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath.FilePathServer, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize)).
@@ -86,6 +88,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                               ToResultFromApplication();
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand);
         }
+
+        /// <summary>
+        /// Путь к сохранению файла печати с учетом принципа именования
+        /// </summary>
+        private static string GetFilePathByNamingType(string filePath, PdfNamingType pdfNamingType, IStamp stamp) =>
+            pdfNamingType switch
+            {
+                PdfNamingType.ByFile => GetFilePathWithStampIndex(filePath, stamp.StampSettings.Id.ToFilePathPrefix()),
+                PdfNamingType.ByStamp => GetFilePathWithStampIndex(filePath, stamp.StampSettings.Id.ToFilePathPrefix()),
+                PdfNamingType.BySheet => GetFilePathWithStampIndex(filePath, stamp.StampSettings.Id.ToFilePathPrefix()),
+                _ => throw new ArgumentOutOfRangeException(nameof(pdfNamingType), pdfNamingType, null)
+            };
 
         /// <summary>
         /// Путь к сохранению файла печати с учетом количества штампов

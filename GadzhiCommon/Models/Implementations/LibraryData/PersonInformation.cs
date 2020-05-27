@@ -11,9 +11,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
     {
         public PersonInformation(string surname, string name, string patronymic, string department)
         {
-            Surname = !String.IsNullOrWhiteSpace(surname)
-                      ? surname
-                      : throw new ArgumentNullException(nameof(surname));
+            Surname = surname ?? String.Empty;
             Name = name ?? String.Empty;
             Patronymic = patronymic ?? String.Empty;
             Department = department ?? String.Empty;

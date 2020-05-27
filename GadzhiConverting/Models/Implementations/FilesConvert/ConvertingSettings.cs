@@ -1,17 +1,25 @@
 ﻿using System;
+using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     public class ConvertingSettings : IConvertingSettings
     {
-        public ConvertingSettings(string department)
+        public ConvertingSettings(string personId, PdfNamingType pdfNamingType)
         {
-            Department = department ?? String.Empty;
+            PersonId = personId ?? String.Empty;
+            PdfNamingType = pdfNamingType;
         }
+
         /// <summary>
-        /// Отдел
+        /// Идентификатор личной подпись
         /// </summary>
-        public string Department { get; }
+        public string PersonId { get; }
+
+        /// <summary>
+        /// Принцип именование PDF
+        /// </summary>
+        public PdfNamingType PdfNamingType { get; }
     }
 }

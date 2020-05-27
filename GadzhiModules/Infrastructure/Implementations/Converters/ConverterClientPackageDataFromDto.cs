@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 
 namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
