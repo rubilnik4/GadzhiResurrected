@@ -9,6 +9,7 @@ using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Nito.Mvvm;
+using Prism.Commands;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -28,12 +29,28 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
 
             PersonSignatures = NotifyTask.Create(applicationGadzhi.GetSignaturesNames());
+
+            UpdateCommand = new DelegateCommand(Update);
         }
 
+        public DelegateCommand UpdateCommand { get; }
+
+        private void Update()
+        {
+            PersonSignature = _convertingSettings.PersonSignature;
+            RaisePropertyChanged(nameof(PersonSignature));
+        }
         /// <summary>
         /// Название
         /// </summary>
         public override string Title => "Параметрюшки";
+
+        /// <summary>
+        /// Текст подписи во время загрузки
+        /// </summary>
+        public string PersonSignatureLoading => (_convertingSettings.PersonSignature?.PersonInformation.HasFullInformation == true)
+                                                ? _convertingSettings.PersonSignature?.PersonInformation.FullInformation
+                                                : "Выберите подпись";
 
         /// <summary>
         /// Подпись
@@ -48,6 +65,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Подписи
         /// </summary>
         public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
+
 
         /// <summary>
         /// Принцип именования PDF

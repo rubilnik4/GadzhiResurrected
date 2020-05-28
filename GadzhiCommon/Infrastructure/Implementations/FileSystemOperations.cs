@@ -21,6 +21,13 @@ namespace GadzhiCommon.Infrastructure.Implementations
     public class FileSystemOperations : IFileSystemOperations
     {
         /// <summary>
+        /// Изменить имя в пути файла
+        /// </summary>
+        public static string ChangeFilePathName(string filePath, string fileName) =>
+            Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
+            fileName + Path.GetExtension(filePath);
+
+        /// <summary>
         /// Убрать точку из расширения файла и привести к нижнему регистру
         /// </summary>      
         public static string ExtensionWithoutPoint(string extension) =>

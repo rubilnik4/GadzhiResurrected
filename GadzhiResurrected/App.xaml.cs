@@ -15,6 +15,7 @@ using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Unity;
+using Unity.Lifetime;
 
 namespace GadzhiResurrected
 {
@@ -50,7 +51,7 @@ namespace GadzhiResurrected
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
             unityContainer.RegisterFactory<IProjectSettings>(unity => 
-                new ProjectSettings(ApplicationGadzhi.GetConvertingSettingFromConfiguration()));
+                new ProjectSettings(ApplicationGadzhi.GetConvertingSettingFromConfiguration()), new ContainerControlledLifetimeManager());
         }
 
         /// <summary>

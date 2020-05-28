@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
@@ -30,16 +31,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         {
             StampCellElement = stampCellElement ?? throw new ArgumentNullException(nameof(stampCellElement));
         }
-
-        /// <summary>
-        /// Основные поля штампа
-        /// </summary>
-        private IResultAppValue<IStampBasicFields> _stampBasicFields;
-
-        /// <summary>
-        /// Основные поля штампа
-        /// </summary>
-        public override IResultAppValue<IStampBasicFields> StampBasicFields => _stampBasicFields ??= GetStampBasicFields();
 
         /// <summary>
         /// Наименование

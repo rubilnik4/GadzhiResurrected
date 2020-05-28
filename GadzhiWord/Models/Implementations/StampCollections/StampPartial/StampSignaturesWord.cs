@@ -12,7 +12,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Подкласс штампа для работы с подписями
+    /// Подкласс штампа для работы с подписями Word
     /// </summary>
     public partial class StampWord
     {

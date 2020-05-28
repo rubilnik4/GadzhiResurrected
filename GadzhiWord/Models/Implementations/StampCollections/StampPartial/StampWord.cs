@@ -4,6 +4,7 @@ using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
@@ -39,16 +40,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Тип расположения штампа
         /// </summary>
         public override StampOrientationType Orientation { get; }
-
-        /// <summary>
-        /// Основные поля штампа
-        /// </summary>
-        private IResultAppValue<IStampBasicFields> _stampBasicFields;
-
-        /// <summary>
-        /// Основные поля штампа
-        /// </summary>
-        public override IResultAppValue<IStampBasicFields> StampBasicFields => _stampBasicFields ??= GetStampBasicFields();
 
         /// <summary>
         /// Наименование

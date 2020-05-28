@@ -82,9 +82,11 @@
     <Compile Include="Models\Implementation\Resources\ResourcesWord.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampBasicFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampTextField.cs" />
-    <Compile Include="Models\Implementation\StampCollections\Stamp.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampPartial\Stamp.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Enums\StampCollections\StampDepartmentType.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampPartial\StampBasicFields.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampPartial\StampSignatures.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampSettings.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampField.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampIdentifier.cs" />

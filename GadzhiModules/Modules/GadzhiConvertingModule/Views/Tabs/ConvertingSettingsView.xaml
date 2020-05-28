@@ -55,8 +55,8 @@
                                  Visibility="{Binding PersonSignatures.IsNotCompleted, Converter={StaticResource VisibilityConverter}}" >
                     </ProgressBar>
 
-                    <ComboBox materialDesign:HintAssist.Hint="Выберите подпись"
-                              SelectedItem="{Binding PersonSignature}"
+                    <ComboBox materialDesign:HintAssist.Hint="{Binding PersonSignatureLoading}"
+                              SelectedValue="{Binding PersonSignature}"
                               ItemsSource="{Binding PersonSignatures.Result}"
                               DisplayMemberPath="PersonInformation.FullInformation">
                         <ComboBox.ItemsPanel>

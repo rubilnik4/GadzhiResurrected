@@ -20,7 +20,7 @@ using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Подкласс штампа для работы с подписями
+    /// Подкласс штампа для работы с подписями Microstation
     /// </summary>
     public abstract partial class StampMicrostation
     {

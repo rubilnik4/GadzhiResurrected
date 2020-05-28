@@ -6,7 +6,7 @@
     public enum PdfNamingType
     {
         ByFile,
-        ByStamp,
+        ByCode,
         BySheet,
     }
 }

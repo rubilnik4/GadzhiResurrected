@@ -15,13 +15,14 @@ using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Models.Implementations.StampCollections.StampMainPartial;
+using GadzhiApplicationCommon.Extensions.Functional;
 
 namespace GadzhiWord.Word.Implementations.DocumentWordPartial
 {
     /// <summary>
     /// Подкласс документа Word для работы с элементами
     /// </summary>
-    public partial class DocumentWord : IDocumentLibraryElements
+    public partial class DocumentWord
     {
         /// <summary>
         /// Загруженные штампы
@@ -31,7 +32,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings)=>
+        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
             _stampContainer ??= new StampContainer(FindStamps(convertingSettings), FullName);
 
         /// <summary>
@@ -43,12 +44,10 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
             SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
             Select(table => new TableElementWord(table, ToOwnerWord())).
             Where(CheckFooterIsStamp).
-            Select((tableElement, stampIndex) => new StampMainWord(tableElement,
-                                                                   new StampSettingsWord(new StampIdentifier(stampIndex),
-                                                                                         convertingSettings.PersonId,
-                                                                                         convertingSettings.PdfNamingType,
-                                                                                         PaperSize, OrientationType),
-                                                                   ApplicationWord.ResourcesWord.SignaturesSearching));
+            Select((tableElement, stampIndex) => 
+                       new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId, 
+                                             convertingSettings.PdfNamingType, PaperSize, OrientationType).
+                       Map(stampSettings => new StampMainWord(stampSettings, ApplicationWord.ResourcesWord.SignaturesSearching, tableElement)));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом

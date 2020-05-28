@@ -9,7 +9,6 @@ using GadzhiConverting.Models.Interfaces.Printers;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,9 +18,9 @@ using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
-using System.Runtime.Remoting.Messaging;
-using GadzhiApplicationCommon.Models.Enums;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -34,17 +33,25 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
         private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
-                                                                             IConvertingSettings convertingSettings,
-                                                                             ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-            documentLibrary.GetStampContainer(convertingSettings.ToApplication()).Stamps.ToResultCollectionFromApplication().
-            ResultValueOkBind(stamps =>
-                stamps.Select(stamp =>
-                CreatePdfWithSignatures(documentLibrary, stamp,
-                                        new FilePath(GetFilePathWithStampIndex(filePath.FilePathServer, stamp.StampSettings.Id.ToFilePathPrefix()),
-                                                     GetFilePathWithStampIndex(filePath.FilePathClient, stamp.StampSettings.Id.ToFilePathPrefix())),
-                                        colorPrint, pdfPrinterInformation)).ToList().
-                                        ToResultCollection()).
+                                                                             IConvertingSettings convertingSettings, ColorPrint colorPrint, 
+                                                                             IPrinterInformation pdfPrinterInformation) =>
+            documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
+            Stamps.ToResultCollectionFromApplication().
+            ResultValueOkBind(stamps => stamps.
+                                        Select(stamp => CreatePdfWithFilePath(stamp, documentLibrary, filePath, convertingSettings, 
+                                                                              colorPrint, pdfPrinterInformation)).
+                                        ToList().ToResultCollection()).
             ToResultCollection();
+
+        /// <summary>
+        /// Создать пдф и сохранить согласно типу именования
+        /// </summary>
+        private IResultValue<IFileDataSourceServer> CreatePdfWithFilePath(IStamp stamp, IDocumentLibrary documentLibrary, IFilePath filePath,
+                                                                          IConvertingSettings convertingSettings,
+                                                                          ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
+            new FilePath(StampFilePath.GetFilePathByNamingType(filePath.FilePathServer, convertingSettings.PdfNamingType, stamp),
+                         StampFilePath.GetFilePathByNamingType(filePath.FilePathClient, convertingSettings.PdfNamingType, stamp)).
+            Map(stampFilePath => CreatePdfWithSignatures(documentLibrary, stamp, stampFilePath, colorPrint, pdfPrinterInformation));
 
         /// <summary>
         /// Создать PDF для штампа, вставить подписи
@@ -88,25 +95,5 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                               ToResultFromApplication();
             return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand);
         }
-
-        /// <summary>
-        /// Путь к сохранению файла печати с учетом принципа именования
-        /// </summary>
-        private static string GetFilePathByNamingType(string filePath, PdfNamingType pdfNamingType, IStamp stamp) =>
-            pdfNamingType switch
-            {
-                PdfNamingType.ByFile => GetFilePathWithStampIndex(filePath, stamp.StampSettings.Id.ToFilePathPrefix()),
-                PdfNamingType.ByStamp => GetFilePathWithStampIndex(filePath, stamp.StampSettings.Id.ToFilePathPrefix()),
-                PdfNamingType.BySheet => GetFilePathWithStampIndex(filePath, stamp.StampSettings.Id.ToFilePathPrefix()),
-                _ => throw new ArgumentOutOfRangeException(nameof(pdfNamingType), pdfNamingType, null)
-            };
-
-        /// <summary>
-        /// Путь к сохранению файла печати с учетом количества штампов
-        /// </summary>
-        private static string GetFilePathWithStampIndex(string filePath, string stampId) =>
-            Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
-            Path.GetFileNameWithoutExtension(filePath) + stampId +
-            Path.GetExtension(filePath);
     }
 }

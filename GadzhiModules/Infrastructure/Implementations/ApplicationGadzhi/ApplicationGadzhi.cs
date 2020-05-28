@@ -119,6 +119,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             Properties.Settings.Default.PersonPatronymic = _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.Patronymic;
             Properties.Settings.Default.PersonDepartment = _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.Department;
             Properties.Settings.Default.PdfNamingType = (int)_projectSettings.ConvertingSettings.PdfNamingType;
+            Properties.Settings.Default.Save();
         }
 
         #region IDisposable Support

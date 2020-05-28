@@ -17,7 +17,7 @@ namespace GadzhiModules.Helpers.Converters
             new Dictionary<PdfNamingType, string>
             {
                 { PdfNamingType.ByFile, "По имени файла" },
-                { PdfNamingType.ByStamp, "По основному шифру" },
+                { PdfNamingType.ByCode, "По основному шифру" },
                 { PdfNamingType.BySheet, "По номеру листа" },
             };
 

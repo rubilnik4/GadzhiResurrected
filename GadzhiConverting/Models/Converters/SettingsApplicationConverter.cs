@@ -30,7 +30,7 @@ namespace GadzhiConverting.Models.Converters
             pdfNamingType switch
             {
                 PdfNamingType.ByFile => PdfNamingTypeApplication.ByFile,
-                PdfNamingType.ByStamp => PdfNamingTypeApplication.BySheet,
+                PdfNamingType.ByCode => PdfNamingTypeApplication.BySheet,
                 PdfNamingType.BySheet => PdfNamingTypeApplication.ByStamp,
                 _ => throw new ArgumentOutOfRangeException(nameof(pdfNamingType), pdfNamingType, null)
             };
