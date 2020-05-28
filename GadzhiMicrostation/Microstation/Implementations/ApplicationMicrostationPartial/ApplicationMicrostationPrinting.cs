@@ -15,6 +15,7 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
 {
@@ -31,7 +32,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить тип поворота
         /// </summary>       
-        public void SetPrintingOrientation(OrientationType orientation) =>
+        public void SetPrintingOrientation(StampOrientationType orientation) =>
              Application.CadInputQueue.SendCommand($"PRINT orientation {orientation.ToString().ToLowerCaseCurrentCulture()}");
 
         /// <summary>

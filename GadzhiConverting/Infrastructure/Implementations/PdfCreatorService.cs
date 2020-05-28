@@ -1,6 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -15,6 +14,7 @@ using System.Text;
 using System.Threading;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {

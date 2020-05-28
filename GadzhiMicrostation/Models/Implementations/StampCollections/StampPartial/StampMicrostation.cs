@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -18,6 +19,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation : Stamp, IStampMicrostation
     {
+        /// <summary>
+        /// Элемент ячейка, определяющая штамп
+        /// </summary>
+        public ICellElementMicrostation StampCellElement { get; }
+
         protected StampMicrostation(StampSettings stampSettings, ICellElementMicrostation stampCellElement, 
                                     SignaturesSearching signaturesSearching)
             : base(stampSettings, signaturesSearching)
@@ -26,14 +32,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         }
 
         /// <summary>
-        /// Элемент ячейка, определяющая штамп
+        /// Основные поля штампа
         /// </summary>
-        public ICellElementMicrostation StampCellElement { get; }
+        private IResultAppValue<IStampBasicFields> _stampBasicFields;
 
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        public override IStampBasicFields StampBasicFields { get; }
+        public override IResultAppValue<IStampBasicFields> StampBasicFields => _stampBasicFields ??= GetStampBasicFields();
 
         /// <summary>
         /// Наименование

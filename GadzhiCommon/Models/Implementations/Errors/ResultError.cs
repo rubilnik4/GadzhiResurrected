@@ -1,10 +1,10 @@
-﻿using GadzhiCommon.Functional;
-using GadzhiCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiCommon.Models.Implementations.Errors
 {

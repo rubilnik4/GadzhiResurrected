@@ -46,7 +46,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        public abstract IStampBasicFields StampBasicFields { get; }
+        public abstract IResultAppValue<IStampBasicFields> StampBasicFields { get; }
 
         /// <summary>
         /// Формат
@@ -77,10 +77,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// Объединить подписи подписи
         /// </summary>        
         protected static IResultAppCollection<IStampSignature> GetSignatures(IResultAppCollection<IStampPerson> personSignatures,
-                                                                           IResultAppCollection<IStampChange> changeSignatures,
-                                                                           IResultAppCollection<IStampApproval> approvalSignatures) =>
-             personSignatures.Cast<IStampPerson, IStampSignature>().
-                              ConcatValues(changeSignatures.Value.Cast<IStampSignature>()).
-                              ConcatValues(approvalSignatures.Value.Cast<IStampSignature>());
+                                                                             IResultAppCollection<IStampChange> changeSignatures, 
+                                                                             IResultAppCollection<IStampApproval> approvalSignatures) =>
+            personSignatures.Cast<IStampPerson, IStampSignature>().
+                             ConcatValues(changeSignatures.Value.Cast<IStampSignature>()).
+                             ConcatValues(approvalSignatures.Value.Cast<IStampSignature>());
     }
 }

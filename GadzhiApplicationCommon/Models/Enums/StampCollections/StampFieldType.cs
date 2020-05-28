@@ -6,6 +6,7 @@
     public enum StampFieldType
     {
         Unknown,
+        Basic,
         PersonSignature,
         ChangeSignature,
         ApprovalSignature,

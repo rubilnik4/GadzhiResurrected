@@ -1,5 +1,4 @@
-﻿using GadzhiApplicationCommon.Functional;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using System;
 using System.Collections.Generic;

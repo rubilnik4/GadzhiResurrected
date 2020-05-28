@@ -1,11 +1,11 @@
 ﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial
 {
@@ -17,7 +17,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Установить тип поворота
         /// </summary>       
-        void SetPrintingOrientation(OrientationType orientation);
+        void SetPrintingOrientation(StampOrientationType orientation);
 
         /// <summary>
         /// Установить границы печати по рамке

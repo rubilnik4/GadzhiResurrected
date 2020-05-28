@@ -1,10 +1,10 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiCommon.Infrastructure.Implementations
 {

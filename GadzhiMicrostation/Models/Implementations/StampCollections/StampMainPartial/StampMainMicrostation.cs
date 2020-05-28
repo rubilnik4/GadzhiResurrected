@@ -25,31 +25,43 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings,
                                      SignaturesSearching signaturesSearching)
             : base(stampSettings, stampCellElement, signaturesSearching)
-        {
-            StampPersons = GetStampPersonRows();
-            StampChanges = GetStampChangeRows(StampPersons.Value?.FirstOrDefault()?.SignatureLibrary);
-            StampApprovals = GetStampApprovalRows();
-        }
+        { }
+
+        /// <summary>
+        /// Строки с ответственным лицом и подписью
+        /// </summary>
+        private IResultAppCollection<IStampPerson> _stampPersons;
+
+        /// <summary>
+        /// Строки с ответственным лицом и подписью
+        /// </summary>
+        public IResultAppCollection<IStampPerson> StampPersons => _stampPersons ??= GetStampPersonRows();
+
+        /// <summary>
+        /// Строки с изменениями
+        /// </summary>
+        private IResultAppCollection<IStampChange> _stampChanges;
+
+        /// <summary>
+        /// Строки с изменениями
+        /// </summary>
+        public IResultAppCollection<IStampChange> StampChanges =>
+            _stampChanges ??= GetStampChangeRows(StampPersons.Value?.FirstOrDefault()?.SignatureLibrary);
+
+        /// <summary>
+        /// Строки с согласованиями
+        /// </summary>
+        private IResultAppCollection<IStampApproval> _stampApprovals;
+
+        /// <summary>
+        /// Строки с согласованиями
+        /// </summary>
+        public IResultAppCollection<IStampApproval> StampApprovals => _stampApprovals ??= GetStampApprovalRows();
 
         /// <summary>
         /// Тип штампа
         /// </summary>
         public override StampType StampType => StampType.Main;
-
-        /// <summary>
-        /// Строки с ответственным лицом и подписью
-        /// </summary>
-        public IResultAppCollection<IStampPerson> StampPersons { get; }
-
-        /// <summary>
-        /// Строки с изменениями
-        /// </summary>
-        public IResultAppCollection<IStampChange> StampChanges { get; }
-
-        /// <summary>
-        /// Строки с согласованиями
-        /// </summary>
-        public IResultAppCollection<IStampApproval> StampApprovals { get; }
 
         /// <summary>
         /// Вставить подписи

@@ -14,6 +14,7 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
+using GadzhiWord.Models.Implementations.StampCollections.StampMainPartial;
 
 namespace GadzhiWord.Word.Implementations.DocumentWordPartial
 {

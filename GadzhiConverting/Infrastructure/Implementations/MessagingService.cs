@@ -1,12 +1,12 @@
 ﻿using GadzhiCommon.Converters;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiCommon.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {

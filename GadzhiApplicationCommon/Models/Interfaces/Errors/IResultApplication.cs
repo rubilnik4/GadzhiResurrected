@@ -1,8 +1,8 @@
-﻿using GadzhiApplicationCommon.Functional;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Models.Implementation.Functional;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.Errors
 {

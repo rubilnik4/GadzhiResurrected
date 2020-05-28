@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Functional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
@@ -15,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
 namespace GadzhiWord.Word.Implementations.DocumentWordPartial
 {
@@ -67,15 +67,15 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Формат
         /// </summary>
-        private OrientationType? _orientationType;
+        private StampOrientationType? _orientationType;
 
         /// <summary>
         /// Формат
         /// </summary>
-        private OrientationType OrientationType => 
+        private StampOrientationType OrientationType => 
             _orientationType ??= _document.PageSetup.Orientation == WdOrientation.wdOrientLandscape 
-                                 ? OrientationType.Landscape 
-                                 : OrientationType.Portrait;
+                                 ? StampOrientationType.Landscape 
+                                 : StampOrientationType.Portrait;
 
         /// <summary>
         /// Сохранить файл

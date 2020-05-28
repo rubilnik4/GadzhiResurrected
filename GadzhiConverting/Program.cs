@@ -23,7 +23,7 @@ namespace GadzhiConverting
             await BootStrapUnity.ConfigureContainer(Container);
 
             var applicationConverting = Container.Resolve<IConvertingService>();
-            applicationConverting.StartConverting();
+            await applicationConverting.StartConverting();
 
             Console.ReadLine();
         }

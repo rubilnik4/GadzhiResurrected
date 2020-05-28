@@ -1,5 +1,4 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System.Collections.Generic;
 

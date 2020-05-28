@@ -21,7 +21,7 @@ using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiCommon.Functional;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;

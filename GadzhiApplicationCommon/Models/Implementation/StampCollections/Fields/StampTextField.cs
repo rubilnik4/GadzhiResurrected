@@ -8,6 +8,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     /// </summary>  
     public abstract class StampTextField : StampField, IStampTextField
     {
+        protected StampTextField(StampFieldType stampFieldType)
+            : base(stampFieldType)
+        { }
         /// <summary>
         /// Текст поля в штампе
         /// </summary>

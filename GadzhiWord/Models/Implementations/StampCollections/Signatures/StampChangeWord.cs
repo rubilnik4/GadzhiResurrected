@@ -17,12 +17,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         public const int FIELDS_COUNT = 6;
 
         public StampChangeWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature, IStampTextField numberChange,
-                               IStampTextField numberOfPlots, IStampTextField typeOfChange, IStampTextField documentChange,
+                               IStampTextField numberPlots, IStampTextField typeOfChange, IStampTextField documentChange,
                                IStampTextField dateChange)
             : base(signatureLibrary, signature)
         {
             NumberChange = numberChange;
-            NumberOfPlots = numberOfPlots;
+            NumberPlots = numberPlots;
             TypeOfChange = typeOfChange;
             DocumentChange = documentChange;
             DateChange = dateChange;
@@ -36,7 +36,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// <summary>
         /// Количество участков
         /// </summary>
-        public IStampTextField NumberOfPlots { get; }
+        public IStampTextField NumberPlots { get; }
 
         /// <summary>
         /// Тип изменения

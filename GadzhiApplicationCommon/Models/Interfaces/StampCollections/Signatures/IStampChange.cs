@@ -15,7 +15,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
         /// <summary>
         /// Количество участков
         /// </summary>
-        IStampTextField NumberOfPlots { get; }
+        IStampTextField NumberPlots { get; }
 
         /// <summary>
         /// Тип изменения

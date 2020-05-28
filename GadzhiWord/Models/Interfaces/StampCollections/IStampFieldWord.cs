@@ -1,5 +1,4 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+﻿
 using GadzhiWord.Word.Interfaces.Elements;
 using System;
 using System.Collections.Generic;

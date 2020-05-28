@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GadzhiCommon.Functional
+namespace GadzhiCommon.Models.Implementations.Functional
 {
     /// <summary>
     /// Тип Unit для замены void

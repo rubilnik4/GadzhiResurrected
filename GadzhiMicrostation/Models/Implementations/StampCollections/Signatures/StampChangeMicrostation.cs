@@ -29,7 +29,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
             : base(signatureLibrary, signature, insertSignatureFunc)
         {
             NumberChange = numberChange;
-            NumberOfPlots = numberOfPlots;
+            NumberPlots = numberOfPlots;
             TypeOfChange = typeOfChange;
             DocumentChange = documentChange;
             DateChange = dateChange;
@@ -43,7 +43,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// <summary>
         /// Количество участков
         /// </summary>
-        public IStampTextField NumberOfPlots { get; }
+        public IStampTextField NumberPlots { get; }
 
         /// <summary>
         /// Тип изменения
@@ -70,13 +70,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
             new StampChangeMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
-                                        NumberChange, NumberOfPlots, TypeOfChange, DocumentChange, DateChange);
+                                        NumberChange, NumberPlots, TypeOfChange, DocumentChange, DateChange);
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
         public override IStampSignature DeleteSignature() =>
-            new StampChangeMicrostation(SignatureLibrary, InsertSignatureFunc, NumberChange, NumberOfPlots, 
+            new StampChangeMicrostation(SignatureLibrary, InsertSignatureFunc, NumberChange, NumberPlots, 
                                         TypeOfChange, DocumentChange, DateChange);
     }
 }

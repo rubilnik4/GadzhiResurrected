@@ -1,5 +1,4 @@
-﻿using GadzhiApplicationCommon.Functional;
-using GadzhiApplicationCommon.Models.Enums;
+﻿using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using System;
@@ -37,7 +36,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        IStampBasicFields StampBasicFields { get; }
+        IResultAppValue<IStampBasicFields> StampBasicFields { get; }
 
         /// <summary>
         /// Формат

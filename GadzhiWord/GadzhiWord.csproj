@@ -126,22 +126,30 @@
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampChangeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampSignaturesWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\AdditionalSettingsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampFieldWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampPersonWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampSignatureWord.cs" />
+    <Compile Include="Models\Implementations\StampFieldIndexes\ChangeRowIndexes.cs" />
+    <Compile Include="Models\Implementations\StampFieldIndexes\PersonRowIndexes.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampFieldWord.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampTextFieldWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="StampFieldNames\IStampFieldSignature.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWord.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordDocument.cs" />
     <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordPrinting.cs" />

@@ -48,7 +48,6 @@ namespace GadzhiCommon.Extensions.Functional.Result
                                                                                                       Func<TValueIn, Task<IResultValue<TValueOut>>> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
-
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             return @this.HasErrors

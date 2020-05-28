@@ -37,11 +37,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public IStampTextFieldMicrostation GetFieldFromElements(IEnumerable<ITextElementMicrostation> elementsMicrostation,
                                                             HashSet<StampFieldBase> stampFields, StampFieldType stampFieldType) =>
-                elementsMicrostation.Where(element => stampFields.
-                                                      Select(field => field.Name).
-                                                      Contains(element.AttributeControlName)).
-                                     Select(field => new StampTextFieldMicrostation(field, stampFieldType)).
-                                     FirstOrDefault();
+            elementsMicrostation.Where(element => stampFields.Select(field => field.Name).
+                                                              Contains(element.AttributeControlName)).
+                                 Select(field => new StampTextFieldMicrostation(field, stampFieldType)).
+                                 FirstOrDefault();
 
         /// <summary>
         /// Вписать текстовые поля в рамки

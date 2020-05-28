@@ -24,8 +24,8 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this == null) return null;
             if (@this.HasErrors) return new ResultAppValue<TValueOut>(@this.Errors);
 
             return predicate(@this.Value) ?
@@ -44,8 +44,7 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
-
-            if (@this == null) return null;
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             return @this.OkStatus ?
                    okFunc.Invoke(@this.Value).
@@ -63,8 +62,8 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
 
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this == null) return null;
             if (@this.HasErrors) return new ResultAppValue<TValueOut>(@this.Errors);
 
             return okFunc.Invoke(@this.Value).
@@ -77,8 +76,8 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         public static IResultAppValue<TValue> ResultValueBad<TValue>(this IResultAppValue<TValue> @this, Func<TValue, TValue> badFunc)
         {
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this == null) return null;
             if (@this.OkStatus) return @this;
 
             return badFunc.Invoke(@this.Value).
@@ -92,8 +91,8 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
                                                                                                 Func<TValueIn, IResultAppValue<TValueOut>> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this == null) return null;
             return @this.HasErrors 
                 ? new ResultAppValue<TValueOut>(@this.Errors) 
                 : okFunc.Invoke(@this.Value);
@@ -119,8 +118,8 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         public static IResultApplication ResultOkBind(this IResultApplication @this, Func<IResultApplication> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this == null) return null;
             return @this.HasErrors 
                 ? new ResultApplication(@this.Errors) 
                 : okFunc.Invoke();
