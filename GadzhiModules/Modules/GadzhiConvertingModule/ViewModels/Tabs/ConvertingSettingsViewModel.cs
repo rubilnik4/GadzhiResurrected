@@ -23,23 +23,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private readonly IConvertingSettings _convertingSettings;
 
-        public ConvertingSettingsViewModel(IProjectSettings projectSettings, IApplicationGadzhi applicationGadzhi)
+        public ConvertingSettingsViewModel(IProjectSettings projectSettings, IProjectResources projectResources)
         {
-            if (applicationGadzhi == null) throw new ArgumentNullException(nameof(applicationGadzhi));
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-
-            PersonSignatures = NotifyTask.Create(applicationGadzhi.GetSignaturesNames());
-
-            UpdateCommand = new DelegateCommand(Update);
+            PersonSignatures = projectResources.PersonSignatures;
         }
 
-        public DelegateCommand UpdateCommand { get; }
-
-        private void Update()
-        {
-            PersonSignature = _convertingSettings.PersonSignature;
-            RaisePropertyChanged(nameof(PersonSignature));
-        }
         /// <summary>
         /// Название
         /// </summary>

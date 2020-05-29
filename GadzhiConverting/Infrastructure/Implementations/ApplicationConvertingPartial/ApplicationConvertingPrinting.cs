@@ -33,12 +33,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
         private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
-                                                                             IConvertingSettings convertingSettings, ColorPrint colorPrint, 
+                                                                             IConvertingSettings convertingSettings, ColorPrint colorPrint,
                                                                              IPrinterInformation pdfPrinterInformation) =>
             documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
             Stamps.ToResultCollectionFromApplication().
             ResultValueOkBind(stamps => stamps.
-                                        Select(stamp => CreatePdfWithFilePath(stamp, documentLibrary, filePath, convertingSettings, 
+                                        Select(stamp => CreatePdfWithFilePath(stamp, documentLibrary, filePath, convertingSettings,
                                                                               colorPrint, pdfPrinterInformation)).
                                         ToList().ToResultCollection()).
             ToResultCollection();
@@ -49,9 +49,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultValue<IFileDataSourceServer> CreatePdfWithFilePath(IStamp stamp, IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                           IConvertingSettings convertingSettings,
                                                                           ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-            new FilePath(StampFilePath.GetFilePathByNamingType(filePath.FilePathServer, convertingSettings.PdfNamingType, stamp),
-                         StampFilePath.GetFilePathByNamingType(filePath.FilePathClient, convertingSettings.PdfNamingType, stamp)).
-            Map(stampFilePath => CreatePdfWithSignatures(documentLibrary, stamp, stampFilePath, colorPrint, pdfPrinterInformation));
+            new ResultValue<Func<string, string, FilePath>>((filePathServer, filePathClient) => new FilePath(filePathServer, filePathClient)).
+            ResultCurryOkBind(StampFilePath.GetFilePathByNamingType(filePath.FilePathServer, convertingSettings.PdfNamingType, stamp)).
+            ResultCurryOkBind(StampFilePath.GetFilePathByNamingType(filePath.FilePathClient, convertingSettings.PdfNamingType, stamp)).
+            ResultValueOk(filePathFunc => filePathFunc.Invoke()).
+            ResultValueOkBind(stampFilePath => CreatePdfWithSignatures(documentLibrary, stamp, stampFilePath, colorPrint, pdfPrinterInformation));
 
         /// <summary>
         /// Создать PDF для штампа, вставить подписи

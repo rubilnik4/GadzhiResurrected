@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Infrastructure.Implementations;
+﻿using System.Threading.Tasks;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Interfaces;
@@ -42,6 +43,9 @@ namespace GadzhiResurrected
             Container.Resolve<IApplicationGadzhi>()?.Dispose();
         }
 
+        /// <summary>
+        /// Регистрирование зависимостей 
+        /// </summary>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var unityContainer = containerRegistry.GetContainer();
@@ -50,8 +54,8 @@ namespace GadzhiResurrected
             unityContainer.RegisterType<IMessagingService, DialogServiceStandard>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
-            unityContainer.RegisterFactory<IProjectSettings>(unity => 
-                new ProjectSettings(ApplicationGadzhi.GetConvertingSettingFromConfiguration()), new ContainerControlledLifetimeManager());
+
+
         }
 
         /// <summary>

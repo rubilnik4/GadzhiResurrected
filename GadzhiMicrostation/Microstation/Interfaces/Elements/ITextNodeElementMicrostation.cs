@@ -1,4 +1,5 @@
-﻿using GadzhiMicrostation.Models.Implementations.Coordinates;
+﻿using System.Collections.Generic;
+using GadzhiMicrostation.Models.Implementations.Coordinates;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 { /// <summary>
@@ -6,6 +7,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
   /// </summary>
     public interface ITextNodeElementMicrostation : IRangeBaseElementMicrostation<ITextNodeElementMicrostation>
     {
+        /// <summary>
+        /// Текстовые строки элемента
+        /// </summary>
+        IList<string> Text { get; }
+
+        /// <summary>
+        /// Однострочный текст
+        /// </summary>
+        string TextInline { get; }
+
         /// <summary>
         /// Переместить элемент
         /// </summary>

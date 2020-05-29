@@ -4,7 +4,9 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Models.Implementations.StampCollections;
 using MicroStationDGN;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -26,6 +28,23 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         {
             _textNodeElement = textNodeElement ?? throw new ArgumentNullException(nameof(textNodeElement));
         }
+
+        /// <summary>
+        /// Текстовые строки элемента
+        /// </summary>
+        private IList<string> _text;
+
+        /// <summary>
+        /// Текстовые строки элемента
+        /// </summary>
+        public IList<string> Text => _text ??= Enumerable.Range(1, _textNodeElement.TextLinesCount).
+                                                          Select(lineIndex => _textNodeElement.TextLine[lineIndex]).
+                                                          ToList();
+
+        /// <summary>
+        /// Однострочный текст
+        /// </summary>
+        public string TextInline => String.Join(" ", Text.ToArray());
 
         /// <summary>
         /// Координаты текстового поля

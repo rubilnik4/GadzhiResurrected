@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
@@ -21,11 +18,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
     /// </summary>
     public partial class ApplicationGadzhi
     {
-        /// <summary>
-        /// Подписка на изменение коллекции
-        /// </summary>
-        public ISubject<FilesChange> FileDataChange => _packageInfoProject.FileDataChange;
-
         /// <summary>
         /// Выполняется ли промежуточный запрос
         /// </summary>
@@ -92,9 +84,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task UpdateStatusProcessing()
         {
-            PackageDataIntermediateResponseClient packageDataResponse = await _fileConvertingClientService.Operations.
-                                                                                CheckFilesStatusProcessing(_packageInfoProject.Id);
-            PackageStatus packageStatus = await _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse);
+            var packageDataResponse = await _fileConvertingClientService.Operations.CheckFilesStatusProcessing(_packageInfoProject.Id);
+            var packageStatus = await _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(packageStatus);
 
             if (CheckStatusProcessing.CompletedStatusProcessingProject.Contains(packageDataResponse.StatusProcessingProject))

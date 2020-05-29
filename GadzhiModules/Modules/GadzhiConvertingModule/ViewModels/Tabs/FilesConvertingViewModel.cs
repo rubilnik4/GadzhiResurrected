@@ -213,7 +213,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary> 
         private void CloseApplication() => ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
 
-        #region FilesInfoUpdate
         /// <summary>
         /// Обновление данных после изменения модели
         /// </summary> 
@@ -304,8 +303,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                 RaisePropertyChanged(nameof(IsConverting));
             }
         }
-        #endregion
-
 
         /// <summary>
         /// Реализация Drag Drop для ссылки на файлы

@@ -186,7 +186,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования
         /// </summary>
-        private bool CanFileDataBeAddedToList(IFileData file) => file != null && _filesData.IndexOf(file) > -1;
+        private bool CanFileDataBeAddedToList(IFileData file) => file != null && _filesData.IndexOf(file) == -1;
 
         /// <summary>
         /// Установить статус конвертирования пакета

@@ -38,7 +38,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Текст элемента
         /// </summary>
-        public string Text => _text ??= String.Copy(_textElement.Text);
+        public string Text => _text ??= _textElement.Text;
 
         /// <summary>
         /// Координаты текстового элемента

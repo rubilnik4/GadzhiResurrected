@@ -214,12 +214,14 @@
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientPackageDataToDto.cs" />
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\GadzhiConvertingModule.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\PackageStatus.cs" />

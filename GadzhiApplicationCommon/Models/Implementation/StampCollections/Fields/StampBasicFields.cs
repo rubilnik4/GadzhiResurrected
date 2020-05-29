@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
@@ -6,7 +7,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     /// <summary>
     /// Обязательные поля штампа
     /// </summary>
-    public class StampBasicFields: IStampBasicFields
+    public class StampBasicFields : IStampBasicFields
     {
         public StampBasicFields(IStampTextField code, IStampTextField currentSheetNumber)
         {
@@ -23,5 +24,22 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// Номер текущего листа
         /// </summary>
         public IStampTextField CurrentSheet { get; }
+
+        /// <summary>
+        /// Проверить шифр на корректность
+        /// </summary>
+        public static bool ValidateFullCode(string fullCode) => !fullCode.IsNullOrWhiteSpace();
+
+        /// <summary>
+        /// Проверить текущий лист на корректность
+        /// </summary>
+        public static bool ValidateCurrentSheet(string currentSheet) => Int32.TryParse(currentSheet, out int _);
+
+        /// <summary>
+        /// Перевести номер листа в строковый формат
+        /// </summary>
+        public static string CurrentSheetFormat(int currentSheet) => (currentSheet < 10)
+                                                                        ? $"{ currentSheet:00}"
+                                                                        : $"{ currentSheet}";
     }
 }

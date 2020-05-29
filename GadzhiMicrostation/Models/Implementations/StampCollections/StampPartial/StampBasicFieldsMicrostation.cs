@@ -26,9 +26,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Получить поле шифра
         /// </summary>
         protected override IResultAppValue<IStampTextField> GetFullCode() =>
-                FindElementsInStamp<ITextElementMicrostation>(new List<string>() { StampFieldBasic.FullCode.Name },
-                                                              new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра не найдено")).
-                ResultValueOk(textElement => new StampTextFieldMicrostation(textElement.First(), StampFieldType.Basic));
+                FindElementsInStamp<ITextNodeElementMicrostation>(new List<string>() { StampFieldBasic.FullCode.Name },
+                                                                  new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра не найдено")).
+                ResultValueOk(textElement => new StampTextNodeFieldMicrostation(textElement.First() , StampFieldType.Basic));
 
         /// <summary>
         /// Получить номер текущего листа

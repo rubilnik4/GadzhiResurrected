@@ -66,12 +66,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         protected IResultAppCollection<TElement> FindElementsInStamp<TElement>(IEnumerable<string> fieldsSearch, IErrorApplication errorNull)
             where TElement : IElementMicrostation =>
             StampSubControls.
-                ResultValueOk(subElements => FindElementsInFields<TElement>(subElements, fieldsSearch)).
-                ToResultCollection().
-                ResultValueContinue(fields => fields.Count > 0,
-                                    okFunc: fields => fields,
-                                    badFunc: fields => errorNull).
-                ToResultCollection();
+            ResultValueOk(subElements => FindElementsInFields<TElement>(subElements, fieldsSearch)).
+            ToResultCollection().
+            ResultValueContinue(fields => fields.Count > 0,
+                okFunc: fields => fields,
+                badFunc: fields => errorNull).
+            ToResultCollection();
 
         /// <summary>
         /// Найти элементы в словаре по ключам
@@ -80,7 +80,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                             IEnumerable<string> fieldsSearch)
             where TElement : IElementMicrostation =>
             cellSubElements.
-                Where(subElement => subElement is IRangeBaseElementMicrostation<TElement>).
+                Where(subElement => subElement is IRangeBaseElementMicrostation<TElement> && subElement is TElement).
                 Cast<IRangeBaseElementMicrostation<TElement>>().
                 Where(subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).
                 Select(subElement => subElement.Clone(StampFieldMain.IsControlVertical(subElement.AttributeControlName)));

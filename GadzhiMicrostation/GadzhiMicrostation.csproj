@@ -74,6 +74,7 @@
     <Compile Include="Microstation\Interfaces\DocumentMicrostationPartial\IDocumentMicrostation.cs" />
     <Compile Include="Microstation\Interfaces\Elements\ILineElementMicrostation.cs" />
     <Compile Include="Models\Implementations\LibraryElement.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Fields\StampTextNodeFieldMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainApprovalMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonMicrostation.cs" />

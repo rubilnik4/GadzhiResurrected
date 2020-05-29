@@ -11,8 +11,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampFieldNames
     /// </summary>
     public static class StampFieldMain
     {
-
-
         /// <summary>
         /// Наименование проекта
         /// </summary>

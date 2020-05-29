@@ -1,4 +1,10 @@
-﻿using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.LibraryData;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
+using GadzhiCommon.Extensions.Async;
+using Nito.Mvvm;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings
 {
@@ -9,7 +15,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
     {
         public ProjectSettings(IConvertingSettings convertingSettings)
         {
-            ConvertingSettings = convertingSettings;
+            ConvertingSettings = convertingSettings ?? throw new ArgumentNullException(nameof(convertingSettings));
         }
 
         /// <summary>

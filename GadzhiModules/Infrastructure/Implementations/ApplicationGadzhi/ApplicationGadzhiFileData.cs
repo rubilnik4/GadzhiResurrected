@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using GadzhiCommon.Helpers.Dialogs;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
 namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
@@ -10,6 +12,11 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
     /// </summary>
     public partial class ApplicationGadzhi
     {
+        /// <summary>
+        /// Подписка на изменение коллекции
+        /// </summary>
+        public ISubject<FilesChange> FileDataChange => _packageInfoProject.FileDataChange;
+
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>

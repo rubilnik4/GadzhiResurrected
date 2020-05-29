@@ -5,13 +5,13 @@ using Nito.Mvvm;
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings
 {
     /// <summary>
-    /// Параметры приложения
+    /// Общие данные, используемые в проекте
     /// </summary>
-    public interface IProjectSettings
+    public interface IProjectResources
     {
         /// <summary>
-        /// Параметры конвертации
+        /// Подписи
         /// </summary>
-        IConvertingSettings ConvertingSettings { get; }
+        public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
     }
 }

@@ -29,7 +29,9 @@ namespace GadzhiConverting.Models.Converters
             if (resultApplicationValue == null) throw new ArgumentNullException(nameof(resultApplicationValue));
 
             return resultApplicationValue.
-            Map(result => new ResultValue<TValue>(result.Value, result.Errors.ToErrorsConverting()));
+            Map(result => (resultApplicationValue.OkStatus) 
+                            ? new ResultValue<TValue>(result.Value) 
+                            : new ResultValue<TValue>(result.Errors.ToErrorsConverting()));
         }
 
         /// <summary>
