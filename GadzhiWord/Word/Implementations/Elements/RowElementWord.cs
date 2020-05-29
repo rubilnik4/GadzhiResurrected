@@ -10,26 +10,29 @@ namespace GadzhiWord.Word.Implementations.Elements
     /// <summary>
     /// Элемент строка
     /// </summary>
-    public class RowElementWord : IRowElement
+    public class RowElementWord : IRowElementWord
     {
-        /// <summary>
-        /// Элемент строка Word
-        /// </summary>
-        private readonly List<ICellElement> _cellsElementWord;
-
-        public RowElementWord(List<ICellElement> cellsElementWord)
+        public RowElementWord(IEnumerable<ICellElementWord> cellsElement)
         {
-            _cellsElementWord = cellsElementWord ?? throw new ArgumentNullException(nameof(cellsElementWord));
+            var cellsElementCollection = cellsElement?.ToList();
+            CellsElement = ValidateCellsRow(cellsElementCollection) 
+                            ? cellsElementCollection 
+                            : throw new ArgumentNullException(nameof(cellsElement));
         }
 
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        public IList<ICellElement> CellsElement => _cellsElementWord;
+        public IReadOnlyList<ICellElementWord> CellsElement { get; }
 
         /// <summary>
         /// Индекс строки
         /// </summary>
-        public int Index => _cellsElementWord[0].RowIndex;
+        public int Index => CellsElement[0].RowIndex;
+
+        /// <summary>
+        /// Проверить корректность ячеек строки
+        /// </summary>
+        public static bool ValidateCellsRow(IList<ICellElementWord> cells) => cells?.Count > 0;
     }
 }

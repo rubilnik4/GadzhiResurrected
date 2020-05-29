@@ -76,5 +76,10 @@ namespace GadzhiApplicationCommon.Extensions.StringAdditional
             (input?.Length > startIndex && startIndex >= 0)
                 ? String.Join(" ", input, startIndex, input.Length - startIndex)
                 : String.Empty;
+
+        /// <summary>
+        /// Преобразовать строку в число типа int 
+        /// </summary>
+        public static int ParseInt(this string @this) => Int32.Parse(@this, CultureInfo.InvariantCulture);
     }
 }

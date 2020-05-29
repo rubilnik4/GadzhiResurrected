@@ -12,23 +12,29 @@ namespace GadzhiWord.Word.Implementations.Elements
     /// <summary>
     /// Элемент ячейка
     /// </summary>
-    public class CellElementWord : ICellElement
+    public class CellElementWord : ICellElementWord
     {
         /// <summary>
         /// Элемент ячейка Word
         /// </summary>
         private readonly Cell _cellElement;
 
-        /// <summary>
-        /// Родительская таблица
-        /// </summary>
-        private readonly ITableElement _tableElementWord;
-
-        public CellElementWord(Cell cellElement, ITableElement tableElementWord)
+        public CellElementWord(Cell cellElement, int rowIndex, int columnIndex)
         {
             _cellElement = cellElement ?? throw new ArgumentNullException(nameof(cellElement));
-            _tableElementWord = tableElementWord ?? throw new ArgumentNullException(nameof(tableElementWord));
+            RowIndex = (rowIndex >= 0) ? rowIndex : throw new ArgumentOutOfRangeException(nameof(rowIndex));
+            ColumnIndex = (columnIndex >= 0) ? columnIndex : throw new ArgumentOutOfRangeException(nameof(columnIndex));
         }
+
+         /// <summary>
+        /// Номер строки
+        /// </summary>
+        public int RowIndex { get; }
+
+        /// <summary>
+        /// Номер колонки
+        /// </summary>
+        public int ColumnIndex { get; }
 
         /// <summary>
         /// Текст ячейки
@@ -39,31 +45,6 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// Текст ячейки
         /// </summary>
         public string Text => _text ??= _cellElement.Range.Text.PrepareCellTextToCompare();
-
-        /// <summary>
-        /// Родительский элемент строка
-        /// </summary>
-        public IRowElement RowElementWord => _tableElementWord?.RowsElementWord[_cellElement.RowIndex - 1];
-
-        /// <summary>
-        /// Номер строки
-        /// </summary>
-        private int? _rowIndex;
-
-        /// <summary>
-        /// Номер строки
-        /// </summary>
-        public int RowIndex => _rowIndex ??= _cellElement.RowIndex - 1;
-
-        /// <summary>
-        /// Номер колонки
-        /// </summary>
-        private int? _columnIndex;
-
-        /// <summary>
-        /// Номер колонки
-        /// </summary>
-        public int ColumnIndex => _columnIndex ??= _cellElement.ColumnIndex - 1;
 
         /// <summary>
         /// Присутствует ли картинка в ячейке

@@ -36,7 +36,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Получить поля штампа на основе элементов Microstation
         /// </summary>
         public IStampTextFieldMicrostation GetFieldFromElements(IEnumerable<ITextElementMicrostation> elementsMicrostation,
-                                                            HashSet<StampFieldBase> stampFields, StampFieldType stampFieldType) =>
+                                                                HashSet<StampFieldBase> stampFields, StampFieldType stampFieldType) =>
             elementsMicrostation.Where(element => stampFields.Select(field => field.Name).
                                                               Contains(element.AttributeControlName)).
                                  Select(field => new StampTextFieldMicrostation(field, stampFieldType)).

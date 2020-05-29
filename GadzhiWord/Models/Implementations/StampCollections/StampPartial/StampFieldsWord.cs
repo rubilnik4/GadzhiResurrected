@@ -15,12 +15,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        private IReadOnlyList<IStampFieldWord> _fieldsStamp;
+        private IReadOnlyList<IStampTextFieldWord> _fieldsStamp;
 
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        protected IReadOnlyList<IStampFieldWord> FieldsStamp => _fieldsStamp ??= GetFields();
+        protected IReadOnlyList<IStampTextFieldWord> FieldsStamp => _fieldsStamp ??= GetFields();
 
         /// <summary>
         /// Вписать текстовые поля в рамки
@@ -30,11 +30,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        private IReadOnlyList<IStampFieldWord> GetFields() =>
+        private IReadOnlyList<IStampTextFieldWord> GetFields() =>
             TableStamp?.CellsElementWord?.
             Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
-            Select(cell => new StampFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
+            Select(cell => new StampTextFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
             Where(field => field.StampFieldType != StampFieldType.Unknown).
             ToList();
+
+        /// <summary>
+        /// Получить поля штампа согласно типу
+        /// </summary>
+        protected IEnumerable<IStampTextFieldWord> GetFieldsByType(StampFieldType stampFieldType) =>
+            FieldsStamp.Where(field => field.StampFieldType == stampFieldType);
     }
 }

@@ -5,7 +5,6 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
@@ -15,8 +14,6 @@ using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
-    using StampBasicFieldsFunc = Func<IStampTextField, IStampTextField, IStampBasicFields>;
-
     /// <summary>
     /// Подкласс штампа для работы с базовыми полями штампа Microstation
     /// </summary>
@@ -28,7 +25,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         protected override IResultAppValue<IStampTextField> GetFullCode() =>
                 FindElementsInStamp<ITextNodeElementMicrostation>(new List<string>() { StampFieldBasic.FullCode.Name },
                                                                   new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра не найдено")).
-                ResultValueOk(textElement => new StampTextNodeFieldMicrostation(textElement.First() , StampFieldType.Basic));
+                ResultValueOk(textElement => new StampTextNodeFieldMicrostation(textElement.First() , StampFieldType.FullRow));
 
         /// <summary>
         /// Получить номер текущего листа
@@ -36,6 +33,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         protected override IResultAppValue<IStampTextField> GetCurrentSheet() =>
             FindElementsInStamp<ITextElementMicrostation>(new List<string>() { StampFieldBasic.CurrentSheet.Name },
                                                           new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле номера листа не найдено")).
-            ResultValueOk(textElement => new StampTextFieldMicrostation(textElement.First(), StampFieldType.Basic));
+            ResultValueOk(textElement => new StampTextFieldMicrostation(textElement.First(), StampFieldType.CurrentSheet));
     }
 }

@@ -52,7 +52,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Проверить является ли колонтитул штампом
         /// </summary>
-        private static bool CheckFooterIsStamp(ITableElement tableElement) => tableElement.CellsElementWord.
+        private static bool CheckFooterIsStamp(ITableElementWord tableElement) => tableElement.CellsElementWord.
                                                                        Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
                                                                        Select(cell => cell.Text.PrepareCellTextToCompare()).
                                                                        Any(cellText => AdditionalSettingsWord.MarkersMainStamp.MarkerContain(cellText));

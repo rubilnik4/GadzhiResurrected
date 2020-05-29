@@ -22,9 +22,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
         /// Получить строки с изменениями
         /// </summary>
         private IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
-            FieldsStamp.
-            Where(field => field.StampFieldType == StampFieldType.ChangeSignature).
-            Select(field => field.CellElementStamp.RowElementWord).
+            GetFieldsByType(StampFieldType.PersonSignature).
+            Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
             Where(row => row.CellsElement.Count >= StampChangeWord.FIELDS_COUNT).
             Select(row => GetStampChangeFromRow(row, signatureLibrary)).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
@@ -32,7 +31,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
         /// <summary>
         /// Получить класс с изменениями и подписью по строке Word
         /// </summary>
-        private static IResultAppValue<IStampChange> GetStampChangeFromRow(IRowElement changeRow, ISignatureLibraryApp signatureLibrary) =>
+        private static IResultAppValue<IStampChange> GetStampChangeFromRow(IRowElementWord changeRow, ISignatureLibraryApp signatureLibrary) =>
             new ResultAppValue<ISignatureLibraryApp>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                             "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampChangeFromFields(changeRow, signature));
@@ -40,7 +39,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
         /// <summary>
         /// Получить класс с изменениями и подписью на основании полей
         /// </summary>
-        private static IStampChange GetStampChangeFromFields(IRowElement changeRow, ISignatureLibraryApp personSignature) =>
+        private static IStampChange GetStampChangeFromFields(IRowElementWord changeRow, ISignatureLibraryApp personSignature) =>
             new StampChangeWord(personSignature,
                                 new StampFieldWord(changeRow.CellsElement[ChangeRowIndexes.SIGNATURE], StampFieldType.ChangeSignature),
                                 new StampTextFieldWord(changeRow.CellsElement[ChangeRowIndexes.NUMBER_CHANGE], StampFieldType.ChangeSignature),

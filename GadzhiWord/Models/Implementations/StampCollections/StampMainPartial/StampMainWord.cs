@@ -19,7 +19,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
     /// </summary>
     public partial class StampMainWord : StampWord, IStampMain
     {
-        public StampMainWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElement tableStamp)
+        public StampMainWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElementWord tableStamp)
             : base(stampSettingsWord, signaturesSearching, tableStamp)
         { }
 

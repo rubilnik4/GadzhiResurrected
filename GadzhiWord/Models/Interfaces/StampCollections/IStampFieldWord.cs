@@ -16,6 +16,6 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
         /// <summary>
         /// Элемент ячейка, определяющая поле штампа
         /// </summary>
-        ICellElement CellElementStamp { get; }
+        ICellElementWord CellElementStamp { get; }
     }
 }

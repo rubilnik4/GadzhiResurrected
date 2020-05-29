@@ -13,7 +13,7 @@ namespace GadzhiWord.Word.Implementations.Elements
     /// <summary>
     /// Элемент таблица
     /// </summary>
-    public class TableElementWord : ITableElement
+    public class TableElementWord : ITableElementWord
     {
         /// <summary>
         /// Элемент таблица Word
@@ -38,24 +38,19 @@ namespace GadzhiWord.Word.Implementations.Elements
         }
 
         /// <summary>
-        /// Получить ячейки таблицы
+        /// Получить строки таблицы
         /// </summary>
-        private IReadOnlyList<ICellElement> _cellsElementWord;
-
-        /// <summary>
-        /// Получить ячейки таблицы
-        /// </summary>
-        public IReadOnlyList<ICellElement> CellsElementWord => _cellsElementWord ??= GetCellsElementWord();
+        private IReadOnlyList<IRowElementWord> _rowsElementWord;
 
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        private IReadOnlyList<IRowElement> _rowsElementWord;
+        public IReadOnlyList<IRowElementWord> RowsElementWord => _rowsElementWord ??= GetRowsElement();
 
         /// <summary>
-        /// Получить строки таблицы
+        /// Получить ячейки таблицы
         /// </summary>
-        public IReadOnlyList<IRowElement> RowsElementWord => _rowsElementWord ??= GetRowsElement();
+        public IEnumerable<ICellElementWord> CellsElementWord => RowsElementWord.SelectMany(row => row.CellsElement);
 
         /// <summary>
         /// Проверить существование ячейки 
@@ -66,27 +61,20 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Получить строки таблицы
         /// </summary>       
-        private IReadOnlyList<IRowElement> GetRowsElement()
-        {
-            var rowsElementWord = Enumerable.Range(0, _tableElement.Rows.Count).
-                                  Select(index => new List<ICellElement>()).ToList();
-
-            foreach (var cell in CellsElementWord)
-            {
-                var row = rowsElementWord[cell.RowIndex];
-                row.Add(cell);
-            }
-            return rowsElementWord.Select(row => new RowElementWord(row)).
-                                   Cast<IRowElement>().
-                                   ToList();
-        }
+        private IReadOnlyList<IRowElementWord> GetRowsElement() =>
+            _tableElement.Range.Cells.ToIEnumerable().
+            Select(cell => cell.RowIndex).
+            Distinct().
+            OrderBy(indexRowOriginal => indexRowOriginal).
+            Select((indexRowOriginal, indexRowNew) => new RowElementWord(GetCellsElementByRow(indexRowOriginal, indexRowNew))).
+            ToList();
 
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        private IReadOnlyList<ICellElement> GetCellsElementWord() =>
-            _tableElement?.Range.Cells.ToIEnumerable().
-            Select(cell => new CellElementWord(cell, this)).
-            ToList();
+        private IEnumerable<ICellElementWord> GetCellsElementByRow(int indexRowOriginal, int indexRowNew) =>
+            _tableElement.Range.Cells.ToIEnumerable().
+            Where(cell => cell.RowIndex == indexRowOriginal).
+            Select((cell, indexColumnNew) => new CellElementWord(cell, indexRowNew, indexColumnNew));
     }
 }

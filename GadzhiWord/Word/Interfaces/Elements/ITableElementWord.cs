@@ -8,17 +8,17 @@ namespace GadzhiWord.Word.Interfaces.Elements
     /// <summary>
     /// Элемент таблица. Базовый вариант
     /// </summary>
-    public interface ITableElement: IOwnerWord
+    public interface ITableElementWord: IOwnerWord
     {
-        /// <summary>
-        /// Получить ячейки таблицы
-        /// </summary>
-        IReadOnlyList<ICellElement> CellsElementWord { get; }
-
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        IReadOnlyList<IRowElement> RowsElementWord { get; }
+        IReadOnlyList<IRowElementWord> RowsElementWord { get; }
+
+        /// <summary>
+        /// Получить ячейки таблицы
+        /// </summary>
+        IEnumerable<ICellElementWord> CellsElementWord { get; }
 
         /// <summary>
         /// Проверить существование ячейки 

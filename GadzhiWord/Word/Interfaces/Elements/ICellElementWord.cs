@@ -8,18 +8,8 @@ namespace GadzhiWord.Word.Interfaces.Elements
     /// <summary>
     /// Элемент ячейка. Базовый вариант
     /// </summary>
-    public interface ICellElement
+    public interface ICellElementWord
     {
-        /// <summary>
-        /// Текст ячейки
-        /// </summary>
-        string Text { get; }
-
-        /// <summary>
-        /// родительский элемент строка
-        /// </summary>
-        IRowElement RowElementWord { get; }
-
         /// <summary>
         /// Номер строки
         /// </summary>
@@ -29,6 +19,11 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// Номер колонки
         /// </summary>
         int ColumnIndex { get; }
+
+        /// <summary>
+        /// Текст ячейки
+        /// </summary>
+        string Text { get; }
 
         /// <summary>
         /// Присутствует ли картинка в ячейке

@@ -11,7 +11,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
     /// </summary>
     public class StampFieldWord : StampField, IStampFieldWord
     {
-        public StampFieldWord(ICellElement cellElementStamp, StampFieldType stampFieldType)
+        public StampFieldWord(ICellElementWord cellElementStamp, StampFieldType stampFieldType)
             : base(stampFieldType)
         {
             CellElementStamp = cellElementStamp ?? throw new ArgumentNullException(nameof(cellElementStamp));
@@ -20,6 +20,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// <summary>
         /// Элемент ячейка определяющая поле штампа
         /// </summary>
-        public ICellElement CellElementStamp { get; }
+        public ICellElementWord CellElementStamp { get; }
     }
 }

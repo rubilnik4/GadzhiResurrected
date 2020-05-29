@@ -3,7 +3,7 @@
     /// <summary>
     /// Базовая текстовая ячейка штампа
     /// </summary>  
-    public interface IStampTextField : IStampField
+    public interface IStampTextField: IStampField
     {
         /// <summary>
         /// Текст поля в штампе

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Collection\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\Collection\ListExtensions.cs" />
     <Compile Include="Extensions\Functional\CurryExtensions.cs" />
     <Compile Include="Extensions\Functional\ErrorExtensions.cs" />
     <Compile Include="Extensions\Functional\MapExtensions.cs" />

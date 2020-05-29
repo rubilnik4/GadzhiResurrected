@@ -9,7 +9,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
     /// </summary>  
     public class StampTextFieldWord: StampFieldWord, IStampTextFieldWord
     {
-        public StampTextFieldWord(ICellElement cellElementStamp, StampFieldType stampFieldType)
+        public StampTextFieldWord(ICellElementWord cellElementStamp, StampFieldType stampFieldType)
             :base(cellElementStamp, stampFieldType)
         { }
 

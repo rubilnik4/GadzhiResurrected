@@ -50,22 +50,23 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Получить имя файла согласно шифру
         /// </summary>
         private static IResultValue<string> GetFileNameByCode(IStamp stamp) =>
-            stamp.StampBasicFields.
-            ResultValueOk(basicFields => basicFields.FullCode.Text).
-            ResultValueContinue(fullCode => !String.IsNullOrWhiteSpace(fullCode),
-                okFunc: fullCode => fullCode,
-                badFunc: _ => new ErrorApplication(ErrorApplicationType.FieldNotFound, "Пустое поле шифра")).
+            stamp.StampBasicFields.FullCode.
+            ResultValueOk(fullCodeField => fullCodeField.Text).
             ToResultValueFromApplication();
 
         /// <summary>
         /// Получить имя файла согласно номеру листа
         /// </summary>
         private static IResultValue<string> GetFileNameBySheet(IStamp stamp) =>
-            stamp.StampBasicFields.
-            ResultValueOk(basicFields => basicFields.CurrentSheet.Text).
-            ResultValueContinue(currentSheet => !String.IsNullOrWhiteSpace(currentSheet),
-                okFunc: currentSheet => currentSheet,
-                badFunc: _ => new ErrorApplication(ErrorApplicationType.FieldNotFound, "Пустое поле номера листа")).
+            stamp.StampBasicFields.CurrentSheetNumber.
+            ResultValueOk(CurrentSheetFormat).
             ToResultValueFromApplication();
+
+        /// <summary>
+        /// Перевести номер листа в строковый формат вида ##
+        /// </summary>
+        private static string CurrentSheetFormat(int currentSheet) => (currentSheet < 10)
+            ? $"{ currentSheet:00}"
+            : $"{ currentSheet}";
     }
 }

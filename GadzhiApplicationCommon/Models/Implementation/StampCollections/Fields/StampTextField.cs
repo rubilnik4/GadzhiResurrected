@@ -11,6 +11,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         protected StampTextField(StampFieldType stampFieldType)
             : base(stampFieldType)
         { }
+
         /// <summary>
         /// Текст поля в штампе
         /// </summary>

@@ -8,12 +8,12 @@ namespace GadzhiWord.Word.Interfaces.Elements
     /// <summary>
     /// Элемент строка. Базовый вариант
     /// </summary>
-    public interface IRowElement
+    public interface IRowElementWord
     {
         /// <summary>
         /// Список ячеек в строке
         /// </summary>
-        IList<ICellElement> CellsElement { get; }
+        IReadOnlyList<ICellElementWord> CellsElement { get; }
 
         /// <summary>
         /// Индекс строки

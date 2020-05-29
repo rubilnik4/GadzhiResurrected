@@ -6,7 +6,8 @@
     public enum StampFieldType
     {
         Unknown,
-        Basic,
+        FullRow,
+        CurrentSheet,
         PersonSignature,
         ChangeSignature,
         ApprovalSignature,

@@ -162,9 +162,9 @@
     <Compile Include="Word\Implementations\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Elements\RowElementWord.cs" />
     <Compile Include="Word\Interfaces\Elements\IOwnerWord.cs" />
-    <Compile Include="Word\Interfaces\Elements\ICellElement.cs" />
-    <Compile Include="Word\Interfaces\Elements\IRowElement.cs" />
-    <Compile Include="Word\Interfaces\Elements\ITableElement.cs" />
+    <Compile Include="Word\Interfaces\Elements\ICellElementWord.cs" />
+    <Compile Include="Word\Interfaces\Elements\IRowElementWord.cs" />
+    <Compile Include="Word\Interfaces\Elements\ITableElementWord.cs" />
     <Compile Include="Word\Interfaces\IApplicationWord.cs" />
     <Compile Include="Word\Interfaces\IDocumentWord.cs" />
   </ItemGroup>

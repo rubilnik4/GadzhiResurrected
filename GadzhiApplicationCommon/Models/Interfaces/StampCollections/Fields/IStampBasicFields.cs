@@ -1,4 +1,6 @@
-﻿namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields
+﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+
+namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields
 {
     /// <summary>
     /// Обязательные поля штампа
@@ -8,11 +10,16 @@
         /// <summary>
         /// Шифр
         /// </summary>
-        IStampTextField FullCode { get; }
+        IResultAppValue<IStampTextField> FullCode { get; }
 
         /// <summary>
         /// Номер текущего листа
         /// </summary>
-        IStampTextField CurrentSheet { get; }
+        IResultAppValue<IStampTextField> CurrentSheet { get; }
+
+        /// <summary>
+        /// Номер текущего листа в числовом формате
+        /// </summary>
+        IResultAppValue<int> CurrentSheetNumber { get; }
     }
 }

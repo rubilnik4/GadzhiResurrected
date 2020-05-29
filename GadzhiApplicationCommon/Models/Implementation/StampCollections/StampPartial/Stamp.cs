@@ -4,10 +4,8 @@ using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial
 {
@@ -45,12 +43,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        private IResultAppValue<IStampBasicFields> _stampBasicFields;
+        private IStampBasicFields _stampBasicFields;
 
         /// <summary>
         /// Основные поля штампа
         /// </summary>
-        public IResultAppValue<IStampBasicFields> StampBasicFields => _stampBasicFields ??= GetStampBasicFields();
+        public IStampBasicFields StampBasicFields => _stampBasicFields ??= GetStampBasicFields();
 
         /// <summary>
         /// Формат
