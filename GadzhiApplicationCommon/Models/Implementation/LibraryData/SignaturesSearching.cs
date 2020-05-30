@@ -143,7 +143,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
             new ResultAppCollection<string>(personsId).
             ResultValueOkBind(ids => new ResultAppCollection<ISignatureFileApp>(_getSignatures(ids), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                                        "Подписи в базе не найдены")).
-                                     ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(ids, signaturesFile))).
+            ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(ids, signaturesFile))).
             ToResultCollection();
 
         /// <summary>

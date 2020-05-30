@@ -1,14 +1,13 @@
-﻿using GadzhiWord.Extensions.Word;
-using GadzhiWord.Word.Interfaces;
-using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GadzhiWord.Extensions.Word;
+using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Interfaces.Word;
+using GadzhiWord.Word.Interfaces.Word.Elements;
+using Microsoft.Office.Interop.Word;
 
-namespace GadzhiWord.Word.Implementations.Elements
+namespace GadzhiWord.Word.Implementations.Word.Elements
 {
     /// <summary>
     /// Элемент таблица
@@ -23,7 +22,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        public IApplicationWord ApplicationWord { get; }
+        public IApplicationOffice ApplicationOffice { get; }
 
         /// <summary>
         /// Модель или лист в файле
@@ -33,7 +32,7 @@ namespace GadzhiWord.Word.Implementations.Elements
         public TableElementWord(Table tableElement, IOwnerWord ownerWord)
         {
             _tableElement = tableElement ?? throw new ArgumentNullException(nameof(tableElement));
-            ApplicationWord = ownerWord.ApplicationWord ?? throw new ArgumentNullException(nameof(ownerWord));
+            ApplicationOffice = ownerWord.ApplicationOffice ?? throw new ArgumentNullException(nameof(ownerWord));
             DocumentWord = ownerWord.DocumentWord;
         }
 

@@ -9,7 +9,7 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Interfaces.StampCollections;
-using GadzhiWord.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {

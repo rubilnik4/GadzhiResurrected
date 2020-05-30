@@ -20,10 +20,11 @@ using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
-using GadzhiWord.Word.Implementations.ApplicationWordPartial;
 using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Interfaces.Word;
 using Unity;
 using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;
+using ApplicationOffice = GadzhiWord.Word.Implementations.ApplicationOfficePartial.ApplicationOffice;
 
 namespace GadzhiConverting.DependencyInjection
 {
@@ -58,7 +59,7 @@ namespace GadzhiConverting.DependencyInjection
 
             container.RegisterFactory<IApplicationConverting>(unity =>
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),
-                                          unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord)),
+                                          unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationOffice)),
                                           unity.Resolve<IFileSystemOperations>(),
                                           unity.Resolve<IPdfCreatorService>()));
         }
@@ -74,16 +75,16 @@ namespace GadzhiConverting.DependencyInjection
 
             var convertingResources = await projectSettings.ConvertingResources;
             var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.ToApplication(),
-                                                                             GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
-                                                                                              ProjectSettings.DataSignaturesFolder));
+                                                                     GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
+                                                                                       ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>
                 new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching, 
                                                                       convertingResources.SignaturesMicrostation.Value, 
                                                                       convertingResources.StampMicrostation.Value)));
 
-            container.RegisterFactory<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationWord), unity =>
-                new ApplicationWord(new ResourcesWord(signaturesLibrarySearching)));
+            container.RegisterFactory<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationOffice), unity =>
+                new ApplicationOffice(new ResourcesWord(signaturesLibrarySearching)));
         }
     }
 }

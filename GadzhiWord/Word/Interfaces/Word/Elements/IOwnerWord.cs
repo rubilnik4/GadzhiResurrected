@@ -1,11 +1,4 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GadzhiWord.Word.Interfaces.Elements
+﻿namespace GadzhiWord.Word.Interfaces.Word.Elements
 {
     /// <summary>
     /// Родительский элемент
@@ -15,7 +8,7 @@ namespace GadzhiWord.Word.Interfaces.Elements
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        IApplicationWord ApplicationWord { get; }
+        IApplicationOffice ApplicationOffice { get; }
 
         /// <summary>
         /// Модель или лист в файле

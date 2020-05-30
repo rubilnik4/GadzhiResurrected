@@ -51,7 +51,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private static IResultValue<string> GetFileNameByCode(IStamp stamp) =>
             stamp.StampBasicFields.FullCode.
-            ResultValueOk(fullCodeField => fullCodeField.Text).
+            ResultValueOk(fullCodeField => FileSystemOperations.GetValidFileName(fullCodeField.Text)).
             ToResultValueFromApplication();
 
         /// <summary>

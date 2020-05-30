@@ -4,7 +4,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Extensions.Word;
-using GadzhiWord.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 using static GadzhiWord.Models.Implementations.StampCollections.AdditionalSettingsWord;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Fields

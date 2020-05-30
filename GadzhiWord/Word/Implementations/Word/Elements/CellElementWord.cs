@@ -1,13 +1,9 @@
-﻿using GadzhiWord.Word.Interfaces.Elements;
-using Microsoft.Office.Interop.Word;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using GadzhiWord.Extensions.StringAdditional;
+using GadzhiWord.Word.Interfaces.Word.Elements;
+using Microsoft.Office.Interop.Word;
 
-namespace GadzhiWord.Word.Implementations.Elements
+namespace GadzhiWord.Word.Implementations.Word.Elements
 {
     /// <summary>
     /// Элемент ячейка

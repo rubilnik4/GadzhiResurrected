@@ -10,7 +10,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
-using GadzhiWord.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
 {

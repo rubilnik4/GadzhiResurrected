@@ -1,23 +1,18 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Extensions.Word;
-using GadzhiWord.Models.Implementations.StampCollections;
-using GadzhiWord.Word.Implementations.Elements;
-using GadzhiWord.Word.Interfaces.Elements;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
+using GadzhiWord.Extensions.Word;
+using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Models.Implementations.StampCollections.StampMainPartial;
-using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiWord.Word.Implementations.Word.Elements;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Word.Implementations.DocumentWordPartial
+namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
 {
     /// <summary>
     /// Подкласс документа Word для работы с элементами
@@ -47,7 +42,7 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
             Select((tableElement, stampIndex) => 
                        new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId, 
                                              convertingSettings.PdfNamingType, PaperSize, OrientationType).
-                       Map(stampSettings => new StampMainWord(stampSettings, ApplicationWord.ResourcesWord.SignaturesSearching, tableElement)));
+                       Map(stampSettings => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableElement)));
 
         /// <summary>
         /// Проверить является ли колонтитул штампом

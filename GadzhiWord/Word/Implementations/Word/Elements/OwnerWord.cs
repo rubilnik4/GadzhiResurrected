@@ -1,8 +1,9 @@
 ﻿using System;
 using GadzhiWord.Word.Interfaces;
-using GadzhiWord.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.Word;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Word.Implementations.Elements
+namespace GadzhiWord.Word.Implementations.Word.Elements
 {
     /// <summary>
     /// Родительский элемент
@@ -22,6 +23,6 @@ namespace GadzhiWord.Word.Implementations.Elements
         /// <summary>
         /// Класс для работы с приложением Microstation
         /// </summary>
-        public IApplicationWord ApplicationWord => DocumentWord.ApplicationWord;
+        public IApplicationOffice ApplicationOffice => DocumentWord.ApplicationOffice;
     }
 }

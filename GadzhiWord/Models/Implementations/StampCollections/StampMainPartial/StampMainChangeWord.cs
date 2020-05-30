@@ -9,7 +9,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
-using GadzhiWord.Word.Interfaces.Elements;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
 {
@@ -22,7 +22,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
         /// Получить строки с изменениями
         /// </summary>
         private IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
-            GetFieldsByType(StampFieldType.PersonSignature).
+            GetFieldsByType(StampFieldType.ChangeSignature).
             Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
             Where(row => row.CellsElement.Count >= StampChangeWord.FIELDS_COUNT).
             Select(row => GetStampChangeFromRow(row, signatureLibrary)).

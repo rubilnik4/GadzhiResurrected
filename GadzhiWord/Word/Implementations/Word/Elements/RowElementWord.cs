@@ -1,11 +1,9 @@
-﻿using GadzhiWord.Word.Interfaces.Elements;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Word.Implementations.Elements
+namespace GadzhiWord.Word.Implementations.Word.Elements
 {
     /// <summary>
     /// Элемент строка

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Collection;
@@ -39,6 +40,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public static string ExtensionWithoutPointFromPath(string path) =>
            Path.GetExtension(path).
            Map(ExtensionWithoutPoint);
+
+        /// <summary>
+        /// Заменить недопустимые символы в имени файла
+        /// </summary>
+        public static string GetValidFileName(string filePath)
+        {
+            var regexSearch = new string(Path.GetInvalidFileNameChars());
+            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
+            return r.Replace(filePath, "_");
+        }
 
         /// <summary>
         /// Является ли путь папкой

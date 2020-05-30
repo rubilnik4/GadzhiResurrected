@@ -10,15 +10,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using ChannelAdam.ServiceModel;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
-using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
-using GadzhiWord.Word.Interfaces;
-using GadzhiCommon.Extensions.Functional;
-using GadzhiConverting.Infrastructure.Implementations.Converters;
+using GadzhiWord.Word.Interfaces.Word;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {

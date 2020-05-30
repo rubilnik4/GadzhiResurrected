@@ -1,10 +1,9 @@
-﻿
-using GadzhiWord.Word.Interfaces.Elements;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Interfaces.StampCollections
 {

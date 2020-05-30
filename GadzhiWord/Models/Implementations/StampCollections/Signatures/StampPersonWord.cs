@@ -16,7 +16,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public const int FIELDS_COUNT = 4;
 
-        public StampPersonWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature,IStampTextField actionType,
+        public StampPersonWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature, IStampTextField actionType,
                                IStampTextField responsiblePerson, IStampTextField dateSignature)
             : base(signatureLibrary, signature)
         {

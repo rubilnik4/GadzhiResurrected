@@ -18,7 +18,7 @@ namespace GadzhiWord.Factory
         /// <summary>
         /// Создание экземпляра приложения Microstation
         /// </summary>        
-        internal static Application Instance()
+        public static Application Instance()
         {
             KillAllPreviousProcess();
          
@@ -53,7 +53,7 @@ namespace GadzhiWord.Factory
         /// </summary>
         private static void KillAllPreviousProcess()
         {
-            var wordProcesses = Process.GetProcesses().Where(process => process.ProcessName.ContainsIgnoreCase("winword"));
+            var wordProcesses = Process.GetProcesses().Where(process => process.ProcessName.ContainsIgnoreCase("word"));
             foreach (var wordProcess in wordProcesses)
             {
                 wordProcess.Kill();

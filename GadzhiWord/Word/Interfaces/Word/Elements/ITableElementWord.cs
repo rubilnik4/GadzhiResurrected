@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace GadzhiWord.Word.Interfaces.Elements
+namespace GadzhiWord.Word.Interfaces.Word.Elements
 {
     /// <summary>
     /// Элемент таблица. Базовый вариант

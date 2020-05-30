@@ -60,6 +60,9 @@
     <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.3.6.0\lib\netstandard2.0\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Word.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Word.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -121,9 +124,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Excel\ElementExcelExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Extensions\Word\ElementWordExtensions.cs" />
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
+    <Compile Include="Factory\ExcelInstance.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
@@ -150,23 +155,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWord.cs" />
-    <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordDocument.cs" />
-    <Compile Include="Word\Implementations\ApplicationWordPartial\ApplicationWordPrinting.cs" />
+    <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOffice.cs" />
+    <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficeDocument.cs" />
+    <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficePrinting.cs" />
     <Compile Include="Word\Implementations\Converters\TextPrepare.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
-    <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWord.cs" />
-    <Compile Include="Word\Implementations\DocumentWordPartial\DocumentWordElements.cs" />
-    <Compile Include="Word\Implementations\Elements\CellElementWord.cs" />
-    <Compile Include="Word\Implementations\Elements\OwnerWord.cs" />
-    <Compile Include="Word\Implementations\Elements\TableElementWord.cs" />
-    <Compile Include="Word\Implementations\Elements\RowElementWord.cs" />
-    <Compile Include="Word\Interfaces\Elements\IOwnerWord.cs" />
-    <Compile Include="Word\Interfaces\Elements\ICellElementWord.cs" />
-    <Compile Include="Word\Interfaces\Elements\IRowElementWord.cs" />
-    <Compile Include="Word\Interfaces\Elements\ITableElementWord.cs" />
-    <Compile Include="Word\Interfaces\IApplicationWord.cs" />
-    <Compile Include="Word\Interfaces\IDocumentWord.cs" />
+    <Compile Include="Word\Implementations\Excel\BookExcel.cs" />
+    <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWord.cs" />
+    <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWordElements.cs" />
+    <Compile Include="Word\Implementations\Word\Elements\CellElementWord.cs" />
+    <Compile Include="Word\Implementations\Word\Elements\OwnerWord.cs" />
+    <Compile Include="Word\Implementations\Word\Elements\TableElementWord.cs" />
+    <Compile Include="Word\Implementations\Word\Elements\RowElementWord.cs" />
+    <Compile Include="Word\Implementations\Excel\SheetExcel.cs" />
+    <Compile Include="Word\Interfaces\Excel\IBookExcel.cs" />
+    <Compile Include="Word\Interfaces\Word\Elements\IOwnerWord.cs" />
+    <Compile Include="Word\Interfaces\Word\Elements\ICellElementWord.cs" />
+    <Compile Include="Word\Interfaces\Word\Elements\IRowElementWord.cs" />
+    <Compile Include="Word\Interfaces\Word\Elements\ITableElementWord.cs" />
+    <Compile Include="Word\Interfaces\IApplicationOffice.cs" />
+    <Compile Include="Word\Interfaces\Word\IDocumentWord.cs" />
+    <Compile Include="Word\Interfaces\Excel\ISheetExcel.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -201,17 +210,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="VBA">
-      <Guid>{000204EF-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>6</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>9</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

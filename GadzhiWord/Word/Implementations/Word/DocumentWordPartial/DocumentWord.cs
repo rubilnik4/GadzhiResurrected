@@ -1,22 +1,16 @@
-﻿using GadzhiApplicationCommon.Extensions.Functional;
+﻿using System;
+using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Implementations.Converters;
 using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Interfaces.Word;
 using Microsoft.Office.Interop.Word;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
-namespace GadzhiWord.Word.Implementations.DocumentWordPartial
+namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
 {
     /// <summary>
     /// Документ Word
@@ -31,12 +25,12 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Класс для работы с приложением Word
         /// </summary>
-        public IApplicationWord ApplicationWord { get; }
+        public IApplicationOffice ApplicationOffice { get; }
 
-        public DocumentWord(Document document, IApplicationWord applicationWord)
+        public DocumentWord(Document document, IApplicationOffice applicationOffice)
         {
             _document = document ?? throw new ArgumentNullException(nameof(document));
-            ApplicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
+            ApplicationOffice = applicationOffice ?? throw new ArgumentNullException(nameof(applicationOffice));
         }
 
         /// <summary>
@@ -72,9 +66,9 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Формат
         /// </summary>
-        private StampOrientationType OrientationType => 
-            _orientationType ??= _document.PageSetup.Orientation == WdOrientation.wdOrientLandscape 
-                                 ? StampOrientationType.Landscape 
+        private StampOrientationType OrientationType =>
+            _orientationType ??= _document.PageSetup.Orientation == WdOrientation.wdOrientLandscape
+                                 ? StampOrientationType.Landscape
                                  : StampOrientationType.Portrait;
 
         /// <summary>
@@ -92,12 +86,18 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// </summary>
         public IResultApplication PrintStamp(IStamp stamp, ColorPrintApplication colorPrint, string prefixSearchPaperSize) =>
             new ResultApplication().
-            Void(_ => ApplicationWord.PrintCommand());
+            Void(_ => ApplicationOffice.PrintCommand());
 
         /// <summary>
         /// Экспорт файла
         /// </summary>      
-        public string Export(string filePath) => filePath;
+        public string Export(string filePath)
+        {
+            var bookExcel = ApplicationOffice.CreateWorkbook();
+            var activeSheet = bookExcel.Sheets[0];
+            activeSheet.ChangeColumnWidth(0, 7.65f);
+            return filePath;
+        }
 
         /// <summary>
         /// Закрыть файл файл
@@ -116,6 +116,6 @@ namespace GadzhiWord.Word.Implementations.DocumentWordPartial
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication() => ApplicationWord.CloseApplication();
+        public void CloseApplication() => ApplicationOffice.CloseApplication();
     }
 }
