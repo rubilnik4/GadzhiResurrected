@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiCommon.Infrastructure.Implementations;
 
 namespace GadzhiCommon.Enums.FilesConvert
 {
@@ -58,5 +59,12 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// </summary>
         public static FileExtension GetFileTypesValid(string extension) =>
             FileTypesValidDictionary[extension.ToLowerCaseCurrentCulture()];
+
+        /// <summary>
+        /// Сравнить расширения
+        /// </summary>
+        public static bool IsFileExtensionEqual(string fileExtension, FileExtension extensionCompare) =>
+            extensionCompare.ToString().ToLowerCaseCurrentCulture() == 
+            FileSystemOperations.ExtensionWithoutPoint(fileExtension).ToLowerCaseCurrentCulture();
     }
 }

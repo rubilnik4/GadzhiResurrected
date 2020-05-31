@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Implementation.Resources;
 using GadzhiWord.Word.Interfaces.Excel;
+using GadzhiWord.Word.Interfaces.Excel.Elements;
 using GadzhiWord.Word.Interfaces.Word;
 
 namespace GadzhiWord.Word.Interfaces

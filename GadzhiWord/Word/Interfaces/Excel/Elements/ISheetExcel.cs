@@ -1,4 +1,4 @@
-﻿namespace GadzhiWord.Word.Interfaces.Excel
+﻿namespace GadzhiWord.Word.Interfaces.Excel.Elements
 {
     /// <summary>
     /// Лист приложения Excel

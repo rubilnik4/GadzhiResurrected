@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
@@ -69,7 +71,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Модели и листы в текущем файле
         /// </summary>
-        public IList<IModelMicrostation> ModelsMicrostation  =>_modelsMicrostation ??= GetModelsMicrostation();
+        public IList<IModelMicrostation> ModelsMicrostation => _modelsMicrostation ??= GetModelsMicrostation();
 
         /// <summary>
         /// Сохранить файл
@@ -79,7 +81,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Сохранить файл
         /// </summary>
-        public void SaveAs(string filePath) => DesignFile.SaveAs(filePath, true);
+        public IResultApplication SaveAs(string filePath) =>
+            Path.GetExtension(filePath).
+            WhereContinue(fileExtension => ValidMicrostationExtensions.IsFileExtensionEqual(fileExtension, FileExtensionMicrostation.Dgn),
+            okFunc: fileExtension => new ResultApplication().
+                                     ResultVoidOk(_ => DesignFile.SaveAs(filePath, true)).
+                                     ToResultApplication(),
+            badFunc: fileExtension => new ResultApplication(new ErrorApplication(ErrorApplicationType.IncorrectExtension,
+                                                                                 $"Некорректное расширение {fileExtension} для файла типа dgn")));
 
         /// <summary>
         /// Закрыть файл файл
@@ -119,10 +128,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Экспорт файла в Dwg
         /// </summary>      
-        public string Export(string filePath) =>
-           (Path.GetFileNameWithoutExtension(filePath) + "." + FileExtensionMicrostation.Dwg).
-           Map(fileName => Path.Combine(Path.GetDirectoryName(filePath) ?? String.Empty, fileName)).
-           Void(dwgFilePath => DesignFile.SaveAs(dwgFilePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG));
+        public IResultAppValue<string> Export(string filePath) =>
+            Path.GetExtension(filePath).
+            WhereContinue(fileExtension => ValidMicrostationExtensions.IsFileExtensionEqual(fileExtension, FileExtensionMicrostation.Dwg),
+            okFunc: fileExtension => new ResultAppValue<string>(filePath).
+                                     ResultVoidOk(_ => DesignFile.SaveAs(filePath, true, MsdDesignFileFormat.msdDesignFileFormatDWG)),
+            badFunc: fileExtension => new ResultAppValue<string>(new ErrorApplication(ErrorApplicationType.IncorrectExtension,
+                                                                                      $"Некорректное расширение {fileExtension} для файла типа dgn")));
 
         /// <summary>
         /// Получить модели в текущем файле

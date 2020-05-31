@@ -31,7 +31,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Сохранить файл
         /// </summary>
-        void SaveAs(string filePath);
+        IResultApplication SaveAs(string filePath);
 
         /// <summary>
         /// Команда печати PDF
@@ -41,7 +41,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Экспорт файла в другие форматы
         /// </summary>      
-        string Export(string filePath);
+        IResultAppValue<string> Export(string filePath);
 
         /// <summary>
         /// Закрыть файл файл

@@ -160,22 +160,24 @@
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficePrinting.cs" />
     <Compile Include="Word\Implementations\Converters\TextPrepare.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
-    <Compile Include="Word\Implementations\Excel\BookExcel.cs" />
+    <Compile Include="Word\Implementations\Excel\Elements\BookExcel.cs" />
+    <Compile Include="Word\Implementations\Excel\ExportTableFromWord.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWord.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWordElements.cs" />
     <Compile Include="Word\Implementations\Word\Elements\CellElementWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\OwnerWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\RowElementWord.cs" />
-    <Compile Include="Word\Implementations\Excel\SheetExcel.cs" />
-    <Compile Include="Word\Interfaces\Excel\IBookExcel.cs" />
+    <Compile Include="Word\Implementations\Excel\Elements\SheetExcel.cs" />
+    <Compile Include="Word\Interfaces\Excel\Elements\IBookExcel.cs" />
+    <Compile Include="Word\Implementations\Excel\Helpers\ColumnNamesExcel.cs" />
     <Compile Include="Word\Interfaces\Word\Elements\IOwnerWord.cs" />
     <Compile Include="Word\Interfaces\Word\Elements\ICellElementWord.cs" />
     <Compile Include="Word\Interfaces\Word\Elements\IRowElementWord.cs" />
     <Compile Include="Word\Interfaces\Word\Elements\ITableElementWord.cs" />
     <Compile Include="Word\Interfaces\IApplicationOffice.cs" />
     <Compile Include="Word\Interfaces\Word\IDocumentWord.cs" />
-    <Compile Include="Word\Interfaces\Excel\ISheetExcel.cs" />
+    <Compile Include="Word\Interfaces\Excel\Elements\ISheetExcel.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

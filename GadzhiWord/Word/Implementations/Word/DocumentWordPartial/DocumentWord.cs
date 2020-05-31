@@ -1,12 +1,18 @@
 ﻿using System;
+using System.IO;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiWord.Word.Implementations.Converters;
+using GadzhiWord.Word.Implementations.Excel;
 using GadzhiWord.Word.Interfaces;
+using GadzhiWord.Word.Interfaces.Excel.Elements;
 using GadzhiWord.Word.Interfaces.Word;
 using Microsoft.Office.Interop.Word;
 
@@ -79,7 +85,14 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Сохранить файл
         /// </summary>
-        public void SaveAs(string filePath) => _document.SaveAs(filePath);
+        public IResultApplication SaveAs(string filePath) =>
+            Path.GetExtension(filePath).
+            WhereContinue(fileExtension => ValidFileExtensions.IsFileExtensionEqual(fileExtension, FileExtension.Docx),
+            okFunc: fileExtension => new ResultApplication().
+                                         ResultVoidOk(_ => _document.SaveAs(filePath)).
+                                         ToResultApplication(),
+            badFunc: fileExtension => new ResultApplication(new ErrorApplication(ErrorApplicationType.IncorrectExtension,
+                                                                                 $"Некорректное расширение {fileExtension} для файла типа docx")));
 
         /// <summary>
         /// Команда печати
@@ -91,13 +104,9 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Экспорт файла
         /// </summary>      
-        public string Export(string filePath)
-        {
-            var bookExcel = ApplicationOffice.CreateWorkbook();
-            var activeSheet = bookExcel.Sheets[0];
-            activeSheet.ChangeColumnWidth(0, 7.65f);
-            return filePath;
-        }
+        public IResultAppValue<string> Export(string filePath) => 
+            new ResultAppValue<IBookExcel>(ApplicationOffice.CreateWorkbook()).
+            ResultValueOkBind(book => ExportTableFromWord.ExportTable(book, filePath));
 
         /// <summary>
         /// Закрыть файл файл

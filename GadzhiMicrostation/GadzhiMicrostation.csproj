@@ -54,6 +54,7 @@
     <Compile Include="Extensions\Microstation\ElementExtensions.cs" />
     <Compile Include="Extensions\Microstation\PointExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Infrastructure\Implementations\ValidMicrostationExtensions.cs" />
     <Compile Include="Microstation\Converters\ConvertingElementMicrostationTypes.cs" />
     <Compile Include="Factory\MicrostationInstance.cs" />
     <Compile Include="Microstation\Converters\ConvertMicrostationElements.cs" />

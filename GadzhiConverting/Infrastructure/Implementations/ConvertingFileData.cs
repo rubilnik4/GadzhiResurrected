@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional.Result;
+using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -153,7 +154,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtension.ToString())).
             ResultValueOk(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
                                                                                   Path.GetFileNameWithoutExtension(filePathServer),
-                                                                                  fileExtension.ToString()));
+                                                                                  fileExtension.ToString().ToLowerCaseCurrentCulture()));
 
         /// <summary>
         /// Проверить наличие сохраненных файлов
