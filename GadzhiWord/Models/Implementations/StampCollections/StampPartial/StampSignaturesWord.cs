@@ -36,10 +36,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
                 badFunc: signaturesFile => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                 "Количество подписей в файле не совпадает с загруженным из базы данных")).
             ResultValueOk(signaturesFile =>
-                signaturesStamp.Join(signaturesFile,
-                                     signatureStamp => signatureStamp.SignatureLibrary.PersonId,
-                                     signatureFile => signatureFile.PersonId,
-                                     (signatureStamp, signatureFile) => signatureStamp.InsertSignature(signatureFile))).
+                signaturesStamp.Zip(signaturesFile,
+                                    (signatureStamp, signatureFile) => signatureStamp.InsertSignature(signatureFile))).
             ToResultCollection();
     }
 }

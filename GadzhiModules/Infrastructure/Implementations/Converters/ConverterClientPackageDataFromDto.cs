@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 
@@ -143,12 +144,13 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         {
             string fileName = Path.GetFileNameWithoutExtension(fileDataSourceResponseClient.FileName);
             string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FileName));
-            string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtension.ToUpper(CultureInfo.CurrentCulture));
+            string fileExtensionValid = ValidFileExtensions.GetFileTypesValid(fileExtension).ToString().ToLowerCaseCurrentCulture();
+            string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtensionValid.ToUpperCaseCurrentCulture());
 
             if (String.IsNullOrWhiteSpace(directoryPath)) return FileConvertErrorType.RejectToSave;
             if (fileDataSourceResponseClient.FileDataSource.Length == 0) return FileConvertErrorType.FileNotFound;
 
-            string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtension);
+            string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
             Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource);
 
             await _dialogServiceStandard.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool, 

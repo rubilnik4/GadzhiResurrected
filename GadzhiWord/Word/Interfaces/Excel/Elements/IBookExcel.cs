@@ -14,5 +14,10 @@ namespace GadzhiWord.Word.Interfaces.Excel.Elements
         /// Сохранить файл
         /// </summary>
         IResultAppValue<string> SaveAs(string filePath);
+
+        /// <summary>
+        /// Закрыть
+        /// </summary>
+        void Close();
     }
 }

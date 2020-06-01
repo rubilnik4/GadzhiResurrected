@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
@@ -8,12 +10,14 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiWord.Models.Implementations.Specification;
 using GadzhiWord.Word.Implementations.Converters;
 using GadzhiWord.Word.Implementations.Excel;
+using GadzhiWord.Word.Implementations.Excel.Export;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Excel.Elements;
 using GadzhiWord.Word.Interfaces.Word;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 using Microsoft.Office.Interop.Word;
 
 namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
@@ -104,9 +108,14 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Экспорт файла
         /// </summary>      
-        public IResultAppValue<string> Export(string filePath) => 
-            new ResultAppValue<IBookExcel>(ApplicationOffice.CreateWorkbook()).
-            ResultValueOkBind(book => ExportTableFromWord.ExportTable(book, filePath));
+        public IResultAppValue<string> Export(string filePath) =>
+            new ResultAppCollection<ITableElementWord>(GetTables()).
+            ResultValueOk(tables => tables.Where(ValidatingTableWord.IsTableSpecification)).
+            ToResultCollection().
+            ResultValueContinue(tablesSpecification => tablesSpecification.Count > 0,
+                okFunc: tables => tables,
+                badFunc: _ => new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Таблицы спецификации не найдены")).
+            ResultValueOkBind(tablesWord => ExportWordTableToExcel(tablesWord, filePath));
 
         /// <summary>
         /// Закрыть файл файл
@@ -126,5 +135,13 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Закрыть приложение
         /// </summary>
         public void CloseApplication() => ApplicationOffice.CloseApplication();
+
+        /// <summary>
+        /// Экспортировать данные таблицы Word в Excel
+        /// </summary>
+        private IResultAppValue<string> ExportWordTableToExcel(IEnumerable<ITableElementWord> tablesWord, string filePath) =>
+            new ResultAppValue<IBookExcel>(ApplicationOffice.CreateWorkbook()).
+            ResultValueOkBind(book => ExportTableFromWord.ExportTable(book, tablesWord, filePath).
+                                      Void(_ => book.Close()));
     }
 }

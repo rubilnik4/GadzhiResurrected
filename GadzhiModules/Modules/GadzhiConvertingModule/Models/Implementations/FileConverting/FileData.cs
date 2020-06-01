@@ -27,9 +27,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
-            if (!Enum.TryParse(fileExtension, true, out FileExtension fileExtensionType)) throw new FormatException(nameof(fileExtension));
+            if (!ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileExtension)) throw new KeyNotFoundException(nameof(fileExtension));
 
-            FileExtension = fileExtensionType;
+            FileExtension = ValidFileExtensions.DocAndDgnFileTypeDictionary[fileExtension];
             FileName = fileName;
             FilePath = filePath;
             ColorPrint = colorPrint;

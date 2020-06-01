@@ -36,7 +36,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// <summary>
         /// Номер текущего листа в числовом формате
         /// </summary>
-        public IResultAppValue<int> CurrentSheetNumber => CurrentSheet.ResultValueOk(currentsheet => currentsheet.Text.ParseInt());
+        public IResultAppValue<int> CurrentSheetNumber => CurrentSheet.ResultValueOk(currentSheet => currentSheet.Text.ParseInt());
 
         /// <summary>
         /// Проверить шифр на корректность

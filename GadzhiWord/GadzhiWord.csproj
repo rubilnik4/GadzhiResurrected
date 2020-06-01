@@ -130,6 +130,8 @@
     <Compile Include="Extensions\Word\MarkerCollection.cs" />
     <Compile Include="Factory\ExcelInstance.cs" />
     <Compile Include="Factory\WordInstance.cs" />
+    <Compile Include="Models\Implementations\Specification\ColumnIndexesSpecification.cs" />
+    <Compile Include="Models\Implementations\Specification\TableProcessingSpecification.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampChangeWord.cs" />
@@ -160,8 +162,9 @@
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficePrinting.cs" />
     <Compile Include="Word\Implementations\Converters\TextPrepare.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
+    <Compile Include="Models\Implementations\Specification\ValidatingTableWord.cs" />
     <Compile Include="Word\Implementations\Excel\Elements\BookExcel.cs" />
-    <Compile Include="Word\Implementations\Excel\ExportTableFromWord.cs" />
+    <Compile Include="Word\Implementations\Excel\Export\ExportTableFromWord.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWord.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWordElements.cs" />
     <Compile Include="Word\Implementations\Word\Elements\CellElementWord.cs" />

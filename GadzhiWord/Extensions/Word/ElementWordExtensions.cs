@@ -20,7 +20,7 @@ namespace GadzhiWord.Extensions.Word
         /// <summary>
         /// Получить разделы
         /// </summary>        
-        public static IEnumerable<Section> ToIEnumerable(this Sections sections)
+        public static IEnumerable<Section> ToEnumerable(this Sections sections)
         {
             if (sections == null) yield break;
 
@@ -33,7 +33,7 @@ namespace GadzhiWord.Extensions.Word
         /// <summary>
         /// Получить список нижних колонтитулов
         /// </summary>       
-        public static IEnumerable<HeaderFooter> ToIEnumerable(this HeadersFooters headersFooters)
+        public static IEnumerable<HeaderFooter> ToEnumerable(this HeadersFooters headersFooters)
         {
             if (headersFooters == null) yield break;
 
@@ -46,7 +46,7 @@ namespace GadzhiWord.Extensions.Word
         /// <summary>
         /// Получить таблицы
         /// </summary>        
-        public static IEnumerable<Table> ToIEnumerable(this Tables tables)
+        public static IEnumerable<Table> ToEnumerable(this Tables tables)
         {
             if (tables == null) yield break;
 
@@ -59,7 +59,7 @@ namespace GadzhiWord.Extensions.Word
         /// <summary>
         /// Получить строки
         /// </summary>        
-        public static IEnumerable<Row> ToIEnumerable(this Rows rows)
+        public static IEnumerable<Row> ToEnumerable(this Rows rows)
         {
             if (rows == null) yield break;
 
@@ -72,7 +72,7 @@ namespace GadzhiWord.Extensions.Word
         /// <summary>
         /// Получить ячейки
         /// </summary>        
-        public static IEnumerable<Cell> ToIEnumerable(this Cells cells)
+        public static IEnumerable<Cell> ToEnumerable(this Cells cells)
         {
             if (cells == null) yield break;
 

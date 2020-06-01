@@ -99,10 +99,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer, filePath.FileExtension)).
             ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath).
-                                                                  WhereContinue(copyResult => copyResult,
-                                                                                okFunc: _ => new ResultValue<string>(savingPath),
-                                                                                badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
-                                                                                    ToResultValue<string>())).
+                                            WhereContinue(copyResult => copyResult,
+                                                okFunc: _ => new ResultValue<string>(savingPath),
+                                                badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
+                                            ToResultValue<string>())).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 

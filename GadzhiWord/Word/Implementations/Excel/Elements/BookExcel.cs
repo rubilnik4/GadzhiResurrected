@@ -9,7 +9,6 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiWord.Extensions.Excel;
-using GadzhiWord.Word.Interfaces.Excel;
 using GadzhiWord.Word.Interfaces.Excel.Elements;
 using Microsoft.Office.Interop.Excel;
 
@@ -47,6 +46,11 @@ namespace GadzhiWord.Word.Implementations.Excel.Elements
                                      ResultVoidOk(_ => _workbook.SaveAs(filePath)),
             badFunc: fileExtension => new ResultAppValue<string>(new ErrorApplication(ErrorApplicationType.IncorrectExtension,
                                                                                       $"Некорректное расширение {fileExtension} для файла типа docx")));
+
+        /// <summary>
+        /// Закрыть
+        /// </summary>
+        public void Close() => _workbook.Close();
 
         /// <summary>
         /// Получить список листов

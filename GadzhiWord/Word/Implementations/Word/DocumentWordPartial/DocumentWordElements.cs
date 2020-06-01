@@ -20,6 +20,16 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
     public partial class DocumentWord
     {
         /// <summary>
+        /// Таблицы
+        /// </summary>
+        private IReadOnlyList<ITableElementWord> _tables;
+
+        /// <summary>
+        /// Таблицы
+        /// </summary>
+        public IReadOnlyList<ITableElementWord> Tables => _tables ??= GetTables();
+
+        /// <summary>
         /// Загруженные штампы
         /// </summary>
         private IStampContainer _stampContainer;
@@ -31,19 +41,32 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             _stampContainer ??= new StampContainer(FindStamps(convertingSettings), FullName);
 
         /// <summary>
+        /// Преобразовать к виду родительского элемента
+        /// </summary>      
+        public IOwnerWord ToOwnerWord => new OwnerWord(this);
+
+        /// <summary>
         /// Найти таблицы в колонтитулах
         /// </summary>
         private IEnumerable<IStamp> FindStamps(ConvertingSettingsApplication convertingSettings) =>
-            _document.Sections.ToIEnumerable().
-            SelectMany(section => section.Footers.ToIEnumerable()).
-            SelectMany(footer => footer.Range.Tables.ToIEnumerable()).
-            Select(table => new TableElementWord(table, ToOwnerWord())).
+            _document.Sections.ToEnumerable().
+            SelectMany(section => section.Footers.ToEnumerable()).
+            SelectMany(footer => footer.Range.Tables.ToEnumerable()).
+            Select(table => new TableElementWord(table, ToOwnerWord)).
             Where(CheckFooterIsStamp).
-            Select((tableElement, stampIndex) => 
-                       new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId, 
+            Select((tableElement, stampIndex) =>
+                       new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId,
                                              convertingSettings.PdfNamingType, PaperSize, OrientationType).
                        Map(stampSettings => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableElement)));
 
+        /// <summary>
+        /// Получить таблицы
+        /// </summary>
+        private IReadOnlyList<ITableElementWord> GetTables() =>
+            _document.Tables.ToEnumerable().
+            Select(table => new TableElementWord(table, ToOwnerWord)).
+            ToList();
+            
         /// <summary>
         /// Проверить является ли колонтитул штампом
         /// </summary>
@@ -52,9 +75,6 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
                                                                        Select(cell => cell.Text.PrepareCellTextToCompare()).
                                                                        Any(cellText => AdditionalSettingsWord.MarkersMainStamp.MarkerContain(cellText));
 
-        /// <summary>
-        /// Преобразовать к виду родительского элемента
-        /// </summary>      
-        public IOwnerWord ToOwnerWord() => new OwnerWord(this);
+
     }
 }

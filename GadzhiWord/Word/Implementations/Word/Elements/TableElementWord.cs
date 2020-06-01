@@ -52,16 +52,31 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         public IEnumerable<ICellElementWord> CellsElementWord => RowsElementWord.SelectMany(row => row.CellsElement);
 
         /// <summary>
+        /// Количество строк в начальной таблице Word без обертки
+        /// </summary>
+        public int RowsCountInitial => _tableElement.Rows.Count;
+
+        /// <summary>
+        /// Количество колонок в начальной таблице Word без обертки
+        /// </summary>
+        public int ColumnsCountInitial => _tableElement.Columns.Count;
+
+        /// <summary>
         /// Проверить существование ячейки 
         /// </summary>
         public bool HasCellElement(int rowIndex, int columnIndex) =>
             RowsElementWord?.Count >= rowIndex && RowsElementWord[rowIndex].CellsElement?.Count >= columnIndex;
 
         /// <summary>
+        /// Скопировать таблицу в буфер
+        /// </summary>
+        public void CopyToClipBoard() => _tableElement.Range.Copy();
+
+        /// <summary>
         /// Получить строки таблицы
         /// </summary>       
         private IReadOnlyList<IRowElementWord> GetRowsElement() =>
-            _tableElement.Range.Cells.ToIEnumerable().
+            _tableElement.Range.Cells.ToEnumerable().
             Select(cell => cell.RowIndex).
             Distinct().
             OrderBy(indexRowOriginal => indexRowOriginal).
@@ -72,7 +87,7 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// Получить ячейки таблицы
         /// </summary>
         private IEnumerable<ICellElementWord> GetCellsElementByRow(int indexRowOriginal, int indexRowNew) =>
-            _tableElement.Range.Cells.ToIEnumerable().
+            _tableElement.Range.Cells.ToEnumerable().
             Where(cell => cell.RowIndex == indexRowOriginal).
             Select((cell, indexColumnNew) => new CellElementWord(cell, indexRowNew, indexColumnNew));
     }

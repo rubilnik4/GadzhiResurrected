@@ -105,8 +105,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
 
-            var filesStatusWrite = await _fileDataProcessingStatusMark.
-                                         GetFilesStatusCompleteResponseAndWritten(packageDataResponse);
+            var filesStatusWrite = await _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseAndWritten(packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(filesStatusWrite);
 
             await _fileConvertingClientService.Operations.SetFilesDataLoadedByClient(_packageInfoProject.Id);

@@ -28,9 +28,11 @@ namespace GadzhiWord.Word.Implementations.Excel.Helpers
         /// <summary>
         /// Получить имя колонки по индексу
         /// </summary>
-        public static string GetExcelColumnName(int columnNumber)
+        public static string GetExcelColumnName(int columnIndex)
         {
-            int dividend = columnNumber + 1;
+            if (columnIndex < 0) throw new IndexOutOfRangeException(nameof(columnIndex));
+
+            int dividend = columnIndex + 1;
             var columnName = String.Empty;
 
             while (dividend > 0)
@@ -41,6 +43,17 @@ namespace GadzhiWord.Word.Implementations.Excel.Helpers
             }
 
             return columnName;
+        }
+
+        /// <summary>
+        /// Получить имя ячейки по индексам
+        /// </summary>
+        public static string GetCellNameByIndexes(int columnIndex, int rowIndex)
+        {
+            if (columnIndex < 0) throw new IndexOutOfRangeException(nameof(columnIndex));
+            if (rowIndex < 0) throw new IndexOutOfRangeException(nameof(rowIndex));
+
+            return GetExcelColumnName(columnIndex) + rowIndex;
         }
     }
 }

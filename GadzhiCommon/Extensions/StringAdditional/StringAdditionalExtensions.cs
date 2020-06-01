@@ -58,6 +58,12 @@ namespace GadzhiCommon.Extensions.StringAdditional
                                                                              ?? String.Empty;
 
         /// <summary>
+        /// Перевести строку в верхний регистр с учетом текущего языка
+        /// </summary>
+        public static string ToUpperCaseCurrentCulture(this string input) => input?.ToUpper(CultureInfo.CurrentCulture)
+                                                                             ?? String.Empty;
+
+        /// <summary>
         /// Получить строку из массива или вернуть пустое значение
         /// </summary>
         public static string GetStringFromArrayOrEmpty(this string[] input, int index) =>
