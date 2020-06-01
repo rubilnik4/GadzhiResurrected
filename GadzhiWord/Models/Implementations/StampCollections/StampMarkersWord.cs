@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiCommon.Extensions.Collection;
-
-// ReSharper disable All
+using GadzhiWord.Models.Implementations.StampCollections.Fields;
+using GadzhiWord.Word.Interfaces.Word.Elements;
+using GadzhiWord.Extensions.Word;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
     /// <summary>
     /// Дополнительные параметры штампа
     /// </summary>
-    public static class AdditionalSettingsWord
+    public static class StampMarkersWord
     {
         /// <summary>
         /// Тип штампа в строковом обозначении
@@ -22,7 +22,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public static IReadOnlyDictionary<StampType, string> StampTypeToString => new Dictionary<StampType, string>()
         {
             { StampType.Main, "Основной"},
-            { StampType.Additional, "Дополнительный"},
+            { StampType.Short, "Дополнительный"},
         };
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// Маркеры штампа
         /// </summary>
         public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.
-                                                            UnionNotNull(MarkersAdditionalStamp).
+                                                            Union(MarkersAdditionalStamp).
                                                             ToList();
 
         /// <summary>
         /// Маркеры типа действия в строке с ответственным лицом
         /// </summary>
-        public static IReadOnlyList<string> MarkersActionType => 
+        public static IReadOnlyList<string> MarkersActionType =>
             MarkersActionTypeDepartment.Concat(MarkersActionTypeChief).ToList();
 
         /// <summary>
@@ -86,7 +86,38 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public static IReadOnlyList<string> MarkersChangeHeader => new List<string>()
         {
-            "Изм."            
+            "Изм."
         };
+
+        /// <summary>
+        /// Содержит ли коллекция маркеров указанное поле
+        /// </summary>        
+        public static bool MarkerContain(IEnumerable<string> markerCollection, string cellText) =>
+            markerCollection?.Any(marker => cellText?.StartsWith(marker, StringComparison.CurrentCultureIgnoreCase) == true) == true;
+
+        /// <summary>
+        /// Проверить является ли таблица штампом и вернуть его тип
+        /// </summary>
+        public static StampType GetStampType(ITableElementWord tableWord)
+        {
+            var hasFullCode = false;
+            var hasShortMarker = false;
+            var hasMainMarkers = false;
+
+            foreach (var cell in tableWord.CellsElementWord)
+            {
+                if (CheckFieldType.IsFieldFullCode(cell)) hasFullCode = true;
+                if (MarkersAdditionalStamp.MarkerContain(cell.Text)) hasShortMarker = true;
+                if (MarkersMainStamp.MarkerContain(cell.Text)) hasMainMarkers = true;
+            }
+
+            return hasFullCode switch
+            {
+                true when hasMainMarkers => StampType.Main,
+                true when hasShortMarker => StampType.Shortened,
+                false => StampType.Unknown,
+                _ => StampType.Unknown,
+            };
+        }
     }
 }

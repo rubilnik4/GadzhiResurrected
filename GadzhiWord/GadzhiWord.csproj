@@ -127,7 +127,7 @@
     <Compile Include="Extensions\Excel\ElementExcelExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Extensions\Word\ElementWordExtensions.cs" />
-    <Compile Include="Extensions\Word\MarkerCollection.cs" />
+    <Compile Include="Extensions\Word\MarkerExtensions.cs" />
     <Compile Include="Factory\ExcelInstance.cs" />
     <Compile Include="Factory\WordInstance.cs" />
     <Compile Include="Models\Implementations\Specification\ColumnIndexesSpecification.cs" />
@@ -137,12 +137,13 @@
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampShortWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampSignaturesWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampSettingsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\AdditionalSettingsWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMarkersWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampPersonWord.cs" />

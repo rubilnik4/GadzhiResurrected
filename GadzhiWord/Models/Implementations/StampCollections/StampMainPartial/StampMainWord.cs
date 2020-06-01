@@ -15,7 +15,7 @@ using GadzhiWord.Word.Interfaces.Word.Elements;
 namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
 {
     /// <summary>
-    /// Основные поля штампа Word
+    /// Поля основного штампа Word
     /// </summary>
     public partial class StampMainWord : StampWord, IStampMain
     {

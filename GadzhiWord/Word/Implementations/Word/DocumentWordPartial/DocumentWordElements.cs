@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
@@ -11,6 +13,7 @@ using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Models.Implementations.StampCollections.StampMainPartial;
 using GadzhiWord.Word.Implementations.Word.Elements;
 using GadzhiWord.Word.Interfaces.Word.Elements;
+using Microsoft.Office.Interop.Word;
 
 namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
 {
@@ -53,11 +56,34 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             SelectMany(section => section.Footers.ToEnumerable()).
             SelectMany(footer => footer.Range.Tables.ToEnumerable()).
             Select(table => new TableElementWord(table, ToOwnerWord)).
-            Where(CheckFooterIsStamp).
-            Select((tableElement, stampIndex) =>
-                       new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId,
-                                             convertingSettings.PdfNamingType, PaperSize, OrientationType).
-                       Map(stampSettings => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableElement)));
+            Select(GetTableStamp).
+            Where(tableStamp => tableStamp.StampType != StampType.Unknown).
+            Select((tableStamp, stampIndex) => GetStampByType(tableStamp.TableWord, tableStamp.StampType,
+                                                              GetStampSettingsWord(stampIndex, convertingSettings)));
+
+        /// <summary>
+        /// Получить таблицу и тип соответствующего штампа
+        /// </summary>
+        private static (ITableElementWord TableWord, StampType StampType) GetTableStamp(ITableElementWord tableWord) =>
+            (tableWord, StampMarkersWord.GetStampType(tableWord));
+
+        /// <summary>
+        /// Получить параметры штампа Word
+        /// </summary>
+        private StampSettingsWord GetStampSettingsWord(int stampIndex, ConvertingSettingsApplication convertingSettings) =>
+            new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId, 
+                                  convertingSettings.PdfNamingType, PaperSize, OrientationType);
+
+        /// <summary>
+        /// Получить штамп из таблицы по типу
+        /// </summary>
+        private IStamp GetStampByType(ITableElementWord tableWord, StampType stampType, StampSettingsWord stampSettings) =>
+            stampType switch
+            {
+                StampType.Main => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableWord),
+                StampType.Shortened => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableWord),
+                _ => throw new InvalidEnumArgumentException(nameof(stampType), (int)stampType, typeof(StampType))
+            };
 
         /// <summary>
         /// Получить таблицы
@@ -66,15 +92,5 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             _document.Tables.ToEnumerable().
             Select(table => new TableElementWord(table, ToOwnerWord)).
             ToList();
-            
-        /// <summary>
-        /// Проверить является ли колонтитул штампом
-        /// </summary>
-        private static bool CheckFooterIsStamp(ITableElementWord tableElement) => tableElement.CellsElementWord.
-                                                                       Where(cell => !String.IsNullOrWhiteSpace(cell?.Text)).
-                                                                       Select(cell => cell.Text.PrepareCellTextToCompare()).
-                                                                       Any(cellText => AdditionalSettingsWord.MarkersMainStamp.MarkerContain(cellText));
-
-
     }
 }

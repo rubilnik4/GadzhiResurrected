@@ -5,6 +5,9 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 
 namespace GadzhiWord.Models.Implementations.StampCollections
 {
+    /// <summary>
+    /// Параметры штампа Word
+    /// </summary>
     public class StampSettingsWord: StampSettings
     {
         public StampSettingsWord(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType, 

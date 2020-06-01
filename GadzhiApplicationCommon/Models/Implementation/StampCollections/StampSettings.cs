@@ -5,7 +5,7 @@ using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
 {
     /// <summary>
-    /// 
+    /// Параметры штампа
     /// </summary>
     public class StampSettings: ConvertingSettingsApplication
     {

@@ -5,7 +5,8 @@
     /// </summary>
     public enum StampType
     {
+        Unknown,
         Main,
-        Additional
+        Shortened,
     }
 }
