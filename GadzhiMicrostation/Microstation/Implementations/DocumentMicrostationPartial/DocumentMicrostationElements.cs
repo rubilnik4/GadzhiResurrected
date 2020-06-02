@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces;
 
@@ -11,23 +14,25 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
     /// <summary>
     /// Файл файл Microstation
     /// </summary>
-    public partial class DocumentMicrostation : IDocumentLibraryElements
+    public partial class DocumentMicrostation
     {
         /// <summary>
-        /// Загруженные штампы
+        /// Список штампов
         /// </summary>
-        private IStampContainer _stampContainer;
+        private IResultAppCollection<IStamp> _stamps;
 
         /// <summary>
-        /// Найти все штампы во всех моделях и листах
-        /// </summary>       
-        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
-            _stampContainer ??= new StampContainer(FindStamps(ModelsMicrostation, convertingSettings), FullName);
+        /// Список штампов
+        /// </summary>
+        public IResultAppCollection<IStamp> GetStamps(ConvertingSettingsApplication convertingSettings) =>
+            _stamps ??= FindStamps(ModelsMicrostation, convertingSettings);
 
         /// <summary>
-        /// Найти таблицы-штампы во всех моделях и листах
+        /// Найти штампы во всех моделях и листах
         /// </summary>
-        private static IEnumerable<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation, ConvertingSettingsApplication convertingSettings) =>
-            modelsMicrostation.SelectMany((model, modelIndex) => model.FindStamps(modelIndex, convertingSettings)).ToList();
+        private static IResultAppCollection<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation, 
+                                                               ConvertingSettingsApplication convertingSettings) =>
+            modelsMicrostation.SelectMany((model, modelIndex) => model.FindStamps(modelIndex, convertingSettings)).
+            Map(stamps => new ResultAppCollection<IStamp>(new ErrorApplication(ErrorApplicationType.StampNotFound, "Штампы не найдены")));
     }
 }

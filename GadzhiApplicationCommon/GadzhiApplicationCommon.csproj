@@ -85,7 +85,6 @@
     <Compile Include="Models\Implementation\StampCollections\Fields\StampSignatureFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampTextField.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\Stamp.cs" />
-    <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Enums\StampCollections\StampDepartmentType.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\StampBasicFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\StampSignatureFields.cs" />
@@ -108,7 +107,6 @@
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampSignatureFields.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampTextField.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStamp.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampField.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampMain.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampShort.cs" />

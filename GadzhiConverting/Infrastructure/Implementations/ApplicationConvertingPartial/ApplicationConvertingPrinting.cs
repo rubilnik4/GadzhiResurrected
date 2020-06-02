@@ -35,8 +35,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                              IConvertingSettings convertingSettings, ColorPrint colorPrint,
                                                                              IPrinterInformation pdfPrinterInformation) =>
-            documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
-            Stamps.ToResultCollectionFromApplication().
+            documentLibrary.GetStamps(convertingSettings.ToApplication()).
+            ToResultCollectionFromApplication().
             ResultValueOkBind(stamps => stamps.
                                         Select(stamp => CreatePdfWithFilePath(stamp, documentLibrary, filePath, convertingSettings,
                                                                               colorPrint, pdfPrinterInformation)).
