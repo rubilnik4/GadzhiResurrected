@@ -8,8 +8,6 @@ using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiWord.Models.Implementations.StampCollections.Fields;
-using GadzhiWord.Models.Interfaces.StampCollections;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {

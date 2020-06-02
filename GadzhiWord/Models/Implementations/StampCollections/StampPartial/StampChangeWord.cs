@@ -11,17 +11,17 @@ using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
+namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Строки с изменениями в основном штампе
+    /// Строки с изменениями
     /// </summary>
-    public partial class StampMainWord
+    public partial class StampWord
     {
         /// <summary>
-        /// Получить строки с изменениями
+        /// Получить строки с изменениями Word
         /// </summary>
-        private IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
+        protected override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
             GetFieldsByType(StampFieldType.ChangeSignature).
             Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
             Where(row => row.CellsElement.Count >= StampChangeWord.FIELDS_COUNT).
@@ -37,7 +37,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
             ResultValueOk(signature => GetStampChangeFromFields(changeRow, signature));
 
         /// <summary>
-        /// Получить класс с изменениями и подписью на основании полей
+        /// Получить класс с изменениями и подписью на основании полей Word
         /// </summary>
         private static IStampChange GetStampChangeFromFields(IRowElementWord changeRow, ISignatureLibraryApp personSignature) =>
             new StampChangeWord(personSignature,

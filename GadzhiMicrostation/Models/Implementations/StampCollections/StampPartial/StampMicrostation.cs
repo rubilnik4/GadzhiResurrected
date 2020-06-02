@@ -6,8 +6,8 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -40,11 +40,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Формат
         /// </summary>
-        public override string PaperSize => StampCellElement.SubElements?.
-                                            FirstOrDefault(subElement => subElement.IsTextElementMicrostation &&
-                                                                         StampFieldMain.IsFormatField(subElement.AsTextElementMicrostation.Text))?.
-                                            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)) 
-                                            ?? String.Empty;
+        public override string PaperSize =>
+            StampCellElement.SubElements.
+            FirstOrDefault(subElement => subElement.IsTextElementMicrostation &&
+                                         StampFieldMain.IsFormatField(subElement.AsTextElementMicrostation.Text)).
+            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text));
 
         /// <summary>
         /// Тип расположения штампа
@@ -53,5 +53,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             StampCellElement.Range.Width >= StampCellElement.Range.Height 
             ? StampOrientationType.Landscape
             : StampOrientationType.Portrait;
+
+        /// <summary>
+        /// Поля штампа, отвечающие за подписи
+        /// </summary>
+        public override IStampSignatureFields StampSignatureFields =>
+            GetStampPersonRows().
+            Map(personRows => new StampSignatureFields(personRows, 
+                                                       GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary),
+                                                       GetStampApprovalRows()));
     }
 }

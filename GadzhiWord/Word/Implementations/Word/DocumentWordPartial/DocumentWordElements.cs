@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Models.Implementations.StampCollections.StampMainPartial;
 using GadzhiWord.Word.Implementations.Word.Elements;
 using GadzhiWord.Word.Interfaces.Word.Elements;
-using Microsoft.Office.Interop.Word;
 
 namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
 {
@@ -81,7 +78,7 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             stampType switch
             {
                 StampType.Main => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableWord),
-                StampType.Shortened => new StampMainWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableWord),
+                StampType.Shortened => new StampShortWord(stampSettings, ApplicationOffice.ResourcesWord.SignaturesSearching, tableWord),
                 _ => throw new InvalidEnumArgumentException(nameof(stampType), (int)stampType, typeof(StampType))
             };
 

@@ -37,10 +37,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public IStampTextFieldMicrostation GetFieldFromElements(IEnumerable<ITextElementMicrostation> elementsMicrostation,
                                                                 HashSet<StampFieldBase> stampFields, StampFieldType stampFieldType) =>
-            elementsMicrostation.Where(element => stampFields.Select(field => field.Name).
-                                                              Contains(element.AttributeControlName)).
-                                 Select(field => new StampTextFieldMicrostation(field, stampFieldType)).
-                                 FirstOrDefault();
+            elementsMicrostation.
+            Where(element => stampFields.Select(field => field.Name).
+                                         Contains(element.AttributeControlName)).
+            Select(field => new StampTextFieldMicrostation(field, stampFieldType)).
+            FirstOrDefault();
 
         /// <summary>
         /// Вписать текстовые поля в рамки
@@ -50,12 +51,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                 element.ElementType switch
                 {
                     ElementMicrostationType.TextElement => element.AsTextElementMicrostation.CompressRange(),
-                    ElementMicrostationType.TextNodeElement => element.AsTextNodeElementMicrostation.CompressRange().
-                        WhereOk(isCompressed => isCompressed, okFunc: isCompressed =>
-                        {
-                            StampCellElement.FindAndChangeSubElement(element);
-                            return isCompressed;
-                        }),
+                    ElementMicrostationType.TextNodeElement => CompressRangeTextNode(element.AsTextNodeElementMicrostation),
                     _ => false
                 }
             );
@@ -84,5 +80,18 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                 Cast<IRangeBaseElementMicrostation<TElement>>().
                 Where(subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).
                 Select(subElement => subElement.Clone(StampFieldMain.IsControlVertical(subElement.AttributeControlName)));
+
+        /// <summary>
+        /// Сжать текстовый элемент
+        /// </summary>
+        private bool CompressRangeTextNode(ITextNodeElementMicrostation textNodeElement)
+        {
+            bool isCompressed = textNodeElement.CompressRange();
+            if (isCompressed)
+            {
+                StampCellElement.FindAndChangeSubElement(textNodeElement);
+            }
+            return isCompressed;
+        }
     }
 }

@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiWord.Models.Implementations.StampCollections.Fields;
-using GadzhiWord.Models.Interfaces.StampCollections;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
@@ -44,6 +39,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Наименование
         /// </summary>
-        public override string Name => $"{AdditionalSettingsWord.StampTypeToString[StampType]}";
+        public override string Name => $"{StampMarkersWord.StampTypeToString[StampType]}";
     }
 }

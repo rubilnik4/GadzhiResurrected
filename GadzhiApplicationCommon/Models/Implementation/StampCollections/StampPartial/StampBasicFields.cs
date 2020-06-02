@@ -12,11 +12,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
     public abstract partial class Stamp
     {
         /// <summary>
-        /// Получить базовые поля штампа
-        /// </summary>
-        private IStampBasicFields GetStampBasicFields() => new StampBasicFields(GetFullCode(), GetCurrentSheet());
-
-        /// <summary>
         /// Получить поле шифра
         /// </summary>
         protected abstract IResultAppValue<IStampTextField> GetFullCode();
@@ -25,5 +20,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Получить номер текущего листа
         /// </summary>
         protected abstract IResultAppValue<IStampTextField> GetCurrentSheet();
+
+        /// <summary>
+        /// Получить базовые поля штампа
+        /// </summary>
+        private IStampBasicFields GetStampBasicFields() => new StampBasicFields(GetFullCode(), GetCurrentSheet());
     }
 }

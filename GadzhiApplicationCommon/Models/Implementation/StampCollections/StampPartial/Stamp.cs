@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
@@ -49,6 +48,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Основные поля штампа
         /// </summary>
         public IStampBasicFields StampBasicFields => _stampBasicFields ??= GetStampBasicFields();
+
+        /// <summary>
+        /// Поля штампа, отвечающие за подписи
+        /// </summary>
+        public abstract IStampSignatureFields StampSignatureFields { get; }
 
         /// <summary>
         /// Формат

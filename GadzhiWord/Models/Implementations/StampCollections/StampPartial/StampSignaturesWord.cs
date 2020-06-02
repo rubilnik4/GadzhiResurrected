@@ -17,18 +17,29 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
     public partial class StampWord
     {
         /// <summary>
-        /// Получить информацию об ответственном лице по имени
-        /// </summary>      
-        protected IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
-                                                                              PersonDepartmentType departmentType) =>
-            SignaturesSearching.FindById(personId)?.PersonInformation.Department.
-            Map(department => SignaturesSearching.CheckDepartmentAccordingToType(department, departmentType)).
-            Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
+        /// Вставить подписи
+        /// </summary>
+        public override IResultAppCollection<IStampSignature> InsertSignatures() =>
+            StampSignatureFields.GetSignatures().
+            ResultValueOkBind(GetStampSignaturesByIds).
+            ToResultCollection();
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        public override IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures) =>
+            signatures.
+            Select(signature => signature.DeleteSignature()).
+            ToList().
+            Map(signaturesDeleted => new ResultAppCollection<IStampSignature>
+                                     (signaturesDeleted,
+                                      signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи для удаления не инициализированы")));
 
         /// <summary>
         /// Получить элементы подписей из базы по их идентификационным номерам
         /// </summary>
-        protected IResultAppCollection<IStampSignature> GetStampSignaturesByIds(IList<IStampSignature> signaturesStamp) =>
+        private IResultAppCollection<IStampSignature> GetStampSignaturesByIds(IList<IStampSignature> signaturesStamp) =>
             new ResultAppCollection<string>(signaturesStamp.Select(signatureStamp => signatureStamp.SignatureLibrary.PersonId)).
             ResultValueOkBind(personIds => SignaturesSearching.GetSignaturesByIds(personIds)).
             ResultValueContinue(signaturesFile => signaturesFile.Count == signaturesStamp.Count,
@@ -39,5 +50,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
                 signaturesStamp.Zip(signaturesFile,
                                     (signatureStamp, signatureFile) => signatureStamp.InsertSignature(signatureFile))).
             ToResultCollection();
+
+        /// <summary>
+        /// Получить информацию об ответственном лице по имени
+        /// </summary>      
+        private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
+                                                                              PersonDepartmentType departmentType) =>
+            SignaturesSearching.FindById(personId)?.PersonInformation.Department.
+            Map(department => SignaturesSearching.CheckDepartmentAccordingToType(department, departmentType)).
+            Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
     }
 }

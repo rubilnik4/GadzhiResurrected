@@ -5,7 +5,6 @@ using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Word.Interfaces.Word.Elements;
-using static GadzhiWord.Models.Implementations.StampCollections.AdditionalSettingsWord;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Fields
 {
@@ -42,15 +41,15 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// </summary>        
         public static bool IsFieldPersonSignature(ICellElementWord cellElement) =>
             cellElement?.
-                Text.PrepareCellTextToCompare().
-                Map(cellText => AdditionalSettingsWord.MarkersActionType.MarkerContain(cellText))
+            Text.PrepareCellTextToCompare().
+            Map(cellText => StampMarkersWord.MarkersActionType.MarkerContain(cellText))
             ?? false;
 
         /// <summary>
         /// Находится ли поле в строке заголовком изменений. Обработка входной строки
         /// </summary>        
         public static bool IsFieldChangeHeader(string cellText) =>
-            AdditionalSettingsWord.MarkersChangeHeader.MarkerContain(cellText.PrepareCellTextToCompare());
+            StampMarkersWord.MarkersChangeHeader.MarkerContain(cellText.PrepareCellTextToCompare());
 
         /// <summary>
         /// Является ли поле шифром
@@ -76,8 +75,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         public static PersonDepartmentType GetDepartmentType(string actionType) =>
             actionType switch
             {
-                _ when MarkersActionTypeDepartment.MarkerContain(actionType) => PersonDepartmentType.Department,
-                _ when MarkersActionTypeChief.MarkerContain(actionType) => PersonDepartmentType.ChiefProject,
+                _ when StampMarkersWord.MarkersActionTypeDepartment.MarkerContain(actionType) => PersonDepartmentType.Department,
+                _ when StampMarkersWord.MarkersActionTypeChief.MarkerContain(actionType) => PersonDepartmentType.ChiefProject,
                 _ => PersonDepartmentType.Undefined,
             };
     }

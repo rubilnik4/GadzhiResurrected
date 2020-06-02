@@ -135,8 +135,9 @@
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampChangeWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainChangeWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainPersonWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampChangeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampPersonWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampShortWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsWord.cs" />

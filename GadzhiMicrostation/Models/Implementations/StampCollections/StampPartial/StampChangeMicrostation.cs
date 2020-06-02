@@ -1,32 +1,29 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Enums;
-using GadzhiMicrostation.Models.Implementations.StampFieldNames;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
+using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
+namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
     /// Строки с изменениями в основном штампе
     /// </summary>
-    public partial class StampMainMicrostation
+    public partial class StampMicrostation
     {
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        private IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
+        protected override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
             new ResultAppValue<ISignatureLibraryApp>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
                                                                                             "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
@@ -34,7 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
         /// <summary>
-        /// Преобразовать элементы Microstation в строку подписей изменений
+        /// Преобразовать элементы Microstation в строку подписей изменений Microstation
         /// </summary>
         private IResultAppValue<IStampChange> GetStampChangeRow(IEnumerable<string> changeNames, ISignatureLibraryApp personSignature) =>
             FindElementsInStamp<ITextElementMicrostation>(changeNames, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
@@ -42,7 +39,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             ResultValueOkBind(foundFields => GetStampChangeFromFields(foundFields, personSignature));
 
         /// <summary>
-        /// Получить строку с подписью изменений из полей штампа
+        /// Получить строку с подписью изменений из полей штампа Microstation
         /// </summary>
         private IResultAppValue<IStampChange> GetStampChangeFromFields(IList<ITextElementMicrostation> foundFields, ISignatureLibraryApp personSignature)
         {
@@ -57,7 +54,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         }
 
         /// <summary>
-        /// Сформировать строку с подписью изменений согласно идентификатору
+        /// Сформировать строку с подписью изменений согласно идентификатору Microstation
         /// </summary>
         private static IResultAppValue<IStampChange> GetStampChangeById(ISignatureLibraryApp personSignature,
                                                                  Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,

@@ -39,6 +39,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         IStampBasicFields StampBasicFields { get; }
 
         /// <summary>
+        /// Поля штампа, отвечающие за подписи
+        /// </summary>
+        IStampSignatureFields StampSignatureFields { get; }
+
+        /// <summary>
         /// Формат
         /// </summary>
         string PaperSize { get; }

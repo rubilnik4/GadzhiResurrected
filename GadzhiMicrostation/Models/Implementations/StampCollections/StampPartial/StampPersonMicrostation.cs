@@ -1,38 +1,36 @@
-﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Implementations.StampFieldNames;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
-using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiMicrostation.Microstation.Interfaces.Elements;
+using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
+using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
+namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
     /// Строки с ответственными лицами в основном штампе
     /// </summary>
-    public partial class StampMainMicrostation
+    public partial class StampMicrostation
     {
         /// <summary>
-        /// Получить строки основных подписей с ответственным лицом без подписи
+        /// Получить строки основных подписей с ответственным лицом без подписи Microstation
         /// </summary>
-        private IResultAppCollection<IStampPerson> GetStampPersonRows() =>
-            GetStampSignatureRows(StampFieldType.PersonSignature, GetStampPersonRow).
-            Map(signatureRows => new ResultAppCollection<IStampPerson>(signatureRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                                           "Штамп основных подписей не найден")));
+        protected override IResultAppCollection<IStampPerson> GetStampPersonRows() =>
+           GetStampSignatureRows(StampFieldType.PersonSignature, GetStampPersonRow).
+           Map(signatureRows => new ResultAppCollection<IStampPerson>(signatureRows, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
+                                                                                                          "Штамп основных подписей не найден")));
 
         /// <summary>
-        /// Преобразовать элементы Microstation в строку основных подписей
+        /// Преобразовать элементы Microstation в строку основных подписей Microstation
         /// </summary>
         private IResultAppValue<IStampPerson> GetStampPersonRow(IEnumerable<string> personNames) =>
             FindElementsInStamp<ITextElementMicrostation>(personNames, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
@@ -40,7 +38,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             ResultValueOkBind(GetStampPersonFromFields);
 
         /// <summary>
-        /// Получить строку с основной подписью из полей штампа
+        /// Получить строку с основной подписью из полей штампа Microstation
         /// </summary>
         private IResultAppValue<IStampPerson> GetStampPersonFromFields(IList<ITextElementMicrostation> foundFields)
         {
@@ -53,14 +51,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         }
 
         /// <summary>
-        /// Сформировать строку с основной подписью согласно идентификатору
+        /// Сформировать строку с основной подписью согласно идентификатору Microstation
         /// </summary>
         private IResultAppValue<IStampPerson> GetStampPersonById(IStampTextFieldMicrostation responsiblePerson,
                                                                  Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                                                  IStampTextField actionType, IStampTextField dateSignature) =>
-            SignaturesSearching.FindByIdOrFullNameOrRandom(responsiblePerson.ElementStamp.AttributePersonId, 
+            SignaturesSearching.FindByIdOrFullNameOrRandom(responsiblePerson.ElementStamp.AttributePersonId,
                                                            responsiblePerson.Text, StampSettings.PersonId).
-            ResultValueOk(personSignature => new StampPersonMicrostation(personSignature, insertSignatureFunc, actionType, 
+            ResultValueOk(personSignature => new StampPersonMicrostation(personSignature, insertSignatureFunc, actionType,
                                                                          responsiblePerson, dateSignature));
     }
 }

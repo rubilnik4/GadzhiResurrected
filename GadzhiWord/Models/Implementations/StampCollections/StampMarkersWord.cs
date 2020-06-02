@@ -22,7 +22,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public static IReadOnlyDictionary<StampType, string> StampTypeToString => new Dictionary<StampType, string>()
         {
             { StampType.Main, "Основной"},
-            { StampType.Short, "Дополнительный"},
+            { StampType.Shortened, "Сокращенный"},
         };
 
         /// <summary>
