@@ -38,6 +38,7 @@ namespace GadzhiCommon.Converters
                 { FileConvertErrorType.FileNotOpen , "Невозможно открыть файл" },
                 { FileConvertErrorType.FileNotSaved , "Невозможно сохранить файл" },
                 { FileConvertErrorType.StampNotFound , "Штампы не найдены" },
+                { FileConvertErrorType.TableNotFound , "Таблицы не найдены" },
                 { FileConvertErrorType.RangeNotValid , "Некорректный диапазон" },
                 { FileConvertErrorType.PrinterNotInstall , "Принтер не установлен" },
                 { FileConvertErrorType.PaperSizeNotFound  , "Формат принтера не найден" },

@@ -130,8 +130,11 @@
     <Compile Include="Extensions\Word\MarkerExtensions.cs" />
     <Compile Include="Factory\ExcelInstance.cs" />
     <Compile Include="Factory\WordInstance.cs" />
-    <Compile Include="Models\Implementations\Specification\ColumnIndexesSpecification.cs" />
-    <Compile Include="Models\Implementations\Specification\TableProcessingSpecification.cs" />
+    <Compile Include="Models\Enums\SpecificationType.cs" />
+    <Compile Include="Models\Implementations\Specification\Indexes\SpecificationDeltaIndexes.cs" />
+    <Compile Include="Models\Implementations\Specification\Indexes\SpecificationIndexes.cs" />
+    <Compile Include="Models\Implementations\Specification\Specification.cs" />
+    <Compile Include="Models\Implementations\Specification\Table\TableProcessingSpecification.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampChangeWord.cs" />
@@ -151,6 +154,7 @@
     <Compile Include="Models\Implementations\StampCollections\Signatures\StampSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\ChangeRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\PersonRowIndexes.cs" />
+    <Compile Include="Models\Interfaces\Specification\ISpecification.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampFieldWord.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampTextFieldWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -164,11 +168,11 @@
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficePrinting.cs" />
     <Compile Include="Word\Implementations\Converters\TextPrepare.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
-    <Compile Include="Models\Implementations\Specification\ValidatingTableWord.cs" />
     <Compile Include="Word\Implementations\Excel\Elements\BookExcel.cs" />
-    <Compile Include="Word\Implementations\Excel\Export\ExportTableFromWord.cs" />
+    <Compile Include="Infractructure\Implementations\Specification\SpecificationToExcel.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWord.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWordElements.cs" />
+    <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumnetWordExport.cs" />
     <Compile Include="Word\Implementations\Word\Elements\CellElementWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\OwnerWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\TableElementWord.cs" />
@@ -184,7 +188,9 @@
     <Compile Include="Word\Interfaces\Word\IDocumentWord.cs" />
     <Compile Include="Word\Interfaces\Excel\Elements\ISheetExcel.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Word\Implementations\Excel\Export\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
       <Project>{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}</Project>

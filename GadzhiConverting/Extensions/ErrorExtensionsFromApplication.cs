@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Converters;
 using System;

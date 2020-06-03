@@ -11,8 +11,9 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiWord.Models.Implementations.Specification;
+using GadzhiWord.Models.Implementations.Specification.Table;
+using GadzhiWord.Models.Interfaces.Specification;
 using GadzhiWord.Word.Implementations.Converters;
-using GadzhiWord.Word.Implementations.Excel.Export;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Excel.Elements;
 using GadzhiWord.Word.Interfaces.Word;
@@ -109,12 +110,9 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// </summary>      
         public IResultAppValue<string> Export(string filePath) =>
             new ResultAppCollection<ITableElementWord>(GetTables()).
-            ResultValueOk(tables => tables.Where(ValidatingTableWord.IsTableSpecification)).
-            ToResultCollection().
-            ResultValueContinue(tablesSpecification => tablesSpecification.Count > 0,
-                okFunc: tables => tables,
-                badFunc: _ => new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Таблицы спецификации не найдены")).
-            ResultValueOkBind(tablesWord => ExportWordTableToExcel(tablesWord, filePath));
+            ResultValueOk(FilteringExportTables).
+            ToResultCollection(new ErrorApplication(ErrorApplicationType.TableNotFound, "Таблицы для экспорта не найдены")).
+            ResultValueOkBind(tables => ExportByTableType(tables, filePath));
 
         /// <summary>
         /// Закрыть файл файл
@@ -134,13 +132,5 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Закрыть приложение
         /// </summary>
         public void CloseApplication() => ApplicationOffice.CloseApplication();
-
-        /// <summary>
-        /// Экспортировать данные таблицы Word в Excel
-        /// </summary>
-        private IResultAppValue<string> ExportWordTableToExcel(IEnumerable<ITableElementWord> tablesWord, string filePath) =>
-            new ResultAppValue<IBookExcel>(ApplicationOffice.CreateWorkbook()).
-            ResultValueOkBind(book => ExportTableFromWord.ExportTable(book, tablesWord, filePath).
-                                      Void(_ => book.Close()));
     }
 }

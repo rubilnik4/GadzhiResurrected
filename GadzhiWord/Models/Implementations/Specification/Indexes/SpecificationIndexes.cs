@@ -1,9 +1,9 @@
-﻿namespace GadzhiWord.Models.Implementations.Specification
+﻿namespace GadzhiWord.Models.Implementations.Specification.Indexes
 {
     /// <summary>
     /// Данные таблицы спецификации
     /// </summary>
-    public static class ColumnIndexesSpecification
+    public static class SpecificationIndexes
     {
         /// <summary>
         /// Количество колонок

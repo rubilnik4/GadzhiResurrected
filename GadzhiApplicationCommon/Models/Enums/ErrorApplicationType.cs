@@ -9,6 +9,7 @@
         FileNotOpen,
         FileNotSaved,
         StampNotFound,
+        TableNotFound,
         FileNotFound,
         FieldNotFound,
         RangeNotValid,

@@ -45,9 +45,9 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// </summary>
         public static string GetValidFileName(string fileName)
         {
-            var regexSearch = new string(Path.GetInvalidFileNameChars());
-            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
-            return r.Replace(fileName, "_");
+            string regexSearch = new string(Path.GetInvalidFileNameChars()) + ".";
+            var regexName = new Regex($"[{Regex.Escape(regexSearch)}]");
+            return regexName.Replace(fileName, "_");
         }
 
         /// <summary>

@@ -54,12 +54,22 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// <summary>
         /// Количество строк в начальной таблице Word без обертки
         /// </summary>
-        public int RowsCountInitial => _tableElement.Rows.Count;
+        private int? _rowsCountInitial;
+
+        /// <summary>
+        /// Количество строк в начальной таблице Word без обертки
+        /// </summary>
+        public int RowsCountInitial => _rowsCountInitial ??= _tableElement.Rows.Count;
 
         /// <summary>
         /// Количество колонок в начальной таблице Word без обертки
         /// </summary>
-        public int ColumnsCountInitial => _tableElement.Columns.Count;
+        private int? _columnsCountInitial;
+
+        /// <summary>
+        /// Количество колонок в начальной таблице Word без обертки
+        /// </summary>
+        public int ColumnsCountInitial => _columnsCountInitial ??= _tableElement.Columns.Count;
 
         /// <summary>
         /// Проверить существование ячейки 
