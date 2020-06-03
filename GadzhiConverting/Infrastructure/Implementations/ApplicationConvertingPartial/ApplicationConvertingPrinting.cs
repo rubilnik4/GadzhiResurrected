@@ -18,8 +18,6 @@ using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
-using GadzhiCommon.Enums.ConvertingSettings;
-using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
@@ -33,59 +31,66 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>       
         private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
-                                                                             IConvertingSettings convertingSettings, ColorPrint colorPrint,
-                                                                             IPrinterInformation pdfPrinterInformation) =>
-            documentLibrary.GetStamps(convertingSettings.ToApplication()).
-            ToResultCollectionFromApplication().
-            ResultValueOkBind(stamps => stamps.
-                                        Select(stamp => CreatePdfWithFilePath(stamp, documentLibrary, filePath, convertingSettings,
-                                                                              colorPrint, pdfPrinterInformation)).
-                                        ToList().ToResultCollection()).
+                                                                             IConvertingSettings convertingSettings, ColorPrint colorPrint) =>
+            documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
+            Map(stampContainer => StampContainerPdfActions(stampContainer, documentLibrary, filePath, convertingSettings, colorPrint));
+
+        /// <summary>
+        /// Обработать штампы и начать печать
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> StampContainerPdfActions(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
+                                                                                   IFilePath filePath, IConvertingSettings convertingSettings,
+                                                                                   ColorPrint colorPrint) =>
+            stampContainer.InsertSignatures().ToResultCollectionFromApplication().
+            ResultValueOkBind(signatures => StampContainerPdfPrinting(stampContainer.GetStampsToPrint().ToResultCollectionFromApplication(),
+                                                                      documentLibrary, filePath, convertingSettings, colorPrint).
+                                            Void(_ => stampContainer.DeleteSignatures(signatures))).
             ToResultCollection();
 
         /// <summary>
-        /// Создать пдф и сохранить согласно типу именования
+        /// Печать штампов
         /// </summary>
-        private IResultValue<IFileDataSourceServer> CreatePdfWithFilePath(IStamp stamp, IDocumentLibrary documentLibrary, IFilePath filePath,
-                                                                          IConvertingSettings convertingSettings,
-                                                                          ColorPrint colorPrint, IPrinterInformation pdfPrinterInformation) =>
-            new ResultValue<Func<string, string, FilePath>>((filePathServer, filePathClient) => new FilePath(filePathServer, filePathClient)).
-            ResultCurryOkBind(StampFilePath.GetFilePathByNamingType(filePath.FilePathServer, convertingSettings.PdfNamingType, stamp)).
-            ResultCurryOkBind(StampFilePath.GetFilePathByNamingType(filePath.FilePathClient, convertingSettings.PdfNamingType, stamp)).
-            ResultValueOk(filePathFunc => filePathFunc.Invoke()).
-            ResultValueOkBind(stampFilePath => CreatePdfWithSignatures(documentLibrary, stamp, stampFilePath, colorPrint, pdfPrinterInformation));
+        private IResultCollection<IFileDataSourceServer> StampContainerPdfPrinting(IResultCollection<IStamp> stampsToPrint, IDocumentLibrary documentLibrary,
+                                                                                   IFilePath filePath, IConvertingSettings convertingSettings,
+                                                                                   ColorPrint colorPrint) =>
+            stampsToPrint.
+            ResultValueOkBind(stamps => StampFilePath.GetFileNamesByNamingType(stamps, filePath.FilePathClient, convertingSettings.PdfNamingType).
+                                        ResultValueOk(fileNames => stamps.Zip(fileNames, (stamp, fileName) => (stamp, fileName)))).
+            ResultValueOkBind(stampsFileName => CreatePdfCollection(stampsFileName, documentLibrary, filePath,
+                                                                    colorPrint, convertingSettings.PdfPrinterInformation)).
+            ToResultCollection();
 
         /// <summary>
-        /// Создать PDF для штампа, вставить подписи
-        /// </summary>       
-        private IResultValue<IFileDataSourceServer> CreatePdfWithSignatures(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath, ColorPrint colorPrint,
-                                                                            IPrinterInformation pdfPrinterInformation) =>
-            stamp.CompressFieldsRanges().
-            Map(_ => stamp.InsertSignatures()).
-            Map(signatures => CreatePdf(documentLibrary, stamp, filePath, colorPrint, stamp.PaperSize, pdfPrinterInformation).
-                              ConcatErrors(signatures.Errors.ToErrorsConverting()).
-                              Void(_ => stamp.DeleteSignatures(signatures.Value)));
+        /// Создать коллекцию PDF для штампа, вставить подписи
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> CreatePdfCollection(IEnumerable<(IStamp Stamp, string FileName)> stampsFileName,
+                                                                             IDocumentLibrary documentLibrary, IFilePath filePath,
+                                                                             ColorPrint colorPrint, IResultValue<IPrinterInformation> pdfPrinterInformation) =>
+            stampsFileName.
+            Select(stampFileName => filePath.ChangeServerName(stampFileName.FileName).ChangeClientName(stampFileName.FileName).
+                                    Map(filePathChanged => CreatePdf(documentLibrary, stampFileName.Stamp, filePathChanged,
+                                                                     colorPrint, pdfPrinterInformation))).
+            ToResultCollection();
 
         /// <summary>
         /// Печать пдф
         /// </summary>
         private IResultValue<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath,
-                                                              ColorPrint colorPrint, string paperSize, IPrinterInformation pdfPrinterInformation) =>
-            SetDefaultPrinter(pdfPrinterInformation.Name).
-            ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath.FilePathServer, colorPrint, pdfPrinterInformation.PrefixSearchPaperSize)).
-            ResultValueOk(_ => (IFileDataSourceServer)new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient,
-                                                                               paperSize, pdfPrinterInformation.Name));
+                                                              ColorPrint colorPrint, IResultValue<IPrinterInformation> pdfPrinterInformation) =>
+            pdfPrinterInformation.
+            ResultVoidOk(pdfPrinter => SetDefaultPrinter(pdfPrinter.Name)).
+            ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath.FilePathServer, colorPrint,
+                                                   pdfPrinterInformation.Value.PrefixSearchPaperSize)).
+            ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, stamp.PaperSize,
+                                                        pdfPrinterInformation.Value.Name));
 
         /// <summary>
         /// Установить принтер по умолчанию
         /// </summary>       
-        private static IResultError SetDefaultPrinter(string printerName) =>
+        private static void SetDefaultPrinter(string printerName) =>
             PrinterSettings.InstalledPrinters.Cast<string>().
             WhereNull(printersInstall => printersInstall.Any(printerInstall => printerInstall.ContainsIgnoreCase(printerName)) &&
-                                         NativeMethods.SetDefaultPrinter(printerName))?.
-            Map(_ => new ResultError())
-            ?? new ErrorCommon(FileConvertErrorType.PrinterNotInstall, $"Принтер {printerName} не установлен в системе").
-               ToResult();
+                                         NativeMethods.SetDefaultPrinter(printerName));
 
         /// <summary>
         /// Команда печати PDF

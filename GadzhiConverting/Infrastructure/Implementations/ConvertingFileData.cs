@@ -52,18 +52,18 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await fileDataServer.
             Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             WhereContinueAsyncBind(fileData => fileData.IsValidByAttemptingCount,
-                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, convertingSettings, ProjectSettings.PrintersInformation)),
+                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, convertingSettings)),
                 badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
 
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
-        private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IConvertingSettings convertingSettings, IPrintersInformation printersInformation) =>
+        private IFileDataServer ConvertingFile(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
             LoadAndSaveDocument(fileDataServer).
             ResultValueOkBind(document =>
                 GetSavedFileDataSource(document, fileDataServer).
                 ToResultCollection().
-                Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, convertingSettings, printersInformation)).
+                Map(saveResult => MakeConvertingFileActions(saveResult, document, fileDataServer, convertingSettings)).
                 Map(filesData => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
                                  Map(closeResult => filesData.ConcatErrors(closeResult.Errors)).
                                  ToResultCollection())).
@@ -75,9 +75,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private IResultCollection<IFileDataSourceServer> MakeConvertingFileActions(IResultCollection<IFileDataSourceServer> fileDataSourceServer,
                                                                                    IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
-                                                                                   IConvertingSettings convertingSettings, IPrintersInformation printersInformation) =>
+                                                                                   IConvertingSettings convertingSettings) =>
             fileDataSourceServer.
-            ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, convertingSettings, printersInformation).
+            ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, convertingSettings).
                                                           Map(saveResult.ConcatResult).
                                                           Map(filesData => ExportFile(documentLibrary, fileDataServer).
                                                                            Map(filesData.ConcatResultValue))).
@@ -117,13 +117,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Создать PDF
         /// </summary>
         private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
-                                                                   IConvertingSettings convertingSettings, IPrintersInformation printersInformation) =>
+                                                                   IConvertingSettings convertingSettings) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtension.Pdf)).
             ResultValueOkBind(filePdfPath => _applicationConverting.CreatePdfFile(documentLibrary, fileDataServer.ChangeServerPath(filePdfPath),
-                                                                                  convertingSettings, fileDataServer.ColorPrint,
-                                                                                  printersInformation?.PrintersPdf.FirstOrDefault())).
+                                                                                  convertingSettings, fileDataServer.ColorPrint)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
             ToResultCollection();
 
@@ -151,7 +150,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultValue<string> CreateSavingPathByExtension(string filePathServer, FileExtension fileExtension) =>
             new ResultValue<string>(filePathServer).
             ResultValueOk(Path.GetDirectoryName).
-            ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(directory, fileExtension.ToString())).
+            ResultValueOk(directory => _fileSystemOperations.CreateFolderByName(Path.Combine(directory, Path.GetFileNameWithoutExtension(filePathServer)),
+                                                                                fileExtension.ToString())).
             ResultValueOk(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
                                                                                   Path.GetFileNameWithoutExtension(filePathServer),
                                                                                   fileExtension.ToString().ToLowerCaseCurrentCulture()));
@@ -162,11 +162,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultCollection<IFileDataSourceServer> CheckDataSourceExistence(IResultCollection<IFileDataSourceServer> fileDataSourceResult) =>
             fileDataSourceResult.Value.
             Where(fileDataSource => !_fileSystemOperations.IsFileExist(fileDataSource.FilePathServer)).
-            ToList() .
+            ToList().
             Map(fileDataSources => new
             {
                 fileDataSources,
-                errors = fileDataSources.Select(fileDataSource => new ErrorCommon(FileConvertErrorType.FileNotFound, 
+                errors = fileDataSources.Select(fileDataSource => new ErrorCommon(FileConvertErrorType.FileNotFound,
                                                                                   $"Файл {fileDataSource.FilePathServer} не найден"))
             }).
             Void(filesOrErrors => _messagingService.ShowAndLogErrors(filesOrErrors.errors)).

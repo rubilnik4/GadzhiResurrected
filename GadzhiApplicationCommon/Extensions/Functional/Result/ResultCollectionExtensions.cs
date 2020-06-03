@@ -28,6 +28,19 @@ namespace GadzhiApplicationCommon.Extensions.Functional.Result
         /// <summary>
         /// Преобразовать коллекцию ответов в ответ с коллекцией
         /// </summary>
+        public static IResultAppCollection<T> ToResultCollection<T>(this IEnumerable<IResultAppCollection<T>> @this, IErrorApplication errorNull = null) =>
+            @this != null
+                ? @this.Aggregate((IResultAppCollection<T>)new ResultAppCollection<T>(), (resultCollectionMain, resultCollection) =>
+                                      resultCollectionMain.ConcatResult(resultCollection)).
+                        WhereBad(result => result.Value.Count > 0,
+                            badFunc: result => errorNull != null
+                                               ? new ResultAppCollection<T>(errorNull)
+                                               : result)
+                : throw new ArgumentNullException(nameof(@this));
+
+        /// <summary>
+        /// Преобразовать коллекцию ответов в ответ с коллекцией
+        /// </summary>
         public static IResultAppCollection<T> ToResultCollection<T>(this IResultAppValue<IEnumerable<T>> @this, IErrorApplication errorNull = null) =>
             @this != null
                 ? new ResultAppCollection<T>(@this.OkStatus 

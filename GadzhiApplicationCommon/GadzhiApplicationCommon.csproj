@@ -60,6 +60,7 @@
     <Compile Include="Extensions\Functional\Result\ResultWhereExtensions.cs" />
     <Compile Include="Extensions\Functional\WhereExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
+    <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />
     <Compile Include="Models\Implementation\Functional\Unit.cs" />
     <Compile Include="Helpers\RandomInstance.cs" />
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Models\Implementation\StampCollections\Fields\StampBasicFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampSignatureFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampTextField.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\Stamp.cs" />
     <Compile Include="Models\Enums\StampCollections\StampDepartmentType.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\StampBasicFields.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampTextField.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStamp.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampField.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampMain.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampShort.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampChange.cs" />

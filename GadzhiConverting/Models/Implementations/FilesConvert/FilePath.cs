@@ -27,8 +27,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             if (fileTypeServer != fileTypeClient) throw new InvalidOperationException("Расширения клиентской и серверной частей не равны");
 
             FileExtension = ValidFileExtensions.GetFileTypesValid(fileTypeServer);
-            FilePathServer = filePathServer;
-            FilePathClient = filePathClient;
+            FilePathServer = FileSystemOperations.GetValidFilePath(filePathServer);
+            FilePathClient = FileSystemOperations.GetValidFilePath(filePathClient);
         }
 
         /// <summary>
@@ -73,6 +73,23 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             Path.GetExtension(filePathServer).
             Map(extension => Path.ChangeExtension(FilePathClient, extension)).
             Map(filePathClient => new FilePath(filePathServer, filePathClient));
+
+        /// <summary>
+        /// Изменить имя сервера
+        /// </summary>
+        public IFilePath ChangeServerName(string serverName) =>
+            (!String.IsNullOrWhiteSpace(serverName))
+                ? new FilePath(FileSystemOperations.ChangeFilePathName(FilePathServer, serverName),
+                               FilePathClient)
+                : this;
+
+        /// <summary>
+        /// Изменить имя клиента
+        /// </summary>
+        public IFilePath ChangeClientName(string clientName) =>
+            (!String.IsNullOrWhiteSpace(clientName))
+                ? new FilePath(FilePathServer, FileSystemOperations.ChangeFilePathName(FilePathClient, clientName))
+                : this;
 
         /// <summary>
         /// Проверить расширение на соответствие допустимым типам

@@ -2,9 +2,10 @@
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
-using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces;
@@ -17,20 +18,20 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
     public partial class DocumentMicrostation
     {
         /// <summary>
-        /// Список штампов
+        /// Контейнер штампов
         /// </summary>
-        private IResultAppCollection<IStamp> _stamps;
+        private IStampContainer _stampContainer;
 
         /// <summary>
-        /// Список штампов
+        /// Контейнер штампов
         /// </summary>
-        public IResultAppCollection<IStamp> GetStamps(ConvertingSettingsApplication convertingSettings) =>
-            _stamps ??= FindStamps(ModelsMicrostation, convertingSettings);
+        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
+            _stampContainer ??= new StampContainer(FindStamps(ModelsMicrostation, convertingSettings), StampContainerType.United);
 
         /// <summary>
         /// Найти штампы во всех моделях и листах
         /// </summary>
-        private static IResultAppCollection<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation, 
+        private static IResultAppCollection<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation,
                                                                ConvertingSettingsApplication convertingSettings) =>
             modelsMicrostation.SelectMany((model, modelIndex) => model.FindStamps(modelIndex, convertingSettings)).
             Map(stamps => new ResultAppCollection<IStamp>(new ErrorApplication(ErrorApplicationType.StampNotFound, "Штампы не найдены")));

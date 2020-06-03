@@ -14,7 +14,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
     {  
         public PrintersInformation(IEnumerable<IPrinterInformation> printersPdf)
         {
-            PrintersPdf = printersPdf;
+            PrintersPdf = printersPdf ?? throw new ArgumentNullException(nameof(printersPdf));
         }
 
         /// <summary>

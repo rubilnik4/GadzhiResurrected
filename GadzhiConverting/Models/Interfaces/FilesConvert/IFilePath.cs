@@ -10,41 +10,53 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Путь файла на сервере
         /// </summary>
-        public string FilePathServer { get; }
+        string FilePathServer { get; }
 
         /// <summary>
         /// Имя файла на клиенте
         /// </summary>
-        public string FilePathClient { get; }
+        string FilePathClient { get; }
 
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtension FileExtension { get; }
+        FileExtension FileExtension { get; }
 
         /// <summary>
         /// Имя файла на сервере
         /// </summary>
-        public string FileNameServer { get; }
+        string FileNameServer { get; }
 
         /// <summary>
         /// Имя файла на клиенте
         /// </summary>
-        public string FileNameClient { get; }
+        string FileNameClient { get; }
 
         /// <summary>
         /// Имя файла без расширения на сервере
         /// </summary>
-        public string FileNameWithoutExtensionServer { get; }
+        string FileNameWithoutExtensionServer { get; }
 
         /// <summary>
         /// Имя файла без расширения на клиенте
         /// </summary>
-        public string FileNameWithoutExtensionClient { get; }
+        string FileNameWithoutExtensionClient { get; }
 
         /// <summary>
         /// Заменить путь к файлу на сервере
         /// </summary>
-        public IFilePath ChangeServerPath(string filePathServer);
+        IFilePath ChangeServerPath(string filePathServer);
+
+        /// <summary>
+        /// Изменить имя сервера
+        /// </summary>
+        IFilePath ChangeServerName(string serverName);
+
+
+        /// <summary>
+        /// Изменить имя клиента
+        /// </summary>
+        IFilePath ChangeClientName(string clientName);
+           
     }
 }

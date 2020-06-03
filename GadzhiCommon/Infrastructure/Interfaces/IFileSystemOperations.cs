@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
 
@@ -42,7 +43,7 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
-        void DeleteAllDataInDirectory(string directoryPath);
+        void DeleteAllDataInDirectory(string directoryPath, DateTime timeNow, int hoursElapsed = -1);
 
         /// <summary>
         /// Удалить файл

@@ -327,7 +327,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
                 _messagingService.ShowAndLogMessage("Очистка пространства на жестком диске...");
-                await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory));
+                await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory, DateTime.Now,
+                                                                                    ProjectSettings.IntervalHoursToDeleteUnusedPackages));
 
                 Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();

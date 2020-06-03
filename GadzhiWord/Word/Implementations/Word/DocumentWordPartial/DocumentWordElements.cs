@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
@@ -38,13 +37,13 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Список штампов
         /// </summary>
-        private IResultAppCollection<IStamp> _stamps;
+        private IStampContainer _stampContainer;
 
         /// <summary>
         /// Список штампов
         /// </summary>
-        public IResultAppCollection<IStamp> GetStamps(ConvertingSettingsApplication convertingSettings) =>
-            _stamps ??= FindStamps(convertingSettings);
+        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
+            _stampContainer ??= new StampContainer(FindStamps(convertingSettings), StampContainerType.United);
 
         /// <summary>
         /// Преобразовать к виду родительского элемента

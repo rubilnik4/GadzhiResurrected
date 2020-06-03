@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extensions.Collection;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -44,9 +43,19 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Заменить недопустимые символы в имени файла
         /// </summary>
-        public static string GetValidFileName(string filePath)
+        public static string GetValidFileName(string fileName)
         {
             var regexSearch = new string(Path.GetInvalidFileNameChars());
+            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
+            return r.Replace(fileName, "_");
+        }
+
+        /// <summary>
+        /// Заменить недопустимые символы в пути файла
+        /// </summary>
+        public static string GetValidFilePath(string filePath)
+        {
+            var regexSearch = new string(Path.GetInvalidPathChars());
             var r = new Regex($"[{Regex.Escape(regexSearch)}]");
             return r.Replace(filePath, "_");
         }
@@ -114,23 +123,27 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
-        public void DeleteAllDataInDirectory(string directoryPath)
+        public void DeleteAllDataInDirectory(string directoryPath, DateTime timeNow, int hoursElapsed = -1)
         {
             if (String.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath)) return;
 
             var directoryInfo = new DirectoryInfo(directoryPath);
-            foreach (var file in directoryInfo.EnumerateFiles())
+
+            foreach (var fileInfo in directoryInfo.EnumerateFiles())
             {
-                if (!IsFileLocked(file))
+                if ((timeNow - fileInfo.LastWriteTime).Ticks >= hoursElapsed && !IsFileLocked(fileInfo))
                 {
-                    file.Delete();
+                    fileInfo.Delete();
                 }
             }
             foreach (var dir in directoryInfo.EnumerateDirectories())
             {
                 try
                 {
-                    dir.Delete(true);
+                    if ((timeNow - dir.LastWriteTime).Ticks >= hoursElapsed)
+                    {
+                        dir.Delete(true);
+                    }
                 }
                 catch (IOException)
                 { }
@@ -203,7 +216,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Сохранить файл на диск из двоичного кода
         /// </summary>   
         public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
-        { 
+        {
             if (String.IsNullOrEmpty(filePath) || fileByte == null) return false;
 
             try

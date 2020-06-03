@@ -1,12 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiCommon.Enums.ConvertingSettings;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -21,30 +19,31 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
     public static class StampFilePath
     {
         /// <summary>
-        /// Путь к сохранению файла печати с учетом принципа именования
+        /// Получить имена файлов с учетом принципа именования и индексацией
         /// </summary>
-        public static IResultValue<string> GetFilePathByNamingType(string filePath, PdfNamingType pdfNamingType, IStamp stamp) =>
+        public static IResultCollection<string> GetFileNamesByNamingType(IEnumerable<IStamp> stamps, string fileName, PdfNamingType pdfNamingType) =>
+            stamps.Select(stamp => GetFileNameByNamingType(fileName, pdfNamingType, stamp)).
+            ToResultCollection().
+            ResultValueOk(fileNames => AddIndexesToDuplicateFileNames(fileNames, FindDuplicates(fileNames))).
+            ToResultCollection();
+
+        /// <summary>
+        /// Имя файла печати с учетом принципа именования
+        /// </summary>
+        private static IResultValue<string> GetFileNameByNamingType(string fileName, PdfNamingType pdfNamingType, IStamp stamp) =>
             pdfNamingType switch
             {
-                PdfNamingType.ByFile => ChangeFilePathName(filePath, GetFileNameByIndex(filePath, stamp)),
-                PdfNamingType.ByCode => ChangeFilePathName(filePath, GetFileNameByCode(stamp)),
-                PdfNamingType.BySheet => ChangeFilePathName(filePath, GetFileNameBySheet(stamp)),
+                PdfNamingType.ByFile => GetFileNameByIndex(fileName, stamp),
+                PdfNamingType.ByCode => GetFileNameByCode(stamp),
+                PdfNamingType.BySheet => GetFileNameBySheet(stamp),
                 _ => throw new ArgumentOutOfRangeException(nameof(pdfNamingType), pdfNamingType, null)
             };
 
         /// <summary>
-        /// Получить путь к файлу с новым именем
-        /// </summary>
-        private static IResultValue<string> ChangeFilePathName(string filePath, IResultValue<string> fileNameChanged) =>
-            fileNameChanged.
-            ResultValueOk(fileName => FileSystemOperations.ChangeFilePathName(filePath, fileName));
-
-        /// <summary>
         /// Получить имя файла с учетом количества штампов
         /// </summary>
-        private static IResultValue<string> GetFileNameByIndex(string filePath, IStamp stamp) =>
-            new ResultValue<string>(Path.GetFileNameWithoutExtension(filePath) +
-                                    stamp.StampSettings.Id.ToFilePathPrefix());
+        private static IResultValue<string> GetFileNameByIndex(string fileName, IStamp stamp) =>
+            new ResultValue<string>(fileName + stamp.StampSettings.Id.ToFilePathPrefix());
 
         /// <summary>
         /// Получить имя файла согласно шифру
@@ -68,5 +67,37 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private static string CurrentSheetFormat(int currentSheet) => (currentSheet < 10)
             ? $"{ currentSheet:00}"
             : $"{ currentSheet}";
+
+        /// <summary>
+        /// Найти дублирующие пути файлов
+        /// </summary>
+        private static IReadOnlyList<string> FindDuplicates(IEnumerable<string> filePaths) =>
+            filePaths.
+            GroupBy(filePath => filePath).
+            Where(group => group.Count() > 1).
+            Select(group => group.Key).
+            ToList();
+
+        /// <summary>
+        /// Добавить индексы к дублирующимся именам
+        /// </summary>
+        private static IEnumerable<string> AddIndexesToDuplicateFileNames(IEnumerable<string> fileNames, IReadOnlyList<string> duplicatedNames)
+        {
+            var indexDictionary = duplicatedNames.ToDictionary(fileName => fileName, _ => 1);
+
+            foreach (string fileName in fileNames)
+            {
+                if (!duplicatedNames.Contains(fileName))
+                {
+                    yield return fileName;
+                }
+                else
+                {
+                    string fileNameIndex = fileName + "_" + indexDictionary[fileName];
+                    indexDictionary[fileName] += 1;
+                    yield return fileNameIndex;
+                }
+            }
+        }
     }
 }

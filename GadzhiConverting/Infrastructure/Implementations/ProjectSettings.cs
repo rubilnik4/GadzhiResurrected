@@ -58,10 +58,17 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         public static string DataSignaturesFolder => DataResourcesFolder + Path.DirectorySeparatorChar +
                                                      "Signatures" + Path.DirectorySeparatorChar;
+
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        public static IPrintersInformation PrintersInformation => ConverterPrintingConfiguration.ToPrintersInformation();
+        private static IPrintersInformation _printersInformation;
+
+        /// <summary>
+        /// Информация о установленных в системе принтерах
+        /// </summary>
+        public static IPrintersInformation PrintersInformation => 
+            _printersInformation ??= ConverterPrintingConfiguration.ToPrintersInformation();
 
         /// <summary>
         /// Время через которое осуществляется проверка пакетов на сервере
