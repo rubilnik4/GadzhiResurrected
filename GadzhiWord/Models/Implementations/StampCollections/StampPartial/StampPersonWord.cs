@@ -11,6 +11,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
+using GadzhiWord.Word.Implementations.Word.Elements;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
@@ -25,17 +26,20 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// </summary>
         protected override IResultAppCollection<IStampPerson> GetStampPersonRows() =>
             GetFieldsByType(StampFieldType.PersonSignature).
-            Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
+            Select(field => GetTableRowByIndex(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex,
+                                               PersonRowIndexes.ACTION_TYPE, PersonSignatureWord.FIELDS_COUNT)).
             Where(row => row.CellsElement.Count >= PersonSignatureWord.FIELDS_COUNT).
             Select(GetStampPersonFromRow).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп основных подписей не найден"));
+
+      
 
         /// <summary>
         /// Получить класс с ответственным лицом и подписью по строке Word
         /// </summary>
         private IResultAppValue<IStampPerson> GetStampPersonFromRow(IRowElementWord personRow) =>
             CheckFieldType.GetDepartmentType(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE].Text).
-            Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].Text, 
+            Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].Text,
                                                           StampSettings.PersonId, departmentType)).
             ResultValueOk(signature => GetStampPersonFromFields(personRow, signature));
 

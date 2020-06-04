@@ -21,6 +21,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         StampDocumentType StampDocumentType { get; }
 
         /// <summary>
+        /// Тип приложения
+        /// </summary>
+        public StampApplicationType StampApplicationType { get; }
+
+        /// <summary>
         /// Получить штампы для печати
         /// </summary>
         IResultAppCollection <IStamp> GetStampsToPrint();

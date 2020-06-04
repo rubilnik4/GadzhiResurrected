@@ -23,7 +23,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// </summary>
         protected override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
             GetFieldsByType(StampFieldType.ChangeSignature).
-            Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
+            Select(field => GetTableRowByIndex(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex,
+                                               ChangeRowIndexes.NUMBER_CHANGE, ChangeSignatureWord.FIELDS_COUNT)).
             Where(row => row.CellsElement.Count >= ChangeSignatureWord.FIELDS_COUNT).
             Select(row => GetStampChangeFromRow(row, signatureLibrary)).
             ToResultCollection();

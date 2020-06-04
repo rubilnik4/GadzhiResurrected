@@ -52,7 +52,7 @@ namespace GadzhiApplicationCommon.Extensions.StringAdditional
                   null => String.Empty,
                   "" => String.Empty,
                   _ when input.Length == lengthFromEnd => String.Empty,
-                  _ => input.Substring(input.Length - 1 - lengthFromEnd, lengthFromEnd),
+                  _ => input.Substring(input.Length - lengthFromEnd, lengthFromEnd),
               };
 
         /// <summary>

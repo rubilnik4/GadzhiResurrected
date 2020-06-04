@@ -108,11 +108,11 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Экспорт файла
         /// </summary>      
-        public IResultAppValue<string> Export(string filePath) =>
+        public IResultAppValue<string> Export(string filePath, StampDocumentType stampDocumentType) =>
             new ResultAppCollection<ITableElementWord>(GetTables()).
             ResultValueOk(FilteringExportTables).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.TableNotFound, "Таблицы для экспорта не найдены")).
-            ResultValueOkBind(tables => ExportByTableType(tables, filePath));
+            ResultValueOkBind(tables => ExportByTableType(tables, filePath, stampDocumentType));
 
         /// <summary>
         /// Закрыть файл файл

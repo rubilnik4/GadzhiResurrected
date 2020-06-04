@@ -107,7 +107,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
 
             foreach (var cell in tableWord.CellsElementWord)
             {
-                if (CheckFieldType.IsFieldFullCode(cell)) hasFullCode = true;
+                if (CheckFieldType.IsFieldFullCode(cell, tableWord)) hasFullCode = true;
                 if (MarkersAdditionalStamp.MarkerContain(cell.Text)) hasShortMarker = true;
                 if (MarkersMainStamp.MarkerContain(cell.Text)) hasMainMarkers = true;
             }

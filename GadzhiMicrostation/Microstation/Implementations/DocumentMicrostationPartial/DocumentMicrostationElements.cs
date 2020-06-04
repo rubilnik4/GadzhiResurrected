@@ -26,7 +26,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// Контейнер штампов
         /// </summary>
         public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
-            _stampContainer ??= new StampContainer(FindStamps(ModelsMicrostation, convertingSettings), StampContainerType.United);
+            _stampContainer ??= new StampContainer(FindStamps(ModelsMicrostation, convertingSettings), StampContainerType.United, 
+                                                   StampApplicationType.Microstation);
 
         /// <summary>
         /// Найти штампы во всех моделях и листах

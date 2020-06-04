@@ -8,6 +8,8 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiWord.Word.Implementations.Word.Elements;
+using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {
@@ -59,5 +61,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
             SignaturesSearching.FindById(personId)?.PersonInformation.Department.
             Map(department => SignaturesSearching.CheckDepartmentAccordingToType(department, departmentType)).
             Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
+
+        /// <summary>
+        /// Получить строку, начиная от индекса маркера
+        /// </summary>
+        private IRowElementWord GetTableRowByIndex(int rowIndex, int columnStartIndex, int indexColumnFirst, int fieldsCount) =>
+            Enumerable.Range(indexColumnFirst, fieldsCount).
+                       Where(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement.Count >= columnStartIndex + indexColumn + 1).
+                       Select(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement[columnStartIndex + indexColumn]).
+                       Map(cells => new RowElementWord(cells));
     }
 }

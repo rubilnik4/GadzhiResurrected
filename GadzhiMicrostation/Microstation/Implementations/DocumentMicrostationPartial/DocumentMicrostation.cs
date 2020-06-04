@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
@@ -128,7 +129,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Экспорт файла в Dwg
         /// </summary>      
-        public IResultAppValue<string> Export(string filePath) =>
+        public IResultAppValue<string> Export(string filePath, StampDocumentType stampDocumentType) =>
             Path.GetExtension(filePath).
             WhereContinue(fileExtension => ValidMicrostationExtensions.IsFileExtensionEqual(fileExtension, FileExtensionMicrostation.Dwg),
             okFunc: fileExtension => new ResultAppValue<string>(filePath).

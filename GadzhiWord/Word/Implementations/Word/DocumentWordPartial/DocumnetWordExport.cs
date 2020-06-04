@@ -3,6 +3,7 @@ using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiWord.Infractructure.Implementations.Specification;
@@ -27,13 +28,12 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Экспортировать таблицы Word по их типу
         /// </summary>
-        private IResultAppValue<string> ExportByTableType(IList<ITableElementWord> tablesWord, string filePath) =>
-            tablesWord switch
+        private IResultAppValue<string> ExportByTableType(IEnumerable<ITableElementWord> tablesWord, string filePath, StampDocumentType stampDocumentType) =>
+            stampDocumentType switch
             {
-                _ when Specification.IsTablesSpecification(tablesWord) => ExportSpecificationToExcel(new Specification(tablesWord), filePath),
+                StampDocumentType.Specification => ExportSpecificationToExcel(new Specification(tablesWord), filePath),
                 _ => new ResultAppValue<string>(new ErrorApplication(ErrorApplicationType.TableNotFound, "Тип таблиц не определен")),
             };
-
 
         /// <summary>
         /// Экспортировать данные таблицы Word в Excel

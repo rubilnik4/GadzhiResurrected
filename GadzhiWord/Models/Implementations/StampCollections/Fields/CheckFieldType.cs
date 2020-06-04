@@ -19,7 +19,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         public static StampFieldType GetStampFieldType(ICellElementWord cellElement, ITableElementWord stampTable) =>
             cellElement switch
             {
-                _ when IsFieldFullCode(cellElement) => StampFieldType.FullRow,
+                _ when IsFieldFullCode(cellElement, stampTable) => StampFieldType.FullRow,
                 _ when IsFieldCurrentSheet(cellElement, stampTable) => StampFieldType.CurrentSheet,
                 _ when IsFieldPersonSignature(cellElement) => StampFieldType.PersonSignature,
                 _ when IsFieldChangeSignature(cellElement, stampTable) => StampFieldType.ChangeSignature,
@@ -54,8 +54,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// <summary>
         /// Является ли поле шифром
         /// </summary>
-        public static bool IsFieldFullCode(ICellElementWord cellElement) =>
-            cellElement.RowIndex == 0 &&
+        public static bool IsFieldFullCode(ICellElementWord cellElement, ITableElementWord stampTable) =>
+            (cellElement.RowIndex == 0 || 
+             cellElement.ColumnIndex == stampTable.RowsElementWord[cellElement.RowIndex].CellsElement.Count - 1) &&
             !String.IsNullOrWhiteSpace(cellElement.Text) &&
             cellElement.Text.Length >= 4 &&
             Int32.TryParse(cellElement.Text.Substring(0, 4), out _);

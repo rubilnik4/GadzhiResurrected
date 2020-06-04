@@ -14,9 +14,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
+using GadzhiConverting.Extensions;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -78,8 +80,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                    IConvertingSettings convertingSettings) =>
             fileDataSourceServer.
             ResultValueOkRaw(saveResult => CreatePdfToSaveResult(saveResult, documentLibrary, fileDataServer, convertingSettings).
-                                                          Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer)).
-                                                          Map(CheckDataSourceExistence));
+                                           Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer, convertingSettings)).
+                                           Map(CheckDataSourceExistence));
         /// <summary>
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
@@ -114,7 +116,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Создать PDF и добавить в список обработанных файлов
         /// </summary>
-        private IResultCollection<IFileDataSourceServer> CreatePdfToSaveResult(IResultCollection<IFileDataSourceServer> saveResult, 
+        private IResultCollection<IFileDataSourceServer> CreatePdfToSaveResult(IResultCollection<IFileDataSourceServer> saveResult,
                                                                                IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                                IConvertingSettings convertingSettings) =>
             saveResult.ConcatResult(CreatePdf(documentLibrary, fileDataServer, convertingSettings));
@@ -135,19 +137,24 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Экспортировать в другие форматы и добавить в список обработанных файлов
         /// </summary>
-        private IResultCollection<IFileDataSourceServer> ExportFileToSaveResult(IResultCollection<IFileDataSourceServer> saveResult, 
-                                                                                IDocumentLibrary documentLibrary, IFilePath filePath) =>
-            saveResult.ConcatResultValue(ExportFile(documentLibrary, filePath));
+        private IResultCollection<IFileDataSourceServer> ExportFileToSaveResult(IResultCollection<IFileDataSourceServer> saveResult,
+                                                                                IDocumentLibrary documentLibrary, IFilePath filePath,
+                                                                                IConvertingSettings convertingSettings) =>
+            documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
+            WhereContinue(stampContainer => stampContainer.StampDocumentType == StampDocumentType.Specification,
+                okFunc: stampContainer => saveResult.ConcatResultValue(ExportFile(documentLibrary, filePath, stampContainer.StampDocumentType)),
+                badFunc: _ => saveResult);
 
         /// <summary>
         /// Экспортировать в другие форматы
         /// </summary>
-        private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFilePath filePath) =>
+        private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFilePath filePath, StampDocumentType stampDocumentType) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer,
                                                                _applicationConverting.GetExportFileExtension(filePath.FileExtension))).
-            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath))).
+            ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath), 
+                                                                                        stampDocumentType)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>

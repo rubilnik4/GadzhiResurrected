@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
 {
@@ -41,7 +42,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Экспорт файла в другие форматы
         /// </summary>      
-        IResultAppValue<string> Export(string filePath);
+        IResultAppValue<string> Export(string filePath, StampDocumentType stampDocumentType);
 
         /// <summary>
         /// Закрыть файл файл

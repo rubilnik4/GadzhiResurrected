@@ -9,13 +9,20 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
         /// <summary>
         /// Определить тип документа по типу шифра в штампе
         /// </summary>
-        public static StampDocumentType GetDocumentTypeByFullCode(string fullCode) =>
-            fullCode switch
+        public static StampDocumentType GetDocumentTypeByFullCode(string fullCode, StampApplicationType stampApplicationType) =>
+            stampApplicationType switch
             {
-                _ when fullCode.SubstringEnd(2).Equals(".с", StringComparison.CurrentCultureIgnoreCase) => StampDocumentType.Specification,
-                _ when fullCode.SubstringEnd(2).Equals(".вр", StringComparison.CurrentCultureIgnoreCase) => StampDocumentType.BillOfQuantities,
-                _ when fullCode.SubstringEnd(2).Equals(".кж", StringComparison.CurrentCultureIgnoreCase) => StampDocumentType.CableMagazine,
-                _ => StampDocumentType.Drawing,
+                StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(2), ".с") => StampDocumentType.Specification,
+                StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(3), ".вр") => StampDocumentType.BillOfQuantities,
+                StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(3), ".кж") => StampDocumentType.CableMagazine,
+                StampApplicationType.Microstation => StampDocumentType.Drawing,
+                _ => StampDocumentType.Unknown,
             };
+
+        /// <summary>
+        /// Сравнить подстроку
+        /// </summary>
+        private static bool CompareSubstring(string substring, string equalMarker) =>
+            substring.Equals(equalMarker, StringComparison.CurrentCultureIgnoreCase);
     }
 }

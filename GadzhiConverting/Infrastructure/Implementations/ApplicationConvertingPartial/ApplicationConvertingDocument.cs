@@ -17,13 +17,14 @@ using GadzhiConverting.Extensions;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
     /// <summary>
     /// Подкласс для работы с документом
     /// </summary>
-    public partial class ApplicationConverting : IApplicationConvertingDocument
+    public partial class ApplicationConverting
     {
         /// <summary>
         /// Открыть документ
@@ -54,8 +55,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Экспортировать файл
         /// </summary>
-        public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath) =>
-           ExecuteAndHandleError(() => documentLibrary.Export(filePath.FilePathServer),
+        public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath, 
+                                                                    StampDocumentType stampDocumentType) =>
+           ExecuteAndHandleError(() => documentLibrary.Export(filePath.FilePathServer, stampDocumentType),
                          errorMessage: new ErrorCommon(FileConvertErrorType.ExportError, $"Ошибка экспорта файла {filePath.FileNameClient}")).
             ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
 

@@ -44,7 +44,8 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Список штампов
         /// </summary>
         public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
-            _stampContainer ??= new StampContainer(FindStamps(convertingSettings), StampContainerType.United);
+            _stampContainer ??= new StampContainer(FindStamps(convertingSettings), StampContainerType.United, 
+                                                   StampApplicationType.Word);
 
         /// <summary>
         /// Преобразовать к виду родительского элемента

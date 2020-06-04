@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 
@@ -38,7 +39,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Экспортировать файл
         /// </summary>
-        IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath);
+        IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath, StampDocumentType stampDocumentType);
 
         /// <summary>
         /// Закрыть файл
