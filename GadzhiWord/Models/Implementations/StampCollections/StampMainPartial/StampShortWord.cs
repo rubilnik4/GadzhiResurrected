@@ -37,7 +37,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
         /// <summary>
         /// Поля штампа, отвечающие за подписи
         /// </summary>
-        public override IStampSignatureFields StampSignatureFields =>
+        protected override IStampSignatureFields GetStampSignatureFields() =>
             new StampSignatureFields(GetStampChangeRows(_personShortSignature));
     }
 }

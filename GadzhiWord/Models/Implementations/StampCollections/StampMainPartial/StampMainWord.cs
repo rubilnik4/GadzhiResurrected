@@ -28,7 +28,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
         /// <summary>
         /// Поля штампа, отвечающие за подписи
         /// </summary>
-        public override IStampSignatureFields StampSignatureFields =>
+        protected override IStampSignatureFields GetStampSignatureFields() =>
             GetStampPersonRows().
             Map(personRows => new StampSignatureFields(personRows, GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary)));
     }

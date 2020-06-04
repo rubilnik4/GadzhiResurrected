@@ -50,7 +50,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// </summary>        
         public IResultAppCollection<IStampSignature> GetSignatures() =>
             StampPersons.Cast<IStampPerson, IStampSignature>().
-            ConcatValues(StampChanges.Value.Cast<IStampSignature>()).
-            ConcatValues(StampApproval.Value.Cast<IStampSignature>());
+            ConcatResult(StampChanges.Cast<IStampChange, IStampSignature>()).
+            ConcatResult(StampApproval.Cast<IStampApproval, IStampSignature>()).
+            ResultValueOk(signatures => signatures.Where(signature => signature.NeedToInsert())).
+            ToResultCollection();
     }
 }

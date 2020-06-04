@@ -25,6 +25,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         public abstract IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures);
 
         /// <summary>
+        /// Получить поля штампа, отвечающие за подписи
+        /// </summary>
+        protected abstract IStampSignatureFields GetStampSignatureFields();
+
+        /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>
         protected abstract IResultAppCollection<IStampPerson> GetStampPersonRows();

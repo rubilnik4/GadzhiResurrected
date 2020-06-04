@@ -52,10 +52,11 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// </summary>
         public void InsertPicture(string filePath)
         {
-            if (!String.IsNullOrWhiteSpace(filePath))
-            {
-                _cellElement.Range.InlineShapes.AddPicture(filePath, false, true);
-            }
+            if (String.IsNullOrWhiteSpace(filePath)) return;
+
+            _cellElement.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+            _cellElement.VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+            _cellElement.Range.InlineShapes.AddPicture(filePath, false, true);
         }
 
         /// <summary>

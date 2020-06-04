@@ -41,7 +41,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultCollection<IFileDataSourceServer> StampContainerPdfActions(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
                                                                                    IFilePath filePath, IConvertingSettings convertingSettings,
                                                                                    ColorPrint colorPrint) =>
-            stampContainer.InsertSignatures().ToResultCollectionFromApplication().
+            stampContainer.CompressFieldsRanges().
+            Map(_ => stampContainer.InsertSignatures().ToResultCollectionFromApplication()).
             ResultValueOkBind(signatures => StampContainerPdfPrinting(stampContainer.GetStampsToPrint().ToResultCollectionFromApplication(),
                                                                       documentLibrary, filePath, convertingSettings, colorPrint).
                                             Void(_ => stampContainer.DeleteSignatures(signatures))).

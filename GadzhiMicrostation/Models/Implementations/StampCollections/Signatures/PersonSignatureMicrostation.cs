@@ -9,16 +9,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Строка с ответственным лицом и подписью Microstation
     /// </summary>
-    public class StampPersonMicrostation : StampSignatureMicrostation, IStampPerson
+    public class PersonSignatureMicrostation : SignatureMicrostation, IStampPerson
     {
-        public StampPersonMicrostation(ISignatureLibraryApp signatureLibrary,
+        public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
                                        Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                        IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
             : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.Text), insertSignatureFunc,
                    actionType, responsiblePerson, dateSignature)
         { }
 
-        public StampPersonMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
+        public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
                                        Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                        IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
             : base(signatureLibrary, signature, insertSignatureFunc)
@@ -47,13 +47,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// Вставить подпись
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
-            new StampPersonMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
+            new PersonSignatureMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
                                         ActionType, ResponsiblePerson, DateSignature);
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
         public override IStampSignature DeleteSignature() =>
-            new StampPersonMicrostation(SignatureLibrary, InsertSignatureFunc, ActionType, ResponsiblePerson, DateSignature);
+            new PersonSignatureMicrostation(SignatureLibrary, InsertSignatureFunc, ActionType, ResponsiblePerson, DateSignature);
     }
 }

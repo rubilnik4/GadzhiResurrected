@@ -59,7 +59,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId, ITextElementMicrostation previousField,
                                                                             ITextElementMicrostation nextField) =>
-            StampSignatureRange.GetSignatureRange(StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
+            SignatureRange.GetSignatureRange(StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
                                                                    Select(element => element.AsLineElementMicrostation).
                                                                    Map(lineElements => new ResultAppCollection<ILineElementMicrostation>(lineElements)),
                                                   previousField, nextField, previousField.IsVertical).
@@ -76,7 +76,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                 where TSignatureField : IStampSignature =>
             StampFieldSignatures.GetFieldsBySignatureType(stampFieldType).
             Select(getSignatureField).
-            Where(resultSignature => resultSignature.OkStatus && resultSignature.Value.NeedToInsert()).
+            Where(resultSignature => resultSignature.OkStatus).
             Select(resultSignature => resultSignature.Value);
 
         /// <summary>

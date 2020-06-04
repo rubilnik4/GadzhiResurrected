@@ -58,7 +58,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                      IStampTextField actionType, IStampTextField dateSignature) =>
             SignaturesSearching.FindByIdOrFullNameOrRandom(responsiblePerson.ElementStamp.AttributePersonId,
                                                            responsiblePerson.Text, StampSettings.PersonId).
-            ResultValueOk(personSignature => new StampApprovalMicrostation(personSignature, insertSignatureFunc, actionType,
+            ResultValueOk(personSignature => new ApprovalSignatureMicrostation(personSignature, insertSignatureFunc, actionType,
                                                                            responsiblePerson, dateSignature));
     }
 }

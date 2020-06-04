@@ -12,16 +12,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Строка с согласованием Microstation
     /// </summary>
-    public class StampApprovalMicrostation : StampSignatureMicrostation, IStampApproval
+    public class ApprovalSignatureMicrostation : SignatureMicrostation, IStampApproval
     {
-        public StampApprovalMicrostation(ISignatureLibraryApp signatureLibrary,
+        public ApprovalSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
                                          Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                          IStampTextField departmentApproval, IStampTextField responsiblePerson, IStampTextField dateSignature)
             : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.Text), insertSignatureFunc,
                    departmentApproval, responsiblePerson, dateSignature)
         { }
 
-        public StampApprovalMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
+        public ApprovalSignatureMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
                                          Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                          IStampTextField departmentApproval, IStampTextField responsiblePerson, IStampTextField dateSignature)
             : base(signatureLibrary, signature, insertSignatureFunc)
@@ -51,13 +51,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// Вставить подпись
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
-            new StampApprovalMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
+            new ApprovalSignatureMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
                                           DepartmentApproval, ResponsiblePerson, DateSignature);
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
         public override IStampSignature DeleteSignature() =>
-            new StampApprovalMicrostation(SignatureLibrary, InsertSignatureFunc, DepartmentApproval, ResponsiblePerson, DateSignature);
+            new ApprovalSignatureMicrostation(SignatureLibrary, InsertSignatureFunc, DepartmentApproval, ResponsiblePerson, DateSignature);
     }
 }

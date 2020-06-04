@@ -7,10 +7,9 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
-namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
+namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer
 {
     /// <summary>
     /// Контейнер штампов
@@ -33,6 +32,15 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
         /// Тип контейнера штампов
         /// </summary>
         public StampContainerType StampContainerType { get; }
+
+        /// <summary>
+        /// Тип документа, определяемый по типу шифра в штампе
+        /// </summary>
+        public StampDocumentType StampDocumentType =>
+            _stamps.WhereContinue(stamps => stamps.OkStatus && stamps.Value.Count > 0 &&
+                                            stamps.Value[0].StampBasicFields.FullCode.OkStatus,
+                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(stamps.Value[0].StampBasicFields.FullCode.Value.Text),
+                badFunc: _ => StampDocumentType.Unknown);
 
         /// <summary>
         /// Штампы для печати

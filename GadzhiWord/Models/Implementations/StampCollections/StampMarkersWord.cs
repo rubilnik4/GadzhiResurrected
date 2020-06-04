@@ -70,6 +70,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             "Гл.спец",
             "Нач.сек",
             "Нач.отд",
+            "Зам.Нач.отд",
             "Н.конт",
         };
 
@@ -86,7 +87,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public static IReadOnlyList<string> MarkersChangeHeader => new List<string>()
         {
-            "Изм."
+            "Изм"
         };
 
         /// <summary>

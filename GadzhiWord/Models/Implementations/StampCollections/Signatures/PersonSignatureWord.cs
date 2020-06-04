@@ -9,14 +9,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Строка с ответственным лицом и подписью
     /// </summary>
-    public class StampPersonWord : StampSignatureWord, IStampPerson
+    public class PersonSignatureWord : SignatureWord, IStampPerson
     {
         /// <summary>
         /// Количество ячеек в строке
         /// </summary>
         public const int FIELDS_COUNT = 4;
 
-        public StampPersonWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature, IStampTextField actionType,
+        public PersonSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature, IStampTextField actionType,
                                IStampTextField responsiblePerson, IStampTextField dateSignature)
             : base(signatureLibrary, signature)
         {

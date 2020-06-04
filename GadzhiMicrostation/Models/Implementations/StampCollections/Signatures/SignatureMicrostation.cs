@@ -11,9 +11,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Базовая структура подписи Microstation
     /// </summary>
-    public abstract class StampSignatureMicrostation : StampSignature
+    public abstract class SignatureMicrostation : StampSignature
     {
-        protected StampSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
+        protected SignatureMicrostation(ISignatureLibraryApp signatureLibrary,
                                              IResultAppValue<IStampField> signature,
                                              Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc)
             :base(signatureLibrary)

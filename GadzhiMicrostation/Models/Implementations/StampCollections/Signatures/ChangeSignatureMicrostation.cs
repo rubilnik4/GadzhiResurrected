@@ -12,9 +12,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Строка с изменениями Microstation
     /// </summary>
-    public class StampChangeMicrostation : StampSignatureMicrostation, IStampChange
+    public class ChangeSignatureMicrostation : SignatureMicrostation, IStampChange
     {
-        public StampChangeMicrostation(ISignatureLibraryApp signatureLibrary,
+        public ChangeSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
                                        Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                        IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                        IStampTextField documentChange, IStampTextField dateChange)
@@ -22,7 +22,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
                    insertSignatureFunc, numberChange, numberOfPlots, typeOfChange, documentChange, dateChange)
         { }
 
-        public StampChangeMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
+        public ChangeSignatureMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
                                        Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                        IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                        IStampTextField documentChange, IStampTextField dateChange)
@@ -69,14 +69,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// Вставить подпись
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
-            new StampChangeMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
+            new ChangeSignatureMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
                                         NumberChange, NumberPlots, TypeOfChange, DocumentChange, DateChange);
 
         /// <summary>
         /// Удалить подпись
         /// </summary>
         public override IStampSignature DeleteSignature() =>
-            new StampChangeMicrostation(SignatureLibrary, InsertSignatureFunc, NumberChange, NumberPlots, 
+            new ChangeSignatureMicrostation(SignatureLibrary, InsertSignatureFunc, NumberChange, NumberPlots, 
                                         TypeOfChange, DocumentChange, DateChange);
     }
 }

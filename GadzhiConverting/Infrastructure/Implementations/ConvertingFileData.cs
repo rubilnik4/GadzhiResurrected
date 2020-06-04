@@ -77,11 +77,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                    IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                                    IConvertingSettings convertingSettings) =>
             fileDataSourceServer.
-            ResultValueEqualOkRawCollection(saveResult => CreatePdf(documentLibrary, fileDataServer, convertingSettings).
-                                                          Map(saveResult.ConcatResult).
-                                                          Map(filesData => ExportFile(documentLibrary, fileDataServer).
-                                                                           Map(filesData.ConcatResultValue))).
-                                                          Map(CheckDataSourceExistence);
+            ResultValueOkRaw(saveResult => CreatePdfToSaveResult(saveResult, documentLibrary, fileDataServer, convertingSettings).
+                                                          Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer)).
+                                                          Map(CheckDataSourceExistence));
         /// <summary>
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
@@ -114,6 +112,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource));
 
         /// <summary>
+        /// Создать PDF и добавить в список обработанных файлов
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> CreatePdfToSaveResult(IResultCollection<IFileDataSourceServer> saveResult, 
+                                                                               IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
+                                                                               IConvertingSettings convertingSettings) =>
+            saveResult.ConcatResult(CreatePdf(documentLibrary, fileDataServer, convertingSettings));
+
+        /// <summary>
         /// Создать PDF
         /// </summary>
         private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
@@ -125,6 +131,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                   convertingSettings, fileDataServer.ColorPrint)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
             ToResultCollection();
+
+        /// <summary>
+        /// Экспортировать в другие форматы и добавить в список обработанных файлов
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> ExportFileToSaveResult(IResultCollection<IFileDataSourceServer> saveResult, 
+                                                                                IDocumentLibrary documentLibrary, IFilePath filePath) =>
+            saveResult.ConcatResultValue(ExportFile(documentLibrary, filePath));
 
         /// <summary>
         /// Экспортировать в другие форматы

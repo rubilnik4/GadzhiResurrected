@@ -101,11 +101,11 @@
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\Signatures\StampChangeMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\Signatures\StampPersonMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\Signatures\StampApprovalMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\Signatures\StampSignatureMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\Signatures\StampSignatureRange.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\PersonSignatureMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\ApprovalSignatureMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\SignatureMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\SignatureRange.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldApprovals.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldBase.cs" />
     <Compile Include="Models\Implementations\StampFieldNames\StampFieldChange.cs" />

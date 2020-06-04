@@ -81,26 +81,10 @@ namespace GadzhiCommon.Extensions.Functional.Result
         }
 
         /// <summary>
-        /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе в обертке
-        /// </summary>   
-        public static IResultCollection<TValueOut> ResultValueOkRawCollection<TValueIn, TValueOut>(this IResultCollection<TValueIn> @this,
-                                                                                                   Func<IResultCollection<TValueIn>,
-                                                                                                   IResultCollection<TValueOut>> okFunc)
-        {
-            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-
-            return @this.HasErrors 
-                ? new ResultCollection<TValueOut>(@this.Errors) 
-                : okFunc.Invoke(@this);
-        }
-
-        /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе в обертке при равенстве параметров
         /// </summary>   
-        public static IResultCollection<TValue> ResultValueEqualOkRawCollection<TValue>(this IResultCollection<TValue> @this,
-                                                                                        Func<IResultCollection<TValue>,
-                                                                                        IResultCollection<TValue>> okFunc)
+        public static IResultCollection<TValue> ResultValueOkRaw<TValue>(this IResultCollection<TValue> @this,
+                                                                         Func<IResultCollection<TValue>, IResultCollection<TValue>> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));

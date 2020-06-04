@@ -44,10 +44,22 @@ namespace GadzhiApplicationCommon.Extensions.StringAdditional
             };
 
         /// <summary>
+        /// Получить подстроку по индексу, начиная с конца
+        /// </summary>
+        public static string SubstringEnd(this string input, int lengthFromEnd) =>
+              input switch
+              {
+                  null => String.Empty,
+                  "" => String.Empty,
+                  _ when input.Length == lengthFromEnd => String.Empty,
+                  _ => input.Substring(input.Length - 1 - lengthFromEnd, lengthFromEnd),
+              };
+
+        /// <summary>
         /// Содержит ли подстроку без учета регистра
         /// </summary>        
         public static bool ContainsIgnoreCase(this string input, string substring) =>
-            !String.IsNullOrEmpty(substring) && 
+            !String.IsNullOrEmpty(substring) &&
             input?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
 
         /// <summary>

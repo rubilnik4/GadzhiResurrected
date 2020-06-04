@@ -26,7 +26,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         protected override IResultAppCollection<IStampPerson> GetStampPersonRows() =>
             GetFieldsByType(StampFieldType.PersonSignature).
             Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
-            Where(row => row.CellsElement.Count >= StampPersonWord.FIELDS_COUNT).
+            Where(row => row.CellsElement.Count >= PersonSignatureWord.FIELDS_COUNT).
             Select(GetStampPersonFromRow).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп основных подписей не найден"));
 
@@ -43,7 +43,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить класс с ответственным лицом и подписью на основании полей Word
         /// </summary>
         private static IStampPerson GetStampPersonFromFields(IRowElementWord personRow, ISignatureLibraryApp personSignature) =>
-            new StampPersonWord(personSignature,
+            new PersonSignatureWord(personSignature,
                                 new StampFieldWord(personRow.CellsElement[PersonRowIndexes.SIGNATURE], StampFieldType.PersonSignature),
                                 new StampTextFieldWord(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE], StampFieldType.PersonSignature),
                                 new StampTextFieldWord(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON], StampFieldType.PersonSignature),

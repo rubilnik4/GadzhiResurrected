@@ -60,7 +60,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                  Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                                                  IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                                                  IStampTextField documentChange, IStampTextField dateChange) => 
-            new StampChangeMicrostation(personSignature, insertSignatureFunc, numberChange, numberOfPlots, 
+            new ChangeSignatureMicrostation(personSignature, insertSignatureFunc, numberChange, numberOfPlots, 
                                         typeOfChange, documentChange, dateChange).
             Map(stampChange => new ResultAppValue<IStampChange>(stampChange));
     }

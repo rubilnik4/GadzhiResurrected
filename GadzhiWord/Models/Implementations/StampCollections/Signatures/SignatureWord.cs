@@ -16,14 +16,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Базовая структура подписи Microstation
     /// </summary>
-    public abstract class StampSignatureWord : StampSignature
+    public abstract class SignatureWord : StampSignature
     {
         /// <summary>
         /// Подпись. Элемент Word
         /// </summary>
         private readonly IResultAppValue<IStampFieldWord> _signature;
 
-        protected StampSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature )
+        protected SignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature )
             : base(signatureLibrary)
         {
             _signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,

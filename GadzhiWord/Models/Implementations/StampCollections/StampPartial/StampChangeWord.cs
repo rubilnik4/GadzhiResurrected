@@ -24,9 +24,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         protected override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
             GetFieldsByType(StampFieldType.ChangeSignature).
             Select(field => TableStamp.RowsElementWord[field.CellElementStamp.RowIndex]).
-            Where(row => row.CellsElement.Count >= StampChangeWord.FIELDS_COUNT).
+            Where(row => row.CellsElement.Count >= ChangeSignatureWord.FIELDS_COUNT).
             Select(row => GetStampChangeFromRow(row, signatureLibrary)).
-            ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
+            ToResultCollection();
 
         /// <summary>
         /// Получить класс с изменениями и подписью по строке Word
@@ -40,7 +40,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить класс с изменениями и подписью на основании полей Word
         /// </summary>
         private static IStampChange GetStampChangeFromFields(IRowElementWord changeRow, ISignatureLibraryApp personSignature) =>
-            new StampChangeWord(personSignature,
+            new ChangeSignatureWord(personSignature,
                                 new StampFieldWord(changeRow.CellsElement[ChangeRowIndexes.SIGNATURE], StampFieldType.ChangeSignature),
                                 new StampTextFieldWord(changeRow.CellsElement[ChangeRowIndexes.NUMBER_CHANGE], StampFieldType.ChangeSignature),
                                 new StampTextFieldWord(changeRow.CellsElement[ChangeRowIndexes.NUMBER_PLOTS], StampFieldType.ChangeSignature),

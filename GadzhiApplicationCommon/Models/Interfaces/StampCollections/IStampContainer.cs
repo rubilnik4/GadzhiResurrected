@@ -16,14 +16,24 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         StampContainerType StampContainerType { get; }
 
         /// <summary>
+        /// Тип документа, определяемый по типу шифра в штампе
+        /// </summary>
+        StampDocumentType StampDocumentType { get; }
+
+        /// <summary>
         /// Получить штампы для печати
         /// </summary>
-        IResultAppCollection<IStamp> GetStampsToPrint();
+        IResultAppCollection <IStamp> GetStampsToPrint();
+
+        /// <summary>
+        /// Сжать поля
+        /// </summary>
+        IResultAppCollection<bool> CompressFieldsRanges();
 
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        IResultAppCollection<IStampSignature> InsertSignatures();
+        IResultAppCollection <IStampSignature> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи

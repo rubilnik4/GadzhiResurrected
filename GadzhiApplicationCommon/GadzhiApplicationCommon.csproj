@@ -61,6 +61,7 @@
     <Compile Include="Extensions\Functional\WhereExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />
+    <Compile Include="Models\Enums\StampCollections\StampDocumentType.cs" />
     <Compile Include="Models\Implementation\Functional\Unit.cs" />
     <Compile Include="Helpers\RandomInstance.cs" />
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />
@@ -85,7 +86,8 @@
     <Compile Include="Models\Implementation\StampCollections\Fields\StampBasicFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampSignatureFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampTextField.cs" />
-    <Compile Include="Models\Implementation\StampCollections\StampContainer.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampContainer\StampContainer.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampContainer\StampDocument.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\Stamp.cs" />
     <Compile Include="Models\Enums\StampCollections\StampDepartmentType.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\StampBasicFields.cs" />

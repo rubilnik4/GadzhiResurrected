@@ -52,7 +52,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// <summary>
         /// Поля штампа, отвечающие за подписи
         /// </summary>
-        public abstract IStampSignatureFields StampSignatureFields { get; }
+        private IStampSignatureFields _stampSignatureFields;
+
+        /// <summary>
+        /// Поля штампа, отвечающие за подписи
+        /// </summary>
+        public IStampSignatureFields StampSignatureFields => _stampSignatureFields ??= GetStampSignatureFields();
 
         /// <summary>
         /// Формат

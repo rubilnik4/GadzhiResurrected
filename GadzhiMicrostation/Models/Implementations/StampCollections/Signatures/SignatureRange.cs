@@ -11,7 +11,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// <summary>
     /// Получение диапазона для вставки подписей
     /// </summary>
-    public static class StampSignatureRange
+    public static class SignatureRange
     {
         /// <summary>
         /// Получить координаты и размеры поля для вставки подписей
