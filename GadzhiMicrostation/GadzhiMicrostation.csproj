@@ -100,7 +100,7 @@
     <Compile Include="Models\Implementations\StampCollections\Fields\StampFieldMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsMicrostation.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampFullMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\PersonSignatureMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ApprovalSignatureMicrostation.cs" />

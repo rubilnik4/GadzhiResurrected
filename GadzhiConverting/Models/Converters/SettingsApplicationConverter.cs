@@ -18,9 +18,9 @@ namespace GadzhiConverting.Models.Converters
         /// <summary>
         /// Преобразовать параметры конвертации в класс модуля конвертирования
         /// </summary>
-        public static ConvertingSettingsApplication ToConvertingSettingsApplication(IConvertingSettings convertingSettings) =>
+        public static ConvertingSettingsApp ToConvertingSettingsApplication(IConvertingSettings convertingSettings) =>
             (convertingSettings != null)
-                ? new ConvertingSettingsApplication(convertingSettings.PersonId, ToPdfNamingTypeApplication(convertingSettings.PdfNamingType))
+                ? new ConvertingSettingsApp(convertingSettings.PersonId, ToPdfNamingTypeApplication(convertingSettings.PdfNamingType))
                 : throw new ArgumentNullException(nameof(convertingSettings));
 
         /// <summary>

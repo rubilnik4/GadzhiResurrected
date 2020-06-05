@@ -13,6 +13,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     /// </summary>
     public class StampSignatureFields : IStampSignatureFields
     {
+        public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons)
+            : this(stampPersons, new ResultAppCollection<IStampChange>(Enumerable.Empty<IStampChange>()))
+        { }
+
         public StampSignatureFields(IResultAppCollection<IStampChange> stampChanges)
           : this(new ResultAppCollection<IStampPerson>(Enumerable.Empty<IStampPerson>()), stampChanges)
         { }

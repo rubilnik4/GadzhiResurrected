@@ -3,9 +3,9 @@ using GadzhiApplicationCommon.Models.Enums;
 
 namespace GadzhiApplicationCommon.Models.Implementation.FilesConvert
 {
-    public class ConvertingSettingsApplication
+    public class ConvertingSettingsApp
     {
-        public ConvertingSettingsApplication(string personId, PdfNamingTypeApplication pdfNamingType)
+        public ConvertingSettingsApp(string personId, PdfNamingTypeApplication pdfNamingType)
         {
             PersonId = personId ?? String.Empty;
             PdfNamingType = pdfNamingType;

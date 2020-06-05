@@ -75,7 +75,7 @@
     <Compile Include="Models\Implementation\Errors\ResultApplication.cs" />
     <Compile Include="Models\Implementation\Errors\ResultAppValue.cs" />
     <Compile Include="Models\Implementation\Errors\ResultAppCollection.cs" />
-    <Compile Include="Models\Implementation\FilesConvert\ConvertingSettingsApplication.cs" />
+    <Compile Include="Models\Implementation\FilesConvert\ConvertingSettingsApp.cs" />
     <Compile Include="Models\Implementation\LibraryData\MicrostationDataFile.cs" />
     <Compile Include="Models\Implementation\LibraryData\PersonInformationApp.cs" />
     <Compile Include="Models\Implementation\LibraryData\SignatureFileApp.cs" />
@@ -113,8 +113,9 @@
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampTextField.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStamp.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampField.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampChangeNotice.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampContainer.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampMain.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\IStampFull.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampShort.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampChange.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampApproval.cs" />

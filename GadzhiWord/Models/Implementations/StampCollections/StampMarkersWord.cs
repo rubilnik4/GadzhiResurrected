@@ -21,7 +21,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public static IReadOnlyDictionary<StampType, string> StampTypeToString => new Dictionary<StampType, string>()
         {
-            { StampType.Main, "Основной"},
+            { StampType.Full, "Основной"},
             { StampType.Shortened, "Сокращенный"},
         };
 
@@ -33,7 +33,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             "Разраб",
             "Исполн",
             "Составил",
+            "Изм.внес",
         };
+
+        /// <summary>
+        /// Маркеры извещения изменений
+        /// </summary>
+        public static IReadOnlyList<string> MarkersChangeNoticeStamp => new List<string>()
+        {
+            "Изм.внес",
+        };
+
 
         /// <summary>
         /// Маркеры дополнительного штампа
@@ -104,18 +114,21 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             var hasFullCode = false;
             var hasShortMarker = false;
             var hasMainMarkers = false;
+            var hasChangeMarkers = false;
 
             foreach (var cell in tableWord.CellsElementWord)
             {
                 if (CheckFieldType.IsFieldFullCode(cell, tableWord)) hasFullCode = true;
                 if (MarkersAdditionalStamp.MarkerContain(cell.Text)) hasShortMarker = true;
                 if (MarkersMainStamp.MarkerContain(cell.Text)) hasMainMarkers = true;
+                if (MarkersChangeNoticeStamp.MarkerContain(cell.Text)) hasChangeMarkers = true;
             }
 
             return hasFullCode switch
             {
-                true when hasMainMarkers => StampType.Main,
+                true when hasMainMarkers => StampType.Full,
                 true when hasShortMarker => StampType.Shortened,
+                _ when hasChangeMarkers => StampType.ChangeNotice,
                 false => StampType.Unknown,
                 _ => StampType.Unknown,
             };

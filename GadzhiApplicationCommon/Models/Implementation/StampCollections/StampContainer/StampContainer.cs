@@ -56,7 +56,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
             {
                 StampContainerType.Separate => _stamps,
                 StampContainerType.United => _stamps.
-                                             ResultValueOk(stamps => stamps.Where(stamp => stamp.StampType == StampType.Main)).
+                                             ResultValueOk(stamps => stamps.Where(stamp => stamp.StampType == StampType.Full)).
                                              ToResultCollection(),
                 _ => throw new InvalidEnumArgumentException(nameof(StampContainerType), (int)StampContainerType, typeof(StampContainerType))
             };

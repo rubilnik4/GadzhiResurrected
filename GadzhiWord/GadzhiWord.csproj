@@ -138,10 +138,13 @@
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampCreating\StampCreating.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampCreating\TableStampType.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampPersonWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampShortWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampTypes\StampChangeNoticeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampTypes\StampShortWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampFieldsWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampSignaturesWord.cs" />
@@ -149,9 +152,10 @@
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampMarkersWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampFieldWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampMainPartial\StampMainWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampTypes\StampFullWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\PersonSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\SignatureWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampCreating\StampValidatingWord.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\ChangeRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\PersonRowIndexes.cs" />
     <Compile Include="Models\Interfaces\Specification\ISpecification.cs" />
@@ -178,6 +182,7 @@
     <Compile Include="Word\Implementations\Word\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\RowElementWord.cs" />
     <Compile Include="Word\Implementations\Excel\Elements\SheetExcel.cs" />
+    <Compile Include="Word\Implementations\Word\Interop\SearchInRange.cs" />
     <Compile Include="Word\Interfaces\Excel\Elements\IBookExcel.cs" />
     <Compile Include="Word\Implementations\Excel\Helpers\ColumnNamesExcel.cs" />
     <Compile Include="Word\Interfaces\Word\Elements\IOwnerWord.cs" />

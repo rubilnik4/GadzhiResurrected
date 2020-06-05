@@ -10,7 +10,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
     /// <summary>
     /// Поля основного штампа
     /// </summary>
-    public interface IStampMain : IStamp
+    public interface IStampFull : IStamp
     {
         
     }

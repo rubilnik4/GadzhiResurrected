@@ -25,7 +25,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// <summary>
         /// Контейнер штампов
         /// </summary>
-        public IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings) =>
+        public IStampContainer GetStampContainer(ConvertingSettingsApp convertingSettings) =>
             _stampContainer ??= new StampContainer(FindStamps(ModelsMicrostation, convertingSettings), StampContainerType.United, 
                                                    StampApplicationType.Microstation);
 
@@ -33,7 +33,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// Найти штампы во всех моделях и листах
         /// </summary>
         private static IResultAppCollection<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation,
-                                                               ConvertingSettingsApplication convertingSettings) =>
+                                                               ConvertingSettingsApp convertingSettings) =>
             modelsMicrostation.SelectMany((model, modelIndex) => model.FindStamps(modelIndex, convertingSettings)).
             Map(stamps => new ResultAppCollection<IStamp>(new ErrorApplication(ErrorApplicationType.StampNotFound, "Штампы не найдены")));
     }

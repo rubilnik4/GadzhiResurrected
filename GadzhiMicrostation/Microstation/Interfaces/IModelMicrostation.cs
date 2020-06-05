@@ -45,7 +45,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        IEnumerable<IStamp> FindStamps(int modelIndex, ConvertingSettingsApplication convertingSettings);
+        IEnumerable<IStamp> FindStamps(int modelIndex, ConvertingSettingsApp convertingSettings);
 
         /// <summary>
         /// Удалить элемент

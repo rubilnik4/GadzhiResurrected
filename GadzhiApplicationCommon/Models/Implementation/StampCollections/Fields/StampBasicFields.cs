@@ -13,6 +13,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     /// </summary>
     public class StampBasicFields : IStampBasicFields
     {
+        /// <summary>
+        /// Номер листа по умолчанию
+        /// </summary>
+        public const int CURRENT_SHEET_DEFAULT = 1;
+
         public StampBasicFields(IResultAppValue<IStampTextField> fullCode, IResultAppValue<IStampTextField> currentSheet)
         {
             if (fullCode == null) throw new ArgumentNullException(nameof(fullCode));
@@ -35,7 +40,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// <summary>
         /// Номер текущего листа в числовом формате
         /// </summary>
-        public IResultAppValue<int> CurrentSheetNumber => CurrentSheet.ResultValueOk(currentSheet => currentSheet.Text.ParseInt());
+        public IResultAppValue<int> CurrentSheetNumber => 
+            CurrentSheet.ResultValueOk(currentSheet => Int32.TryParse(currentSheet.Text, out int currentSheetInt) 
+                                                        ? currentSheetInt
+                                                        : CURRENT_SHEET_DEFAULT);
 
         /// <summary>
         /// Проверить шифр на корректность
@@ -45,7 +53,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// <summary>
         /// Проверить текущий лист на корректность
         /// </summary>
-        public static bool ValidateCurrentSheet(string currentSheet) => Int32.TryParse(currentSheet, out int _);
+        public static bool ValidateCurrentSheet(string currentSheet) => currentSheet.IsNullOrWhiteSpace() || Int32.TryParse(currentSheet, out int _);
 
         /// <summary>
         /// Получить поле шифра с учетом проверки на ошибки

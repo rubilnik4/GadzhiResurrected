@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
@@ -10,7 +8,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.StampPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Implementations.StampCollections.StampMainPartial
+namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
 {
     /// <summary>
     /// Поля сокращенного штампа Word

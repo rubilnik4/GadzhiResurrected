@@ -20,9 +20,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
     /// <summary>
     /// Основные поля штампа Microstation
     /// </summary>
-    public class StampMainMicrostation : StampMicrostation, IStampMain
+    public class StampFullMicrostation : StampMicrostation, IStampFull
     {
-        public StampMainMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings,
+        public StampFullMicrostation(ICellElementMicrostation stampCellElement, StampSettings stampSettings,
                                      SignaturesSearching signaturesSearching)
             : base(stampSettings, stampCellElement, signaturesSearching)
         { }
@@ -30,7 +30,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Тип штампа
         /// </summary>
-        public override StampType StampType => StampType.Main;
+        public override StampType StampType => StampType.Full;
 
         /// <summary>
         /// Вставить подписи

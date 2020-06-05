@@ -44,6 +44,19 @@ namespace GadzhiWord.Extensions.Word
         }
 
         /// <summary>
+        /// Получить список фигур
+        /// </summary>       
+        public static IEnumerable<Shape> ToEnumerable(this Shapes shapes)
+        {
+            if (shapes == null) yield break;
+
+            foreach (Shape shape in shapes)
+            {
+                yield return shape;
+            }
+        }
+
+        /// <summary>
         /// Получить таблицы
         /// </summary>        
         public static IEnumerable<Table> ToEnumerable(this Tables tables)

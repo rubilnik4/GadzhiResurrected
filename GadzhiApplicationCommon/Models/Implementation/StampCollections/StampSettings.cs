@@ -7,7 +7,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// <summary>
     /// Параметры штампа
     /// </summary>
-    public class StampSettings: ConvertingSettingsApplication
+    public class StampSettings: ConvertingSettingsApp
     {
         public StampSettings(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType)
             :base(personId, pdfNamingType)

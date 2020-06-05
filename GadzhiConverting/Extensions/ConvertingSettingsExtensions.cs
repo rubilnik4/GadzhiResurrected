@@ -16,7 +16,7 @@ namespace GadzhiConverting.Extensions
         /// <summary>
         /// Преобразовать параметры конвертации в класс модуля конвертирования
         /// </summary>
-        public static ConvertingSettingsApplication ToApplication(this IConvertingSettings convertingSettings) =>
+        public static ConvertingSettingsApp ToApplication(this IConvertingSettings convertingSettings) =>
             SettingsApplicationConverter.ToConvertingSettingsApplication(convertingSettings);
 
         /// <summary>

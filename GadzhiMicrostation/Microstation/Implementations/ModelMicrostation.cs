@@ -81,12 +81,12 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Найти штампы в модели
         /// </summary>    
-        public IEnumerable<IStamp> FindStamps(int modelIndex, ConvertingSettingsApplication convertingSettings) =>
+        public IEnumerable<IStamp> FindStamps(int modelIndex, ConvertingSettingsApp convertingSettings) =>
             GetModelElements(new List<ElementMicrostationType>() { ElementMicrostationType.CellElement }).
             Where(element => StampFieldMain.IsStampName(element.AsCellElement.Name)).
             Select((element, stampIndex) => 
                        new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
-                           Map(cellMicrostation => new StampMainMicrostation(cellMicrostation,
+                           Map(cellMicrostation => new StampFullMicrostation(cellMicrostation,
                                                                              new StampSettings(new StampIdentifier(modelIndex, stampIndex),
                                                                                                convertingSettings.PersonId, 
                                                                                                convertingSettings.PdfNamingType),

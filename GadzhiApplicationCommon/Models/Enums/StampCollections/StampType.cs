@@ -1,12 +1,13 @@
 ﻿namespace GadzhiApplicationCommon.Models.Enums.StampCollections
 {
     /// <summary>
-    /// тип штампа
+    /// Тип штампа
     /// </summary>
     public enum StampType
     {
-        Unknown,
-        Main,
+        Full,
+        ChangeNotice,
         Shortened,
+        Unknown,
     }
 }

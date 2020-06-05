@@ -16,6 +16,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Найти все штампы во всех моделях и листах
         /// </summary>       
-        IStampContainer GetStampContainer(ConvertingSettingsApplication convertingSettings);
+        IStampContainer GetStampContainer(ConvertingSettingsApp convertingSettings);
     }
 }
