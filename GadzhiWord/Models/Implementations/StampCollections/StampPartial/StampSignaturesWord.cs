@@ -67,7 +67,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// </summary>
         private IRowElementWord GetTableRowByIndex(int rowIndex, int columnStartIndex, int indexColumnFirst, int fieldsCount) =>
             Enumerable.Range(indexColumnFirst, fieldsCount).
-                       Where(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement.Count >= columnStartIndex + indexColumn + 1).
+                       Where(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement.Count > columnStartIndex + indexColumn).
                        Select(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement[columnStartIndex + indexColumn]).
                        Map(cells => new RowElementWord(cells));
     }

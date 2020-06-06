@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -56,7 +58,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
             {
                 StampContainerType.Separate => _stamps,
                 StampContainerType.United => _stamps.
-                                             ResultValueOk(stamps => stamps.Where(stamp => stamp.StampType == StampType.Full)).
+                                             ResultValueOk(stamps => stamps.Where(stamp => stamp.IsStampTypeMain)).
+                                             ToResultCollection().
+                                             ResultValueContinue(stamps => stamps.Count > 0, 
+                                                okFunc: stamps => stamps,
+                                                badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Основные штампы не найдены")).
                                              ToResultCollection(),
                 _ => throw new InvalidEnumArgumentException(nameof(StampContainerType), (int)StampContainerType, typeof(StampContainerType))
             };

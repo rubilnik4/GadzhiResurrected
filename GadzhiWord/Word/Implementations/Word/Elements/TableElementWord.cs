@@ -75,7 +75,7 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// Проверить существование ячейки 
         /// </summary>
         public bool HasCellElement(int rowIndex, int columnIndex) =>
-            RowsElementWord?.Count >= rowIndex && RowsElementWord[rowIndex].CellsElement?.Count >= columnIndex;
+            RowsElementWord?.Count > rowIndex && RowsElementWord[rowIndex].CellsElement?.Count > columnIndex;
 
         /// <summary>
         /// Скопировать таблицу в буфер

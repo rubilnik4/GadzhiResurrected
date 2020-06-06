@@ -54,6 +54,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         StampOrientationType Orientation { get; }
 
         /// <summary>
+        /// Является ли тип штампа основным
+        /// </summary>
+        bool IsStampTypeMain { get; }
+
+        /// <summary>
         /// Сжать поля
         /// </summary>
         IEnumerable<bool> CompressFieldsRanges();

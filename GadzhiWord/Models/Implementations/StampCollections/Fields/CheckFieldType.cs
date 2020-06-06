@@ -21,29 +21,48 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
             {
                 _ when IsFieldFullCode(cellElement, stampTable) => StampFieldType.FullRow,
                 _ when IsFieldCurrentSheet(cellElement, stampTable) => StampFieldType.CurrentSheet,
-                _ when IsFieldPersonSignature(cellElement) => StampFieldType.PersonSignature,
+                _ when IsFieldPersonSignatureFull(cellElement, stampTable) => StampFieldType.PersonSignature,
+                _ when IsFieldPersonSignatureChangeNotice(cellElement) => StampFieldType.PersonSignature,
                 _ when IsFieldChangeSignature(cellElement, stampTable) => StampFieldType.ChangeSignature,
+                _ when IsFieldApprovalSignatureChangeNotice(cellElement, stampTable) => StampFieldType.ApprovalSignature,
                 _ => StampFieldType.Unknown
             };
+
+        /// <summary>
+        /// Находится ли поле в строке с ответственным лицом и подписью для полного штампа
+        /// </summary>        
+        public static bool IsFieldPersonSignatureFull(ICellElementWord cellElement, ITableElementWord stampTable) =>
+            StampMarkersWord.MarkersActionType.MarkerContain(cellElement.Text) &&
+            stampTable?.RowsElementWord?.
+            Any(row => row.Index < cellElement.RowIndex &&
+                       stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
+                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].Text)) == true;
+
+        /// <summary>
+        /// Находится ли поле в строке с ответственным лицом и подписью для штампа с изменениями
+        /// </summary>        
+        public static bool IsFieldPersonSignatureChangeNotice(ICellElementWord cellElement) =>
+            StampMarkersWord.MarkersActionTypeChangeNotice.MarkerContain(cellElement.Text);
 
         /// <summary>
         /// Находится ли поле в строке с изменениями
         /// </summary>        
         public static bool IsFieldChangeSignature(ICellElementWord cellElement, ITableElementWord stampTable) =>
-            cellElement?.ColumnIndex == 0 &&
+            Int32.TryParse(cellElement.Text, out _) &&
             stampTable?.RowsElementWord?.
             Any(row => row.Index > cellElement.RowIndex &&
-                       stampTable.HasCellElement(cellElement.RowIndex, cellElement.ColumnIndex) &&
+                       stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
                        IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].Text)) == true;
 
         /// <summary>
-        /// Находится ли поле в строке с ответственным лицом и подписью
+        /// Находится ли поле в строке с согласованиями
         /// </summary>        
-        public static bool IsFieldPersonSignature(ICellElementWord cellElement) =>
-            cellElement?.
-            Text.PrepareCellTextToCompare().
-            Map(cellText => StampMarkersWord.MarkersActionType.MarkerContain(cellText))
-            ?? false;
+        public static bool IsFieldApprovalSignatureChangeNotice(ICellElementWord cellElement, ITableElementWord stampTable) =>
+            StampMarkersWord.MarkersApprovalChangeNotice.MarkerContain(cellElement.Text) &&
+            stampTable?.RowsElementWord?.
+            Any(row => row.Index < cellElement.RowIndex &&
+                       stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
+                       StampMarkersWord.MarkersApprovalStamp.MarkerContain(cellElement.Text)) == true;
 
         /// <summary>
         /// Находится ли поле в строке заголовком изменений. Обработка входной строки
@@ -55,7 +74,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// Является ли поле шифром
         /// </summary>
         public static bool IsFieldFullCode(ICellElementWord cellElement, ITableElementWord stampTable) =>
-            (cellElement.RowIndex == 0 || 
+            (cellElement.RowIndex == 0 ||
              cellElement.ColumnIndex == stampTable.RowsElementWord[cellElement.RowIndex].CellsElement.Count - 1) &&
             !String.IsNullOrWhiteSpace(cellElement.Text) &&
             cellElement.Text.Length >= 4 &&

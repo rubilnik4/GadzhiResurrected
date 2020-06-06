@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampTypes;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 
@@ -68,6 +69,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Тип расположения штампа
         /// </summary>
         public abstract StampOrientationType Orientation { get; }
+
+        /// <summary>
+        /// Является ли тип штампа основным
+        /// </summary>
+        public bool IsStampTypeMain => StampTypeDefinition.IsStampTypeMain(StampType);
 
         /// <summary>
         /// Сжать поля

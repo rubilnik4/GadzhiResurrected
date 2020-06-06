@@ -39,8 +39,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Обработать штампы и начать печать
         /// </summary>
         private IResultCollection<IFileDataSourceServer> StampContainerPdfActions(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
-                                                                                   IFilePath filePath, IConvertingSettings convertingSettings,
-                                                                                   ColorPrint colorPrint) =>
+                                                                                  IFilePath filePath, IConvertingSettings convertingSettings, 
+                                                                                  ColorPrint colorPrint) =>
             stampContainer.CompressFieldsRanges().
             Map(_ => stampContainer.InsertSignatures().ToResultCollectionFromApplication()).
             ResultValueOkBind(signatures => StampContainerPdfPrinting(stampContainer.GetStampsToPrint().ToResultCollectionFromApplication(),
@@ -55,7 +55,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                                    IFilePath filePath, IConvertingSettings convertingSettings,
                                                                                    ColorPrint colorPrint) =>
             stampsToPrint.
-            ResultValueOkBind(stamps => StampFilePath.GetFileNamesByNamingType(stamps, filePath.FilePathClient, convertingSettings.PdfNamingType).
+            ResultValueOkBind(stamps => StampFilePath.GetFileNamesByNamingType(stamps, filePath.FileNameWithoutExtensionClient, convertingSettings.PdfNamingType).
                                         ResultValueOk(fileNames => stamps.Zip(fileNames, (stamp, fileName) => (stamp, fileName)))).
             ResultValueOkBind(stampsFileName => CreatePdfCollection(stampsFileName, documentLibrary, filePath,
                                                                     colorPrint, convertingSettings.PdfPrinterInformation)).

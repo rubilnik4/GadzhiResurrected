@@ -21,11 +21,11 @@ namespace GadzhiCommon.Infrastructure.Implementations
     public class FileSystemOperations : IFileSystemOperations
     {
         /// <summary>
-        /// Изменить имя в пути файла
+        /// Изменить имя в пути файла без изменения расширения
         /// </summary>
-        public static string ChangeFilePathName(string filePath, string fileName) =>
+        public static string ChangeFilePathNameWithoutExstension(string filePath, string fileName) =>
             Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
-            fileName + Path.GetExtension(filePath);
+            Path.GetFileNameWithoutExtension(fileName) + Path.GetExtension(filePath);
 
         /// <summary>
         /// Убрать точку из расширения файла и привести к нижнему регистру

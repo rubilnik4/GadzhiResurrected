@@ -3,6 +3,7 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampTypes;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
@@ -19,15 +20,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         public static IResultAppCollection<TableStampType> ValidateTableStampsByType(IEnumerable<TableStampType> tablesStampWord) =>
             new ResultAppCollection<TableStampType>(tablesStampWord, new ErrorApplication(ErrorApplicationType.StampNotFound,
                                                                                           "Штампы не найдены")).
-                ResultValueContinue(tablesStamp => tablesStamp.Count > 0 && IsStampTypeMain(tablesStamp[0].StampType),
+                ResultValueContinue(tablesStamp => tablesStamp.Count > 0 && StampTypeDefinition.IsStampTypeMain(tablesStamp[0].StampType),
                                     okFunc: tablesStamp => tablesStamp,
                                     badFunc: _ => new ErrorApplication(ErrorApplicationType.StampNotFound, "Основной штамп не найден")).
                 ToResultCollection();
-
-        /// <summary>
-        /// Является ли тип штампа основным
-        /// </summary>
-        public static bool IsStampTypeMain(StampType stampType) =>
-            stampType == StampType.Full || stampType == StampType.ChangeNotice;
     }
 }

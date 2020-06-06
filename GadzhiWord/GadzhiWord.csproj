@@ -137,6 +137,7 @@
     <Compile Include="Models\Implementations\Specification\Table\TableProcessingSpecification.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\ApprovalSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\StampCreating.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\TableStampType.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Models\Implementations\StampCollections\Signatures\PersonSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\SignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\StampValidatingWord.cs" />
+    <Compile Include="Models\Implementations\StampFieldIndexes\ApprovalChangeNoticeRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\ChangeRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\PersonRowIndexes.cs" />
     <Compile Include="Models\Interfaces\Specification\ISpecification.cs" />

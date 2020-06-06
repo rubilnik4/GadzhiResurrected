@@ -28,12 +28,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Маркеры основного штампа
         /// </summary>
-        public static IReadOnlyList<string> MarkersMainStamp => new List<string>()
+        public static IReadOnlyList<string> MarkersFullStamp => new List<string>()
         {
             "Разраб",
             "Исполн",
             "Составил",
-            "Изм.внес",
         };
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Маркеры штампа
         /// </summary>
-        public static IReadOnlyList<string> MarkersStamp => MarkersMainStamp.
+        public static IReadOnlyList<string> MarkersStamp => MarkersFullStamp.
                                                             Union(MarkersAdditionalStamp).
                                                             ToList();
 
@@ -81,7 +80,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             "Нач.сек",
             "Нач.отд",
             "Зам.Нач.отд",
-            "Н.конт",
+            "Н.контр",
+            "Изм.внес",
+            "Утв.",
         };
 
         /// <summary>
@@ -90,6 +91,33 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public static IReadOnlyList<string> MarkersActionTypeChief => new List<string>()
         {
              "ГИП"
+        };
+
+        /// <summary>
+        /// Маркеры типа действия в строке с ответственным лицом для извещений с изменениями
+        /// </summary>
+        public static IReadOnlyList<string> MarkersActionTypeChangeNotice => new List<string>()
+        {
+            "Изм.внес",
+            "Составил",
+            "Утв.",
+            "ГИП",
+        };
+
+        /// <summary>
+        /// Маркеры штампа для извещений с изменениями
+        /// </summary>
+        public static IReadOnlyList<string> MarkersApprovalStamp => new List<string>()
+        {
+            "Согласовано",
+        };
+
+        /// <summary>
+        /// Маркеры типа действия в строке с ответственным лицом для извещений с изменениями
+        /// </summary>
+        public static IReadOnlyList<string> MarkersApprovalChangeNotice => new List<string>()
+        {
+            "Н.контр",
         };
 
         /// <summary>
@@ -120,7 +148,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             {
                 if (CheckFieldType.IsFieldFullCode(cell, tableWord)) hasFullCode = true;
                 if (MarkersAdditionalStamp.MarkerContain(cell.Text)) hasShortMarker = true;
-                if (MarkersMainStamp.MarkerContain(cell.Text)) hasMainMarkers = true;
+                if (MarkersFullStamp.MarkerContain(cell.Text)) hasMainMarkers = true;
                 if (MarkersChangeNoticeStamp.MarkerContain(cell.Text)) hasChangeMarkers = true;
             }
 

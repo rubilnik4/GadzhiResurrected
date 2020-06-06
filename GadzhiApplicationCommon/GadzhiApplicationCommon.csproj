@@ -97,6 +97,7 @@
     <Compile Include="Models\Implementation\StampCollections\Fields\StampField.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampIdentifier.cs" />
     <Compile Include="Models\Implementation\StampCollections\Signatures\StampSignature.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampTypes\StampTypeDefinition.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryPrinting.cs" />
