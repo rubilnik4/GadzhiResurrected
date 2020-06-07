@@ -27,7 +27,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
             stampType switch
             {
                 StampType.Full => new StampFullWord(stampSettings, signaturesSearching, tableWord),
-                StampType.ChangeNotice => new StampChangeNoticeWord(stampSettings, signaturesSearching, tableWord),
+                StampType.ChangeNotice => new StampChangeWord(stampSettings, signaturesSearching, tableWord),
                 _ => throw new InvalidEnumArgumentException(nameof(stampType), (int)stampType, typeof(StampType)),
             };
 
@@ -70,7 +70,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         /// Получить основной штамп
         /// </summary>
         public static IStamp GetChangeNoticeStamp(ITableElementWord tableWord, StampSettingsWord stampSettings, SignaturesSearching signaturesSearching) =>
-            new StampChangeNoticeWord(stampSettings, signaturesSearching, tableWord);
+            new StampChangeWord(stampSettings, signaturesSearching, tableWord);
 
         /// <summary>
         /// Получить параметры штампа Word

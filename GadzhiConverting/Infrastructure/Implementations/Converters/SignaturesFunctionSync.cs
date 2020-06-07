@@ -7,7 +7,6 @@ using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Extensions;
-using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using Nito.AsyncEx.Synchronous;

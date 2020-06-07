@@ -22,7 +22,7 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
             ColumnIndex = (columnIndex >= 0) ? columnIndex : throw new ArgumentOutOfRangeException(nameof(columnIndex));
         }
 
-         /// <summary>
+        /// <summary>
         /// Номер строки
         /// </summary>
         public int RowIndex { get; }
@@ -50,7 +50,7 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// <summary>
         /// Вставить картинку
         /// </summary>
-        public void InsertPicture(string filePath)
+        public void InsertPicture(string filePath, bool rotate)
         {
             if (String.IsNullOrWhiteSpace(filePath)) return;
 

@@ -24,6 +24,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields
         IResultAppCollection<IStampApproval> StampApproval { get; }
 
         /// <summary>
+        /// Строки с согласованием для извещения с изменениями
+        /// </summary>
+        IResultAppCollection<IStampApprovalChange> StampApprovalChange { get; }
+
+        /// <summary>
         /// Получить все подписи
         /// </summary>        
         IResultAppCollection<IStampSignature> GetSignatures();

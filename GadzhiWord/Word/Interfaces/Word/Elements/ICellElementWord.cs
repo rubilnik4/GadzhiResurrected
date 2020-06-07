@@ -28,7 +28,7 @@
         /// <summary>
         /// Вставить подпись
         /// </summary>
-        void InsertPicture(string filePath);
+        void InsertPicture(string filePath, bool rotate);
 
         /// <summary>
         /// Удалить все подписи

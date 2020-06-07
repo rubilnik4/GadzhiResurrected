@@ -77,6 +77,7 @@
     <Compile Include="Models\Implementations\LibraryElement.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextNodeFieldMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalChangeMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampPersonMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampChangeMicrostation.cs" />

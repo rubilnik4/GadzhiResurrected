@@ -107,7 +107,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Маркеры штампа для извещений с изменениями
         /// </summary>
-        public static IReadOnlyList<string> MarkersApprovalStamp => new List<string>()
+        public static IReadOnlyList<string> MarkersApprovalChangeStamp => new List<string>()
         {
             "Согласовано",
         };
@@ -115,7 +115,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Маркеры типа действия в строке с ответственным лицом для извещений с изменениями
         /// </summary>
-        public static IReadOnlyList<string> MarkersApprovalChangeNotice => new List<string>()
+        public static IReadOnlyList<string> MarkersApprovalChange => new List<string>()
         {
             "Н.контр",
         };

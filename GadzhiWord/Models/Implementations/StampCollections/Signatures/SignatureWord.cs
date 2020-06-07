@@ -45,7 +45,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
             _signature.
-            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath)).
+            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath, signature.IsVertical)).
             Map(_ => this);
 
         /// <summary>

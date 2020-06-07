@@ -23,15 +23,23 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
 
         public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges)
             : this(stampPersons, stampChanges,
-                  new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()))
+                   new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()),
+                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()))
         { }
 
         public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges,
                                     IResultAppCollection<IStampApproval> stampApproval)
+            : this(stampPersons, stampChanges, stampApproval,
+                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()))
+        { }
+
+        public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges,
+                                    IResultAppCollection<IStampApproval> stampApproval, IResultAppCollection<IStampApprovalChange> stampApprovalChange)
         {
             StampPersons = stampPersons ?? throw new ArgumentNullException(nameof(stampPersons));
             StampChanges = stampChanges ?? throw new ArgumentNullException(nameof(stampChanges));
             StampApproval = stampApproval ?? throw new ArgumentNullException(nameof(stampApproval));
+            StampApprovalChange = stampApprovalChange ?? throw new ArgumentNullException(nameof(stampApprovalChange));
         }
 
         /// <summary>
@@ -50,12 +58,18 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         public IResultAppCollection<IStampApproval> StampApproval { get; }
 
         /// <summary>
+        /// Строки с согласованием для извещения с изменениями
+        /// </summary>
+        public IResultAppCollection<IStampApprovalChange> StampApprovalChange { get; }
+
+        /// <summary>
         /// Получить все подписи
         /// </summary>        
         public IResultAppCollection<IStampSignature> GetSignatures() =>
             StampPersons.Cast<IStampPerson, IStampSignature>().
             ConcatResult(StampChanges.Cast<IStampChange, IStampSignature>()).
             ConcatResult(StampApproval.Cast<IStampApproval, IStampSignature>()).
+            ConcatResult(StampApprovalChange.Cast<IStampApprovalChange, IStampSignature>()).
             ResultValueOk(signatures => signatures.Where(signature => signature.NeedToInsert())).
             ToResultCollection();
     }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Индексы ячеек для штампа согласования в извещении изменений
     /// </summary>
-    public static class ApprovalChangeNoticeRowIndexes
+    public static class ApprovalChangeRowIndexes
     {
         /// <summary>
         /// Индекс типа действия

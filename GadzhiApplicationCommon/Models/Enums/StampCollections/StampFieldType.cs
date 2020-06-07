@@ -11,5 +11,6 @@
         PersonSignature,
         ChangeSignature,
         ApprovalSignature,
+        ApprovalChangeSignature,
     }
 }

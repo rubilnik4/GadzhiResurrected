@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Extensions.Word;
@@ -22,9 +21,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
                 _ when IsFieldFullCode(cellElement, stampTable) => StampFieldType.FullRow,
                 _ when IsFieldCurrentSheet(cellElement, stampTable) => StampFieldType.CurrentSheet,
                 _ when IsFieldPersonSignatureFull(cellElement, stampTable) => StampFieldType.PersonSignature,
-                _ when IsFieldPersonSignatureChangeNotice(cellElement) => StampFieldType.PersonSignature,
+                _ when IsFieldPersonSignatureChange(cellElement) => StampFieldType.PersonSignature,
                 _ when IsFieldChangeSignature(cellElement, stampTable) => StampFieldType.ChangeSignature,
-                _ when IsFieldApprovalSignatureChangeNotice(cellElement, stampTable) => StampFieldType.ApprovalSignature,
+                _ when IsFieldApprovalChangeSignature(cellElement, stampTable) => StampFieldType.ApprovalChangeSignature,
                 _ => StampFieldType.Unknown
             };
 
@@ -41,7 +40,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью для штампа с изменениями
         /// </summary>        
-        public static bool IsFieldPersonSignatureChangeNotice(ICellElementWord cellElement) =>
+        public static bool IsFieldPersonSignatureChange(ICellElementWord cellElement) =>
             StampMarkersWord.MarkersActionTypeChangeNotice.MarkerContain(cellElement.Text);
 
         /// <summary>
@@ -57,12 +56,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// <summary>
         /// Находится ли поле в строке с согласованиями
         /// </summary>        
-        public static bool IsFieldApprovalSignatureChangeNotice(ICellElementWord cellElement, ITableElementWord stampTable) =>
-            StampMarkersWord.MarkersApprovalChangeNotice.MarkerContain(cellElement.Text) &&
+        public static bool IsFieldApprovalChangeSignature(ICellElementWord cellElement, ITableElementWord stampTable) =>
+            StampMarkersWord.MarkersApprovalChange.MarkerContain(cellElement.Text) &&
             stampTable?.RowsElementWord?.
             Any(row => row.Index < cellElement.RowIndex &&
                        stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
-                       StampMarkersWord.MarkersApprovalStamp.MarkerContain(cellElement.Text)) == true;
+                       StampMarkersWord.MarkersApprovalChangeStamp.MarkerContain(row.CellsElement[cellElement.ColumnIndex].Text)) == true;
 
         /// <summary>
         /// Находится ли поле в строке заголовком изменений. Обработка входной строки
