@@ -103,7 +103,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public IResultAppValue<ISignatureLibraryApp> FindByFullNameOrRandom(string fullName, string personId) =>
             new ResultAppValue<ISignatureLibraryApp>(FindByFullName(fullName, FindById(personId)?.PersonInformation.Department),
-                                                     new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись  по имени {fullName} не найдена")).
+                                                     new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по имени {fullName} не найдена")).
             ResultValueBadBind(_ => new ResultAppValue<ISignatureLibraryApp>(GetRandomSignature(),
                                                                              new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                   "База подписей пуста")));
@@ -113,7 +113,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public IResultAppValue<ISignatureLibraryApp> FindByPersonInformationOrRandom(PersonInformationApp personInformation) =>
             new ResultAppValue<ISignatureLibraryApp>(FindByPersonInformation(personInformation),
-                                                  new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись  по имени {personInformation.FullName} не найдена")).
+                                                  new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по имени {personInformation.FullName} не найдена")).
                 ResultValueBadBind(_ => new ResultAppValue<ISignatureLibraryApp>(GetRandomSignature(),
                                                                               new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                    "База подписей пуста")));
@@ -149,12 +149,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         public IResultAppCollection<ISignatureFileApp> GetSignaturesByIds(IEnumerable<SignatureFileRequest> personRequests) =>
             new ResultAppCollection<SignatureFileRequest>(personRequests).
             ResultValueOkBind(requests =>
-                new ResultAppCollection<SignatureFileRequest>(requests).
-                ResultValueContinue(_ => requests.Count > 0,
+                requests.
+                WhereContinue(_ => requests.Count > 0,
                     okFunc: _ => _getSignatures(requests), 
-                    badFunc: _ => new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи в базе не найдены")).
-                ToResultCollection().
-                ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(requests, signaturesFile))).
+                    badFunc: _ => Enumerable.Empty<ISignatureFileApp>()).
+                ToList().
+                Map(signaturesFile => SignatureLeftJoinWithDataBase(requests, signaturesFile))).
             ToResultCollection();
 
         /// <summary>

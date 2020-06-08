@@ -20,12 +20,12 @@ namespace GadzhiWord.Word.Interfaces.Word.Elements
         /// <summary>
         /// Количество строк в начальной таблице Word без обертки
         /// </summary>
-        public int RowsCountInitial { get; }
+        int RowsCountInitial { get; }
 
         /// <summary>
         /// Количество колонок в начальной таблице Word без обертки
         /// </summary>
-        public int ColumnsCountInitial { get; }
+        int ColumnsCountInitial { get; }
 
         /// <summary>
         /// Проверить существование ячейки 

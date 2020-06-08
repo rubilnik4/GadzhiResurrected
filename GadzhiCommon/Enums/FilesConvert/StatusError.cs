@@ -12,7 +12,6 @@ namespace GadzhiCommon.Enums.FilesConvert
     public enum StatusError
     {
         NoError,
-        InformationError,
         CriticalError
     }
 }

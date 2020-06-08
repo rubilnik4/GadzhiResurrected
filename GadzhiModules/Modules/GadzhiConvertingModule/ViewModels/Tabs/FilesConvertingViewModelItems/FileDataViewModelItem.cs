@@ -53,11 +53,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         public bool IsNoError => IsEndStatus && FileData.StatusError == StatusError.NoError;
 
         /// <summary>
-        /// Информационная ошибка
-        /// </summary>
-        public bool IsInformationError => IsEndStatus &&  FileData.StatusError == StatusError.InformationError;
-
-        /// <summary>
         /// Ошибка отсутствует
         /// /// </summary>
         public bool IsCriticalError => IsEndStatus &&  FileData.StatusError == StatusError.CriticalError;
@@ -75,7 +70,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
             RaisePropertyChanged(nameof(StatusProcessingName));            
             RaisePropertyChanged(nameof(IsEndStatus));
             RaisePropertyChanged(nameof(IsNoError));
-            RaisePropertyChanged(nameof(IsInformationError));
             RaisePropertyChanged(nameof(IsCriticalError));
         }
 

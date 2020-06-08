@@ -48,28 +48,6 @@ namespace GadzhiCommon.Converters
             };
 
         /// <summary>
-        /// Информационные ошибки
-        /// </summary>
-        public static IReadOnlyList<FileConvertErrorType> AllErrorType =>
-           Enum.GetValues(typeof(FileConvertErrorType)).Cast<FileConvertErrorType>().ToList();
-
-        /// <summary>
-        /// Информационные ошибки
-        /// </summary>
-        public static IReadOnlyList<FileConvertErrorType> InformationalErrorType =>
-            new List<FileConvertErrorType>()
-            {
-               FileConvertErrorType.SignatureNotFound,
-            };
-
-        /// <summary>
-        /// Критические ошибки
-        /// </summary>
-        public static IReadOnlyList<FileConvertErrorType> CriticalErrorType =>
-           AllErrorType?.Except(InformationalErrorType).
-                         Where(error => error != FileConvertErrorType.NoError).ToList();
-
-        /// <summary>
         /// Преобразовать тип ошибки в строковое значение
         /// </summary>       
         public static string FileErrorTypeToString(FileConvertErrorType fileConvertErrorType)
@@ -78,18 +56,16 @@ namespace GadzhiCommon.Converters
             return fileConvertErrorTypeString;
         }
 
+        /// <summary>
+        /// Определить наличие ошибок
+        /// </summary>
         public static StatusError FileErrorsTypeToStatusError(IEnumerable<FileConvertErrorType> fileConvertErrorsType)
         {
             var fileConvertErrorsTypeCollection = fileConvertErrorsType?.ToList() ?? new List<FileConvertErrorType>();
-            bool hasCriticalErrors = fileConvertErrorsTypeCollection.Any(error => CriticalErrorType?.Contains(error) == true);
-            bool hasInformationErrors = fileConvertErrorsTypeCollection.Any(error => InformationalErrorType?.Contains(error) == true);
 
-            return (hasCriticalErrors, hasInformationErrors) switch
-            {
-                (false, true) => StatusError.InformationError,
-                (true, _) => StatusError.CriticalError,
-                (_, _) => StatusError.NoError,
-            };
+            return (fileConvertErrorsTypeCollection.Count == 0)
+                ? StatusError.NoError
+                : StatusError.CriticalError;
         }
     }
 }

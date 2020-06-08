@@ -190,12 +190,6 @@
                                                                       Converter={StaticResource VisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorGreenComplete}"/>
                                 
-                                <materialDesign:PackIcon Kind="Information"   
-                                                         Style="{StaticResource PackIconDataGridStyle}"
-                                                         Visibility="{Binding IsInformationError, 
-                                                                      Converter={StaticResource VisibilityConverter}}"      
-                                                         Foreground ="{StaticResource ColorYellowInformation}"/>
-                                
                                 <materialDesign:PackIcon Kind="Error"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
                                                          Visibility="{Binding IsCriticalError, 
