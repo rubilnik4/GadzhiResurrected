@@ -9,5 +9,10 @@
         /// Изображение подписи
         /// </summary>
         string SignatureFilePath { get; }
+
+        /// <summary>
+        /// Вертикальное расположение изображения
+        /// </summary>
+        bool IsVerticalImage { get; }
     }
 }

@@ -65,16 +65,16 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
         /// <summary>
         /// Найти подпись в базе и вставить
         /// </summary>
-        private IResultAppValue<IStampSignature>  SearchSignatureToInsert(IStampSignature signature, IList<string> libraryIds) =>
+        private IResultAppValue<IStampSignature>  SearchSignatureToInsert(IStampSignature signature, IList<string> personIds) =>
             SignaturesSearching.
             FindByIdOrFullNameOrRandom(signature.SignatureLibrary.PersonId,
                                        signature.SignatureLibrary.PersonInformation.FullName, StampSettings.PersonId).
-            ResultValueContinue(signatureLibrary => libraryIds.IndexOf(signatureLibrary.PersonId) > 0,
+            ResultValueContinue(signatureLibrary => personIds.IndexOf(signatureLibrary.PersonId) > 0,
                 okFunc: signatureLibrary => signatureLibrary,
                 badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                   $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
-            ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId,
-                                                                   signatureLibrary.PersonInformation, String.Empty)).
+            ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId, signatureLibrary.PersonInformation,
+                                                                   String.Empty, signature.IsVertical)).
             ResultValueOk(signature.InsertSignature);
     }
 }

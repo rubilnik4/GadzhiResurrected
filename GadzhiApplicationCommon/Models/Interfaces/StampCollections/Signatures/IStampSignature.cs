@@ -20,19 +20,24 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
         IResultAppValue<IStampField> Signature { get; }
 
         /// <summary>
+        /// Вертикальное расположение подписи
+        /// </summary>
+        bool IsVertical { get; }
+
+        /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        bool IsSignatureValid();
+        bool IsSignatureValid { get; }
 
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица
         /// </summary>
-        bool IsPersonFieldValid();
+        bool IsPersonFieldValid { get; }
 
         /// <summary>
         /// Необходимо ли вставлять подпись в поле
         /// </summary>
-        public abstract bool NeedToInsert();
+        public abstract bool IsAbleToInsert { get; }
 
         /// <summary>
         /// Вставить подпись

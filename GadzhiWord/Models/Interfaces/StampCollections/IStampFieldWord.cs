@@ -16,10 +16,5 @@ namespace GadzhiWord.Models.Interfaces.StampCollections
         /// Элемент ячейка, определяющая поле штампа
         /// </summary>
         ICellElementWord CellElementStamp { get; }
-
-        /// <summary>
-        /// Вертикальное расположение поля
-        /// </summary>
-        bool IsVertical { get; }
     }
 }

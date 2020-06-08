@@ -5,6 +5,7 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -41,15 +42,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Получить элементы подписей из базы по их идентификационным номерам
         /// </summary>
-        private IResultAppCollection<IStampSignature> GetStampSignaturesByIds(IList<IStampSignature> signaturesStamp) =>
-            new ResultAppCollection<string>(signaturesStamp.Select(signatureStamp => signatureStamp.SignatureLibrary.PersonId)).
+        private IResultAppCollection<IStampSignature> GetStampSignaturesByIds(IList<IStampSignature> stampSignatures) =>
+            new ResultAppCollection<IStampSignature>(stampSignatures).
+            ResultValueOk(_ => stampSignatures.Select(signatureStamp => new SignatureFileRequest(signatureStamp.SignatureLibrary.PersonId,
+                                                                                                 signatureStamp.IsVertical))).
             ResultValueOkBind(personIds => SignaturesSearching.GetSignaturesByIds(personIds)).
-            ResultValueContinue(signaturesFile => signaturesFile.Count == signaturesStamp.Count,
+            ResultValueContinue(signaturesFile => signaturesFile.Count == stampSignatures.Count,
                 okFunc: signaturesFile => signaturesFile,
                 badFunc: signaturesFile => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                 "Количество подписей в файле не совпадает с загруженным из базы данных")).
             ResultValueOk(signaturesFile =>
-                signaturesStamp.Zip(signaturesFile,
+                stampSignatures.Zip(signaturesFile,
                                     (signatureStamp, signatureFile) => signatureStamp.InsertSignature(signatureFile))).
             ToResultCollection();
 

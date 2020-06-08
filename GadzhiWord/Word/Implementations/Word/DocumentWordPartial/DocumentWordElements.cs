@@ -83,9 +83,9 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             StampCreating.GetMainStamp(tablesStamp[0].StampType, tablesStamp[0].TableWord,
                                        StampCreating.GetStampSettingsWord(0, convertingSettings, PaperSize, OrientationType),
                                        ApplicationOffice.ResourcesWord.SignaturesSearching).
-            Map(fullStamp => new ResultAppCollection<IStamp>(new List<IStamp>() { fullStamp }).
-                             ConcatResult(GetShortStamps(tablesStamp.Select(tableStamp => tableStamp.TableWord), 
-                                                         fullStamp,  convertingSettings)));
+            Map(mainStamp => new ResultAppCollection<IStamp>(new List<IStamp>() { mainStamp }).
+                             ConcatResult(GetShortStamps(tablesStamp.Select(tableStamp => tableStamp.TableWord),
+                                                         mainStamp,  convertingSettings)));
 
         /// <summary>
         /// Получить сокращенные штампы

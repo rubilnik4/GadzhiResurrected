@@ -13,11 +13,11 @@ namespace GadzhiDTOBase.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder);
+        IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IEnumerable<SignatureDto> signaturesDto, string signatureFolder);
 
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        Task<IReadOnlyList<ISignatureFile>> SignaturesFileFromDtoAsync(IReadOnlyList<SignatureDto> signaturesDto, string signatureFolder);
+        Task<IReadOnlyList<ISignatureFile>> SignaturesFileFromDtoAsync(IEnumerable<SignatureDto> signaturesDto, string signatureFolder);
     }
 }

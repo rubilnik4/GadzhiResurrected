@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Helpers;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 
@@ -27,10 +25,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Функция загрузки подписей из базы данных по идентификаторам
         /// </summary>
-        private readonly Func<IEnumerable<string>, IList<ISignatureFileApp>> _getSignatures;
+        private readonly Func<IEnumerable<SignatureFileRequest>, IList<ISignatureFileApp>> _getSignatures;
 
         public SignaturesSearching(IEnumerable<ISignatureLibraryApp> signaturesLibrary,
-                                          Func<IEnumerable<string>, IList<ISignatureFileApp>> getSignatures)
+                                   Func<IEnumerable<SignatureFileRequest>, IList<ISignatureFileApp>> getSignatures)
         {
             if (signaturesLibrary == null) throw new ArgumentNullException(nameof(signaturesLibrary));
             _getSignatures = getSignatures ?? throw new ArgumentNullException(nameof(getSignatures));
@@ -141,9 +139,22 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public IResultAppCollection<ISignatureFileApp> GetSignaturesByIds(IEnumerable<string> personsId) =>
             new ResultAppCollection<string>(personsId).
-            ResultValueOkBind(ids => new ResultAppCollection<ISignatureFileApp>(_getSignatures(ids), new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                                                       "Подписи в базе не найдены")).
-            ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(ids, signaturesFile))).
+            ResultValueOk(ids => ids.Select(id => new SignatureFileRequest(id, false))).
+            ResultValueOkBind(GetSignaturesByIds).
+            ToResultCollection();
+
+        /// <summary>
+        /// Загрузить подписи из базы данных по идентификаторам с возможностью поворота
+        /// </summary>
+        public IResultAppCollection<ISignatureFileApp> GetSignaturesByIds(IEnumerable<SignatureFileRequest> personRequests) =>
+            new ResultAppCollection<SignatureFileRequest>(personRequests).
+            ResultValueOkBind(requests =>
+                new ResultAppCollection<SignatureFileRequest>(requests).
+                ResultValueContinue(_ => requests.Count > 0,
+                    okFunc: _ => _getSignatures(requests), 
+                    badFunc: _ => new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Подписи в базе не найдены")).
+                ToResultCollection().
+                ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(requests, signaturesFile))).
             ToResultCollection();
 
         /// <summary>
@@ -159,9 +170,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Связать значения подписей с базой данных один к одному
         /// </summary>
-        private static IResultAppCollection<ISignatureFileApp> SignatureLeftJoinWithDataBase(IEnumerable<string> personIds, IList<ISignatureFileApp> signaturesFile) =>
-            personIds.
-            Select(id => signaturesFile.FirstOrDefault(signatureFile => signatureFile.PersonId == id)).
+        private static IResultAppCollection<ISignatureFileApp> SignatureLeftJoinWithDataBase(IEnumerable<SignatureFileRequest> personRequests,
+                                                                                             IList<ISignatureFileApp> signaturesFile) =>
+            personRequests.
+            Select(personRequest => signaturesFile.FirstOrDefault(signatureFile => signatureFile.PersonId == personRequest.PersonId &&
+                                                                                   signatureFile.IsVerticalImage == personRequest.IsVerticalImage)).
             Select(signatureFile => new ResultAppValue<ISignatureFileApp>(signatureFile, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                                            "Подпись в базе не найдена"))).
             Select(signatureResult => (IResultAppValue<ISignatureFileApp>)signatureResult).

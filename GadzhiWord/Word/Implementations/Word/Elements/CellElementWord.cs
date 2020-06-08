@@ -50,7 +50,7 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// <summary>
         /// Вставить картинку
         /// </summary>
-        public void InsertPicture(string filePath, bool rotate)
+        public void InsertPicture(string filePath)
         {
             if (String.IsNullOrWhiteSpace(filePath)) return;
 

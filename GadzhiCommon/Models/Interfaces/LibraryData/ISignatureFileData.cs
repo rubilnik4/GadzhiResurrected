@@ -9,5 +9,10 @@
         /// Изображение подписи
         /// </summary>
         byte[] SignatureFileDataSource { get; }
+
+        /// <summary>
+        /// Вертикальное расположение изображения
+        /// </summary>
+        bool IsVerticalImage { get; }
     }
 }

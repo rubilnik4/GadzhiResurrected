@@ -35,7 +35,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public override bool IsSignatureValid() => Signature.OkStatus;
+        public override bool IsSignatureValid => Signature.OkStatus;
 
         /// <summary>
         /// Получить пустое поле с подписью

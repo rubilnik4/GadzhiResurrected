@@ -22,7 +22,7 @@ namespace GadzhiConverting.Models.Converters
         public static ISignatureFileApp ToSignatureFileApplication(ISignatureFile signatureFile) =>
             (signatureFile != null)
                 ? new SignatureFileApp(signatureFile.PersonId, ToPersonInformationApp(signatureFile.PersonInformation),
-                                       signatureFile.SignatureFilePath)
+                                       signatureFile.SignatureFilePath, signatureFile.IsVerticalImage)
                 : throw new ArgumentNullException(nameof(signatureFile));
 
         /// <summary>

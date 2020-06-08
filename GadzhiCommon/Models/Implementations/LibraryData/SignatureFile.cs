@@ -10,19 +10,25 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
     /// </summary>
     public class SignatureFile : SignatureLibrary, ISignatureFile
     {
-        public SignatureFile(string personId, PersonInformation personInformation, string signatureFilePath)
+        public SignatureFile(string personId, PersonInformation personInformation, string signatureFilePath, bool isVerticalImage)
             : base(personId, personInformation)
         {
             if (String.IsNullOrWhiteSpace(signatureFilePath)) throw new ArgumentNullException(nameof(signatureFilePath));
             if (Path.GetExtension(signatureFilePath) != SaveFormat) throw new FileNotFoundException(nameof(signatureFilePath));
 
             SignatureFilePath = signatureFilePath;
+            IsVerticalImage = isVerticalImage;
         }
 
         /// <summary>
         /// Изображение подписи
         /// </summary>
         public string SignatureFilePath { get; }
+
+        /// <summary>
+        /// Вертикальное расположение изображения
+        /// </summary>
+        public bool IsVerticalImage { get; }
 
         /// <summary>
         /// Формат хранения файла
@@ -32,7 +38,9 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// <summary>
         /// Сформировать путь для сохранения подписи
         /// </summary>
-        public static string GetFilePathByFolder(string signatureFolderPath, string personId) =>
-            FileSystemOperations.CombineFilePath(signatureFolderPath, personId, SaveFormat);
+        public static string GetFilePathByFolder(string signatureFolderPath, string personId, bool isVerticalImage) =>
+            FileSystemOperations.CombineFilePath(signatureFolderPath, 
+                                                 personId + (isVerticalImage ? "_rotated" : String.Empty), 
+                                                 SaveFormat);
     }
 }

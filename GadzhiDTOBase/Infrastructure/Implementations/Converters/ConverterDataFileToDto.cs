@@ -15,7 +15,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи в трансферную модель
         /// </summary>
-        public static IList<SignatureDto> SignaturesToDto(IReadOnlyList<ISignatureFileData> signaturesLibrary) =>
+        public static IList<SignatureDto> SignaturesToDto(IEnumerable<ISignatureFileData> signaturesLibrary) =>
             signaturesLibrary?.
             Select(SignatureToDto).ToList()
             ?? throw new ArgumentNullException(nameof(signaturesLibrary));

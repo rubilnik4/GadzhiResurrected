@@ -50,6 +50,7 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
+            container.RegisterType<ISignatureConverter, SignatureConverter>();
             container.RegisterType<IConverterServerPackageDataFromDto, ConverterServerPackageDataFromDto>();
             container.RegisterType<IConverterServerPackageDataToDto, ConverterServerPackageDataToDto>();
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();
@@ -69,13 +70,13 @@ namespace GadzhiConverting.DependencyInjection
         /// </summary>
         private static async Task RegisterConvertingApplications(IUnityContainer container)
         {
-            var converterDataFileFromDto = container.Resolve<IConverterDataFileFromDto>();
+            var signatureConverter = container.Resolve<ISignatureConverter>();
             var projectSettings = container.Resolve<IProjectSettings>();
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
 
             var convertingResources = await projectSettings.ConvertingResources;
             var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.ToApplication(),
-                                                                     GetSignaturesSync(fileConvertingServerService, converterDataFileFromDto, 
+                                                                     GetSignaturesSync(fileConvertingServerService, signatureConverter, 
                                                                                        ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>

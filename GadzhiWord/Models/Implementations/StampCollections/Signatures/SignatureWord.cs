@@ -38,14 +38,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public override bool IsSignatureValid() => _signature.OkStatus && _signature.Value.CellElementStamp.HasPicture;
+        public override bool IsSignatureValid => _signature.OkStatus && _signature.Value.CellElementStamp.HasPicture;
 
         /// <summary>
         /// Вставить подпись
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
             _signature.
-            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath, signature.IsVertical)).
+            ResultVoidOk(signature => signature.CellElementStamp.InsertPicture(signatureFile.SignatureFilePath)).
             Map(_ => this);
 
         /// <summary>

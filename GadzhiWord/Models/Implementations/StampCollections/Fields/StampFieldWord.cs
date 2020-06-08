@@ -21,11 +21,5 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// Элемент ячейка определяющая поле штампа
         /// </summary>
         public ICellElementWord CellElementStamp { get; }
-
-        /// <summary>
-        /// Вертикальное расположение поля
-        /// </summary>
-        public bool IsVertical => StampFieldType == StampFieldType.ApprovalChangeSignature || 
-                                  StampFieldType == StampFieldType.ApprovalSignature;
     }
 }

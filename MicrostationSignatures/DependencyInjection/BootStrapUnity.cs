@@ -40,6 +40,7 @@ namespace MicrostationSignatures.DependencyInjection
             container.RegisterType<IProjectSignatureSettings, ProjectSignatureSettings>();
             container.RegisterType<ISignaturesToJpeg, SignaturesUpload>();
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();
+            container.RegisterType<ISignatureConverter, SignatureConverter>();
 
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<ILoggerService, LoggerService>();
@@ -48,11 +49,10 @@ namespace MicrostationSignatures.DependencyInjection
                     ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint));
 
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
-            var converterDataFileFromDto = container.Resolve<IConverterDataFileFromDto>();
+            var signatureConverter = container.Resolve<ISignatureConverter>();
             var signaturesLibrarySearching = new SignaturesSearching(Enumerable.Empty<ISignatureLibraryApp>(),
-                                                                            GetSignaturesSync(fileConvertingServerService,
-                                                                                              converterDataFileFromDto,
-                                                                                              ProjectSettings.DataSignaturesFolder));
+                                                                     GetSignaturesSync(fileConvertingServerService, signatureConverter,
+                                                                                       ProjectSettings.DataSignaturesFolder));
             container.RegisterFactory<IApplicationMicrostation>(unity =>
                 new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching,
                                                                       ProjectSignatureSettings.SignatureMicrostationFileName,

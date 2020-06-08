@@ -63,7 +63,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// <summary>
         /// Необходимо ли вставлять подпись в поле
         /// </summary>
-        public override bool NeedToInsert() => IsPersonFieldValid() && !NumberChange.Text.IsNullOrWhiteSpace();
+        public override bool IsAbleToInsert => IsPersonFieldValid && !NumberChange.Text.IsNullOrWhiteSpace();
 
         /// <summary>
         /// Вставить подпись

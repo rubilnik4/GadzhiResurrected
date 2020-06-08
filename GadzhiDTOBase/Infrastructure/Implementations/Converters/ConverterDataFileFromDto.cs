@@ -30,7 +30,16 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели
         /// </summary>
-        public static IReadOnlyList<ISignatureLibrary> SignaturesLibraryFromDto(IList<SignatureDto> signaturesDto) =>
+        public static IReadOnlyList<ISignatureFileData> SignaturesFileDataFromDto(IEnumerable<SignatureDto> signaturesDto) =>
+            signaturesDto?.
+            Select(SignatureFileDataFromDto).
+            ToList()
+            ?? throw new ArgumentNullException(nameof(signaturesDto));
+
+        /// <summary>
+        /// Преобразовать подписи из трансферной модели
+        /// </summary>
+        public static IReadOnlyList<ISignatureLibrary> SignaturesLibraryFromDto(IEnumerable<SignatureDto> signaturesDto) =>
             signaturesDto?.
             Select(SignatureLibraryFromDto).ToList()
             ?? throw new ArgumentNullException(nameof(signaturesDto));
@@ -38,7 +47,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения
         /// </summary>
-        public IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IList<SignatureDto> signaturesDto, string signatureFolder) =>
+        public IReadOnlyList<ISignatureFile> SignaturesFileFromDto(IEnumerable<SignatureDto> signaturesDto, string signatureFolder) =>
             signaturesDto?.
             Select(signatureDto => SignatureFileFromDto(signatureDto, signatureFolder)).
             Where(successAndSignature => successAndSignature.success).
@@ -49,7 +58,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подписи из трансферной модели и сохранить изображения асинхронно
         /// </summary>
-        public async Task<IReadOnlyList<ISignatureFile>> SignaturesFileFromDtoAsync(IReadOnlyList<SignatureDto> signaturesDto, string signatureFolder)
+        public async Task<IReadOnlyList<ISignatureFile>> SignaturesFileFromDtoAsync(IEnumerable<SignatureDto> signaturesDto, string signatureFolder)
         {
             if (signaturesDto == null) throw new ArgumentNullException(nameof(signaturesDto));
 
@@ -65,6 +74,15 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать подпись из трансферной модели
         /// </summary>
+        private static ISignatureFileData SignatureFileDataFromDto(SignatureDto signatureDto) =>
+            (signatureDto != null)
+                ? new SignatureFileData(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation), 
+                                        signatureDto.SignatureJpeg, false)
+                : throw new ArgumentNullException(nameof(signatureDto));
+
+        /// <summary>
+        /// Преобразовать подпись из трансферной модели
+        /// </summary>
         private static ISignatureLibrary SignatureLibraryFromDto(SignatureDto signatureDto) =>
             (signatureDto != null)
                 ? new SignatureLibrary(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation))
@@ -76,10 +94,11 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         private (bool success, ISignatureFile signatureFile) SignatureFileFromDto(SignatureDto signatureDto, string signatureFolder)
         {
             if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
-            string signatureFilePath = SignatureFile.GetFilePathByFolder(signatureFolder, signatureDto.PersonId);
+            string signatureFilePath = SignatureFile.GetFilePathByFolder(signatureFolder, signatureDto.PersonId, false);
             bool success = _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureDto.SignatureJpeg).WaitAndUnwrapException();
 
-            return (success, new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation), signatureFilePath));
+            return (success, new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation), 
+                                               signatureFilePath, false));
         }
 
         /// <summary>
@@ -88,11 +107,11 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         private async Task<(bool success, ISignatureFile signatureFile)> SignatureFileFromDtoAsync(SignatureDto signatureDto, string signatureFolder)
         {
             if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
-            bool success = await _fileSystemOperations.SaveFileFromByte(FileSystemOperations.CombineFilePath(signatureFolder, signatureDto.PersonId,
-                                                                                                             SignatureFile.SaveFormat),
-                                                                        signatureDto.SignatureJpeg);
+            string signatureFilePath = SignatureFile.GetFilePathByFolder(signatureFolder, signatureDto.PersonId, false);
+            bool success = await _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureDto.SignatureJpeg);
 
-            return (success, new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation), signatureFolder));
+            return (success, new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation),
+                                               signatureFilePath, false));
         }
 
         /// <summary>

@@ -201,6 +201,7 @@
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\StampFilePath.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterMicrostationDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterMicrostationDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\SignatureConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\SignaturesFunctionSync.cs" />
     <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterPrintingConfiguration.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConvertingDocument.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\ISignatureConverter.cs" />
     <Compile Include="Infrastructure\Interfaces\IPdfCreatorService.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataToDto.cs" />

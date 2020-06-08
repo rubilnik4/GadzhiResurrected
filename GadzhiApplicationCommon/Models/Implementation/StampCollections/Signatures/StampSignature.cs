@@ -27,19 +27,24 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatu
         public abstract IResultAppValue<IStampField> Signature { get; }
 
         /// <summary>
+        /// Вертикальное расположение подписи
+        /// </summary>
+        public bool IsVertical => Signature.Value?.IsVertical ?? false;
+
+        /// <summary>
         /// Установлена ли подпись
         /// </summary>
-        public abstract bool IsSignatureValid();
+        public abstract bool IsSignatureValid { get; }
 
         /// <summary>
         /// Корректно ли заполнено поле ответственного лица
         /// </summary>
-        public bool IsPersonFieldValid() => !String.IsNullOrEmpty(SignatureLibrary.PersonId);
+        public bool IsPersonFieldValid => !String.IsNullOrEmpty(SignatureLibrary.PersonId);
 
         /// <summary>
         /// Необходимо ли вставлять подпись в поле
         /// </summary>
-        public virtual bool NeedToInsert() => IsPersonFieldValid();
+        public virtual bool IsAbleToInsert => IsPersonFieldValid;
 
         /// <summary>
         /// Вставить подпись

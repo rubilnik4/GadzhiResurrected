@@ -56,6 +56,7 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Linq" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
@@ -118,6 +119,7 @@
     <Compile Include="Extensions\NullExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\PathExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
+    <Compile Include="Infrastructure\Implementations\ImageOperations.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
@@ -133,6 +135,8 @@
     <Compile Include="Models\Implementations\Errors\ResultValue.cs" />
     <Compile Include="Models\Implementations\Errors\ResultError.cs" />
     <Compile Include="Models\Implementations\Errors\ResultCollection.cs" />
+    <Compile Include="Models\Implementations\Images\ImageFormat.cs" />
+    <Compile Include="Models\Implementations\Images\ImageRotation.cs" />
     <Compile Include="Models\Implementations\LibraryData\PersonInformation.cs" />
     <Compile Include="Models\Implementations\LibraryData\SignatureFile.cs" />
     <Compile Include="Models\Implementations\LibraryData\SignatureFileData.cs" />

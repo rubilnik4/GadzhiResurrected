@@ -11,5 +11,10 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields
         /// Тип поля в штампе
         /// </summary>
         StampFieldType StampFieldType { get; }
+
+        /// <summary>
+        /// Вертикальное расположение подписи
+        /// </summary>
+        bool IsVertical { get; }
     }
 }
