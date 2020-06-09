@@ -17,7 +17,7 @@ using GadzhiMicrostation.Models.Interfaces.StampCollections;
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Строки с согласованиями
+    /// Строки согласования
     /// </summary>
     public partial class StampMicrostation
     {

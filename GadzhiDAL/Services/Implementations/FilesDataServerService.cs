@@ -37,6 +37,7 @@ namespace GadzhiDAL.Services.Implementations
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
+                                          OrderBy(package=> package.CreationDateTime).
                                           FirstOrDefaultAsync(ConditionConverting(identityServerName));
 
             packageDataEntity?.StartConverting(identityServerName);

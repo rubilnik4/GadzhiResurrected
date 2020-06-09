@@ -1,6 +1,7 @@
 ﻿using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GadzhiWord.Word.Implementations.Converters
             {
                 WdPaperSize.wdPaperA3 => "A3",
                 WdPaperSize.wdPaperA4 => "A4",
-                _ => String.Empty
+                _ => "Undefined"
             };
     }
 }

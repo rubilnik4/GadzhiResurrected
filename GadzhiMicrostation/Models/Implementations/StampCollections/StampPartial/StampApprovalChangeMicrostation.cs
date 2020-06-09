@@ -6,7 +6,7 @@ using System.Linq;
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Строки с согласованиями для извещения с изменениями
+    /// Строки согласования для извещения с изменениями
     /// </summary>
     public partial class StampMicrostation
     {

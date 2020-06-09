@@ -14,19 +14,24 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields
         IResultAppCollection<IStampPerson> StampPersons { get; }
 
         /// <summary>
-        /// Строки с изменениями
+        /// Строки изменений
         /// </summary>
         IResultAppCollection<IStampChange> StampChanges { get; }
 
         /// <summary>
-        /// Строки с согласованием
+        /// Строки согласования
         /// </summary>
         IResultAppCollection<IStampApproval> StampApproval { get; }
 
         /// <summary>
-        /// Строки с согласованием для извещения с изменениями
+        /// Строки согласования для извещения с изменениями
         /// </summary>
         IResultAppCollection<IStampApprovalChange> StampApprovalChange { get; }
+
+        /// <summary>
+        /// Строки согласования для опросных листов и тех требований
+        /// </summary>
+        IResultAppCollection<IStampApprovalPerformers> StampApprovalPerformers { get; }
 
         /// <summary>
         /// Получить все подписи

@@ -24,22 +24,26 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges)
             : this(stampPersons, stampChanges,
                    new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()),
-                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()))
+                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()),
+                   new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>()))
         { }
 
         public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges,
                                     IResultAppCollection<IStampApproval> stampApproval)
             : this(stampPersons, stampChanges, stampApproval,
-                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()))
+                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()),
+                   new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>()))
         { }
 
         public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges,
-                                    IResultAppCollection<IStampApproval> stampApproval, IResultAppCollection<IStampApprovalChange> stampApprovalChange)
+                                    IResultAppCollection<IStampApproval> stampApproval, IResultAppCollection<IStampApprovalChange> stampApprovalChange,
+                                    IResultAppCollection<IStampApprovalPerformers> stampApprovalPerformers)
         {
             StampPersons = stampPersons ?? throw new ArgumentNullException(nameof(stampPersons));
             StampChanges = stampChanges ?? throw new ArgumentNullException(nameof(stampChanges));
             StampApproval = stampApproval ?? throw new ArgumentNullException(nameof(stampApproval));
             StampApprovalChange = stampApprovalChange ?? throw new ArgumentNullException(nameof(stampApprovalChange));
+            StampApprovalPerformers = stampApprovalPerformers ?? throw new ArgumentNullException(nameof(stampApprovalPerformers));
         }
 
         /// <summary>
@@ -48,19 +52,24 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         public IResultAppCollection<IStampPerson> StampPersons { get; }
 
         /// <summary>
-        /// Строки с изменениями
+        /// Строки изменений
         /// </summary>
         public IResultAppCollection<IStampChange> StampChanges { get; }
 
         /// <summary>
-        /// Строки с согласованием
+        /// Строки согласования
         /// </summary>
         public IResultAppCollection<IStampApproval> StampApproval { get; }
 
         /// <summary>
-        /// Строки с согласованием для извещения с изменениями
+        /// Строки согласования для извещения с изменениями
         /// </summary>
         public IResultAppCollection<IStampApprovalChange> StampApprovalChange { get; }
+
+        /// <summary>
+        /// Строки согласования для опросных листов и тех требований
+        /// </summary>
+        public IResultAppCollection<IStampApprovalPerformers > StampApprovalPerformers { get; }
 
         /// <summary>
         /// Получить все подписи

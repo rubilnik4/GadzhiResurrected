@@ -23,6 +23,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         {
             { StampType.Full, "Основной"},
             { StampType.Shortened, "Сокращенный"},
+            { StampType.ChangeNotice, "Согласование извещения"},
         };
 
         /// <summary>
@@ -50,6 +51,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         public static IReadOnlyList<string> MarkersAdditionalStamp => new List<string>()
         {
             "Лист",
+        };
+
+        /// <summary>
+        /// Маркеры таблицы согласования исполнителей
+        /// </summary>
+        public static IReadOnlyList<string> MarkersApprovalPerformanceTable => new List<string>()
+        {
+            "Список исполнителей"
         };
 
         /// <summary>

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -45,8 +43,13 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         protected abstract IResultAppCollection<IStampApproval> GetStampApprovalRows();
 
         /// <summary>
-        /// Получить строки с согласованием без подписи Word для извещения с изменениями
+        /// Получить строки согласования без подписи Word для извещения с изменениями
         /// </summary>
         protected abstract IResultAppCollection<IStampApprovalChange> GetStampApprovalChangeRows();
+
+        /// <summary>
+        /// Получить строки согласования без подписи Word для извещения с изменениями
+        /// </summary>
+        protected abstract IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows();
     }
 }

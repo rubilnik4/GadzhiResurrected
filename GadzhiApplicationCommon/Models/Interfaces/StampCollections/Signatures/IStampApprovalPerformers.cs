@@ -3,9 +3,9 @@
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
 {
     /// <summary>
-    /// Строка с согласованием
+    /// Строка согласования для опросных листов и тех требований
     /// </summary>
-    public interface IStampApproval : IStampSignature
+    public interface IStampApprovalPerformers : IStampSignature
     {
         /// <summary>
         /// Отдел согласования
@@ -13,13 +13,13 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
         IStampTextField Department { get; }
 
         /// <summary>
+        /// Дата
+        /// </summary>
+        IStampTextField DateSignature { get; }
+
+        /// <summary>
         /// Ответственное лицо
         /// </summary>
         IStampTextField ResponsiblePerson { get; }
-
-        /// <summary>
-        /// Дата
-        /// </summary>
-        IStampTextField DateSignature { get; }      
     }
 }

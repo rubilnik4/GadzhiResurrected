@@ -16,7 +16,7 @@ using GadzhiWord.Word.Interfaces.Word.Elements;
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {
     /// <summary>
-    /// Строки с согласованием для извещения с изменениями
+    /// Строки согласования для извещения с изменениями Word
     /// </summary>
     public partial class StampWord
     {

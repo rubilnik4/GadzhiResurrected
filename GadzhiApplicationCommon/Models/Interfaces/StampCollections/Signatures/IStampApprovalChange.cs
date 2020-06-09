@@ -3,7 +3,7 @@
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
 {
     /// <summary>
-    /// Строка с ответственным лицом и подписью
+    /// Строка согласования для извещения изменений
     /// </summary>
     public interface IStampApprovalChange : IStampSignature
     {

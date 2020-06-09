@@ -6,6 +6,9 @@ using GadzhiWord.Models.Interfaces.StampCollections;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
 {
+    /// <summary>
+    /// Строка согласования для извещения изменений
+    /// </summary>
     public class ApprovalChangeSignatureWord : SignatureWord, IStampApprovalChange
     {
         /// <summary>

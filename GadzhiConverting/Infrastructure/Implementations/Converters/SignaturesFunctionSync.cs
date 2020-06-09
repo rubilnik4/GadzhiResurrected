@@ -40,15 +40,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         private static Func<IList<SignatureFileRequest>, IList<ISignatureFileApp>> GetSignaturesSyncList(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
                                                                                                             ISignatureConverter signatureConverter,
                                                                                                             string signatureFolder) =>
-            (signaturesFileRequest) => signaturesFileRequest?.Select(signatureRequest => signatureRequest.PersonId).
-                                      Map(ids => fileConvertingServerService.Operations.GetSignatures(ids.ToList()).WaitAndUnwrapException()).
-                                      Map(ConverterDataFileFromDto.SignaturesFileDataFromDto).
-                                      Map(signaturesFileData => signaturesFileRequest.Join(signaturesFileData,
-                                                                                           signatureFileRequest => signatureFileRequest.PersonId,
-                                                                                           signatureFileData => signatureFileData.PersonId,
-                                                                                           (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData, signatureFileRequest))).
-                                      Map(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder)).
-                                      ToApplication().ToList();
+            (signaturesFileRequest) =>
+                signaturesFileRequest?.
+                Select(signatureRequest => signatureRequest.PersonId).
+                Map(ids => fileConvertingServerService.Operations.GetSignatures(ids.ToList()).WaitAndUnwrapException()).
+                Map(ConverterDataFileFromDto.SignaturesFileDataFromDto).
+                Map(signaturesFileData => signaturesFileRequest.Join(signaturesFileData,
+                                                                     signatureFileRequest => signatureFileRequest.PersonId,
+                                                                     signatureFileData => signatureFileData.PersonId,
+                                                                     (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData, 
+                                                                                                                                  signatureFileRequest))).
+                Map(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder)).
+                ToApplication().ToList();
 
         /// <summary>
         /// Повернуть изображение подписи

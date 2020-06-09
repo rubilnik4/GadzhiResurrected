@@ -120,6 +120,7 @@
     <Compile Include="Models\Interfaces\StampCollections\IStampFull.cs" />
     <Compile Include="Models\Interfaces\StampCollections\IStampShort.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampApprovalChange.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampApprovalPerformers.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampChange.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampApproval.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampPerson.cs" />

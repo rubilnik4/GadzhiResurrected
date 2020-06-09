@@ -18,6 +18,7 @@ using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Excel.Elements;
 using GadzhiWord.Word.Interfaces.Word;
 using GadzhiWord.Word.Interfaces.Word.Elements;
+using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Word;
 
 namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
@@ -109,7 +110,7 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Экспорт файла
         /// </summary>      
         public IResultAppValue<string> Export(string filePath, StampDocumentType stampDocumentType) =>
-            new ResultAppCollection<ITableElementWord>(GetTables()).
+            new ResultAppCollection<ITableElementWord>(Tables).
             ResultValueOk(FilteringExportTables).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.TableNotFound, "Таблицы для экспорта не найдены")).
             ResultValueOkBind(tables => ExportByTableType(tables, filePath, stampDocumentType));

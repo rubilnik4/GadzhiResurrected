@@ -22,15 +22,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Получить поле шифра
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetFullCode() =>
+        protected override IResultAppValue<IStampTextField> FullCode =>
                 FindElementsInStamp<ITextNodeElementMicrostation>(new List<string>() { StampFieldBasic.FullCode.Name },
                                                                   new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра не найдено")).
-                ResultValueOk(textElement => new StampTextNodeFieldMicrostation(textElement.First() , StampFieldType.FullRow));
+                ResultValueOk(textElement => new StampTextNodeFieldMicrostation(textElement.First(), StampFieldType.FullRow));
 
         /// <summary>
         /// Получить номер текущего листа
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetCurrentSheet() =>
+        protected override IResultAppValue<IStampTextField> CurrentSheet =>
             FindElementsInStamp<ITextElementMicrostation>(new List<string>() { StampFieldBasic.CurrentSheet.Name },
                                                           new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле номера листа не найдено")).
             ResultValueOk(textElement => new StampTextFieldMicrostation(textElement.First(), StampFieldType.CurrentSheet));

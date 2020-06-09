@@ -28,6 +28,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
             };
 
         /// <summary>
+        /// Является ли таблица список исполнителей для согласования
+        /// </summary>
+        public static bool IsTableApprovalsPerformers(ITableElementWord stampTable) =>
+            stampTable?.HasCellElement(0, 0) == true &&
+            StampMarkersWord.MarkersApprovalPerformanceTable.MarkerContain(stampTable.RowsElementWord[0].CellsElement[0].Text);
+
+        /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью для полного штампа
         /// </summary>        
         public static bool IsFieldPersonSignatureFull(ICellElementWord cellElement, ITableElementWord stampTable) =>

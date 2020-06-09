@@ -144,7 +144,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibrary) =>
             _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
-            ResultVoidOk(cellElement => cellElement.LineWeight = 5).
+            ResultVoidOk(cellElement => cellElement.LineWeight = 7).
             ToResultValueFromApplication().
             ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.PersonInformation.FullName}")).
             ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
@@ -157,7 +157,8 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonInformation, JpegConverter.ToJpegFromEmf(filePathEmf)).
+            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonInformation,
+                                                     JpegConverter.ToJpegFromEmf(filePathEmf), false ).
                                Void(_ => _fileSystemOperations.DeleteFile(filePathEmf))).
             Void(_ => cellSignature.Remove());
 

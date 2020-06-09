@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
@@ -22,9 +23,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
     /// </summary>
     public class StampChangeWord : StampWord, IStampChangeNotice
     {
-        public StampChangeWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElementWord tableStamp)
+        public StampChangeWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElementWord tableStamp,
+                               IResultAppValue<IStampTextField> fullCode)
             : base(stampSettingsWord, signaturesSearching, tableStamp)
-        { }
+        {
+            FullCode = fullCode ?? throw new ArgumentNullException(nameof(fullCode));
+        }
 
         /// <summary>
         /// Тип штампа
@@ -39,6 +43,12 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
             Map(personRows => new StampSignatureFields(personRows,
                                                        new ResultAppCollection<IStampChange>(Enumerable.Empty<IStampChange>()),
                                                        GetStampApprovalRows(),
-                                                       GetStampApprovalChangeRows()));
+                                                       GetStampApprovalChangeRows(),
+                                                       GetStampApprovalPerformersRows()));
+
+        /// <summary>
+        /// Получить поле шифра
+        /// </summary>
+        protected override IResultAppValue<IStampTextField> FullCode { get; }
     }
 }

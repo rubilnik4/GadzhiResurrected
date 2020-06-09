@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing.Printing;
+using System.Drawing.Text;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
@@ -12,6 +12,9 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.StampTypes;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
@@ -23,19 +26,20 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         /// Выбрать главный штамп
         /// </summary>
         public static IStamp GetMainStamp(StampType stampType, ITableElementWord tableWord, StampSettingsWord stampSettings,
-                                          SignaturesSearching signaturesSearching) =>
+                                          SignaturesSearching signaturesSearching, IEnumerable<ITableElementWord> tables) =>
             stampType switch
             {
-                StampType.Full => new StampFullWord(stampSettings, signaturesSearching, tableWord),
-                StampType.ChangeNotice => new StampChangeWord(stampSettings, signaturesSearching, tableWord),
+                StampType.Full => GetFullStamp(stampSettings, signaturesSearching, tableWord, tables),
+                StampType.ChangeNotice => GetChangeNoticeStamp(stampSettings, signaturesSearching, tableWord, tables),
                 _ => throw new InvalidEnumArgumentException(nameof(stampType), (int)stampType, typeof(StampType)),
             };
 
         /// <summary>
         /// Получить основной штамп
         /// </summary>
-        public static IStamp GetFullStamp(ITableElementWord tableWord, StampSettingsWord stampSettings, SignaturesSearching signaturesSearching) =>
-            new StampFullWord(stampSettings, signaturesSearching, tableWord);
+        public static IStamp GetFullStamp(StampSettingsWord stampSettings, SignaturesSearching signaturesSearching, 
+                                          ITableElementWord tableWord, IEnumerable<ITableElementWord> tables) =>
+            new StampFullWord(stampSettings, signaturesSearching, tableWord, GetApprovalPerformersTable(tables));
 
         /// <summary>
         /// Получить сокращенные штампы
@@ -69,8 +73,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         /// <summary>
         /// Получить основной штамп
         /// </summary>
-        public static IStamp GetChangeNoticeStamp(ITableElementWord tableWord, StampSettingsWord stampSettings, SignaturesSearching signaturesSearching) =>
-            new StampChangeWord(stampSettings, signaturesSearching, tableWord);
+        public static IStamp GetChangeNoticeStamp(StampSettingsWord stampSettings, SignaturesSearching signaturesSearching, 
+                                                  ITableElementWord tableWord, IEnumerable<ITableElementWord> tables) =>
+            new StampChangeWord(stampSettings, signaturesSearching, tableWord, GetChangeFullCode(tables));
 
         /// <summary>
         /// Получить параметры штампа Word
@@ -79,5 +84,29 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
                                                              string paperSize, StampOrientationType stampOrientationType) =>
             new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId,
                                   convertingSettings.PdfNamingType, paperSize, stampOrientationType);
+
+        /// <summary>
+        /// Найти поле основного шифра в таблицах документа
+        /// </summary>
+        private static IResultAppValue<IStampTextField> GetChangeFullCode(IEnumerable<ITableElementWord> tables)
+        {
+            ICellElementWord fullCode = null;
+            foreach (var table in tables)
+            {
+                fullCode = table.CellsElementWord.
+                              FirstOrDefault(cell => CheckFieldType.IsFieldFullCode(cell, table));
+
+               if (fullCode != null) break;
+            }
+            return new ResultAppValue<IStampTextField>(new StampTextFieldWord(fullCode, StampFieldType.FullRow) ,
+                                                        new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра в таблице не найдено"));
+        }
+
+        /// <summary>
+        /// Найти таблицу согласования списка исполнителей
+        /// </summary>
+        private static IResultAppValue<ITableElementWord> GetApprovalPerformersTable(IEnumerable<ITableElementWord> tables) =>
+           new ResultAppValue<ITableElementWord>(tables.FirstOrDefault(CheckFieldType.IsTableApprovalsPerformers),
+                                                 new ErrorApplication(ErrorApplicationType.TableNotFound, "Таблица согласования списка исполнителей не найдена"));
     }
 }

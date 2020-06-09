@@ -17,14 +17,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Получить поле шифра
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetFullCode() =>
+        protected override IResultAppValue<IStampTextField> FullCode =>
             new ResultAppValue<IStampTextField>(GetFieldsByType(StampFieldType.FullRow).FirstOrDefault(),
                                                 new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра в таблице не найдено"));
 
         /// <summary>
         /// Получить номер текущего листа
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetCurrentSheet() =>
+        protected override IResultAppValue<IStampTextField> CurrentSheet =>
             new ResultAppValue<IStampTextField>(GetFieldsByType(StampFieldType.CurrentSheet).FirstOrDefault(),
                                                 new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле текущего листа в таблице не найдено"));
     }

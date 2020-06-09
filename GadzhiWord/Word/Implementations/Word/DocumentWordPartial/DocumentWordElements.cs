@@ -7,19 +7,15 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Models.Implementations.StampCollections.StampCreating;
-using GadzhiWord.Models.Implementations.StampCollections.StampTypes;
 using GadzhiWord.Word.Implementations.Word.Elements;
 using GadzhiWord.Word.Implementations.Word.Interop;
 using GadzhiWord.Word.Interfaces.Word.Elements;
-using Microsoft.Office.Interop.Word;
 
 namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
 {
@@ -82,16 +78,17 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         private IResultAppCollection<IStamp> GetStampsInOrder(IList<TableStampType> tablesStamp, ConvertingSettingsApp convertingSettings) =>
             StampCreating.GetMainStamp(tablesStamp[0].StampType, tablesStamp[0].TableWord,
                                        StampCreating.GetStampSettingsWord(0, convertingSettings, PaperSize, OrientationType),
-                                       ApplicationOffice.ResourcesWord.SignaturesSearching).
+                                       ApplicationOffice.ResourcesWord.SignaturesSearching, Tables).
             Map(mainStamp => new ResultAppCollection<IStamp>(new List<IStamp>() { mainStamp }).
-                             ConcatResult(GetShortStamps(tablesStamp.Select(tableStamp => tableStamp.TableWord),
+                             ConcatResult(GetShortStamps(tablesStamp.Where(tableStamp => tableStamp.StampType == StampType.Shortened).
+                                                                     Select(tableStamp => tableStamp.TableWord),
                                                          mainStamp,  convertingSettings)));
 
         /// <summary>
         /// Получить сокращенные штампы
         /// </summary>
         private IResultAppCollection<IStamp> GetShortStamps(IEnumerable<ITableElementWord> tablesStamp, IStamp fullStamp, ConvertingSettingsApp convertingSettings) =>
-            StampCreating.GetShortStamps(fullStamp, tablesStamp.Skip(1),
+            StampCreating.GetShortStamps(fullStamp, tablesStamp,
                                          StampCreating.GetStampSettingsWord(1, convertingSettings, PaperSize, OrientationType),
                                          ApplicationOffice.ResourcesWord.SignaturesSearching);
 
