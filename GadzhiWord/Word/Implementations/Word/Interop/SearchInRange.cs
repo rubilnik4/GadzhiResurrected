@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiWord.Extensions.Word;
 using Microsoft.Office.Interop.Word;
 
@@ -17,8 +18,12 @@ namespace GadzhiWord.Word.Implementations.Word.Interop
         /// Найти таблицы в колонтитуле
         /// </summary>
         public static IEnumerable<Table> GetTablesFromFooter(HeaderFooter footer) =>
-            footer.Range.Tables.ToEnumerable().
-            Concat(GetTablesFromShapes(footer.Shapes));
+            footer.Exists
+                ? footer.Range.Tables.ToEnumerable().
+                  ToList().
+                  WhereBad(tablesFooters => tablesFooters.Count > 0,
+                    badFunc: _ => GetTablesFromShapes(footer.Shapes).ToList())
+                : Enumerable.Empty<Table>();
 
         /// <summary>
         /// Найти таблицы в фигуре

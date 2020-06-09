@@ -58,7 +58,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// </summary>
         public static IReadOnlyList<string> MarkersApprovalPerformanceTable => new List<string>()
         {
-            "Список исполнителей"
+            "СписокИсполнителей"
         };
 
         /// <summary>
@@ -159,6 +159,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
                 if (MarkersAdditionalStamp.MarkerContain(cell.Text)) hasShortMarker = true;
                 if (MarkersFullStamp.MarkerContain(cell.Text)) hasMainMarkers = true;
                 if (MarkersChangeNoticeStamp.MarkerContain(cell.Text)) hasChangeMarkers = true;
+
+                if (hasFullCode && (hasMainMarkers || hasChangeMarkers)) break;
             }
 
             return hasFullCode switch

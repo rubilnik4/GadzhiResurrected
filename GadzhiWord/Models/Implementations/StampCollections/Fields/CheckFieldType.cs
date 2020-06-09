@@ -3,6 +3,7 @@ using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Extensions.Word;
+using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Fields
@@ -31,7 +32,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// Является ли таблица список исполнителей для согласования
         /// </summary>
         public static bool IsTableApprovalsPerformers(ITableElementWord stampTable) =>
-            stampTable?.HasCellElement(0, 0) == true &&
+            stampTable?.RowsCountInitial <= ApprovalPerformersSignatureWord.MAX_ROWS_COUNT && 
+            stampTable.ColumnsCountInitial == ApprovalPerformersSignatureWord.FIELDS_COUNT &&
+            stampTable.HasCellElement(0, 0) == true &&
             StampMarkersWord.MarkersApprovalPerformanceTable.MarkerContain(stampTable.RowsElementWord[0].CellsElement[0].Text);
 
         /// <summary>

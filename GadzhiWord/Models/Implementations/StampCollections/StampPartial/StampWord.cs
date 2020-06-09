@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
@@ -14,8 +16,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
     /// </summary>
     public abstract partial class StampWord : Stamp
     {
-        protected StampWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching,
-                            ITableElementWord tableStamp)
+        protected StampWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElementWord tableStamp)
             : base(stampSettingsWord, signaturesSearching)
         {
             TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
@@ -27,6 +28,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Элемент таблица
         /// </summary>
         protected ITableElementWord TableStamp { get; }
+
+        /// <summary>
+        /// Элемент таблица согласования списка исполнителей
+        /// </summary>
+        protected virtual IResultAppValue<ITableElementWord> TableApprovalPerformers =>
+            new ResultAppValue<ITableElementWord>(new ErrorApplication(ErrorApplicationType.TableNotFound,
+                                                                       "Таблица согласования списка исполнителей не найдена"));
 
         /// <summary>
         /// Формат

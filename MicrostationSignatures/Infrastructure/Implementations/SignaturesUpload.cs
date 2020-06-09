@@ -27,6 +27,7 @@ using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
+using GadzhiMicrostation.Factory;
 using MicrostationSignatures.Models.Enums;
 
 namespace MicrostationSignatures.Infrastructure.Implementations

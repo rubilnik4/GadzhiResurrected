@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -42,9 +43,34 @@ namespace MicrostationSignatures.Infrastructure.Implementations
                 g.DrawImage(metaFile, 0, 0, bitmap.Width, bitmap.Height);
             }
 
+            var resizedBitmap = ResizeImage(bitmap);
+
             using var stream = new MemoryStream();
-            bitmap.Save(stream, GetEncoder(format), parameters);
+            resizedBitmap.Save(stream, GetEncoder(format), parameters);
             return stream.ToArray();
+        }
+
+        private static Bitmap ResizeImage(Image image)
+        {
+            int resizeWidth = image.Width / 10;
+            int resizeHeight = image.Height / 10;
+            var destRect = new Rectangle(0, 0, resizeWidth, resizeHeight);
+            var destImage = new Bitmap(resizeWidth, resizeHeight);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using var graphics = Graphics.FromImage(destImage);
+            graphics.CompositingMode = CompositingMode.SourceCopy;
+            graphics.CompositingQuality = CompositingQuality.HighQuality;
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            using var wrapMode = new ImageAttributes();
+            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+
+            return destImage;
         }
 
         /// <summary>

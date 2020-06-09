@@ -12,6 +12,6 @@
         ChangeSignature,
         ApprovalSignature,
         ApprovalChangeSignature,
-        ApprovalPerformers,
+        ApprovalPerformersSignature,
     }
 }

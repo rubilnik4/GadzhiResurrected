@@ -42,9 +42,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
             GetStampPersonRows().
             Map(personRows => new StampSignatureFields(personRows,
                                                        new ResultAppCollection<IStampChange>(Enumerable.Empty<IStampChange>()),
-                                                       GetStampApprovalRows(),
+                                                       new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()),
                                                        GetStampApprovalChangeRows(),
-                                                       GetStampApprovalPerformersRows()));
+                                                       new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>())));
 
         /// <summary>
         /// Получить поле шифра

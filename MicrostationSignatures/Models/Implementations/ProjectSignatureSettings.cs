@@ -61,7 +61,7 @@ namespace MicrostationSignatures.Models.Implementations
         /// <summary>
         /// Размер изображения подписи в пикселях
         /// </summary>
-        public static (int Width, int Height) JpegPixelSize => (500, 300);
+        public static (int Width, int Height) JpegPixelSize => (500, 250);
 
         /// <summary>
         /// Скопировать ресурсы и вернуть пути их расположения

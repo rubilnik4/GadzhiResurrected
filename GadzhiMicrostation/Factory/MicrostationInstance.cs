@@ -6,7 +6,7 @@ using GadzhiApplicationCommon.Extensions.StringAdditional;
 
 namespace GadzhiMicrostation.Factory
 {
-    internal static class MicrostationInstance
+    public static class MicrostationInstance
     {
         /// <summary>
         /// Создание экземпляра приложения Microstation
@@ -37,7 +37,7 @@ namespace GadzhiMicrostation.Factory
         /// <summary>
         /// Уничтожить все предыдущие процессы
         /// </summary>
-        private static void KillAllPreviousProcess()
+        public static void KillAllPreviousProcess()
         { 
             var microstationProcesses = Process.GetProcesses().
                                         Where(process => process.ProcessName.ContainsIgnoreCase("ustation"));

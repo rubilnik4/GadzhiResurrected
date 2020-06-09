@@ -16,6 +16,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public const int FIELDS_COUNT = 4;
 
+        /// <summary>
+        /// Количество ячеек в строке
+        /// </summary>
+        public const int MAX_ROWS_COUNT = 8;
+
         public ApprovalPerformersSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature,
                                                IStampTextField responsiblePerson, IStampTextField department, IStampTextField dateSignature)
             : base(signatureLibrary, signature)

@@ -58,6 +58,7 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             _document.Sections.ToEnumerable().
             SelectMany(section => section.Footers.ToEnumerable()).
             SelectMany(SearchInRange.GetTablesFromFooter).
+            ToList().
             Select(table => new TableElementWord(table, ToOwnerWord)).
             Select(GetTableStamp).
             Where(tableStamp => tableStamp.StampType != StampType.Unknown).

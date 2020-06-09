@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiMicrostation.Factory;
 using MicrostationSignatures.DependencyInjection;
 using MicrostationSignatures.Infrastructure.Interfaces;
 using MicrostationSignatures.Models.Enums;
@@ -22,6 +23,8 @@ namespace MicrostationSignatures
         private static async Task Main()
         {
             BootStrapUnity.ConfigureContainer(Container);
+
+            MicrostationInstance.KillAllPreviousProcess();
 
             var signaturesToJpeg = Container.Resolve<ISignaturesToJpeg>();
             var projectSignatureSettings = Container.Resolve<IProjectSignatureSettings>();
