@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampTypes;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -41,6 +43,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         public abstract StampType StampType { get; }
 
         /// <summary>
+        /// Тип приложения
+        /// </summary>
+        public abstract StampApplicationType StampApplicationType { get; }
+
+        /// <summary>
         /// Основные поля штампа
         /// </summary>
         private IStampBasicFields _stampBasicFields;
@@ -59,6 +66,14 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Поля штампа, отвечающие за подписи
         /// </summary>
         public IStampSignatureFields StampSignatureFields => _stampSignatureFields ??= GetStampSignatureFields();
+
+        /// <summary>
+        /// Тип документа, определяемый по типу шифра в штампе
+        /// </summary>
+        public StampDocumentType StampDocumentType =>
+            FullCode.WhereContinue(fullCode => fullCode.OkStatus,
+                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(FullCode.Value.Text, StampApplicationType),
+                badFunc: _ => StampDocumentType.Unknown);
 
         /// <summary>
         /// Формат

@@ -1,11 +1,12 @@
-﻿using GadzhiCommon.Converters;
-using GadzhiCommon.Extensions.Functional;
+﻿using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Infrastructure.Implementations.Converters;
+using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -67,7 +68,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             errorConverting?.
             Map(error => new List<string>()
             { 
-                "Ошибка | " + ConverterErrorType.FileErrorTypeToString(error.FileConvertErrorType),
+                "Ошибка | " + ConverterErrorType.ErrorTypeToString(error.FileConvertErrorType),
                 errorConverting.ErrorDescription,
                 errorConverting.ExceptionMessage}).
             Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).

@@ -32,7 +32,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// </summary>
         private IReadOnlyList<IStampTextFieldWord> GetFields() =>
             TableStamp?.CellsElementWord?.
-            Where(cell => !String.IsNullOrWhiteSpace(cell.Text)).
+            Where(cell => !String.IsNullOrWhiteSpace(cell.TextNoSpaces)).
             Select(cell => new StampTextFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
             Where(field => field.StampFieldType != StampFieldType.Unknown).
             ToList();

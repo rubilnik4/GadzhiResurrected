@@ -14,7 +14,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
                                        Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                        IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
-            : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.Text), insertSignatureFunc,
+            : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.MaxLengthWord), insertSignatureFunc,
                    actionType, responsiblePerson, dateSignature)
         { }
 

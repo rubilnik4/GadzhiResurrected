@@ -125,7 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Excel\ElementExcelExtensions.cs" />
-    <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Extensions\Word\ElementWordExtensions.cs" />
     <Compile Include="Extensions\Word\MarkerExtensions.cs" />
     <Compile Include="Factory\ExcelInstance.cs" />
@@ -176,7 +175,6 @@
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOffice.cs" />
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficeDocument.cs" />
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficePrinting.cs" />
-    <Compile Include="Word\Implementations\Converters\TextPrepare.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
     <Compile Include="Word\Implementations\Excel\Elements\BookExcel.cs" />
     <Compile Include="Infractructure\Implementations\Specification\SpecificationToExcel.cs" />

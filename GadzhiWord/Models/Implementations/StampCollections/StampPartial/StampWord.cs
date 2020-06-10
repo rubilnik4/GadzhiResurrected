@@ -37,6 +37,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
                                                                        "Таблица согласования списка исполнителей не найдена"));
 
         /// <summary>
+        /// Тип приложения
+        /// </summary>
+        public override StampApplicationType StampApplicationType => StampApplicationType.Word;
+
+        /// <summary>
         /// Формат
         /// </summary>
         public override string PaperSize { get; }

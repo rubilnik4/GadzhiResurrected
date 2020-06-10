@@ -16,5 +16,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// Текст поля в штампе
         /// </summary>
         public abstract string Text { get; }
+
+        /// <summary>
+        /// Получить слово максимальной длины
+        /// </summary>
+        public abstract string MaxLengthWord { get; }
     }
 }

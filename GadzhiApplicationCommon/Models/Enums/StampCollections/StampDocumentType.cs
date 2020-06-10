@@ -10,5 +10,7 @@
         Specification,
         BillOfQuantities,
         CableMagazine,
+        TechnicalRequirements,
+        Questionnaire,
     }
 }

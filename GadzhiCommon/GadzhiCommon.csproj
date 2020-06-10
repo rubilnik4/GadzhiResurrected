@@ -91,7 +91,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\ConverterErrorType.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentType.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Errors\ConverterErrorType.cs" />
     <Compile Include="Enums\ConvertingSettings\PdfNamingType.cs" />
     <Compile Include="Enums\FilesConvert\ColorPrint.cs" />
     <Compile Include="Enums\FilesConvert\FileConvertErrorType.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
     <Compile Include="Enums\FilesConvert\ValidFileExtensions.cs" />
+    <Compile Include="Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Extensions\Async\AsyncExtensions.cs" />
     <Compile Include="Extensions\Collection\EnumerableExtension.cs" />
     <Compile Include="Extensions\Functional\CurryExtensions.cs" />
@@ -119,6 +121,8 @@
     <Compile Include="Extensions\NullExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\PathExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
+    <Compile Include="Extensions\StringAdditional\TextExtensions.cs" />
+    <Compile Include="Helpers\Strings\TextFormatting.cs" />
     <Compile Include="Infrastructure\Implementations\ImageOperations.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />

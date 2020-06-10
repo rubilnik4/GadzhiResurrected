@@ -1,9 +1,8 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using GadzhiCommon.Enums.FilesConvert;
 
-namespace GadzhiCommon.Converters
+namespace GadzhiCommon.Infrastructure.Implementations.Converters.Errors
 {
     /// <summary>
     /// Операции над типами ошибок
@@ -13,7 +12,7 @@ namespace GadzhiCommon.Converters
         /// <summary>
         /// Словарь типов ошибок в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<FileConvertErrorType, string> ErrorTypeToString =>
+        public static IReadOnlyDictionary<FileConvertErrorType, string> ErrorTypeString =>
             new Dictionary<FileConvertErrorType, string>
             {
                 { FileConvertErrorType.NoError , "Ошибка отсутствует" },
@@ -50,16 +49,16 @@ namespace GadzhiCommon.Converters
         /// <summary>
         /// Преобразовать тип ошибки в строковое значение
         /// </summary>       
-        public static string FileErrorTypeToString(FileConvertErrorType fileConvertErrorType)
+        public static string ErrorTypeToString(FileConvertErrorType fileConvertErrorType)
         {
-            ErrorTypeToString.TryGetValue(fileConvertErrorType, out string fileConvertErrorTypeString);
+            ErrorTypeString.TryGetValue(fileConvertErrorType, out string fileConvertErrorTypeString);
             return fileConvertErrorTypeString;
         }
 
         /// <summary>
         /// Определить наличие ошибок
         /// </summary>
-        public static StatusError FileErrorsTypeToStatusError(IEnumerable<FileConvertErrorType> fileConvertErrorsType)
+        public static StatusError ErrorsTypeToStatusError(IEnumerable<FileConvertErrorType> fileConvertErrorsType)
         {
             var fileConvertErrorsTypeCollection = fileConvertErrorsType?.ToList() ?? new List<FileConvertErrorType>();
 

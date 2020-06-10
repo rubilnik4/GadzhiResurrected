@@ -35,8 +35,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить класс с ответственным лицом и подписью по строке Word
         /// </summary>
         private IResultAppValue<IStampPerson> GetStampPersonFromRow(IRowElementWord personRow) =>
-            CheckFieldType.GetDepartmentType(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE].Text).
-            Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].Text,
+            CheckFieldType.GetDepartmentType(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE].MaxLengthWord).
+            Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
                                                           StampSettings.PersonId, departmentType)).
             ResultValueOk(signature => GetStampPersonFromFields(personRow, signature));
 

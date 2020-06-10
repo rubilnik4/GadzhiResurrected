@@ -4,8 +4,6 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Interfaces.StampCollections;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
 {
@@ -17,7 +15,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         public ApprovalSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
                                          Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
                                          IStampTextField departmentApproval, IStampTextField responsiblePerson, IStampTextField dateSignature)
-            : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.Text), insertSignatureFunc,
+            : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.MaxLengthWord), insertSignatureFunc,
                    departmentApproval, responsiblePerson, dateSignature)
         { }
 

@@ -1,5 +1,4 @@
-﻿using GadzhiCommon.Converters;
-using GadzhiCommon.Models.Interfaces.Errors;
+﻿using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Infrastructure.Interfaces;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
@@ -8,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Infrastructure.Implementations.Converters;
+using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
@@ -59,7 +60,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         {
             if (errorConverting == null) throw new ArgumentNullException(nameof(errorConverting));
             string messageText = "Ошибка" + "\n" +
-                                 ConverterErrorType.FileErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
+                                 ConverterErrorType.ErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
                                  errorConverting.ErrorDescription;
             MessageBox.Show(messageText);
         }

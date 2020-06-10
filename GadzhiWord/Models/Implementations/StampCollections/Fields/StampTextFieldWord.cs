@@ -17,5 +17,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// Текст поля в штампе
         /// </summary>
         public string Text => CellElementStamp.Text;
+
+        /// <summary>
+        /// Получить слово максимальной длины
+        /// </summary>
+        public string MaxLengthWord => CellElementStamp.MaxLengthWord;
     }
 }

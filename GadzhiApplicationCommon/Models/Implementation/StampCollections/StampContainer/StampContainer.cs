@@ -18,17 +18,15 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
     /// </summary>
     public class StampContainer : IStampContainer
     {
-
         /// <summary>
         /// Штампы
         /// </summary>
         private readonly IResultAppCollection<IStamp> _stamps;
 
-        public StampContainer(IResultAppCollection<IStamp> stamps, StampContainerType stampContainerType, StampApplicationType stampApplicationType)
+        public StampContainer(IResultAppCollection<IStamp> stamps, StampContainerType stampContainerType)
         {
             _stamps = stamps ?? throw new ArgumentNullException(nameof(stamps));
             StampContainerType = stampContainerType;
-            StampApplicationType = stampApplicationType;
         }
 
         /// <summary>
@@ -37,17 +35,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
         public StampContainerType StampContainerType { get; }
 
         /// <summary>
-        /// Тип приложения
-        /// </summary>
-        public StampApplicationType StampApplicationType { get; }
-
-        /// <summary>
         /// Тип документа, определяемый по типу шифра в штампе
         /// </summary>
         public StampDocumentType StampDocumentType =>
             _stamps.WhereContinue(stamps => stamps.OkStatus && stamps.Value.Count > 0 &&
                                             stamps.Value[0].StampBasicFields.FullCode.OkStatus,
-                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(stamps.Value[0].StampBasicFields.FullCode.Value.Text, StampApplicationType),
+                okFunc: stamps => stamps.Value[0].StampDocumentType,
                 badFunc: _ => StampDocumentType.Unknown);
 
         /// <summary>

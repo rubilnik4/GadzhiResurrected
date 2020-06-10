@@ -16,9 +16,19 @@
         int ColumnIndex { get; }
 
         /// <summary>
+        /// Текст ячейки 
+        /// </summary>
+        public string Text { get; }
+
+        /// <summary>
         /// Текст ячейки
         /// </summary>
-        string Text { get; }
+        string TextNoSpaces { get; }
+
+        /// <summary>
+        /// Получить слово максимальной длины
+        /// </summary>
+        string MaxLengthWord { get; }
 
         /// <summary>
         /// Присутствует ли картинка в ячейке

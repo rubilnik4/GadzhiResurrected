@@ -1,6 +1,9 @@
 ﻿using System;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiCommon.Helpers.Strings;
+using GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData;
 
 namespace GadzhiCommon.Models.Implementations.LibraryData
 {
@@ -9,12 +12,12 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
     /// </summary>
     public readonly struct PersonInformation : IEquatable<PersonInformation>
     {
-        public PersonInformation(string surname, string name, string patronymic, string department)
+        public PersonInformation(string surname, string name, string patronymic, DepartmentType departmentType )
         {
             Surname = surname ?? String.Empty;
             Name = name ?? String.Empty;
             Patronymic = patronymic ?? String.Empty;
-            Department = department ?? String.Empty;
+            DepartmentType = departmentType;
         }
 
         /// <summary>
@@ -35,7 +38,12 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// <summary>
         /// Отдел
         /// </summary>
-        public string Department { get; }
+        public DepartmentType DepartmentType { get; }
+
+        /// <summary>
+        /// Отдел в строковом значении
+        /// </summary>
+        public string Department => ConverterDepartmentType.DepartmentTypeToString(DepartmentType);
 
         /// <summary>
         /// Полная информация
@@ -45,13 +53,13 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// <summary>
         /// Полная информация
         /// </summary>
-        public string FullInformation => $"{FullName} {Department}".Trim();
+        public string FullInformation => $"{FullName} {ConverterDepartmentType.DepartmentTypeToString(DepartmentType)}".Trim();
 
         /// <summary>
         /// Загружена ли информация о пользователе полностью
         /// </summary>
         public bool HasFullInformation => !String.IsNullOrWhiteSpace(Surname) && !String.IsNullOrWhiteSpace(Name) &&
-                                          !String.IsNullOrWhiteSpace(Patronymic) && !String.IsNullOrWhiteSpace(Department);
+                                          !String.IsNullOrWhiteSpace(Patronymic);
 
         /// <summary>
         /// Проверка фамилии 
@@ -59,31 +67,28 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         public bool SurnameEqual(string surname) => String.Equals(Surname, surname, StringComparison.CurrentCultureIgnoreCase);
 
         /// <summary>
-        /// Проверка отдела 
-        /// </summary>
-        public bool DepartmentEqual(string department) => String.Equals(Department, department, StringComparison.CurrentCultureIgnoreCase);
-
-        /// <summary>
         /// Проверка фамилии и отдела
         /// </summary>
-        public bool SurnameAndDepartmentEqual(string surname, string department) => SurnameEqual(surname) && DepartmentEqual(department);
+        public bool SurnameAndDepartmentEqual(string surname, DepartmentType department) => SurnameEqual(surname) && 
+                                                                                           DepartmentType == department;
 
         /// <summary>
         /// Преобразовать строку в информацию о пользователе
         /// </summary>
         public static PersonInformation GetFromFullName(string fullName) =>
-            fullName?.Split(null).
-            Map(splat => new PersonInformation(splat[0],
-                                               splat.GetStringFromArrayOrEmpty(1),
-                                               splat.GetStringFromArrayOrEmpty(2),
-                                               splat.JoinStringArrayFromIndexToEndOrEmpty(3)))
+            fullName?.Split().
+            Map(splat => new PersonInformation(TextFormatting.RemoveSpacesAndArtefacts(splat[0]) ,
+                                               TextFormatting.RemoveSpacesAndArtefacts(splat.GetStringFromArrayOrEmpty(1)),
+                                               TextFormatting.RemoveSpacesAndArtefacts(splat.GetStringFromArrayOrEmpty(2)),
+                                               TextFormatting.RemoveSpacesAndArtefacts(splat.JoinStringArrayFromIndexToEndOrEmpty(3)).
+                                                              Map(ConverterDepartmentType.DepartmentStringToType)))
             ?? new PersonInformation();
 
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((PersonInformation)obj);
 
         public bool Equals(PersonInformation other) =>
-            other.Surname == Surname && other.Name == Name && other.Patronymic == Patronymic && other.Department == Department;
+            other.Surname == Surname && other.Name == Name && other.Patronymic == Patronymic && other.DepartmentType == DepartmentType;
 
         public static bool operator ==(PersonInformation left, PersonInformation right) => left.Equals(right);
 
@@ -95,7 +100,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
             hashCode = hashCode * 31 + Surname.GetHashCode();
             hashCode = hashCode * 31 + Name.GetHashCode();
             hashCode = hashCode * 31 + Patronymic.GetHashCode();
-            hashCode = hashCode * 31 + Department.GetHashCode();
+            hashCode = hashCode * 31 + DepartmentType.GetHashCode();
 
             return hashCode;
         }

@@ -47,8 +47,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить класс с ответственным лицом и подписью по строке Word для штампа согласования
         /// </summary>
         private IResultAppValue<IStampApprovalChange> GetStampApprovalChangeFromRow(IRowElementWord approvalChangeRow) =>
-            CheckFieldType.GetDepartmentType(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.ACTION_TYPE].Text).
-            Map(departmentType => GetSignatureInformation(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON].Text,
+            CheckFieldType.GetDepartmentType(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.ACTION_TYPE].MaxLengthWord).
+            Map(departmentType => GetSignatureInformation(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
                                                           StampSettings.PersonId, departmentType)).
             ResultValueOk(signature => GetStampApprovalChangeFromFields(approvalChangeRow, signature));
 

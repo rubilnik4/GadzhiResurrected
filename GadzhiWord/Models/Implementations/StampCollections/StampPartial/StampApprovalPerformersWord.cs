@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
@@ -23,6 +22,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить строки с согласованием со списком исполнителей без подписи Word для извещения с изменениями
         /// </summary>
         protected override IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows() =>
+            (StampDocumentType == StampDocumentType.TechnicalRequirements || StampDocumentType == StampDocumentType.Questionnaire)
+                ? GetStampApprovalPerformersRowsChecked()
+                : new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>());
+
+        /// <summary>
+        /// Получить строки с согласованием для опросных листов и технических требований
+        /// </summary>
+        private IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRowsChecked() =>
             TableApprovalPerformers.
             ResultValueOk(table => table.RowsElementWord).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.FieldNotFound, "Строки согласования не найдены")).
@@ -35,8 +42,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить класс с ответственным лицом и подписью по строке Word для строк согласования
         /// </summary>
         private IResultAppValue<IStampApprovalPerformers> GetStampApprovalPerformersFromRow(IRowElementWord approvalPerformersRow) =>
-            GetSignatureInformation(approvalPerformersRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON].Text,
-                                                          StampSettings.PersonId, PersonDepartmentType.Undefined).
+            GetSignatureInformation(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
+                                    StampSettings.PersonId, PersonDepartmentType.Undefined).
             ResultValueOk(signature => GetStampApprovalPerformanceFromFields(approvalPerformersRow, signature));
 
         /// <summary>

@@ -5,6 +5,7 @@
     /// </summary>
     public enum StampApplicationType
     {
+        Unknown,
         Microstation,
         Word,
     }

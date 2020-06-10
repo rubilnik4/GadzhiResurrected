@@ -15,6 +15,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
                 StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(2), ".с") => StampDocumentType.Specification,
                 StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(3), ".вр") => StampDocumentType.BillOfQuantities,
                 StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(3), ".кж") => StampDocumentType.CableMagazine,
+                StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(3), ".тт") => StampDocumentType.TechnicalRequirements,
+                StampApplicationType.Word when CompareSubstring(fullCode.SubstringEnd(3), ".ол") => StampDocumentType.Questionnaire,
                 StampApplicationType.Microstation => StampDocumentType.Drawing,
                 _ => StampDocumentType.Unknown,
             };

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiWord.Extensions.StringAdditional;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Word.Interfaces.Word.Elements;
@@ -35,49 +35,49 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
             stampTable?.RowsCountInitial <= ApprovalPerformersSignatureWord.MAX_ROWS_COUNT && 
             stampTable.ColumnsCountInitial == ApprovalPerformersSignatureWord.FIELDS_COUNT &&
             stampTable.HasCellElement(0, 0) == true &&
-            StampMarkersWord.MarkersApprovalPerformanceTable.MarkerContain(stampTable.RowsElementWord[0].CellsElement[0].Text);
+            StampMarkersWord.MarkersApprovalPerformanceTable.MarkerContain(stampTable.RowsElementWord[0].CellsElement[0].TextNoSpaces);
 
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью для полного штампа
         /// </summary>        
         public static bool IsFieldPersonSignatureFull(ICellElementWord cellElement, ITableElementWord stampTable) =>
-            StampMarkersWord.MarkersActionType.MarkerContain(cellElement.Text) &&
+            StampMarkersWord.MarkersActionType.MarkerContain(cellElement.TextNoSpaces) &&
             stampTable?.RowsElementWord?.
             Any(row => row.Index < cellElement.RowIndex &&
                        stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
-                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].Text)) == true;
+                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].TextNoSpaces)) == true;
 
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью для штампа с изменениями
         /// </summary>        
         public static bool IsFieldPersonSignatureChange(ICellElementWord cellElement) =>
-            StampMarkersWord.MarkersActionTypeChangeNotice.MarkerContain(cellElement.Text);
+            StampMarkersWord.MarkersActionTypeChangeNotice.MarkerContain(cellElement.TextNoSpaces);
 
         /// <summary>
         /// Находится ли поле в строке с изменениями
         /// </summary>        
         public static bool IsFieldChangeSignature(ICellElementWord cellElement, ITableElementWord stampTable) =>
-            Int32.TryParse(cellElement.Text, out _) &&
+            Int32.TryParse(cellElement.TextNoSpaces, out _) &&
             stampTable?.RowsElementWord?.
             Any(row => row.Index > cellElement.RowIndex &&
                        stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
-                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].Text)) == true;
+                       IsFieldChangeHeader(stampTable.RowsElementWord[row.Index].CellsElement[cellElement.ColumnIndex].TextNoSpaces)) == true;
 
         /// <summary>
         /// Находится ли поле в строке с согласованиями
         /// </summary>        
         public static bool IsFieldApprovalChangeSignature(ICellElementWord cellElement, ITableElementWord stampTable) =>
-            StampMarkersWord.MarkersApprovalChange.MarkerContain(cellElement.Text) &&
+            StampMarkersWord.MarkersApprovalChange.MarkerContain(cellElement.TextNoSpaces) &&
             stampTable?.RowsElementWord?.
             Any(row => row.Index < cellElement.RowIndex &&
                        stampTable.HasCellElement(row.Index, cellElement.ColumnIndex) &&
-                       StampMarkersWord.MarkersApprovalChangeStamp.MarkerContain(row.CellsElement[cellElement.ColumnIndex].Text)) == true;
+                       StampMarkersWord.MarkersApprovalChangeStamp.MarkerContain(row.CellsElement[cellElement.ColumnIndex].TextNoSpaces)) == true;
 
         /// <summary>
         /// Находится ли поле в строке заголовком изменений. Обработка входной строки
         /// </summary>        
         public static bool IsFieldChangeHeader(string cellText) =>
-            StampMarkersWord.MarkersChangeHeader.MarkerContain(cellText.PrepareCellTextToCompare());
+            StampMarkersWord.MarkersChangeHeader.MarkerContain(cellText.RemoveSpacesAndArtefacts());
 
         /// <summary>
         /// Является ли поле шифром
@@ -85,17 +85,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         public static bool IsFieldFullCode(ICellElementWord cellElement, ITableElementWord stampTable) =>
             (cellElement.RowIndex == 0 ||
              cellElement.ColumnIndex == stampTable.RowsElementWord[cellElement.RowIndex].CellsElement.Count - 1) &&
-            !String.IsNullOrWhiteSpace(cellElement.Text) &&
-            cellElement.Text.Length >= 4 &&
-            Int32.TryParse(cellElement.Text.Substring(0, 4), out _);
+            !String.IsNullOrWhiteSpace(cellElement.TextNoSpaces) &&
+            cellElement.TextNoSpaces.Length >= 4 &&
+            Int32.TryParse(cellElement.TextNoSpaces.Substring(0, 4), out _);
 
         /// <summary>
         /// Является ли поле номером текущего листа
         /// </summary>
         public static bool IsFieldCurrentSheet(ICellElementWord cellElement, ITableElementWord stampTable) =>
             cellElement.RowIndex >= 1 &&
-            !String.IsNullOrWhiteSpace(cellElement.Text) &&
-            Int32.TryParse(cellElement.Text, out _) &&
+            !String.IsNullOrWhiteSpace(cellElement.TextNoSpaces) &&
+            Int32.TryParse(cellElement.TextNoSpaces, out _) &&
             cellElement.ColumnIndex == stampTable.RowsElementWord[cellElement.RowIndex].CellsElement.Count - 2;
 
         /// <summary>

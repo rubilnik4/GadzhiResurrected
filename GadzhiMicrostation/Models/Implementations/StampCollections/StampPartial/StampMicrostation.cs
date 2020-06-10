@@ -38,6 +38,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         public override string Name => StampCellElement.Name;
 
         /// <summary>
+        /// Тип приложения
+        /// </summary>
+        public override StampApplicationType StampApplicationType => StampApplicationType.Word;
+
+        /// <summary>
         /// Формат
         /// </summary>
         public override string PaperSize =>

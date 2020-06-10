@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
@@ -43,8 +41,7 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Список штампов
         /// </summary>
         public IStampContainer GetStampContainer(ConvertingSettingsApp convertingSettings) =>
-            _stampContainer ??= new StampContainer(FindStamps(convertingSettings), StampContainerType.United,
-                                                   StampApplicationType.Word);
+            _stampContainer ??= new StampContainer(FindStamps(convertingSettings), StampContainerType.United);
 
         /// <summary>
         /// Преобразовать к виду родительского элемента

@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Helpers;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
@@ -23,5 +24,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Fields
         /// Текст поля в штампе
         /// </summary>
         public string Text => TextElementStamp.Text;
+
+        /// <summary>
+        /// Получить слово максимальной длины
+        /// </summary>
+        public string MaxLengthWord => TextFormatting.GetMaxLengthWord(Text);
     }
 }

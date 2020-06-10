@@ -34,6 +34,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         StampType StampType { get; }
 
         /// <summary>
+        /// Тип приложения
+        /// </summary>
+        StampApplicationType StampApplicationType { get; }
+
+        /// <summary>
         /// Основные поля штампа
         /// </summary>
         IStampBasicFields StampBasicFields { get; }
@@ -42,6 +47,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// Поля штампа, отвечающие за подписи
         /// </summary>
         IStampSignatureFields StampSignatureFields { get; }
+
+        /// <summary>
+        /// Тип документа, определяемый по типу шифра в штампе
+        /// </summary>
+        StampDocumentType StampDocumentType { get; }
 
         /// <summary>
         /// Формат

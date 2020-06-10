@@ -9,5 +9,10 @@
         /// Текст поля в штампе
         /// </summary>
         string Text { get; }
+
+        /// <summary>
+        /// Получить слово максимальной длины
+        /// </summary>
+        string MaxLengthWord { get; }
     }
 }

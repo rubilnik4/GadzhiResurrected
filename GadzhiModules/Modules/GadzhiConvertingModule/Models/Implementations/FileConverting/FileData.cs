@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using GadzhiCommon.Converters;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Implementations.Converters;
+using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
@@ -63,7 +64,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Статус ошибок
         /// </summary>
-        public StatusError StatusError => ConverterErrorType.FileErrorsTypeToStatusError(FileConvertErrorType);
+        public StatusError StatusError => ConverterErrorType.ErrorsTypeToStatusError(FileConvertErrorType);
 
         /// <summary>
         /// Тип ошибки при конвертации файла

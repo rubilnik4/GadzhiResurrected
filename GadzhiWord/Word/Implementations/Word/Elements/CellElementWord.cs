@@ -1,5 +1,6 @@
 ﻿using System;
-using GadzhiWord.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Helpers;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 using Microsoft.Office.Interop.Word;
 
@@ -38,9 +39,19 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         private string _text;
 
         /// <summary>
-        /// Текст ячейки
+        /// Текст ячейки 
         /// </summary>
-        public string Text => _text ??= _cellElement.Range.Text.PrepareCellTextToCompare();
+        public string Text => _text ??= _cellElement.Range.Text.RemoveArtefacts();
+
+        /// <summary>
+        /// Текст ячейки без пробелов
+        /// </summary>
+        public string TextNoSpaces => _text ??= _cellElement.Range.Text.RemoveSpacesAndArtefacts();
+
+        /// <summary>
+        /// Получить слово максимальной длины
+        /// </summary>
+        public string MaxLengthWord => TextFormatting.GetMaxLengthWord(Text);
 
         /// <summary>
         /// Присутствует ли картинка в ячейке
