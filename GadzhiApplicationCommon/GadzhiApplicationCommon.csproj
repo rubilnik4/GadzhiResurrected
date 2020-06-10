@@ -62,6 +62,7 @@
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\TextExtensions.cs" />
     <Compile Include="Helpers\TextFormatting.cs" />
+    <Compile Include="Models\Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampApplicationType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampDocumentType.cs" />

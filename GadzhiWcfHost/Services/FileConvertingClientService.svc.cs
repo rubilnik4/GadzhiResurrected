@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
@@ -65,6 +66,6 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>  
-        public async Task<IList<string>> GetSignaturesDepartments() => await _applicationClientConverting.GetSignaturesDepartments();
+        public async Task<IList<DepartmentType>> GetSignaturesDepartments() => await _applicationClientConverting.GetSignaturesDepartments();
     }
 }

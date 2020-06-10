@@ -189,6 +189,7 @@
     <Compile Include="Configuration\RegisterPrintersInformationSection.cs" />
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Extensions\ColorPrintExtensions.cs" />
+    <Compile Include="Extensions\DepartmentTypeExtensions.cs" />
     <Compile Include="Extensions\ErrorExtensionsFromApplication.cs" />
     <Compile Include="Extensions\ConvertingSettingsExtensions.cs" />
     <Compile Include="Extensions\ResultExtensionsFromApplication.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
     <Compile Include="Models\Converters\ColorPrintToApplicationConverter.cs" />
+    <Compile Include="Models\Converters\DepartmentToApplicationConverter.cs" />
     <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
     <Compile Include="Models\Converters\ResultApplicationConverter.cs" />
     <Compile Include="Models\Converters\SettingsApplicationConverter.cs" />

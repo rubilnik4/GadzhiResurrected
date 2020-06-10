@@ -90,7 +90,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
                     Surname = personInformation.Surname,
                     Name = personInformation.Name,
                     Patronymic = personInformation.Patronymic,
-                    Department = personInformation.Department,
+                    DepartmentType = personInformation.DepartmentType,
                 }
                 : throw new ArgumentNullException(nameof(personInformation));
 
@@ -116,7 +116,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
                     Surname = personInformation.Surname,
                     Name = personInformation.Name,
                     Patronymic = personInformation.Patronymic,
-                    Department = personInformation.Department,
+                    DepartmentType = personInformation.DepartmentType,
                 }
                 : throw new ArgumentNullException(nameof(personInformation));
     }

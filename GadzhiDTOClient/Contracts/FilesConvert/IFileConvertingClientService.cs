@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiDTOClient.Contracts.FilesConvert
@@ -53,7 +54,7 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// Загрузить отделы из базы данных
         /// </summary>
         [OperationContract]
-        Task<IList<string>> GetSignaturesDepartments();
+        Task<IList<DepartmentType>> GetSignaturesDepartments();
     }
 }
 

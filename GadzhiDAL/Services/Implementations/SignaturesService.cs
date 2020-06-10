@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiDAL.Entities.Signatures;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.DataFile;
@@ -50,20 +51,17 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>      
-        public async Task<IList<string>> GetSignaturesDepartments()
+        public async Task<IList<DepartmentType>> GetSignaturesDepartments()
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
             var departments = await unitOfWork.Session.Query<SignatureEntity>().
-                                               Select(signature => signature.PersonInformation.Department).
+                                               Select(signature => signature.PersonInformation.DepartmentType).
                                                Distinct().
                                                ToListAsync();
             await unitOfWork.CommitAsync();
 
-            return departments.Select(department => department.Trim()).
-                               Distinct().
-                               OrderBy(department => department).
-                               ToList();
+            return departments;
         }
 
         /// <summary>

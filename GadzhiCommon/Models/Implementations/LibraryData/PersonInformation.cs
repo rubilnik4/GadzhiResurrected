@@ -59,7 +59,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// Загружена ли информация о пользователе полностью
         /// </summary>
         public bool HasFullInformation => !String.IsNullOrWhiteSpace(Surname) && !String.IsNullOrWhiteSpace(Name) &&
-                                          !String.IsNullOrWhiteSpace(Patronymic);
+                                          !String.IsNullOrWhiteSpace(Patronymic) && DepartmentType != DepartmentType.Unknown;
 
         /// <summary>
         /// Проверка фамилии 
@@ -81,7 +81,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
                                                TextFormatting.RemoveSpacesAndArtefacts(splat.GetStringFromArrayOrEmpty(1)),
                                                TextFormatting.RemoveSpacesAndArtefacts(splat.GetStringFromArrayOrEmpty(2)),
                                                TextFormatting.RemoveSpacesAndArtefacts(splat.JoinStringArrayFromIndexToEndOrEmpty(3)).
-                                                              Map(ConverterDepartmentType.DepartmentStringToType)))
+                                                              Map(ConverterDepartmentType.DepartmentStringToTypeOrUnknown)))
             ?? new PersonInformation();
 
         #region IEquatable

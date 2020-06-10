@@ -52,7 +52,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
                 Surname = personInformation.Surname,
                 Name = personInformation.Name,
                 Patronymic = personInformation.Patronymic,
-                Department = personInformation.Department,
+                DepartmentType = personInformation.DepartmentType,
             };
     }
 }

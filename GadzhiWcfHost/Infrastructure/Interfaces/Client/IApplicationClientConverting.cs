@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
@@ -44,6 +45,6 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>  
-        Task<IList<string>> GetSignaturesDepartments();
+        Task<IList<DepartmentType>> GetSignaturesDepartments();
     }
 }

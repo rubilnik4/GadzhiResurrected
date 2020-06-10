@@ -1,4 +1,5 @@
 ﻿using FluentNHibernate.Mapping;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiDAL.Entities.Signatures;
 using NHibernate.Type;
 
@@ -17,7 +18,7 @@ namespace GadzhiDAL.Mappings.Signatures
                     m.Map(x => x.Surname).Not.Nullable();
                     m.Map(x => x.Name).Not.Nullable();
                     m.Map(x => x.Patronymic).Not.Nullable();
-                    m.Map(x => x.Department).Not.Nullable();
+                    m.Map(x => x.DepartmentType).CustomType<DepartmentType>().Not.Nullable();
                 });
             Map(x => x.SignatureJpeg).CustomType<BinaryBlobType>().LazyLoad();
         }

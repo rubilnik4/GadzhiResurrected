@@ -119,7 +119,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// </summary>
         private static PersonInformation PersonInformationFromDto(PersonInformationDto personInformation) =>
             (personInformation != null)
-                ? new PersonInformation(personInformation.Surname, personInformation.Name, personInformation.Patronymic, personInformation.Department)
+                ? new PersonInformation(personInformation.Surname, personInformation.Name, personInformation.Patronymic, personInformation.DepartmentType)
                 : throw new ArgumentNullException(nameof(personInformation));
     }
 }

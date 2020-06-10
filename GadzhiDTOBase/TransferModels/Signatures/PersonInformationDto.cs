@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using GadzhiCommon.Enums.LibraryData;
 
 namespace GadzhiDTOBase.TransferModels.Signatures
 {
@@ -30,6 +31,6 @@ namespace GadzhiDTOBase.TransferModels.Signatures
         /// Отдел
         /// </summary>
         [DataMember]
-        public string Department { get; set; }
+        public DepartmentType DepartmentType { get; set; }
     }
 }

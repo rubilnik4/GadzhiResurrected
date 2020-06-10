@@ -5,6 +5,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Helpers;
 using GadzhiApplicationCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Enums.LibraryData;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
@@ -53,8 +54,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// Найти подпись по идентификатору
         /// </summary>
         public ISignatureLibraryApp FindById(string id) => _signaturesLibrary.TryGetValue(id, out var signatureFind)
-                                                       ? signatureFind
-                                                       : null;
+                                                            ? signatureFind
+                                                            : null;
 
         /// <summary>
         /// Найти подписи по идентификаторам
@@ -66,8 +67,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Найти подпись по имени
         /// </summary>
-        public ISignatureLibraryApp FindByFullName(string fullName, string department) =>
-            PersonsInformation.FindIndex(person => person.SurnameAndDepartmentEqual(fullName, department)).
+        public ISignatureLibraryApp FindByFullName(string fullName, DepartmentTypeApp departmentType) =>
+            PersonsInformation.FindIndex(person => person.SurnameAndDepartmentEqual(fullName, departmentType)).
             WhereBad(foundIndex => foundIndex > -1,
                 badFunc: _ => PersonsInformation.FindIndex(person => person.SurnameEqual(fullName))).
             WhereContinue(foundIndex => foundIndex > -1,
@@ -86,8 +87,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Найти подписи по именам
         /// </summary>
-        public IEnumerable<ISignatureLibraryApp> FindByFullNames(IEnumerable<string> fullNames, string department = "") =>
-            fullNames.Select(fullName => FindByFullName(fullName, department)).
+        public IEnumerable<ISignatureLibraryApp> FindByFullNames(IEnumerable<string> fullNames, DepartmentTypeApp departmentType = DepartmentTypeApp.Unknown) =>
+            fullNames.Select(fullName => FindByFullName(fullName, departmentType)).
                       Where(signature => signature != null);
 
         /// <summary>
@@ -102,7 +103,13 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// Найти подпись по имени или получить случайную
         /// </summary>
         public IResultAppValue<ISignatureLibraryApp> FindByFullNameOrRandom(string fullName, string personId) =>
-            new ResultAppValue<ISignatureLibraryApp>(FindByFullName(fullName, FindById(personId)?.PersonInformation.Department),
+            FindByFullNameOrRandom(fullName, FindById(personId)?.PersonInformation.DepartmentType ?? DepartmentTypeApp.Unknown);
+
+        /// <summary>
+        /// Найти подпись по имени или получить случайную
+        /// </summary>
+        public IResultAppValue<ISignatureLibraryApp> FindByFullNameOrRandom(string fullName, DepartmentTypeApp departmentType) =>
+            new ResultAppValue<ISignatureLibraryApp>(FindByFullName(fullName, departmentType),
                                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись по имени {fullName} не найдена")).
             ResultValueBadBind(_ => new ResultAppValue<ISignatureLibraryApp>(GetRandomSignature(),
                                                                              new ErrorApplication(ErrorApplicationType.SignatureNotFound,
@@ -160,11 +167,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Проверить отдел по его типу
         /// </summary>
-        public string CheckDepartmentAccordingToType(string department, PersonDepartmentType departmentType) =>
-            departmentType switch
+        public DepartmentTypeApp CheckDepartmentAccordingToType(DepartmentTypeApp departmentType, PersonDepartmentType personDepartmentType) =>
+            personDepartmentType switch
             {
-                PersonDepartmentType.ChiefProject => "ГИПы",
-                _ => department,
+                PersonDepartmentType.ChiefProject => DepartmentTypeApp.Gip,
+                _ => departmentType,
             };
 
         /// <summary>

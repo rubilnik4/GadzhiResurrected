@@ -48,6 +48,13 @@ namespace GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData
         public static string DepartmentTypeToString(DepartmentType departmentType) =>
             DepartmentTypeString[departmentType];
 
+        /// <summary>
+        /// Преобразовать тип отдел в строковое значение или вернуть неизвестный тип
+        /// </summary>       
+        public static DepartmentType DepartmentStringToTypeOrUnknown(string department) =>
+            DepartmentTypeString.ContainsValue(department)
+            ? DepartmentStringToType(department)
+            : DepartmentType.Unknown;
 
         /// <summary>
         /// Преобразовать строковое значение отдела в тип

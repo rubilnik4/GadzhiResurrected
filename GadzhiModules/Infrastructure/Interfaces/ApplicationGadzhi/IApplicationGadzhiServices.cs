@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi
@@ -24,6 +25,6 @@ namespace GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>
-        Task<IList<string>> GetSignaturesDepartments();
+        Task<IList<DepartmentType>> GetSignaturesDepartments();
     }
 }

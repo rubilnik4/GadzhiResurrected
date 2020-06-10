@@ -1,6 +1,7 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
 using System;
+using GadzhiApplicationCommon.Models.Enums.LibraryData;
 
 namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
 {
@@ -9,14 +10,18 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     /// </summary>
     public readonly struct PersonInformationApp : IEquatable<PersonInformationApp>
     {
-        public PersonInformationApp(string surname, string name, string patronymic, string department)
+        private readonly Func<DepartmentTypeApp, string> _departmentToString;
+
+        public PersonInformationApp(string surname, string name, string patronymic, DepartmentTypeApp departmentType, 
+                                    Func<DepartmentTypeApp, string> departmentToString)
         {
             Surname = !surname.IsNullOrWhiteSpace()
                       ? surname
                       : throw new ArgumentNullException(nameof(surname));
             Name = name ?? String.Empty;
             Patronymic = patronymic ?? String.Empty;
-            Department = department ?? String.Empty;
+            DepartmentType = departmentType;
+            _departmentToString = departmentToString ?? throw new ArgumentNullException(nameof(departmentToString));
         }
 
         /// <summary>
@@ -37,7 +42,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Отдел
         /// </summary>
-        public string Department { get; }
+        public DepartmentTypeApp DepartmentType { get; }
+
+        /// <summary>
+        /// Отдел в строковом значении
+        /// </summary>
+        private string Department => _departmentToString(DepartmentType);
 
         /// <summary>
         /// Полная информация
@@ -53,39 +63,25 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// Загружена ли информация о пользователе полностью
         /// </summary>
         public bool HasFullInformation => !Surname.IsNullOrWhiteSpace() && !Name.IsNullOrWhiteSpace() &&
-                                          !Patronymic.IsNullOrWhiteSpace() && !Department.IsNullOrWhiteSpace();
+                                          !Patronymic.IsNullOrWhiteSpace() && DepartmentType != DepartmentTypeApp.Unknown;
 
         /// <summary>
         /// Проверка фамилии 
         /// </summary>
         public bool SurnameEqual(string surname) => String.Equals(Surname, surname, StringComparison.CurrentCultureIgnoreCase);
 
-        /// <summary>
-        /// Проверка отдела 
-        /// </summary>
-        public bool DepartmentEqual(string department) => String.Equals(Department, department, StringComparison.CurrentCultureIgnoreCase);
 
         /// <summary>
         /// Проверка фамилии и отдела
         /// </summary>
-        public bool SurnameAndDepartmentEqual(string surname, string department) => SurnameEqual(surname) && DepartmentEqual(department);
-
-        /// <summary>
-        /// Преобразовать строку в информацию о пользователе
-        /// </summary>
-        public static PersonInformationApp GetFromFullName(string fullName) =>
-            fullName?.Split(null).
-            Map(splat => new PersonInformationApp(splat[0],
-                                               splat.GetStringFromArrayOrEmpty(1),
-                                               splat.GetStringFromArrayOrEmpty(2),
-                                               splat.JoinStringArrayFromIndexToEndOrEmpty(3)))
-            ?? new PersonInformationApp();
+        public bool SurnameAndDepartmentEqual(string surname, DepartmentTypeApp departmentType) => 
+            SurnameEqual(surname) && DepartmentType == departmentType;
 
         #region IEquatable
         public override bool Equals(object obj) => obj != null && Equals((PersonInformationApp)obj);
 
         public bool Equals(PersonInformationApp other) =>
-            other.Surname == Surname && other.Name == Name && other.Patronymic == Patronymic && other.Department == Department;
+            other.Surname == Surname && other.Name == Name && other.Patronymic == Patronymic && other.DepartmentType == DepartmentType;
 
         public static bool operator ==(PersonInformationApp left, PersonInformationApp right) => left.Equals(right);
 
@@ -97,7 +93,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
             hashCode = hashCode * 31 + Surname.GetHashCode();
             hashCode = hashCode * 31 + Name.GetHashCode();
             hashCode = hashCode * 31 + Patronymic.GetHashCode();
-            hashCode = hashCode * 31 + Department.GetHashCode();
+            hashCode = hashCode * 31 + DepartmentType.GetHashCode();
 
             return hashCode;
         }

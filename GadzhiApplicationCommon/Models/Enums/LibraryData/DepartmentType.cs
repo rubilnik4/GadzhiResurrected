@@ -1,9 +1,9 @@
-﻿namespace GadzhiCommon.Enums.LibraryData
+﻿namespace GadzhiApplicationCommon.Models.Enums.LibraryData
 {
     /// <summary>
     /// Тип отдела
     /// </summary>
-    public enum DepartmentType
+    public enum DepartmentTypeApp
     {
         Unknown,
         Aso,

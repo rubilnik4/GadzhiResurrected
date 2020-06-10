@@ -60,9 +60,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
         private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
-                                                                              PersonDepartmentType departmentType) =>
-            SignaturesSearching.FindById(personId)?.PersonInformation.Department.
-            Map(department => SignaturesSearching.CheckDepartmentAccordingToType(department, departmentType)).
+                                                                              PersonDepartmentType personDepartmentType) =>
+            SignaturesSearching.FindById(personId)?.PersonInformation.DepartmentType.
+            Map(departmentType => SignaturesSearching.CheckDepartmentAccordingToType(departmentType, personDepartmentType)).
             Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
 
         /// <summary>

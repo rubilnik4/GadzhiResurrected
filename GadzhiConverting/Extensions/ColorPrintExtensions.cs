@@ -1,8 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces;
-using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.Implementations.Errors;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Converters;
-using GadzhiMicrostation.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +18,6 @@ namespace GadzhiConverting.Extensions
         /// Конвертировать тип цвета печати в версию для приложения
         /// </summary>
         public static ColorPrintApplication ToApplication(this ColorPrint colorPrint) => 
-            ColorPrintToApplicationConverter.ConvertingToApplication(colorPrint);      
+            ColorPrintToApplicationConverter.ToApplication(colorPrint);      
     }
 }

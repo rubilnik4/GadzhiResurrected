@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Interfaces.LibraryData;
@@ -151,7 +152,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>
-        public async Task<IList<string>> GetSignaturesDepartments() =>
+        public async Task<IList<DepartmentType>> GetSignaturesDepartments() =>
             await _fileConvertingClientService.Operations.GetSignaturesDepartments();
 
         /// <summary>

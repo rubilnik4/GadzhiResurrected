@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiCommon.Enums.LibraryData;
 
 namespace GadzhiDAL.Entities.Signatures
 {
@@ -25,6 +26,6 @@ namespace GadzhiDAL.Entities.Signatures
         /// <summary>
         /// Отдел
         /// </summary>
-        public virtual string Department { get; set; } = String.Empty;
+        public virtual DepartmentType DepartmentType { get; set; } = DepartmentType.Unknown;
     }
 }

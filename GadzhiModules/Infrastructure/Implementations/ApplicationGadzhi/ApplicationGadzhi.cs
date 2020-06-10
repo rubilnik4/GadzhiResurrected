@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiDTOClient.Contracts.FilesConvert;
@@ -104,8 +106,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             new PersonInformation(Properties.Settings.Default.PersonSurname ?? String.Empty,
                                   Properties.Settings.Default.PersonName ?? String.Empty,
                                   Properties.Settings.Default.PersonPatronymic ?? String.Empty,
-                                  Properties.Settings.Default.PersonDepartment ?? String.Empty).
-             Map(personInformation => new ConvertingSettings(new SignatureLibrary(Properties.Settings.Default.PersonId, personInformation),
+                                  ConverterDepartmentType.DepartmentStringToTypeOrUnknown(Properties.Settings.Default.PersonDepartment)).
+            Map(personInformation => new ConvertingSettings(new SignatureLibrary(Properties.Settings.Default.PersonId, personInformation),
                                                              (PdfNamingType)Properties.Settings.Default.PdfNamingType));
 
         /// <summary>

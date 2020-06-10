@@ -2,6 +2,7 @@
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
+using GadzhiConverting.Extensions;
 using System;
 
 namespace GadzhiConverting.Models.Converters
@@ -29,7 +30,7 @@ namespace GadzhiConverting.Models.Converters
         /// Преобразовать информацию о пользователе в класс модуля конвертации
         /// </summary>
         public static PersonInformationApp ToPersonInformationApp(PersonInformation personInformation) =>
-            new PersonInformationApp(personInformation.Surname, personInformation.Name,
-                                     personInformation.Patronymic, personInformation.Department);
+            new PersonInformationApp(personInformation.Surname, personInformation.Name, personInformation.Patronymic,
+                                     personInformation.DepartmentType.ToApplication(), DepartmentToApplicationConverter.GetDepartmentTypeFunc());
     }
 }
