@@ -21,17 +21,17 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields
         /// <summary>
         /// Строки согласования
         /// </summary>
-        IResultAppCollection<IStampApproval> StampApproval { get; }
+        IResultAppCollection<IStampApproval> StampApprovals { get; }
 
         /// <summary>
         /// Строки согласования для извещения с изменениями
         /// </summary>
-        IResultAppCollection<IStampApprovalChange> StampApprovalChange { get; }
+        IResultAppCollection<IStampApprovalChange> StampApprovalsChange { get; }
 
         /// <summary>
         /// Строки согласования для опросных листов и тех требований
         /// </summary>
-        IResultAppCollection<IStampApprovalPerformers> StampApprovalPerformers { get; }
+        IResultAppCollection<IStampApprovalPerformers> StampApprovalsPerformers { get; }
 
         /// <summary>
         /// Получить все подписи

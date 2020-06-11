@@ -7,6 +7,7 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiWord.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial

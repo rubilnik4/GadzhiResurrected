@@ -14,6 +14,7 @@ using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampTypes;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
 {

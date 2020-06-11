@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Interfaces.StampCollections
+namespace GadzhiWord.Models.Interfaces.StampCollections.Fields
 {
     /// <summary>
     /// Базовая ячейка штампа Word

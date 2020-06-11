@@ -1,5 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiWord.Models.Interfaces.StampCollections;
+using GadzhiWord.Models.Interfaces.StampCollections.Fields;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Fields

@@ -8,6 +8,7 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContai
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampTypes;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial
 {
@@ -48,6 +49,24 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         public abstract StampApplicationType StampApplicationType { get; }
 
         /// <summary>
+        /// Тип документа, определяемый по типу шифра в штампе
+        /// </summary>
+        public StampDocumentType StampDocumentType =>
+            GetFullCode().WhereContinue(fullCode => fullCode.OkStatus,
+                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(GetFullCode().Value.Text, StampApplicationType),
+                badFunc: _ => StampDocumentType.Unknown);
+
+        /// <summary>
+        /// Формат
+        /// </summary>
+        public abstract string PaperSize { get; }
+
+        /// <summary>
+        /// Тип расположения штампа
+        /// </summary>
+        public abstract StampOrientationType Orientation { get; }
+
+        /// <summary>
         /// Основные поля штампа
         /// </summary>
         private IStampBasicFields _stampBasicFields;
@@ -66,24 +85,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Поля штампа, отвечающие за подписи
         /// </summary>
         public IStampSignatureFields StampSignatureFields => _stampSignatureFields ??= GetStampSignatureFields();
-
-        /// <summary>
-        /// Тип документа, определяемый по типу шифра в штампе
-        /// </summary>
-        public StampDocumentType StampDocumentType =>
-            GetFullCode.WhereContinue(fullCode => fullCode.OkStatus,
-                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(GetFullCode.Value.Text, StampApplicationType),
-                badFunc: _ => StampDocumentType.Unknown);
-
-        /// <summary>
-        /// Формат
-        /// </summary>
-        public abstract string PaperSize { get; }
-
-        /// <summary>
-        /// Тип расположения штампа
-        /// </summary>
-        public abstract StampOrientationType Orientation { get; }
 
         /// <summary>
         /// Является ли тип штампа основным

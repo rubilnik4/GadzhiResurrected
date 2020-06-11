@@ -2,6 +2,7 @@
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -13,37 +14,15 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     /// </summary>
     public class StampSignatureFields : IStampSignatureFields
     {
-        public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons)
-            : this(stampPersons, new ResultAppCollection<IStampChange>(Enumerable.Empty<IStampChange>()))
-        { }
-
-        public StampSignatureFields(IResultAppCollection<IStampChange> stampChanges)
-          : this(new ResultAppCollection<IStampPerson>(Enumerable.Empty<IStampPerson>()), stampChanges)
-        { }
-
-        public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges)
-            : this(stampPersons, stampChanges,
-                   new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()),
-                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()),
-                   new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>()))
-        { }
-
-        public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges,
-                                    IResultAppCollection<IStampApproval> stampApproval)
-            : this(stampPersons, stampChanges, stampApproval,
-                   new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()),
-                   new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>()))
-        { }
-
-        public StampSignatureFields(IResultAppCollection<IStampPerson> stampPersons, IResultAppCollection<IStampChange> stampChanges,
-                                    IResultAppCollection<IStampApproval> stampApproval, IResultAppCollection<IStampApprovalChange> stampApprovalChange,
-                                    IResultAppCollection<IStampApprovalPerformers> stampApprovalPerformers)
+        public StampSignatureFields(SignaturesBuilder signaturesBuilder)
         {
-            StampPersons = stampPersons ?? throw new ArgumentNullException(nameof(stampPersons));
-            StampChanges = stampChanges ?? throw new ArgumentNullException(nameof(stampChanges));
-            StampApproval = stampApproval ?? throw new ArgumentNullException(nameof(stampApproval));
-            StampApprovalChange = stampApprovalChange ?? throw new ArgumentNullException(nameof(stampApprovalChange));
-            StampApprovalPerformers = stampApprovalPerformers ?? throw new ArgumentNullException(nameof(stampApprovalPerformers));
+            if (signaturesBuilder == null) throw new ArgumentNullException(nameof(signaturesBuilder));
+
+            StampPersons = signaturesBuilder.StampPersons;
+            StampChanges = signaturesBuilder.StampChanges;
+            StampApprovals = signaturesBuilder.StampApprovals;
+            StampApprovalsChange = signaturesBuilder.StampApprovalsChange;
+            StampApprovalsPerformers = signaturesBuilder.StampApprovalsPerformers;
         }
 
         /// <summary>
@@ -59,17 +38,17 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// <summary>
         /// Строки согласования
         /// </summary>
-        public IResultAppCollection<IStampApproval> StampApproval { get; }
+        public IResultAppCollection<IStampApproval> StampApprovals { get; }
 
         /// <summary>
         /// Строки согласования для извещения с изменениями
         /// </summary>
-        public IResultAppCollection<IStampApprovalChange> StampApprovalChange { get; }
+        public IResultAppCollection<IStampApprovalChange> StampApprovalsChange { get; }
 
         /// <summary>
         /// Строки согласования для опросных листов и тех требований
         /// </summary>
-        public IResultAppCollection<IStampApprovalPerformers > StampApprovalPerformers { get; }
+        public IResultAppCollection<IStampApprovalPerformers > StampApprovalsPerformers { get; }
 
         /// <summary>
         /// Получить все подписи
@@ -77,9 +56,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         public IResultAppCollection<IStampSignature> GetSignatures() =>
             StampPersons.Cast<IStampPerson, IStampSignature>().
             ConcatResult(StampChanges.Cast<IStampChange, IStampSignature>()).
-            ConcatResult(StampApproval.Cast<IStampApproval, IStampSignature>()).
-            ConcatResult(StampApprovalChange.Cast<IStampApprovalChange, IStampSignature>()).
-            ConcatResult(StampApprovalPerformers.Cast<IStampApprovalPerformers, IStampSignature>()).
+            ConcatResult(StampApprovals.Cast<IStampApproval, IStampSignature>()).
+            ConcatResult(StampApprovalsChange.Cast<IStampApprovalChange, IStampSignature>()).
+            ConcatResult(StampApprovalsPerformers.Cast<IStampApprovalPerformers, IStampSignature>()).
             ResultValueOk(signatures => signatures.Where(signature => signature.IsAbleToInsert)).
             ToResultCollection();
     }

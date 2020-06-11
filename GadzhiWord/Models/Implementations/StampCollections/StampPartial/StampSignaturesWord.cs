@@ -6,11 +6,11 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiWord.Word.Implementations.Word.Elements;
-using GadzhiWord.Word.Interfaces.Word.Elements;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.SignatureCreating;
+using GadzhiWord.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {
@@ -19,6 +19,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
     /// </summary>
     public partial class StampWord
     {
+        /// <summary>
+        /// Фабрика создания подписей Word
+        /// </summary>
+        protected override ISignatureCreating SignatureCreating  => 
+            new SignatureCreatingWord(TableStamp, TableApprovalPerformers, this, SignaturesSearching, 
+                                      StampDocumentType, StampSettings.PersonId);
+
         /// <summary>
         /// Вставить подписи
         /// </summary>
@@ -55,23 +62,5 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
                 stampSignatures.Zip(signaturesFile,
                                     (signatureStamp, signatureFile) => signatureStamp.InsertSignature(signatureFile))).
             ToResultCollection();
-
-        /// <summary>
-        /// Получить информацию об ответственном лице по имени
-        /// </summary>      
-        private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
-                                                                              PersonDepartmentType personDepartmentType) =>
-            SignaturesSearching.FindById(personId)?.PersonInformation.DepartmentType.
-            Map(departmentType => SignaturesSearching.CheckDepartmentAccordingToType(departmentType, personDepartmentType)).
-            Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
-
-        /// <summary>
-        /// Получить строку, начиная от индекса маркера
-        /// </summary>
-        private IRowElementWord GetTableRowByIndex(int rowIndex, int columnStartIndex, int indexColumnFirst, int fieldsCount) =>
-            Enumerable.Range(indexColumnFirst, fieldsCount).
-                       Where(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement.Count > columnStartIndex + indexColumn).
-                       Select(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement[columnStartIndex + indexColumn]).
-                       Map(cells => new RowElementWord(cells));
     }
 }

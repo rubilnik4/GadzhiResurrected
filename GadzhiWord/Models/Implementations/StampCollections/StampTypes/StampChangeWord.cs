@@ -2,13 +2,12 @@
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampTypes;
 using GadzhiWord.Models.Implementations.StampCollections.StampPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
@@ -40,12 +39,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
         /// Поля штампа, отвечающие за подписи
         /// </summary>
         protected override IStampSignatureFields GetStampSignatureFields() =>
-            GetStampPersonRows().
-            Map(personRows => new StampSignatureFields(personRows,
-                                                       new ResultAppCollection<IStampChange>(Enumerable.Empty<IStampChange>()),
-                                                       new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()),
-                                                       GetStampApprovalChangeRows(),
-                                                       new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>())));
+            SignatureCreating.GetStampPersonRows().
+            Map(personRows => new StampSignatureFields(new SignaturesBuilder().
+                                                       AddStampPersons(personRows).
+                                                       AddStampApprovalsChange(SignatureCreating.GetStampApprovalChangeRows())));
 
         /// <summary>
         /// Получить поле шифра

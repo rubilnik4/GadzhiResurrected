@@ -19,6 +19,7 @@ using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {

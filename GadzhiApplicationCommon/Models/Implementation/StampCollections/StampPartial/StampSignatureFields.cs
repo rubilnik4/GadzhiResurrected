@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.SignatureCreating;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial
 {
@@ -12,6 +12,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
     /// </summary>
     public abstract partial class Stamp
     {
+        /// <summary>
+        /// Фабрика создания подписей Word
+        /// </summary>
+        protected abstract ISignatureCreating SignatureCreating { get; }
+
         /// <summary>
         /// Вставить подписи
         /// </summary>
@@ -26,30 +31,5 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Получить поля штампа, отвечающие за подписи
         /// </summary>
         protected abstract IStampSignatureFields GetStampSignatureFields();
-
-        /// <summary>
-        /// Получить строки с ответственным лицом без подписи
-        /// </summary>
-        protected abstract IResultAppCollection<IStampPerson> GetStampPersonRows();
-
-        /// <summary>
-        /// Получить строки с изменениями
-        /// </summary>
-        protected abstract IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary);
-
-        /// <summary>
-        /// Получить строки согласования с ответственным лицом без подписи
-        /// </summary>
-        protected abstract IResultAppCollection<IStampApproval> GetStampApprovalRows();
-
-        /// <summary>
-        /// Получить строки согласования без подписи Word для извещения с изменениями
-        /// </summary>
-        protected abstract IResultAppCollection<IStampApprovalChange> GetStampApprovalChangeRows();
-
-        /// <summary>
-        /// Получить строки согласования без подписи Word для извещения с изменениями
-        /// </summary>
-        protected abstract IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows();
     }
 }

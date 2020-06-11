@@ -16,6 +16,7 @@ using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiMicrostation.Microstation.Implementations
 {

@@ -11,18 +11,18 @@ using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
+namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
     /// Строки согласования со списком исполнителей Word
     /// </summary>
-    public partial class StampWord
+    public partial class SignatureCreatingWord
     {
         /// <summary>
         /// Получить строки с согласованием со списком исполнителей без подписи Word для извещения с изменениями
         /// </summary>
-        protected override IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows() =>
-            (StampDocumentType == StampDocumentType.TechnicalRequirements || StampDocumentType == StampDocumentType.Questionnaire)
+        public override IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows() =>
+            (_stampDocumentType == StampDocumentType.TechnicalRequirements || _stampDocumentType == StampDocumentType.Questionnaire)
                 ? GetStampApprovalPerformersRowsChecked()
                 : new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>());
 
@@ -30,7 +30,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Получить строки с согласованием для опросных листов и технических требований
         /// </summary>
         private IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRowsChecked() =>
-            TableApprovalPerformers.
+            _tableApprovalPerformers.
             ResultValueOk(table => table.RowsElementWord).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.FieldNotFound, "Строки согласования не найдены")).
             ResultValueOk(rows => rows.Where(row => row.CellsElement.Count == ApprovalPerformersSignatureWord.FIELDS_COUNT)).
@@ -43,7 +43,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// </summary>
         private IResultAppValue<IStampApprovalPerformers> GetStampApprovalPerformersFromRow(IRowElementWord approvalPerformersRow) =>
             GetSignatureInformation(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                    StampSettings.PersonId, PersonDepartmentType.Undefined).
+                                    _personId, PersonDepartmentType.Undefined).
             ResultValueOk(signature => GetStampApprovalPerformanceFromFields(approvalPerformersRow, signature));
 
         /// <summary>

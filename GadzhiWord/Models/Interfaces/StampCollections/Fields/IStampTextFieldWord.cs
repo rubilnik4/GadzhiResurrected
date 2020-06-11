@@ -1,6 +1,6 @@
 ﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 
-namespace GadzhiWord.Models.Interfaces.StampCollections
+namespace GadzhiWord.Models.Interfaces.StampCollections.Fields
 {
     /// <summary>
     /// Базовая тестовая ячейка штампа Word

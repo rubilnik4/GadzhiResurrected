@@ -13,18 +13,18 @@ using GadzhiWord.Models.Implementations.StampFieldIndexes;
 using GadzhiWord.Word.Implementations.Word.Elements;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
+namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
     /// Строки согласования для извещения с изменениями Word
     /// </summary>
-    public partial class StampWord
+    public partial class SignatureCreatingWord
     {
         /// <summary>
         /// Получить строки с согласованием без подписи Word для извещения с изменениями
         /// </summary>
-        protected override IResultAppCollection<IStampApprovalChange> GetStampApprovalChangeRows() =>
-            GetFieldsByType(StampFieldType.ApprovalChangeSignature).
+        public override IResultAppCollection<IStampApprovalChange> GetStampApprovalChangeRows() =>
+            _stampFieldsWord.GetFieldsByType(StampFieldType.ApprovalChangeSignature).
             Select(field => GetApprovalChangeTableRow(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex)).
             Where(row => row.CellsElement.Count >= ApprovalChangeSignatureWord.FIELDS_COUNT).
             Select(GetStampApprovalChangeFromRow).
@@ -36,11 +36,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         private IRowElementWord GetApprovalChangeTableRow(int rowIndexField, int columnIndexField) =>
             Enumerable.Range(0, ApprovalChangeSignatureWord.FIELDS_COUNT).
             Select(index => rowIndexField - index).
-            Where(rowIndex => TableStamp.RowsElementWord.Count > rowIndex &&
-                           TableStamp.RowsElementWord[rowIndex].CellsElement.Count > columnIndexField).
+            Where(rowIndex => _tableStamp.RowsElementWord.Count > rowIndex &&
+                              _tableStamp.RowsElementWord[rowIndex].CellsElement.Count > columnIndexField).
             Select(rowIndex => rowIndex > 0
-                       ? TableStamp.RowsElementWord[rowIndex].CellsElement[columnIndexField]
-                       : TableStamp.RowsElementWord[rowIndex].CellsElement[columnIndexField - 1]).
+                       ? _tableStamp.RowsElementWord[rowIndex].CellsElement[columnIndexField]
+                       : _tableStamp.RowsElementWord[rowIndex].CellsElement[columnIndexField - 1]).
             Map(cells => new RowElementWord(cells));
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         private IResultAppValue<IStampApprovalChange> GetStampApprovalChangeFromRow(IRowElementWord approvalChangeRow) =>
             CheckFieldType.GetDepartmentType(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.ACTION_TYPE].MaxLengthWord).
             Map(departmentType => GetSignatureInformation(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                                          StampSettings.PersonId, departmentType)).
+                                                          _personId, departmentType)).
             ResultValueOk(signature => GetStampApprovalChangeFromFields(approvalChangeRow, signature));
 
         /// <summary>

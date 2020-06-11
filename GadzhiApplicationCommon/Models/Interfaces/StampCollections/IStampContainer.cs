@@ -2,6 +2,7 @@
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
 {

@@ -11,19 +11,19 @@ using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
+namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
     /// Строки с изменениями
     /// </summary>
-    public partial class StampWord
+    public partial class SignatureCreatingWord
     {
         /// <summary>
         /// Получить строки с изменениями Word
         /// </summary>
-        protected override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
-            GetFieldsByType(StampFieldType.ChangeSignature).
-            Select(field => GetTableRowByIndex(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex,
+        public override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
+             _stampFieldsWord.GetFieldsByType(StampFieldType.ChangeSignature).
+            Select(field => _stampFieldsWord.GetTableRowByIndex(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex,
                                                ChangeRowIndexes.NUMBER_CHANGE, ChangeSignatureWord.FIELDS_COUNT)).
             Where(row => row.CellsElement.Count >= ChangeSignatureWord.FIELDS_COUNT).
             Select(row => GetStampChangeFromRow(row, signatureLibrary)).

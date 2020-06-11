@@ -8,6 +8,7 @@ using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiWord.Extensions.Word;
 using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Models.Implementations.StampCollections.StampCreating;

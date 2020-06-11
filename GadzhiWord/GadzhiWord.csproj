@@ -141,11 +141,12 @@
     <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\StampCreating.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\TableStampType.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalChangeWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalPerformersWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampApprovalWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampChangeWord.cs" />
-    <Compile Include="Models\Implementations\StampCollections\StampPartial\StampPersonWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\SignatureCreatingWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalChangeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalPerformersWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampChangeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampPersonWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampTypes\StampChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampTypes\StampShortWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsWord.cs" />
@@ -164,8 +165,9 @@
     <Compile Include="Models\Implementations\StampFieldIndexes\ChangeRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\PersonRowIndexes.cs" />
     <Compile Include="Models\Interfaces\Specification\ISpecification.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampFieldWord.cs" />
-    <Compile Include="Models\Interfaces\StampCollections\IStampTextFieldWord.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\Fields\IStampFieldWord.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\Fields\IStampTextFieldWord.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\StampPartial\IStampFieldsWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -198,7 +200,6 @@
     <Compile Include="Word\Interfaces\Excel\Elements\ISheetExcel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Implementations\StampCollections\StampPartial\SignatureCreating\" />
     <Folder Include="Word\Implementations\Excel\Export\" />
   </ItemGroup>
   <ItemGroup>

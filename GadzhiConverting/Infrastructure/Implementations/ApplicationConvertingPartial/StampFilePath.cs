@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations;

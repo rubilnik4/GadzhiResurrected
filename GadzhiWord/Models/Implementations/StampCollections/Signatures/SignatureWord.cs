@@ -2,14 +2,13 @@
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiWord.Models.Interfaces.StampCollections;
+using GadzhiWord.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
 {

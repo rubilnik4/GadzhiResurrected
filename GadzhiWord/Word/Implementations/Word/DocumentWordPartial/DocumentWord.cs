@@ -9,6 +9,7 @@ using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiWord.Models.Implementations.Specification;
 using GadzhiWord.Models.Implementations.Specification.Table;

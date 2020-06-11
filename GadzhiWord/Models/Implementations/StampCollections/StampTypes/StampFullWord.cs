@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampTypes;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiWord.Models.Implementations.StampCollections.StampPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
@@ -40,12 +39,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
         /// Поля штампа, отвечающие за подписи
         /// </summary>
         protected override IStampSignatureFields GetStampSignatureFields() =>
-            GetStampPersonRows().
-            Map(personRows => new StampSignatureFields(personRows,
-                                                       GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary),
-                                                       new ResultAppCollection<IStampApproval>(Enumerable.Empty<IStampApproval>()),
-                                                       new ResultAppCollection<IStampApprovalChange>(Enumerable.Empty<IStampApprovalChange>()),
-                                                       GetStampApprovalPerformersRows()));
+            SignatureCreating.GetStampPersonRows().
+            Map(personRows => new StampSignatureFields(new SignaturesBuilder().
+                                                       AddStampPersons(personRows).
+                                                       AddStampChanges(SignatureCreating.GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary)).
+                                                       AddStampApprovalsPerformers(SignatureCreating.GetStampApprovalPerformersRows())));
 
     }
 }

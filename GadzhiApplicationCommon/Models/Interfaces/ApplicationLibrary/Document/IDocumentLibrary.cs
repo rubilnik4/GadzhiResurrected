@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
 {

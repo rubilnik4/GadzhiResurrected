@@ -8,6 +8,7 @@ using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiMicrostation.Microstation.Interfaces;
 
 namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPartial

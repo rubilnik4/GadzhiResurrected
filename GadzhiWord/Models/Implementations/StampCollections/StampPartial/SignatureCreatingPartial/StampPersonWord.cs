@@ -4,7 +4,6 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -13,20 +12,20 @@ using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
+namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
     /// Строки с ответственными лицами
     /// </summary>
-    public partial class StampWord
+    public partial class SignatureCreatingWord
     {
         /// <summary>
         /// Получить строки с ответственным лицом без подписи Word
         /// </summary>
-        protected override IResultAppCollection<IStampPerson> GetStampPersonRows() =>
-            GetFieldsByType(StampFieldType.PersonSignature).
-            Select(field => GetTableRowByIndex(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex,
-                                               PersonRowIndexes.ACTION_TYPE, PersonSignatureWord.FIELDS_COUNT)).
+        public override IResultAppCollection<IStampPerson> GetStampPersonRows() =>
+            _stampFieldsWord.GetFieldsByType(StampFieldType.PersonSignature).
+            Select(field => _stampFieldsWord.GetTableRowByIndex(field.CellElementStamp.RowIndex, field.CellElementStamp.ColumnIndex,
+                                                                PersonRowIndexes.ACTION_TYPE, PersonSignatureWord.FIELDS_COUNT)).
             Where(row => row.CellsElement.Count >= PersonSignatureWord.FIELDS_COUNT).
             Select(GetStampPersonFromRow).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп основных подписей не найден"));
@@ -37,7 +36,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         private IResultAppValue<IStampPerson> GetStampPersonFromRow(IRowElementWord personRow) =>
             CheckFieldType.GetDepartmentType(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE].MaxLengthWord).
             Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                                          StampSettings.PersonId, departmentType)).
+                                                          _personId, departmentType)).
             ResultValueOk(signature => GetStampPersonFromFields(personRow, signature));
 
         /// <summary>

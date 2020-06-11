@@ -4,6 +4,7 @@ using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiMicrostation.Microstation.Interfaces
 {

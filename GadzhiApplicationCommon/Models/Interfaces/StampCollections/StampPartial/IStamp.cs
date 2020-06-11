@@ -1,17 +1,11 @@
-﻿using GadzhiApplicationCommon.Models.Enums;
+﻿using System.Collections.Generic;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
-
-namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
+namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial
 {
     /// <summary>
     /// Штамп. Базовый вариант

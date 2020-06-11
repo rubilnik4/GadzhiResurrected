@@ -2,9 +2,10 @@
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampTypes;
 using GadzhiWord.Models.Implementations.StampCollections.StampPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
@@ -36,6 +37,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
         /// Поля штампа, отвечающие за подписи
         /// </summary>
         protected override IStampSignatureFields GetStampSignatureFields() =>
-            new StampSignatureFields(GetStampChangeRows(_personShortSignature));
+            new StampSignatureFields(new SignaturesBuilder().
+                                     AddStampChanges(SignatureCreating.GetStampChangeRows(_personShortSignature)));
     }
 }

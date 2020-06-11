@@ -12,6 +12,7 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiMicrostation.Extensions.Microstation;
 using GadzhiMicrostation.Microstation.Interfaces;

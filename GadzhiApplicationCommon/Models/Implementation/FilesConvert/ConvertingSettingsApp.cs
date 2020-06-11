@@ -12,7 +12,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.FilesConvert
         }
 
         /// <summary>
-        /// Идентификатор личной подпись
+        /// Идентификатор личной подписи
         /// </summary>
         public string PersonId { get; }
 

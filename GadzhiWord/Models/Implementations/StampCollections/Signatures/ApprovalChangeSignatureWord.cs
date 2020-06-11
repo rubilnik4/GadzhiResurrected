@@ -2,7 +2,7 @@
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiWord.Models.Interfaces.StampCollections;
+using GadzhiWord.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
 {
