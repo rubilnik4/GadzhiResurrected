@@ -11,7 +11,7 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartia
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
-using GadzhiMicrostation.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -58,14 +58,5 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             StampCellElement.Range.Width >= StampCellElement.Range.Height 
             ? StampOrientationType.Landscape
             : StampOrientationType.Portrait;
-
-        /// <summary>
-        /// Поля штампа, отвечающие за подписи
-        /// </summary>
-        protected override IStampSignatureFields GetStampSignatureFields() =>
-            GetStampPersonRows().
-            Map(personRows => new StampSignatureFields(personRows, 
-                                                       GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary),
-                                                       GetStampApprovalRows()));
     }
 }

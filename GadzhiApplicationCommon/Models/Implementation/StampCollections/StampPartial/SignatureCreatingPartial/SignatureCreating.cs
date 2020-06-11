@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using System;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.SignatureCreating;
@@ -6,10 +8,26 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.Si
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
-    /// Фабрика создания подписей Word
+    /// Фабрика создания подписей
     /// </summary>
     public abstract class SignatureCreating : ISignatureCreating
     {
+        protected SignatureCreating(SignaturesSearching signaturesSearching, string personId)
+        {
+            SignaturesSearching = signaturesSearching ?? throw new ArgumentNullException(nameof(signaturesSearching));
+            PersonId = personId ?? throw new ArgumentNullException(nameof(personId));
+        }
+
+        /// <summary>
+        /// Поиск имен с идентификатором и подписью
+        /// </summary>
+        protected SignaturesSearching SignaturesSearching { get; }
+
+        /// <summary>
+        /// Идентификатор личной подписи
+        /// </summary>
+        protected string PersonId { get; }
+
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
         /// </summary>

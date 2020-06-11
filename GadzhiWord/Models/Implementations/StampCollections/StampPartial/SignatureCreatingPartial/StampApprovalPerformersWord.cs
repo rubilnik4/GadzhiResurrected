@@ -43,7 +43,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         /// </summary>
         private IResultAppValue<IStampApprovalPerformers> GetStampApprovalPerformersFromRow(IRowElementWord approvalPerformersRow) =>
             GetSignatureInformation(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                    _personId, PersonDepartmentType.Undefined).
+                                    PersonId, PersonDepartmentType.Undefined).
             ResultValueOk(signature => GetStampApprovalPerformanceFromFields(approvalPerformersRow, signature));
 
         /// <summary>

@@ -3,17 +3,17 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
+namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
     /// Строки согласования для списка исполнителей
     /// </summary>
-    public partial class StampMicrostation
+    public partial class SignatureCreatingMicrostation
     {
         /// <summary>
         /// Получить строки согласования для списка исполнителей
         /// </summary>
-        protected override IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows() =>
+        public override IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows() =>
             new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>());
     }
 }

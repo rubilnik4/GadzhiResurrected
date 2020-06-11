@@ -49,7 +49,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         private IResultAppValue<IStampApprovalChange> GetStampApprovalChangeFromRow(IRowElementWord approvalChangeRow) =>
             CheckFieldType.GetDepartmentType(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.ACTION_TYPE].MaxLengthWord).
             Map(departmentType => GetSignatureInformation(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                                          _personId, departmentType)).
+                                                          PersonId, departmentType)).
             ResultValueOk(signature => GetStampApprovalChangeFromFields(approvalChangeRow, signature));
 
         /// <summary>

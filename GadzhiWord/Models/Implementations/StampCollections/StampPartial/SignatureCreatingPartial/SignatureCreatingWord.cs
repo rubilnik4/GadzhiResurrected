@@ -17,15 +17,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
     public partial class SignatureCreatingWord: SignatureCreating
     {
         public SignatureCreatingWord(ITableElementWord tableStamp, IResultAppValue<ITableElementWord> tableApprovalPerformers,
-                                     IStampFieldsWord stampFieldsWord, SignaturesSearching signaturesSearching,
-                                     StampDocumentType stampDocumentType , string personId)
+                                     IStampFieldsWord stampFieldsWord, StampDocumentType stampDocumentType, 
+                                     SignaturesSearching signaturesSearching, string personId)
+            :base(signaturesSearching, personId)
         {
             _tableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
             _tableApprovalPerformers = tableApprovalPerformers ?? throw new ArgumentNullException(nameof(tableApprovalPerformers));
             _stampFieldsWord = stampFieldsWord ?? throw new ArgumentNullException(nameof(stampFieldsWord));
-            _signaturesSearching = signaturesSearching ?? throw new ArgumentNullException(nameof(signaturesSearching));
             _stampDocumentType = stampDocumentType;
-            _personId = personId;
         }
 
         /// <summary>
@@ -44,27 +43,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         private readonly IStampFieldsWord _stampFieldsWord;
 
         /// <summary>
-        /// Поиск имен с идентификатором и подписью
-        /// </summary>
-        private readonly SignaturesSearching _signaturesSearching;
-
-        /// <summary>
         /// Тип документа, определяемый по типу шифра в штампе
         /// </summary>
         private readonly StampDocumentType _stampDocumentType;
-
-        /// <summary>
-        /// Идентификатор личной подписи
-        /// </summary>
-        private readonly string  _personId;
 
         /// <summary>
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
         private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
                                                                               PersonDepartmentType personDepartmentType) =>
-            _signaturesSearching.FindById(personId)?.PersonInformation.DepartmentType.
-            Map(departmentType => _signaturesSearching.CheckDepartmentAccordingToType(departmentType, personDepartmentType)).
-            Map(departmentChecked => _signaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
+            SignaturesSearching.FindById(personId)?.PersonInformation.DepartmentType.
+            Map(departmentType => SignaturesSearching.CheckDepartmentAccordingToType(departmentType, personDepartmentType)).
+            Map(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
     }
 }

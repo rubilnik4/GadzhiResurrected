@@ -7,8 +7,11 @@ using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.BasicFieldsCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampTypes;
 using GadzhiWord.Models.Implementations.StampCollections.StampPartial;
+using GadzhiWord.Models.Implementations.StampCollections.StampPartial.BasicFieldsCreatingPartial;
+using GadzhiWord.Models.Implementations.StampCollections.StampTypes.BasicFieldsCreatingPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
@@ -45,8 +48,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
                                                        AddStampApprovalsChange(SignatureCreating.GetStampApprovalChangeRows())));
 
         /// <summary>
-        /// Получить поле шифра
+        /// Фабрика создания базовых полей для извещения изменений Word
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetFullCode() => _fullcode;
+        protected override IBasicFieldsCreating BasicFieldsCreating => new BasicFieldsCreatingChangeWord(_fullcode, this);
     }
 }

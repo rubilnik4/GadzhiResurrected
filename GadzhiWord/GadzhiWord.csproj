@@ -141,12 +141,14 @@
     <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\StampCreating.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\TableStampType.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\BasicFieldsCreatingPartial\BasicFieldsCreatingWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\SignatureCreatingWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalPerformersWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampPersonWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampTypes\BasicFieldsCreatingPartial\BasicFieldsCreatingChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampTypes\StampChangeWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampTypes\StampShortWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\StampBasicFieldsWord.cs" />

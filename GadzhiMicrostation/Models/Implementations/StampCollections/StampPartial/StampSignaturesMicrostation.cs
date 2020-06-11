@@ -9,13 +9,13 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Functional;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiMicrostation.Models.Implementations.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.SignatureCreating;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
+using GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -24,6 +24,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public abstract partial class StampMicrostation
     {
+        /// <summary>
+        /// Фабрика создания подписей Microstation
+        /// </summary>
+        protected override ISignatureCreating SignatureCreating =>
+            new SignatureCreatingMicrostation(this, InsertSignatureByFields, SignaturesSearching, StampSettings.PersonId);
+
         /// <summary>
         /// Вставить подписи
         /// </summary>
@@ -34,11 +40,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             ResultValueOkBind(InsertSignaturesFromLibrary).
             ResultVoidOk(_ => StampCellElement.ApplicationMicrostation.DetachLibrary()).
             ToResultCollection();
-
-        /// <summary>
-        /// Вставить подписи из библиотеки
-        /// </summary>      
-        protected abstract IResultAppCollection<IStampSignature> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements);
 
         /// <summary>
         /// Удалить предыдущие подписи
@@ -55,38 +56,70 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             Map(_ => Unit.Value);
 
         /// <summary>
-        /// Вставить подпись
+        /// Удалить подписи
         /// </summary>
-        protected IResultAppValue<ICellElementMicrostation> InsertSignature(string personId, ITextElementMicrostation previousField,
-                                                                            ITextElementMicrostation nextField) =>
-            SignatureRange.GetSignatureRange(StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
-                                                                   Select(element => element.AsLineElementMicrostation).
-                                                                   Map(lineElements => new ResultAppCollection<ILineElementMicrostation>(lineElements)),
-                                                  previousField, nextField, previousField.IsVertical).
+        public override IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures) =>
+            signatures.
+            Select(signature => signature.DeleteSignature()).
+            ToList().
+            Map(signaturesDeleted =>
+                    new ResultAppCollection<IStampSignature>(signaturesDeleted,
+                                                             signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
+                                                             new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                  "Подписи для удаления не инициализированы")));
+
+        /// <summary>
+        /// Вставить подписи из библиотеки
+        /// </summary>      
+        private IResultAppCollection<IStampSignature> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
+            StampSignatureFields.GetSignatures().
+            ResultValueOkBind(signatures => InsertSignatures(signatures,
+                                                             libraryElements.Select(libraryElement => libraryElement.Name).ToList())).
+            ToResultCollection();
+
+
+        /// <summary>
+        /// Вставить подписи и получить поля
+        /// </summary>
+        private IResultAppCollection<IStampSignature> InsertSignatures(IEnumerable<IStampSignature> signatures, IList<string> libraryIds) =>
+            signatures.
+            Select(signature => SearchSignatureToInsert(signature, libraryIds)).
+            ToResultCollection();
+
+        /// <summary>
+        /// Найти подпись в базе и вставить
+        /// </summary>
+        private IResultAppValue<IStampSignature> SearchSignatureToInsert(IStampSignature signature, IList<string> personIds) =>
+            SignaturesSearching.
+            FindByIdOrFullNameOrRandom(signature.SignatureLibrary.PersonId,
+                                       signature.SignatureLibrary.PersonInformation.FullName, StampSettings.PersonId).
+            ResultValueContinue(signatureLibrary => personIds.IndexOf(signatureLibrary.PersonId) > 0,
+                okFunc: signatureLibrary => signatureLibrary,
+                badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                  $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
+            ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId, signatureLibrary.PersonInformation,
+                                                                   String.Empty, signature.IsVertical)).
+            ResultValueOk(signature.InsertSignature);
+
+
+        /// <summary>
+        /// Вставить подпись между полями
+        /// </summary>
+        private IResultAppValue<ICellElementMicrostation> InsertSignatureByFields(string personId, ITextElementMicrostation previousField,
+                                                                                  ITextElementMicrostation nextField) =>
+            SignatureRange.GetSignatureRange(GetLinesStamp(), previousField, nextField, previousField.IsVertical).
             ResultValueOkBind(signatureRange => StampCellElement.ApplicationMicrostation.
                                                 CreateCellElementFromLibrary(personId, signatureRange.OriginPoint,
                                                                              StampCellElement.ModelMicrostation,
                                                                              CreateSignatureCell(signatureRange, previousField.IsVertical)));
 
         /// <summary>
-        /// Получить строки с ответственным лицом/отделом без подписи
+        /// Получить линии из штампа
         /// </summary>
-        protected static IEnumerable<TSignatureField> GetStampSignatureRows<TSignatureField>(StampFieldType stampFieldType,
-                                                                                             Func<IEnumerable<string>, IResultAppValue<TSignatureField>> getSignatureField)
-                where TSignatureField : IStampSignature =>
-            StampFieldSignatures.GetFieldsBySignatureType(stampFieldType).
-            Select(getSignatureField).
-            Where(resultSignature => resultSignature.OkStatus).
-            Select(resultSignature => resultSignature.Value);
-
-        /// <summary>
-        /// Функция вставки подписей из библиотеки
-        /// </summary>      
-        protected Func<ISignatureLibraryApp, IResultAppValue<IStampField>> InsertSignatureFunc
-            (IElementMicrostation previousElement, IElementMicrostation nextElement, StampFieldType stampFieldType) =>
-            (signatureLibrary) =>
-                InsertSignature(signatureLibrary.PersonId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation).
-                ResultValueOk(signature => new StampFieldMicrostation(signature, stampFieldType));
+        private IResultAppCollection<ILineElementMicrostation> GetLinesStamp() =>
+            StampCellElement.GetSubElementsByType(ElementMicrostationType.LineElement).
+            Select(element => element.AsLineElementMicrostation).
+            Map(lineElements => new ResultAppCollection<ILineElementMicrostation>(lineElements));
 
         /// <summary>
         /// Параметры ячейки подписи

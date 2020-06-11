@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GadzhiApplicationCommon.Extensions.Functional.Result;
-using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
-using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using GadzhiMicrostation.Models.Implementations.StampCollections.Fields;
-using GadzhiMicrostation.Models.Implementations.StampFieldNames;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.BasicFieldsCreatingPartial;
+using GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.BasicFieldsCreatingPartial;
 
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
@@ -20,19 +11,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     public partial class StampMicrostation
     {
         /// <summary>
-        /// Получить поле шифра
+        /// Фабрика создания базовых полей Microstation
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetFullCode =>
-                FindElementsInStamp<ITextNodeElementMicrostation>(new List<string>() { StampFieldBasic.FullCode.Name },
-                                                                  new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра не найдено")).
-                ResultValueOk(textElement => new StampTextNodeFieldMicrostation(textElement.First(), StampFieldType.FullRow));
+        protected override IBasicFieldsCreating BasicFieldsCreating => new BasicFieldsCreatingMicrostation(this);
 
         /// <summary>
-        /// Получить номер текущего листа
+        /// Получить базовые поля штампа Microstation
         /// </summary>
-        protected override IResultAppValue<IStampTextField> CurrentSheet =>
-            FindElementsInStamp<ITextElementMicrostation>(new List<string>() { StampFieldBasic.CurrentSheet.Name },
-                                                          new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле номера листа не найдено")).
-            ResultValueOk(textElement => new StampTextFieldMicrostation(textElement.First(), StampFieldType.CurrentSheet));
+        protected override IStampBasicFields GetStampBasicFields() => BasicFieldsCreating.StampBasicFields;
     }
 }

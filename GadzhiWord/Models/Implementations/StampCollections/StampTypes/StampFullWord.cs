@@ -44,6 +44,5 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
                                                        AddStampPersons(personRows).
                                                        AddStampChanges(SignatureCreating.GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary)).
                                                        AddStampApprovalsPerformers(SignatureCreating.GetStampApprovalPerformersRows())));
-
     }
 }

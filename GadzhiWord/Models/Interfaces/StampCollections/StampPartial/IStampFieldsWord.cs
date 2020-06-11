@@ -11,11 +11,6 @@ namespace GadzhiWord.Models.Interfaces.StampCollections.StampPartial
     public interface IStampFieldsWord
     {
         /// <summary>
-        /// Получить поля штампа
-        /// </summary>
-        public IReadOnlyList<IStampTextFieldWord> GetFields();
-
-        /// <summary>
         /// Получить поля штампа согласно типу
         /// </summary>
         public IEnumerable<IStampTextFieldWord> GetFieldsByType(StampFieldType stampFieldType);

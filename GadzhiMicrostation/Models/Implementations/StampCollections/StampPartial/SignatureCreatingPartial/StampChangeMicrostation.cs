@@ -13,17 +13,17 @@ using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 
-namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
+namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
-    /// Строки с изменениями в основном штампе
+    /// Строки с изменениями в основном штампе Microstation
     /// </summary>
-    public partial class StampMicrostation
+    public partial class SignatureCreatingMicrostation
     {
         /// <summary>
         /// Получить строки с изменениями
         /// </summary>
-        protected override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
+        public override IResultAppCollection<IStampChange> GetStampChangeRows(ISignatureLibraryApp signatureLibrary) =>
             new ResultAppValue<ISignatureLibraryApp>(signatureLibrary, new ErrorApplication(ErrorApplicationType.SignatureNotFound, 
                                                                                             "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
@@ -34,8 +34,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Преобразовать элементы Microstation в строку подписей изменений Microstation
         /// </summary>
         private IResultAppValue<IStampChange> GetStampChangeRow(IEnumerable<string> changeNames, ISignatureLibraryApp personSignature) =>
-            FindElementsInStamp<ITextElementMicrostation>(changeNames, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                                            "Поля подписей изменений не найдены")).
+             _stampFields.FindElementsInStamp<ITextElementMicrostation>(changeNames, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
+                                                                                                                      "Поля подписей изменений не найдены")).
             ResultValueOkBind(foundFields => GetStampChangeFromFields(foundFields, personSignature));
 
         /// <summary>
@@ -43,11 +43,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         private IResultAppValue<IStampChange> GetStampChangeFromFields(IList<ITextElementMicrostation> foundFields, ISignatureLibraryApp personSignature)
         {
-            var numberChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsNumberChange(), StampFieldType.ChangeSignature);
-            var numberOfPlots = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsNumberOfPlots(), StampFieldType.ChangeSignature);
-            var typeOfChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsTypeOfChange(), StampFieldType.ChangeSignature);
-            var documentChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDocumentChange(), StampFieldType.ChangeSignature);
-            var dateChange = GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDateChange(), StampFieldType.ChangeSignature);
+            var numberChange = _stampFields.GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsNumberChange(), StampFieldType.ChangeSignature);
+            var numberOfPlots = _stampFields.GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsNumberOfPlots(), StampFieldType.ChangeSignature);
+            var typeOfChange = _stampFields.GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsTypeOfChange(), StampFieldType.ChangeSignature);
+            var documentChange = _stampFields.GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDocumentChange(), StampFieldType.ChangeSignature);
+            var dateChange = _stampFields.GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDateChange(), StampFieldType.ChangeSignature);
             var insertSignatureFunc = InsertSignatureFunc(documentChange.ElementStamp, dateChange.ElementStamp, StampFieldType.ChangeSignature);
 
             return GetStampChangeById(personSignature, insertSignatureFunc, numberChange, numberOfPlots, typeOfChange, documentChange, dateChange);
@@ -61,7 +61,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                  IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                                                  IStampTextField documentChange, IStampTextField dateChange) => 
             new ChangeSignatureMicrostation(personSignature, insertSignatureFunc, numberChange, numberOfPlots, 
-                                        typeOfChange, documentChange, dateChange).
+                                            typeOfChange, documentChange, dateChange).
             Map(stampChange => new ResultAppValue<IStampChange>(stampChange));
     }
 }

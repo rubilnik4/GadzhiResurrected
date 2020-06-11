@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Enums.StampCollections;
-using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.BasicFieldsCreatingPartial;
+using GadzhiWord.Models.Implementations.StampCollections.StampPartial.BasicFieldsCreatingPartial;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
 {
@@ -15,17 +10,13 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
     public partial class StampWord
     {
         /// <summary>
-        /// Получить поле шифра
+        /// Фабрика создания базовых полей Word
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetFullCode() =>
-            new ResultAppValue<IStampTextField>(GetFieldsByType(StampFieldType.FullRow).FirstOrDefault(),
-                                                new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра в таблице не найдено"));
+        protected override IBasicFieldsCreating BasicFieldsCreating => new BasicFieldsCreatingWord(this);
 
         /// <summary>
-        /// Получить номер текущего листа
+        /// Получить базовые поля штампа Word
         /// </summary>
-        protected override IResultAppValue<IStampTextField> GetCurrentSheet() =>
-            new ResultAppValue<IStampTextField>(GetFieldsByType(StampFieldType.CurrentSheet).FirstOrDefault(),
-                                                new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле текущего листа в таблице не найдено"));
+        protected override IStampBasicFields GetStampBasicFields() => BasicFieldsCreating.StampBasicFields;
     }
 }

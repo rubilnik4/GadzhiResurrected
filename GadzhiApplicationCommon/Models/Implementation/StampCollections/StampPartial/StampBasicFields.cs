@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
-using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial.BasicFieldsCreatingPartial;
 
 namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial
 {
     /// <summary>
-    /// Подкласс штампа для работы с базовыми полями штампа
+    /// Базовые поля штампа
     /// </summary>
     public abstract partial class Stamp
     {
         /// <summary>
-        /// Получить поле шифра
+        /// Фабрика создания подписей Word
         /// </summary>
-        protected abstract IResultAppValue<IStampTextField> GetFullCode();
-
-        /// <summary>
-        /// Получить номер текущего листа
-        /// </summary>
-        protected abstract IResultAppValue<IStampTextField> GetCurrentSheet();
+        protected abstract IBasicFieldsCreating BasicFieldsCreating { get; }
 
         /// <summary>
         /// Получить базовые поля штампа
         /// </summary>
-        private IStampBasicFields GetStampBasicFields() => new StampBasicFields(GetFullCode(), GetCurrentSheet());
+        protected abstract IStampBasicFields GetStampBasicFields();
     }
 }

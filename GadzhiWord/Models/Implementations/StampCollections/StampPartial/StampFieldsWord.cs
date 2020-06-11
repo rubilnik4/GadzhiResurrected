@@ -24,22 +24,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Получить поля штампа
         /// </summary>
-        protected IReadOnlyList<IStampTextFieldWord> FieldsStamp => _fieldsStamp ??= GetFields();
-
-        /// <summary>
-        /// Вписать текстовые поля в рамки
-        /// </summary>
-        public override IEnumerable<bool> CompressFieldsRanges() => Enumerable.Empty<bool>();
-
-        /// <summary>
-        /// Получить поля штампа
-        /// </summary>
-        public IReadOnlyList<IStampTextFieldWord> GetFields() =>
-            TableStamp?.CellsElementWord?.
-            Where(cell => !String.IsNullOrWhiteSpace(cell.TextNoSpaces)).
-            Select(cell => new StampTextFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
-            Where(field => field.StampFieldType != StampFieldType.Unknown).
-            ToList();
+        private IEnumerable<IStampTextFieldWord> FieldsStamp => _fieldsStamp ??= GetFields();
 
         /// <summary>
         /// Получить поля штампа согласно типу
@@ -55,5 +40,20 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
             Where(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement.Count > columnStartIndex + indexColumn).
             Select(indexColumn => TableStamp.RowsElementWord[rowIndex].CellsElement[columnStartIndex + indexColumn]).
             Map(cells => new RowElementWord(cells));
+
+        /// <summary>
+        /// Вписать текстовые поля в рамки
+        /// </summary>
+        public override IEnumerable<bool> CompressFieldsRanges() => Enumerable.Empty<bool>();
+
+        /// <summary>
+        /// Получить поля штампа
+        /// </summary>
+        private IReadOnlyList<IStampTextFieldWord> GetFields() =>
+            TableStamp?.CellsElementWord?.
+            Where(cell => !String.IsNullOrWhiteSpace(cell.TextNoSpaces)).
+            Select(cell => new StampTextFieldWord(cell, CheckFieldType.GetStampFieldType(cell, TableStamp))).
+            Where(field => field.StampFieldType != StampFieldType.Unknown).
+            ToList();
     }
 }

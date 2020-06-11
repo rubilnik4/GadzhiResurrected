@@ -3,6 +3,7 @@ using GadzhiApplicationCommon.Helpers;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.Fields
 {

@@ -52,8 +52,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Тип документа, определяемый по типу шифра в штампе
         /// </summary>
         public StampDocumentType StampDocumentType =>
-            GetFullCode().WhereContinue(fullCode => fullCode.OkStatus,
-                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(GetFullCode().Value.Text, StampApplicationType),
+            StampBasicFields.FullCode.WhereContinue(fullCode => fullCode.OkStatus,
+                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(StampBasicFields.FullCode.Value.Text, StampApplicationType),
                 badFunc: _ => StampDocumentType.Unknown);
 
         /// <summary>

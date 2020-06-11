@@ -1,5 +1,4 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
-using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
@@ -9,9 +8,9 @@ using System.Linq;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Fields;
-using GadzhiMicrostation.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial
 {
@@ -44,6 +43,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             FirstOrDefault();
 
         /// <summary>
+        /// Найти элементы в словаре штампа по ключам
+        /// </summary>
+        public IResultAppCollection<TElement> FindElementsInStamp<TElement>(IEnumerable<string> fieldsSearch, IErrorApplication errorNull)
+            where TElement : IElementMicrostation =>
+            StampSubControls.
+            ResultValueOk(subElements => FindElementsInFields<TElement>(subElements, fieldsSearch)).
+            ToResultCollection().
+            ResultValueContinue(fields => fields.Count > 0,
+                okFunc: fields => fields,
+                badFunc: fields => errorNull).
+            ToResultCollection();
+
+        /// <summary>
         /// Вписать текстовые поля в рамки
         /// </summary>
         public override IEnumerable<bool> CompressFieldsRanges() =>
@@ -55,19 +67,6 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                     _ => false
                 }
             );
-
-        /// <summary>
-        /// Найти элементы в словаре штампа по ключам
-        /// </summary>
-        protected IResultAppCollection<TElement> FindElementsInStamp<TElement>(IEnumerable<string> fieldsSearch, IErrorApplication errorNull)
-            where TElement : IElementMicrostation =>
-            StampSubControls.
-            ResultValueOk(subElements => FindElementsInFields<TElement>(subElements, fieldsSearch)).
-            ToResultCollection().
-            ResultValueContinue(fields => fields.Count > 0,
-                okFunc: fields => fields,
-                badFunc: fields => errorNull).
-            ToResultCollection();
 
         /// <summary>
         /// Найти элементы в словаре по ключам

@@ -20,6 +20,7 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.StampPartial;
 using MicroStationDGN;
 
 namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPartial

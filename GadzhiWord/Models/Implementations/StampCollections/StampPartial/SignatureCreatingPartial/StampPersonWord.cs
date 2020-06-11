@@ -36,7 +36,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         private IResultAppValue<IStampPerson> GetStampPersonFromRow(IRowElementWord personRow) =>
             CheckFieldType.GetDepartmentType(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE].MaxLengthWord).
             Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                                          _personId, departmentType)).
+                                                          PersonId, departmentType)).
             ResultValueOk(signature => GetStampPersonFromFields(personRow, signature));
 
         /// <summary>

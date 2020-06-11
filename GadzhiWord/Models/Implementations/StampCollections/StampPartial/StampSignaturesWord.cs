@@ -23,8 +23,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// Фабрика создания подписей Word
         /// </summary>
         protected override ISignatureCreating SignatureCreating  => 
-            new SignatureCreatingWord(TableStamp, TableApprovalPerformers, this, SignaturesSearching, 
-                                      StampDocumentType, StampSettings.PersonId);
+            new SignatureCreatingWord(TableStamp, TableApprovalPerformers, this, StampDocumentType, 
+                                      SignaturesSearching, StampSettings.PersonId);
 
         /// <summary>
         /// Вставить подписи
