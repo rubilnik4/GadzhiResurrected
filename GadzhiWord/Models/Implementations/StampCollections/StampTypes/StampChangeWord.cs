@@ -6,14 +6,10 @@ using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
-using GadzhiWord.Models.Implementations.StampCollections.Fields;
-using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampCollections.StampPartial;
-using GadzhiWord.Models.Implementations.StampFieldIndexes;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
@@ -23,11 +19,16 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
     /// </summary>
     public class StampChangeWord : StampWord, IStampChangeNotice
     {
+        /// <summary>
+        /// Поле шифра
+        /// </summary>
+        private readonly IResultAppValue<IStampTextField> _fullcode;
+
         public StampChangeWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElementWord tableStamp,
                                IResultAppValue<IStampTextField> fullCode)
             : base(stampSettingsWord, signaturesSearching, tableStamp)
         {
-            FullCode = fullCode ?? throw new ArgumentNullException(nameof(fullCode));
+            _fullcode = fullCode ?? throw new ArgumentNullException(nameof(fullCode));
         }
 
         /// <summary>
@@ -49,6 +50,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
         /// <summary>
         /// Получить поле шифра
         /// </summary>
-        protected override IResultAppValue<IStampTextField> FullCode { get; }
+        protected override IResultAppValue<IStampTextField> GetFullCode() => _fullcode;
     }
 }

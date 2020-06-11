@@ -198,6 +198,7 @@
     <Compile Include="Word\Interfaces\Excel\Elements\ISheetExcel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\Implementations\StampCollections\StampPartial\SignatureCreating\" />
     <Folder Include="Word\Implementations\Excel\Export\" />
   </ItemGroup>
   <ItemGroup>

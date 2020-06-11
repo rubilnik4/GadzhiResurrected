@@ -14,16 +14,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// <summary>
         /// Получить поле шифра
         /// </summary>
-        protected abstract IResultAppValue<IStampTextField> FullCode { get; }
+        protected abstract IResultAppValue<IStampTextField> GetFullCode();
 
         /// <summary>
         /// Получить номер текущего листа
         /// </summary>
-        protected abstract IResultAppValue<IStampTextField> CurrentSheet { get; }
+        protected abstract IResultAppValue<IStampTextField> GetCurrentSheet();
 
         /// <summary>
         /// Получить базовые поля штампа
         /// </summary>
-        private IStampBasicFields GetStampBasicFields() => new StampBasicFields(FullCode, CurrentSheet);
+        private IStampBasicFields GetStampBasicFields() => new StampBasicFields(GetFullCode(), GetCurrentSheet());
     }
 }
