@@ -19,16 +19,23 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
     public class StampFullWord : StampWord, IStampFull
     {
         public StampFullWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching,
-                             ITableElementWord tableStamp, IResultAppValue<ITableElementWord> tableApprovalPerformers)
+                             ITableElementWord tableStamp, IResultAppValue<ITableElementWord> tableApprovalPerformers,
+                             IResultAppValue<ITableElementWord> tableApprovalChief)
             : base(stampSettingsWord, signaturesSearching, tableStamp)
         {
             TableApprovalPerformers = tableApprovalPerformers ?? throw new ArgumentNullException(nameof(tableApprovalPerformers));
+            TableApprovalChief = tableApprovalChief ?? throw new ArgumentNullException(nameof(tableApprovalChief));
         }
 
         /// <summary>
-        /// Элемент таблица согласования списка исполнителей
+        /// Элемент таблица согласования списка исполнителей тех требований
         /// </summary>
         protected override IResultAppValue<ITableElementWord> TableApprovalPerformers { get; }
+
+        /// <summary>
+        /// Элемент таблица согласования тех требований с директорами
+        /// </summary>
+        protected override IResultAppValue<ITableElementWord> TableApprovalChief { get; }
 
         /// <summary>
         /// Тип штампа
@@ -43,6 +50,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampTypes
             Map(personRows => new StampSignatureFields(new SignaturesBuilder().
                                                        AddStampPersons(personRows).
                                                        AddStampChanges(SignatureCreating.GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary)).
-                                                       AddStampApprovalsPerformers(SignatureCreating.GetStampApprovalPerformersRows())));
+                                                       AddStampApprovalsPerformers(SignatureCreating.GetStampApprovalPerformersRows()).
+                                                       AddStampApprovalsChief(SignatureCreating.GetStampApprovalChiefRows())));
     }
 }

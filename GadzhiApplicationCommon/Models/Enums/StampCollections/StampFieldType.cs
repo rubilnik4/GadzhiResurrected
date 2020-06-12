@@ -13,5 +13,6 @@
         ApprovalSignature,
         ApprovalChangeSignature,
         ApprovalPerformersSignature,
+        ApprovalChiefSignature,
     }
 }

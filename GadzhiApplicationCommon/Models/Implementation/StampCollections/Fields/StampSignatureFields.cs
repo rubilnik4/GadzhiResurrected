@@ -23,6 +23,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
             StampApprovals = signaturesBuilder.StampApprovals;
             StampApprovalsChange = signaturesBuilder.StampApprovalsChange;
             StampApprovalsPerformers = signaturesBuilder.StampApprovalsPerformers;
+            StampApprovalsChief = signaturesBuilder.StampApprovalsChief;
         }
 
         /// <summary>
@@ -48,7 +49,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
         /// <summary>
         /// Строки согласования для опросных листов и тех требований
         /// </summary>
-        public IResultAppCollection<IStampApprovalPerformers > StampApprovalsPerformers { get; }
+        public IResultAppCollection<IStampApprovalPerformers> StampApprovalsPerformers { get; }
+
+        /// <summary>
+        /// Строки согласования для опросных листов и тех требований с директорами
+        /// </summary>
+        public IResultAppCollection<IStampApprovalChief> StampApprovalsChief { get; }
 
         /// <summary>
         /// Получить все подписи
@@ -59,6 +65,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
             ConcatResult(StampApprovals.Cast<IStampApproval, IStampSignature>()).
             ConcatResult(StampApprovalsChange.Cast<IStampApprovalChange, IStampSignature>()).
             ConcatResult(StampApprovalsPerformers.Cast<IStampApprovalPerformers, IStampSignature>()).
+            ConcatResult(StampApprovalsChief.Cast<IStampApprovalChief, IStampSignature>()).
             ResultValueOk(signatures => signatures.Where(signature => signature.IsAbleToInsert)).
             ToResultCollection();
     }

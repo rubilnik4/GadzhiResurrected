@@ -31,11 +31,18 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         protected ITableElementWord TableStamp { get; }
 
         /// <summary>
-        /// Элемент таблица согласования списка исполнителей
+        /// Элемент таблица согласования списка исполнителей тех требований
         /// </summary>
         protected virtual IResultAppValue<ITableElementWord> TableApprovalPerformers =>
             new ResultAppValue<ITableElementWord>(new ErrorApplication(ErrorApplicationType.TableNotFound,
-                                                                       "Таблица согласования списка исполнителей не найдена"));
+                                                                       "Таблица согласования списка исполнителей тех требований не найдена"));
+
+        /// <summary>
+        /// Элемент таблица согласования тех требований с директорами
+        /// </summary>
+        protected virtual IResultAppValue<ITableElementWord> TableApprovalChief =>
+            new ResultAppValue<ITableElementWord>(new ErrorApplication(ErrorApplicationType.TableNotFound, 
+                                                                       "Таблица согласования тех требований с директорами не найдена"));
 
         /// <summary>
         /// Тип приложения

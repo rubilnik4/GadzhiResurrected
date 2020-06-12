@@ -2,9 +2,9 @@
 using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 
-namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer
+namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampDefinitions
 {
-    public static class StampDocument
+    public static class StampDocumentDefinition
     {
         /// <summary>
         /// Определить тип документа по типу шифра в штампе
@@ -20,6 +20,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
                 StampApplicationType.Microstation => StampDocumentType.Drawing,
                 _ => StampDocumentType.Unknown,
             };
+
+        /// <summary>
+        /// Является ли тип документа тех требованиями или опросным листом
+        /// </summary>
+        public static bool IsDocumentQuestionnaire(StampDocumentType stampDocumentType) =>
+            stampDocumentType == StampDocumentType.Questionnaire || stampDocumentType == StampDocumentType.TechnicalRequirements;
 
         /// <summary>
         /// Сравнить подстроку

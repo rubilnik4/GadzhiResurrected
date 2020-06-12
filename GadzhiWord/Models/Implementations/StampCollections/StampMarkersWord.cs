@@ -54,11 +54,20 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         };
 
         /// <summary>
-        /// Маркеры таблицы согласования исполнителей
+        /// Маркеры таблицы согласования исполнителей тех требований
         /// </summary>
         public static IReadOnlyList<string> MarkersApprovalPerformanceTable => new List<string>()
         {
             "СписокИсполнителей"
+        };
+
+        /// <summary>
+        /// Маркеры таблицы согласования тех требований с директорами
+        /// </summary>
+        public static IReadOnlyList<string> MarkersApprovalChiefTable => new List<string>()
+        {
+            "Директор",
+            "ГлавныйИнженер",
         };
 
         /// <summary>

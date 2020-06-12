@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiCommon.Enums.LibraryData;
 using GadzhiWord.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
@@ -17,12 +18,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
     public partial class SignatureCreatingWord: SignatureCreating
     {
         public SignatureCreatingWord(ITableElementWord tableStamp, IResultAppValue<ITableElementWord> tableApprovalPerformers,
+                                     IResultAppValue<ITableElementWord> tableApprovalChief,
                                      IStampFieldsWord stampFieldsWord, StampDocumentType stampDocumentType, 
                                      SignaturesSearching signaturesSearching, string personId)
             :base(signaturesSearching, personId)
         {
             _tableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
             _tableApprovalPerformers = tableApprovalPerformers ?? throw new ArgumentNullException(nameof(tableApprovalPerformers));
+            _tableApprovalChief = tableApprovalChief ?? throw new ArgumentNullException(nameof(tableApprovalChief));
             _stampFieldsWord = stampFieldsWord ?? throw new ArgumentNullException(nameof(stampFieldsWord));
             _stampDocumentType = stampDocumentType;
         }
@@ -36,6 +39,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         /// Элемент таблица согласования списка исполнителей
         /// </summary>
         private readonly IResultAppValue<ITableElementWord> _tableApprovalPerformers;
+
+        /// <summary>
+        /// Элемент таблица согласования с директорами
+        /// </summary>
+        private readonly IResultAppValue<ITableElementWord> _tableApprovalChief;
 
         /// <summary>
         /// Поля штампа Word

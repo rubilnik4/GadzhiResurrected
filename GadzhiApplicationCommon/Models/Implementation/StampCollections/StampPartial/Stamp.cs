@@ -5,7 +5,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampContainer;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampTypes;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampDefinitions;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
@@ -53,7 +53,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// </summary>
         public StampDocumentType StampDocumentType =>
             StampBasicFields.FullCode.WhereContinue(fullCode => fullCode.OkStatus,
-                okFunc: stamps => StampDocument.GetDocumentTypeByFullCode(StampBasicFields.FullCode.Value.Text, StampApplicationType),
+                okFunc: stamps => StampDocumentDefinition.GetDocumentTypeByFullCode(StampBasicFields.FullCode.Value.Text, StampApplicationType),
                 badFunc: _ => StampDocumentType.Unknown);
 
         /// <summary>

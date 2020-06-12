@@ -2,7 +2,7 @@
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampTypes;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampDefinitions;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating

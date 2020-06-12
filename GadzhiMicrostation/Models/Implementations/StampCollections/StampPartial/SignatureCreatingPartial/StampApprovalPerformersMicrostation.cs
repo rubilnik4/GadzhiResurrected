@@ -6,12 +6,12 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
     /// <summary>
-    /// Строки согласования для списка исполнителей
+    /// Строки согласования для списка исполнителей тех требований Microstation
     /// </summary>
     public partial class SignatureCreatingMicrostation
     {
         /// <summary>
-        /// Получить строки согласования для списка исполнителей
+        /// Получить строки согласования для списка исполнителей тех требований Microstation
         /// </summary>
         public override IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows() =>
             new ResultAppCollection<IStampApprovalPerformers>(Enumerable.Empty<IStampApprovalPerformers>());

@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Infrastructure.Implementations.Converters.LibraryData;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Implementations.StampCollections.Signatures;
 using GadzhiWord.Models.Implementations.StampFieldIndexes;
@@ -32,26 +34,29 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         private IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRowsChecked() =>
             _tableApprovalPerformers.
             ResultValueOk(table => table.RowsElementWord).
-            ToResultCollection(new ErrorApplication(ErrorApplicationType.FieldNotFound, "Строки согласования не найдены")).
+            ToResultCollection(new ErrorApplication(ErrorApplicationType.FieldNotFound, "Строки согласования тех требований не найдены")).
             ResultValueOk(rows => rows.Where(row => row.CellsElement.Count == ApprovalPerformersSignatureWord.FIELDS_COUNT)).
-            ResultValueOkBind(rows => rows.Select(GetStampApprovalPerformersFromRow).
+            ResultValueOkBind(rows => rows.
+                                      Where(row => ConverterDepartmentTypeApp.HasDepartmentType(row.CellsElement[ApprovalPerformersRowIndexes.DEPARTMENT].Text)).
+                                      Select(GetStampApprovalPerformersFromRow).
                                       ToResultCollection()).
             ToResultCollection();
 
         /// <summary>
-        /// Получить класс с ответственным лицом и подписью по строке Word для строк согласования
+        /// Получить класс с ответственным лицом и подписью по строке Word для строк согласования тех требований
         /// </summary>
         private IResultAppValue<IStampApprovalPerformers> GetStampApprovalPerformersFromRow(IRowElementWord approvalPerformersRow) =>
-            GetSignatureInformation(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
-                                    PersonId, PersonDepartmentType.Undefined).
+            ConverterDepartmentTypeApp.DepartmentParsing(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.DEPARTMENT].Text).
+            Map(departmentType => SignaturesSearching.FindByFullNameOrRandom(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
+                                                                             departmentType)).
             ResultValueOk(signature => GetStampApprovalPerformanceFromFields(approvalPerformersRow, signature));
 
         /// <summary>
-        /// Получить класс с ответственным лицом и подписью на основании полей Word  для строк согласования
+        /// Получить класс с ответственным лицом и подписью на основании полей Word для строк согласования тех требований
         /// </summary>
         private static IStampApprovalPerformers GetStampApprovalPerformanceFromFields(IRowElementWord approvalPerformersRow,
-                                                                                      ISignatureLibraryApp approvalChangeSignature) =>
-            new ApprovalPerformersSignatureWord(approvalChangeSignature,
+                                                                                      ISignatureLibraryApp approvalPerformersSignature) =>
+            new ApprovalPerformersSignatureWord(approvalPerformersSignature,
                                             new StampFieldWord(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.SIGNATURE], StampFieldType.ApprovalPerformersSignature),
                                             new StampTextFieldWord(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.RESPONSIBLE_PERSON], StampFieldType.ApprovalPerformersSignature),
                                             new StampTextFieldWord(approvalPerformersRow.CellsElement[ApprovalPerformersRowIndexes.DEPARTMENT], StampFieldType.ApprovalPerformersSignature),

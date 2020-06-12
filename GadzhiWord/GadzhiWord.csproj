@@ -137,6 +137,7 @@
     <Compile Include="Models\Implementations\StampCollections\Fields\CheckFieldType.cs" />
     <Compile Include="Models\Implementations\StampCollections\Fields\StampTextFieldWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ApprovalChangeSignatureWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\Signatures\ApprovalChiefSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ApprovalPerformersSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\Signatures\ChangeSignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\StampCreating.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Models\Implementations\StampCollections\StampPartial\BasicFieldsCreatingPartial\BasicFieldsCreatingWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\SignatureCreatingWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalChangeWord.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalChief.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalPerformersWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampChangeWord.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="Models\Implementations\StampCollections\Signatures\SignatureWord.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampCreating\StampValidatingWord.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\ApprovalChangeRowIndexes.cs" />
+    <Compile Include="Models\Implementations\StampFieldIndexes\ApprovalChiefRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\ApprovalPerformersRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\ChangeRowIndexes.cs" />
     <Compile Include="Models\Implementations\StampFieldIndexes\PersonRowIndexes.cs" />

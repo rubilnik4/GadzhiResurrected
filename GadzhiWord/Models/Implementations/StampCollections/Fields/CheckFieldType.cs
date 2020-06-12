@@ -29,13 +29,22 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
             };
 
         /// <summary>
-        /// Является ли таблица список исполнителей для согласования
+        /// Является ли таблица списком исполнителей для согласования тех требований
         /// </summary>
-        public static bool IsTableApprovalsPerformers(ITableElementWord stampTable) =>
-            stampTable?.RowsCountInitial <= ApprovalPerformersSignatureWord.MAX_ROWS_COUNT && 
-            stampTable.ColumnsCountInitial == ApprovalPerformersSignatureWord.FIELDS_COUNT &&
-            stampTable.HasCellElement(0, 0) == true &&
-            StampMarkersWord.MarkersApprovalPerformanceTable.MarkerContain(stampTable.RowsElementWord[0].CellsElement[0].TextNoSpaces);
+        public static bool IsTableApprovalPerformers(ITableElementWord table) =>
+            table?.RowsCountInitial <= ApprovalPerformersSignatureWord.MAX_ROWS_COUNT && 
+            table.ColumnsCountInitial == ApprovalPerformersSignatureWord.FIELDS_COUNT &&
+            table.HasCellElement(0, 0) &&
+            StampMarkersWord.MarkersApprovalPerformanceTable.MarkerContain(table.RowsElementWord[0].CellsElement[0].TextNoSpaces);
+
+        /// <summary>
+        /// Является ли таблица списком согласований с директорами для тех требований
+        /// </summary>
+        public static bool IsTableApprovalChief(ITableElementWord table) =>
+            table?.RowsCountInitial <= ApprovalChiefSignatureWord.MAX_ROWS_COUNT &&
+            table.ColumnsCountInitial == ApprovalChiefSignatureWord.FIELDS_COUNT &&
+            table.HasCellElement(0, 0) &&
+            StampMarkersWord.MarkersApprovalChiefTable.MarkerContain(table.RowsElementWord[0].CellsElement[0].TextNoSpaces);
 
         /// <summary>
         /// Находится ли поле в строке с ответственным лицом и подписью для полного штампа

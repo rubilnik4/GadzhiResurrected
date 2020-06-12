@@ -26,7 +26,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         /// Выбрать главный штамп
         /// </summary>
         public static IStamp GetMainStamp(StampType stampType, ITableElementWord tableWord, StampSettingsWord stampSettings,
-                                          SignaturesSearching signaturesSearching, IEnumerable<ITableElementWord> tables) =>
+                                          SignaturesSearching signaturesSearching, IReadOnlyList<ITableElementWord> tables) =>
             stampType switch
             {
                 StampType.Full => GetFullStamp(stampSettings, signaturesSearching, tableWord, tables),
@@ -38,8 +38,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         /// Получить основной штамп
         /// </summary>
         public static IStamp GetFullStamp(StampSettingsWord stampSettings, SignaturesSearching signaturesSearching, 
-                                          ITableElementWord tableWord, IEnumerable<ITableElementWord> tables) =>
-            new StampFullWord(stampSettings, signaturesSearching, tableWord, GetApprovalPerformersTable(tables));
+                                          ITableElementWord tableWord, IReadOnlyList<ITableElementWord> tables) =>
+            new StampFullWord(stampSettings, signaturesSearching, tableWord, 
+                              GetApprovalPerformersTable(tables), GetApprovalChiefTable(tables));
 
         /// <summary>
         /// Получить сокращенные штампы
@@ -99,14 +100,24 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
                if (fullCode != null) break;
             }
             return new ResultAppValue<IStampTextField>(new StampTextFieldWord(fullCode, StampFieldType.FullRow) ,
-                                                        new ErrorApplication(ErrorApplicationType.FieldNotFound, "Поле шифра в таблице не найдено"));
+                                                        new ErrorApplication(ErrorApplicationType.FieldNotFound,
+                                                                             "Поле шифра в таблице не найдено"));
         }
 
         /// <summary>
-        /// Найти таблицу согласования списка исполнителей
+        /// Найти таблицу согласования списка исполнителей тех требований
         /// </summary>
         private static IResultAppValue<ITableElementWord> GetApprovalPerformersTable(IEnumerable<ITableElementWord> tables) =>
-           new ResultAppValue<ITableElementWord>(tables.FirstOrDefault(CheckFieldType.IsTableApprovalsPerformers),
-                                                 new ErrorApplication(ErrorApplicationType.TableNotFound, "Таблица согласования списка исполнителей не найдена"));
+           new ResultAppValue<ITableElementWord>(tables.FirstOrDefault(CheckFieldType.IsTableApprovalPerformers),
+                                                 new ErrorApplication(ErrorApplicationType.TableNotFound,
+                                                                      "Таблица согласования списка исполнителей тех требований не найдена"));
+
+        /// <summary>
+        /// Найти таблицу согласования тех требований с директорами
+        /// </summary>
+        private static IResultAppValue<ITableElementWord> GetApprovalChiefTable(IEnumerable<ITableElementWord> tables) =>
+           new ResultAppValue<ITableElementWord>(tables.FirstOrDefault(CheckFieldType.IsTableApprovalChief),
+                                                 new ErrorApplication(ErrorApplicationType.TableNotFound,
+                                                                      "Таблица согласования тех требований с директорами не найдена"));
     }
 }

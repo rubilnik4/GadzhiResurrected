@@ -80,6 +80,7 @@
     <Compile Include="Models\Implementations\StampCollections\StampPartial\BasicFieldsCreatingPartial\BasicFieldsCreatingMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\SignatureCreatingMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalChangeMicrostation.cs" />
+    <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalChiefMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampApprovalPerformersMicrostation.cs" />
     <Compile Include="Models\Implementations\StampCollections\StampPartial\SignatureCreatingPartial\StampPersonMicrostation.cs" />

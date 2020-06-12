@@ -62,6 +62,7 @@
     <Compile Include="Extensions\StringAdditional\StringAdditionalExtensions.cs" />
     <Compile Include="Extensions\StringAdditional\TextExtensions.cs" />
     <Compile Include="Helpers\TextFormatting.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentTypeApp.cs" />
     <Compile Include="Models\Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampApplicationType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />
@@ -92,7 +93,7 @@
     <Compile Include="Models\Implementation\StampCollections\Fields\StampSignatureFields.cs" />
     <Compile Include="Models\Implementation\StampCollections\Fields\StampTextField.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampContainer\StampContainer.cs" />
-    <Compile Include="Models\Implementation\StampCollections\StampContainer\StampDocument.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampDefinitions\StampDocumentDefinition.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\BasicFieldsCreatingPartial\BasicFieldsCreating.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\SignatureCreatingPartial\SignatureCreating.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampPartial\Stamp.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Models\Implementation\StampCollections\Fields\StampField.cs" />
     <Compile Include="Models\Implementation\StampCollections\StampIdentifier.cs" />
     <Compile Include="Models\Implementation\StampCollections\Signatures\StampSignature.cs" />
-    <Compile Include="Models\Implementation\StampCollections\StampTypes\StampTypeDefinition.cs" />
+    <Compile Include="Models\Implementation\StampCollections\StampDefinitions\StampTypeDefinition.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibrary.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryDocument.cs" />
     <Compile Include="Models\Interfaces\ApplicationLibrary\Application\IApplicationLibraryPrinting.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampBasicFields.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampSignatureFields.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampTextField.cs" />
+    <Compile Include="Models\Interfaces\StampCollections\Signatures\IStampApprovalChief.cs" />
     <Compile Include="Models\Interfaces\StampCollections\StampPartial\BasicFieldsCreatingPartial\IBasicFieldsCreating.cs" />
     <Compile Include="Models\Interfaces\StampCollections\StampPartial\IStamp.cs" />
     <Compile Include="Models\Interfaces\StampCollections\Fields\IStampField.cs" />

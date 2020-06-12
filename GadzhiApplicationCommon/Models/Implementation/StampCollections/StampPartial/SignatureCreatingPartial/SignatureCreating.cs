@@ -44,13 +44,18 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         public abstract IResultAppCollection<IStampApproval> GetStampApprovalRows();
 
         /// <summary>
-        /// Получить строки согласования без подписи Word для извещения с изменениями
+        /// Получить строки согласования без подписи для извещения с изменениями
         /// </summary>
         public abstract IResultAppCollection<IStampApprovalChange> GetStampApprovalChangeRows();
 
         /// <summary>
-        /// Получить строки согласования без подписи Word для извещения с изменениями
+        /// Получить строки согласования без подписи для опросных листов и тех требований
         /// </summary>
         public abstract IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows();
+
+        /// <summary>
+        /// Получить строки согласования без подписи для опросных листов и тех требований с директорами
+        /// </summary>
+        public abstract IResultAppCollection<IStampApprovalChief> GetStampApprovalChiefRows();
     }
 }

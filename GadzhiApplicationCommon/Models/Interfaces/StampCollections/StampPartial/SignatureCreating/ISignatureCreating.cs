@@ -33,5 +33,10 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartia
         /// Получить строки согласования без подписи Word для извещения с изменениями
         /// </summary>
         IResultAppCollection<IStampApprovalPerformers> GetStampApprovalPerformersRows();
+
+        /// <summary>
+        /// Получить строки согласования без подписи для опросных листов и тех требований с директорами
+        /// </summary>
+        IResultAppCollection<IStampApprovalChief> GetStampApprovalChiefRows();
     }
 }
