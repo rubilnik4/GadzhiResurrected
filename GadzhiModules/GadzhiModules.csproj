@@ -232,11 +232,13 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\PackageData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IFileData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ConvertingSettingsViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModel.cs" />
     <Compile Include="Helpers\BaseClasses\ViewModels\ViewModelBase.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ConvertingSettingsView.xaml.cs">
       <DependentUpon>ConvertingSettingsView.xaml</DependentUpon>
     </Compile>
@@ -251,6 +253,9 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IConvertingSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml.cs">
       <DependentUpon>GadzhiConvertingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml.cs">
+      <DependentUpon>FilesErrorsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\RegionNames.cs" />
@@ -281,6 +286,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,5 +1,10 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
+﻿using System;
+using System.Linq;
+using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using Prism.Mvvm;
 
@@ -55,7 +60,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// <summary>
         /// Ошибка отсутствует
         /// /// </summary>
-        public bool IsCriticalError => IsEndStatus &&  FileData.StatusError == StatusError.CriticalError;
+        public bool IsCriticalError => IsEndStatus && FileData.StatusError == StatusError.CriticalError;
+
+        /// <summary>
+        /// Список ошибок
+        /// </summary>
+        public string ErrorsDescription =>
+            FileData.FileConvertErrorType.Select(ConverterErrorType.ErrorTypeToString).
+            Map(errors => String.Join("\n", errors));
 
         /// <summary>
         /// Завершилось ли конвертирование удачно
@@ -67,10 +79,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// </summary>
         public void UpdateStatusProcessing()
         {
-            RaisePropertyChanged(nameof(StatusProcessingName));            
+            RaisePropertyChanged(nameof(StatusProcessingName));
             RaisePropertyChanged(nameof(IsEndStatus));
             RaisePropertyChanged(nameof(IsNoError));
             RaisePropertyChanged(nameof(IsCriticalError));
+            RaisePropertyChanged(nameof(ErrorsDescription));
         }
 
     }

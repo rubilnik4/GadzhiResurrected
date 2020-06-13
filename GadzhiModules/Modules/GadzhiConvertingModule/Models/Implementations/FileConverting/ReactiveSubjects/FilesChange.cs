@@ -10,12 +10,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     public class FilesChange
     {
         public FilesChange(IReadOnlyCollection<IFileData> filesDataProject,
-                           IEnumerable<IFileData> fileData,
+                           IEnumerable<IFileData> filesData,
                            ActionType actionType,
                            bool isStatusProcessingProjectChanged)
         {
             FilesDataProject = filesDataProject ?? new List<IFileData>().AsReadOnly();
-            FileData = fileData?.ToList().AsReadOnly() ?? new List<IFileData>().AsReadOnly();
+            FilesData = filesData?.ToList().AsReadOnly() ?? new List<IFileData>().AsReadOnly();
             ActionType = actionType;
             IsStatusProcessingProjectChanged = isStatusProcessingProjectChanged;
         }
@@ -28,7 +28,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Список изменяемых файлов
         /// </summary>
-        public IReadOnlyCollection<IFileData> FileData { get; }
+        public IReadOnlyCollection<IFileData> FilesData { get; }
 
         /// <summary>
         /// Тип действия

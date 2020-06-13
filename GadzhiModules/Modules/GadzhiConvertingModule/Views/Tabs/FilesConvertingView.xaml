@@ -11,6 +11,7 @@
         xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
         xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
         xmlns:viewModeItems="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         d:DataContext="{d:DesignInstance Type=viewModelTabs:FilesConvertingViewModel, IsDesignTimeCreatable=False}"
         >
     <Grid>
@@ -22,13 +23,17 @@
                                                    FalseValue="Collapsed"/>
           
             <Brush x:Key="ColorGreenComplete">#2e7d32</Brush>
-            <Brush x:Key="ColorYellowInformation">#ffa500</Brush>
             <Brush x:Key="ColorRedAlert">#9b0000</Brush>
 
             <Style x:Key="PackIconToolBarStyle" 
                    TargetType="materialDesign:PackIcon">
                 <Setter Property="Width" Value="24" />
                 <Setter Property="Height" Value="24"/>
+            </Style>
+
+            <Style x:Key="TextBlockDataGrid" 
+                   TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="PackIconDataGridStyle" 
@@ -44,6 +49,21 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Height" Value="Auto"/>
                 <Setter Property="Margin" Value="0 5 0 5"/>
+            </Style>
+
+            <Style TargetType="ToolTip">
+                <Style.Triggers>
+                    <Trigger Property="Content"
+                             Value="{x:Static sys:String.Empty}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
+                    </Trigger>
+                    <Trigger Property="Content"
+                             Value="{x:Null}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
         </Grid.Resources>
 
@@ -119,49 +139,34 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" 
                                     Binding="{Binding FileExtension}" 
+                                    ElementStyle="{StaticResource TextBlockDataGrid}"
                                     Width="0.15*"
                                     IsReadOnly="True">
-
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="Имя файла" 
-                                    Binding="{Binding FileName}" 
-                                    Width="0.4*" 
+                <DataGridTemplateColumn Header="Имя файла" 
+                                        Width="0.4*" 
                                     IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="viewModeItems:FileDataViewModelItem">
+                            <TextBlock Style="{StaticResource TextBlockDataGrid}" 
+                                       Text="{Binding FileName}"
+                                       ToolTip="{Binding FileName}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="ToolTip" Value="{Binding Path=(viewModeItems:FileDataViewModelItem.FileName)}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-
-                <DataGridTextColumn Header="Путь" 
-                                    Binding="{Binding FilePath}" 
-                                    Width="*" 
-                                    IsReadOnly="True">
-
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="ToolTip" Value="{Binding  Path=(viewModeItems:FileDataViewModelItem.FilePath)}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Путь к файлу" 
+                                        Width="*" 
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="viewModeItems:FileDataViewModelItem">
+                            <TextBlock Style="{StaticResource TextBlockDataGrid}" 
+                                       Text="{Binding FilePath}"
+                                       ToolTip="{Binding FilePath}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
                 <materialDesign:DataGridComboBoxColumn
                                     Header="Цвет печати"
@@ -183,7 +188,7 @@
                                         IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="viewModeItems:FileDataViewModelItem">
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" ToolTip="{Binding ErrorsDescription}">
                                 <materialDesign:PackIcon Kind="Done"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
                                                          Visibility="{Binding IsNoError, 
@@ -196,8 +201,8 @@
                                                                       Converter={StaticResource VisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorRedAlert}"/>
 
-                                <TextBlock Text="{Binding StatusProcessingName}"   
-                                           VerticalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource TextBlockDataGrid}" 
+                                           Text="{Binding StatusProcessingName}"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

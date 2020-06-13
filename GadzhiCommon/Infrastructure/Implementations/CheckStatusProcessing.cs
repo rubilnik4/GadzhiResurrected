@@ -14,7 +14,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
     public static class CheckStatusProcessing
     {
         /// <summary>
-        /// Список статусов, означающих завершенность конвертирования на стороне сервера
+        /// Список статусов, означающих завершенность конвертирования на стороне клиента
         /// </summary>       
         public static IReadOnlyList<StatusProcessingProject> CompletedStatusProcessingProject => new List<StatusProcessingProject>()
         {
@@ -32,7 +32,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         };
 
         /// <summary>
-        /// Находится ли статус в списке завершенных на стороне севера
+        /// Находится ли статус в списке завершенных на стороне клиента
         /// </summary>
         public static bool IsCompletedStatusProcessingProject(StatusProcessingProject statusProcessingProject) =>
             CompletedStatusProcessingProject.Contains(statusProcessingProject);

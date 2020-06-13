@@ -17,6 +17,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
             TabViewModels = new ObservableCollection<BindableBase>
             {
                 container.Resolve<FilesConvertingViewModel>(),
+                container.Resolve<FilesErrorsViewModel>(),
                 container.Resolve<ConvertingSettingsViewModel>(),
             };
         }

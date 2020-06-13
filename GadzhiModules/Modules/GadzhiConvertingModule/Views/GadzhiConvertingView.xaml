@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://prismlibrary.com/"  
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"   
              xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels"
@@ -16,6 +14,9 @@
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">
             <viewTabs:FilesConvertingView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModelTabs:FilesErrorsViewModel}">
+            <viewTabs:FilesErrorsView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModelTabs:ConvertingSettingsViewModel}">
             <viewTabs:ConvertingSettingsView />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.Converters;
@@ -34,6 +35,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             FileName = fileName;
             FilePath = filePath;
             ColorPrint = colorPrint;
+
+            FileConvertErrorType = new List<FileConvertErrorType>();
         }
 
         /// <summary>
@@ -79,10 +82,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             if (fileStatus == null) throw new ArgumentNullException(nameof(fileStatus));
 
             StatusProcessing = fileStatus.StatusProcessing;
-            FileConvertErrorType = fileStatus.Errors;
+            FileConvertErrorType = fileStatus.Errors ?? new List<FileConvertErrorType>();
             return this;
         }
 
+        #region IEquatable
         public override bool Equals(object obj)
         {
             return obj is IFileData fileData &&
@@ -98,5 +102,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         {
             return 1230029444 + FilePath.GetHashCode();
         }
+        #endregion
     }
 }

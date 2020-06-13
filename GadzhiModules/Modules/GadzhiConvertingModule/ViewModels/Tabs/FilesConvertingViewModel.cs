@@ -16,6 +16,9 @@ using Prism.Commands;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
+    /// <summary>
+    /// Представление конвертации файлов
+    /// </summary>
     public class FilesConvertingViewModel : ViewModelBase, IDropTarget, IDisposable
     {
         /// <summary>
@@ -40,15 +43,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
 
-            _fileDataChangeSubscribe = _applicationGadzhi?.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            _fileDataChangeSubscribe = applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
-
-        /// <summary>
-        /// Название
-        /// </summary>
-        public override string Title => "Конвертушки";
 
         /// <summary>
         /// Инициализировать команды
@@ -87,6 +85,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
             CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
         }
+
+        /// <summary>
+        /// Название
+        /// </summary>
+        public override string Title => "Конвертушки";
+
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
@@ -237,7 +241,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private void ActionOnTypeAdd(FilesChange filesChange)
         {
-            var fileDataViewModel = filesChange?.FileData?.Select(fileData => new FileDataViewModelItem(fileData));
+            var fileDataViewModel = filesChange?.FilesData?.Select(fileData => new FileDataViewModelItem(fileData));
             FilesDataCollection.AddRange(fileDataViewModel);
         }
 
@@ -246,9 +250,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private void ActionOnTypeRemove(FilesChange filesChange)
         {
-            if (filesChange?.FileData.Count == 1)
+            if (filesChange?.FilesData.Count == 1)
             {
-                var fileRemove = FilesDataCollection.First(f => f.FilePath == filesChange.FileData.First().FilePath);
+                var fileRemove = FilesDataCollection.First(f => f.FilePath == filesChange.FilesData.First().FilePath);
                 FilesDataCollection.Remove(fileRemove);
             }
             else
@@ -264,14 +268,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private void ActionOnTypeStatusChange(FilesChange filesChange)
         {
-            var fileChangePath = filesChange?.FileData?.Select(file => file.FilePath);
-            if (fileChangePath != null)
+            var fileChangePath = filesChange.FilesData.Select(file => file.FilePath);
+            var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath.Contains(fileData.FilePath));
+            foreach (var fileUpdate in filesDataNeedUpdate)
             {
-                var filesDataNeedUpdate = FilesDataCollection.Where(fileData => fileChangePath.Contains(fileData.FilePath));
-                foreach (var fileUpdate in filesDataNeedUpdate)
-                {
-                    fileUpdate.UpdateStatusProcessing();
-                }
+                fileUpdate.UpdateStatusProcessing();
             }
 
             RaiseAfterStatusChange(filesChange);
