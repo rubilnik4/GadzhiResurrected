@@ -21,8 +21,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         {
             if (packageDataEntity == null)  return null;
 
-            var filesData = await packageDataEntity.FileDataEntities.AsQueryable().
-                                  Select(fileData => FileDataToRequest(fileData)).ToListAsync();
+            var filesData = await packageDataEntity.FileDataEntities.Select(FileDataToRequest).
+                                                    AsQueryable().ToListAsync();
 
             return new PackageDataRequestServer()
             {

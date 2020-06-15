@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiCommon.Helpers.FileSystem
 {
@@ -14,17 +15,17 @@ namespace GadzhiCommon.Helpers.FileSystem
         {
             if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
             FilePath = filePath;
-            Errors = Enumerable.Empty<FileConvertErrorType>();
+            Errors = new List<IErrorCommon>().AsReadOnly();
         }
 
-        public FileSavedCheck(FileConvertErrorType error)
-            : this(new List<FileConvertErrorType>() { error })
+        public FileSavedCheck(IErrorCommon error)
+            : this(new List<IErrorCommon>() { error })
         { }
 
-        public FileSavedCheck(IEnumerable<FileConvertErrorType> errors)
+        public FileSavedCheck(IEnumerable<IErrorCommon> errors)
         {
-            if (errors == null || errors.Equals(Enumerable.Empty<FileConvertErrorType>())) throw new ArgumentNullException(nameof(errors));
-            Errors = errors.ToList();
+            if (errors == null || errors.Equals(Enumerable.Empty<IErrorCommon>())) throw new ArgumentNullException(nameof(errors));
+            Errors = errors.ToList().AsReadOnly();
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace GadzhiCommon.Helpers.FileSystem
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IEnumerable<FileConvertErrorType> Errors { get; }
+        public IReadOnlyCollection<IErrorCommon> Errors { get; }
 
         /// <summary>
         /// Сохранен ли файл

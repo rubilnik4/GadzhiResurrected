@@ -16,7 +16,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// <summary>
     /// Представление ошибок конвертации
     /// </summary>
-    public class FilesErrorsViewModel : ViewModelBase
+    public class FilesErrorsViewModel : ViewModelBase, IDisposable
     {
         /// <summary>
         /// Текущий статус конвертирования
@@ -64,7 +64,28 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Получить представления об ошибках после конвертирования файлов
         /// </summary>
         private static IEnumerable<FileErrorViewModelItem> GetErrorViewModelItemsFromFileData(IFileData fileData) =>
-            fileData.FileConvertErrorType.
-            Select(errorType => new FileErrorViewModelItem(fileData.FileName, errorType, String.Empty));
+            fileData.FileErrors.
+            Select(errorType => new FileErrorViewModelItem(fileData.FileName, errorType.FileConvertErrorType, errorType.ErrorDescription));
+
+        #region IDisposable Support
+        private bool _disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposedValue) return;
+
+            if (disposing)
+            {
+                _fileDataChangeSubscribe?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

@@ -5,6 +5,9 @@ using GadzhiDTOServer.TransferModels.FilesConvert;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiDAL.Entities.FilesConvert.Main.Components;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
 {
@@ -70,7 +73,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             if (fileDataResponse == null) throw new ArgumentNullException(nameof(fileDataResponse));
 
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
-            fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorTypes.ToList();
+            fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
 
             return fileDataEntity;
         }
@@ -78,8 +81,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// <summary>
         /// Обновить модель файла данных на основе окончательного ответа
         /// </summary>      
-        public static FileDataEntity UpdateFileDataFromResponse(FileDataEntity fileDataEntity,
-                                                                      FileDataResponseServer fileDataResponse)
+        public static FileDataEntity UpdateFileDataFromResponse(FileDataEntity fileDataEntity, FileDataResponseServer fileDataResponse)
         {
             if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
             if (fileDataResponse == null) throw new ArgumentNullException(nameof(fileDataResponse));
@@ -87,7 +89,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             var fileDataSourceEntity = fileDataResponse.FilesDataSource?.AsQueryable().
                                        Select(fileData => ToFileDataSource(fileData));
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
-            fileDataEntity.FileConvertErrorType = fileDataResponse.FileConvertErrorTypes.ToList();
+            fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
             fileDataEntity.SetFileDataSourceEntities(fileDataSourceEntity);
 
             return fileDataEntity;
@@ -103,6 +105,16 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                 FileDataSource = fileDataSourceResponseServer.FileDataSource,
                 PaperSize = fileDataSourceResponseServer.PaperSize,
                 PrinterName = fileDataSourceResponseServer.PrinterName,
+            };
+
+        /// <summary>
+        /// Преобразовать ошибки в формат БД
+        /// </summary>
+        public static ErrorComponent ToErrorComponent(ErrorCommonResponse error) =>
+            new ErrorComponent()
+            {
+                FileConvertErrorType = error.FileConvertErrorType,
+                ErrorDescription = error.ErrorDescription,
             };
     }
 }

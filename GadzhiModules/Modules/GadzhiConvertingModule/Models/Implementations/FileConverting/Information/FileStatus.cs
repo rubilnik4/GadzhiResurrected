@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information
 {
@@ -10,11 +12,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class FileStatus
     {
-        public FileStatus(string filePath, StatusProcessing statusProcessing, FileConvertErrorType error)
-            :this(filePath, statusProcessing, new List<FileConvertErrorType>() { error })
+        public FileStatus(string filePath, StatusProcessing statusProcessing)
+           : this(filePath, statusProcessing, new List<IErrorCommon>())
         { }
 
-        public FileStatus(string filePath, StatusProcessing statusProcessing, IEnumerable<FileConvertErrorType> errors)
+        public FileStatus(string filePath, StatusProcessing statusProcessing, IErrorCommon error)
+            :this(filePath, statusProcessing, new List<IErrorCommon>() { error })
+        { }
+
+        public FileStatus(string filePath, StatusProcessing statusProcessing, IEnumerable<IErrorCommon> errors)
         {
             FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
             StatusProcessing = statusProcessing;
@@ -34,6 +40,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Список ошибок
         /// </summary>
-        public IReadOnlyCollection<FileConvertErrorType> Errors { get; }
+        public IReadOnlyCollection<IErrorCommon> Errors { get; }
     }
 }

@@ -10,6 +10,7 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -118,7 +119,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             MapAsync(resources => resources.SignatureNames?.Count > 0).
             WhereBadAsync(hasSignatures => hasSignatures,
                 badFunc: hasSignatures => hasSignatures.
-                         Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.SignatureNotFound, 
+                         Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.SignatureNotFound,
                                                                                      "База подписей не загружена. Отмена запуска"))));
 
         /// <summary>
@@ -161,12 +162,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task ConvertingPackage(IPackageServer packageServer) =>
             await packageServer.
-            WhereContinueAsyncBind(fileData => fileData.IsValid,
-                okFunc: fileData => fileData.
-                                    Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {fileData.Id}")).
-                                    Map(_ => ConvertingFilesData(fileData)).
+            WhereContinueAsyncBind(package => package.IsValid,
+                okFunc: package => package.
+                                    Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {package.Id}")).
+                                    Map(_ => ConvertingFilesData(package)).
                                     MapAsync(ReplyPackageIsComplete),
-                badFunc: fileData => Task.FromResult(ReplyPackageIsInvalid(packageServer))).
+                badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
             VoidAsync(SendResponse);
 
         /// <summary>
@@ -174,15 +175,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private IPackageServer ReplyPackageIsInvalid(IPackageServer packageServer)
         {
-            if (!packageServer.IsFilesDataValid)
+            var error = packageServer switch
             {
-                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.FileNotFound, "Файлы для конвертации не обнаружены"));
-            }
-            if (!packageServer.IsValidByAttemptingCount)
-            {
-                _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования пакета"));
-            }
-            return packageServer.SetErrorToAllFiles().
+                _ when !packageServer.IsFilesDataValid => new ErrorCommon(FileConvertErrorType.FileNotFound, "Файлы для конвертации не обнаружены"),
+                _ when !packageServer.IsValidByAttemptingCount => new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования пакета"),
+                _ => throw new ArgumentOutOfRangeException(nameof(packageServer))
+            };
+
+            _messagingService.ShowAndLogError(error);
+
+            return packageServer.SetErrorToAllFiles(error).
                    SetStatusProcessingProject(StatusProcessingProject.Error);
         }
 

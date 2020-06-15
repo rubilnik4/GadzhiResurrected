@@ -68,8 +68,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 Map(filesData => CloseFile(document, fileDataServer.FilePathServer, fileDataServer.FileNameClient).
                                  Map(closeResult => filesData.ConcatErrors(closeResult.Errors)).
                                  ToResultCollection())).
-            Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value,
-                                             result.Errors.Select(error => error.FileConvertErrorType)));
+            Map(result => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, result.Value, result.Errors));
 
         /// <summary>
         /// Печать и экспорт файла
@@ -87,8 +86,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IFileDataServer GetErrorByAttemptingCount(IFileDataServer fileDataServer) =>
             new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования файла").
             Void(errorDataServer => _messagingService.ShowAndLogError(errorDataServer)).
-            Map(errorDataServer => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete,
-                                                      errorDataServer.Select(error => error.FileConvertErrorType)));
+            Map(errorDataServer => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, errorDataServer));
 
         /// <summary>
         /// Загрузить файл и сохранить в папку для обработки

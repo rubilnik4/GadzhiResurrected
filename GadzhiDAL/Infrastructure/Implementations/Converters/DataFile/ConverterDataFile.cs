@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiDAL.Entities.Signatures;
+using GadzhiDAL.Entities.Signatures.Components;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;

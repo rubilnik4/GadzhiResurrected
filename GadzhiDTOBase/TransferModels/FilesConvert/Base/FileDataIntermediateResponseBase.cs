@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
 {
@@ -26,6 +27,6 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Тип ошибки при конвертации файла
         /// </summary>
         [DataMember]
-        public IList<FileConvertErrorType> FileConvertErrorTypes { get; set; }
+        public IList<ErrorCommonResponse> FileErrors { get; set; }
     }
 }

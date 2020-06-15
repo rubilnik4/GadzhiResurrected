@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using GadzhiDAL.Entities.FilesConvert.Base;
+using GadzhiDAL.Entities.Signatures.Components;
 
 namespace GadzhiDAL.Entities.Signatures
 {

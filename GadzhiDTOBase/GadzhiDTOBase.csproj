@@ -127,6 +127,7 @@
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterDataFileFromDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\ConvertingSettingsRequest.cs" />
+    <Compile Include="TransferModels\FilesConvert\Base\ErrorCommonResponse.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\FileDataResponseBase.cs" />

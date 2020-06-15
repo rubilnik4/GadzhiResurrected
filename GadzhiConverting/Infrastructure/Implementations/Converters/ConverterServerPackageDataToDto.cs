@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
 {
@@ -34,7 +36,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                     Id = packageServer.Id,
                     StatusProcessingProject = packageServer.StatusProcessingProject,
                     FilesData = packageServer.FilesDataServer?.Select(FileDataToIntermediateResponse).ToList(),
-                } 
+                }
                 : throw new ArgumentNullException(nameof(packageServer));
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
+                FileErrors = fileDataServer.FileErrors.Select(ToErrorCommon).ToList(),
             };
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
                 FilesDataSource = filesDataSourceWithBytes.ToList(),
-                FileConvertErrorTypes = fileDataServer.FileConvertErrorTypes.ToList(),
+                FileErrors = fileDataServer.FileErrors.Select(ToErrorCommon).ToList(),
             };
         }
 
@@ -104,5 +106,17 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             };
             return (success, fileDataSourceResponseServer);
         }
+
+        /// <summary>
+        /// Преобразовать ошибку в трансферную модель
+        /// </summary> 
+        private static ErrorCommonResponse ToErrorCommon(IErrorCommon error) =>
+            (error != null)
+                ? new ErrorCommonResponse()
+                {
+                    FileConvertErrorType = error.FileConvertErrorType,
+                    ErrorDescription = error.ErrorDescription,
+                }
+                : throw new ArgumentNullException(nameof(error));
     }
 }

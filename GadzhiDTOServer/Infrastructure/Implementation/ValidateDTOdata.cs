@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDTOServer.Infrastructure.Implementation
@@ -15,9 +17,9 @@ namespace GadzhiDTOServer.Infrastructure.Implementation
         /// <summary>
         /// Проверить целостность выходных данных для конвертации
         /// </summary>
-        public static (bool isValid, IEnumerable<FileConvertErrorType> errors) IsFileDataRequestValid(FileDataRequestBase fileDataRequest)
+        public static IReadOnlyList<IErrorCommon> IsFileDataRequestValid(FileDataRequestBase fileDataRequest)
         {
-            var errors = new List<FileConvertErrorType>();
+            var errors = new List<IErrorCommon>();
 
             string fileName = Path.GetFileNameWithoutExtension(fileDataRequest?.FilePath);
             string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest?.FilePath);
@@ -28,19 +30,18 @@ namespace GadzhiDTOServer.Infrastructure.Implementation
 
             if (!isValidName)
             {
-                errors.Add(FileConvertErrorType.IncorrectFileName);
+                errors.Add(new ErrorCommon(FileConvertErrorType.IncorrectFileName, $"Некорректное имя файла {fileName}"));
             }
             if (!isValidExtension)
             {
-                errors.Add(FileConvertErrorType.IncorrectExtension);
+                errors.Add(new ErrorCommon(FileConvertErrorType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}"));
             }
             if (!isValidDataSource)
             {
-                errors.Add(FileConvertErrorType.IncorrectDataSource);
+                errors.Add(new ErrorCommon(FileConvertErrorType.IncorrectDataSource, $"Некорректные входные данные конвертации"));
             }
 
-            bool isValid = isValidName && isValidExtension && isValidDataSource;
-            return (isValid, errors);
+            return errors;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiConverting.Models.Interfaces.FilesConvert
 {
@@ -58,7 +59,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Присвоить статус ошибки обработки для всех файлов
         /// </summary>
-        IPackageServer SetErrorToAllFiles();
+        IPackageServer SetErrorToAllFiles(IErrorCommon filesError);
 
         /// <summary>
         /// Присвоить статус обработки проекта

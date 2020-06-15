@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
@@ -61,7 +62,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         public Task<PackageStatus> GetFilesInSending()
         {
             var filesSending = _packageInfoProject?.FilesData?.
-                               Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending, FileConvertErrorType.IncorrectFileName));
+                               Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
 
             var filesStatusInSending = new PackageStatus(filesSending, StatusProcessingProject.Sending);
             return Task.FromResult(filesStatusInSending);
@@ -75,7 +76,8 @@ namespace GadzhiModules.Infrastructure.Implementations
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
             var filesNotFound = _packageInfoProject?.FilesDataPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
-                                Select(filePath => new FileStatus(filePath, StatusProcessing.End, FileConvertErrorType.FileNotFound));
+                                Select(filePath => new FileStatus(filePath, StatusProcessing.End,
+                                                                  new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл не найден {filePath}")));
 
             var filesStatusInSending = new PackageStatus(filesNotFound, StatusProcessingProject.Sending);
             return Task.FromResult(filesStatusInSending);

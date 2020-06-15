@@ -6,6 +6,7 @@ using GadzhiConverting.Models.Interfaces.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
@@ -78,9 +79,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Присвоить статус ошибки обработки для всех файлов
         /// </summary>
-        public IPackageServer SetErrorToAllFiles() =>
-            FilesDataServer.Select(fileData => new FileDataServer(fileData, StatusProcessing.ConvertingComplete,
-                                                                  FileConvertErrorType.UnknownError)).
+        public IPackageServer SetErrorToAllFiles(IErrorCommon filesError) =>
+            FilesDataServer.Select(fileData => new FileDataServer(fileData, StatusProcessing.ConvertingComplete, filesError)).
             Map(filesData => new PackageServer(Id, AttemptingConvertCount, StatusProcessingProject, ConvertingSettings, filesData));
 
         /// <summary>

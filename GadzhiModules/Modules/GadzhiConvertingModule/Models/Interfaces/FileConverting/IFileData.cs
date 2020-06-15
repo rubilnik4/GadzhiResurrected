@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting
@@ -37,7 +38,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        IReadOnlyCollection<FileConvertErrorType> FileConvertErrorType { get; }
+        IReadOnlyCollection<IErrorCommon> FileErrors { get; }
 
         /// <summary>
         /// Статус ошибок

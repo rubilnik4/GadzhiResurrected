@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiDAL.Entities.FilesConvert.Main.Components;
+using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
 {
@@ -24,9 +27,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         {
             if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
 
-            var filesDataTasks = packageDataEntity.FileDataEntities.AsQueryable().
-                                 Select(fileData => FileDataAccessToIntermediateResponse(fileData));
-            var filesData = await Task.WhenAll(filesDataTasks);
+            var filesData = await packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).
+                                                    AsQueryable().ToListAsync();
 
             return new PackageDataIntermediateResponseClient()
             {
@@ -59,22 +61,27 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать файл модели базы данных в промежуточную
         /// </summary>
-        private static async Task<FileDataIntermediateResponseClient> FileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
+        private static FileDataIntermediateResponseClient FileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
         {
             if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
 
-            var fileConvertErrorType = await fileDataEntity.FileConvertErrorType.AsQueryable().ToListAsync();
+            var fileConvertErrorType = fileDataEntity.FileErrors.Select(ToErrorCommon).ToList();
             if (!CheckStatusProcessing.CompletedStatusProcessingServer.Contains(fileDataEntity.StatusProcessing) &&
-                !fileDataEntity.FileConvertErrorType.Any())
+                !fileDataEntity.FileErrors.Any())
             {
-                fileConvertErrorType = new List<FileConvertErrorType> { FileConvertErrorType.UnknownError };
+                var error = new ErrorCommonResponse()
+                {
+                    FileConvertErrorType = FileConvertErrorType.UnknownError,
+                    ErrorDescription = "Конвертирование пакета не может быть завершено"
+                };
+                fileConvertErrorType = new List<ErrorCommonResponse> { error };
             }
 
             return new FileDataIntermediateResponseClient()
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                FileConvertErrorTypes = fileConvertErrorType,
+                FileErrors = fileConvertErrorType,
             };
         }
 
@@ -93,7 +100,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 FilesDataSource = fileDataSourceResponseClient,
-                FileConvertErrorTypes = fileDataEntity.FileConvertErrorType.AsQueryable().ToList(),
+                FileErrors = fileDataEntity.FileErrors.Select(ToErrorCommon).ToList(),
             };
         }
 
@@ -116,5 +123,17 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FileName = fileDataSourceEntity?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceEntity)),
                 FileDataSource = fileDataSourceEntity.FileDataSource?.AsQueryable().ToArray(),
             };
+
+        /// <summary>
+        /// Конвертировать ошибки в трансферную модель
+        /// </summary>
+        private static ErrorCommonResponse ToErrorCommon(ErrorComponent errorComponent) =>
+            (errorComponent != null)
+            ? new ErrorCommonResponse()
+            {
+                FileConvertErrorType = errorComponent.FileConvertErrorType,
+                ErrorDescription = errorComponent.ErrorDescription
+            }
+            : throw new ArgumentNullException(nameof(errorComponent));
     }
 }

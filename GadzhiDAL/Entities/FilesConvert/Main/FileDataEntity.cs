@@ -3,6 +3,7 @@ using GadzhiDAL.Entities.FilesConvert.Base;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiDAL.Entities.FilesConvert.Main.Components;
 
 namespace GadzhiDAL.Entities.FilesConvert.Main
 {
@@ -24,7 +25,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public virtual IList<FileConvertErrorType> FileConvertErrorType { get; set; }
+        public virtual IList<ErrorComponent> FileErrors { get; set; }
 
         /// <summary>
         /// Файлы отконвертированных данных в формате zip GZipStream

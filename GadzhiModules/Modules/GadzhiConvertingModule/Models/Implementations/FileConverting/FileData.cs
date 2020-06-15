@@ -6,6 +6,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.Converters;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
@@ -36,7 +37,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             FilePath = filePath;
             ColorPrint = colorPrint;
 
-            FileConvertErrorType = new List<FileConvertErrorType>();
+            FileErrors = new List<IErrorCommon>();
         }
 
         /// <summary>
@@ -67,12 +68,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Статус ошибок
         /// </summary>
-        public StatusError StatusError => ConverterErrorType.ErrorsTypeToStatusError(FileConvertErrorType);
+        public StatusError StatusError =>
+            ConverterErrorType.ErrorsTypeToStatusError(FileErrors.Select(error => error.FileConvertErrorType));
 
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
-        public IReadOnlyCollection<FileConvertErrorType> FileConvertErrorType { get; private set; }
+        public IReadOnlyCollection<IErrorCommon> FileErrors { get; private set; }
 
         /// <summary>
         /// Изменить статус и вид ошибки при необходимости
@@ -82,7 +84,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             if (fileStatus == null) throw new ArgumentNullException(nameof(fileStatus));
 
             StatusProcessing = fileStatus.StatusProcessing;
-            FileConvertErrorType = fileStatus.Errors ?? new List<FileConvertErrorType>();
+            FileErrors = fileStatus.Errors;
             return this;
         }
 

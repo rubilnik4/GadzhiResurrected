@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -173,7 +174,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             StatusProcessingProject = StatusProcessingProject.Error;
             FilesQueueInfo = new FilesQueueInfo();
 
-            var fileData = _filesData.Select(file => new FileStatus(file.FilePath, StatusProcessing.End, FileConvertErrorType.AbortOperation));
+            var fileData = _filesData.Select(file => new FileStatus(file.FilePath, StatusProcessing.End,
+                                                                    new ErrorCommon(FileConvertErrorType.AbortOperation, "Операция конвертирования отменена")));
             var filesStatus = new PackageStatus(fileData, StatusProcessingProject.Error);
             ChangeFilesStatus(filesStatus);
         }
