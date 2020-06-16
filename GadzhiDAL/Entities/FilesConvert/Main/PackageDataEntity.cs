@@ -8,7 +8,7 @@ using System.Linq;
 namespace GadzhiDAL.Entities.FilesConvert.Main
 {
     /// <summary>
-    /// Класс содержащий данные о конвертируемых файлах в базе данных
+    /// Класс содержащий данные о конвертируемом пакете в базе данных
     /// </summary>
     public class PackageDataEntity : PackageDataEntityBase
     {

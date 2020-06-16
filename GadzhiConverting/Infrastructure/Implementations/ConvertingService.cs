@@ -283,6 +283,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private async Task ActionsInEmptyQueue()
         {
             await CheckAndDeleteUnusedPackagesOnDataBase();
+            await CheckAndDeleteUnusedErrorPackagesOnDataBase();
             await DeleteAllUnusedDataOnDisk();
             await QueueIsEmpty();
         }
@@ -315,6 +316,23 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
+        /// Проверить и удалить ненужные пакеты с ошибками в базе
+        /// </summary>
+        private async Task CheckAndDeleteUnusedErrorPackagesOnDataBase()
+        {
+            var dateTimeNow = DateTime.Now;
+            var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedErrorDataCheck).Ticks);
+            if (timeElapsed.TotalDays > ProjectSettings.IntervalHoursToDeleteUnusedErrorPackages)
+            {
+                _messagingService.ShowAndLogMessage("Очистка пакетов с ошибками...");
+                await _fileConvertingServerService.Operations.DeleteAllUnusedErrorPackagesUntilDate(dateTimeNow);
+
+                Properties.Settings.Default.UnusedErrorDataCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();
             }
         }

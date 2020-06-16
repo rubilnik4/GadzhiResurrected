@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using GadzhiDAL.Entities.FilesConvert.Errors;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
 using GadzhiDAL.Services.Interfaces;
 using Unity;
@@ -41,7 +42,7 @@ namespace GadzhiDAL.Services.Implementations
                                           FirstOrDefaultAsync(ConditionConverting(identityServerName));
 
             packageDataEntity?.StartConverting(identityServerName);
-            var packageDataRequest = await ConverterFilesDataEntitiesToDtoServer.PackageDataToRequest(packageDataEntity);
+            var packageDataRequest = ConverterFilesDataEntitiesToDtoServer.PackageDataToRequest(packageDataEntity);
 
             await unitOfWork.CommitAsync();
 
@@ -94,6 +95,22 @@ namespace GadzhiDAL.Services.Implementations
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var filesDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
+                                        Where(filesData => filesData.CreationDateTime < dateDeletion).
+                                        ToListAsync();
+            foreach (var fileData in filesDataEntity)
+            {
+                await unitOfWork.Session.DeleteAsync(fileData);
+            }
+            await unitOfWork.CommitAsync();
+        }
+
+        /// <summary>
+        /// Удалить все устаревшие пакеты с ошибками
+        /// </summary>      
+        public async Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion)
+        {
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var filesDataEntity = await unitOfWork.Session.Query<PackageDataErrorEntity>().
                                         Where(filesData => filesData.CreationDateTime < dateDeletion).
                                         ToListAsync();
             foreach (var fileData in filesDataEntity)

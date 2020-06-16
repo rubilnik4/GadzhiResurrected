@@ -58,6 +58,12 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
                 await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
+        /// Удалить все устаревшие пакеты с ошибками
+        /// </summary>      
+        public async Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
+                await _filesDataServerService.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
+
+        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
         public async Task AbortConvertingById(Guid id) => await _filesDataServerService.AbortConvertingById(id);

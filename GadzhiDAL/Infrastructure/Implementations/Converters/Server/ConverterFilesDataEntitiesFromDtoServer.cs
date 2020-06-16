@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
-using GadzhiDAL.Entities.FilesConvert.Main.Components;
+using GadzhiDAL.Entities.FilesConvert.Base.Components;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server

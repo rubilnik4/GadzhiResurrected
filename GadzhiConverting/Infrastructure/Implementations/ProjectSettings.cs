@@ -76,9 +76,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public static int IntervalSecondsToServer => 5;
 
         /// <summary>
-        /// Время через которое осуществляется удаление ненужных пакетов на сервере
+        /// Время (часы) через которое осуществляется удаление ненужных пакетов на сервере
         /// </summary>
         public static int IntervalHoursToDeleteUnusedPackages => 12;
+
+        /// <summary>
+        /// Время (дни) через которое осуществляется удаление ненужных пакетов с ошибками на сервере
+        /// </summary>
+        public static int IntervalHoursToDeleteUnusedErrorPackages => 14;
 
         /// <summary>
         /// Получить имя компьютера

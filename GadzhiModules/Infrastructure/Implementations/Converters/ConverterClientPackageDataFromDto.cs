@@ -152,8 +152,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtensionValid.ToUpperCaseCurrentCulture());
 
 
-            if (!String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(FileConvertErrorType.IncorrectFileName, $"Некорректное имя файла {fileName}");
-            if (!String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(FileConvertErrorType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}");
+            if (String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(FileConvertErrorType.IncorrectFileName, $"Некорректное имя файла {fileName}");
+            if (String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(FileConvertErrorType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}");
             if (String.IsNullOrWhiteSpace(directoryPath)) return new ErrorCommon(FileConvertErrorType.RejectToSave, "Директория сохранения не создана");
             if (fileDataSourceResponseClient.FileDataSource.Length == 0) return new ErrorCommon(FileConvertErrorType.IncorrectDataSource,
                                                                                                 $"Некорректные входные данные {fileName}");

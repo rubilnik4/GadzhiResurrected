@@ -179,12 +179,17 @@
     <Compile Include="Entities\FilesConvert\Base\FileDataEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\FileDataSourceEntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Base\PackageDataEntityBase.cs" />
-    <Compile Include="Entities\FilesConvert\Main\Components\ErrorComponent.cs" />
+    <Compile Include="Entities\FilesConvert\Errors\FileDataErrorEntity.cs" />
+    <Compile Include="Entities\FilesConvert\Base\Components\ErrorComponent.cs" />
+    <Compile Include="Entities\FilesConvert\Errors\PackageDataErrorEntity.cs" />
     <Compile Include="Entities\FilesConvert\Main\ConvertingSettingsComponent.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
     <Compile Include="Entities\Signatures\MicrostationDataFiles.cs" />
     <Compile Include="Entities\Signatures\Components\PersonInformationComponent.cs" />
     <Compile Include="Entities\Signatures\SignatureEntity.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Errors\ConverterToErrorsStore.cs" />
+    <Compile Include="Mappings\FilesConvert\Errors\FileDataErrorMap.cs" />
+    <Compile Include="Mappings\FilesConvert\Errors\PackageDataErrorMap.cs" />
     <Compile Include="Models\Implementations\MicrostationDataFileEntity.cs" />
     <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataEntity.cs" />
@@ -200,7 +205,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\DataFile\ConverterDataFile.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Archive\FileDataSourceArchiveMap.cs" />
-    <Compile Include="Mappings\FilesConvert\Archive\FilesDataArchiveMap.cs" />
+    <Compile Include="Mappings\FilesConvert\Archive\PackageDataArchiveMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\FileDataSourceMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\FileDataMap.cs" />
     <Compile Include="Mappings\FilesConvert\Main\PackageDataMap.cs" />

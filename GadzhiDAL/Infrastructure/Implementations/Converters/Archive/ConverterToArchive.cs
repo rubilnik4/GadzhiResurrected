@@ -14,7 +14,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
     /// </summary>    
     public static class ConverterToArchive
     {
-
         /// <summary>
         /// Конвертировать пакет в архивную версию базы данных
         /// </summary>    
@@ -49,7 +48,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
             {
                 ColorPrint = fileDataEntity.ColorPrint,
                 FilePath = fileDataEntity.FilePath,
-                FileErrorsArchive = fileDataEntity.FileErrors.AsQueryable().ToList()
             };
             var fileDataSourceServerEntities = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().
                                                Select(fileDataSource => FileDataSourceToArchive(fileDataSource)).ToListAsync();

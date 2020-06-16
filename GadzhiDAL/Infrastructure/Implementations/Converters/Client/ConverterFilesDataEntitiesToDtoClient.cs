@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
-using GadzhiDAL.Entities.FilesConvert.Main.Components;
+using GadzhiDAL.Entities.FilesConvert.Base.Components;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
@@ -22,22 +22,17 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        public static async Task<PackageDataIntermediateResponseClient> PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
-                                                                                                          FilesQueueInfo filesQueueInfo)
-        {
-            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
-
-            var filesData = await packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).
-                                                    AsQueryable().ToListAsync();
-
-            return new PackageDataIntermediateResponseClient()
-            {
-                Id = Guid.Parse(packageDataEntity.Id),
-                StatusProcessingProject = packageDataEntity.StatusProcessingProject,
-                FilesData = filesData,
-                FilesQueueInfo = FilesQueueInfoToResponse(filesQueueInfo),
-            };
-        }
+        public static PackageDataIntermediateResponseClient PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
+                                                                                              FilesQueueInfo filesQueueInfo) =>
+            (packageDataEntity != null)
+                ? new PackageDataIntermediateResponseClient()
+                {
+                    Id = Guid.Parse(packageDataEntity.Id),
+                    StatusProcessingProject = packageDataEntity.StatusProcessingProject,
+                    FilesData = packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).ToList(),
+                    FilesQueueInfo = FilesQueueInfoToResponse(filesQueueInfo),
+                }
+                : throw new ArgumentNullException(nameof(packageDataEntity));
 
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ

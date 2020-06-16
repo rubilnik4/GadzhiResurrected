@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
@@ -34,12 +35,18 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 
             FilesErrorsCollection = new ObservableCollection<FileErrorViewModelItem>();
+            BindingOperations.EnableCollectionSynchronization(FilesErrorsCollection, _filesErrorsCollectionLock);
         }
 
         /// <summary>
         /// Название
         /// </summary>
         public override string Title => "Ошибочки";
+
+        /// <summary>
+        /// Блокировка списка ошибок для других потоков
+        /// </summary>
+        private readonly object _filesErrorsCollectionLock = new object();
 
         /// <summary>
         /// Список ошибок

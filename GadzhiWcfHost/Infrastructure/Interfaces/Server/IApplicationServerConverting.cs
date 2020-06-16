@@ -34,6 +34,11 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
 
         /// <summary>
+        /// Удалить все устаревшие пакеты с ошибками
+        /// </summary>      
+        Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
+
+        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>         
         Task AbortConvertingById(Guid id);

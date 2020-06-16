@@ -1,7 +1,7 @@
 ﻿using System;
 using GadzhiCommon.Enums.FilesConvert;
 
-namespace GadzhiDAL.Entities.FilesConvert.Main.Components
+namespace GadzhiDAL.Entities.FilesConvert.Base.Components
 {
     /// <summary>
     /// Информация об ошибке

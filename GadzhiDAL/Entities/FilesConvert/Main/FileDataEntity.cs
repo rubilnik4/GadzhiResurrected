@@ -1,9 +1,8 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Base;
-using GadzhiDAL.Entities.FilesConvert.Main;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiDAL.Entities.FilesConvert.Main.Components;
+using GadzhiDAL.Entities.FilesConvert.Base.Components;
 
 namespace GadzhiDAL.Entities.FilesConvert.Main
 {

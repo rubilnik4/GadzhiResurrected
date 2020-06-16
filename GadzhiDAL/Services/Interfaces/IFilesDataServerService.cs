@@ -34,5 +34,10 @@ namespace GadzhiDAL.Services.Interfaces
         /// Удалить все устаревшие пакеты
         /// </summary>      
         Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
+
+        /// <summary>
+        /// Удалить все устаревшие пакеты с ошибками
+        /// </summary>      
+        Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
     }
 }

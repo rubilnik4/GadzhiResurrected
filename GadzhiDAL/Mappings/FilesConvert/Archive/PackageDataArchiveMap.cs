@@ -6,9 +6,9 @@ namespace GadzhiDAL.Mappings.FilesConvert.Archive
     /// <summary>
     /// Структура в БД для конвертируемого пакета файлов
     /// </summary>
-    public class FilesDataArchiveMap : ClassMap<PackageDataArchiveEntity>
+    public class PackageDataArchiveMap : ClassMap<PackageDataArchiveEntity>
     {
-        public FilesDataArchiveMap()
+        public PackageDataArchiveMap()
         {
             Id(x => x.Id);
             Map(x => x.CreationDateTime).Not.Nullable();        

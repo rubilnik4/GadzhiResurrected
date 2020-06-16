@@ -1,7 +1,6 @@
 ﻿using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiDTOServer.TransferModels.FilesConvert;
-using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,22 +16,16 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// <summary>
         /// Конвертировать из модели базы данных в запрос
         /// </summary>          
-        public static async Task<PackageDataRequestServer> PackageDataToRequest(PackageDataEntity packageDataEntity)
-        {
-            if (packageDataEntity == null)  return null;
-
-            var filesData = await packageDataEntity.FileDataEntities.Select(FileDataToRequest).
-                                                    AsQueryable().ToListAsync();
-
-            return new PackageDataRequestServer()
-            {
-                Id = Guid.Parse(packageDataEntity.Id),
-                AttemptingConvertCount = packageDataEntity.AttemptingConvertCount,
-                ConvertingSettings = ConvertingSettingsToRequest(packageDataEntity.ConvertingSettings),
-                FilesData = filesData,
-            };
-
-        }
+        public static PackageDataRequestServer PackageDataToRequest(PackageDataEntity packageDataEntity) =>
+            (packageDataEntity != null)
+                ? new PackageDataRequestServer()
+                {
+                    Id = Guid.Parse(packageDataEntity.Id),
+                    AttemptingConvertCount = packageDataEntity.AttemptingConvertCount,
+                    ConvertingSettings = ConvertingSettingsToRequest(packageDataEntity.ConvertingSettings),
+                    FilesData = packageDataEntity.FileDataEntities.Select(FileDataToRequest).ToList(),
+                }
+                : null;
 
         /// <summary>
         /// Преобразовать параметры конвертации в трансферную модель

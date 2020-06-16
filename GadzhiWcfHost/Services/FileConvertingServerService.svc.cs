@@ -55,6 +55,12 @@ namespace GadzhiWcfHost.Services
                 await _applicationServerConverting.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
+        /// Удалить все устаревшие пакеты с ошибками
+        /// </summary>      
+        public async Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
+                await _applicationServerConverting.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
+
+        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
         public async Task AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
