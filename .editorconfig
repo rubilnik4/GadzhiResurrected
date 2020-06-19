@@ -65,3 +65,6 @@ dotnet_diagnostic.SA1629.severity = none
 
 # CA1721: Property names should not match get methods
 dotnet_diagnostic.CA1721.severity = none
+
+# VSTHRD001: Avoid legacy thread switching APIs
+dotnet_diagnostic.VSTHRD001.severity = none

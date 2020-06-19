@@ -17,7 +17,6 @@ using GongSolutions.Wpf.DragDrop;
 using MaterialDesignThemes.Wpf;
 using Nito.AsyncEx.Synchronous;
 using Prism.Commands;
-using Unity;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -326,15 +325,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             if (filesChange.IsStatusProcessingProjectChanged &&
               _statusProcessingInformation.StatusProcessingProject == StatusProcessingProject.End)
             {
-                Application.Current.Dispatcher.Invoke((Action)(() =>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     bool hasErrors = FilesDataCollection.Any(fileData => fileData.IsCriticalError);
                     var successDialogViewModel = new SuccessDialogViewModel(hasErrors);
                     var successDialogView = new SuccessDialogView(successDialogViewModel);
                     DialogHost.Show(successDialogView, "RootDialog").WaitAndUnwrapException();
-                }));
-
-
+                });
             }
         }
 
