@@ -32,7 +32,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Название
         /// </summary>
-        public override string Title => "Параметрюшки";
+        public override string Title => "Параметры";
 
         /// <summary>
         /// Текст подписи во время загрузки

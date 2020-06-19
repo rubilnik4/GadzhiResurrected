@@ -20,11 +20,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// </summary>
         private readonly List<IFileData> _filesData;
 
-        /// <summary>
-        /// Подписка на изменение коллекции
-        /// </summary>
-        private readonly Subject<FilesChange> _fileDataChange;
-
         public PackageData()
             : this(new List<IFileData>())
         { }
@@ -36,7 +31,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
 
             _filesData = filesData?.ToList() ?? new List<IFileData>();
-            _fileDataChange = new Subject<FilesChange>();
         }
 
         /// <summary>
@@ -48,6 +42,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// Подписка на изменение коллекции
         /// </summary>
         public ISubject<FilesChange> FileDataChange => _fileDataChange;
+
+        /// <summary>
+        /// Подписка на изменение коллекции
+        /// </summary>
+        private readonly Subject<FilesChange> _fileDataChange = new Subject<FilesChange>();
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -183,7 +182,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Обновить список файлов
         /// </summary>
-        private void UpdateFileData(FilesChange fileChange) => FileDataChange?.OnNext(fileChange);
+        private void UpdateFileData(FilesChange fileChange) => _fileDataChange?.OnNext(fileChange);
 
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования

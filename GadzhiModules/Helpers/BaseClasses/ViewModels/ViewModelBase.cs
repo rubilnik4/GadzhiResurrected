@@ -1,16 +1,32 @@
 ﻿using System;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using GadzhiCommon.Infrastructure.Implementations;
 using Prism.Mvvm;
 
 namespace GadzhiModules.Helpers.BaseClasses.ViewModels
 {
-    public abstract class ViewModelBase : BindableBase
+    public abstract class ViewModelBase : BindableBase, IDisposable
     {
         /// <summary>
         /// Название
         /// </summary>
         public abstract string Title { get; }
+
+        /// <summary>
+        /// Видимость
+        /// </summary>
+        public virtual bool Visibility => true;
+
+        /// <summary>
+        /// Подписка на изменение видимости
+        /// </summary>
+        private readonly Subject<bool> _visibilityChange = new Subject<bool>();
+
+        /// <summary>
+        /// Подписка на изменение видимости
+        /// </summary>
+        public ISubject<bool> VisibilityChange => _visibilityChange;
 
         /// <summary>
         /// Индикатор загрузки
@@ -44,5 +60,26 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
                                                                    () => IsLoading = true,
                                                                    applicationAbortionMethod,
                                                                    () => IsLoading = false);
+
+        #region IDisposable Support
+        private bool _disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposedValue) return;
+
+            if (disposing)
+            {
+                _visibilityChange?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

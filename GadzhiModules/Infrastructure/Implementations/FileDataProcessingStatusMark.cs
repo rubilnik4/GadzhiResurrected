@@ -113,14 +113,13 @@ namespace GadzhiModules.Infrastructure.Implementations
         public async Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
                                                                    PackageDataIntermediateResponseClient packageDataIntermediateResponse)
         {
-            var filesNotFound = GetFilesNotFound(packageDataRequest?.FilesData);
-            var filesChangedStatus = GetPackageStatusIntermediateResponse(packageDataIntermediateResponse);
-            await Task.WhenAll(filesNotFound, filesChangedStatus);
+            var filesNotFound = await GetFilesNotFound(packageDataRequest?.FilesData);
+            var filesChangedStatus = await GetPackageStatusIntermediateResponse(packageDataIntermediateResponse);
 
-            var filesDataUnion = filesNotFound.Result.FileStatus.UnionNotNull(filesChangedStatus.Result.FileStatus);
+            var filesDataUnion = filesNotFound.FileStatus.UnionNotNull(filesChangedStatus.FileStatus);
             return new PackageStatus(filesDataUnion,
                                      packageDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
-                                     filesChangedStatus.Result.QueueStatus);
+                                     filesChangedStatus.QueueStatus);
         }
     }
 }

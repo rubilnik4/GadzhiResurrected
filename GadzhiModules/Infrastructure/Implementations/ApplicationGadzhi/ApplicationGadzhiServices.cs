@@ -10,6 +10,7 @@ using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
+using Nito.AsyncEx.Synchronous;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
@@ -75,7 +76,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                 Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                 Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
                                                                                   () => IsIntermediateResponseInProgress = true,
-                                                                                  async () => await AbortPropertiesConverting(),
+                                                                                  () => AbortPropertiesConverting().WaitAndUnwrapException(),
                                                                                   () => IsIntermediateResponseInProgress = false))).
                 Concat().
                 Subscribe());

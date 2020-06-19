@@ -10,6 +10,7 @@
              xmlns:viewModelsBase="clr-namespace:GadzhiModules.Helpers.BaseClasses.ViewModels"
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              xmlns:viewTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=viewModels:GadzhiConvertingViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">
@@ -22,14 +23,16 @@
             <viewTabs:ConvertingSettingsView />
         </DataTemplate>
     </UserControl.Resources>
-    <Grid>
-        <TabControl Style="{StaticResource MaterialDesignTabControl}"
-                    ItemsSource="{Binding TabViewModels}">
-            <TabControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type viewModelsBase:ViewModelBase}">
-                    <TextBlock Text="{Binding Title}" />
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-        </TabControl>
-    </Grid>
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <Grid>
+            <TabControl Style="{StaticResource MaterialDesignTabControl}"
+                        ItemsSource="{Binding TabViewModelsVisible}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModelsBase:ViewModelBase}">
+                        <TextBlock Text="{Binding Title}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+            </TabControl>
+        </Grid>
+    </materialDesign:DialogHost>
 </UserControl>

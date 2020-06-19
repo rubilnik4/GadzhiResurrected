@@ -21,7 +21,7 @@
             <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"
                                                    TrueValue="Visible" 
                                                    FalseValue="Collapsed"/>
-          
+
             <Brush x:Key="ColorGreenComplete">#2e7d32</Brush>
             <Brush x:Key="ColorRedAlert">#9b0000</Brush>
 
@@ -194,7 +194,7 @@
                                                          Visibility="{Binding IsNoError, 
                                                                       Converter={StaticResource VisibilityConverter}}"     
                                                          Foreground ="{StaticResource ColorGreenComplete}"/>
-                                
+
                                 <materialDesign:PackIcon Kind="Error"   
                                                          Style="{StaticResource PackIconDataGridStyle}"
                                                          Visibility="{Binding IsCriticalError, 

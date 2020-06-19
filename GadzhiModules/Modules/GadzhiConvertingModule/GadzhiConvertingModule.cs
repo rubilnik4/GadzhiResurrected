@@ -12,7 +12,9 @@ using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Projec
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.Views;
+using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;

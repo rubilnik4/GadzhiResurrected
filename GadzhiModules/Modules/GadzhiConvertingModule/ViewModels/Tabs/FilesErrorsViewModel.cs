@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
@@ -41,7 +40,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Название
         /// </summary>
-        public override string Title => "Ошибочки";
+        public override string Title => "Ошибки";
+
+        /// <summary>
+        /// Видимость
+        /// </summary>
+        public override bool Visibility => FilesErrorsCollection.Count > 0;
 
         /// <summary>
         /// Блокировка списка ошибок для других потоков
@@ -64,6 +68,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                 FilesErrorsCollection.Clear();
                 var errorViewModelItems = filesChange.FilesData.SelectMany(GetErrorViewModelItemsFromFileData);
                 FilesErrorsCollection.AddRange(errorViewModelItems);
+
+                VisibilityChange.OnNext(Visibility);
             }
         }
 
@@ -77,8 +83,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         #region IDisposable Support
         private bool _disposedValue;
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             if (_disposedValue) return;
 
             if (disposing)
@@ -89,7 +96,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _disposedValue = true;
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
         }

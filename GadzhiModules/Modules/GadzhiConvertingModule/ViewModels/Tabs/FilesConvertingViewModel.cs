@@ -10,9 +10,14 @@ using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems;
+using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
 using GongSolutions.Wpf.DragDrop;
+using MaterialDesignThemes.Wpf;
+using Nito.AsyncEx.Synchronous;
 using Prism.Commands;
+using Unity;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -21,6 +26,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// </summary>
     public class FilesConvertingViewModel : ViewModelBase, IDropTarget, IDisposable
     {
+
         /// <summary>
         /// Слой инфраструктуры
         /// </summary>        
@@ -36,7 +42,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private readonly IDisposable _fileDataChangeSubscribe;
 
-        public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
+        public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi,
+                                        IStatusProcessingInformation statusProcessingInformation)
         {
             _applicationGadzhi = applicationGadzhi ?? throw new ArgumentNullException(nameof(applicationGadzhi));
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
@@ -46,6 +53,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _fileDataChangeSubscribe = applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
+
         }
 
         /// <summary>
@@ -60,13 +68,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                ObservesProperty(() => IsConverting);
 
             AddFromFilesDelegateCommand = new DelegateCommand(
-               async () => await AddFromFiles(),
+               () => AddFromFiles().WaitAndUnwrapException(),
                () => !IsLoading && !IsConverting).
                ObservesProperty(() => IsLoading).
                ObservesProperty(() => IsConverting);
 
             AddFromFoldersDelegateCommand = new DelegateCommand(
-               async () => await AddFromFolders(),
+               () => AddFromFolders().WaitAndUnwrapException(),
                () => !IsLoading && !IsConverting).
                ObservesProperty(() => IsLoading).
                ObservesProperty(() => IsConverting);
@@ -78,7 +86,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                ObservesProperty(() => IsConverting);
 
             ConvertingFilesDelegateCommand = new DelegateCommand(
-              async () => await ConvertingFiles(),
+              () => ConvertingFiles().WaitAndUnwrapException(),
               () => !IsLoading && !IsConverting).
               ObservesProperty(() => IsLoading).
               ObservesProperty(() => IsConverting);
@@ -89,7 +97,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Название
         /// </summary>
-        public override string Title => "Конвертушки";
+        public override string Title => "Конвертация";
 
         /// <summary>
         /// Данные о конвертируемых файлах
@@ -210,7 +218,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary> 
         private async Task ConvertingFiles() =>
             await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
-                                             async () => await _applicationGadzhi.AbortPropertiesConverting());
+                                             () => _applicationGadzhi.AbortPropertiesConverting().WaitAndUnwrapException());
 
         /// <summary>
         /// Удалить файлы из списка
@@ -231,6 +239,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                 case ActionType.Clear:
                     ActionOnTypeRemove(fileChange);
                     break;
+                case ActionType.StatusChange:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(fileChange));
             }
 
             ActionOnTypeStatusChange(fileChange);
@@ -276,6 +288,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             }
 
             RaiseAfterStatusChange(filesChange);
+            ShowResultConvertingDialog(filesChange);
         }
 
         /// <summary>
@@ -306,6 +319,26 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         }
 
         /// <summary>
+        /// Показать диалоговое окно после завершения конвертации
+        /// </summary>
+        private void ShowResultConvertingDialog(FilesChange filesChange)
+        {
+            if (filesChange.IsStatusProcessingProjectChanged &&
+              _statusProcessingInformation.StatusProcessingProject == StatusProcessingProject.End)
+            {
+                Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    bool hasErrors = FilesDataCollection.Any(fileData => fileData.IsCriticalError);
+                    var successDialogViewModel = new SuccessDialogViewModel(hasErrors);
+                    var successDialogView = new SuccessDialogView(successDialogViewModel);
+                    DialogHost.Show(successDialogView, "RootDialog").WaitAndUnwrapException();
+                }));
+
+
+            }
+        }
+
+        /// <summary>
         /// Реализация Drag Drop для ссылки на файлы
         /// </summary>       
         public void DragOver(IDropInfo dropInfo)
@@ -325,14 +358,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                 !dataObject.ContainsFileDropList()) return;
 
             var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
-            Task.FromResult(AddFromFilesAndFolders(filePaths));
+            AddFromFilesAndFolders(filePaths).WaitAndUnwrapException();
         }
 
         #region IDisposable Support
         private bool _disposedValue;
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             if (_disposedValue) return;
 
             if (disposing)
@@ -343,7 +377,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _disposedValue = true;
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
         }
