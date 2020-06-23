@@ -87,11 +87,11 @@ namespace GadzhiMicrostation.Microstation.Implementations
             Where(element => StampFieldMain.IsStampName(element.AsCellElement.Name)).
             Select((element, stampIndex) => 
                        new CellElementMicrostation(element.AsCellElement, ToOwnerMicrostation()).
-                           Map(cellMicrostation => new StampFullMicrostation(cellMicrostation,
-                                                                             new StampSettings(new StampIdentifier(modelIndex, stampIndex),
-                                                                                               convertingSettings.PersonId, 
-                                                                                               convertingSettings.PdfNamingType),
-                                                                             ApplicationMicrostation.MicrostationResources.SignaturesSearching))).
+                       Map(cellMicrostation => new StampFullMicrostation(cellMicrostation,
+                                                                         new StampSettings(new StampIdentifier(modelIndex, stampIndex),
+                                                                                           convertingSettings.PersonId, 
+                                                                                           convertingSettings.PdfNamingType),
+                                                                         ApplicationMicrostation.MicrostationResources.SignaturesSearching))).
             Cast<IStamp>();
 
         /// <summary>

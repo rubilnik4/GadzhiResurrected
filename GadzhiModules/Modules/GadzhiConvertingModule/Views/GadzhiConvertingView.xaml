@@ -26,6 +26,7 @@
     <materialDesign:DialogHost Identifier="RootDialog">
         <Grid>
             <TabControl Style="{StaticResource MaterialDesignTabControl}"
+                        SelectedValue="{Binding SelectedTabViewModel}"
                         ItemsSource="{Binding TabViewModelsVisible}">
                 <TabControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModelsBase:ViewModelBase}">

@@ -61,7 +61,7 @@
                     Content="ОТЛИЧНО"
                     HorizontalAlignment="Center">
                 <Button.CommandParameter>
-                    <system:Boolean>True</system:Boolean>
+                    <system:Boolean>False</system:Boolean>
                 </Button.CommandParameter>
             </Button>
         </StackPanel>

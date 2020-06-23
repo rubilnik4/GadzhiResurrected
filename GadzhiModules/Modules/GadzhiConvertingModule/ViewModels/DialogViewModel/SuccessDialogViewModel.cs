@@ -5,11 +5,11 @@
     /// </summary>
     public class SuccessDialogViewModel
     {
-        public SuccessDialogViewModel( bool hasErrors)
+        public SuccessDialogViewModel(bool hasErrors)
         {
-            HasErrors = !hasErrors;
+            HasErrors = hasErrors;
         }
-        
+
         /// <summary>
         /// Наличие ошибок
         /// </summary>

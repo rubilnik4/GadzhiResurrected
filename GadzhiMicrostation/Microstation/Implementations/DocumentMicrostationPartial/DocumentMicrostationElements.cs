@@ -35,6 +35,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         private static IResultAppCollection<IStamp> FindStamps(IEnumerable<IModelMicrostation> modelsMicrostation,
                                                                ConvertingSettingsApp convertingSettings) =>
             modelsMicrostation.SelectMany((model, modelIndex) => model.FindStamps(modelIndex, convertingSettings)).
-            Map(stamps => new ResultAppCollection<IStamp>(new ErrorApplication(ErrorApplicationType.StampNotFound, "Штампы не найдены")));
+            Map(stamps => new ResultAppCollection<IStamp>(stamps, new ErrorApplication(ErrorApplicationType.StampNotFound, "Штампы не найдены")));
     }
 }

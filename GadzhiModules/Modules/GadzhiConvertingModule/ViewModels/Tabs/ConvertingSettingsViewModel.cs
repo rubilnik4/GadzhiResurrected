@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using GadzhiCommon.Enums.ConvertingSettings;
-using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Infrastructure.Interfaces;
-using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Nito.Mvvm;
-using Prism.Commands;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -54,7 +50,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Подписи
         /// </summary>
         public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
-
 
         /// <summary>
         /// Принцип именования PDF

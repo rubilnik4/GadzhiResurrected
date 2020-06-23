@@ -109,7 +109,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             var convertingResources = GetConvertingResourcesLazy();
 
             _messagingService.ShowAndLogMessage("Обработка предварительных данных...");
-            await convertingResources.LoadData();
+          //  await convertingResources.LoadData();
             _messagingService.ShowAndLogMessage("Загрузка подписей и штампов завершена...");
 
             var errors = convertingResources.SignaturesMicrostation.Errors.
