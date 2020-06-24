@@ -11,6 +11,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>      
-        Task StartConverting();
+        void StartConverting();
     }
 }

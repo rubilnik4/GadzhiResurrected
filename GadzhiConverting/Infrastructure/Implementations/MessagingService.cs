@@ -7,6 +7,7 @@ using System.Linq;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiCommon.Infrastructure.Implementations.Converters;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiConverting.Infrastructure.Implementations
@@ -17,21 +18,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class MessagingService : IMessagingService
     {
         /// <summary>
-        /// Запись в журнал системных сообщений
-        /// </summary>
-        private readonly ILoggerService _loggerService;
-
-        public MessagingService(ILoggerService loggerService)
-        {
-            _loggerService = loggerService;
-        }
-
-        /// <summary>
         /// Отобразить сообщение
         /// </summary>        
         public virtual void ShowAndLogMessage(string message)
         {
-            _loggerService.LogMessage(message);
             ShowMessage(message);
         }
 
@@ -41,7 +31,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public virtual void ShowAndLogError(IErrorCommon errorConverting)
         {
             ShowError(errorConverting);
-            _loggerService.LogError(errorConverting);
         }
 
         /// <summary>
@@ -52,7 +41,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             foreach (var error in errorsConverting.EmptyIfNull())
             {
                 ShowError(error);
-                _loggerService.LogError(error);
             }
         }
 

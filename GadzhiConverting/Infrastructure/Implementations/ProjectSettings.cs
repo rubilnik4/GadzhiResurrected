@@ -94,26 +94,24 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Пути ресурсов модулей конвертации
         /// </summary>
-        private Task<ConvertingResources> _convertingResources;
+        private ConvertingResources _convertingResources;
 
         /// <summary>
         /// Пути ресурсов модулей конвертации
         /// </summary>
-        public Task<ConvertingResources> ConvertingResources => _convertingResources ??= GetConvertingResourcesLoaded();
+        public ConvertingResources ConvertingResources => _convertingResources ??= GetConvertingResourcesLoaded();
 
         /// <summary>
         /// Загрузить стартовый набор ресурсов для начала конвертирования
         /// </summary>
-        public async Task<ConvertingResources> GetConvertingResourcesLoaded()
+        public ConvertingResources GetConvertingResourcesLoaded()
         {
-            var convertingResources = GetConvertingResourcesLazy();
-
             _messagingService.ShowAndLogMessage("Обработка предварительных данных...");
-          //  await convertingResources.LoadData();
+            var convertingResources = GetConvertingResourcesLazy();
             _messagingService.ShowAndLogMessage("Загрузка подписей и штампов завершена...");
 
             var errors = convertingResources.SignaturesMicrostation.Errors.
-                                             Concat(convertingResources.StampMicrostation.Errors).ToList();
+                         Concat(convertingResources.StampMicrostation.Errors).ToList();
             if (errors.Count > 0)
             {
                 _messagingService.ShowAndLogMessage("Обнаружены ошибки...");

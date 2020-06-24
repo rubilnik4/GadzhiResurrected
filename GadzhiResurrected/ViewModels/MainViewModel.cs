@@ -14,10 +14,14 @@ namespace GadzhiResurrected.ViewModels
         /// Название и версия
         /// </summary>
         private string _title = "Gadzhi";
+
+        /// <summary>
+        /// Название и версия
+        /// </summary>
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
         /// <summary>

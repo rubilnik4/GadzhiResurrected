@@ -19,6 +19,7 @@ using MicrostationSignatures.Models.Implementations;
 using MicrostationSignatures.Models.Interfaces;
 using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 
@@ -43,7 +44,6 @@ namespace MicrostationSignatures.DependencyInjection
             container.RegisterType<ISignatureConverter, SignatureConverter>();
 
             container.RegisterType<IMessagingService, MessagingService>();
-            container.RegisterType<ILoggerService, LoggerService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>((unity) => 
                     ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint));

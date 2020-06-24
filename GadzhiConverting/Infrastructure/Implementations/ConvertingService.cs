@@ -101,9 +101,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>      
-        public async Task StartConverting()
+        public void StartConverting()
         {
-            if (await CheckSignatures() == false) return;
+            if (!CheckSignatures()) return;
 
             _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
             KillPreviousRunProcesses();
@@ -114,10 +114,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Проверить наличие базы подписей
         /// </summary>
-        private async Task<bool> CheckSignatures() =>
-            await _projectSettings.ConvertingResources.
-            MapAsync(resources => resources.SignatureNames?.Count > 0).
-            WhereBadAsync(hasSignatures => hasSignatures,
+        private bool CheckSignatures() =>
+            _projectSettings.ConvertingResources.
+            Map(resources => resources.SignatureNames?.Count > 0).
+            WhereBad(hasSignatures => hasSignatures,
                 badFunc: hasSignatures => hasSignatures.
                          Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.SignatureNotFound,
                                                                                      "База подписей не загружена. Отмена запуска"))));

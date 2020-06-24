@@ -9,18 +9,14 @@ using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
-using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.Views;
-using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
 using Unity;
-using Unity.Lifetime;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule
 {

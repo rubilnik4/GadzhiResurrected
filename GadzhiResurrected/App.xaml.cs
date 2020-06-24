@@ -11,12 +11,14 @@ using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Unity;
 using System.Windows;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Unity;
 using Unity.Lifetime;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 
 namespace GadzhiResurrected
 {
@@ -52,10 +54,9 @@ namespace GadzhiResurrected
 
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
             unityContainer.RegisterType<IMessagingService, DialogServiceStandard>();
+            unityContainer.RegisterSingleton<ILoggerService, FileLoggerService>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
-
-
         }
 
         /// <summary>

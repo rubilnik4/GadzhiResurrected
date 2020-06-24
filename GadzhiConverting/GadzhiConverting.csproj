@@ -210,7 +210,6 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
-    <Compile Include="Infrastructure\Implementations\LoggerService.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />

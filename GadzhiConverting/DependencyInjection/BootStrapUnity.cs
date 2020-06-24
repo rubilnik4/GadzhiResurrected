@@ -8,6 +8,7 @@ using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial;
@@ -36,7 +37,7 @@ namespace GadzhiConverting.DependencyInjection
         /// <summary>
         /// Зарегистрировать зависимости
         /// </summary>
-        public static async Task ConfigureContainer(IUnityContainer container)
+        public static void ConfigureContainer(IUnityContainer container)
         {
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
@@ -48,7 +49,6 @@ namespace GadzhiConverting.DependencyInjection
                       ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint), FactoryLifetime.Singleton);
 
             container.RegisterType<IMessagingService, MessagingService>();
-            container.RegisterType<ILoggerService, LoggerService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();
             container.RegisterType<IConverterServerPackageDataFromDto, ConverterServerPackageDataFromDto>();
@@ -56,7 +56,7 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
-            await RegisterConvertingApplications(container);
+            RegisterConvertingApplications(container);
 
             container.RegisterFactory<IApplicationConverting>(unity =>
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),
@@ -68,13 +68,13 @@ namespace GadzhiConverting.DependencyInjection
         /// <summary>
         /// Регистрация приложений Microstation и Word
         /// </summary>
-        private static async Task RegisterConvertingApplications(IUnityContainer container)
+        private static void RegisterConvertingApplications(IUnityContainer container)
         {
             var signatureConverter = container.Resolve<ISignatureConverter>();
             var projectSettings = container.Resolve<IProjectSettings>();
             var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
 
-            var convertingResources = await projectSettings.ConvertingResources;
+            var convertingResources = projectSettings.ConvertingResources;
             var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.ToApplication(),
                                                                      GetSignaturesSync(fileConvertingServerService, signatureConverter, 
                                                                                        ProjectSettings.DataSignaturesFolder));

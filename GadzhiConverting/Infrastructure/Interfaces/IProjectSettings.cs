@@ -12,6 +12,6 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// <summary>
         /// Пути ресурсов модулей конвертации
         /// </summary>
-        public Task<ConvertingResources> ConvertingResources { get; }
+        public ConvertingResources ConvertingResources { get; }
     }
 }
