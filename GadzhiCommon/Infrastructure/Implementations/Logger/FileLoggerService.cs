@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
+using GadzhiCommon.Models.Implementations.Functional;
 using NLog;
 
 namespace GadzhiCommon.Infrastructure.Implementations.Logger
@@ -12,62 +15,74 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Конфигурация для записи в файл информационных сообщений
         /// </summary>
-        public const string LOG_TO_FILE_INFO_CONFIGURATION = "FileInfoLogger";
-
-        /// <summary>
-        /// Конфигурация для записи в файл сообщений трассировки
-        /// </summary>
-        public const string LOG_TO_FILE_TRACE_CONFIGURATION = "FileTraceLogger";
+        public const string FILE_LOG_CONFIGURATION = "FileLogger";
 
         /// <summary>
         /// Журнал системных сообщений типа NLog для информационных сообщений
         /// </summary>
-        private readonly NLog.Logger _loggerInfo;
-
-        /// <summary>
-        /// Журнал системных сообщений типа NLog для трассировки
-        /// </summary>
-        private readonly NLog.Logger _loggerTrace;
+        private readonly NLog.Logger _logger;
 
         public FileLoggerService()
         {
-            _loggerInfo = LogManager.GetLogger(LOG_TO_FILE_INFO_CONFIGURATION);
-            _loggerTrace = LogManager.GetLogger(LOG_TO_FILE_TRACE_CONFIGURATION);
+            _logger = LogManager.GetLogger(FILE_LOG_CONFIGURATION);
         }
 
         /// <summary>
         /// Сообщение уровня трассировки
         /// </summary>
-        public void TraceLog(string message) => _loggerTrace.Trace(message);
+        public void TraceLog(string message) => _logger.Trace(message);
 
         /// <summary>
         /// Сообщение уровня отладки
         /// </summary>
-        public void DebugLog(string message) => _loggerInfo.Debug(message);
+        public void DebugLog(string message) => _logger.Debug(message);
 
         /// <summary>
         /// Сообщение информационного уровня
         /// </summary>
-        public void InfoLog(string message) => _loggerInfo.Info(message);
+        public void InfoLog(string message) => _logger.Info(message);
 
         /// <summary>
         /// Сообщение предупреждающего уровня
         /// </summary>
-        public void WarnLog(string message) => _loggerInfo.Warn(message);
+        public void WarnLog(string message) => _logger.Warn(message);
 
         /// <summary>
         /// Сообщение уровня ошибки
         /// </summary>
-        public void ErrorLog(Exception exception, string message) => _loggerInfo.Error(exception, message);
+        public void ErrorLog(Exception exception, string message) => _logger.Error(exception, message);
 
         /// <summary>
         /// Сообщение уровня ошибки для трассировки
         /// </summary>
-        public void ErrorTraceLog(Exception exception, string message) => _loggerTrace.Error(exception, message);
+        public void ErrorTraceLog(Exception exception, string message) => _logger.Error(exception, message);
 
         /// <summary>
         /// Сообщение критического уровня
         /// </summary>
-        public void FatalLog(string message) => _loggerInfo.Fatal(message);
+        public void FatalLog(string message) => _logger.Fatal(message);
+
+        /// <summary>
+        /// Вывести сообщение согласно уровня
+        /// </summary>
+        public void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message)
+        {
+            if (String.IsNullOrWhiteSpace(message)) return;
+
+            switch (loggerInfoLevel)
+            {
+                case LoggerInfoLevel.Trace:
+                    TraceLog(message);
+                    break;
+                case LoggerInfoLevel.Debug:
+                    DebugLog(message);
+                    break;
+                case LoggerInfoLevel.Info:
+                    InfoLog(message);
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException(nameof(loggerInfoLevel), (int)loggerInfoLevel, typeof(LoggerInfoLevel));
+            }
+        }
     }
 }

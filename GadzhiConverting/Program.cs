@@ -15,7 +15,7 @@ namespace GadzhiConverting
         /// </summary>
         private static readonly IUnityContainer Container = new UnityContainer();
 
-        private static async Task Main()
+        private static void Main()
         {
             NativeMethods.Handler += Handler;
             NativeMethods.SetConsoleCtrlHandler(NativeMethods.Handler, true);

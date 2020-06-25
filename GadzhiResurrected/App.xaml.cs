@@ -16,9 +16,6 @@ using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using Unity;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using Unity.Interception;
-using Unity.Interception.ContainerIntegration;
-using Unity.Interception.Interceptors.InstanceInterceptors.InterfaceInterception;
 
 namespace GadzhiResurrected
 {
@@ -51,15 +48,12 @@ namespace GadzhiResurrected
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var unityContainer = containerRegistry.GetContainer();
-            unityContainer.AddNewExtension<Interception>();
 
             unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
             unityContainer.RegisterType<IMessagingService, DialogServiceStandard>();
             unityContainer.RegisterSingleton<ILoggerService, FileLoggerService>();
-            unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>(new Interceptor<InterfaceInterceptor>(),
-                                                                                     new InterceptionBehavior<ProfilingInterceptionBehavior>());
-            unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>(new Interceptor<InterfaceInterceptor>(), 
-                                                                                    new InterceptionBehavior<ProfilingInterceptionBehavior>());
+            unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
+            unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
         }
 
         /// <summary>

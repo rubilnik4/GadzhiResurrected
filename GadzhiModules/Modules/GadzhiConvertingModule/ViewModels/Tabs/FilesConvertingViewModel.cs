@@ -5,8 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure;
+using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
@@ -45,11 +51,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
-
             _fileDataChangeSubscribe = applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
-
         }
 
         /// <summary>
@@ -178,7 +182,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
         /// <summary>
         /// Очистить список файлов
-        /// </summary> 
+        /// </summary>
+        [Logger(LoggerInfoLevel.Debug)]
         private void ClearFiles() => ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
 
         /// <summary>
@@ -327,6 +332,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             }
         }
 
+
+        /// <summary>
+        /// Реализация Drag Drop для ссылки на файлы
+        /// </summary>
+     // [Logger]
         public void Drop(IDropInfo dropInfo)
         {
             if (!(dropInfo?.Data is DataObject dataObject) ||
@@ -335,7 +345,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
             AddFromFilesAndFolders(filePaths).WaitAndUnwrapException();
         }
-
 
         #region IDisposable Support
         private bool _disposedValue;

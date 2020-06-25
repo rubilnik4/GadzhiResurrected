@@ -140,7 +140,8 @@
     <Compile Include="Helpers\Strings\TextFormatting.cs" />
     <Compile Include="Infrastructure\Implementations\ImageOperations.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\FileLoggerService.cs" />
-    <Compile Include="Infrastructure\Implementations\Logger\ProfilingInterceptionBehavior .cs" />
+    <Compile Include="Infrastructure\Implementations\Logger\LoggerBaseAttribute.cs" />
+    <Compile Include="Infrastructure\Implementations\Logger\LoggerFactory.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFile.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFileData.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />
+    <Compile Include="Models\Enums\LoggerInfoLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiCommon.Models.Enums;
 
 namespace GadzhiCommon.Infrastructure.Interfaces.Logger
 {
@@ -41,5 +42,10 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         /// Сообщение критического уровня
         /// </summary>
         void FatalLog(string message);
+
+        /// <summary>
+        /// Вывести сообщение согласно уровня
+        /// </summary>
+        void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message);
     }
 }
