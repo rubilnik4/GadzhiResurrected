@@ -8,6 +8,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
     public interface ILoggerService
     {
         /// <summary>
+        /// Сообщение уровня трассировки
+        /// </summary>
+        void TraceLog(string message);
+
+        /// <summary>
         /// Сообщение уровня отладки
         /// </summary>
         void DebugLog(string message);
@@ -26,6 +31,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         /// Сообщение уровня ошибки
         /// </summary>
         void ErrorLog(Exception exception, string message);
+
+        /// <summary>
+        /// Сообщение уровня ошибки для трассировки
+        /// </summary>
+        void ErrorTraceLog(Exception exception, string message);
 
         /// <summary>
         /// Сообщение критического уровня

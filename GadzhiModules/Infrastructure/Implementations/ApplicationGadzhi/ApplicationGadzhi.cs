@@ -97,9 +97,10 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         public void CloseApplication()
         {
-            if (_statusProcessingInformation.IsConverting &&
+           if (_statusProcessingInformation.IsConverting &&
                 !_dialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
             {
+                _loggerService.InfoLog("Отмена выхода их приложения");
                 return;
             }
 

@@ -21,7 +21,6 @@ using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
-using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Word;
 using Unity;
 using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;

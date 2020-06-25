@@ -40,7 +40,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
             var clientEndpoints = new ClientEndpoints();
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));
 
-            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingClientService>>((unity) =>
+            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingClientService>>(unity =>
                       ServiceConsumerFactory.Create<IFileConvertingClientService>(fileConvertingEndpoint), FactoryLifetime.Singleton);
 
             unityContainer.RegisterSingleton<IPackageData, PackageData>();

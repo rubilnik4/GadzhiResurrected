@@ -1,8 +1,6 @@
 ﻿using System;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
 
 namespace GadzhiCommon.Infrastructure.Implementations.Logger
 {
@@ -12,95 +10,64 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
     public class FileLoggerService : ILoggerService
     {
         /// <summary>
-        /// Конфигурация для записи в файл
+        /// Конфигурация для записи в файл информационных сообщений
         /// </summary>
-        public const string LOG_TO_FILE_CONFIGURATION = "NLogFile";
+        public const string LOG_TO_FILE_INFO_CONFIGURATION = "FileInfoLogger";
 
         /// <summary>
-        /// Журнал системных сообщений типа NLog
+        /// Конфигурация для записи в файл сообщений трассировки
         /// </summary>
-        private readonly NLog.Logger _logger;
+        public const string LOG_TO_FILE_TRACE_CONFIGURATION = "FileTraceLogger";
+
+        /// <summary>
+        /// Журнал системных сообщений типа NLog для информационных сообщений
+        /// </summary>
+        private readonly NLog.Logger _loggerInfo;
+
+        /// <summary>
+        /// Журнал системных сообщений типа NLog для трассировки
+        /// </summary>
+        private readonly NLog.Logger _loggerTrace;
 
         public FileLoggerService()
         {
-            LogManager.Configuration=
-            _logger = LogManager.GetLogger(LOG_TO_FILE_CONFIGURATION);
+            _loggerInfo = LogManager.GetLogger(LOG_TO_FILE_INFO_CONFIGURATION);
+            _loggerTrace = LogManager.GetLogger(LOG_TO_FILE_TRACE_CONFIGURATION);
         }
+
+        /// <summary>
+        /// Сообщение уровня трассировки
+        /// </summary>
+        public void TraceLog(string message) => _loggerTrace.Trace(message);
 
         /// <summary>
         /// Сообщение уровня отладки
         /// </summary>
-        public void DebugLog(string message) => _logger.Debug(message);
-
+        public void DebugLog(string message) => _loggerInfo.Debug(message);
 
         /// <summary>
         /// Сообщение информационного уровня
         /// </summary>
-        public void InfoLog(string message)
-        {
-            _logger.Info(message);
-        }
+        public void InfoLog(string message) => _loggerInfo.Info(message);
 
         /// <summary>
         /// Сообщение предупреждающего уровня
         /// </summary>
-        public void WarnLog(string message) => _logger.Warn(message);
+        public void WarnLog(string message) => _loggerInfo.Warn(message);
 
         /// <summary>
         /// Сообщение уровня ошибки
         /// </summary>
-        public void ErrorLog(Exception exception, string message) => _logger.Error(exception, message);
+        public void ErrorLog(Exception exception, string message) => _loggerInfo.Error(exception, message);
+
+        /// <summary>
+        /// Сообщение уровня ошибки для трассировки
+        /// </summary>
+        public void ErrorTraceLog(Exception exception, string message) => _loggerTrace.Error(exception, message);
 
         /// <summary>
         /// Сообщение критического уровня
         /// </summary>
-        public void FatalLog(string message) => _logger.Fatal(message);
-
-        public static LoggingConfiguration GetFileLoggingConfiguration()
-        {
-            var config = new LoggingConfiguration();
-            config.LogFactory.ThrowExceptions = true;
-           
-
-            var fileLogTarget = new FileTarget("FileLog")
-            {
-                FileName = @".\Logs\GadzhiLog.log"
-            };
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, fileLogTarget);
-
-
-            //< !--Логгирование-- >
-            //    < nlog xmlns = "http://www.nlog-project.org/schemas/NLog.xsd"
-            //xmlns: xsi = "http://www.w3.org/2001/XMLSchema-instance"
-            //autoReload = "true"
-            //throwExceptions = "true"
-            //internalLogLevel = "Debug"
-            //internalLogFile = ".\Logs\internal-nlog.log"
-            //internalLogToConsole = "false" >
-
-            //    < targets >
-            //    < target name = "FileLog"
-            //xsi: type = "File"
-            //fileName = ".\Logs\gadzhiLog.log" />
-            //    </ targets >
-
-            //    < targets async = "true" >
-
-            //    < target name = "NLogFile"
-            //xsi: type = "File" />
-
-            //    </ targets >
-
-
-            //    < rules >
-
-            //    < logger name = "NLogFile"
-            //minlevel = "Debug"
-            //writeTo = "FileLog"
-            //layout = "${longdate}|${level:uppercase=true}|${logger}|${message}" />
-            //    </ rules >
-            //    </ nlog >
-
-        }
+        public void FatalLog(string message) => _loggerInfo.Fatal(message);
     }
 }
