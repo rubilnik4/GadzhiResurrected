@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
+using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs;
 using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
@@ -24,6 +27,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// Подписка на обновление модели
         /// </summary>
         private readonly IReadOnlyList<IDisposable> _tabViewModelsVisibility;
+
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         public GadzhiConvertingViewModel(IUnityContainer container)
         {
@@ -65,6 +73,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// <summary>
         /// Текущая вкладка
         /// </summary>
+        [LoggerModules]
         public ViewModelBase SelectedTabViewModel
         {
             get => _selectedTabViewModel;
@@ -74,6 +83,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// <summary>
         /// Обновить видимые модели
         /// </summary>
+        [LoggerModules]
         private async Task UpdateTabViewModelsVisible()
         {
             TabViewModelsVisible.Clear();
@@ -91,6 +101,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         {
             if (filesConvertingViewModel?.StatusProcessingProject == StatusProcessingProject.End)
             {
+                _loggerService.DebugLog("Загрузка диалогового окна результатов конвертирования");
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
                     bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);

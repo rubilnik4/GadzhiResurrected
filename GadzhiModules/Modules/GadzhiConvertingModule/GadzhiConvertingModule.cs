@@ -1,9 +1,12 @@
-﻿using ChannelAdam.ServiceModel;
+﻿using System.Collections.Generic;
+using ChannelAdam.ServiceModel;
 using GadzhiCommon.Helpers.Wcf;
+using GadzhiCommon.Models.Enums;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
@@ -25,6 +28,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
         /// <summary>
         /// Привязка модулей к View
         /// </summary>
+       // [Logger (LoggerAction = LoggerActionAttribute.None , Message = "Запуск приложения")] 
         public void OnInitialized(IContainerProvider containerProvider)
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
@@ -33,7 +37,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
 
         /// <summary>
         /// Регистрация зависимостей
-        /// </summary>        
+        /// </summary>
+        [LoggerModules] 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var unityContainer = containerRegistry.GetContainer();

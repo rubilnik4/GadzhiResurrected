@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
+using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using Nito.AsyncEx.Synchronous;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
@@ -145,6 +147,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Загрузить подписи из базы данных
         /// </summary>
+        [LoggerModules(LoggerAction = LoggerActionAttribute.OnEnterAndExit)]
         public async Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames() =>
             await _fileConvertingClientService.Operations.GetSignaturesNames().
             MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).

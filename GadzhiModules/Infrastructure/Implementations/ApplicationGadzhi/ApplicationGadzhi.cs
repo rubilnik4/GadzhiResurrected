@@ -13,6 +13,7 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
@@ -52,11 +53,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
-        /// Журнал системных сообщений
-        /// </summary>   
-        private readonly ILoggerService _loggerService;
-
-        /// <summary>
         /// Текущий статус конвертирования
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
@@ -74,7 +70,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
                                  IProjectSettings projectSettings,
                                  IFileSystemOperations fileSystemOperations,
-                                 ILoggerService loggerService,
                                  IPackageData packageInfoProject,
                                  IServiceConsumer<IFileConvertingClientService> fileConvertingClientService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
@@ -82,7 +77,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             _dialogServiceStandard = dialogServiceStandard ?? throw new ArgumentNullException(nameof(dialogServiceStandard));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _loggerService = loggerService ?? throw new ArgumentNullException(nameof(loggerService));
             _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _fileConvertingClientService = fileConvertingClientService ?? throw new ArgumentNullException(nameof(fileConvertingClientService));
@@ -100,17 +94,18 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
            if (_statusProcessingInformation.IsConverting &&
                 !_dialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
             {
-                _loggerService.InfoLog("Отмена выхода их приложения");
+               // _loggerService.InfoLog("Отмена выхода их приложения");
                 return;
             }
 
-            _loggerService.InfoLog("Выход из приложения");
+           //_loggerService.InfoLog("Выход из приложения");
             Application.Current.Shutdown();
         }
 
         /// <summary>
         /// Получить параметры приложения из сохраненной конфигурации
         /// </summary>
+        [LoggerModules]
         public static IConvertingSettings GetConvertingSettingFromConfiguration() =>
             new PersonInformation(Properties.Settings.Default.PersonSurname ?? String.Empty,
                                   Properties.Settings.Default.PersonName ?? String.Empty,

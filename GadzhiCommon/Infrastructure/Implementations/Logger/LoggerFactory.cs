@@ -10,6 +10,6 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Получить хранилище системных сообщений
         /// </summary>
-        public static ILoggerService GetFileLogger => new FileLoggerService();
+        public static ILoggerService GetFileLogger() => new FileLoggerService();
     }
 }

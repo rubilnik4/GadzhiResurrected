@@ -142,6 +142,7 @@
     <Compile Include="Infrastructure\Implementations\Logger\FileLoggerService.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\LoggerBaseAttribute.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\LoggerFactory.cs" />
+    <Compile Include="Models\Enums\LoggerActionAttribute.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />

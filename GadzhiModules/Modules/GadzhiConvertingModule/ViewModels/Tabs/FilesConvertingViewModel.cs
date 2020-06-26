@@ -183,7 +183,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Очистить список файлов
         /// </summary>
-        [Logger(LoggerInfoLevel.Debug)]
+      //  [Logger(LoggerInfoLevel.Debug)]
         private void ClearFiles() => ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
 
         /// <summary>

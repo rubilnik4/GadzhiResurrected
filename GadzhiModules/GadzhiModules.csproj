@@ -221,7 +221,7 @@
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
-    <Compile Include="Infrastructure\Implementations\Logger\LoggerFodyAttribute.cs" />
+    <Compile Include="Infrastructure\Implementations\Logger\LoggerModulesAttribute.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
