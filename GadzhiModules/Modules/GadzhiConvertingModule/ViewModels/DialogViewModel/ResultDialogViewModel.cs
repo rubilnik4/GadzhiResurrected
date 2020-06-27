@@ -3,9 +3,9 @@
     /// <summary>
     /// Отображение для диалогового окна результатов конвертирования
     /// </summary>
-    public class SuccessDialogViewModel
+    public class ResultDialogViewModel
     {
-        public SuccessDialogViewModel(bool hasErrors)
+        public ResultDialogViewModel(bool hasErrors)
         {
             HasErrors = hasErrors;
         }

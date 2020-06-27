@@ -21,10 +21,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews
     /// </summary>
     public partial class SuccessDialogView : UserControl
     {
-        public SuccessDialogView(SuccessDialogViewModel successDialogViewModel)
+        public SuccessDialogView(ResultDialogViewModel resultDialogViewModel)
         {
             InitializeComponent();
-            DataContext = successDialogViewModel;
+            DataContext = resultDialogViewModel;
         }
     }
 }

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
-using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs;
 using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
@@ -73,17 +75,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// <summary>
         /// Текущая вкладка
         /// </summary>
-        [LoggerModules]
         public ViewModelBase SelectedTabViewModel
         {
             get => _selectedTabViewModel;
-            set => SetProperty(ref _selectedTabViewModel, value);
+            set => SetProperty(ref _selectedTabViewModel, value).
+                   Void(_ => _loggerService.LogProperty(nameof(SelectedTabViewModel), nameof(GadzhiConvertingViewModel), LoggerInfoLevel.Debug, value.GetType().Name));
         }
 
         /// <summary>
         /// Обновить видимые модели
         /// </summary>
-        [LoggerModules]
         private async Task UpdateTabViewModelsVisible()
         {
             TabViewModelsVisible.Clear();
@@ -101,15 +102,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         {
             if (filesConvertingViewModel?.StatusProcessingProject == StatusProcessingProject.End)
             {
-                _loggerService.DebugLog("Загрузка диалогового окна результатов конвертирования");
+                _loggerService.DebugLog($"Show {nameof(ResultDialogViewModel)}");
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
                     bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
-                    var successDialogViewModel = new SuccessDialogViewModel(hasErrors);
+                    var successDialogViewModel = new ResultDialogViewModel(hasErrors);
                     var successDialogView = new SuccessDialogView(successDialogViewModel);
                     var showErrors = await DialogHost.Show(successDialogView, "RootDialog");
                     if ((bool)showErrors)
                     {
+                        _loggerService.InfoLog($"Show {nameof(FilesErrorsViewModel)}");
                         SelectedTabViewModel = filesErrorsViewModel;
                     }
                 });
@@ -125,7 +127,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
                                                 Select(_ => Observable.FromAsync(UpdateTabViewModelsVisible)).
                                                 Concat().
                                                 Subscribe()).
-           ToList();
+            ToList();
 
         #region IDisposable Support
         private bool _disposedValue;

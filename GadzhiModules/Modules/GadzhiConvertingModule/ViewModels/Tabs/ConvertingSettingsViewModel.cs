@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Helpers.Converters;
@@ -18,6 +23,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Параметры приложения
         /// </summary>
         private readonly IConvertingSettings _convertingSettings;
+
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         public ConvertingSettingsViewModel(IProjectSettings projectSettings, IProjectResources projectResources)
         {
@@ -43,7 +53,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         public ISignatureLibrary PersonSignature
         {
             get => _convertingSettings.PersonSignature;
-            set => _convertingSettings.PersonSignature = value;
+            set => _convertingSettings.PersonSignature = value.
+                   Void(_ => _loggerService.LogProperty(nameof(PersonSignature), nameof(ConvertingSettingsViewModel), LoggerInfoLevel.Info, value.PersonInformation.FullName));
         }
 
         /// <summary>
@@ -57,7 +68,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         public PdfNamingType PdfNamingType
         {
             get => _convertingSettings.PdfNamingType;
-            set => _convertingSettings.PdfNamingType = value;
+            set => _convertingSettings.PdfNamingType = value.
+                   Void(_ => _loggerService.LogProperty(nameof(PdfNamingType), nameof(ConvertingSettingsViewModel), LoggerInfoLevel.Info, value.ToString()));
         }
 
         /// <summary>

@@ -3,8 +3,10 @@ using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using Prism.Mvvm;
 
@@ -12,6 +14,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
 {
     public class FileDataViewModelItem : BindableBase
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         public FileDataViewModelItem(IFileData fileData)
         {
             FileData = fileData;
@@ -43,7 +50,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         public string ColorPrintName
         {
             get => ColorPrintConverter.ColorPrintToString(FileData.ColorPrint);
-            set => FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
+            set => FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value).
+                   Void(_ => _loggerService.LogProperty(nameof(ColorPrintName), nameof(FileDataViewModelItem), LoggerInfoLevel.Info, value));
         }
 
         /// <summary>

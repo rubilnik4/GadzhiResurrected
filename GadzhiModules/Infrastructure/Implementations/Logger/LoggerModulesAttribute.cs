@@ -8,7 +8,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Logger
     /// <summary>
     /// Атрибут для трассирования методов
     /// </summary>
-    public class LoggerModulesAttribute : LoggerBaseAttribute, IMethodDecorator, IMethodInterceptor
+    public class LoggerModulesAttribute : LoggerBaseAttribute, IMethodDecorator
     {
         /// <summary>
         /// Инициализация метода

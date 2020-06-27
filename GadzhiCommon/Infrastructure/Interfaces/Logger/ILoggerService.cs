@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using GadzhiCommon.Models.Enums;
 
 namespace GadzhiCommon.Infrastructure.Interfaces.Logger
@@ -24,6 +26,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         void InfoLog(string message);
 
         /// <summary>
+        /// Сообщение информационного уровня
+        /// </summary>
+        public void InfoLog(string message, IEnumerable<string> parameters);
+
+        /// <summary>
         /// Сообщение предупреждающего уровня
         /// </summary>
         void WarnLog(string message);
@@ -47,5 +54,10 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         /// Вывести сообщение согласно уровня
         /// </summary>
         void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message);
+
+        /// <summary>
+        /// Записать информацию об изменении свойства
+        /// </summary>
+        void LogProperty(string propertyName, string className, LoggerInfoLevel loggerInfoLevel, string value);
     }
 }

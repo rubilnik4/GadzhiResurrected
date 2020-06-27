@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
@@ -27,6 +29,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Подписка на обновление модели
         /// </summary>
         private readonly IDisposable _fileDataChangeSubscribe;
+
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         public FilesErrorsViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
         {
@@ -65,12 +72,21 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             if (filesChange.IsStatusProcessingProjectChanged &&
                 _statusProcessingInformation.StatusProcessingProject == StatusProcessingProject.End)
             {
-                FilesErrorsCollection.Clear();
-                var errorViewModelItems = filesChange.FilesData.SelectMany(GetErrorViewModelItemsFromFileData);
-                FilesErrorsCollection.AddRange(errorViewModelItems);
-
-                VisibilityChange.OnNext(Visibility);
+                ActionOnTypeAddErrors(filesChange);
             }
+        }
+
+        /// <summary>
+        /// Добавить ошибки после окончания конвертирования
+        /// </summary>
+        private void ActionOnTypeAddErrors(FilesChange filesChange)
+        {
+            FilesErrorsCollection.Clear();
+            var errorViewModelItems = filesChange.FilesData.SelectMany(GetErrorViewModelItemsFromFileData).ToList();
+            FilesErrorsCollection.AddRange(errorViewModelItems);
+
+            _loggerService.InfoLog($"Add errors {nameof(FilesErrorsViewModel)}:", errorViewModelItems.Select(error => error.ErrorTypeString));
+            VisibilityChange.OnNext(Visibility);
         }
 
         /// <summary>

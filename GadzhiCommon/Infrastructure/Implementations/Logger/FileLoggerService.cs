@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
+using System.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
-using GadzhiCommon.Models.Implementations.Functional;
 using NLog;
 
 namespace GadzhiCommon.Infrastructure.Implementations.Logger
@@ -41,6 +43,12 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// Сообщение информационного уровня
         /// </summary>
         public void InfoLog(string message) => _logger.Info(message);
+
+        /// <summary>
+        /// Сообщение информационного уровня
+        /// </summary>
+        public void InfoLog(string message, IEnumerable<string> parameters) =>
+            _logger.Info(FormatMessageParameters(message, parameters));
 
         /// <summary>
         /// Сообщение предупреждающего уровня
@@ -84,5 +92,47 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
                     throw new InvalidEnumArgumentException(nameof(loggerInfoLevel), (int)loggerInfoLevel, typeof(LoggerInfoLevel));
             }
         }
+
+        /// <summary>
+        /// Записать информацию об изменении свойства
+        /// </summary>
+        public void LogProperty(string propertyName, string className, LoggerInfoLevel loggerInfoLevel, string value) =>
+            LogByLevel(loggerInfoLevel, $"Set {GetMethodInfo(MemberTypes.Property, className, propertyName)}: {value}");
+
+        /// <summary>
+        /// Получить имя метода и его класс
+        /// </summary>
+        public static string GetReflectionName(MethodBase method)
+        {
+            var memberType = method.MemberType;
+            string className = method.ReflectedType?.Name ?? String.Empty;
+            string methodName = method.Name;
+
+            return memberType switch
+            {
+                MemberTypes.Constructor => GetMethodInfo(memberType, className),
+                MemberTypes.Method => GetMethodInfo(memberType, className, methodName),
+                MemberTypes.Property => GetMethodInfo(memberType, className, methodName),
+                _ => GetMethodInfo(memberType, className, methodName),
+            };
+        }
+
+        /// <summary>
+        /// Представить информацию о методе в строковом значении
+        /// </summary>
+        private static string GetMethodInfo(MemberTypes memberType, string className, string methodName) =>
+            GetMethodInfo(memberType, className) + $".{methodName}";
+
+        /// <summary>
+        /// Представить информацию о методе в строковом значении
+        /// </summary>
+        private static string GetMethodInfo(MemberTypes memberType, string className) =>
+            $"[{memberType}]{className}";
+
+        /// <summary>
+        /// Преобразовать список параметров в строку с отступами
+        /// </summary>
+        private static string FormatMessageParameters(string message, IEnumerable<string> parameters) =>
+            message + "\n\t- " + String.Join("\n\t- ", parameters);
     }
 }

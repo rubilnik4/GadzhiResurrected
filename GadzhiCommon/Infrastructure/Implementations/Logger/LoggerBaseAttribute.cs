@@ -60,7 +60,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
             if (IsActionOnEnter(LoggerAction) && _method != null)
             {
                 string logPrefix = LoggerAction == LoggerActionAttribute.OnEnterAndExit ? "Enter" : "Using";
-                LoggerService.DebugLog($"{logPrefix}:{GetReflectionName(_method)}");
+                LoggerService.DebugLog($"{logPrefix}:{FileLoggerService.GetReflectionName(_method)}");
             }
         }
 
@@ -70,7 +70,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         public virtual void OnExit()
         {
             if (!IsActionOnExit(LoggerAction) || _method == null) return;
-            LoggerService.DebugLog($"Exit:{GetReflectionName(_method)}");
+            LoggerService.DebugLog($"Exit:{FileLoggerService.GetReflectionName(_method)}");
         }
 
         /// <summary>
@@ -78,24 +78,6 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// </summary>
         public virtual void OnException(Exception exception)
         { }
-
-        /// <summary>
-        /// Получить имя метода и его класс
-        /// </summary>
-        private static string GetReflectionName(MethodBase method)
-        {
-            var memberType = method.MemberType;
-            string className = method.ReflectedType?.Name ?? String.Empty;
-            string methodName = method.Name;
-
-            return memberType switch
-            {
-                MemberTypes.Constructor => $"[{memberType}]{className}",
-                MemberTypes.Method => $"[{memberType}]{className}.{methodName}",
-                MemberTypes.Property => $"[{memberType}]{className}.{methodName}",
-                _ => $"[{memberType}]{className}.{methodName}",
-            };
-        }
 
         /// <summary>
         /// Выполнять ли действие при входе в метод
