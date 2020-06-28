@@ -13,7 +13,6 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiDTOClient.Contracts.FilesConvert;
-using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
@@ -105,7 +104,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Получить параметры приложения из сохраненной конфигурации
         /// </summary>
-        [LoggerModules]
         public static IConvertingSettings GetConvertingSettingFromConfiguration() =>
             new PersonInformation(Properties.Settings.Default.PersonSurname ?? String.Empty,
                                   Properties.Settings.Default.PersonName ?? String.Empty,

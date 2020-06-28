@@ -56,8 +56,13 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message);
 
         /// <summary>
-        /// Записать информацию об изменении свойства
+        /// Вывести сообщение согласно информации о методе или свойстве
         /// </summary>
-        void LogProperty(string propertyName, string className, LoggerInfoLevel loggerInfoLevel, string value);
+        void LogByMethodBase(LoggerInfoLevel loggerInfoLevel, MethodBase methodBase);
+
+        /// <summary>
+        /// Вывести сообщение согласно информации о новом значении свойства
+        /// </summary>
+        void LogByPropertySet(LoggerInfoLevel loggerInfoLevel, MethodBase propertyBase, string newValue);
     }
 }

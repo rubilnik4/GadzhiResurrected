@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Helpers.Converters;
-using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
@@ -179,32 +179,32 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Очистить список файлов
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private void ClearFiles() => ExecuteAndHandleError(_applicationGadzhi.ClearFiles);
 
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private async Task AddFromFiles() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
 
         /// <summary>
         /// Добавить папки для конвертации
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private async Task AddFromFolders() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
 
         /// <summary>
         /// Добавить файлы и папки для конвертации
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths) =>
             await ExecuteAndHandleErrorAsync(() => _applicationGadzhi.AddFromFilesOrDirectories(fileOrDirectoriesPaths));
 
         /// <summary>
         /// Удалить файлы из списка
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private void RemoveFiles() =>
             SelectedFilesData?.
             OfType<FileDataViewModelItem>().
@@ -214,7 +214,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Конвертировать файлы
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private async Task ConvertingFiles() =>
             await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
                                              () => _applicationGadzhi.AbortPropertiesConverting().WaitAndUnwrapException());
@@ -222,7 +222,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        [LoggerModules]
+        [Logger]
         private void CloseApplication() => ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Реализация Drag Drop для ссылки на файлы
         /// </summary>
-        [LoggerModules]
+        [Logger]
         public void Drop(IDropInfo dropInfo)
         {
             if (!(dropInfo?.Data is DataObject dataObject) ||

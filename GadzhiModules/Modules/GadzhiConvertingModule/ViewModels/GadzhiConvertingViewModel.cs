@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
-using GadzhiCommon.Models.Enums;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs;
@@ -75,11 +72,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// <summary>
         /// Текущая вкладка
         /// </summary>
+        [Logger]
         public ViewModelBase SelectedTabViewModel
         {
             get => _selectedTabViewModel;
-            set => SetProperty(ref _selectedTabViewModel, value).
-                   Void(_ => _loggerService.LogProperty(nameof(SelectedTabViewModel), nameof(GadzhiConvertingViewModel), LoggerInfoLevel.Debug, value.GetType().Name));
+            set => SetProperty(ref _selectedTabViewModel, value);
         }
 
         /// <summary>

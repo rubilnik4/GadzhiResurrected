@@ -11,12 +11,9 @@ using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Unity;
 using System.Windows;
-using GadzhiCommon.Infrastructure.Interfaces.Logger;
-using GadzhiCommon.Models.Enums;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
-using GadzhiModules.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
-using GadzhiResurrected.Infrastructure.Implementations.Logger;
 using Unity;
 
 namespace GadzhiResurrected
@@ -31,15 +28,14 @@ namespace GadzhiResurrected
         /// </summary>
         protected override Window CreateShell()
         {
-            PrismApplication.Current.Exit += MainWindow_Closing;
-
+            Current.Exit += MainWindow_Closing;
             return Container.Resolve<MainView>();
         }
 
         /// <summary>
         /// Закрываем сессию на сервер при закрытии программы
         /// </summary>
-        [LoggerMain]
+        [Logger]
         private void MainWindow_Closing(object sender, ExitEventArgs e)
         {
             Container.Resolve<IApplicationGadzhi>()?.Dispose();
@@ -48,7 +44,7 @@ namespace GadzhiResurrected
         /// <summary>
         /// Регистрирование зависимостей 
         /// </summary>
-        [LoggerMain(MessageEntry = "----------Запуск приложения----------")]
+        [Logger("----------Запуск приложения----------")]
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var unityContainer = containerRegistry.GetContainer();

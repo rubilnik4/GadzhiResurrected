@@ -71,6 +71,18 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         public void FatalLog(string message) => _logger.Fatal(message);
 
         /// <summary>
+        /// Вывести сообщение согласно информации о методе
+        /// </summary>
+        public void LogByMethodBase(LoggerInfoLevel loggerInfoLevel, MethodBase methodBase) =>
+            LogByLevel(loggerInfoLevel, $"Enter {GetReflectionName(methodBase)}");
+
+        /// <summary>
+        /// Вывести сообщение согласно информации о новом значении свойства
+        /// </summary>
+        public void LogByPropertySet(LoggerInfoLevel loggerInfoLevel, MethodBase propertyBase, string newValue) =>
+            LogByLevel(loggerInfoLevel, $"Set {GetReflectionName(MemberTypes.Property, propertyBase)}: {newValue ?? "NullValue"}");
+
+        /// <summary>
         /// Вывести сообщение согласно уровня
         /// </summary>
         public void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message)
@@ -94,28 +106,36 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         }
 
         /// <summary>
-        /// Записать информацию об изменении свойства
+        /// Получить имя метода и его класс
         /// </summary>
-        public void LogProperty(string propertyName, string className, LoggerInfoLevel loggerInfoLevel, string value) =>
-            LogByLevel(loggerInfoLevel, $"Set {GetMethodInfo(MemberTypes.Property, className, propertyName)}: {value}");
+        private static string GetReflectionName(MemberTypes memberType, MethodBase method) =>
+            (method != null)
+            ? GetReflectionName(memberType,
+                                    method.ReflectedType?.Name ?? String.Empty,
+                                    method.Name)
+            : throw new ArgumentNullException(nameof(method));
 
         /// <summary>
         /// Получить имя метода и его класс
         /// </summary>
-        public static string GetReflectionName(MethodBase method)
-        {
-            var memberType = method.MemberType;
-            string className = method.ReflectedType?.Name ?? String.Empty;
-            string methodName = method.Name;
+        private static string GetReflectionName(MethodBase method) =>
+            (method != null)
+            ? GetReflectionName(method.MemberType,
+                                method.ReflectedType?.Name ?? String.Empty,
+                                method.Name)
+            : throw new ArgumentNullException(nameof(method));
 
-            return memberType switch
+        /// <summary>
+        /// Получить имя метода и его класс
+        /// </summary>
+        private static string GetReflectionName(MemberTypes memberType, string className, string methodName) =>
+            memberType switch
             {
                 MemberTypes.Constructor => GetMethodInfo(memberType, className),
                 MemberTypes.Method => GetMethodInfo(memberType, className, methodName),
                 MemberTypes.Property => GetMethodInfo(memberType, className, methodName),
                 _ => GetMethodInfo(memberType, className, methodName),
             };
-        }
 
         /// <summary>
         /// Представить информацию о методе в строковом значении

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using GadzhiCommon.Infrastructure.Implementations;
@@ -6,7 +7,7 @@ using Prism.Mvvm;
 
 namespace GadzhiModules.Helpers.BaseClasses.ViewModels
 {
-    public abstract class ViewModelBase : BindableBase, IDisposable
+    public abstract class ViewModelBase : BindableBase, IFormattable, IDisposable
     {
         /// <summary>
         /// Название
@@ -61,6 +62,12 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
                                                                    applicationAbortionMethod,
                                                                    () => IsLoading = false);
 
+        #region IFormattable Support
+        public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
+
+        public string ToString(string format, IFormatProvider formatProvider) => this.GetType().Name;
+        #endregion
+
         #region IDisposable Support
         private bool _disposedValue;
 
@@ -80,6 +87,7 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
         {
             Dispose(true);
         }
+
         #endregion
     }
 }
