@@ -22,7 +22,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// <summary>
     /// Представление конвертации файлов
     /// </summary>
-    public class FilesConvertingViewModel : ViewModelBase, IDropTarget, IDisposable
+    public class FilesConvertingViewModel : ViewModelBase, IDropTarget
     {
 
         /// <summary>
@@ -35,11 +35,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
 
-        /// <summary>
-        /// Подписка на обновление модели
-        /// </summary>
-        private readonly IDisposable _fileDataChangeSubscribe;
-
         public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi,
                                         IStatusProcessingInformation statusProcessingInformation)
         {
@@ -47,7 +42,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
-            _fileDataChangeSubscribe = applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
+            applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
 
             InitializeDelegateCommands();
         }
@@ -82,12 +77,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                ObservesProperty(() => IsConverting);
 
             ConvertingFilesDelegateCommand = new DelegateCommand(
-              async () => await ConvertingFiles(),
-              () => !IsLoading && !IsConverting).
-              ObservesProperty(() => IsLoading).
-              ObservesProperty(() => IsConverting);
+               async () => await ConvertingFiles(),
+               () => !IsLoading && !IsConverting).
+               ObservesProperty(() => IsLoading).
+               ObservesProperty(() => IsConverting);
 
-            CloseApplicationDelegateCommand = new DelegateCommand(CloseApplication);
+            CloseApplicationDelegateCommand = new DelegateCommand(async () => await CloseApplication());
         }
 
         /// <summary>
@@ -223,7 +218,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Закрыть приложение
         /// </summary>
         [Logger]
-        private void CloseApplication() => ExecuteAndHandleError(_applicationGadzhi.CloseApplication);
+        private async Task CloseApplication() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.CloseApplication);
 
         /// <summary>
         /// Обновление данных после изменения модели
@@ -331,7 +326,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             }
         }
 
-
         /// <summary>
         /// Реализация Drag Drop для ссылки на файлы
         /// </summary>
@@ -344,28 +338,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
             AddFromFilesAndFolders(filePaths).WaitAndUnwrapException();
         }
-
-        #region IDisposable Support
-        private bool _disposedValue;
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (_disposedValue) return;
-
-            if (disposing)
-            {
-                _fileDataChangeSubscribe?.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-
-        public new void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
     }
 
 }

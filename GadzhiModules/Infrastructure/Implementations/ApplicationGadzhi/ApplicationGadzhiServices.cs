@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
@@ -22,14 +25,19 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
     public partial class ApplicationGadzhi
     {
         /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
+        /// <summary>
         /// Выполняется ли промежуточный запрос
         /// </summary>
         private bool IsIntermediateResponseInProgress { get; set; }
 
-
         /// <summary>
         /// Запустить процесс конвертирования
         /// </summary>
+        [Logger]
         public async Task ConvertingFiles()
         {
             if (_statusProcessingInformation.IsConverting) return;
@@ -38,7 +46,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (!packageDataRequest.IsValid)
             {
                 await AbortPropertiesConverting();
-                _dialogServiceStandard.ShowAndLogMessage("Необходимо загрузить файлы для конвертирования");
+                await _dialogService.ShowMessage("Загрузите файлы для конвертирования");
+                return;
             }
 
             await SendFilesToConverting(packageDataRequest);
@@ -47,7 +56,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
 
         /// <summary>
         /// Подготовить данные к отправке
-        /// </summary>     
+        /// </summary>
+        [Logger] 
         private async Task<PackageDataRequestClient> PrepareFilesToSending()
         {
             var filesStatusInSending = await _fileDataProcessingStatusMark.GetFilesInSending();
@@ -60,9 +70,12 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Отправить файлы для конвертации
         /// </summary>
+        [Logger]
         private async Task SendFilesToConverting(PackageDataRequestClient packageDataRequest)
         {
             var packageDataResponse = await _fileConvertingClientService.Operations.SendFiles(packageDataRequest);
+            _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Upload, MethodBase.GetCurrentMethod(), packageDataRequest.Id.ToString());
+
             var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetPackageStatusAfterSend(packageDataRequest, packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(filesStatusAfterSending);
         }

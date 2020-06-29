@@ -206,11 +206,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         #region IDisposable Support
         private bool _disposedValue;
 
+        [Logger]
         protected virtual void Dispose(bool disposing)
         {
             if (_disposedValue) return;
+
             if (disposing)
             {
+                _fileDataChange.OnCompleted();
                 _fileDataChange.Dispose();
             }
 

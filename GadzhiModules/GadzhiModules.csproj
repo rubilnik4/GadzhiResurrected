@@ -248,6 +248,10 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\PackageData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IFileData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogButtonsType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogFactory.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\MessageDialogViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\OkCancelDialogViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\ResultDialogViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ConvertingSettingsViewModel.cs" />
@@ -256,8 +260,14 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
-    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\SuccessDialogView.xaml.cs">
-      <DependentUpon>SuccessDialogView.xaml</DependentUpon>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml.cs">
+      <DependentUpon>MessageDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\OkCancelDialogView.xaml.cs">
+      <DependentUpon>OkCancelDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\ResultDialogView.xaml.cs">
+      <DependentUpon>ResultDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ConvertingSettingsView.xaml.cs">
       <DependentUpon>ConvertingSettingsView.xaml</DependentUpon>
@@ -266,9 +276,9 @@
       <DependentUpon>FilesConvertingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhi.cs" />
-    <Compile Include="Infrastructure\Implementations\DialogServiceStandard.cs" />
+    <Compile Include="Infrastructure\Implementations\DialogService.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhi.cs" />
-    <Compile Include="Infrastructure\Interfaces\IDialogServiceStandard.cs" />
+    <Compile Include="Infrastructure\Interfaces\IDialogService.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ConvertingSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IConvertingSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml.cs">
@@ -297,7 +307,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\SuccessDialogView.xaml">
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\OkCancelDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\ResultDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

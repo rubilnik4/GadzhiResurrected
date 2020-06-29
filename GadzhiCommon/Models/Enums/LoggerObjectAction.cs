@@ -9,6 +9,7 @@
         Reload,
         Remove,
         Update,
-        Clear
+        Clear,
+        Upload,
     }
 }

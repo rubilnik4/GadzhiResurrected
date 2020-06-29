@@ -6,16 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GadzhiCommon.Extensions.Collection;
-using GadzhiCommon.Infrastructure.Implementations.Converters;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {
     /// <summary>
     /// Стандартные диалоговые окна
     /// </summary>
-    public class DialogServiceStandard : IDialogServiceStandard
+    public class DialogService : IDialogService
     {
         /// <summary>
         ///  Выбор файлов
@@ -51,47 +50,22 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Информационное сообщение
         /// </summary>  
-        public void ShowAndLogMessage(string messageText) => MessageBox.Show(messageText);     
-
-        /// <summary>
-        /// Сообщение об ошибке
-        /// </summary>  
-        public void ShowAndLogError(IErrorCommon errorConverting)
-        {
-            if (errorConverting == null) throw new ArgumentNullException(nameof(errorConverting));
-            string messageText = "Ошибка" + "\n" +
-                                 ConverterErrorType.ErrorTypeToString(errorConverting.FileConvertErrorType) + "\n" +
-                                 errorConverting.ErrorDescription;
-            MessageBox.Show(messageText);
-        }
-
-        /// <summary>
-        /// Сообщение об ошибках
-        /// </summary>  
-        public void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting)
-        {
-            foreach (var error in errorsConverting.EmptyIfNull())
-            {
-                ShowAndLogError(error);
-            }
-        }
+        public async Task ShowMessage(string message) => await DialogFactory.GetMessageDialog(message);
 
         /// <summary>
         /// Диалоговое окно с подтверждением
         /// </summary>  
-        public bool ShowMessageOkCancel(string messageText) =>
-            MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK;
+        public async Task<bool> ShowMessageOkCancel(string message) => await DialogFactory.GetOkCancelDialog(message);
 
         /// <summary>
         /// Диалоговое окно с повтором и пропуском
         /// </summary>  
-        public bool ShowMessageRetryCancel(string messageText) =>
-            MessageBox.Show(messageText, "Gadzhi", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question) == DialogResult.Retry;
+        public async Task<bool> ShowMessageRetryCancel(string message) => await DialogFactory.GetRetryCancelDialog(message);
 
         /// <summary>
         /// Обертка для функции с диалоговым окном повтора
         /// </summary>
-        public async Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string messageText)
+        public async Task RetryOrIgnoreBoolFunction(Func<Task<bool>> asyncFunc, string message)
         {
             bool retry;
             do
@@ -100,7 +74,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                 bool success = await asyncFunc();
                 if (!success)
                 {
-                    retry = ShowMessageRetryCancel(messageText);
+                    retry = await ShowMessageRetryCancel(message);
                 }
             } while (retry);
         }

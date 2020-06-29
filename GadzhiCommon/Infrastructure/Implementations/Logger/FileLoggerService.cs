@@ -98,6 +98,12 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Вывести сообщение об объекте согласно типа действия
         /// </summary>
+        public void LogByObject(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase, string parameter) =>
+            LogByObject(loggerLevel, loggerObjectAction, methodBase, new List<string>() { parameter }, String.Empty);
+
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия
+        /// </summary>
         public void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
                                         MethodBase methodBase, TValue parameter, string parentValue) =>
             LogByObjects(loggerLevel, loggerObjectAction, methodBase, new List<TValue>() { parameter }, parentValue);

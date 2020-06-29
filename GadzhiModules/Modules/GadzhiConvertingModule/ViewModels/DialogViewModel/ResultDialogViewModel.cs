@@ -1,7 +1,7 @@
 ﻿namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel
 {
     /// <summary>
-    /// Отображение для диалогового окна результатов конвертирования
+    /// Диалоговое окно результатов конвертирования
     /// </summary>
     public class ResultDialogViewModel
     {

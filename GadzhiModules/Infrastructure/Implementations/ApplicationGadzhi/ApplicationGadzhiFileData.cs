@@ -24,7 +24,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var filePaths = await _dialogServiceStandard.OpenFileDialog(true, DialogFilters.DocAndDgn);
+            var filePaths = await _dialogService.OpenFileDialog(true, DialogFilters.DocAndDgn);
             await AddFromFilesOrDirectories(filePaths);
         }
 
@@ -35,7 +35,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var directoryPaths = await _dialogServiceStandard.OpenFolderDialog(true);
+            var directoryPaths = await _dialogService.OpenFolderDialog(true);
             await AddFromFilesOrDirectories(directoryPaths);
         }
 

@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces;
@@ -44,7 +41,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary>        
-        private readonly IDialogServiceStandard _dialogServiceStandard;
+        private readonly IDialogService _dialogService;
 
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -66,7 +63,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private readonly CompositeDisposable _statusProcessingSubscriptions;
 
-        public ApplicationGadzhi(IDialogServiceStandard dialogServiceStandard,
+        public ApplicationGadzhi(IDialogService dialogService,
                                  IProjectSettings projectSettings,
                                  IFileSystemOperations fileSystemOperations,
                                  IPackageData packageInfoProject,
@@ -74,7 +71,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation)
         {
-            _dialogServiceStandard = dialogServiceStandard ?? throw new ArgumentNullException(nameof(dialogServiceStandard));
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
             _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
@@ -88,22 +85,22 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication()
+        [Logger]
+        public async Task CloseApplication()
         {
-           if (_statusProcessingInformation.IsConverting &&
-                !_dialogServiceStandard.ShowMessageOkCancel("Бросить все на полпути?"))
+            if (_statusProcessingInformation.IsConverting)
             {
-               // _loggerService.InfoLog("Отмена выхода их приложения");
-                return;
+                bool okResult = await _dialogService.ShowMessageOkCancel("Бросить все на полпути?");
+                if (!okResult) return;
             }
 
-           //_loggerService.InfoLog("Выход из приложения");
             Application.Current.Shutdown();
         }
 
         /// <summary>
         /// Получить параметры приложения из сохраненной конфигурации
         /// </summary>
+        [Logger]
         public static IConvertingSettings GetConvertingSettingFromConfiguration() =>
             new PersonInformation(Properties.Settings.Default.PersonSurname ?? String.Empty,
                                   Properties.Settings.Default.PersonName ?? String.Empty,
@@ -115,6 +112,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Сохранить конфигурацию приложения
         /// </summary>
+        [Logger]
         private void SaveConfiguration()
         {
             Properties.Settings.Default.PersonId = _projectSettings.ConvertingSettings.PersonSignature.PersonId;
@@ -129,13 +127,15 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         #region IDisposable Support
         private bool _disposedValue;
 
+        [Logger]
         private void Dispose(bool disposing)
         {
             if (_disposedValue) return;
             if (disposing)
             {
-
+                _packageInfoProject.Dispose();
             }
+
             AbortPropertiesConverting(true).ConfigureAwait(false);
             SaveConfiguration();
 

@@ -68,8 +68,13 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         /// <summary>
         /// Вывести сообщение об объекте согласно типа действия
         /// </summary>
+        void LogByObject(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase, string parameter);
+
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия
+        /// </summary>
         void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
-                                        MethodBase methodBase, TValue parameter, string parentValue);
+                                 MethodBase methodBase, TValue parameter, string parentValue);
 
         /// <summary>
         /// Вывести сообщение об объектах согласно типа действия

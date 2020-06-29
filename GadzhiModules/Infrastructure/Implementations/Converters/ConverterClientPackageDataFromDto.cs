@@ -33,12 +33,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Стандартные диалоговые окна
         /// </summary>        
-        private readonly IDialogServiceStandard _dialogServiceStandard;
+        private readonly IDialogService _dialogService;
 
-        public ConverterClientPackageDataFromDto(IFileSystemOperations fileSystemOperations, IDialogServiceStandard dialogServiceStandard)
+        public ConverterClientPackageDataFromDto(IFileSystemOperations fileSystemOperations, IDialogService dialogService)
         {
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _dialogServiceStandard = dialogServiceStandard ?? throw new ArgumentNullException(nameof(dialogServiceStandard));
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
             Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource);
 
-            await _dialogServiceStandard.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool,
+            await _dialogService.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool,
                                                                    $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
 
             return new ErrorCommon(FileConvertErrorType.NoError, "Ошибки отсутствуют");

@@ -35,7 +35,7 @@ namespace GadzhiResurrected
         /// <summary>
         /// Закрываем сессию на сервер при закрытии программы
         /// </summary>
-        [Logger]
+        [Logger("----------Выход из приложения----------")]
         private void MainWindow_Closing(object sender, ExitEventArgs e)
         {
             Container.Resolve<IApplicationGadzhi>()?.Dispose();
@@ -49,8 +49,7 @@ namespace GadzhiResurrected
         {
             var unityContainer = containerRegistry.GetContainer();
 
-            unityContainer.RegisterType<IDialogServiceStandard, DialogServiceStandard>();
-            unityContainer.RegisterType<IMessagingService, DialogServiceStandard>();
+            unityContainer.RegisterType<IDialogService, DialogService>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
         }

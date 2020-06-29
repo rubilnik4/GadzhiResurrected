@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 
 namespace GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi
@@ -11,6 +12,6 @@ namespace GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        void CloseApplication();
+        Task CloseApplication();
     }
 }

@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiCommon.Infrastructure.Interfaces.Logger;
-using GadzhiCommon.Models.Enums;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
@@ -20,21 +16,18 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// <summary>
     /// Представление ошибок конвертации
     /// </summary>
-    public class FilesErrorsViewModel : ViewModelBase, IDisposable
+    public class FilesErrorsViewModel : ViewModelBase
     {
         /// <summary>
         /// Текущий статус конвертирования
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
 
-        /// <summary>
-        /// Подписка на обновление модели
-        /// </summary>
-        private readonly IDisposable _fileDataChangeSubscribe;
-
         public FilesErrorsViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
         {
-            _fileDataChangeSubscribe = applicationGadzhi?.FileDataChange.Subscribe(ActionOnTypeStatusChange) ?? throw new ArgumentNullException(nameof(applicationGadzhi));
+            if (applicationGadzhi == null) throw new ArgumentNullException(nameof(applicationGadzhi));
+
+            applicationGadzhi.FileDataChange.Subscribe(ActionOnTypeStatusChange);
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 
             FilesErrorsCollection = new ObservableCollection<FileErrorViewModelItem>();
@@ -91,27 +84,5 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         private static IEnumerable<FileErrorViewModelItem> GetErrorViewModelItemsFromFileData(IFileData fileData) =>
             fileData.FileErrors.
             Select(errorType => new FileErrorViewModelItem(fileData.FileName, errorType.FileConvertErrorType, errorType.ErrorDescription));
-
-        #region IDisposable Support
-        private bool _disposedValue;
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (_disposedValue) return;
-
-            if (disposing)
-            {
-                _fileDataChangeSubscribe?.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-
-        public new void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
     }
 }

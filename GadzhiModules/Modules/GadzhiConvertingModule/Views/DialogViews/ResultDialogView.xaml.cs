@@ -17,11 +17,11 @@ using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews
 {
     /// <summary>
-    /// Interaction logic for SuccessDialogView.xaml
+    /// Interaction logic for ResultDialogView.xaml
     /// </summary>
-    public partial class SuccessDialogView : UserControl
+    public partial class ResultDialogView : UserControl
     {
-        public SuccessDialogView(ResultDialogViewModel resultDialogViewModel)
+        public ResultDialogView(ResultDialogViewModel resultDialogViewModel)
         {
             InitializeComponent();
             DataContext = resultDialogViewModel;

@@ -8,12 +8,9 @@ using System.Windows;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs;
-using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
-using MaterialDesignThemes.Wpf;
 using Nito.AsyncEx.Synchronous;
 using Prism.Mvvm;
 using Unity;
@@ -26,11 +23,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// Подписка на обновление модели
         /// </summary>
         private readonly IReadOnlyList<IDisposable> _tabViewModelsVisibility;
-
-        /// <summary>
-        /// Журнал системных сообщений
-        /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         public GadzhiConvertingViewModel(IUnityContainer container)
         {
@@ -88,43 +80,48 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
             var tabsVisible = _tabViewModels.Where(tab => tab.Visibility);
             TabViewModelsVisible.AddRange(tabsVisible);
 
-            await ShowResultConvertingDialog(_tabViewModels.OfType<FilesConvertingViewModel>().FirstOrDefault(),
+            await CheckResultConvertingDialog(_tabViewModels.OfType<FilesConvertingViewModel>().FirstOrDefault(),
                                              _tabViewModels.OfType<FilesErrorsViewModel>().FirstOrDefault());
         }
 
         /// <summary>
-        /// Показать диалоговое окно после завершения конвертации
+        /// Проверить необходимость вызова диалогового окна результатов конвертации
         /// </summary>
-        private async Task ShowResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
+        private async Task CheckResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
         {
             if (filesConvertingViewModel?.StatusProcessingProject == StatusProcessingProject.End)
             {
-                _loggerService.DebugLog($"Show {nameof(ResultDialogViewModel)}");
-                await Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
-                    var successDialogViewModel = new ResultDialogViewModel(hasErrors);
-                    var successDialogView = new SuccessDialogView(successDialogViewModel);
-                    var showErrors = await DialogHost.Show(successDialogView, "RootDialog");
-                    if ((bool)showErrors)
-                    {
-                        _loggerService.DebugLog($"Show {nameof(FilesErrorsViewModel)}");
-                        SelectedTabViewModel = filesErrorsViewModel;
-                    }
-                });
+                await ShowResultConvertingDialog(filesConvertingViewModel, filesErrorsViewModel);
             }
+        }
+
+        /// <summary>
+        /// Вызвать диалоговое окно результатов конвертирования
+        /// </summary>
+        [Logger]
+        private async Task ShowResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
+                bool showErrors = await DialogFactory.GetResultDialog(hasErrors);
+                if (showErrors)
+                {
+                    SelectedTabViewModel = filesErrorsViewModel;
+                }
+            });
         }
 
         /// <summary>
         /// Подписаться на обновление свойства видимости отображения
         /// </summary>
         private IReadOnlyList<IDisposable> SubscribeToViewsVisibility(IEnumerable<ViewModelBase> tabViewModels) =>
-            tabViewModels.
-            Select(tabViewModel => tabViewModel.VisibilityChange.
-                                                Select(_ => Observable.FromAsync(UpdateTabViewModelsVisible)).
-                                                Concat().
-                                                Subscribe()).
-            ToList();
+        tabViewModels.
+        Select(tabViewModel => tabViewModel.VisibilityChange.
+                                            Select(_ => Observable.FromAsync(UpdateTabViewModelsVisible)).
+                                            Concat().
+                                            Subscribe()).
+        ToList();
 
         #region IDisposable Support
         private bool _disposedValue;
