@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 
@@ -7,7 +8,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// <summary>
     /// Информация о количестве файлов в очереди на сервере
     /// </summary>
-    public readonly struct FilesQueueInfo : IEquatable<FilesQueueInfo>
+    public readonly struct FilesQueueInfo : IEquatable<FilesQueueInfo>, IFormattable
     {
         public FilesQueueInfo(int filesInQueueCount, int packagesInQueueCount, int firstFilesCountInQueue)
         {
@@ -42,6 +43,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
                                                                       queueStatus.FilesInQueueCount),
                 _ => new FilesQueueInfo(),
             };
+
+        #region IFormattable Support
+        public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
+
+        public string ToString(string format, IFormatProvider formatProvider) => $"Files in queue:{FilesInQueueCount}";
+        #endregion
 
         #region IEquatable
         public bool Equals(FilesQueueInfo other) =>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 
@@ -7,7 +8,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErro
     /// <summary>
     /// Представление ошибки с ее характеристиками
     /// </summary>
-    public class FileErrorViewModelItem
+    public class FileErrorViewModelItem: IFormattable
     {
         public FileErrorViewModelItem( string fileName, FileConvertErrorType errorType, string errorDescription)
         {
@@ -37,5 +38,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErro
         /// Описание ошибки
         /// </summary>
         public string ErrorDescription { get; }
+
+        #region IFormattable Support
+        public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
+
+        public string ToString(string format, IFormatProvider formatProvider) => ErrorTypeString;
+        #endregion
     }
 }

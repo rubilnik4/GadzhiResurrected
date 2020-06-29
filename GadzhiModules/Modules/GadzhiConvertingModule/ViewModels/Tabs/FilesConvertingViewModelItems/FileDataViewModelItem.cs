@@ -3,6 +3,7 @@ using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using Prism.Mvvm;
@@ -39,10 +40,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// <summary>
         /// Цвет печати строковое значение
         /// </summary>
+        [Logger]
         public string ColorPrintName
         {
             get => ColorPrintConverter.ColorPrintToString(FileData.ColorPrint);
-            set => FileData.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
+            set => FileData.SetColorPrint(ColorPrintConverter.ConvertStringToColorPrint(value));
         }
 
         /// <summary>

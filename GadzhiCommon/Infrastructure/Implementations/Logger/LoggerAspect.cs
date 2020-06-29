@@ -23,7 +23,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Уровень логгирования длс атрибутов
         /// </summary>
-        private static LoggerInfoLevel LoggerDefaultLevel => LoggerInfoLevel.Debug;
+        private static LoggerLevel LoggerDefaultLevel => LoggerLevel.Debug;
 
         /// <summary>
         /// Действия при вызове метода или конструктора

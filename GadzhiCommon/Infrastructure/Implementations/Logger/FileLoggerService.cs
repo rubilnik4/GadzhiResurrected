@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net;
+using System.Linq;
 using System.Reflection;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using NLog;
@@ -40,6 +41,12 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         public void DebugLog(string message) => _logger.Debug(message);
 
         /// <summary>
+        /// Сообщение уровня отладки
+        /// </summary>
+        public void DebugLog(string message, IEnumerable<string> parameters) =>
+            _logger.Debug(FormatMessageParameters(message, parameters));
+
+        /// <summary>
         /// Сообщение информационного уровня
         /// </summary>
         public void InfoLog(string message) => _logger.Info(message);
@@ -73,35 +80,70 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Вывести сообщение согласно информации о методе
         /// </summary>
-        public void LogByMethodBase(LoggerInfoLevel loggerInfoLevel, MethodBase methodBase) =>
-            LogByLevel(loggerInfoLevel, $"Enter {GetReflectionName(methodBase)}");
+        public void LogByMethodBase(LoggerLevel loggerLevel, MethodBase methodBase) =>
+            LogByLevel(loggerLevel, $"Enter {GetReflectionName(methodBase)}");
 
         /// <summary>
         /// Вывести сообщение согласно информации о новом значении свойства
         /// </summary>
-        public void LogByPropertySet(LoggerInfoLevel loggerInfoLevel, MethodBase propertyBase, string newValue) =>
-            LogByLevel(loggerInfoLevel, $"Set {GetReflectionName(MemberTypes.Property, propertyBase)}: {newValue ?? "NullValue"}");
+        public void LogByPropertySet(LoggerLevel loggerLevel, MethodBase propertyBase, string newValue) =>
+            LogByLevel(loggerLevel, $"Set {GetReflectionName(MemberTypes.Property, propertyBase)}: {newValue ?? "NullValue"}");
 
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия
+        /// </summary>
+        public void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase) =>
+            LogByObject(loggerLevel, loggerObjectAction, methodBase, Enumerable.Empty<TValue>(), String.Empty);
+
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия
+        /// </summary>
+        public void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+                                        MethodBase methodBase, TValue parameter, string parentValue) =>
+            LogByObjects(loggerLevel, loggerObjectAction, methodBase, new List<TValue>() { parameter }, parentValue);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        public void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+                                         MethodBase methodBase, IEnumerable<TValue> parameters) =>
+            LogByObjects(loggerLevel, loggerObjectAction, methodBase, parameters, String.Empty);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        public void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+                                        MethodBase methodBase, IEnumerable<TValue> parameters, string parentValue) =>
+            LogByObjects(loggerLevel, loggerObjectAction, typeof(TValue).Name, methodBase,
+                        parameters?.Select(parameter => parameter.ToString()), parentValue);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        public void LogByObjects(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+                                string objectName, MethodBase methodBase, IEnumerable<string> parameters, string parentValue) =>
+            LogByLevel(loggerLevel, $"{loggerObjectAction} {objectName} by {GetReflectionName(methodBase)}{GetParentClassMessage(parentValue)}".
+                                    Map(message => FormatMessageParameters(message, parameters)));
         /// <summary>
         /// Вывести сообщение согласно уровня
         /// </summary>
-        public void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message)
+        public void LogByLevel(LoggerLevel loggerLevel, string message)
         {
             if (String.IsNullOrWhiteSpace(message)) return;
 
-            switch (loggerInfoLevel)
+            switch (loggerLevel)
             {
-                case LoggerInfoLevel.Trace:
+                case LoggerLevel.Trace:
                     TraceLog(message);
                     break;
-                case LoggerInfoLevel.Debug:
+                case LoggerLevel.Debug:
                     DebugLog(message);
                     break;
-                case LoggerInfoLevel.Info:
+                case LoggerLevel.Info:
                     InfoLog(message);
                     break;
                 default:
-                    throw new InvalidEnumArgumentException(nameof(loggerInfoLevel), (int)loggerInfoLevel, typeof(LoggerInfoLevel));
+                    throw new InvalidEnumArgumentException(nameof(loggerLevel), (int)loggerLevel, typeof(LoggerLevel));
             }
         }
 
@@ -150,9 +192,24 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
             $"[{memberType}]{className}";
 
         /// <summary>
+        /// Преобразовать значение родительского класса в сообщение 
+        /// </summary>
+        private static string GetParentClassMessage(string parentValue) =>
+            (!String.IsNullOrWhiteSpace(parentValue))
+            ? $" in {parentValue}"
+            : String.Empty;
+
+
+        /// <summary>
         /// Преобразовать список параметров в строку с отступами
         /// </summary>
         private static string FormatMessageParameters(string message, IEnumerable<string> parameters) =>
-            message + "\n\t- " + String.Join("\n\t- ", parameters);
+            parameters?.ToList().
+            Map(parametersCollection => parametersCollection switch
+            {
+                _ when parametersCollection?.Count > 1 => message + "\n\t- " + String.Join("\n\t- ", parametersCollection),
+                _ when parametersCollection?.Count == 1 => message + ": " + parametersCollection[0],
+                _ => message,
+            });
     }
 }

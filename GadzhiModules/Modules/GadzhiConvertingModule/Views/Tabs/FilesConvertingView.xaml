@@ -173,7 +173,7 @@
                                     Width="0.4*" 
                                     IsEditable="True"   
                                     IsReadOnly="{Binding Path=DataContext.(viewModelTabs:FilesConvertingViewModel.IsConverting), Source={StaticResource ProxyElement}}"
-                                    SelectedValueBinding="{Binding ColorPrintName}"
+                                    SelectedValueBinding="{Binding ColorPrintName,  UpdateSourceTrigger=PropertyChanged}"
                                     ItemsSourceBinding="{Binding Path=DataContext.(viewModelTabs:FilesConvertingViewModel.ColorPrintToString), Source={StaticResource ProxyElement}}">
 
                     <materialDesign:DataGridComboBoxColumn.ElementStyle>

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Infrastructure.Implementations.Converters;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -15,8 +19,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// <summary>
     /// Класс для хранения информации о конвертируемом файле
     /// </summary>
-    public class FileData : IFileData, IEquatable<IFileData>
+    public class FileData : IFileData, IEquatable<IFileData>, IFormattable
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         public FileData(string filePath)
             : this(filePath, ColorPrint.BlackAndWhite)
         { }
@@ -58,7 +67,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; set; }
+        public ColorPrint ColorPrint { get; private set; }
 
         /// <summary>
         /// Статус обработки файла
@@ -77,16 +86,50 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public IReadOnlyCollection<IErrorCommon> FileErrors { get; private set; }
 
         /// <summary>
+        /// Изменить цвет печати
+        /// </summary>
+        public void SetColorPrint(ColorPrint colorPrint)
+        {
+            ColorPrint = colorPrint;
+            _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Update, MethodBase.GetCurrentMethod(), ColorPrint, ToString());
+        }
+
+        /// <summary>
         /// Изменить статус и вид ошибки при необходимости
         /// </summary>
         public IFileData ChangeByFileStatus(FileStatus fileStatus)
         {
             if (fileStatus == null) throw new ArgumentNullException(nameof(fileStatus));
 
-            StatusProcessing = fileStatus.StatusProcessing;
-            FileErrors = fileStatus.Errors;
+            SetStatusProcessing(fileStatus.StatusProcessing);
+            SetFileErrors(fileStatus.Errors);
+
             return this;
         }
+
+        /// <summary>
+        /// Изменить статус обработки файлов
+        /// </summary>
+        private void SetStatusProcessing(StatusProcessing statusProcessing)
+        {
+            StatusProcessing = statusProcessing;
+            _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Update, MethodBase.GetCurrentMethod(), StatusProcessing, ToString());
+        }
+
+        /// <summary>
+        /// Изменить список ошибок конвертации
+        /// </summary>
+        private void SetFileErrors(IReadOnlyCollection<IErrorCommon> fileErrors)
+        {
+            FileErrors = fileErrors;
+            _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Update, MethodBase.GetCurrentMethod(), FileErrors, ToString());
+        }
+
+        #region IFormattable Support
+        public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
+
+        public string ToString(string format, IFormatProvider formatProvider) => FilePath;
+        #endregion
 
         #region IEquatable
         public override bool Equals(object obj)

@@ -3,6 +3,7 @@ using GadzhiCommon.Models.Interfaces.Errors;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,15 +13,12 @@ namespace GadzhiCommon.Models.Implementations.Errors
     /// <summary>
     /// Ошибка конвертации
     /// </summary>
-    public class ErrorCommon: IErrorCommon
+    public class ErrorCommon: IErrorCommon, IFormattable
     {
         public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription)
             : this(fileConvertErrorType, errorDescription, null, null) { }
 
-        public ErrorCommon(FileConvertErrorType fileConvertErrorType,
-                               string errorDescription,
-                               string exceptionMessage,
-                               string stackTrace)
+        public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription, string exceptionMessage, string stackTrace)
         {
             FileConvertErrorType = fileConvertErrorType;
             ErrorDescription = errorDescription ?? String.Empty;
@@ -63,6 +61,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// </summary>      
         public IResultCollection<TValue> ToResultCollection<TValue>() => new ResultCollection<TValue>(this);
 
+        #region IEnumerable Support
         /// <summary>
         /// Реализация перечисления
         /// </summary>       
@@ -74,7 +73,13 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Реализация перечисления
         /// </summary>  
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();   
-        
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        #endregion
+
+        #region IFormattable Support
+        public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
+
+        public string ToString(string format, IFormatProvider formatProvider) => FileConvertErrorType.ToString();
+        #endregion
     }
 }

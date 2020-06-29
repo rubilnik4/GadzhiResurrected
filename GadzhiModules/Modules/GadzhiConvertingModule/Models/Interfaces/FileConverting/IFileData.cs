@@ -28,7 +28,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Цвет печати
         /// </summary>
-        ColorPrint ColorPrint { get; set; }
+        ColorPrint ColorPrint { get; }
 
         /// <summary>
         /// Статус обработки файла
@@ -44,6 +44,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// Статус ошибок
         /// </summary>
         StatusError StatusError { get; }
+
+        /// <summary>
+        /// Изменить цвет печати
+        /// </summary>
+        void SetColorPrint(ColorPrint colorPrint);
 
         /// <summary>
         /// Изменить статус и вид ошибки при необходимости

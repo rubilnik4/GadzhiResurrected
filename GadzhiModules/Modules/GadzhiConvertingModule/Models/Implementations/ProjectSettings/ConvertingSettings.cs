@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 
@@ -21,11 +22,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
         /// <summary>
         /// Личная подпись
         /// </summary>
+        [Logger]
         public ISignatureLibrary PersonSignature { get; set; }
 
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
+
+        [Logger]
         public PdfNamingType PdfNamingType { get; set; }
     }
 }

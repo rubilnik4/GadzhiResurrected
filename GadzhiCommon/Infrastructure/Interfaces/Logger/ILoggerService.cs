@@ -21,6 +21,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         void DebugLog(string message);
 
         /// <summary>
+        /// Сообщение уровня отладки
+        /// </summary>
+        void DebugLog(string message, IEnumerable<string> parameters);
+
+        /// <summary>
         /// Сообщение информационного уровня
         /// </summary>
         void InfoLog(string message);
@@ -53,16 +58,45 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         /// <summary>
         /// Вывести сообщение согласно уровня
         /// </summary>
-        void LogByLevel(LoggerInfoLevel loggerInfoLevel, string message);
+        void LogByLevel(LoggerLevel loggerLevel, string message);
+
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия
+        /// </summary>
+        void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase);
+
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия
+        /// </summary>
+        void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+                                        MethodBase methodBase, TValue parameter, string parentValue);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+                                 MethodBase methodBase, IEnumerable<TValue> parameters);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase,
+                                 IEnumerable<TValue> parameters, string parentValue);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        void LogByObjects(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, string objectName,
+                         MethodBase methodBase, IEnumerable<string> parameters, string parentValue);
 
         /// <summary>
         /// Вывести сообщение согласно информации о методе или свойстве
         /// </summary>
-        void LogByMethodBase(LoggerInfoLevel loggerInfoLevel, MethodBase methodBase);
+        void LogByMethodBase(LoggerLevel loggerLevel, MethodBase methodBase);
 
         /// <summary>
         /// Вывести сообщение согласно информации о новом значении свойства
         /// </summary>
-        void LogByPropertySet(LoggerInfoLevel loggerInfoLevel, MethodBase propertyBase, string newValue);
+        void LogByPropertySet(LoggerLevel loggerLevel, MethodBase propertyBase, string newValue);
     }
 }

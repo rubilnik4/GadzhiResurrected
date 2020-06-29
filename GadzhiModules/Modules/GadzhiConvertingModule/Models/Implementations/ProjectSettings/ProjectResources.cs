@@ -12,7 +12,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
     /// </summary>
     public class ProjectResources: IProjectResources
     {
-       // [Logger]
         public ProjectResources(Task<IReadOnlyList<ISignatureLibrary>> personSignatures)
         {
            PersonSignatures = NotifyTask.Create(personSignatures);
@@ -21,6 +20,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
         /// <summary>
         /// Подписи
         /// </summary>
+        [Logger]
         public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
     }
 

@@ -108,7 +108,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
                     var showErrors = await DialogHost.Show(successDialogView, "RootDialog");
                     if ((bool)showErrors)
                     {
-                        _loggerService.InfoLog($"Show {nameof(FilesErrorsViewModel)}");
+                        _loggerService.DebugLog($"Show {nameof(FilesErrorsViewModel)}");
                         SelectedTabViewModel = filesErrorsViewModel;
                     }
                 });

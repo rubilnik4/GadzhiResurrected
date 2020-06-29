@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
@@ -15,6 +20,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class PackageData : IPackageData
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         /// <summary>
         /// Список файлов для обработки
         /// </summary>
@@ -62,11 +72,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>
+        [Logger]
         public StatusProcessingProject StatusProcessingProject { get; private set; }
 
         /// <summary>
         /// Информация о количестве файлов в очереди на сервере
         /// </summary>
+        [Logger]
         public FilesQueueInfo FilesQueueInfo { get; private set; }
 
         /// <summary>
@@ -81,35 +93,29 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Добавить файл
         /// </summary>
-        public void AddFile(IFileData fileData)
-        {
-            AddFiles(new List<IFileData>() { fileData });
-        }
+        public void AddFile(IFileData fileData) => AddFiles(new List<IFileData>() { fileData });
 
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        public void AddFiles(IEnumerable<string> files)
-        {
-            var filesInfo = files?.Select(f => new FileData(f)).
-                                   Where(CanFileDataBeAddedToList).
-                                   ToList();
-            AddFiles(filesInfo ?? new List<FileData>());
-        }
+        public void AddFiles(IEnumerable<string> files) =>
+            files?.Select(f => new FileData(f)).
+                   Where(CanFileDataBeAddedToList).
+            Void(AddFiles);
 
         /// <summary>
         /// Добавить файлы
         /// </summary>
         public void AddFiles(IEnumerable<IFileData> filesData)
         {
-            var filesInfo = filesData?.Where(CanFileDataBeAddedToList).
-                                       ToList();
+            var filesDataToAdd = filesData?.Where(CanFileDataBeAddedToList).ToList();
+            if (filesDataToAdd == null || filesDataToAdd.Count == 0) return;
 
-            if (filesInfo == null) return;
+            _filesData.AddRange(filesDataToAdd);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Add, MethodBase.GetCurrentMethod(), filesDataToAdd);
 
-            _filesData.AddRange(filesInfo);
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
-            UpdateFileData(new FilesChange(_filesData, filesInfo, ActionType.Add, isStatusProcessingProjectChanged));
+            UpdateFileData(new FilesChange(_filesData, filesDataToAdd, ActionType.Add, isStatusProcessingProjectChanged));
         }
 
         /// <summary>
@@ -118,7 +124,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public void ClearFiles()
         {
             _filesData.Clear();
-            StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
+            _loggerService.LogByObject<IFileData>(LoggerLevel.Info, LoggerObjectAction.Clear, MethodBase.GetCurrentMethod());
+
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
             UpdateFileData(new FilesChange(_filesData, new List<FileData>(), ActionType.Clear, isStatusProcessingProjectChanged));
         }
@@ -128,27 +135,22 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// </summary>
         public void RemoveFiles(IEnumerable<IFileData> filesData)
         {
-            if (filesData == null) return;
-            var filesDataCollection = filesData.ToList();
+            var filesDataCollection = filesData?.ToList();
+            if (filesDataCollection == null || filesDataCollection.Count == 0) return;
 
             _filesData.RemoveAll(filesDataCollection.Contains);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Remove, MethodBase.GetCurrentMethod(), filesDataCollection);
 
-            bool isStatusProcessingProjectChanged;
-            if (_filesData == null || _filesData.Count == 0)
-            {
-                isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
-            }
-            else
-            {
-                isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
-            }
-
+            bool isStatusProcessingProjectChanged = (_filesData == null || _filesData.Count == 0)
+                                                    ? SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles)
+                                                    : SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
             UpdateFileData(new FilesChange(_filesData, filesDataCollection, ActionType.Remove, isStatusProcessingProjectChanged));
         }
 
         /// <summary>
         /// Изменить статус файла и присвоить при необходимости ошибку
         /// </summary>
+        [Logger]
         public void ChangeFilesStatus(PackageStatus packageStatus)
         {
             if (packageStatus?.IsValid != true) return;
@@ -168,6 +170,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Изменить статус всех файлов и присвоить ошибку
         /// </summary>
+        [Logger]
         public void ChangeAllFilesStatusAndMarkError()
         {
             StatusProcessingProject = StatusProcessingProject.Error;
