@@ -23,7 +23,7 @@ namespace GadzhiCommon.Extensions.Functional
             }
             catch (Exception ex)
             {
-                result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
+                result = new ErrorCommon(GetTypeException(ex), String.Empty, ex).
                          ToResultValue<T>().
                          ConcatErrors(errorMessage);
             }

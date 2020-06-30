@@ -118,7 +118,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             var fileConvertSavedErrorType = await SaveFileDataSourceFromDtoResponse(fileResponse);
             var fileConvertErrorTypes = fileResponse.FileErrors.Select(ToErrorCommon).
                                         UnionNotNull(fileConvertSavedErrorType).
-                                        Where(error => error.FileConvertErrorType != FileConvertErrorType.NoError);
+                                        Where(error => error.ErrorType != FileConvertErrorType.NoError);
 
             return new FileStatus(fileResponse.FilePath, StatusProcessing.End, fileConvertErrorTypes);
         }

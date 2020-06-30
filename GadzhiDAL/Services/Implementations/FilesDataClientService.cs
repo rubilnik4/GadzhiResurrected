@@ -113,7 +113,7 @@ namespace GadzhiDAL.Services.Implementations
 
             int packagesInQueueCount = await packageData.CountAsync();
             int filesInQueueCount = await packageData.SelectMany(package => package.FileDataEntities).
-                                                      Where(file => !CheckStatusProcessing.CompletedStatusProcessingServer.Contains(file.StatusProcessing)).
+                                                      Where(file => !CheckStatusProcessing.CompletedStatusProcessing.Contains(file.StatusProcessing)).
                                                       CountAsync();
 
             return new FilesQueueInfo(filesInQueueCount, packagesInQueueCount);

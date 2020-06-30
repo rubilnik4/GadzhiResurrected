@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using GadzhiCommon.Models.Enums;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiCommon.Infrastructure.Interfaces.Logger
 {
@@ -46,9 +47,14 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         void ErrorLog(Exception exception, string message);
 
         /// <summary>
-        /// Сообщение уровня ошибки для трассировки
+        /// Сообщения уровня ошибки
         /// </summary>
-        void ErrorTraceLog(Exception exception, string message);
+        void ErrorLog(IErrorCommon fileError);
+
+        /// <summary>
+        /// Сообщения уровня ошибки
+        /// </summary>
+        void ErrorsLog(IEnumerable<IErrorCommon> fileErrors);
 
         /// <summary>
         /// Сообщение критического уровня

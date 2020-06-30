@@ -25,7 +25,7 @@ namespace GadzhiCommon.Extensions.Functional
             }
             catch (Exception ex)
             {
-                return new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
+                return new ErrorCommon(GetTypeException(ex), String.Empty, ex).
                        ToResultValue<Task<T>>();
             }
         }

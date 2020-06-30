@@ -131,14 +131,15 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private void Dispose(bool disposing)
         {
             if (_disposedValue) return;
-            if (disposing)
-            {
-                _packageInfoProject.Dispose();
-            }
 
             AbortPropertiesConverting(true).ConfigureAwait(false);
             SaveConfiguration();
-
+            if (disposing)
+            {
+                // Ликвидация модели после отключения всех подписок
+                _packageInfoProject.Dispose();
+                _statusProcessingSubscriptions.Dispose();
+            }
             _disposedValue = true;
         }
 

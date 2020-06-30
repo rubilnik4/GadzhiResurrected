@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 
@@ -27,6 +28,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Converters.Errors
                 { FileConvertErrorType.NullReference , "Переменная не задана" },
                 { FileConvertErrorType.ArgumentNullReference , "Аргумент не задан" },
                 { FileConvertErrorType.FormatException , "Формат преобразования задан не верно" },
+                { FileConvertErrorType.InvalidEnumArgumentException , "Ошибка перечисления" },
                 { FileConvertErrorType.AttemptingCount , "Превышено число попыток" },
                 { FileConvertErrorType.InternalError , "Внутренняя ошибка" },
                 { FileConvertErrorType.UnknownError, "Неизвестная ошибка" },

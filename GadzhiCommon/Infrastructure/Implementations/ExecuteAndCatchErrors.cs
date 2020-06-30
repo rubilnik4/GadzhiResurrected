@@ -2,6 +2,7 @@
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using System;
+using System.ComponentModel;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Implementations.Functional;
@@ -38,10 +39,10 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 beforeMethod?.Invoke();
                 result = new ResultValue<T>(method.Invoke());
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 catchMethod?.Invoke();
-                result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).
+                result = new ErrorCommon(GetTypeException(exception), String.Empty, exception).
                          ToResultValue<T>().
                          ConcatErrors(errorMessage);
             }
@@ -68,10 +69,10 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 beforeMethod?.Invoke();
                 await asyncMethod.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 catchMethod?.Invoke();
-                result = new ErrorCommon(GetTypeException(ex), String.Empty, ex.Message, ex.StackTrace).ToResult();
+                result = new ErrorCommon(GetTypeException(exception), String.Empty, exception).ToResult();
             }
             finally
             {
@@ -90,6 +91,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
                 NullReferenceException _ => FileConvertErrorType.NullReference,
                 ArgumentNullException _ => FileConvertErrorType.ArgumentNullReference,
                 FormatException _ => FileConvertErrorType.FormatException,
+                InvalidEnumArgumentException _ => FileConvertErrorType.InvalidEnumArgumentException,
                 TimeoutException _ => FileConvertErrorType.TimeOut,
                 CommunicationException _ => FileConvertErrorType.Communication,
                 _ => FileConvertErrorType.UnknownError

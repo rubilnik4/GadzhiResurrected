@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiCommon.Extensions.Functional.Result
@@ -27,6 +28,17 @@ namespace GadzhiCommon.Extensions.Functional.Result
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             if (@this.OkStatus) action?.Invoke(@this.Value);
+            return @this;
+        }
+
+        /// <summary>
+        /// Выполнить действие при отрицательном значении, вернуть результирующий ответ
+        /// </summary>      
+        public static IResultValue<TValue> ResultVoidBad<TValue>(this IResultValue<TValue> @this, Action<IEnumerable<IErrorCommon>> action)
+        {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
+            if (@this.HasErrors) action?.Invoke(@this.Errors);
             return @this;
         }
     }

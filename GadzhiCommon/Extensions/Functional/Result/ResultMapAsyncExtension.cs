@@ -41,6 +41,20 @@ namespace GadzhiCommon.Extensions.Functional.Result
         }
 
         /// <summary>
+        /// Выполнить действие асинхронно при отрицательном значении, вернуть результирующий ответ
+        /// </summary>      
+        public static async Task<IResultValue<TValue>> ResultVoidBadAsync<TValue>(this Task<IResultValue<TValue>> @this, Action<IEnumerable<IErrorCommon>> action)
+        {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            var awaitedThis = await @this;
+            if (awaitedThis.HasErrors) action.Invoke(awaitedThis.Errors);
+
+            return awaitedThis;
+        }
+
+        /// <summary>
         /// Выполнить действие асинхронно, вернуть результирующий ответ
         /// </summary>      
         public static async Task<IResultValue<TValue>> ResultVoidAsyncBind<TValue>(this Task<IResultValue<TValue>> @this, Func<TValue, Task> actionAsync)
@@ -50,20 +64,6 @@ namespace GadzhiCommon.Extensions.Functional.Result
 
             var awaitedThis = await @this;
             await actionAsync.Invoke(awaitedThis.Value);
-
-            return awaitedThis;
-        }
-
-        /// <summary>
-        /// Выполнить действие асинхронно при положительном значении, вернуть результирующий ответ
-        /// </summary>      
-        public static async Task<IResultValue<TValue>> ResultVoidOkAsyncBind<TValue>(this Task<IResultValue<TValue>> @this, Func<TValue, Task> actionAsync)
-        {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (actionAsync == null) throw new ArgumentNullException(nameof(actionAsync));
-
-            var awaitedThis = await @this;
-            if (awaitedThis.OkStatus) await actionAsync.Invoke(awaitedThis.Value);
 
             return awaitedThis;
         }
@@ -79,6 +79,20 @@ namespace GadzhiCommon.Extensions.Functional.Result
             await actionAsync.Invoke(@this.Value);
 
             return @this;
+        }
+
+        /// <summary>
+        /// Выполнить действие асинхронно при положительном значении, вернуть результирующий ответ
+        /// </summary>      
+        public static async Task<IResultValue<TValue>> ResultVoidOkAsyncBind<TValue>(this Task<IResultValue<TValue>> @this, Func<TValue, Task> actionAsync)
+        {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (actionAsync == null) throw new ArgumentNullException(nameof(actionAsync));
+
+            var awaitedThis = await @this;
+            if (awaitedThis.OkStatus) await actionAsync.Invoke(awaitedThis.Value);
+
+            return awaitedThis;
         }
     }
 }

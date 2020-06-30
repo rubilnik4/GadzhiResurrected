@@ -76,7 +76,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Завершена ли обработка файла
         /// </summary>
-        public bool IsCompleted => CheckStatusProcessing.CompletedStatusProcessingServer.Contains(StatusProcessing);
+        public bool IsCompleted => CheckStatusProcessing.CompletedStatusProcessing.Contains(StatusProcessing);
 
         /// <summary>
         /// Количество попыток конвертирования

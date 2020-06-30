@@ -146,6 +146,7 @@
     <Compile Include="Infrastructure\Implementations\Logger\LoggerAspect.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\LoggerAttribute.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\LoggerFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Reflection\ReflectionInfo.cs" />
     <Compile Include="Models\Enums\LoggerObjectAction.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />

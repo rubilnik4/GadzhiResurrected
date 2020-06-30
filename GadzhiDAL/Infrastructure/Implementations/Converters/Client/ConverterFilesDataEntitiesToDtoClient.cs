@@ -61,7 +61,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
 
             var fileConvertErrorType = fileDataEntity.FileErrors.Select(ToErrorCommon).ToList();
-            if (!CheckStatusProcessing.CompletedStatusProcessingServer.Contains(fileDataEntity.StatusProcessing) &&
+            if (!CheckStatusProcessing.CompletedStatusProcessing.Contains(fileDataEntity.StatusProcessing) &&
                 !fileDataEntity.FileErrors.Any())
             {
                 var error = new ErrorCommonResponse()

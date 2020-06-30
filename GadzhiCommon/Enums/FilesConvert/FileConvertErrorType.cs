@@ -17,6 +17,7 @@
         NullReference,
         ArgumentNullReference,
         FormatException,
+        InvalidEnumArgumentException,
         AttemptingCount,
         InternalError,
         UnknownError,

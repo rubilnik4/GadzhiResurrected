@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
@@ -8,7 +9,8 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Базовый класс содержащий данные о конвертируемых файлах
     /// </summary>
     [DataContract]
-    public abstract class PackageDataRequestBase<TFileDataRequest> where TFileDataRequest: FileDataRequestBase
+    public abstract class PackageDataRequestBase<TFileDataRequest>
+        where TFileDataRequest: FileDataRequestBase
     {
         /// <summary>
         /// ID идентификатор

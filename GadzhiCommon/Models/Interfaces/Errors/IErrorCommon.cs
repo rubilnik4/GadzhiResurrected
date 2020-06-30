@@ -15,22 +15,17 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Тип ошибки при конвертации файлов
         /// </summary>
-        FileConvertErrorType FileConvertErrorType { get; }
+        FileConvertErrorType ErrorType { get; }
 
         /// <summary>
         /// Описание ошибки
         /// </summary>
-        string ErrorDescription { get; }
+        string Description { get; }
 
         /// <summary>
         /// Исключение
         /// </summary>
-        string ExceptionMessage { get; }
-
-        /// <summary>
-        /// Стек вызовов
-        /// </summary>
-        string StackTrace { get; }
+        Exception Exception { get; }
 
         /// <summary>
         /// Преобразовать в ответ

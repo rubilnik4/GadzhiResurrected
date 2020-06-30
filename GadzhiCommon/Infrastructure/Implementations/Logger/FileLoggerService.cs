@@ -6,6 +6,7 @@ using System.Reflection;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
+using GadzhiCommon.Models.Interfaces.Errors;
 using NLog;
 
 namespace GadzhiCommon.Infrastructure.Implementations.Logger
@@ -68,9 +69,32 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         public void ErrorLog(Exception exception, string message) => _logger.Error(exception, message);
 
         /// <summary>
-        /// Сообщение уровня ошибки для трассировки
+        /// Сообщения уровня ошибки
         /// </summary>
-        public void ErrorTraceLog(Exception exception, string message) => _logger.Error(exception, message);
+        public void ErrorLog(IErrorCommon fileError)
+        {
+            if (fileError == null) return;
+
+            if (fileError.Exception != null)
+            {
+                _logger.Error(fileError.Exception, fileError.ErrorType.ToString);
+            }
+            else
+            {
+                _logger.Error($"{fileError.ErrorType}: {fileError.Description}");
+            }
+        }
+
+        /// <summary>
+        /// Сообщения уровня ошибки
+        /// </summary>
+        public void ErrorsLog(IEnumerable<IErrorCommon> fileErrors)
+        {
+            foreach (var error in fileErrors ?? Enumerable.Empty<IErrorCommon>())
+            {
+                ErrorLog(error);
+            }
+        }
 
         /// <summary>
         /// Сообщение критического уровня

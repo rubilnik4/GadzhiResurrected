@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -9,7 +11,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Класс содержащий промежуточные данные о конвертируемом файле
     /// </summary>
     [DataContract]
-    public abstract class FileDataIntermediateResponseBase
+    public abstract class FileDataIntermediateResponseBase : IFormattable
     {       
         /// <summary>
         /// Путь файла
@@ -28,5 +30,11 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// </summary>
         [DataMember]
         public IList<ErrorCommonResponse> FileErrors { get; set; }
+
+        #region IFormattable Support
+        public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
+
+        public string ToString(string format, IFormatProvider formatProvider) => FilePath;
+        #endregion
     }
 }

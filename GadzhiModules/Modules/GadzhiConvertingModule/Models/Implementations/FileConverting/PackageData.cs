@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -78,7 +78,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Информация о количестве файлов в очереди на сервере
         /// </summary>
-        [Logger]
         public FilesQueueInfo FilesQueueInfo { get; private set; }
 
         /// <summary>
@@ -112,7 +111,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             if (filesDataToAdd == null || filesDataToAdd.Count == 0) return;
 
             _filesData.AddRange(filesDataToAdd);
-            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Add, MethodBase.GetCurrentMethod(), filesDataToAdd);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Add, ReflectionInfo.GetMethodBase(this), filesDataToAdd);
 
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
             UpdateFileData(new FilesChange(_filesData, filesDataToAdd, ActionType.Add, isStatusProcessingProjectChanged));
@@ -124,7 +123,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public void ClearFiles()
         {
             _filesData.Clear();
-            _loggerService.LogByObject<IFileData>(LoggerLevel.Info, LoggerObjectAction.Clear, MethodBase.GetCurrentMethod());
+            _loggerService.LogByObject<IFileData>(LoggerLevel.Info, LoggerObjectAction.Clear, ReflectionInfo.GetMethodBase(this));
 
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
             UpdateFileData(new FilesChange(_filesData, new List<FileData>(), ActionType.Clear, isStatusProcessingProjectChanged));
@@ -139,7 +138,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             if (filesDataCollection == null || filesDataCollection.Count == 0) return;
 
             _filesData.RemoveAll(filesDataCollection.Contains);
-            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Remove, MethodBase.GetCurrentMethod(), filesDataCollection);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Remove, ReflectionInfo.GetMethodBase(this), filesDataCollection);
 
             bool isStatusProcessingProjectChanged = (_filesData == null || _filesData.Count == 0)
                                                     ? SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles)
@@ -150,7 +149,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Изменить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        [Logger]
         public void ChangeFilesStatus(PackageStatus packageStatus)
         {
             if (packageStatus?.IsValid != true) return;

@@ -16,35 +16,29 @@ namespace GadzhiCommon.Models.Implementations.Errors
     public class ErrorCommon: IErrorCommon, IFormattable
     {
         public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription)
-            : this(fileConvertErrorType, errorDescription, null, null) { }
+            : this(fileConvertErrorType, errorDescription, null) { }
 
-        public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription, string exceptionMessage, string stackTrace)
+        public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription, Exception exception)
         {
-            FileConvertErrorType = fileConvertErrorType;
-            ErrorDescription = errorDescription ?? String.Empty;
-            ExceptionMessage = exceptionMessage;
-            StackTrace = stackTrace;
+            ErrorType = fileConvertErrorType;
+            Description = errorDescription ?? String.Empty;
+            Exception = exception;
         }
 
         /// <summary>
         /// Тип ошибки при конвертации файлов
         /// </summary>
-        public FileConvertErrorType FileConvertErrorType { get; }
+        public FileConvertErrorType ErrorType { get; }
 
         /// <summary>
         /// Описание ошибки
         /// </summary>
-        public string ErrorDescription { get; }
+        public string Description { get; }
 
         /// <summary>
         /// Исключение
         /// </summary>
-        public string ExceptionMessage { get; }
-
-        /// <summary>
-        /// Стек вызовов
-        /// </summary>
-        public string StackTrace { get; }
+        public Exception Exception { get; }
 
         /// <summary>
         /// Преобразовать в ответ
@@ -79,7 +73,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         #region IFormattable Support
         public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
 
-        public string ToString(string format, IFormatProvider formatProvider) => FileConvertErrorType.ToString();
+        public string ToString(string format, IFormatProvider formatProvider) => ErrorType.ToString();
         #endregion
     }
 }

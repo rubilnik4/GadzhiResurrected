@@ -67,7 +67,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// Список ошибок
         /// </summary>
         public string ErrorsDescription =>
-            FileData.FileErrors.Select(error => error.FileConvertErrorType).Select(ConverterErrorType.ErrorTypeToString).
+            FileData.FileErrors.Select(error => error.ErrorType).Select(ConverterErrorType.ErrorTypeToString).
             Map(errors => String.Join("\n", errors));
 
         /// <summary>

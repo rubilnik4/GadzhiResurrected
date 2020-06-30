@@ -31,7 +31,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
             DialogButtonsType switch
             {
                 DialogButtonsType.OkCancel => "ОК",
-                DialogButtonsType.RetryCancel => "RETRY"
+                DialogButtonsType.RetryCancel => "RETRY",
+                _ => "ОК",
             };
 
         /// <summary>

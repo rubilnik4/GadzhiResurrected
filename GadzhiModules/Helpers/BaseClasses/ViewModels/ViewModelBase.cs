@@ -2,13 +2,24 @@
 using System.Globalization;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Implementations.Functional;
+using GadzhiCommon.Models.Interfaces.Errors;
 using Prism.Mvvm;
 
 namespace GadzhiModules.Helpers.BaseClasses.ViewModels
 {
     public abstract class ViewModelBase : BindableBase, IFormattable, IDisposable
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         /// <summary>
         /// Название
         /// </summary>
@@ -45,22 +56,24 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
 
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отлова ошибок метода.
-        /// При наличие ошибок WCF останавливает процесс конвертации
         /// </summary> 
-        protected void ExecuteAndHandleError(Action method, Action applicationAbortionMethod = null) =>       
+        protected void ExecuteAndHandleError(Action method, Action applicationAbortionMethod = null) =>
             ExecuteAndCatchErrors.ExecuteAndHandleError(method,
                                                         () => IsLoading = true,
                                                         applicationAbortionMethod,
-                                                        () => IsLoading = false);
-        
+                                                        () => IsLoading = false).
+            ResultVoidBad(errors => _loggerService.ErrorsLog(errors));
+
         /// <summary>
         /// Обертка для вызова индикатора загрузки и отл5ова ошибок асинхронного метода
         /// </summary> 
-        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationAbortionMethod = null) =>        
+        protected async Task ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action applicationAbortionMethod = null) =>
             await ExecuteAndCatchErrors.ExecuteAndHandleErrorAsync(asyncMethod,
                                                                    () => IsLoading = true,
                                                                    applicationAbortionMethod,
-                                                                   () => IsLoading = false);
+                                                                   () => IsLoading = false).
+            MapAsync(result => (IResultValue<Unit>)result).
+            ResultVoidBadAsync(errors => _loggerService.ErrorsLog(errors));
 
         #region IFormattable Support
         public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);

@@ -11,5 +11,7 @@
         Update,
         Clear,
         Upload,
+        Download,
+        Abort,
     }
 }

@@ -8,6 +8,7 @@ using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.LibraryData;
@@ -57,7 +58,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Подготовить данные к отправке
         /// </summary>
-        [Logger] 
         private async Task<PackageDataRequestClient> PrepareFilesToSending()
         {
             var filesStatusInSending = await _fileDataProcessingStatusMark.GetFilesInSending();
@@ -70,11 +70,11 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Отправить файлы для конвертации
         /// </summary>
-        [Logger]
         private async Task SendFilesToConverting(PackageDataRequestClient packageDataRequest)
         {
             var packageDataResponse = await _fileConvertingClientService.Operations.SendFiles(packageDataRequest);
-            _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Upload, MethodBase.GetCurrentMethod(), packageDataRequest.Id.ToString());
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Upload, ReflectionInfo.GetMethodBase(this),
+                                        packageDataRequest.FilesData, packageDataRequest.Id.ToString());
 
             var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetPackageStatusAfterSend(packageDataRequest, packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(filesStatusAfterSending);
@@ -117,6 +117,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private async Task GetCompleteFiles()
         {
             var packageDataResponse = await _fileConvertingClientService.Operations.GetCompleteFiles(_packageInfoProject.Id);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Download, ReflectionInfo.GetMethodBase(this),
+                                        packageDataResponse.FilesData, packageDataResponse.Id.ToString());
 
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
             _packageInfoProject.ChangeFilesStatus(filesStatusBeforeWrite);
@@ -135,8 +137,25 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (_statusProcessingInformation?.IsConverting == true && _packageInfoProject != null)
             {
                 await _fileConvertingClientService.Operations.AbortConvertingById(_packageInfoProject.Id);
+                _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Abort, ReflectionInfo.GetMethodBase(this), _packageInfoProject.Id.ToString());
             }
         }
+
+        /// <summary>
+        /// Загрузить подписи из базы данных
+        /// </summary>
+        [Logger]
+        public async Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames() =>
+            await _fileConvertingClientService.Operations.GetSignaturesNames().
+            MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
+            MapAsync(signatures => signatures.ToList());
+
+        /// <summary>
+        /// Загрузить отделы из базы данных
+        /// </summary>
+        [Logger]
+        public async Task<IList<DepartmentType>> GetSignaturesDepartments() =>
+            await _fileConvertingClientService.Operations.GetSignaturesDepartments();
 
         /// <summary>
         /// Сбросить индикаторы конвертации
@@ -151,32 +170,16 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                 _fileConvertingClientService?.Dispose();
             }
 
+            if (_statusProcessingInformation?.IsConverting == true)
+            {
+                _packageInfoProject?.ChangeAllFilesStatusAndMarkError();
+            }
             ClearSubscriptions();
-            _statusProcessingSubscriptions?.Dispose();
-            _packageInfoProject?.ChangeAllFilesStatusAndMarkError();
         }
-
-        /// <summary>
-        /// Загрузить подписи из базы данных
-        /// </summary>
-       // [LoggerModules(LoggerAction = LoggerActionAttribute.OnEnterAndExit)]
-        public async Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames() =>
-            await _fileConvertingClientService.Operations.GetSignaturesNames().
-            MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
-            MapAsync(signatures => signatures.ToList());
-
-        /// <summary>
-        /// Загрузить отделы из базы данных
-        /// </summary>
-        public async Task<IList<DepartmentType>> GetSignaturesDepartments() =>
-            await _fileConvertingClientService.Operations.GetSignaturesDepartments();
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования
         /// </summary>
-        private void ClearSubscriptions()
-        {
-            _statusProcessingSubscriptions?.Clear();
-        }
+        private void ClearSubscriptions() => _statusProcessingSubscriptions?.Clear();
     }
 }
