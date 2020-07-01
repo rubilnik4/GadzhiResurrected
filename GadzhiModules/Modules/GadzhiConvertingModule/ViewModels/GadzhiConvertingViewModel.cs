@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiModules.Helpers.BaseClasses.ViewModels;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs;
 using Nito.AsyncEx.Synchronous;

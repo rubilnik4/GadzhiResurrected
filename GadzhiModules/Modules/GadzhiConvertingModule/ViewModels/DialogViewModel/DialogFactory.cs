@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Enums.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
 using MaterialDesignThemes.Wpf;
 
@@ -14,7 +15,17 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
         /// </summary>
         public static async Task GetMessageDialog(string message)
         {
-            var messageDialogViewModel = new MessageDialogViewModel(message);
+            var messageDialogViewModel = new MessageDialogViewModel(MessageDialogType.Information, message);
+            var messageDialogView = new MessageDialogView(messageDialogViewModel);
+            await DialogHost.Show(messageDialogView, "RootDialog");
+        }
+
+        /// <summary>
+        /// Создать диалоговое окно сообщений с ошибками
+        /// </summary>
+        public static async Task GetErrorDialog(string message)
+        {
+            var messageDialogViewModel = new MessageDialogViewModel(MessageDialogType.Error, message);
             var messageDialogView = new MessageDialogView(messageDialogViewModel);
             await DialogHost.Show(messageDialogView, "RootDialog");
         }

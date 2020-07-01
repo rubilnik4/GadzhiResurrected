@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 
@@ -51,6 +51,34 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Информационное сообщение
         /// </summary>  
         public async Task ShowMessage(string message) => await DialogFactory.GetMessageDialog(message);
+
+        /// <summary>
+        /// Сообщение об ошибке
+        /// </summary>
+        public async Task ShowError(IErrorCommon fileError) =>
+            await $"Тип ошибки: {ConverterErrorType.ErrorTypeToString(fileError.ErrorType)}".
+            VoidAsync(DialogFactory.GetErrorDialog);
+
+        /// <summary>
+        /// Сообщения об ошибках
+        /// </summary>
+        public async Task ShowErrors(IEnumerable<IErrorCommon> fileErrors)
+        {
+            if (fileErrors == null) return;
+
+            var fileErrorsCollection = fileErrors.ToList();
+            switch (fileErrorsCollection.Count)
+            {
+                case 0:
+                    return;
+                case 1:
+                    await ShowError(fileErrorsCollection[0]);
+                    return;
+                default:
+                    await DialogFactory.GetErrorDialog("Ошибки записаны в системный журнал");
+                    return;
+            }
+        }
 
         /// <summary>
         /// Диалоговое окно с подтверждением

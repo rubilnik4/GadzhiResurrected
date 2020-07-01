@@ -9,9 +9,10 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiModules.Infrastructure.Interfaces;
 using Prism.Mvvm;
 
-namespace GadzhiModules.Helpers.BaseClasses.ViewModels
+namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base
 {
     public abstract class ViewModelBase : BindableBase, IFormattable, IDisposable
     {
@@ -19,6 +20,11 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
         /// Журнал системных сообщений
         /// </summary>
         private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>
+        protected abstract IDialogService DialogService { get; }
 
         /// <summary>
         /// Название
@@ -62,6 +68,7 @@ namespace GadzhiModules.Helpers.BaseClasses.ViewModels
                                                         () => IsLoading = true,
                                                         applicationAbortionMethod,
                                                         () => IsLoading = false).
+            ResultVoidBad(errors => DialogService.ShowErrors(errors)).
             ResultVoidBad(errors => _loggerService.ErrorsLog(errors));
 
         /// <summary>

@@ -1,9 +1,9 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiCommon.Enums.FilesConvert;
 
-namespace GadzhiModules.Helpers.Converters
+namespace GadzhiModules.Infrastructure.Implementations.Converters
 {
     public static class StatusProcessingConverter
     {

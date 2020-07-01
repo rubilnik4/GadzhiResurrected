@@ -10,88 +10,96 @@
              xmlns:viewModelDialog="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
+             MinWidth="300"
              d:DataContext="{d:DesignInstance Type=viewModelDialog:ResultDialogViewModel, IsDesignTimeCreatable=False}"
              >
-    <Grid Margin="16">
+    <Grid>
         <Grid.Resources >
-            <converters:BoolToVisibilityConverter x:Key="VisibilityConverter"
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="DialogResource.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+
+                <converters:BoolToVisibilityConverter x:Key="VisibilityConverter"
                                                   TrueValue="Visible" 
                                                   FalseValue="Collapsed"/>
-
-            <Style x:Key="PackIconResultStyle" 
-                   TargetType="materialDesign:PackIcon">
-                <Setter Property="Width" Value="64" />
-                <Setter Property="Height" Value="64"/>
-                <Setter Property="Margin" Value="0 10 0 0"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
-            </Style>
-
-            <Style x:Key="GridResultStyle" 
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="0 10 0 0"/>
-            </Style>
+            </ResourceDictionary>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <materialDesign:PackIcon Grid.Row="0"
-                                 Kind="ThumbUp"
-                                 Style="{StaticResource PackIconResultStyle}"
-                                 Visibility="{Binding NoErrors, Converter={StaticResource VisibilityConverter}}"/>
+        <StackPanel Grid.Row="0" 
+                    Style="{StaticResource StackPanelTitle}">
+            <TextBlock Text="{Binding Title}"
+                       Style="{StaticResource TextBlockTitle}"/>
+        </StackPanel>
+      
+        <StackPanel Grid.Row="1"
+                    Style="{StaticResource StackPanelResult}">
+            <materialDesign:PackIcon Kind="ThumbUp"
+                                     Style="{StaticResource PackIconResultStyle}"
+                                     Visibility="{Binding NoErrors, Converter={StaticResource VisibilityConverter}}"/>
+            <materialDesign:PackIcon Kind="ThumbDown"
+                                     Style="{StaticResource PackIconResultStyle}"
+                                     Foreground="{StaticResource ColorRedError}"
+                                     Visibility="{Binding HasErrors, Converter={StaticResource VisibilityConverter}}"/>
+            <TextBlock Text="{Binding Message}"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
 
-        <materialDesign:PackIcon Grid.Row="0"
-                                 Kind="ThumbDown"
-                                 Style="{StaticResource PackIconResultStyle}"
-                                 Visibility="{Binding HasErrors, Converter={StaticResource VisibilityConverter}}"/>
+        <DockPanel Grid.Row="2"
+                   Style="{StaticResource DockPanelButtons}"
+                   Visibility="{Binding NoErrors, Converter={StaticResource VisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1"
-              Style="{StaticResource GridResultStyle}"
-              Visibility="{Binding NoErrors, Converter={StaticResource VisibilityConverter}}">
+                <Button Grid.Column="0" 
+                        IsCancel="True"
+                        Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                        Content="Отлично"
+                        Style="{StaticResource ButtonResult}">
+                    <Button.CommandParameter>
+                        <system:Boolean>False</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </Grid>
+        </DockPanel>
 
-            <Button IsCancel="True"
-                    Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                    Content="ОТЛИЧНО"
-                    HorizontalAlignment="Center">
-                <Button.CommandParameter>
-                    <system:Boolean>False</system:Boolean>
-                </Button.CommandParameter>
-            </Button>
-        </Grid>
+        <DockPanel Grid.Row="2"
+                   Style="{StaticResource DockPanelButtons}"
+                   Visibility="{Binding HasErrors, Converter={StaticResource VisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1"
-              Style="{StaticResource GridResultStyle}"
-              Visibility="{Binding HasErrors, Converter={StaticResource VisibilityConverter}}">
+                <Button Grid.Column="0" 
+                        IsDefault="True"
+                        Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                        Content="Ошибки"
+                        Style="{StaticResource ButtonResult}">
+                    <Button.CommandParameter>
+                        <system:Boolean>True</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" 
-                    IsDefault="True" 
-                    Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                    Content="ОШИБКИ">
-                <Button.CommandParameter>
-                    <system:Boolean>True</system:Boolean>
-                </Button.CommandParameter>
-            </Button>
-
-            <Button  Grid.Column="1" 
-                     IsCancel="True" 
-                     Style="{DynamicResource MaterialDesignFlatButton}"
-                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                     Content="ЗАКРЫТЬ">
-                <Button.CommandParameter>
-                    <system:Boolean>False</system:Boolean>
-                </Button.CommandParameter>
-            </Button>
-        </Grid>
+                <Button Grid.Column="1" 
+                        IsCancel="True"
+                        Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                        Content="Закрыть"
+                        Style="{StaticResource ButtonResult}">
+                    <Button.CommandParameter>
+                        <system:Boolean>False</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </Grid>
+        </DockPanel>
     </Grid>
 </UserControl>

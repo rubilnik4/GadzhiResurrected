@@ -34,7 +34,8 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнить действие при отрицательном значении, вернуть результирующий ответ
         /// </summary>      
-        public static IResultValue<TValue> ResultVoidBad<TValue>(this IResultValue<TValue> @this, Action<IEnumerable<IErrorCommon>> action)
+        public static IResultValue<TValue> ResultVoidBad<TValue>(this IResultValue<TValue> @this, 
+                                                                 Action<IReadOnlyList<IErrorCommon>> action)
         {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 

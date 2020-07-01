@@ -7,11 +7,11 @@ using System.Windows;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiModules.Helpers.BaseClasses.ViewModels;
-using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems;
 using GongSolutions.Wpf.DragDrop;
 using Nito.AsyncEx.Synchronous;
@@ -35,11 +35,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
 
-        public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi,
-                                        IStatusProcessingInformation statusProcessingInformation)
+        public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation,
+                                        IDialogService dialogService)
         {
             _applicationGadzhi = applicationGadzhi ?? throw new ArgumentNullException(nameof(applicationGadzhi));
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
             applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
@@ -84,6 +85,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
             CloseApplicationDelegateCommand = new DelegateCommand(async () => await CloseApplication());
         }
+
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>
+        protected override IDialogService DialogService { get; }
 
         /// <summary>
         /// Название

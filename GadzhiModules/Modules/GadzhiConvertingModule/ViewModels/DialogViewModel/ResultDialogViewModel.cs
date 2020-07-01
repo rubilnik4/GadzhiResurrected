@@ -1,9 +1,11 @@
-﻿namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel
+﻿using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
+
+namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel
 {
     /// <summary>
     /// Диалоговое окно результатов конвертирования
     /// </summary>
-    public class ResultDialogViewModel
+    public class ResultDialogViewModel: DialogViewModelBase
     {
         public ResultDialogViewModel(bool hasErrors)
         {
@@ -19,5 +21,14 @@
         /// Отсутствие ошибок
         /// </summary>
         public bool NoErrors => !HasErrors;
+
+        /// <summary>
+        /// Заголовок
+        /// </summary>
+        public override string Title => "Итоги";
+
+        public string Message => (NoErrors)
+                                 ? "Прекрасно! Файлы готовы"
+                                 : "Упс! Что-то пошло не так...";
     }
 }

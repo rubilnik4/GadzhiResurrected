@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Enums.DialogViewModel;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel
 {
     /// <summary>
     /// Диалоговое окно с кнопкой подтверждения
     /// </summary>
-    public class OkCancelDialogViewModel
+    public class OkCancelDialogViewModel: DialogViewModelBase
     {
         public OkCancelDialogViewModel(DialogButtonsType dialogButtonsType, string message)
         {
@@ -23,6 +25,17 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
         /// Информационное сообщение
         /// </summary>
         public string Message { get; }
+
+        /// <summary>
+        /// Заголовок
+        /// </summary>
+        public override string Title =>
+            DialogButtonsType switch
+            {
+                DialogButtonsType.OkCancel => "Подтверждение",
+                DialogButtonsType.RetryCancel => "Повтор",
+                _ => "Подтверждение",
+            };
 
         /// <summary>
         /// Текст первой кнопки

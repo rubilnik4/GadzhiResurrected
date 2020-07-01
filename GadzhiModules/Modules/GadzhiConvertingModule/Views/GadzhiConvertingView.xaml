@@ -7,10 +7,10 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"   
              xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels"
-             xmlns:viewModelsBase="clr-namespace:GadzhiModules.Helpers.BaseClasses.ViewModels"
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              xmlns:viewTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModelsBase="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base"
              d:DataContext="{d:DesignInstance Type=viewModels:GadzhiConvertingViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">

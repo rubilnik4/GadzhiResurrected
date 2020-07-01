@@ -1,11 +1,11 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Helpers.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using System;
 using System.Linq;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
-using static GadzhiModules.Helpers.Converters.StatusProcessingProjectConverter;
+using static GadzhiModules.Infrastructure.Implementations.Converters.StatusProcessingProjectConverter;
 
 namespace GadzhiModules.Infrastructure.Implementations
 {

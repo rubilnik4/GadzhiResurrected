@@ -43,7 +43,8 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнить действие асинхронно при отрицательном значении, вернуть результирующий ответ
         /// </summary>      
-        public static async Task<IResultValue<TValue>> ResultVoidBadAsync<TValue>(this Task<IResultValue<TValue>> @this, Action<IEnumerable<IErrorCommon>> action)
+        public static async Task<IResultValue<TValue>> ResultVoidBadAsync<TValue>(this Task<IResultValue<TValue>> @this,
+                                                                                  Action<IReadOnlyList<IErrorCommon>> action)
         {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (action == null) throw new ArgumentNullException(nameof(action));

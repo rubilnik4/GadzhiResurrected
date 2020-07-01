@@ -12,6 +12,8 @@
         Clear,
         Upload,
         Download,
+        Request,
+        Response,
         Abort,
     }
 }

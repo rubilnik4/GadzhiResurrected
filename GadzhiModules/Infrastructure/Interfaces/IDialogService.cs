@@ -27,6 +27,16 @@ namespace GadzhiModules.Infrastructure.Interfaces
         Task ShowMessage(string message);
 
         /// <summary>
+        /// Сообщение об ошибке
+        /// </summary>
+        Task ShowError(IErrorCommon fileError);
+
+        /// <summary>
+        /// Сообщения об ошибках
+        /// </summary>
+        Task ShowErrors(IEnumerable<IErrorCommon> fileErrors);
+
+        /// <summary>
         /// Диалоговое окно с подтверждением
         /// </summary>  
         Task<bool> ShowMessageOkCancel(string messageText);

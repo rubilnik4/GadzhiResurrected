@@ -215,14 +215,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Helpers\Converters\ColorPrintConverter.cs" />
-    <Compile Include="Helpers\Converters\PdfNamingConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\PdfNamingConverter.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiServices.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataToDto.cs" />
-    <Compile Include="Helpers\Converters\StatusProcessingProjectConverter.cs" />
-    <Compile Include="Helpers\Converters\StatusProcessingConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingProjectConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
@@ -248,15 +248,17 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\PackageData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IFileData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
-    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogButtonsType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Base\DialogViewModelBase.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\DialogButtonsType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogFactory.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\MessageDialogType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\MessageDialogViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\OkCancelDialogViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\ResultDialogViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ConvertingSettingsViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModel.cs" />
-    <Compile Include="Helpers\BaseClasses\ViewModels\ViewModelBase.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Base\ViewModelBase.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
@@ -307,6 +309,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\DialogResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -369,6 +375,7 @@
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.16.6.13\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.16.6.13\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

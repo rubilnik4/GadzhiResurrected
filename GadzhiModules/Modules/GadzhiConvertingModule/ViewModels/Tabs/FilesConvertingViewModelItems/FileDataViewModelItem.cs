@@ -4,7 +4,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using Prism.Mvvm;
 

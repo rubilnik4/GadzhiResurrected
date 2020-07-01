@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Interfaces.LibraryData;
-using GadzhiModules.Helpers.BaseClasses.ViewModels;
-using GadzhiModules.Helpers.Converters;
+using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using Nito.Mvvm;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
@@ -20,11 +21,17 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private readonly IConvertingSettings _convertingSettings;
 
-        public ConvertingSettingsViewModel(IProjectSettings projectSettings, IProjectResources projectResources)
+        public ConvertingSettingsViewModel(IProjectSettings projectSettings, IProjectResources projectResources, IDialogService dialogService)
         {
             _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            PersonSignatures = projectResources.PersonSignatures;
+            PersonSignatures = projectResources?.PersonSignatures ?? throw new ArgumentNullException(nameof(projectResources));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
+
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>
+        protected override IDialogService DialogService { get; }
 
         /// <summary>
         /// Название

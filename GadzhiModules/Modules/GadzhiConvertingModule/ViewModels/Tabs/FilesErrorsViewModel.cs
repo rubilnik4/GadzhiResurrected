@@ -4,11 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiModules.Helpers.BaseClasses.ViewModels;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErrorsViewModelItems;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
@@ -23,9 +23,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>        
         private readonly IStatusProcessingInformation _statusProcessingInformation;
 
-        public FilesErrorsViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation)
+        public FilesErrorsViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation, 
+                                    IDialogService dialogService)
         {
             if (applicationGadzhi == null) throw new ArgumentNullException(nameof(applicationGadzhi));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             applicationGadzhi.FileDataChange.Subscribe(ActionOnTypeStatusChange);
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
@@ -33,6 +35,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             FilesErrorsCollection = new ObservableCollection<FileErrorViewModelItem>();
             BindingOperations.EnableCollectionSynchronization(FilesErrorsCollection, _filesErrorsCollectionLock);
         }
+
+        /// <summary>
+        /// Стандартные диалоговые окна
+        /// </summary>
+        protected override IDialogService DialogService { get; }
 
         /// <summary>
         /// Название
