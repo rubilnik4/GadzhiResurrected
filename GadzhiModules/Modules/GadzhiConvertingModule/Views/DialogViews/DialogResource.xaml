@@ -20,7 +20,7 @@
 
     <Style x:Key="DockPanelButtons" 
            TargetType="DockPanel">
-        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Margin" Value="10 5 10 10"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
 

@@ -73,7 +73,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private async Task SendFilesToConverting(PackageDataRequestClient packageDataRequest)
         {
             var packageDataResponse = await _fileConvertingClientService.Operations.SendFiles(packageDataRequest);
-            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Upload, ReflectionInfo.GetMethodBase(this),
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                         packageDataRequest.FilesData, packageDataRequest.Id.ToString());
 
             var filesStatusAfterSending = await _fileDataProcessingStatusMark.GetPackageStatusAfterSend(packageDataRequest, packageDataResponse);
@@ -117,7 +117,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private async Task GetCompleteFiles()
         {
             var packageDataResponse = await _fileConvertingClientService.Operations.GetCompleteFiles(_packageInfoProject.Id);
-            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Download, ReflectionInfo.GetMethodBase(this),
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                         packageDataResponse.FilesData, packageDataResponse.Id.ToString());
 
             var filesStatusBeforeWrite = await _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse);
@@ -137,7 +137,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (_statusProcessingInformation?.IsConverting == true && _packageInfoProject != null)
             {
                 await _fileConvertingClientService.Operations.AbortConvertingById(_packageInfoProject.Id);
-                _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Abort, ReflectionInfo.GetMethodBase(this), _packageInfoProject.Id.ToString());
+                _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Abort, ReflectionInfo.GetMethodBase(this), _packageInfoProject.Id.ToString());
             }
         }
 
@@ -145,17 +145,20 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Загрузить подписи из базы данных
         /// </summary>
         [Logger]
-        public async Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames() =>
-            await _fileConvertingClientService.Operations.GetSignaturesNames().
-            MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
-            MapAsync(signatures => signatures.ToList());
-
+        public async Task<IReadOnlyList<ISignatureLibrary>> GetSignaturesNames()
+        {
+            using var signatureService = _wcfServiceFactory.GetSignatureService();
+            var signaturesRequest = await signatureService.Operations.GetSignaturesNames();
+            var signatures = ConverterDataFileFromDto.SignaturesLibraryFromDto(signaturesRequest);
+            return signatures.ToList();
+        }
+          
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>
         [Logger]
         public async Task<IList<DepartmentType>> GetSignaturesDepartments() =>
-            await _fileConvertingClientService.Operations.GetSignaturesDepartments();
+            await _wcfServiceFactory.GetSignatureService().Operations.GetSignaturesDepartments();
 
         /// <summary>
         /// Сбросить индикаторы конвертации

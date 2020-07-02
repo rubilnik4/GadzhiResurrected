@@ -7,7 +7,6 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
 using GadzhiDTOBase.TransferModels.Signatures;
-using GadzhiDTOServer.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Services
 {
@@ -27,6 +26,8 @@ namespace GadzhiWcfHost.Services
         public FileConvertingClientService(IApplicationClientConverting applicationClientConverting)
         {
             _applicationClientConverting = applicationClientConverting;
+
+            OperationContext.Current.InstanceContext.Closed += InstanceContext_Closed;
         }
 
         /// <summary>
@@ -38,34 +39,31 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Проверить статус файлов по Id номеру
         /// </summary>      
-        public async Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataId) =>
-                await _applicationClientConverting.GetIntermediateFilesDataResponseById(filesDataId);
+        public async Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid packageId) =>
+                await _applicationClientConverting.GetIntermediateFilesDataResponseById(packageId);
 
         /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
-        public async Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataId) =>
-                await _applicationClientConverting.GetFilesDataResponseById(filesDataId);
+        public async Task<PackageDataResponseClient> GetCompleteFiles(Guid packageId) =>
+                await _applicationClientConverting.GetFilesDataResponseById(packageId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary>       
-        public async Task SetFilesDataLoadedByClient(Guid filesDataId) =>
-              await _applicationClientConverting.SetFilesDataLoadedByClient(filesDataId);
+        public async Task SetFilesDataLoadedByClient(Guid packageId) =>
+              await _applicationClientConverting.SetFilesDataLoadedByClient(packageId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        public async Task AbortConvertingById(Guid id) => await _applicationClientConverting.AbortConvertingById(id);
+        public async Task AbortConvertingById(Guid packageId) => await _applicationClientConverting.AbortConvertingById(packageId);
 
-        /// <summary>
-        /// Загрузить имена из базы данных
-        /// </summary>      
-        public async Task<IList<SignatureDto>> GetSignaturesNames() => await _applicationClientConverting.GetSignaturesNames();
+      
 
-        /// <summary>
-        /// Загрузить отделы из базы данных
-        /// </summary>  
-        public async Task<IList<DepartmentType>> GetSignaturesDepartments() => await _applicationClientConverting.GetSignaturesDepartments();
+        private static void InstanceContext_Closed(object sender, EventArgs e)
+        {
+            // Session closed here
+        }
     }
 }

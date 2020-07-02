@@ -4,12 +4,15 @@ using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiModules.Infrastructure.Implementations.Services;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
+using GadzhiModules.Infrastructure.Interfaces.Services;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -41,11 +44,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             var unityContainer = containerRegistry.GetContainer();
-            var clientEndpoints = new ClientEndpoints();
-            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));
 
-            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingClientService>>(unity =>
-                      ServiceConsumerFactory.Create<IFileConvertingClientService>(fileConvertingEndpoint), FactoryLifetime.Singleton);
+            RegisterServices(unityContainer);
 
             unityContainer.RegisterSingleton<IPackageData, PackageData>();
             unityContainer.RegisterSingleton<IStatusProcessingInformation, StatusProcessingInformation>();
@@ -58,6 +58,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
 
             var application = unityContainer.Resolve<IApplicationGadzhi>();
             unityContainer.RegisterFactory<IProjectResources>(unity => new ProjectResources(application.GetSignaturesNames()), FactoryLifetime.Singleton);
+        }
+
+        /// <summary>
+        /// Регистрация WCF сервисов
+        /// </summary>
+        private static void RegisterServices(IUnityContainer unityContainer)
+        {
+            unityContainer.RegisterType<IWcfServicesFactory, WcfServicesFactory>();
+
+            var clientEndpoints = new ClientEndpoints();
+
+            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));
+            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingClientService>>(unity =>
+                ServiceConsumerFactory.Create<IFileConvertingClientService>(fileConvertingEndpoint));
+
+            string signatureEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(ISignatureClientService));
+            unityContainer.RegisterFactory<IServiceConsumer<ISignatureClientService>>(unity =>
+                ServiceConsumerFactory.Create<ISignatureClientService>(signatureEndpoint));
         }
     }
 }

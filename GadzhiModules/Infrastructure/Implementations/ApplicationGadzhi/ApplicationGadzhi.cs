@@ -10,8 +10,10 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
+using GadzhiModules.Infrastructure.Interfaces.Services;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
@@ -32,6 +34,11 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Параметры приложения
         /// </summary>     
         private readonly IProjectSettings _projectSettings;
+
+        /// <summary>
+        /// Фабрика для создания сервисов WCF
+        /// </summary>
+        private readonly IWcfServicesFactory _wcfServiceFactory;
 
         /// <summary>
         /// Сервис конвертации
@@ -67,6 +74,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                  IProjectSettings projectSettings,
                                  IFileSystemOperations fileSystemOperations,
                                  IPackageData packageInfoProject,
+                                 IWcfServicesFactory wcfServiceFactory,
                                  IServiceConsumer<IFileConvertingClientService> fileConvertingClientService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation)
@@ -76,6 +84,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _fileConvertingClientService = fileConvertingClientService ?? throw new ArgumentNullException(nameof(fileConvertingClientService));
+            _wcfServiceFactory = wcfServiceFactory ?? throw new ArgumentNullException(nameof(wcfServiceFactory));
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 

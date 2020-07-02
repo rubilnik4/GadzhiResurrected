@@ -69,35 +69,44 @@ namespace GadzhiCommon.Infrastructure.Interfaces.Logger
         /// <summary>
         /// Вывести сообщение об объекте согласно типа действия
         /// </summary>
-        void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase);
+        void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerAction loggerAction, MethodBase methodBase);
 
         /// <summary>
         /// Вывести сообщение об объекте согласно типа действия
         /// </summary>
-        void LogByObject(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase, string parameter);
+        void LogByObject(LoggerLevel loggerLevel, LoggerAction loggerAction, MethodBase methodBase, string parameter);
 
         /// <summary>
         /// Вывести сообщение об объекте согласно типа действия
         /// </summary>
-        void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
-                                 MethodBase methodBase, TValue parameter, string parentValue);
+        void LogByObject<TValue>(LoggerLevel loggerLevel, LoggerAction loggerAction, MethodBase methodBase, TValue parameter, string parentValue);
 
         /// <summary>
         /// Вывести сообщение об объектах согласно типа действия
         /// </summary>
-        void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction,
+        void LogByObject(LoggerLevel loggerLevel, LoggerAction loggerAction, string objectName, MethodBase methodBase, string parameters);
+
+        /// <summary>
+        /// Вывести сообщение об объекте согласно типа действия метода
+        /// </summary>
+        void LogByObjectMethod(LoggerLevel loggerLevel, LoggerAction loggerAction, MethodBase methodBase, string parameter);
+
+        /// <summary>
+        /// Вывести сообщение об объектах согласно типа действия
+        /// </summary>
+        void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerAction loggerAction,
                                  MethodBase methodBase, IEnumerable<TValue> parameters);
 
         /// <summary>
         /// Вывести сообщение об объектах согласно типа действия
         /// </summary>
-        void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, MethodBase methodBase,
+        void LogByObjects<TValue>(LoggerLevel loggerLevel, LoggerAction loggerAction, MethodBase methodBase,
                                  IEnumerable<TValue> parameters, string parentValue);
 
         /// <summary>
         /// Вывести сообщение об объектах согласно типа действия
         /// </summary>
-        void LogByObjects(LoggerLevel loggerLevel, LoggerObjectAction loggerObjectAction, string objectName,
+        void LogByObjects(LoggerLevel loggerLevel, LoggerAction loggerAction, string typeName,
                          MethodBase methodBase, IEnumerable<string> parameters, string parentValue);
 
         /// <summary>

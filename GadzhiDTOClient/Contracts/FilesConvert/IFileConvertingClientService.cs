@@ -24,37 +24,25 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// Проверить статус файлов
         /// </summary>   
         [OperationContract]
-        Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid filesDataId);
+        Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid packageId);
 
         /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>  
         [OperationContract]
-        Task<PackageDataResponseClient> GetCompleteFiles(Guid filesDataId);
+        Task<PackageDataResponseClient> GetCompleteFiles(Guid packageId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary> 
         [OperationContract]
-        Task SetFilesDataLoadedByClient(Guid filesDataId);
+        Task SetFilesDataLoadedByClient(Guid packageId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>   
         [OperationContract]
-        Task AbortConvertingById(Guid id);
-
-        /// <summary>
-        /// Загрузить имена из базы данных
-        /// </summary>
-        [OperationContract]
-        Task<IList<SignatureDto>> GetSignaturesNames();
-
-        /// <summary>
-        /// Загрузить отделы из базы данных
-        /// </summary>
-        [OperationContract]
-        Task<IList<DepartmentType>> GetSignaturesDepartments();
+        Task AbortConvertingById(Guid packageId);
     }
 }
 

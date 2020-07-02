@@ -24,11 +24,9 @@ namespace GadzhiDAL.DependencyInjection
                  //с помощью фабрики открываем сессию
                  .RegisterType<IUnitOfWork, UnitOfWork>()
 
-                 //регистрация клиентской части
-                 .RegisterType<IFilesDataServerService, FilesDataServerService>()
-
-                 //регистрация серверной части
-                 .RegisterType<IFilesDataClientService, FilesDataClientService>();
+                .RegisterType<IFilesDataServerService, FilesDataServerService>()
+                 .RegisterType<IFilesDataClientService, FilesDataClientService>()
+                 .RegisterType<ISignaturesService, SignaturesService>(new HierarchicalLifetimeManager());
 
         }
     }

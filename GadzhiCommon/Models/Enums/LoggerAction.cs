@@ -3,7 +3,7 @@
     /// <summary>
     /// Тип действия при логгировании объектов
     /// </summary>
-    public enum LoggerObjectAction
+    public enum LoggerAction
     {
         Add,
         Reload,

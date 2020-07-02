@@ -20,22 +20,22 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Client
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов
         /// </summary>
-        Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid filesDataServerId);
+        Task<PackageDataIntermediateResponseClient> GetIntermediateFilesDataResponseById(Guid packageId);
 
         /// <summary>
         /// Получить отконвертированные файлы
         /// </summary>
-        Task<PackageDataResponseClient> GetFilesDataResponseById(Guid filesDataServerId);
+        Task<PackageDataResponseClient> GetFilesDataResponseById(Guid packageId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary>       
-        Task SetFilesDataLoadedByClient(Guid filesDataId);
+        Task SetFilesDataLoadedByClient(Guid packageId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        Task AbortConvertingById(Guid id);
+        Task AbortConvertingById(Guid packageId);
 
         /// <summary>
         /// Загрузить имена из базы данных

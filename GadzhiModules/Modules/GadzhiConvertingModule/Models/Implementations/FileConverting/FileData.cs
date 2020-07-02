@@ -92,7 +92,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public void SetColorPrint(ColorPrint colorPrint)
         {
             ColorPrint = colorPrint;
-            _loggerService.LogByObject(LoggerLevel.Info, LoggerObjectAction.Update, ReflectionInfo.GetMethodBase(this), ColorPrint, ToString());
+            _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Update, ReflectionInfo.GetMethodBase(this), ColorPrint, ToString());
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
 
             if(fileStatus.StatusProcessing == StatusProcessing.End)
             {
-                _loggerService.InfoLog($"Converting [{nameof(IFileData)}] complete: {FilePath}. Has {FileErrors.Count} errors", 
+                _loggerService.InfoLog($"Converting {nameof(IFileData)} complete: {FilePath}. Has {FileErrors.Count} errors", 
                                        FileErrors.Select(error => error.ToString()));
             }
 

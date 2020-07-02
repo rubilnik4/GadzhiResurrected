@@ -111,7 +111,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             if (filesDataToAdd == null || filesDataToAdd.Count == 0) return;
 
             _filesData.AddRange(filesDataToAdd);
-            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Add, ReflectionInfo.GetMethodBase(this), filesDataToAdd);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Add, ReflectionInfo.GetMethodBase(this), filesDataToAdd);
 
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToStartConverting);
             UpdateFileData(new FilesChange(_filesData, filesDataToAdd, ActionType.Add, isStatusProcessingProjectChanged));
@@ -123,7 +123,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public void ClearFiles()
         {
             _filesData.Clear();
-            _loggerService.LogByObject<IFileData>(LoggerLevel.Info, LoggerObjectAction.Clear, ReflectionInfo.GetMethodBase(this));
+            _loggerService.LogByObject<IFileData>(LoggerLevel.Info, LoggerAction.Clear, ReflectionInfo.GetMethodBase(this));
 
             bool isStatusProcessingProjectChanged = SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
             UpdateFileData(new FilesChange(_filesData, new List<FileData>(), ActionType.Clear, isStatusProcessingProjectChanged));
@@ -138,7 +138,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             if (filesDataCollection == null || filesDataCollection.Count == 0) return;
 
             _filesData.RemoveAll(filesDataCollection.Contains);
-            _loggerService.LogByObjects(LoggerLevel.Info, LoggerObjectAction.Remove, ReflectionInfo.GetMethodBase(this), filesDataCollection);
+            _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Remove, ReflectionInfo.GetMethodBase(this), filesDataCollection);
 
             bool isStatusProcessingProjectChanged = (_filesData == null || _filesData.Count == 0)
                                                     ? SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles)
