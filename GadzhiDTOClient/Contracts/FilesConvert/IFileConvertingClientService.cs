@@ -3,45 +3,43 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using GadzhiCommon.Enums.LibraryData;
-using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiDTOClient.Contracts.FilesConvert
 {
     /// <summary>
     /// Сервис для конвертирования файлов. Контракт используется клиентской частью
     /// </summary>
-    [ServiceContract]
+    [ServiceContract(SessionMode = SessionMode.Required)]
     public interface IFileConvertingClientService
     {
         /// <summary>
         /// Отправить файлы для конвертирования
         /// </summary>
-        [OperationContract]
+        [OperationContract(IsInitiating = true, IsTerminating = false)]
         Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequestClient);
 
         /// <summary>
         /// Проверить статус файлов
         /// </summary>   
-        [OperationContract]
+        [OperationContract(IsInitiating = false , IsTerminating = false)]
         Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid packageId);
 
         /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>  
-        [OperationContract]
+        [OperationContract(IsInitiating = false, IsTerminating = false)]
         Task<PackageDataResponseClient> GetCompleteFiles(Guid packageId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary> 
-        [OperationContract]
+        [OperationContract(IsInitiating = false, IsTerminating = true)]
         Task SetFilesDataLoadedByClient(Guid packageId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>   
-        [OperationContract]
+        [OperationContract(IsInitiating = false, IsTerminating = true)]
         Task AbortConvertingById(Guid packageId);
     }
 }

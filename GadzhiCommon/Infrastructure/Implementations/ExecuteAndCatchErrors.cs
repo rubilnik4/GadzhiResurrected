@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiCommon.Infrastructure.Implementations
@@ -20,8 +21,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public static IResultError ExecuteAndHandleError(Action method, Action beforeMethod = null, Action catchMethod = null,
                                                          Action finallyMethod = null, IErrorCommon errorMessage = null) =>
             ExecuteAndHandleError(() => { method.Invoke(); return Unit.Value; },
-                                  beforeMethod, catchMethod,
-                                  finallyMethod, errorMessage).
+                                  beforeMethod, catchMethod, finallyMethod, errorMessage).
             ToResult();
 
         /// <summary>
@@ -58,21 +58,34 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// Отлов ошибок и вызов метода асинхронно     
         /// </summary> 
         public static async Task<IResultError> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action beforeMethod = null,
-                                                                          Action catchMethod = null, Action finallyMethod = null)
-        {
-            if (asyncMethod == null) throw new ArgumentNullException(nameof(asyncMethod));
+                                                                          Action catchMethod = null, Action finallyMethod = null,
+                                                                          IErrorCommon errorMessage = null) =>
+            await ExecuteAndHandleErrorAsync(() => { asyncMethod.Invoke(); return Task.FromResult(Unit.Value); },
+                                             beforeMethod, catchMethod, finallyMethod, errorMessage).
+            MapAsync(result => result.ToResult());
 
-            IResultError result = new ResultError();
+        /// <summary>
+        /// Отлов ошибок и вызов метода асинхронно
+        /// </summary> 
+        public static async Task<IResultValue<T>> ExecuteAndHandleErrorAsync<T>(Func<Task<T>> asyncFunc, Action beforeMethod = null, 
+                                                                                Action catchMethod = null, Action finallyMethod = null, 
+                                                                                IErrorCommon errorMessage = null)
+        {
+            if (asyncFunc == null) throw new ArgumentNullException(nameof(asyncFunc));
+
+            IResultValue<T> result;
 
             try
             {
                 beforeMethod?.Invoke();
-                await asyncMethod.Invoke();
+                result = new ResultValue<T>(await asyncFunc.Invoke());
             }
             catch (Exception exception)
             {
                 catchMethod?.Invoke();
-                result = new ErrorCommon(GetTypeException(exception), String.Empty, exception).ToResult();
+                result = new ErrorCommon(GetTypeException(exception), String.Empty, exception).
+                         ToResultValue<T>().
+                         ConcatErrors(errorMessage);
             }
             finally
             {

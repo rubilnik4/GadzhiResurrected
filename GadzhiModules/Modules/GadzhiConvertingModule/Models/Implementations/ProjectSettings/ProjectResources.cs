@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using Nito.Mvvm;
@@ -12,7 +13,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
     /// </summary>
     public class ProjectResources: IProjectResources
     {
-        public ProjectResources(Task<IReadOnlyList<ISignatureLibrary>> personSignatures)
+        public ProjectResources(Task<IResultCollection<ISignatureLibrary>> personSignatures)
         {
            PersonSignatures = NotifyTask.Create(personSignatures);
         }
@@ -21,7 +22,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
         /// Подписи
         /// </summary>
         [Logger]
-        public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
+        public NotifyTask<IResultCollection<ISignatureLibrary>> PersonSignatures { get; }
     }
 
 }

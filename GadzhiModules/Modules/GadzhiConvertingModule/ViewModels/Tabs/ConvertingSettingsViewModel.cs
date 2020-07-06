@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
@@ -58,7 +59,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Подписи
         /// </summary>
-        public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
+        public NotifyTask<IResultCollection<ISignatureLibrary>> PersonSignatures { get; }
 
         /// <summary>
         /// Принцип именования PDF

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using Nito.Mvvm;
 
@@ -12,6 +13,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Project
         /// <summary>
         /// Подписи
         /// </summary>
-        public NotifyTask<IReadOnlyList<ISignatureLibrary>> PersonSignatures { get; }
+        public NotifyTask<IResultCollection<ISignatureLibrary>> PersonSignatures { get; }
     }
 }

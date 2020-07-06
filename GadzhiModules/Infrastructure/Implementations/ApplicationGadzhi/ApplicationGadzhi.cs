@@ -2,15 +2,12 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
-using ChannelAdam.ServiceModel;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.LibraryData;
-using GadzhiDTOClient.Contracts.FilesConvert;
-using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.Services;
@@ -39,11 +36,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Фабрика для создания сервисов WCF
         /// </summary>
         private readonly IWcfServicesFactory _wcfServiceFactory;
-
-        /// <summary>
-        /// Сервис конвертации
-        /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingClientService> _fileConvertingClientService;
 
         /// <summary>
         /// Стандартные диалоговые окна
@@ -75,7 +67,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                  IFileSystemOperations fileSystemOperations,
                                  IPackageData packageInfoProject,
                                  IWcfServicesFactory wcfServiceFactory,
-                                 IServiceConsumer<IFileConvertingClientService> fileConvertingClientService,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation)
         {
@@ -83,7 +74,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
             _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _fileConvertingClientService = fileConvertingClientService ?? throw new ArgumentNullException(nameof(fileConvertingClientService));
             _wcfServiceFactory = wcfServiceFactory ?? throw new ArgumentNullException(nameof(wcfServiceFactory));
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
@@ -141,7 +131,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_disposedValue) return;
 
-            AbortPropertiesConverting(true).ConfigureAwait(false);
+            AbortPropertiesConverting().ConfigureAwait(false);
             SaveConfiguration();
             if (disposing)
             {

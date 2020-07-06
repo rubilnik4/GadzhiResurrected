@@ -57,7 +57,7 @@
 
                     <ComboBox materialDesign:HintAssist.Hint="{Binding PersonSignatureLoading}"
                               SelectedValue="{Binding PersonSignature}"
-                              ItemsSource="{Binding PersonSignatures.Result}"
+                              ItemsSource="{Binding PersonSignatures.Result.Value}"
                               DisplayMemberPath="PersonInformation.FullInformation">
                         <ComboBox.ItemsPanel>
                             <ItemsPanelTemplate>
