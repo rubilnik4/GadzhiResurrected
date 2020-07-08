@@ -218,7 +218,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         [Logger]
         private async Task ConvertingFiles() =>
             await ExecuteAndHandleErrorAsync(_applicationGadzhi.ConvertingFiles,
-                                             () => _applicationGadzhi.AbortPropertiesConverting().WaitAndUnwrapException());
+                                             () => _applicationGadzhi.AbortPropertiesConverting(true).WaitAndUnwrapException());
 
         /// <summary>
         /// Закрыть приложение

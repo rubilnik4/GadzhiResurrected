@@ -41,6 +41,24 @@ namespace GadzhiCommon.Extensions.Functional
         }
 
         /// <summary>
+        /// Условие продолжающее действие с асинхронным выполнением
+        /// </summary>      
+        public static async Task<TResult> WhereContinueAsync<TSource, TResult>(this Task<TSource> @this, Func<TSource, bool> predicate,
+                                                                               Func<TSource, Task<TResult>> okFunc,
+                                                                               Func<TSource, Task<TResult>> badFunc)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
+
+            var awaitedAsync = await @this;
+
+            return predicate(awaitedAsync)
+                   ? await okFunc.Invoke(awaitedAsync)
+                   : await badFunc.Invoke(awaitedAsync);
+        }
+
+        /// <summary>
         /// Обработка позитивного условия
         /// </summary>      
         public static async Task<TSource> WhereOkAsyncBind<TSource>(this TSource @this, Func<TSource, bool> predicate,

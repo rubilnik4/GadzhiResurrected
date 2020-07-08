@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -13,7 +15,7 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>   
-        public static async Task<IResultValue<TValueOut>> ResultValueOkAsync<TValueIn, TValueOut>(this Task<IResultValue<TValueIn>> @this, 
+        public static async Task<IResultValue<TValueOut>> ResultValueOkAsync<TValueIn, TValueOut>(this Task<IResultValue<TValueIn>> @this,
                                                                                                   Func<TValueIn, TValueOut> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
@@ -29,8 +31,24 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>   
-        public static async Task<IResultValue<TValueOut>> ResultValueOkAsync<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
+        public static async Task<IResultValue<TValueOut>> ResultValueOkAsync<TValueIn, TValueOut>(this Task<IResultValue<TValueIn>> @this,
                                                                                                   Func<TValueIn, Task<TValueOut>> okFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
+            var awaitedThis = await @this;
+            if (awaitedThis.HasErrors) return new ResultValue<TValueOut>(awaitedThis.Errors);
+
+            return await okFunc.Invoke(awaitedThis.Value).
+                          MapAsync(okResult => new ResultValue<TValueOut>(okResult, awaitedThis.Errors));
+        }
+
+        /// <summary>
+        /// Выполнение положительного условия или возвращение предыдущей ошибки в результирующем ответе
+        /// </summary>   
+        public static async Task<IResultValue<TValueOut>> ResultValueOkAsync<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
+                                                                                                   Func<TValueIn, Task<TValueOut>> okFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));

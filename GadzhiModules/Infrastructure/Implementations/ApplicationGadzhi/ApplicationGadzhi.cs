@@ -131,7 +131,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_disposedValue) return;
 
-            AbortPropertiesConverting().ConfigureAwait(false);
+            AbortPropertiesConverting(true).ConfigureAwait(false);
             SaveConfiguration();
             if (disposing)
             {

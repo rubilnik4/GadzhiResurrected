@@ -12,7 +12,6 @@ namespace GadzhiCommon.Extensions.Functional.Result
     /// </summary>
     public static class ResultWhereExtensions
     {
-
         /// <summary>
         /// Выполнение условия или возвращение предыдущей ошибки в результирующем ответе
         /// </summary>      
