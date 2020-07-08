@@ -13,18 +13,23 @@ namespace GadzhiModules.Infrastructure.Interfaces.Services
     public interface IWcfServicesFactory
     {
         /// <summary>
-        /// Инициализировать сервис конвертации
-        /// </summary>
-        IServiceConsumer<IFileConvertingClientService> GetFileConvertingServiceService();
-
-        /// <summary>
         /// Инициализировать сервис для получения подписей
         /// </summary>
         IServiceConsumer<ISignatureClientService> GetSignatureService();
 
         /// <summary>
+        /// Очистить сервис конвертации
+        /// </summary>
+        void SignatureServiceDispose();
+
+        /// <summary>
         /// Выполнить функцию для сервиса подписей и проверить на ошибки
         /// </summary>
         Task<IResultValue<TResult>> UsingSignatureServiceAsync<TResult>(Func<IServiceConsumer<ISignatureClientService>, Task<TResult>> signatureFunc);
+        
+        /// <summary>
+        /// Выполнить функцию для сервиса конвертации и проверить на ошибки
+        /// </summary>
+        Task<IResultValue<TResult>> UsingConvertingServiceAsync<TResult>(Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>> fileConvertingFunc);
     }
 }

@@ -36,11 +36,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
-        /// Сервис конвертации
-        /// </summary>     
-        private IServiceConsumer<IFileConvertingClientService> FileConvertingClientService { get; set; }
-
-        /// <summary>
         /// Выполняется ли промежуточный запрос
         /// </summary>
         private bool IsIntermediateResponseInProgress { get; set; }
