@@ -168,7 +168,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                     Map(_ => ConvertingFilesData(package)).
                                     MapAsync(ReplyPackageIsComplete),
                 badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
-            VoidAsync(SendResponse);
+            VoidBindAsync(SendResponse);
 
         /// <summary>
         /// Сообщить о пустом/некорректном пакете
@@ -200,7 +200,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private async Task<IPackageServer> SendIntermediateResponse(IPackageServer packageServer) =>
             await _converterServerPackageDataToDto.FilesDataToIntermediateResponse(packageServer).
             Map(Task.FromResult).
-            MapAsyncBind(fileDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(fileDataRequest)).
+            MapBindAsync(fileDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(fileDataRequest)).
             MapAsync(packageServer.SetStatusProcessingProject);
 
         /// <summary>
@@ -252,8 +252,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 ResultOkBad(
                     okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
                                         MapAsync(packageServer.ChangeFileDataServer).
-                                        MapAsyncBind(SendIntermediateResponse).
-                                        MapAsyncBind(ConvertingFilesData),
+                                        MapBindAsync(SendIntermediateResponse).
+                                        MapBindAsync(ConvertingFilesData),
                     badFunc: _ => Task.FromResult(packageServer)).
                 Value;
 
@@ -265,7 +265,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData, convertingSettings)).
                         ResultValueBad(_ => fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).
-                                            VoidAsync(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))).
+                                            VoidBindAsync(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))).
                         Value);
 
         /// <summary>

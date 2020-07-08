@@ -25,7 +25,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
-        private readonly IPackageData _packageInfoProject;
+        private readonly IPackageData _packageData;
 
         /// <summary>
         /// Параметры приложения
@@ -72,7 +72,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
+            _packageData = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             _wcfServiceFactory = wcfServiceFactory ?? throw new ArgumentNullException(nameof(wcfServiceFactory));
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
@@ -132,11 +132,12 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (_disposedValue) return;
 
             AbortPropertiesConverting(true).ConfigureAwait(false);
+            _wcfServiceFactory?.Dispose();
             SaveConfiguration();
             if (disposing)
             {
                 // Ликвидация модели после отключения всех подписок
-                _packageInfoProject.Dispose();
+                _packageData.Dispose();
                 _statusProcessingSubscriptions.Dispose();
             }
             _disposedValue = true;

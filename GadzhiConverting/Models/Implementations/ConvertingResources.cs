@@ -109,7 +109,7 @@ namespace GadzhiConverting.Models.Implementations
         private async Task<IResultValue<string>> GetSignaturesMicrostation() =>
             await _fileConvertingServerService.Operations.GetSignaturesMicrostation().
                   MapAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
-                  MapAsyncBind(signatures => _fileSystemOperations.UnzipFileAndSaveWithResult(_signatureMicrostationFileName, signatures.MicrostationDataBase));
+                  MapBindAsync(signatures => _fileSystemOperations.UnzipFileAndSaveWithResult(_signatureMicrostationFileName, signatures.MicrostationDataBase));
 
         /// <summary>
         /// Получить штампы для Microstation
@@ -117,7 +117,7 @@ namespace GadzhiConverting.Models.Implementations
         private async Task<IResultValue<string>> GetStampsMicrostation() =>
             await _fileConvertingServerService.Operations.GetStampsMicrostation().
                   MapAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
-                  MapAsyncBind(stamps => _fileSystemOperations.UnzipFileAndSaveWithResult(_stampMicrostationFileName, stamps.MicrostationDataBase));
+                  MapBindAsync(stamps => _fileSystemOperations.UnzipFileAndSaveWithResult(_stampMicrostationFileName, stamps.MicrostationDataBase));
 
         /// <summary>
         /// Загрузить имена для подписей

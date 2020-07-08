@@ -176,7 +176,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
             await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
             Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
-            VoidAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
+            VoidBindAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
             VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private async Task UploadMicrostationDataToDataBase(MicrostationDataFile microstationDataFile, MicrostationDataType microstationDataType) =>
             await ConverterMicrostationDataToDto.MicrostationDataFileToDto(microstationDataFile).
                   Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
-                  VoidAsync(dataFile => microstationDataType switch
+                  VoidBindAsync(dataFile => microstationDataType switch
                   {
                       MicrostationDataType.Signature => _fileConvertingServerService.Operations.UploadSignaturesMicrostation(dataFile),
                       MicrostationDataType.Stamp => _fileConvertingServerService.Operations.UploadStampsMicrostation(dataFile),

@@ -16,7 +16,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange => _packageInfoProject.FileDataChange;
+        public ISubject<FilesChange> FileDataChange => _packageData.FileDataChange;
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -48,7 +48,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (_statusProcessingInformation.IsConverting) return;
 
             var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromPaths(fileOrDirectoriesPaths));
-            _packageInfoProject.AddFiles(allFilePaths);
+            _packageData.AddFiles(allFilePaths);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            _packageInfoProject.ClearFiles();
+            _packageData.ClearFiles();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            _packageInfoProject.RemoveFiles(filesToRemove);
+            _packageData.RemoveFiles(filesToRemove);
         }
     }
 }
