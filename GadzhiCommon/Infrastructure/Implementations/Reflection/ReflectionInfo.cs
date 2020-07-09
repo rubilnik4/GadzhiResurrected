@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using GadzhiCommon.Extensions.Functional;
@@ -19,7 +20,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Reflection
         /// <summary>
         /// Получить информацию о методе с атрибутом
         /// </summary>
-        public static MethodInfo GetMethodBase<TValue>(TValue caller, [CallerMemberName] string methodName = "") 
+        public static MethodInfo GetMethodBase<TValue>(TValue caller, [CallerMemberName] string methodName = "")
             where TValue : class =>
             GetMethodBaseDefinition(caller, methodName);
 
@@ -58,6 +59,13 @@ namespace GadzhiCommon.Infrastructure.Implementations.Reflection
                 _ when type.IsGenericType => $"{FormatGenericType(type)}<{GetTypeNames(type.GetGenericArguments())}>",
                 _ => type.Name,
             };
+
+        /// <summary>
+        /// Получить имя метода в выражении
+        /// </summary>
+        public static string GetExpressionName<T>(Expression<T> expression) =>
+            ((MethodCallExpression)expression?.Body)?.Method.Name 
+            ?? throw new ArgumentNullException(nameof(expression));
 
         /// <summary>
         /// Получить информацию о методе

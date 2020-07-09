@@ -85,13 +85,27 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнить действие асинхронно при положительном значении, вернуть результирующий ответ
         /// </summary>      
-        public static async Task<IResultValue<TValue>> ResultVoidOkAsyncBind<TValue>(this Task<IResultValue<TValue>> @this, Func<TValue, Task> actionAsync)
+        public static async Task<IResultValue<TValue>> ResultVoidOkBindAsync<TValue>(this Task<IResultValue<TValue>> @this, Func<TValue, Task> actionAsync)
         {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (actionAsync == null) throw new ArgumentNullException(nameof(actionAsync));
 
             var awaitedThis = await @this;
             if (awaitedThis.OkStatus) await actionAsync.Invoke(awaitedThis.Value);
+
+            return awaitedThis;
+        }
+
+        /// <summary>
+        /// Выполнить действие асинхронно при положительном значении, вернуть результирующий ответ
+        /// </summary>      
+        public static async Task<IResultValue<TValue>> ResultVoidBadBindAsync<TValue>(this Task<IResultValue<TValue>> @this, Func<IReadOnlyList<IErrorCommon>, Task> actionAsync)
+        {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (actionAsync == null) throw new ArgumentNullException(nameof(actionAsync));
+
+            var awaitedThis = await @this;
+            if (awaitedThis.HasErrors) await actionAsync.Invoke(awaitedThis.Errors);
 
             return awaitedThis;
         }

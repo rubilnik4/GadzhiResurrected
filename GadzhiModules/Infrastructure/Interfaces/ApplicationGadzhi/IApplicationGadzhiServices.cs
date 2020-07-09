@@ -16,7 +16,12 @@ namespace GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi
         /// <summary>
         /// Сбросить индикаторы конвертации
         /// </summary>
-        Task AbortPropertiesConverting(bool abortConnection);
+        Task AbortPropertiesConverting(bool abortConnection, IErrorCommon errorStatus);
+
+        /// <summary>
+        /// Сбросить индикаторы конвертации при отмене конвертирования
+        /// </summary>
+        Task AbortPropertiesCancellation();
 
         /// <summary>
         /// Загрузить подписи из базы данных

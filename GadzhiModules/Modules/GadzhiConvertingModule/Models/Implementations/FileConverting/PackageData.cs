@@ -9,6 +9,7 @@ using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -38,7 +39,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         {
             Id = Guid.Empty;
             FilesQueueInfo = new FilesQueueInfo();
-            StatusProcessingProject = StatusProcessingProject.NeedToLoadFiles;
+            SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
 
             _filesData = filesData?.ToList() ?? new List<IFileData>();
         }
@@ -169,14 +170,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// Изменить статус всех файлов и присвоить ошибку
         /// </summary>
         [Logger]
-        public void ChangeAllFilesStatusAndMarkError()
+        public void ChangeAllFilesStatusAndSetError(IErrorCommon errorStatus)
         {
-            StatusProcessingProject = StatusProcessingProject.Error;
             FilesQueueInfo = new FilesQueueInfo();
-
-            var fileData = _filesData.Select(file => new FileStatus(file.FilePath, StatusProcessing.End,
-                                                                    new ErrorCommon(FileConvertErrorType.AbortOperation, "Операция конвертирования отменена")));
-            var filesStatus = new PackageStatus(fileData, StatusProcessingProject.Error);
+           // new ErrorCommon(FileConvertErrorType.AbortOperation, "Операция конвертирования отменена")
+            var fileData = _filesData.Select(file => new FileStatus(file.FilePath, StatusProcessing.End, errorStatus));
+            var filesStatus = new PackageStatus(fileData, StatusProcessingProject.End);
             ChangeFilesStatus(filesStatus);
         }
 

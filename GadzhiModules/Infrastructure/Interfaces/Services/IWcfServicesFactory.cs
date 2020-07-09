@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -25,11 +26,11 @@ namespace GadzhiModules.Infrastructure.Interfaces.Services
         /// <summary>
         /// Выполнить функцию для сервиса конвертации и проверить на ошибки
         /// </summary>
-        Task<IResultValue<TResult>> UsingConvertingService<TResult>(Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>> fileConvertingFunc);
+        Task<IResultValue<TResult>> UsingConvertingService<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression);
 
         /// <summary>
         /// Освободить сервисы
         /// </summary>
-        void DisposeServices();
+        void DisposeConvertingService();
     }
 }

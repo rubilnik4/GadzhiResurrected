@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
@@ -81,6 +82,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Изменить статус всех файлов и присвоить ошибку
         /// </summary>
-        void ChangeAllFilesStatusAndMarkError();
+        void ChangeAllFilesStatusAndSetError(IErrorCommon errorStatus);
     }
 }

@@ -3,10 +3,12 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
@@ -131,9 +133,10 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_disposedValue) return;
 
-            AbortPropertiesConverting(true).ConfigureAwait(false);
+            AbortPropertiesCancellation().ConfigureAwait(false);
             _wcfServiceFactory?.Dispose();
             SaveConfiguration();
+
             if (disposing)
             {
                 // Ликвидация модели после отключения всех подписок

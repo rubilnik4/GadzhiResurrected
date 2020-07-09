@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Enums.LibraryData;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
@@ -12,13 +13,11 @@ using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
-using Nito.AsyncEx.Synchronous;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
 namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
@@ -49,14 +48,13 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             var packageDataRequest = await PrepareFilesToSending();
             if (!packageDataRequest.IsValid)
             {
-                await AbortPropertiesConverting(false);
+                await AbortPropertiesConverting(false, new ErrorCommon(FileConvertErrorType.FileNotFound, "Отсутствуют файлы для конвертации"));
                 await _dialogService.ShowMessage("Загрузите файлы для конвертирования");
                 return;
             }
 
-            SubscribeToIntermediateResponse();
-            //var sendResult = await SendFilesToConverting(packageDataRequest);
-            //if (sendResult.OkStatus) SubscribeToIntermediateResponse();
+            var sendResult = await SendFilesToConverting(packageDataRequest);
+            if (sendResult.OkStatus) SubscribeToIntermediateResponse();
         }
 
         /// <summary>
@@ -79,8 +77,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             WhereContinueAsync(packageResult => packageResult.OkStatus,
                 okFunc: packageResult => SendFilesToConvertingConnect(packageDataRequest, packageResult.Value),
                 badFunc: packageResult => packageResult.
-                                          ResultVoidAsyncBind(_ => AbortPropertiesConverting(false)).
-                                          ResultVoidAsyncBind(_ => _dialogService.ShowErrors(packageResult.Errors)).
+                                          ResultVoidAsyncBind(_ => AbortPropertiesCommunication()).
                                           MapAsync(package => package.ToResult()));
 
         /// <summary>
@@ -103,10 +100,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                 Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToIntermediateResponse)).
                 Where(_ => _statusProcessingInformation.IsConverting && !IsIntermediateResponseInProgress).
                 Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(UpdateStatusProcessing,
-                                                                                  () => IsIntermediateResponseInProgress = true,
-                                                                                  () => AbortPropertiesConverting(true).WaitAndUnwrapException(),
-                                                                                  () => IsIntermediateResponseInProgress = false).
-                                                       ResultVoidBadAsync(errors => _dialogService.ShowErrors(errors)))).
+                                                                                  beforeMethod: () => IsIntermediateResponseInProgress = true,
+                                                                                  finallyMethod: () => IsIntermediateResponseInProgress = false))).
                 Concat().
                 Subscribe());
 
@@ -115,6 +110,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
             await _wcfServiceFactory.UsingConvertingService(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id)).
+            ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
             ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).
             ResultValueOkAsync(packageStatus => packageStatus.StatusProcessingProject.
@@ -129,7 +125,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task GetCompleteFiles() =>
             await _wcfServiceFactory.UsingConvertingService(service => service.Operations.GetCompleteFiles(_packageData.Id)).
-            ResultVoidBadAsync(errors => _dialogService.ShowErrors(errors)).
+            ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultVoidOkAsync(packageDataResponse => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                                                                  packageDataResponse.FilesData, packageDataResponse.Id.ToString())).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse).
@@ -137,7 +133,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                                       MapBindAsync(_ => _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseAndWritten(packageDataResponse)).
                                                       VoidAsync(filesStatusWrite => _packageData.ChangeFilesStatus(filesStatusWrite))).
             ResultVoidOkAsync(_ => _wcfServiceFactory.UsingConvertingService(service => service.Operations.SetFilesDataLoadedByClient(_packageData.Id))).
-            ResultVoidBadAsync(errors => _dialogService.ShowErrors(errors));
+            ResultVoidBadBindAsync(_ => AbortPropertiesCommunication());
 
         /// <summary>
         /// Отмена операции
@@ -146,9 +142,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             await _statusProcessingInformation.
             WhereOkAsyncBind(status => status?.IsConverting == true,
                 okFunc: status => status.
-                        VoidBindAsync(_ => _wcfServiceFactory.UsingConvertingService(service => service.Operations.AbortConvertingById(_packageData.Id)).
-                                           MapAsync(result => result.ToResultValue(Unit.Value)).
-                                           ResultVoidBadAsync(errors => _dialogService.ShowErrors(errors))));
+                        VoidBindAsync(_ => _wcfServiceFactory.UsingConvertingService(service => service.Operations.AbortConvertingById(_packageData.Id))));
 
         /// <summary>
         /// Загрузить подписи из базы данных
@@ -170,18 +164,27 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Сбросить индикаторы конвертации
         /// </summary>
-        public async Task AbortPropertiesConverting(bool abortConnection)
+        public async Task AbortPropertiesConverting(bool abortConnection, IErrorCommon errorStatus)
         {
             IsIntermediateResponseInProgress = false;
 
             if (abortConnection) await AbortConverting();
+            if (_statusProcessingInformation?.IsConverting == true) _packageData?.ChangeAllFilesStatusAndSetError(errorStatus);
 
-            if (_statusProcessingInformation?.IsConverting == true)
-            {
-                _packageData?.ChangeAllFilesStatusAndMarkError();
-            }
             ClearSubscriptions();
         }
+
+        /// <summary>
+        /// Сбросить индикаторы конвертации при отмене конвертирования
+        /// </summary>
+        public async Task AbortPropertiesCancellation() =>
+            await AbortPropertiesConverting(true, new ErrorCommon(FileConvertErrorType.AbortOperation, "Отмена конвертирования"));
+
+        /// <summary>
+        /// Сбросить индикаторы конвертации при ошибке соединения с сервером
+        /// </summary>
+        private async Task AbortPropertiesCommunication() =>
+            await AbortPropertiesConverting(false, new ErrorCommon(FileConvertErrorType.Communication, "Связь с сервером не установлена"));
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования
@@ -189,7 +192,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private void ClearSubscriptions()
         {
             _statusProcessingSubscriptions?.Clear();
-            _wcfServiceFactory?.DisposeServices();
+            _wcfServiceFactory?.DisposeConvertingService();
         }
     }
 }

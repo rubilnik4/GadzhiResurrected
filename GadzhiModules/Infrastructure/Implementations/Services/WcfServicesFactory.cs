@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -51,10 +53,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// <summary>
         /// Выполнить функцию для сервиса конвертации и проверить на ошибки
         /// </summary>
-        public async Task<IResultValue<TResult>> UsingConvertingService<TResult>(Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>> fileConvertingFunc) =>
-            await GetFileConvertingServiceService().
-            Map(fileConvertingService => ExecuteAndHandleErrorAsync(() => fileConvertingFunc(fileConvertingService))).
-            ResultVoidBadAsync(errors => _loggerService.ErrorsLog(errors));
+        public async Task<IResultValue<TResult>> UsingConvertingService<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression) =>
+            await GetFileConvertingServiceService(IsInitConvertingService(ReflectionInfo.GetExpressionName(fileConvertingExpression))).
+            Map(fileConvertingService => ExecuteAndHandleErrorAsync(() => fileConvertingExpression.Compile()(fileConvertingService))).
+            ResultVoidBadAsync(errors => _loggerService.ErrorsLog(errors)).
+            WhereOkAsync(result => result.HasErrors || IsDisposeConvertingService(ReflectionInfo.GetExpressionName(fileConvertingExpression)),
+                okFunc: result => result.ResultVoid(_ => DisposeConvertingService()));
 
         /// <summary>
         /// Выполнить функцию для сервиса подписей и проверить на ошибки
@@ -69,7 +73,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// <summary>
         /// Освободить сервисы
         /// </summary>
-        public void DisposeServices()
+        public void DisposeConvertingService()
         {
             _signatureService?.Dispose();
             _signatureService = null;
@@ -78,14 +82,30 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// <summary>
         /// Инициализировать сервис конвертации
         /// </summary>
-        private IServiceConsumer<IFileConvertingClientService> GetFileConvertingServiceService() =>
-            _signatureService ??= _container.Resolve<IServiceConsumer<IFileConvertingClientService>>();
+        private IServiceConsumer<IFileConvertingClientService> GetFileConvertingServiceService(bool reinitialize) =>
+            reinitialize 
+                ? _signatureService = _container.Resolve<IServiceConsumer<IFileConvertingClientService>>() 
+                : _signatureService ??= _container.Resolve<IServiceConsumer<IFileConvertingClientService>>();
+
 
         /// <summary>
         /// Инициализировать сервис для получения подписей
         /// </summary>
         private IServiceConsumer<ISignatureClientService> GetSignatureService() =>
             _container.Resolve<IServiceConsumer<ISignatureClientService>>();
+
+        /// <summary>
+        /// Необходимость инициализации сервиса при вызове метода
+        /// </summary>
+        private static bool IsInitConvertingService(string methodName) =>
+            nameof(IFileConvertingClientService.SendFiles) == methodName;
+
+        /// <summary>
+        /// Необходимость освобождения сервиса при вызове метода
+        /// </summary>
+        private static bool IsDisposeConvertingService(string methodName) =>
+            nameof(IFileConvertingClientService.SetFilesDataLoadedByClient) == methodName ||
+            nameof(IFileConvertingClientService.AbortConvertingById) == methodName;
 
         #region IDisposable Support
         private bool _disposedValue;
