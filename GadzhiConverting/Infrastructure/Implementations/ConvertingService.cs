@@ -164,9 +164,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await packageServer.
             WhereContinueAsyncBind(package => package.IsValid,
                 okFunc: package => package.
-                                    Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {package.Id}")).
-                                    Map(_ => ConvertingFilesData(package)).
-                                    MapAsync(ReplyPackageIsComplete),
+                                   Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {package.Id}")).
+                                   Map(_ => ConvertingFilesData(package)).
+                                   MapAsync(ReplyPackageIsComplete),
                 badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
             VoidBindAsync(SendResponse);
 

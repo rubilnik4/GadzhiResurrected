@@ -58,7 +58,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             { 
                 "Ошибка | " + ConverterErrorType.ErrorTypeToString(error.ErrorType),
                 errorConverting.Description,
-                errorConverting.Exception.Message}).
+                errorConverting.Exception?.Message}).
             Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).
             Map(messageText => { Console.WriteLine(messageText); return Unit.Value; });
     }

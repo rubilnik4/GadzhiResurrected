@@ -60,7 +60,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public static async Task<IResultError> ExecuteAndHandleErrorAsync(Func<Task> asyncMethod, Action beforeMethod = null,
                                                                           Action catchMethod = null, Action finallyMethod = null,
                                                                           IErrorCommon errorMessage = null) =>
-            await ExecuteAndHandleErrorAsync(() => { asyncMethod.Invoke(); return Task.FromResult(Unit.Value); },
+            await ExecuteAndHandleErrorAsync(async () =>  { await asyncMethod.Invoke(); return Task.FromResult(Unit.Value); },
                                              beforeMethod, catchMethod, finallyMethod, errorMessage).
             MapAsync(result => result.ToResult());
 
