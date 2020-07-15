@@ -17,6 +17,7 @@ using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
+using GadzhiModules.Infrastructure.Implementations.Services;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
@@ -74,7 +75,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task<IResultError> SendFilesToConverting(PackageDataRequestClient packageDataRequest) =>
             await _wcfServiceFactory.UsingConvertingService(service => service.Operations.SendFiles(packageDataRequest)).
-            WhereContinueAsync(packageResult => packageResult.OkStatus,
+            WhereContinueAsyncBind(packageResult => packageResult.OkStatus,
                 okFunc: packageResult => SendFilesToConvertingConnect(packageDataRequest, packageResult.Value),
                 badFunc: packageResult => packageResult.
                                           ResultVoidAsyncBind(_ => AbortPropertiesCommunication()).
@@ -109,7 +110,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
-            await _wcfServiceFactory.UsingConvertingService(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id)).
+            await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id), 
+                                                                 new RetryService(5)).
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
             ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).

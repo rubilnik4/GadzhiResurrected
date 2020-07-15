@@ -38,10 +38,8 @@ namespace GadzhiCommon.Extensions.Functional.Result
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             var awaitedThis = await @this;
-            if (awaitedThis.HasErrors) return new ResultValue<TValueOut>(awaitedThis.Errors);
 
-            return await okFunc.Invoke(awaitedThis.Value).
-                          MapAsync(okResult => new ResultValue<TValueOut>(okResult, awaitedThis.Errors));
+            return await awaitedThis.ResultValueOkAsync(okFunc);
         }
 
         /// <summary>
@@ -62,6 +60,21 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнение положительного условия результирующего ответа со связыванием или возвращение предыдущей ошибки в результирующем ответе асинхронно
         /// </summary>   
+        public static async Task<IResultValue<TValueOut>> ResultValueOkBindAsync<TValueIn, TValueOut>(this Task<IResultValue<TValueIn>> @this,
+                                                                                                      Func<TValueIn, Task<IResultValue<TValueOut>>> okFunc)
+        {
+            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
+            var awaitedThis = await @this;
+
+            return await awaitedThis.ResultValueOkBindAsync(okFunc);
+        }
+
+
+        /// <summary>
+        /// Выполнение положительного условия результирующего ответа со связыванием или возвращение предыдущей ошибки в результирующем ответе асинхронно
+        /// </summary>   
         public static async Task<IResultValue<TValueOut>> ResultValueOkBindAsync<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
                                                                                                       Func<TValueIn, Task<IResultValue<TValueOut>>> okFunc)
         {
@@ -74,19 +87,19 @@ namespace GadzhiCommon.Extensions.Functional.Result
         }
 
         /// <summary>
-        /// Выполнение положительного условия результирующего ответа со связыванием или возвращение предыдущей ошибки в результирующем ответе асинхронно
+        /// Выполнение отрицательного условия результирующего ответа со связыванием или возвращение предыдущей ошибки в результирующем ответе асинхронно
         /// </summary>   
-        public static async Task<IResultValue<TValueOut>> ResultValueOkBindAsync<TValueIn, TValueOut>(this Task<IResultValue<TValueIn>> @this,
-                                                                                                      Func<TValueIn, Task<IResultValue<TValueOut>>> okFunc)
+        public static async Task<IResultValue<TValue>> ResultValueBadBindAsync<TValue>(this Task<IResultValue<TValue>> @this,
+                                                                                       Func<IReadOnlyList<IErrorCommon>, Task<IResultValue<TValue>>> badFunc)
         {
-            if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
+            if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             var awaitedThis = await @this;
 
-            return awaitedThis.HasErrors
-                ? new ResultValue<TValueOut>(awaitedThis.Errors)
-                : await okFunc.Invoke(awaitedThis.Value);
+            return awaitedThis.OkStatus
+                ? awaitedThis
+                : await badFunc.Invoke(awaitedThis.Errors);
         }
     }
 }
