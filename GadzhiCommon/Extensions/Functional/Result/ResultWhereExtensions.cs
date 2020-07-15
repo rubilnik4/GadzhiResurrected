@@ -39,7 +39,7 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// </summary>      
         public static IResultValue<TValueOut> ResultOkBad<TValueIn, TValueOut>(this IResultValue<TValueIn> @this,
                                                                                Func<TValueIn, TValueOut> okFunc,
-                                                                               Func<TValueIn, TValueOut> badFunc)
+                                                                               Func<IReadOnlyList<IErrorCommon>, TValueOut> badFunc)
         {
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
@@ -48,7 +48,7 @@ namespace GadzhiCommon.Extensions.Functional.Result
             return @this.OkStatus ?
                    okFunc.Invoke(@this.Value).
                           Map(okResult => new ResultValue<TValueOut>(okResult, @this.Errors)) :
-                   badFunc.Invoke(@this.Value).
+                   badFunc.Invoke(@this.Errors).
                            Map(badResult => new ResultValue<TValueOut>(badResult, @this.Errors));
         }
 
@@ -96,14 +96,14 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Выполнение негативного условия или возвращение положительного условия в результирующем ответе
         /// </summary>   
-        public static IResultValue<TValue> ResultValueBad<TValue>(this IResultValue<TValue> @this, Func<TValue, TValue> badFunc)
+        public static IResultValue<TValue> ResultValueBad<TValue>(this IResultValue<TValue> @this, Func<IReadOnlyList<IErrorCommon>, TValue> badFunc)
         {
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             if (@this.OkStatus) return @this;
 
-            return badFunc.Invoke(@this.Value).
+            return badFunc.Invoke(@this.Errors).
                    Map(badResult => new ResultValue<TValue>(badResult));
         }
 
@@ -116,8 +116,8 @@ namespace GadzhiCommon.Extensions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            return @this.HasErrors 
-                ? new ResultValue<TValueOut>(@this.Errors) 
+            return @this.HasErrors
+                ? new ResultValue<TValueOut>(@this.Errors)
                 : okFunc.Invoke(@this.Value);
         }
 
@@ -125,14 +125,14 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// Выполнение негативного условия результирующего ответа или возвращение положительного в результирующем ответе
         /// </summary>   
         public static IResultValue<TValue> ResultValueBadBind<TValue>(this IResultValue<TValue> @this,
-                                                                      Func<TValue, IResultValue<TValue>> badFunc)
+                                                                      Func<IReadOnlyList<IErrorCommon>, IResultValue<TValue>> badFunc)
         {
             if (badFunc == null) throw new ArgumentNullException(nameof(badFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            return @this.OkStatus 
-                ? @this 
-                : badFunc.Invoke(@this.Value);
+            return @this.OkStatus
+                ? @this
+                : badFunc.Invoke(@this.Errors);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace GadzhiCommon.Extensions.Functional.Result
             if (okFunc == null) throw new ArgumentNullException(nameof(okFunc));
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            return @this.HasErrors 
+            return @this.HasErrors
                 ? new ResultValue<TValueOut>(@this.Errors)
                 : ExecuteBindResultValue(() => okFunc(@this.Value), errorMessage);
         }

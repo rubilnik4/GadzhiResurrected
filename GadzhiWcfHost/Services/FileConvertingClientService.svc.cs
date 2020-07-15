@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using GadzhiCommon.Enums.LibraryData;
-using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Services
 {
@@ -26,8 +24,6 @@ namespace GadzhiWcfHost.Services
         public FileConvertingClientService(IApplicationClientConverting applicationClientConverting)
         {
             _applicationClientConverting = applicationClientConverting;
-
-            OperationContext.Current.InstanceContext.Closed += InstanceContext_Closed;
         }
 
         /// <summary>
@@ -58,12 +54,5 @@ namespace GadzhiWcfHost.Services
         /// Отмена операции по номеру ID
         /// </summary>       
         public async Task AbortConvertingById(Guid packageId) => await _applicationClientConverting.AbortConvertingById(packageId);
-
-      
-
-        private static void InstanceContext_Closed(object sender, EventArgs e)
-        {
-            // Session closed here
-        }
     }
 }

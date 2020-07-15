@@ -5,6 +5,7 @@ using ChannelAdam.ServiceModel;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.Contracts.Signatures;
+using GadzhiModules.Infrastructure.Implementations.Services;
 
 namespace GadzhiModules.Infrastructure.Interfaces.Services
 {
@@ -27,6 +28,12 @@ namespace GadzhiModules.Infrastructure.Interfaces.Services
         /// Выполнить функцию для сервиса конвертации и проверить на ошибки
         /// </summary>
         Task<IResultValue<TResult>> UsingConvertingService<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression);
+
+        /// <summary>
+        /// Выполнить функцию для сервиса конвертации, проверить на ошибки и выполнить повторное подключение при сбое
+        /// </summary>
+        Task<IResultValue<TResult>> UsingConvertingServiceRetry<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression, 
+                                                                         RetryService retryService);
 
         /// <summary>
         /// Освободить сервисы

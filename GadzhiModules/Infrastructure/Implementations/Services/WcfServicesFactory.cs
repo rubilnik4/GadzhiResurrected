@@ -7,6 +7,7 @@ using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOClient.Contracts.FilesConvert;
@@ -46,18 +47,34 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// Выполнить действие для сервиса конвертации и проверить на ошибки
         /// </summary>
         public async Task<IResultError> UsingConvertingService(Func<IServiceConsumer<IFileConvertingClientService>, Task> fileConvertingFunc) =>
-            await UsingConvertingService(fileConvertingService => Unit.Value.
-                                                                  VoidBindAsync(_ => fileConvertingFunc(fileConvertingService))).
+            await UsingConvertingService(fileConvertingService => Unit.Value.VoidBindAsync(_ => fileConvertingFunc(fileConvertingService))).
             MapAsync(result => result.ToResult());
 
         /// <summary>
         /// Выполнить функцию для сервиса конвертации и проверить на ошибки
         /// </summary>
         public async Task<IResultValue<TResult>> UsingConvertingService<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression) =>
+            await UsingConvertingServiceRetry(fileConvertingExpression, new RetryService());
+
+        /// <summary>
+        /// Выполнить функцию для сервиса конвертации, проверить на ошибки и выполнить повторное подключение при сбое
+        /// </summary>
+        public async Task<IResultValue<TResult>> UsingConvertingServiceRetry<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression,
+                                                                                      RetryService retryService) =>
+            await UsingConvertingServiceDefault(fileConvertingExpression).
+            ResultVoidBadBindAsync(_ => Task.Delay(RetryService.RetryDelaySeconds)).
+            ResultValueBadBindAsync(errors => retryService.IsRetryLast()
+                                              ? Task.FromResult((IResultValue<TResult>)new ResultValue<TResult>(errors))
+                                              : UsingConvertingServiceRetry(fileConvertingExpression, retryService.NextRetry()));
+
+        /// <summary>
+        /// Выполнить функцию для сервиса конвертации и проверить на ошибки
+        /// </summary>
+        private async Task<IResultValue<TResult>> UsingConvertingServiceDefault<TResult>(Expression<Func<IServiceConsumer<IFileConvertingClientService>, Task<TResult>>> fileConvertingExpression) =>
             await GetFileConvertingServiceService(IsInitConvertingService(ReflectionInfo.GetExpressionName(fileConvertingExpression))).
             Map(fileConvertingService => ExecuteAndHandleErrorAsync(() => fileConvertingExpression.Compile()(fileConvertingService))).
             ResultVoidBadAsync(errors => _loggerService.ErrorsLog(errors)).
-            WhereOkAsync(result => result.HasErrors || IsDisposeConvertingService(ReflectionInfo.GetExpressionName(fileConvertingExpression)),
+            WhereOkAsync(result => IsDisposeConvertingService(ReflectionInfo.GetExpressionName(fileConvertingExpression)),
                 okFunc: result => result.ResultVoid(_ => DisposeConvertingService()));
 
         /// <summary>
@@ -83,8 +100,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// Инициализировать сервис конвертации
         /// </summary>
         private IServiceConsumer<IFileConvertingClientService> GetFileConvertingServiceService(bool reinitialize) =>
-            reinitialize 
-                ? _signatureService = _container.Resolve<IServiceConsumer<IFileConvertingClientService>>() 
+            reinitialize
+                ? _signatureService = _container.Resolve<IServiceConsumer<IFileConvertingClientService>>()
                 : _signatureService ??= _container.Resolve<IServiceConsumer<IFileConvertingClientService>>();
 
 
