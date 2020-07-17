@@ -111,7 +111,11 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
             await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id), 
+<<<<<<< HEAD
                                                                  new RetryService(5)).
+=======
+                                                                 new RetryService(ConvertingSettings.RetryCount)).
+>>>>>>> master
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
             ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).
@@ -126,7 +130,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить отконвертированные файлы
         /// </summary>
         private async Task GetCompleteFiles() =>
-            await _wcfServiceFactory.UsingConvertingService(service => service.Operations.GetCompleteFiles(_packageData.Id)).
+            await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.GetCompleteFiles(_packageData.Id),
+                                                                 new RetryService(ConvertingSettings.RetryCount)).
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultVoidOkAsync(packageDataResponse => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                                                                  packageDataResponse.FilesData, packageDataResponse.Id.ToString())).
