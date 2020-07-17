@@ -110,13 +110,9 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
-            await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id), 
-<<<<<<< HEAD
-                                                                 new RetryService(5)).
-=======
+            await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id),
                                                                  new RetryService(ConvertingSettings.RetryCount)).
->>>>>>> master
-            ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
+                                     ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
             ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).
             ResultValueOkAsync(packageStatus => packageStatus.StatusProcessingProject.

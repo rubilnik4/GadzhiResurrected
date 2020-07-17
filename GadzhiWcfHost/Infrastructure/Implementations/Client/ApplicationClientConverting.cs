@@ -91,7 +91,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         public async Task AbortConvertingById(Guid packageId) =>
             await _filesDataClientService.AbortConvertingById(packageId).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Abort, 
-                                                 ReflectionInfo.GetMethodBase(this), AuthLogging.GetParameterAuth(packageId)));
+                                                       ReflectionInfo.GetMethodBase(this), AuthLogging.GetParameterAuth(packageId)));
 
         /// <summary>
         /// Загрузить имена из базы данных
