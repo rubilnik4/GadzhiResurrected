@@ -84,7 +84,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         public async Task<IResultError> SendMicrostationDataToDatabase(string filePathMicrostation, MicrostationDataType microstationDataType) =>
             await new ResultValue<string>(filePathMicrostation, new ErrorCommon(FileConvertErrorType.FileNotFound,
                                                                                 $"Не найден файл данных Microstation {microstationDataType}")).
-                  ResultVoid(_ => _messagingService.ShowAndLogMessage($"Обработка данных {microstationDataType} Microstation")).
+                  ResultVoid(_ => _messagingService.ShowMessage($"Обработка данных {microstationDataType} Microstation")).
                   ResultValueOkBindAsync(MicrostationDataBaseToZip).
                   ResultValueOkAsync(zip => new MicrostationDataFile("MicrostationSignatureDataBase", zip)).
                   ResultVoidAsyncBind(dataFile => UploadMicrostationDataToDataBase(dataFile, microstationDataType)).
@@ -96,13 +96,13 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private void ShowErrors(IResultError resultError) =>
             resultError.
-            Void(_ => _messagingService.ShowAndLogMessage("----------------")).
+            Void(_ => _messagingService.ShowMessage("----------------")).
             WhereContinue(result => result.OkStatus,
                 okFunc: result => result.
-                                  Void(_ => _messagingService.ShowAndLogMessage("Обработка данных успешно завершена")),
+                                  Void(_ => _messagingService.ShowMessage("Обработка данных успешно завершена")),
                 badFunc: result => result.
-                                   Void(_ => _messagingService.ShowAndLogMessage("Обработка ошибок")).
-                                   Void(_ => _messagingService.ShowAndLogErrors(result.Errors)));
+                                   Void(_ => _messagingService.ShowMessage("Обработка ошибок")).
+                                   Void(_ => _messagingService.ShowErrors(result.Errors)));
         /// <summary>
         /// Открыть файл Microstation
         /// </summary>
@@ -112,7 +112,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             ResultValueContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
                 okFunc: filePath => filePath,
                 badFunc: filePath => new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл {filePath} не существует")).
-            ResultVoidOk(filePath => _messagingService.ShowAndLogMessage($"Загрузка файла {filePath}")).
+            ResultVoidOk(filePath => _messagingService.ShowMessage($"Загрузка файла {filePath}")).
             ResultValueOkBind(filePath => _applicationMicrostation.OpenDocument(filePath).ToResultValueFromApplication());
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private IResultCollection<ISignatureLibrary> GetSignatures() =>
             _applicationMicrostation.AttachLibrary(ProjectSignatureSettings.SignatureMicrostationFileName).
             ToResultCollectionFromApplication().
-            ResultVoid(_ => _messagingService.ShowAndLogMessage("Загрузка подписей")).
+            ResultVoid(_ => _messagingService.ShowMessage("Загрузка подписей")).
             ResultValueOk(libraryElements => libraryElements.
                                              Select(libraryElement => new SignatureLibrary(libraryElement.Name, 
                                                                                            PersonInformation.GetFromFullName(libraryElement.Description))).
@@ -147,7 +147,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
             ResultVoidOk(cellElement => cellElement.LineWeight = 7).
             ToResultValueFromApplication().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage($"Обработка подписи {signatureLibrary.PersonInformation.FullName}")).
+            ResultVoidOk(_ => _messagingService.ShowMessage($"Обработка подписи {signatureLibrary.PersonInformation.FullName}")).
             ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
 
         /// <summary>
@@ -175,9 +175,9 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
             await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
-            Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
+            Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
             VoidBindAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
-            VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
+            VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
 
         /// <summary>
         /// Запаковать файл базы Microstation и преобразовать в байтовый массив
@@ -194,13 +194,13 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private async Task UploadMicrostationDataToDataBase(MicrostationDataFile microstationDataFile, MicrostationDataType microstationDataType) =>
             await ConverterMicrostationDataToDto.MicrostationDataFileToDto(microstationDataFile).
-                  Void(_ => _messagingService.ShowAndLogMessage("Отправка данных в базу")).
+                  Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
                   VoidBindAsync(dataFile => microstationDataType switch
                   {
                       MicrostationDataType.Signature => _fileConvertingServerService.Operations.UploadSignaturesMicrostation(dataFile),
                       MicrostationDataType.Stamp => _fileConvertingServerService.Operations.UploadStampsMicrostation(dataFile),
                       _ => throw new ArgumentOutOfRangeException(nameof(microstationDataType), microstationDataType, @"Не найден тип данных Microstation")
                   }).
-                  VoidAsync(_ => _messagingService.ShowAndLogMessage("Данные записаны в базе"));
+                  VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
     }
 }

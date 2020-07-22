@@ -205,8 +205,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\HostSystemInformation.cs" />
     <Compile Include="Infrastructure\Implementations\Client\ApplicationClientConverting.cs" />
-    <Compile Include="Infrastructure\Implementations\Client\Authentication.cs" />
-    <Compile Include="Infrastructure\Implementations\Client\Logger\AuthLogging.cs" />
+    <Compile Include="Infrastructure\Implementations\Authentication\Authentication.cs" />
+    <Compile Include="Infrastructure\Implementations\Logger\AuthLogging.cs" />
     <Compile Include="Infrastructure\Implementations\Server\ApplicationServerConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\Client\IApplicationClientConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\Server\IApplicationServerConverting.cs" />

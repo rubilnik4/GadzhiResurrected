@@ -7,6 +7,7 @@ using GadzhiApplicationCommon.Models.Implementation.Resources;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
 using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiConverting.Extensions;
@@ -36,6 +37,7 @@ namespace GadzhiConverting.DependencyInjection
         /// <summary>
         /// Зарегистрировать зависимости
         /// </summary>
+        [Logger]
         public static void ConfigureContainer(IUnityContainer container)
         {
             var clientEndpoints = new ClientEndpoints();
@@ -67,6 +69,7 @@ namespace GadzhiConverting.DependencyInjection
         /// <summary>
         /// Регистрация приложений Microstation и Word
         /// </summary>
+        [Logger]
         private static void RegisterConvertingApplications(IUnityContainer container)
         {
             var signatureConverter = container.Resolve<ISignatureConverter>();

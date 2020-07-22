@@ -12,16 +12,26 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         /// <summary>
         /// Отобразить и записать в журнал сообщение
         /// </summary>     
-        void ShowAndLogMessage(string message);
+        void ShowMessage(string message);
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибку
         /// </summary>       
-        void ShowAndLogError(IErrorCommon errorConverting);
+        void ShowError(IErrorCommon errorConverting);
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибки
         /// </summary>       
+        void ShowErrors(IEnumerable<IErrorCommon> errorsConverting);
+
+        /// <summary>
+        /// Отобразить и записать в лог ошибку
+        /// </summary>
+        void ShowAndLogError(IErrorCommon errorConverting);
+
+        /// <summary>
+        /// Отобразить и записать в лог ошибки
+        /// </summary>
         void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting);
     }
 }

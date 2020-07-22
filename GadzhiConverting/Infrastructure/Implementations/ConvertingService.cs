@@ -18,6 +18,10 @@ using System.Linq;
 using System.Diagnostics;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Implementations.Reflection;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Enums;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using static GadzhiCommon.Extensions.Functional.ExecuteTaskHandler;
 
@@ -28,6 +32,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// </summary>
     public class ConvertingService : IConvertingService
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         /// <summary>
         /// Контейнер зависимостей
         /// </summary>
@@ -100,12 +109,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         /// <summary>
         /// Запустить процесс конвертирования
-        /// </summary>      
+        /// </summary>
+        [Logger]
         public void StartConverting()
         {
             if (!CheckSignatures()) return;
 
-            _messagingService.ShowAndLogMessage("Запуск процесса конвертирования...");
+            _messagingService.ShowMessage("Запуск процесса конвертирования...");
             KillPreviousRunProcesses();
 
             SubscribeToDataBase();
@@ -125,24 +135,24 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Подписаться на обновление пакетов из базы данных
         /// </summary>
-        private void SubscribeToDataBase()
-        {
-            var subscribe = Observable.Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToServer)).
-                                       Where(_ => !IsConverting).
-                                       Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                                                         beforeMethod: () => IsConverting = true,
-                                                                                                         finallyMethod: () => IsConverting = false))).
-                                       Concat().
-                                       Subscribe();
-            _convertingUpdaterSubscriptions.Add(subscribe);
-        }
+        private void SubscribeToDataBase() =>
+            _convertingUpdaterSubscriptions.
+            Add(Observable.
+                Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToServer)).
+                Where(_ => !IsConverting).
+                Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
+                                                                                  beforeMethod: () => IsConverting = true,
+                                                                                  finallyMethod: () => IsConverting = false))).
+                Concat().
+                Subscribe());
 
         /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
-        /// </summary>        
+        /// </summary>
+        [Logger]
         private async Task ConvertingFirstInQueuePackage()
         {
-            _messagingService.ShowAndLogMessage("Запрос пакета в базе...");
+            _messagingService.ShowMessage("Запрос пакета в базе...");
 
             var packageDataRequest = await _fileConvertingServerService.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName);
             if (packageDataRequest != null)
@@ -164,7 +174,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             await packageServer.
             WhereContinueAsyncBind(package => package.IsValid,
                 okFunc: package => package.
-                                   Void(_ => _messagingService.ShowAndLogMessage($"Конвертация пакета {package.Id}")).
+                                   Void(_ => _messagingService.ShowMessage($"Конвертация пакета {package.Id}")).
+                                   Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation,
+                                                                        ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString())).
                                    Map(_ => ConvertingFilesData(package)).
                                    MapAsync(ReplyPackageIsComplete),
                 badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
@@ -191,8 +203,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сообщить об обработанном пакете, если процесс не был прерван
         /// </summary>
-        private static IPackageServer ReplyPackageIsComplete(IPackageServer packageServer) =>
-            packageServer.SetStatusProcessingProject(StatusProcessingProject.ConvertingComplete);
+        private IPackageServer ReplyPackageIsComplete(IPackageServer packageServer) =>
+            packageServer.SetStatusProcessingProject(StatusProcessingProject.ConvertingComplete).
+            Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Reply, 
+                                                 ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString()));
 
         /// <summary>
         /// Отправить промежуточный отчет
@@ -213,17 +227,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 case StatusProcessingProject.ConvertingComplete:
                 case StatusProcessingProject.Error:
                     {
-                        _messagingService.ShowAndLogMessage("Отправка данных в базу...");
+                        _messagingService.ShowMessage("Отправка данных в базу...");
 
-                        PackageDataResponseServer packageDataResponse = await _converterServerPackageDataToDto.FilesDataToResponse(packageServer);
+                        var packageDataResponse = await _converterServerPackageDataToDto.FilesDataToResponse(packageServer);
                         await _fileConvertingServerService.Operations.UpdateFromResponse(packageDataResponse);
 
-                        _messagingService.ShowAndLogMessage("Конвертация пакета закончена");
+                        _messagingService.ShowMessage("Конвертация пакета закончена");
+                        _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString());
                         break;
                     }
                 //в случае если пользователь отменил конвертацию
                 case StatusProcessingProject.Abort:
-                    _messagingService.ShowAndLogMessage("Конвертация пакета прервана");
+                    _messagingService.ShowMessage("Конвертация пакета прервана");
+                    _loggerService.InfoLog("Abort converting by user");
                     break;
             }
 
@@ -232,10 +248,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         /// <summary>
         /// Отмена конвертирования
-        /// </summary>      
+        /// </summary>
+        [Logger] 
         private async Task AbortConverting()
         {
-            _messagingService.ShowAndLogMessage("Отмена выполнения конвертирования");
+            _messagingService.ShowMessage("Отмена выполнения конвертирования");
             if (_idPackage.HasValue)
             {
                 await _fileConvertingServerService.Operations.AbortConvertingById(_idPackage.Value);
@@ -271,10 +288,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Сообщить об отсутствии пакетов на конвертирование
         /// </summary>
+        [Logger]
         private async Task QueueIsEmpty()
         {
             await Task.Delay(500);
-            _messagingService.ShowAndLogMessage("Очередь пакетов пуста...");
+            _messagingService.ShowMessage("Очередь пакетов пуста...");
         }
 
         /// <summary>
@@ -291,6 +309,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Удалить все предыдущие запущенные процессы
         /// </summary>
+        [Logger]
         private static void KillPreviousRunProcesses()
         {
             var processes = Process.GetProcesses().
@@ -312,7 +331,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedDataCheck).Ticks);
             if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
-                _messagingService.ShowAndLogMessage("Очистка неиспользуемых пакетов...");
+                _messagingService.ShowMessage("Очистка неиспользуемых пакетов...");
                 await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
@@ -329,7 +348,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedErrorDataCheck).Ticks);
             if (timeElapsed.TotalDays > ProjectSettings.IntervalHoursToDeleteUnusedErrorPackages)
             {
-                _messagingService.ShowAndLogMessage("Очистка пакетов с ошибками...");
+                _messagingService.ShowMessage("Очистка пакетов с ошибками...");
                 await _fileConvertingServerService.Operations.DeleteAllUnusedErrorPackagesUntilDate(dateTimeNow);
 
                 Properties.Settings.Default.UnusedErrorDataCheck = new TimeSpan(dateTimeNow.Ticks);
@@ -346,7 +365,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.ConvertingDataFolderCheck).Ticks);
             if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
-                _messagingService.ShowAndLogMessage("Очистка пространства на жестком диске...");
+                _messagingService.ShowMessage("Очистка пространства на жестком диске...");
                 await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory, DateTime.Now,
                                                                                     ProjectSettings.IntervalHoursToDeleteUnusedPackages));
 

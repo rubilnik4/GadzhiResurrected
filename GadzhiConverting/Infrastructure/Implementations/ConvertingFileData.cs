@@ -51,7 +51,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
             await fileDataServer.
-            Void(fileData => _messagingService.ShowAndLogMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
+            Void(fileData => _messagingService.ShowMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             WhereContinueAsyncBind(fileData => fileData.IsValidByAttemptingCount,
                 okFunc: fileData => Task.Run(() => ConvertingFile(fileData, convertingSettings)),
                 badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
@@ -85,7 +85,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>      
         private IFileDataServer GetErrorByAttemptingCount(IFileDataServer fileDataServer) =>
             new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования файла").
-            Void(errorDataServer => _messagingService.ShowAndLogError(errorDataServer)).
+            Void(errorDataServer => _messagingService.ShowError(errorDataServer)).
             Map(errorDataServer => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, errorDataServer));
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>   
         private IResultValue<IDocumentLibrary> LoadAndSaveDocument(IFilePath filePath) =>
             new ResultError().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Загрузка файла")).
+            ResultVoidOk(_ => _messagingService.ShowMessage("Загрузка файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer, filePath.FileExtension)).
             ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath).
                                             WhereContinue(copyResult => copyResult,
@@ -101,7 +101,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                 badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
                                             ToResultValue<string>())).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
-            Void(result => _messagingService.ShowAndLogErrors(result.Errors));
+            Void(result => _messagingService.ShowErrors(result.Errors));
 
         /// <summary>
         /// Получить путь к сохраненному файлу для обработки
@@ -124,11 +124,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultCollection<IFileDataSourceServer> CreatePdf(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                    IConvertingSettings convertingSettings) =>
             new ResultError().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Создание файлов PDF")).
+            ResultVoidOk(_ => _messagingService.ShowMessage("Создание файлов PDF")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(fileDataServer.FilePathServer, FileExtension.Pdf)).
             ResultValueOkBind(filePdfPath => _applicationConverting.CreatePdfFile(documentLibrary, fileDataServer.ChangeServerPath(filePdfPath),
                                                                                   convertingSettings, fileDataServer.ColorPrint)).
-            Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
+            Void(result => _messagingService.ShowErrors(result.Errors)).
             ToResultCollection();
 
         /// <summary>
@@ -147,19 +147,19 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private IResultValue<IFileDataSourceServer> ExportFile(IDocumentLibrary documentLibrary, IFilePath filePath, StampDocumentType stampDocumentType) =>
             new ResultError().
-            ResultVoidOk(_ => _messagingService.ShowAndLogMessage("Экспорт файла")).
+            ResultVoidOk(_ => _messagingService.ShowMessage("Экспорт файла")).
             ResultValueOkBind(_ => CreateSavingPathByExtension(filePath.FilePathServer,
                                                                _applicationConverting.GetExportFileExtension(filePath.FileExtension))).
             ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath), 
                                                                                         stampDocumentType)).
-            Void(result => _messagingService.ShowAndLogErrors(result.Errors));
+            Void(result => _messagingService.ShowErrors(result.Errors));
 
         /// <summary>
         /// Закрыть файл
         /// </summary>
         private IResultError CloseFile(IDocumentLibrary documentLibrary, string filePathServer, string fileNameClient) =>
             _applicationConverting.CloseDocument(documentLibrary, filePathServer).
-            Void(_ => _messagingService.ShowAndLogMessage($"Конвертация файла {fileNameClient} завершена"));
+            Void(_ => _messagingService.ShowMessage($"Конвертация файла {fileNameClient} завершена"));
 
         /// <summary>
         /// Создать папку для сохранения отконвертированных файлов по типу расширения
@@ -186,7 +186,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 errors = fileDataSources.Select(fileDataSource => new ErrorCommon(FileConvertErrorType.FileNotFound,
                                                                                   $"Файл {fileDataSource.FilePathServer} не найден"))
             }).
-            Void(filesOrErrors => _messagingService.ShowAndLogErrors(filesOrErrors.errors)).
+            Void(filesOrErrors => _messagingService.ShowErrors(filesOrErrors.errors)).
             Map(filesOrErrors => new ResultCollection<IFileDataSourceServer>(fileDataSourceResult.Value.Except(filesOrErrors.fileDataSources),
                                                                              fileDataSourceResult.Errors.Concat(filesOrErrors.errors)));
 

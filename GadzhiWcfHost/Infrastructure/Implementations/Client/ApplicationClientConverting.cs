@@ -12,7 +12,7 @@ using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiDTOBase.TransferModels.Signatures;
-using GadzhiWcfHost.Infrastructure.Implementations.Client.Logger;
+using GadzhiWcfHost.Infrastructure.Implementations.Logger;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Client
 {
@@ -51,7 +51,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
                                              AuthLogging.GetParameterAuth(packageDataRequest?.Id));
             if (packageDataRequest == null) return new PackageDataIntermediateResponseClient();
 
-            await QueueFilesData(packageDataRequest, Authentication.GetIdentityName());
+            await QueueFilesData(packageDataRequest, Authentication.Authentication.GetIdentityName());
             return await GetIntermediateFilesDataResponseById(packageDataRequest.Id);
         }
 
@@ -99,7 +99,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         public async Task<IList<SignatureDto>> GetSignaturesNames() =>
             await _signaturesService.GetSignaturesNames().
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Response, 
-                                                       ReflectionInfo.GetMethodBase(this), Authentication.GetIdentityName()));
+                                                       ReflectionInfo.GetMethodBase(this), Authentication.Authentication.GetIdentityName()));
 
         /// <summary>
         /// Загрузить отделы из базы данных
@@ -107,6 +107,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         public async Task<IList<DepartmentType>> GetSignaturesDepartments() =>
             await _signaturesService.GetSignaturesDepartments().
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Response, 
-                                                       ReflectionInfo.GetMethodBase(this), Authentication.GetIdentityName()));
+                                                       ReflectionInfo.GetMethodBase(this), Authentication.Authentication.GetIdentityName()));
     }
 }

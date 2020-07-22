@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using AspectInjector.Broker;
-using GadzhiCommon.Extensions.Functional;
-using GadzhiCommon.Infrastructure.Interfaces.Logger;
-using GadzhiCommon.Models.Enums;
 
 namespace GadzhiCommon.Infrastructure.Implementations.Logger
 {

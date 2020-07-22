@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using System.Linq;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -19,6 +21,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// </summary>
     public class ProjectSettings : IProjectSettings
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
         /// </summary>     
@@ -104,21 +111,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Загрузить стартовый набор ресурсов для начала конвертирования
         /// </summary>
+        [Logger]
         public ConvertingResources GetConvertingResourcesLoaded()
         {
-            _messagingService.ShowAndLogMessage("Обработка предварительных данных...");
+            _messagingService.ShowMessage("Обработка предварительных данных...");
             var convertingResources = GetConvertingResourcesLazy();
-            _messagingService.ShowAndLogMessage("Загрузка подписей и штампов завершена...");
 
             var errors = convertingResources.SignaturesMicrostation.Errors.
                          Concat(convertingResources.StampMicrostation.Errors).ToList();
             if (errors.Count > 0)
             {
-                _messagingService.ShowAndLogMessage("Обнаружены ошибки...");
+                _messagingService.ShowMessage("Обнаружены ошибки...");
                 _messagingService.ShowAndLogErrors(errors);
             }
 
-            _messagingService.ShowAndLogMessage("Обработка предварительных данных завершена...");
+            _messagingService.ShowMessage("Обработка предварительных данных завершена...");
             return convertingResources;
         }
 

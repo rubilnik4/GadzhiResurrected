@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Web.Services.Description;
+using GadzhiWcfHost.Infrastructure.Implementations.Client;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations.Client.Logger
+namespace GadzhiWcfHost.Infrastructure.Implementations.Logger
 {
     /// <summary>
     /// Параметры логгирования с аутентификацией
@@ -12,6 +12,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client.Logger
         /// Добавить к параметру значение аутентификации
         /// </summary>
         public static string GetParameterAuth<TValue>(TValue parameter) =>
-            $"[{Authentication.GetIdentityName()}] {parameter?.ToString() ?? String.Empty}";
+            $"[{Authentication.Authentication.GetIdentityName()}] {parameter?.ToString() ?? String.Empty}";
     }
 }

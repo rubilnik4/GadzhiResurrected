@@ -1,8 +1,6 @@
-﻿using GadzhiDTOClient.TransferModels.FilesConvert;
-using System;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 
-namespace GadzhiWcfHost.Infrastructure.Implementations.Client
+namespace GadzhiWcfHost.Infrastructure.Implementations.Authentication
 {
     /// <summary>
     /// Идентификация пользователя

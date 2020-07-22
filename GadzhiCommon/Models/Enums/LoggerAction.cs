@@ -15,5 +15,7 @@
         Request,
         Response,
         Abort,
+        Operation,
+        Reply
     }
 }

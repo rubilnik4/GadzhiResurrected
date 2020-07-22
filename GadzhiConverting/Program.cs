@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiConverting.DependencyInjection;
 using GadzhiConverting.Helpers;
 using Unity;
@@ -15,6 +16,7 @@ namespace GadzhiConverting
         /// </summary>
         private static readonly IUnityContainer Container = new UnityContainer();
 
+        [Logger("----------Start application----------")]
         private static void Main()
         {
             NativeMethods.Handler += Handler;
@@ -31,6 +33,7 @@ namespace GadzhiConverting
         /// <summary>
         /// Событие закрытия окна
         /// </summary>
+        [Logger("----------Close application----------")]
         private static bool Handler(NativeMethods.CtrlType sig)
         {
             Container.Dispose();

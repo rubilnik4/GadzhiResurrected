@@ -7,6 +7,7 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
 {
@@ -15,6 +16,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// </summary>
     public static class ConverterPrintingConfiguration
     {
+        [Logger]
         public static IPrintersInformation ToPrintersInformation()
         {           
             var config = RegisterPrintersInformationSection.GetConfig();

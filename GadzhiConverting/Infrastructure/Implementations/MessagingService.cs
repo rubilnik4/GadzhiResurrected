@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Extensions.Collection;
-using GadzhiCommon.Infrastructure.Implementations.Converters;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.Functional;
 
@@ -18,25 +18,32 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class MessagingService : IMessagingService
     {
         /// <summary>
-        /// Отобразить сообщение
-        /// </summary>        
-        public virtual void ShowAndLogMessage(string message)
-        {
-            ShowMessage(message);
-        }
+        /// Журнал системных сообщений
+        /// </summary>
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
-        /// Отобразить и добавить в журнал ошибку
-        /// </summary>            
-        public virtual void ShowAndLogError(IErrorCommon errorConverting)
-        {
-            ShowError(errorConverting);
-        }
+        /// Отобразить сообщение
+        /// </summary>
+        public void ShowMessage(string message) => Console.WriteLine(message);
+
+        /// <summary>
+        /// Отобразить сообщение
+        /// </summary>
+        public void ShowError(IErrorCommon errorConverting) =>
+            errorConverting?.
+            Map(error => new List<string>()
+            {
+                "Ошибка | " + ConverterErrorType.ErrorTypeToString(error.ErrorType),
+                errorConverting.Description,
+                errorConverting.Exception?.Message}).
+            Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).
+            Map(messageText => { Console.WriteLine(messageText); return Unit.Value; });
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибки
         /// </summary>       
-        public virtual void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting)
+        public void ShowErrors(IEnumerable<IErrorCommon> errorsConverting)
         {
             foreach (var error in errorsConverting.EmptyIfNull())
             {
@@ -45,21 +52,21 @@ namespace GadzhiConverting.Infrastructure.Implementations
         }
 
         /// <summary>
-        /// Отобразить сообщение
+        /// Отобразить и записать в лог ошибку
         /// </summary>
-        protected virtual void ShowMessage(string message) => Console.WriteLine(message);
+        public void ShowAndLogError(IErrorCommon errorConverting) =>
+            errorConverting.
+            Void(ShowError).
+            Void(error => _loggerService.ErrorLog(error));
 
         /// <summary>
-        /// Отобразить сообщение
+        /// Отобразить и записать в лог ошибки
         /// </summary>
-        protected virtual void ShowError(IErrorCommon errorConverting) =>
-            errorConverting?.
-            Map(error => new List<string>()
-            { 
-                "Ошибка | " + ConverterErrorType.ErrorTypeToString(error.ErrorType),
-                errorConverting.Description,
-                errorConverting.Exception?.Message}).
-            Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).
-            Map(messageText => { Console.WriteLine(messageText); return Unit.Value; });
+        public void ShowAndLogErrors(IEnumerable<IErrorCommon> errorsConverting) =>
+            errorsConverting.
+            Void(ShowErrors).
+            Void(error => _loggerService.ErrorsLog(error));
+
+
     }
 }
