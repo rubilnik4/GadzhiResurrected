@@ -6,6 +6,7 @@ using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
+using GadzhiCommon.Infrastructure.Implementations.Services;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Implementations.Functional;
@@ -24,14 +25,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
     public class WcfServicesFactory : IWcfServicesFactory
     {
         /// <summary>
-        /// Контейнер зависимостей
-        /// </summary>
-        private readonly IUnityContainer _container;
-
-        /// <summary>
         /// Журнал системных сообщений
         /// </summary>
         private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
+        /// <summary>
+        /// Контейнер зависимостей
+        /// </summary>
+        private readonly IUnityContainer _container;
 
         public WcfServicesFactory(IUnityContainer container)
         {

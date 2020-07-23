@@ -148,6 +148,9 @@
     <Compile Include="Infrastructure\Implementations\Logger\LoggerFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\LoggerFormatMessages.cs" />
     <Compile Include="Infrastructure\Implementations\Reflection\ReflectionInfo.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\RetryService.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\WcfServiceFactory.cs" />
+    <Compile Include="Infrastructure\Interfaces\Services\IWcfServiceFactory.cs" />
     <Compile Include="Models\Enums\LoggerAction.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
+using GadzhiCommon.Infrastructure.Implementations.Services;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.Contracts.Signatures;

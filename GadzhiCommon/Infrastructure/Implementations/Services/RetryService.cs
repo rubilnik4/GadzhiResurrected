@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GadzhiModules.Infrastructure.Implementations.Services
+namespace GadzhiCommon.Infrastructure.Implementations.Services
 {
     /// <summary>
     /// Параметры повторных обращений к сервису
