@@ -75,7 +75,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Отправить файлы для конвертации
         /// </summary>
         private async Task<IResultError> SendFilesToConverting(PackageDataRequestClient packageDataRequest) =>
-            await _wcfServiceFactory.UsingConvertingService(service => service.Operations.SendFiles(packageDataRequest)).
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingService(service => service.Operations.SendFiles(packageDataRequest)).
             WhereContinueAsyncBind(packageResult => packageResult.OkStatus,
                 okFunc: packageResult => SendFilesToConvertingConnect(packageDataRequest, packageResult.Value),
                 badFunc: packageResult => packageResult.
@@ -85,7 +85,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Отправить файлы для конвертации после подтверждения сервера
         /// </summary>
-        private async Task<IResultError> SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest, PackageDataIntermediateResponseClient packageDataResponse) =>
+        private async Task<IResultError> SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest, 
+                                                                      PackageDataIntermediateResponseClient packageDataResponse) =>
             await packageDataResponse.
             Void(_ => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                   packageDataRequest.FilesData, packageDataRequest.Id.ToString())).
@@ -111,7 +112,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
-            await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id),
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id),
                                                                  new RetryService(ConvertingSettings.RetryCount)).
                                      ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
@@ -127,8 +128,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить отконвертированные файлы
         /// </summary>
         private async Task GetCompleteFiles() =>
-            await _wcfServiceFactory.UsingConvertingServiceRetry(service => service.Operations.GetCompleteFiles(_packageData.Id),
-                                                                 new RetryService(ConvertingSettings.RetryCount)).
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.GetCompleteFiles(_packageData.Id),
+                                                                                            new RetryService(ConvertingSettings.RetryCount)).
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultVoidOkAsync(packageDataResponse => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                                                                  packageDataResponse.FilesData, packageDataResponse.Id.ToString())).
@@ -136,7 +137,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                                       VoidAsync(filesStatusBeforeWrite => _packageData.ChangeFilesStatus(filesStatusBeforeWrite)).
                                                       MapBindAsync(_ => _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseAndWritten(packageDataResponse)).
                                                       VoidAsync(filesStatusWrite => _packageData.ChangeFilesStatus(filesStatusWrite))).
-            ResultVoidOkAsync(_ => _wcfServiceFactory.UsingConvertingService(service => service.Operations.SetFilesDataLoadedByClient(_packageData.Id))).
+            ResultVoidOkBindAsync(_ => _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingService(service => service.Operations.SetFilesDataLoadedByClient(_packageData.Id))).
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication());
 
         /// <summary>
@@ -146,15 +147,16 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             await _statusProcessingInformation.
             WhereOkAsyncBind(status => status?.IsConverting == true,
                 okFunc: status => status.
-                        VoidBindAsync(_ => _wcfServiceFactory.UsingConvertingService(service => service.Operations.AbortConvertingById(_packageData.Id))));
+                        VoidBindAsync(_ => _wcfClientServiceFactory.ConvertingClientServiceFactory.
+                                           UsingService(service => service.Operations.AbortConvertingById(_packageData.Id))));
 
         /// <summary>
         /// Загрузить подписи из базы данных
         /// </summary>
         [Logger]
         public async Task<IResultCollection<ISignatureLibrary>> GetSignaturesNames() =>
-            await _wcfServiceFactory.UsingSignatureService((service) => service.Operations.GetSignaturesNames().
-                                                                        MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto)).
+            await _wcfClientServiceFactory.SignatureClientServiceFactory.UsingService(service => service.Operations.GetSignaturesNames().
+                                                                                                 MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto)).
             MapAsync(result => result.ToResultCollection());
 
         /// <summary>
@@ -162,7 +164,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         [Logger]
         public async Task<IResultCollection<DepartmentType>> GetSignaturesDepartments() =>
-            await _wcfServiceFactory.UsingSignatureService((service) => service.Operations.GetSignaturesDepartments()).
+            await _wcfClientServiceFactory.SignatureClientServiceFactory.UsingService(service => service.Operations.GetSignaturesDepartments()).
             MapAsync(result => result.ToResultCollection());
 
         /// <summary>
@@ -196,7 +198,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private void ClearSubscriptions()
         {
             _statusProcessingSubscriptions?.Clear();
-            _wcfServiceFactory?.DisposeConvertingService();
+            _wcfClientServiceFactory?.Dispose();
         }
     }
 }

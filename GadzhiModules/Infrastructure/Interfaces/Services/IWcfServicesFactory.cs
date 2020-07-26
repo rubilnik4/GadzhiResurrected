@@ -13,7 +13,7 @@ namespace GadzhiModules.Infrastructure.Interfaces.Services
     /// <summary>
     /// Фабрика для создания сервисов WCF
     /// </summary>
-    public interface IWcfServicesFactory: IDisposable
+    public interface IWcfClientServicesFactory: IDisposable
     {
         /// <summary>
         /// Выполнить функцию для сервиса подписей и проверить на ошибки

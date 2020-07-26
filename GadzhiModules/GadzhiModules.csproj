@@ -226,10 +226,12 @@
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
-    <Compile Include="Infrastructure\Implementations\Services\WcfServicesFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\SignatureClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\WcfClientServicesFactory.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
-    <Compile Include="Infrastructure\Interfaces\Services\IWcfServicesFactory.cs" />
+    <Compile Include="Infrastructure\Interfaces\Services\IWcfClientServicesFactory.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />

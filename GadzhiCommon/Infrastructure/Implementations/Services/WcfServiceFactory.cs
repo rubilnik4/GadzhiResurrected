@@ -18,13 +18,23 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
     /// <summary>
     /// Фабрика для создания подключения у WCF сервису
     /// </summary>
-    public abstract class WcfServiceFactory<TService> : IWcfServiceFactory, IDisposable
+    public abstract class WcfServiceFactory<TService> : IWcfServiceFactory<TService>, IDisposable
         where TService : class, IDisposable
     {
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
         private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
+        /// <summary>
+        /// Функция инициализации сервиса конвертации
+        /// </summary>
+        private readonly Func<TService> _getService;
+
+        protected WcfServiceFactory(Func<TService> getService)
+        {
+            _getService = getService ?? throw new ArgumentNullException(nameof(getService));
+        }
 
         /// <summary>
         /// Сервис конвертации
@@ -36,13 +46,8 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         /// </summary>
         private TService GetService(bool reinitialize) =>
             reinitialize
-            ? _service = GetService()
-            : _service ??= GetService();
-
-        /// <summary>
-        /// Инициализировать сервис конвертации
-        /// </summary>
-        protected abstract TService GetService();
+            ? _service = _getService()
+            : _service ??= _getService();
 
         /// <summary>
         /// Необходимость инициализации сервиса при вызове метода

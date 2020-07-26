@@ -65,7 +65,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
         /// </summary>
         private static void RegisterServices(IUnityContainer unityContainer)
         {
-            unityContainer.RegisterType<IWcfServicesFactory, WcfServicesFactory>();
 
             var clientEndpoints = new ClientEndpoints();
 
@@ -76,6 +75,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
             string signatureEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(ISignatureClientService));
             unityContainer.RegisterFactory<IServiceConsumer<ISignatureClientService>>(unity =>
                 ServiceConsumerFactory.Create<ISignatureClientService>(signatureEndpoint));
+
+            unityContainer.RegisterFactory<IWcfClientServicesFactory>(unity =>
+                new WcfClientServicesFactory(() => unity.Resolve<IServiceConsumer<IFileConvertingClientService>>(),
+                                             () => unity.Resolve<IServiceConsumer<ISignatureClientService>>()));
+
         }
     }
 }

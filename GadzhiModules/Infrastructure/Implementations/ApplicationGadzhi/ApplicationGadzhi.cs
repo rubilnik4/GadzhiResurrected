@@ -37,7 +37,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Фабрика для создания сервисов WCF
         /// </summary>
-        private readonly IWcfServicesFactory _wcfServiceFactory;
+        private readonly IWcfClientServicesFactory _wcfClientServiceFactory;
 
         /// <summary>
         /// Стандартные диалоговые окна
@@ -68,7 +68,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                  IProjectSettings projectSettings,
                                  IFileSystemOperations fileSystemOperations,
                                  IPackageData packageInfoProject,
-                                 IWcfServicesFactory wcfServiceFactory,
+                                 IWcfClientServicesFactory wcfClientServiceFactory,
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation)
         {
@@ -76,7 +76,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
             _packageData = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _wcfServiceFactory = wcfServiceFactory ?? throw new ArgumentNullException(nameof(wcfServiceFactory));
+            _wcfClientServiceFactory = wcfClientServiceFactory ?? throw new ArgumentNullException(nameof(wcfClientServiceFactory));
             _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
             _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
 
@@ -134,7 +134,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (_disposedValue) return;
 
             AbortPropertiesCancellation().ConfigureAwait(false);
-            _wcfServiceFactory?.Dispose();
+            _wcfClientServiceFactory?.Dispose();
             SaveConfiguration();
 
             if (disposing)
