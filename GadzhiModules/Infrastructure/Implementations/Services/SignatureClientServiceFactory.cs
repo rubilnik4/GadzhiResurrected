@@ -6,7 +6,7 @@ using GadzhiDTOClient.Contracts.Signatures;
 namespace GadzhiModules.Infrastructure.Implementations.Services
 {
     /// <summary>
-    /// Фабрика для создания подключения у WCF сервису подписей для клиента
+    /// Фабрика для создания подключения к WCF сервису подписей для клиента
     /// </summary>
     public class SignatureClientServiceFactory : WcfServiceFactory<IServiceConsumer<ISignatureClientService>>
     {

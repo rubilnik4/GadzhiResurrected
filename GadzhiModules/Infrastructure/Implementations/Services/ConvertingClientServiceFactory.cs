@@ -6,7 +6,7 @@ using GadzhiDTOClient.Contracts.FilesConvert;
 namespace GadzhiModules.Infrastructure.Implementations.Services
 {
     /// <summary>
-    /// Фабрика для создания подключения у WCF сервису конвертирования для клиента
+    /// Фабрика для создания подключения к WCF сервису конвертирования для клиента
     /// </summary>
     public class ConvertingClientServiceFactory : WcfServiceFactory<IServiceConsumer<IFileConvertingClientService>>
     {

@@ -198,6 +198,7 @@
     <Content Include="Services\FileConvertingServerService.svc" />
     <Content Include="Services\FileConvertingClientService.svc" />
     <Content Include="Services\SignatureClientService.svc" />
+    <Content Include="Services\SignatureServerService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +220,9 @@
     </Compile>
     <Compile Include="Services\SignatureClientService.svc.cs">
       <DependentUpon>SignatureClientService.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Services\SignatureServerService.svc.cs">
+      <DependentUpon>SignatureServerService.svc</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup />

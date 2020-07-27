@@ -38,8 +38,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
         private static Func<IList<SignatureFileRequest>, IList<ISignatureFileApp>> GetSignaturesSyncList(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
-                                                                                                            ISignatureConverter signatureConverter,
-                                                                                                            string signatureFolder) =>
+                                                                                                         ISignatureConverter signatureConverter, string signatureFolder) =>
             (signaturesFileRequest) =>
                 signaturesFileRequest?.
                 Select(signatureRequest => signatureRequest.PersonId).

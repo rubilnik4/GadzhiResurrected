@@ -113,7 +113,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
             await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id),
-                                                                 new RetryService(ConvertingSettings.RetryCount)).
+                                                                                            new RetryService(ConvertingSettings.RetryCount)).
                                      ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
             ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).

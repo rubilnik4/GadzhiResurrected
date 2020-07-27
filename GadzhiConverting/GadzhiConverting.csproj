@@ -212,6 +212,9 @@
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
     <Compile Include="Infrastructure\Implementations\MessagingService.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\ConvertingServerServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\SignatureServerServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\WcfServerServicesFactory.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConvertingDocument.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\ISignatureConverter.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
+    <Compile Include="Infrastructure\Interfaces\Services\IWcfServerSevicesFactory.cs" />
     <Compile Include="Models\Converters\ColorPrintToApplicationConverter.cs" />
     <Compile Include="Models\Converters\DepartmentToApplicationConverter.cs" />
     <Compile Include="Models\Converters\ErrorApplicationConverter.cs" />
