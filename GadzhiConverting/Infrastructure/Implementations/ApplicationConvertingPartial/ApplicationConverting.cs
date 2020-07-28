@@ -70,7 +70,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             {
                 FileExtension.Dgn => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationMicrostation),
                 FileExtension.Docx => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
-                _ => new ErrorCommon(FileConvertErrorType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtension} не найдена").
+                _ => new ErrorCommon(ErrorConvertingType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtension} не найдена").
                      ToResultValue<IApplicationLibrary<IDocumentLibrary>>()
             };
     }

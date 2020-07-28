@@ -82,7 +82,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             if (String.IsNullOrWhiteSpace(directoryPath) ||
                 !await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataRequest.FileDataSource))
             {
-                return new FileSavedCheck(new ErrorCommon(FileConvertErrorType.RejectToSave, $"Невозможно сохранить файл {filePath}"));
+                return new FileSavedCheck(new ErrorCommon(ErrorConvertingType.RejectToSave, $"Невозможно сохранить файл {filePath}"));
             }
 
             return new FileSavedCheck(filePath);

@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
+using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using Nito.AsyncEx.Synchronous;
@@ -31,9 +33,9 @@ namespace GadzhiConverting.Models.Implementations
         private readonly string _stampMicrostationFileName;
 
         /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
-        /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
+        /// Фабрика для создания подключения к WCF сервису подписей для сервера
+        /// </summary>    
+        private readonly SignatureServerServiceFactory _signatureServerServiceFactory;
 
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -41,7 +43,7 @@ namespace GadzhiConverting.Models.Implementations
         private readonly IFileSystemOperations _fileSystemOperations;
 
         public ConvertingResources(string signatureMicrostationFileName, string stampMicrostationFileName,
-                                   IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
+                                   SignatureServerServiceFactory signatureServerServiceFactory,
                                    IFileSystemOperations fileSystemOperations)
         {
             if (String.IsNullOrWhiteSpace(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
@@ -49,24 +51,24 @@ namespace GadzhiConverting.Models.Implementations
 
             _signatureMicrostationFileName = signatureMicrostationFileName;
             _stampMicrostationFileName = stampMicrostationFileName;
-            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
+            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
         }
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        private Task<IReadOnlyList<ISignatureLibrary>> SignatureNamesTask => GetSignatureNames();
+        private Task<IResultCollection<ISignatureLibrary>> SignatureNamesTask => GetSignatureNames();
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        private IReadOnlyList<ISignatureLibrary> _signatureNames;
+        private IResultCollection<ISignatureLibrary> _signatureNames;
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        public IReadOnlyList<ISignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.WaitAndUnwrapException();
+        public IResultCollection<ISignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.WaitAndUnwrapException();
 
         /// <summary>
         /// Подписи Microstation
@@ -99,31 +101,28 @@ namespace GadzhiConverting.Models.Implementations
         public IResultValue<string> StampMicrostation => _stampMicrostation ??= StampMicrostationTask.WaitAndUnwrapException();
 
         /// <summary>
-        /// Загрузить отложенные данные
-        /// </summary>
-        public async Task LoadData() => await Task.WhenAll(SignatureNamesTask, SignaturesMicrostationTask, StampMicrostationTask);
-
-        /// <summary>
         /// Получить подписи для Microstation
         /// </summary>
         private async Task<IResultValue<string>> GetSignaturesMicrostation() =>
-            await _fileConvertingServerService.Operations.GetSignaturesMicrostation().
-                  MapAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
-                  MapBindAsync(signatures => _fileSystemOperations.UnzipFileAndSaveWithResult(_signatureMicrostationFileName, signatures.MicrostationDataBase));
+            await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesMicrostation()).
+            ResultValueOkAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
+            ResultValueOkBindAsync(signatures => _fileSystemOperations.UnzipFileAndSaveWithResult(_signatureMicrostationFileName, 
+                                                                                                  signatures.MicrostationDataBase));
 
         /// <summary>
         /// Получить штампы для Microstation
         /// </summary>
         private async Task<IResultValue<string>> GetStampsMicrostation() =>
-            await _fileConvertingServerService.Operations.GetStampsMicrostation().
-                  MapAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
-                  MapBindAsync(stamps => _fileSystemOperations.UnzipFileAndSaveWithResult(_stampMicrostationFileName, stamps.MicrostationDataBase));
-
+            await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetStampsMicrostation()).
+            ResultValueOkAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
+            ResultValueOkBindAsync(stamps => _fileSystemOperations.UnzipFileAndSaveWithResult(_stampMicrostationFileName, 
+                                                                                              stamps.MicrostationDataBase));
         /// <summary>
         /// Загрузить имена для подписей
         /// </summary>
-        private async Task<IReadOnlyList<ISignatureLibrary>> GetSignatureNames() =>
-            await _fileConvertingServerService.Operations.GetSignaturesNames().
-            MapAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto);
+        private async Task<IResultCollection<ISignatureLibrary>> GetSignatureNames() =>
+            await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesNames()).
+            ResultValueOkAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
+            MapAsync(result => result.ToResultCollection());
     }
 }

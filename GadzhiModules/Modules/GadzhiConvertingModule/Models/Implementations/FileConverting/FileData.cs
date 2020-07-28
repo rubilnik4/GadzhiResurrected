@@ -79,7 +79,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// Статус ошибок
         /// </summary>
         public StatusError StatusError =>
-            ConverterErrorType.ErrorsTypeToStatusError(FileErrors.Select(error => error.ErrorType));
+            ConverterErrorType.ErrorsTypeToStatusError(FileErrors.Select(error => error.ErrorConvertingType));
 
         /// <summary>
         /// Тип ошибки при конвертации файла

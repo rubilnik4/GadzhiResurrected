@@ -50,7 +50,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             var packageDataRequest = await PrepareFilesToSending();
             if (!packageDataRequest.IsValid)
             {
-                await AbortPropertiesConverting(false, new ErrorCommon(FileConvertErrorType.FileNotFound, "Отсутствуют файлы для конвертации"));
+                await AbortPropertiesConverting(false, new ErrorCommon(ErrorConvertingType.FileNotFound, "Отсутствуют файлы для конвертации"));
                 await _dialogService.ShowMessage("Загрузите файлы для конвертирования");
                 return;
             }
@@ -112,8 +112,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
-            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id),
-                                                                                            new RetryService(ConvertingSettings.RetryCount)).
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id)).
                                      ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
             ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).
@@ -128,8 +127,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить отконвертированные файлы
         /// </summary>
         private async Task GetCompleteFiles() =>
-            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.GetCompleteFiles(_packageData.Id),
-                                                                                            new RetryService(ConvertingSettings.RetryCount)).
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.GetCompleteFiles(_packageData.Id)).
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultVoidOkAsync(packageDataResponse => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                                                                  packageDataResponse.FilesData, packageDataResponse.Id.ToString())).
@@ -184,13 +182,13 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Сбросить индикаторы конвертации при отмене конвертирования
         /// </summary>
         public async Task AbortPropertiesCancellation() =>
-            await AbortPropertiesConverting(true, new ErrorCommon(FileConvertErrorType.AbortOperation, "Отмена конвертирования"));
+            await AbortPropertiesConverting(true, new ErrorCommon(ErrorConvertingType.AbortOperation, "Отмена конвертирования"));
 
         /// <summary>
         /// Сбросить индикаторы конвертации при ошибке соединения с сервером
         /// </summary>
         private async Task AbortPropertiesCommunication() =>
-            await AbortPropertiesConverting(false, new ErrorCommon(FileConvertErrorType.Communication, "Связь с сервером не установлена"));
+            await AbortPropertiesConverting(false, new ErrorCommon(ErrorConvertingType.Communication, "Связь с сервером не установлена"));
 
         /// <summary>
         /// Очистить подписки на обновление пакета конвертирования

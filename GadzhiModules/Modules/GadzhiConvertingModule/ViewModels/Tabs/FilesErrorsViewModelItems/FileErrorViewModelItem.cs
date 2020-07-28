@@ -10,12 +10,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErro
     /// </summary>
     public class FileErrorViewModelItem: IFormattable
     {
-        public FileErrorViewModelItem( string fileName, FileConvertErrorType errorType, string errorDescription)
+        public FileErrorViewModelItem( string fileName, ErrorConvertingType errorConvertingType, string errorDescription)
         {
             if (String.IsNullOrWhiteSpace(fileName)) throw new ArgumentNullException(nameof(fileName));
 
             FileName = fileName;
-            ErrorType = errorType;
+            ErrorConvertingType = errorConvertingType;
             ErrorDescription = errorDescription ?? throw new ArgumentNullException(nameof(errorDescription));
         }
 
@@ -27,12 +27,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErro
         /// <summary>
         /// Тип ошибки
         /// </summary>
-        public FileConvertErrorType ErrorType { get; }
+        public ErrorConvertingType ErrorConvertingType { get; }
 
         /// <summary>
         /// Тип ошибки в строковом значении
         /// </summary>
-        public string ErrorTypeString => ConverterErrorType.ErrorTypeToString(ErrorType);
+        public string ErrorTypeString => ConverterErrorType.ErrorTypeToString(ErrorConvertingType);
 
         /// <summary>
         /// Описание ошибки

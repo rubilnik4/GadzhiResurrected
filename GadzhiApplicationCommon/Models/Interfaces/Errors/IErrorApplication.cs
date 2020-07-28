@@ -19,7 +19,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.Errors
         /// <summary>
         /// Описание ошибки
         /// </summary>
-        string ErrorDescription { get; }
+        string Description { get; }
 
         /// <summary>
         /// Преобразовать в ответ

@@ -32,14 +32,24 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         private readonly Func<TService> _getService;
 
         protected WcfServiceFactory(Func<TService> getService)
+            :this(getService, new RetryService())
+        { }
+
+        protected WcfServiceFactory(Func<TService> getService, RetryService retryService)
         {
             _getService = getService ?? throw new ArgumentNullException(nameof(getService));
+            _retryService = retryService ?? throw new ArgumentNullException(nameof(retryService));
         }
 
         /// <summary>
         /// Сервис конвертации
         /// </summary>
         private TService _service;
+
+        /// <summary>
+        /// Параметры повторных обращений к сервису
+        /// </summary>
+        private readonly RetryService _retryService;
 
         /// <summary>
         /// Получить сервис конвертации
@@ -71,6 +81,12 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         /// </summary>
         public async Task<IResultValue<TResult>> UsingService<TResult>(Expression<Func<TService, Task<TResult>>> serviceExpression) =>
             await UsingServiceRetry(serviceExpression, new RetryService());
+
+        /// <summary>
+        /// Выполнить функцию для сервиса, проверить на ошибки и выполнить повторное подключение при сбое со стандартными параметрами
+        /// </summary>
+        public async Task<IResultValue<TResult>> UsingServiceRetry<TResult>(Expression<Func<TService, Task<TResult>>> serviceExpression) =>
+            await UsingServiceRetry(serviceExpression, _retryService);
 
         /// <summary>
         /// Выполнить функцию для сервиса, проверить на ошибки и выполнить повторное подключение при сбое

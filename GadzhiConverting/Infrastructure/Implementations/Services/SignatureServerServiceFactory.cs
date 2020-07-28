@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Infrastructure.Implementations.Services;
 using GadzhiDTOServer.Contracts.Signatures;
@@ -10,8 +12,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Services
     /// </summary>
     public class SignatureServerServiceFactory : WcfServiceFactory<IServiceConsumer<ISignatureServerService>>
     {
-        public SignatureServerServiceFactory(Func<IServiceConsumer<ISignatureServerService>> getSignatureService)
-            : base(getSignatureService)
+        public SignatureServerServiceFactory(Func<IServiceConsumer<ISignatureServerService>> getSignatureService, RetryService retryService)
+            : base(getSignatureService, retryService)
         { }
 
         /// <summary>

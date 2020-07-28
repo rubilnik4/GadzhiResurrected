@@ -80,7 +80,7 @@ namespace GadzhiConverting.DependencyInjection
             unityContainer.RegisterFactory<IServiceConsumer<ISignatureServerService>>(unity =>
                 ServiceConsumerFactory.Create<ISignatureServerService>(signatureEndpoint));
 
-            unityContainer.RegisterFactory<IWcfServerSevicesFactory>(unity =>
+            unityContainer.RegisterFactory<IWcfServerServicesFactory>(unity =>
                 new WcfServerServicesFactory(() => unity.Resolve<IServiceConsumer<IFileConvertingServerService>>(),
                                              () => unity.Resolve<IServiceConsumer<ISignatureServerService>>()));
         }
@@ -93,12 +93,12 @@ namespace GadzhiConverting.DependencyInjection
         {
             var signatureConverter = container.Resolve<ISignatureConverter>();
             var projectSettings = container.Resolve<IProjectSettings>();
-            var fileConvertingServerService = container.Resolve<IServiceConsumer<IFileConvertingServerService>>();
+            var wcfServerServicesFactory = container.Resolve<IWcfServerServicesFactory>();
 
             var convertingResources = projectSettings.ConvertingResources;
-            var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.ToApplication(),
-                                                                     GetSignaturesSync(fileConvertingServerService, signatureConverter, 
-                                                                                       ProjectSettings.DataSignaturesFolder));
+            var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.Value.ToApplication(),
+                                                                     GetSignaturesSync(wcfServerServicesFactory.SignatureServerServiceFactory, 
+                                                                                       signatureConverter, ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>
                 new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching, 

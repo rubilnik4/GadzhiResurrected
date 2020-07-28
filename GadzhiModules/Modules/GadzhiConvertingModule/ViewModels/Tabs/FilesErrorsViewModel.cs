@@ -90,6 +90,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private static IEnumerable<FileErrorViewModelItem> GetErrorViewModelItemsFromFileData(IFileData fileData) =>
             fileData.FileErrors.
-            Select(errorType => new FileErrorViewModelItem(fileData.FileName, errorType.ErrorType, errorType.Description));
+            Select(errorType => new FileErrorViewModelItem(fileData.FileName, errorType.ErrorConvertingType, errorType.Description));
     }
 }

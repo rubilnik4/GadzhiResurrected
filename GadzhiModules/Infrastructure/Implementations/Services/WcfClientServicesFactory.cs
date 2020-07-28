@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
+using GadzhiCommon.Infrastructure.Implementations.Services;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Interfaces.Services;
@@ -19,9 +20,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
             if (getConvertingService == null) throw new ArgumentNullException(nameof(getConvertingService));
             if (getSignatureService == null) throw new ArgumentNullException(nameof(getSignatureService));
 
-            ConvertingClientServiceFactory = new ConvertingClientServiceFactory(getConvertingService);
+            ConvertingClientServiceFactory = new ConvertingClientServiceFactory(getConvertingService, RetryServiceDefault);
             SignatureClientServiceFactory = new SignatureClientServiceFactory(getSignatureService);
         }
+
+        /// <summary>
+        /// Количество повторов при разрыве соединения
+        /// </summary>
+        public const int RETRY_COUNT = 3;
 
         /// <summary>
         /// Фабрика для создания сервиса конвертации
@@ -32,6 +38,11 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// Фабрика для создания сервиса подписей
         /// </summary>
         public SignatureClientServiceFactory SignatureClientServiceFactory { get; }
+
+        /// <summary>
+        /// Параметры повторных подключений для серверной части
+        /// </summary>
+        public static RetryService RetryServiceDefault => new RetryService(RETRY_COUNT);
 
         #region IDisposable Support
         private bool _disposedValue;

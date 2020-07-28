@@ -18,7 +18,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Errors
             Map(x => x.FileDataSourceError).CustomType<BinaryBlobType>().LazyLoad();
             HasMany(x => x.FileErrorsStore).Component(x => 
                                                  {
-                                                     x.Map(e => e.FileConvertErrorType);
+                                                     x.Map(e => e.ErrorConvertingType);
                                                      x.Map(e => e.ErrorDescription);
                                                  });
             References(x => x.PackageDataEntityError);

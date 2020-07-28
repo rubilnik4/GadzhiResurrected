@@ -66,7 +66,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             {
                 var error = new ErrorCommonResponse()
                 {
-                    FileConvertErrorType = FileConvertErrorType.UnknownError,
+                    ErrorConvertingType = ErrorConvertingType.UnknownError,
                     ErrorDescription = "Конвертирование пакета не может быть завершено"
                 };
                 fileConvertErrorType = new List<ErrorCommonResponse> { error };
@@ -126,7 +126,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             (errorComponent != null)
             ? new ErrorCommonResponse()
             {
-                FileConvertErrorType = errorComponent.FileConvertErrorType,
+                ErrorConvertingType = errorComponent.ErrorConvertingType,
                 ErrorDescription = errorComponent.ErrorDescription
             }
             : throw new ArgumentNullException(nameof(errorComponent));

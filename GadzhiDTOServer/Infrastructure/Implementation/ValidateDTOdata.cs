@@ -30,15 +30,15 @@ namespace GadzhiDTOServer.Infrastructure.Implementation
 
             if (!isValidName)
             {
-                errors.Add(new ErrorCommon(FileConvertErrorType.IncorrectFileName, $"Некорректное имя файла {fileName}"));
+                errors.Add(new ErrorCommon(ErrorConvertingType.IncorrectFileName, $"Некорректное имя файла {fileName}"));
             }
             if (!isValidExtension)
             {
-                errors.Add(new ErrorCommon(FileConvertErrorType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}"));
+                errors.Add(new ErrorCommon(ErrorConvertingType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}"));
             }
             if (!isValidDataSource)
             {
-                errors.Add(new ErrorCommon(FileConvertErrorType.IncorrectDataSource, $"Некорректные входные данные конвертации"));
+                errors.Add(new ErrorCommon(ErrorConvertingType.IncorrectDataSource, $"Некорректные входные данные конвертации"));
             }
 
             return errors;

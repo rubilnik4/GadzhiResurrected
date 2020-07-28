@@ -34,7 +34,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             errorConverting?.
             Map(error => new List<string>()
             {
-                "Ошибка | " + ConverterErrorType.ErrorTypeToString(error.ErrorType),
+                "Ошибка | " + ConverterErrorType.ErrorTypeToString(error.ErrorConvertingType),
                 errorConverting.Description,
                 errorConverting.Exception?.Message}).
             Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).

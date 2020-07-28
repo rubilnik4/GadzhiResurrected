@@ -123,10 +123,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private bool CheckSignatures() =>
             _projectSettings.ConvertingResources.
-            Map(resources => resources.SignatureNames?.Count > 0).
+            Map(resources => resources.SignatureNames.OkStatus).
             WhereBad(hasSignatures => hasSignatures,
                 badFunc: hasSignatures => hasSignatures.
-                         Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(FileConvertErrorType.SignatureNotFound,
+                         Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(ErrorConvertingType.SignatureNotFound,
                                                                                      "База подписей не загружена. Отмена запуска"))));
 
         /// <summary>
@@ -186,8 +186,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             var error = packageServer switch
             {
-                _ when !packageServer.IsFilesDataValid => new ErrorCommon(FileConvertErrorType.FileNotFound, "Файлы для конвертации не обнаружены"),
-                _ when !packageServer.IsValidByAttemptingCount => new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования пакета"),
+                _ when !packageServer.IsFilesDataValid => new ErrorCommon(ErrorConvertingType.FileNotFound, "Файлы для конвертации не обнаружены"),
+                _ when !packageServer.IsValidByAttemptingCount => new ErrorCommon(ErrorConvertingType.AttemptingCount, "Превышено количество попыток конвертирования пакета"),
                 _ => throw new ArgumentOutOfRangeException(nameof(packageServer))
             };
 
@@ -262,7 +262,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private async Task<IPackageServer> ConvertingFilesData(IPackageServer packageServer) =>
             await packageServer.FilesDataServer.
                 FirstOrDefault(fileData => !packageServer.IsCompleted && !fileData.IsCompleted).
-                Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(FileConvertErrorType.ArgumentNullReference, nameof(IFileDataServer)))).
+                Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(ErrorConvertingType.ArgumentNullReference, nameof(IFileDataServer)))).
                 ResultOkBad(
                     okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
                                         MapAsync(packageServer.ChangeFileDataServer).

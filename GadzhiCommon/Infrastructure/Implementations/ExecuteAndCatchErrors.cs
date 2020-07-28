@@ -98,16 +98,16 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Получить тип ошибки
         /// </summary>       
-        public static FileConvertErrorType GetTypeException(Exception exception) =>
+        public static ErrorConvertingType GetTypeException(Exception exception) =>
             exception switch
             {
-                NullReferenceException _ => FileConvertErrorType.NullReference,
-                ArgumentNullException _ => FileConvertErrorType.ArgumentNullReference,
-                FormatException _ => FileConvertErrorType.FormatException,
-                InvalidEnumArgumentException _ => FileConvertErrorType.InvalidEnumArgumentException,
-                TimeoutException _ => FileConvertErrorType.TimeOut,
-                CommunicationException _ => FileConvertErrorType.Communication,
-                _ => FileConvertErrorType.UnknownError
+                NullReferenceException _ => ErrorConvertingType.NullReference,
+                ArgumentNullException _ => ErrorConvertingType.ArgumentNullReference,
+                FormatException _ => ErrorConvertingType.FormatException,
+                InvalidEnumArgumentException _ => ErrorConvertingType.InvalidEnumArgumentException,
+                TimeoutException _ => ErrorConvertingType.TimeOut,
+                CommunicationException _ => ErrorConvertingType.Communication,
+                _ => ErrorConvertingType.UnknownError
             };
     }
 }

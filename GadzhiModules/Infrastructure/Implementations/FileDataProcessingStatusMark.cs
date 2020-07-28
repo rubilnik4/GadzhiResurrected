@@ -77,7 +77,7 @@ namespace GadzhiModules.Infrastructure.Implementations
             var filesNotFound = _packageInfoProject?.FilesDataPath.
                                 Where(filePath => fileDataRequestPaths?.Contains(filePath) == false).
                                 Select(filePath => new FileStatus(filePath, StatusProcessing.End,
-                                                                  new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл не найден {filePath}")));
+                                                                  new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл не найден {filePath}")));
 
             var filesStatusInSending = new PackageStatus(filesNotFound, StatusProcessingProject.Sending);
             return Task.FromResult(filesStatusInSending);

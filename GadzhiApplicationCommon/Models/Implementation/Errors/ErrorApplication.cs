@@ -16,7 +16,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         public ErrorApplication(ErrorApplicationType errorMicrostationType, string errorDescription)
         {
             ErrorMicrostationType = errorMicrostationType;
-            ErrorDescription = errorDescription ?? String.Empty;
+            Description = errorDescription ?? String.Empty;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.Errors
         /// <summary>
         /// Описание ошибки
         /// </summary>
-        public string ErrorDescription { get; }
+        public string Description { get; }
 
         /// <summary>
         /// Преобразовать в ответ

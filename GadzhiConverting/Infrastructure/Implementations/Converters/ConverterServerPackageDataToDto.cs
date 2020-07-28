@@ -114,7 +114,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             (error != null)
                 ? new ErrorCommonResponse()
                 {
-                    FileConvertErrorType = error.ErrorType,
+                    ErrorConvertingType = error.ErrorConvertingType,
                     ErrorDescription = error.Description,
                 }
                 : throw new ArgumentNullException(nameof(error));

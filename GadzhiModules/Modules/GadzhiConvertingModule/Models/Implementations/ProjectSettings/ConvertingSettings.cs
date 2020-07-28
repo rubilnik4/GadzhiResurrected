@@ -31,10 +31,5 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
 
         [Logger]
         public PdfNamingType PdfNamingType { get; set; }
-
-        /// <summary>
-        /// Количество повторов при разрыве соединения
-        /// </summary>
-        public static int RetryCount => 3;
     }
 }

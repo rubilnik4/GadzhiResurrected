@@ -11,7 +11,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Base.Components
         /// <summary>
         /// Тип ошибки при конвертации файлов
         /// </summary>
-        public virtual FileConvertErrorType FileConvertErrorType { get; set; } = FileConvertErrorType.NoError;
+        public virtual ErrorConvertingType ErrorConvertingType { get; set; } = ErrorConvertingType.NoError;
 
         /// <summary>
         /// Описание ошибки

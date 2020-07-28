@@ -209,7 +209,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             UnzipFileAndSave(filepath, fileToSave).
             WhereContinueAsync(successZip => successZip,
                                okFunc: _ => new ResultValue<string>(filepath),
-                               badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotFound, "Файл подписей Microstation не сохранен").
+                               badFunc: _ => new ErrorCommon(ErrorConvertingType.FileNotFound, "Файл подписей Microstation не сохранен").
                                              ToResultValue<string>());
 
         /// <summary>

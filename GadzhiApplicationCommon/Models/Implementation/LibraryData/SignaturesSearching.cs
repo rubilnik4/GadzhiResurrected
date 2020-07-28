@@ -32,10 +32,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
                                    Func<IEnumerable<SignatureFileRequest>, IList<ISignatureFileApp>> getSignatures)
         {
             if (signaturesLibrary == null) throw new ArgumentNullException(nameof(signaturesLibrary));
-            _getSignatures = getSignatures ?? throw new ArgumentNullException(nameof(getSignatures));
 
+            _getSignatures = getSignatures ?? throw new ArgumentNullException(nameof(getSignatures));
             _signaturesLibrary = new SortedList<string, ISignatureLibraryApp>(signaturesLibrary.ToDictionary(signature => signature.PersonId,
-                                                                                                         signature => signature));
+                                                                                                             signature => signature));
         }
 
         /// <summary>

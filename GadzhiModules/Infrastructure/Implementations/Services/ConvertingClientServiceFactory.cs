@@ -10,8 +10,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
     /// </summary>
     public class ConvertingClientServiceFactory : WcfServiceFactory<IServiceConsumer<IFileConvertingClientService>>
     {
-        public ConvertingClientServiceFactory(Func<IServiceConsumer<IFileConvertingClientService>> getConvertingService)
-            :base(getConvertingService)
+        public ConvertingClientServiceFactory(Func<IServiceConsumer<IFileConvertingClientService>> getConvertingService, RetryService retryService)
+            : base(getConvertingService, retryService)
         { }
 
         /// <summary>

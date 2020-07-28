@@ -15,7 +15,7 @@ namespace GadzhiCommon.Models.Interfaces.Errors
         /// <summary>
         /// Тип ошибки при конвертации файлов
         /// </summary>
-        FileConvertErrorType ErrorType { get; }
+        ErrorConvertingType ErrorConvertingType { get; }
 
         /// <summary>
         /// Описание ошибки

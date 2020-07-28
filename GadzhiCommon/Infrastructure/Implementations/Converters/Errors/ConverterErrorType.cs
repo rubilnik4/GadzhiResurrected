@@ -13,56 +13,56 @@ namespace GadzhiCommon.Infrastructure.Implementations.Converters.Errors
         /// <summary>
         /// Словарь типов ошибок в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<FileConvertErrorType, string> ErrorTypeString =>
-            new Dictionary<FileConvertErrorType, string>
+        public static IReadOnlyDictionary<ErrorConvertingType, string> ErrorTypeString =>
+            new Dictionary<ErrorConvertingType, string>
             {
-                { FileConvertErrorType.NoError , "Ошибка отсутствует" },
-                { FileConvertErrorType.FileNotFound , "Файл не найден" },
-                { FileConvertErrorType.IncorrectDataSource , "Некорректный файл данных" },
-                { FileConvertErrorType.IncorrectExtension  , "Некорректное расширение файла" },
-                { FileConvertErrorType.IncorrectFileName , "Некорректное имя файла" },
-                { FileConvertErrorType.RejectToSave , "Файл не сохранен" },
-                { FileConvertErrorType.AbortOperation , "Отмена операции" },
-                { FileConvertErrorType.TimeOut, "Истекло время выполнения операции" },
-                { FileConvertErrorType.Communication , "Связь с сервером не установлена" },
-                { FileConvertErrorType.NullReference , "Переменная не задана" },
-                { FileConvertErrorType.ArgumentNullReference , "Аргумент не задан" },
-                { FileConvertErrorType.FormatException , "Формат преобразования задан не верно" },
-                { FileConvertErrorType.InvalidEnumArgumentException , "Ошибка перечисления" },
-                { FileConvertErrorType.AttemptingCount , "Превышено число попыток" },
-                { FileConvertErrorType.InternalError , "Внутренняя ошибка" },
-                { FileConvertErrorType.UnknownError, "Неизвестная ошибка" },
+                { ErrorConvertingType.NoError , "Ошибка отсутствует" },
+                { ErrorConvertingType.FileNotFound , "Файл не найден" },
+                { ErrorConvertingType.IncorrectDataSource , "Некорректный файл данных" },
+                { ErrorConvertingType.IncorrectExtension  , "Некорректное расширение файла" },
+                { ErrorConvertingType.IncorrectFileName , "Некорректное имя файла" },
+                { ErrorConvertingType.RejectToSave , "Файл не сохранен" },
+                { ErrorConvertingType.AbortOperation , "Отмена операции" },
+                { ErrorConvertingType.TimeOut, "Истекло время выполнения операции" },
+                { ErrorConvertingType.Communication , "Связь с сервером не установлена" },
+                { ErrorConvertingType.NullReference , "Переменная не задана" },
+                { ErrorConvertingType.ArgumentNullReference , "Аргумент не задан" },
+                { ErrorConvertingType.FormatException , "Формат преобразования задан не верно" },
+                { ErrorConvertingType.InvalidEnumArgumentException , "Ошибка перечисления" },
+                { ErrorConvertingType.AttemptingCount , "Превышено число попыток" },
+                { ErrorConvertingType.InternalError , "Внутренняя ошибка" },
+                { ErrorConvertingType.UnknownError, "Неизвестная ошибка" },
 
-                { FileConvertErrorType.ApplicationNotLoad , "Ошибка загрузки приложения" },
-                { FileConvertErrorType.LibraryNotFound , "Библиотека конвертации не найдена" },
-                { FileConvertErrorType.FieldNotFound , "Поле не найдено" },
-                { FileConvertErrorType.FileNotOpen , "Невозможно открыть файл" },
-                { FileConvertErrorType.FileNotSaved , "Невозможно сохранить файл" },
-                { FileConvertErrorType.StampNotFound , "Штампы не найдены" },
-                { FileConvertErrorType.TableNotFound , "Таблицы не найдены" },
-                { FileConvertErrorType.RangeNotValid , "Некорректный диапазон" },
-                { FileConvertErrorType.PrinterNotInstall , "Принтер не установлен" },
-                { FileConvertErrorType.PaperSizeNotFound  , "Формат принтера не найден" },
-                { FileConvertErrorType.PdfPrintingError  , "Ошибка печати PDF" },
-                { FileConvertErrorType.ExportError  , "Ошибка экспортирования файла" },
-                { FileConvertErrorType.SignatureNotFound  , "Подпись не найдена" },
+                { ErrorConvertingType.ApplicationNotLoad , "Ошибка загрузки приложения" },
+                { ErrorConvertingType.LibraryNotFound , "Библиотека конвертации не найдена" },
+                { ErrorConvertingType.FieldNotFound , "Поле не найдено" },
+                { ErrorConvertingType.FileNotOpen , "Невозможно открыть файл" },
+                { ErrorConvertingType.FileNotSaved , "Невозможно сохранить файл" },
+                { ErrorConvertingType.StampNotFound , "Штампы не найдены" },
+                { ErrorConvertingType.TableNotFound , "Таблицы не найдены" },
+                { ErrorConvertingType.RangeNotValid , "Некорректный диапазон" },
+                { ErrorConvertingType.PrinterNotInstall , "Принтер не установлен" },
+                { ErrorConvertingType.PaperSizeNotFound  , "Формат принтера не найден" },
+                { ErrorConvertingType.PdfPrintingError  , "Ошибка печати PDF" },
+                { ErrorConvertingType.ExportError  , "Ошибка экспортирования файла" },
+                { ErrorConvertingType.SignatureNotFound  , "Подпись не найдена" },
             };
 
         /// <summary>
         /// Преобразовать тип ошибки в строковое значение
         /// </summary>       
-        public static string ErrorTypeToString(FileConvertErrorType fileConvertErrorType)
+        public static string ErrorTypeToString(ErrorConvertingType errorConvertingType)
         {
-            ErrorTypeString.TryGetValue(fileConvertErrorType, out string fileConvertErrorTypeString);
+            ErrorTypeString.TryGetValue(errorConvertingType, out string fileConvertErrorTypeString);
             return fileConvertErrorTypeString;
         }
 
         /// <summary>
         /// Определить наличие ошибок
         /// </summary>
-        public static StatusError ErrorsTypeToStatusError(IEnumerable<FileConvertErrorType> fileConvertErrorsType)
+        public static StatusError ErrorsTypeToStatusError(IEnumerable<ErrorConvertingType> fileConvertErrorsType)
         {
-            var fileConvertErrorsTypeCollection = fileConvertErrorsType?.ToList() ?? new List<FileConvertErrorType>();
+            var fileConvertErrorsTypeCollection = fileConvertErrorsType?.ToList() ?? new List<ErrorConvertingType>();
 
             return (fileConvertErrorsTypeCollection.Count == 0)
                 ? StatusError.NoError

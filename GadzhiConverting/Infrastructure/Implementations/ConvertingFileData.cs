@@ -84,7 +84,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Присвоить ошибку по количеству попыток конвертирования
         /// </summary>      
         private IFileDataServer GetErrorByAttemptingCount(IFileDataServer fileDataServer) =>
-            new ErrorCommon(FileConvertErrorType.AttemptingCount, "Превышено количество попыток конвертирования файла").
+            new ErrorCommon(ErrorConvertingType.AttemptingCount, "Превышено количество попыток конвертирования файла").
             Void(errorDataServer => _messagingService.ShowError(errorDataServer)).
             Map(errorDataServer => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, errorDataServer));
 
@@ -98,7 +98,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath).
                                             WhereContinue(copyResult => copyResult,
                                                 okFunc: _ => new ResultValue<string>(savingPath),
-                                                badFunc: _ => new ErrorCommon(FileConvertErrorType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
+                                                badFunc: _ => new ErrorCommon(ErrorConvertingType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
                                             ToResultValue<string>())).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
             Void(result => _messagingService.ShowErrors(result.Errors));
@@ -183,7 +183,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Map(fileDataSources => new
             {
                 fileDataSources,
-                errors = fileDataSources.Select(fileDataSource => new ErrorCommon(FileConvertErrorType.FileNotFound,
+                errors = fileDataSources.Select(fileDataSource => new ErrorCommon(ErrorConvertingType.FileNotFound,
                                                                                   $"Файл {fileDataSource.FilePathServer} не найден"))
             }).
             Void(filesOrErrors => _messagingService.ShowErrors(filesOrErrors.errors)).

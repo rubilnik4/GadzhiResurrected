@@ -19,7 +19,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();
             HasMany(x => x.FileErrors).Component(x => 
                                                  {
-                                                     x.Map(e => e.FileConvertErrorType);
+                                                     x.Map(e => e.ErrorConvertingType);
                                                      x.Map(e => e.ErrorDescription);
                                                  });
             HasMany(x => x.FileDataSourceServerEntities).Inverse().Cascade.All();

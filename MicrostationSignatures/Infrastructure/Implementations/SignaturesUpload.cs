@@ -82,7 +82,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Отправить подписи Microstation в базу данных
         /// </summary>
         public async Task<IResultError> SendMicrostationDataToDatabase(string filePathMicrostation, MicrostationDataType microstationDataType) =>
-            await new ResultValue<string>(filePathMicrostation, new ErrorCommon(FileConvertErrorType.FileNotFound,
+            await new ResultValue<string>(filePathMicrostation, new ErrorCommon(ErrorConvertingType.FileNotFound,
                                                                                 $"Не найден файл данных Microstation {microstationDataType}")).
                   ResultVoid(_ => _messagingService.ShowMessage($"Обработка данных {microstationDataType} Microstation")).
                   ResultValueOkBindAsync(MicrostationDataBaseToZip).
@@ -107,11 +107,11 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Открыть файл Microstation
         /// </summary>
         private IResultValue<IDocumentMicrostation> MicrostationFileOpen(string filePathMicrostation) =>
-            new ResultValue<string>(filePathMicrostation, new ErrorCommon(FileConvertErrorType.FileNotFound,
+            new ResultValue<string>(filePathMicrostation, new ErrorCommon(ErrorConvertingType.FileNotFound,
                                                                           "Не задан путь к файлу Microstation")).
             ResultValueContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
                 okFunc: filePath => filePath,
-                badFunc: filePath => new ErrorCommon(FileConvertErrorType.FileNotFound, $"Файл {filePath} не существует")).
+                badFunc: filePath => new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл {filePath} не существует")).
             ResultVoidOk(filePath => _messagingService.ShowMessage($"Загрузка файла {filePath}")).
             ResultValueOkBind(filePath => _applicationMicrostation.OpenDocument(filePath).ToResultValueFromApplication());
 
@@ -186,7 +186,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
             _fileSystemOperations.FileToByteAndZip(filePath).
              WhereContinueAsync(successAndZip => successAndZip.Success,
                                 okFunc: successAndZip => (IResultValue<byte[]>)new ResultValue<byte[]>(successAndZip.Zip),
-                                badFunc: successAndZip => new ResultValue<byte[]>(new ErrorCommon(FileConvertErrorType.IncorrectDataSource,
+                                badFunc: successAndZip => new ResultValue<byte[]>(new ErrorCommon(ErrorConvertingType.IncorrectDataSource,
                                                                                                   "Невозможно преобразовать файл в формат zip")));
 
         /// <summary>

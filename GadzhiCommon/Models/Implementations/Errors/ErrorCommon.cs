@@ -15,12 +15,12 @@ namespace GadzhiCommon.Models.Implementations.Errors
     /// </summary>
     public class ErrorCommon: IErrorCommon, IFormattable
     {
-        public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription)
-            : this(fileConvertErrorType, errorDescription, null) { }
+        public ErrorCommon(ErrorConvertingType errorConvertingType, string errorDescription)
+            : this(errorConvertingType, errorDescription, null) { }
 
-        public ErrorCommon(FileConvertErrorType fileConvertErrorType, string errorDescription, Exception exception)
+        public ErrorCommon(ErrorConvertingType errorConvertingType, string errorDescription, Exception exception)
         {
-            ErrorType = fileConvertErrorType;
+            ErrorConvertingType = errorConvertingType;
             Description = errorDescription ?? String.Empty;
             Exception = exception;
         }
@@ -28,7 +28,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         /// <summary>
         /// Тип ошибки при конвертации файлов
         /// </summary>
-        public FileConvertErrorType ErrorType { get; }
+        public ErrorConvertingType ErrorConvertingType { get; }
 
         /// <summary>
         /// Описание ошибки
@@ -73,7 +73,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         #region IFormattable Support
         public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
 
-        public string ToString(string format, IFormatProvider formatProvider) => ErrorType.ToString();
+        public string ToString(string format, IFormatProvider formatProvider) => ErrorConvertingType.ToString();
         #endregion
     }
 }

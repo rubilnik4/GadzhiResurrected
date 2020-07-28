@@ -79,11 +79,11 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
 
             if (fileError.Exception != null)
             {
-                _logger.Error(fileError.Exception, fileError.ErrorType.ToString);
+                _logger.Error(fileError.Exception, fileError.ErrorConvertingType.ToString);
             }
             else
             {
-                _logger.Error($"{fileError.ErrorType}: {fileError.Description}");
+                _logger.Error($"{fileError.ErrorConvertingType}: {fileError.Description}");
             }
         }
 

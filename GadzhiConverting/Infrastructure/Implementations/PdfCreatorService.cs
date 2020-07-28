@@ -59,7 +59,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             new ResultValue<PDFCreator.clsPDFCreator>(PdfCreatorInitialize()).
             ResultValueContinue(pdfCreator => pdfCreator.cStart("/NoProcessingAtStartup"),
                 okFunc: pdfCreator => pdfCreator,
-                badFunc: _ => new ErrorCommon(FileConvertErrorType.PdfPrintingError, "Ошибка инициализации PDF принтера")).
+                badFunc: _ => new ErrorCommon(ErrorConvertingType.PdfPrintingError, "Ошибка инициализации PDF принтера")).
             ResultValueContinue(pdfCreator => PdfPathValid(filePath),
                 okFunc: pdfCreator =>
                 {
@@ -67,7 +67,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                     pdfCreator.cClearCache();
                     return pdfCreator;
                 },
-                badFunc: _ => new ErrorCommon(FileConvertErrorType.PdfPrintingError, $"Путь сохранения задан неверно {filePath}"));
+                badFunc: _ => new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Путь сохранения задан неверно {filePath}"));
 
         /// <summary>
         /// Корректность пути сохранения Pdf
@@ -99,7 +99,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
             return _readyState ?
                    new ResultError() :
-                   new ErrorCommon(FileConvertErrorType.PdfPrintingError, "Время создания PDF файла истекло").
+                   new ErrorCommon(ErrorConvertingType.PdfPrintingError, "Время создания PDF файла истекло").
                    ToResult().
                    ConcatErrors(printFunctionResult.Errors);
         }

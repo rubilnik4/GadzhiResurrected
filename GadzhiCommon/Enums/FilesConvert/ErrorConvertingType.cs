@@ -3,7 +3,7 @@
     /// <summary>
     /// Типы ошибок при конвертации файлов
     /// </summary>
-    public enum FileConvertErrorType
+    public enum ErrorConvertingType
     {
         NoError,
         FileNotFound,

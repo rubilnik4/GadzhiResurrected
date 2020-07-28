@@ -33,7 +33,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public IResultValue<IPrinterInformation> PdfPrinterInformation =>
             new ResultValue<IPrinterInformation>(PrintersInformation.PrintersPdf.FirstOrDefault(),
-                                                 new ErrorCommon(FileConvertErrorType.PrinterNotInstall, "PDF принтер не найден"));
+                                                 new ErrorCommon(ErrorConvertingType.PrinterNotInstall, "PDF принтер не найден"));
 
         /// <summary>
         /// Информация о установленных в системе принтерах

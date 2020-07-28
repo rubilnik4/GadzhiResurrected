@@ -13,6 +13,7 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using System.Linq;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiConverting.Infrastructure.Implementations.Services;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -27,9 +28,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
-        /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
+        /// Фабрика для создания подключения к WCF сервису подписей для сервера
+        /// </summary>    
+        private readonly SignatureServerServiceFactory _signatureServerServiceFactory;
 
         /// <summary>
         /// Проверка состояния папок и файлов
@@ -41,10 +42,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private readonly IMessagingService _messagingService;
 
-        public ProjectSettings(IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
+        public ProjectSettings(SignatureServerServiceFactory signatureServerServiceFactory,
                                IFileSystemOperations fileSystemOperations, IMessagingService messagingService)
         {
-            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
+            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
         }
@@ -141,7 +142,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             string stampMicrostationFileName = Path.Combine(DataResourcesFolder, "stampMicrostation.cel");
 
             return new ConvertingResources(signatureMicrostationFileName, stampMicrostationFileName,
-                                           _fileConvertingServerService, _fileSystemOperations);
+                                           _signatureServerServiceFactory, _fileSystemOperations);
         }
     }
 }

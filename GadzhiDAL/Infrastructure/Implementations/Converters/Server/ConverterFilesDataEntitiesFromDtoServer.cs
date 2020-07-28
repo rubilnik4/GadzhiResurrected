@@ -113,7 +113,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         public static ErrorComponent ToErrorComponent(ErrorCommonResponse error) =>
             new ErrorComponent()
             {
-                FileConvertErrorType = error.FileConvertErrorType,
+                ErrorConvertingType = error.ErrorConvertingType,
                 ErrorDescription = error.ErrorDescription,
             };
     }

@@ -13,7 +13,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Тип ошибки при конвертации файлов
         /// </summary>
         [DataMember]
-        public FileConvertErrorType FileConvertErrorType { get; set; }
+        public ErrorConvertingType ErrorConvertingType { get; set; }
 
         /// <summary>
         /// Описание ошибки

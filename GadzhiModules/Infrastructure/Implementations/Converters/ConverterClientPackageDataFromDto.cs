@@ -118,7 +118,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             var fileConvertSavedErrorType = await SaveFileDataSourceFromDtoResponse(fileResponse);
             var fileConvertErrorTypes = fileResponse.FileErrors.Select(ToErrorCommon).
                                         UnionNotNull(fileConvertSavedErrorType).
-                                        Where(error => error.ErrorType != FileConvertErrorType.NoError);
+                                        Where(error => error.ErrorConvertingType != ErrorConvertingType.NoError);
 
             return new FileStatus(fileResponse.FilePath, StatusProcessing.End, fileConvertErrorTypes);
         }
@@ -129,7 +129,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<IEnumerable<IErrorCommon>> SaveFileDataSourceFromDtoResponse(FileDataResponseClient fileDataResponse)
         {
             if (fileDataResponse.FilesDataSource == null)
-                return new List<IErrorCommon>() { new ErrorCommon(FileConvertErrorType.IncorrectDataSource, "Некорректные входные данные") };
+                return new List<IErrorCommon>() { new ErrorCommon(ErrorConvertingType.IncorrectDataSource, "Некорректные входные данные") };
 
             string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
             string convertingDirectoryName = Path.Combine(fileDirectoryName ?? throw new InvalidOperationException(nameof(fileDirectoryName)),
@@ -152,10 +152,10 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtensionValid.ToUpperCaseCurrentCulture());
 
 
-            if (String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(FileConvertErrorType.IncorrectFileName, $"Некорректное имя файла {fileName}");
-            if (String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(FileConvertErrorType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}");
-            if (String.IsNullOrWhiteSpace(directoryPath)) return new ErrorCommon(FileConvertErrorType.RejectToSave, "Директория сохранения не создана");
-            if (fileDataSourceResponseClient.FileDataSource.Length == 0) return new ErrorCommon(FileConvertErrorType.IncorrectDataSource,
+            if (String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(ErrorConvertingType.IncorrectFileName, $"Некорректное имя файла {fileName}");
+            if (String.IsNullOrWhiteSpace(fileName)) return new ErrorCommon(ErrorConvertingType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}");
+            if (String.IsNullOrWhiteSpace(directoryPath)) return new ErrorCommon(ErrorConvertingType.RejectToSave, "Директория сохранения не создана");
+            if (fileDataSourceResponseClient.FileDataSource.Length == 0) return new ErrorCommon(ErrorConvertingType.IncorrectDataSource,
                                                                                                 $"Некорректные входные данные {fileName}");
 
             string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
@@ -164,7 +164,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             await _dialogService.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool,
                                                                    $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
 
-            return new ErrorCommon(FileConvertErrorType.NoError, "Ошибки отсутствуют");
+            return new ErrorCommon(ErrorConvertingType.NoError, "Ошибки отсутствуют");
         }
         /// <summary>
         /// Конвертер из трансферной модели информации в клиентскую
@@ -177,7 +177,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>
         private static IErrorCommon ToErrorCommon(ErrorCommonResponse errorCommonResponse) =>
             (errorCommonResponse != null)
-                ? new ErrorCommon(errorCommonResponse.FileConvertErrorType, errorCommonResponse.ErrorDescription)
+                ? new ErrorCommon(errorCommonResponse.ErrorConvertingType, errorCommonResponse.ErrorDescription)
                 : throw new ArgumentNullException(nameof(errorCommonResponse));
     }
 

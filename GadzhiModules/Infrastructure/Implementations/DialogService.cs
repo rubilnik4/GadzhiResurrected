@@ -56,7 +56,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Сообщение об ошибке
         /// </summary>
         public async Task ShowError(IErrorCommon fileError) =>
-            await $"Тип ошибки: {ConverterErrorType.ErrorTypeToString(fileError.ErrorType)}".
+            await $"Тип ошибки: {ConverterErrorType.ErrorTypeToString(fileError.ErrorConvertingType)}".
             VoidBindAsync(DialogFactory.GetErrorDialog);
 
         /// <summary>
