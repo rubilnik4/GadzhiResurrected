@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
+using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
 {
@@ -26,7 +27,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>        
-        Task UpdateFromResponse(PackageDataResponseServer packageDataResponse);
+        Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse);
 
         /// <summary>
         /// Удалить все устаревшие пакеты

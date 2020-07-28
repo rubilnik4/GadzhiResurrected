@@ -11,7 +11,7 @@ using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiCommon.Infrastructure.Implementations.Services;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Implementations.Images;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
@@ -19,7 +19,6 @@ using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
-using GadzhiDTOServer.Contracts.FilesConvert;
 using Nito.AsyncEx.Synchronous;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -32,19 +31,20 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
-        public static Func<IEnumerable<SignatureFileRequest>, IList<ISignatureFileApp>> GetSignaturesSync(SignatureServerServiceFactory signatureServerServiceFactory,
-                                                                                                          ISignatureConverter signatureConverter,
-                                                                                                          string signatureFolder) =>
+        public static Func<IEnumerable<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSync(SignatureServerServiceFactory signatureServerServiceFactory,
+                                                                                                                         ISignatureConverter signatureConverter,
+                                                                                                                         string signatureFolder) =>
             (signatureFileRequest) => GetSignaturesSyncList(signatureServerServiceFactory, signatureConverter, signatureFolder).
                                       Map(getSignaturesFunc => getSignaturesFunc(signatureFileRequest.ToList()));
 
         /// <summary>
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
+        [Logger]
         private static Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSyncList(SignatureServerServiceFactory signatureServerServiceFactory,
                                                                                                                         ISignatureConverter signatureConverter, string signatureFolder) =>
             (signaturesFileRequest) =>
-                signaturesFileRequest?.
+                signaturesFileRequest.
                 Select(signatureRequest => signatureRequest.PersonId).
                 Map(ids => signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignatures(ids.ToList()))).
                 WaitAndUnwrapException().

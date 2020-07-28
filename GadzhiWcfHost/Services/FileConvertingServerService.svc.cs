@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiDTOServer.TransferModels.Signatures;
 using System.Linq;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Services
@@ -45,7 +46,7 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>
+        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>
                 await _applicationServerConverting.UpdateFromResponse(packageDataResponse);
 
         /// <summary>

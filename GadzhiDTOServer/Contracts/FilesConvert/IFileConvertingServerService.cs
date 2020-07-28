@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 
 namespace GadzhiDTOServer.Contracts.FilesConvert
 {
@@ -29,7 +30,7 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// Обновить информацию после окончательного ответа
         /// </summary>  
         [OperationContract]
-        Task UpdateFromResponse(PackageDataResponseServer packageDataResponse);
+        Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse);
 
         /// <summary>
         /// Удалить все устаревшие пакеты

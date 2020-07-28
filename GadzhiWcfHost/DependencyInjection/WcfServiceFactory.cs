@@ -4,6 +4,7 @@ using GadzhiDAL.Services.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiDTOServer.Contracts.FilesConvert;
+using GadzhiDTOServer.Contracts.Signatures;
 using GadzhiWcfHost.Helpers;
 using GadzhiWcfHost.Infrastructure.Implementations.Client;
 using GadzhiWcfHost.Infrastructure.Implementations.Server;
@@ -21,14 +22,17 @@ namespace GadzhiWcfHost.DependencyInjection
     /// </summary>
     public class WcfServiceFactory : UnityServiceHostFactory
     {
+        /// <summary>
+        /// Регистрация сервисов
+        /// </summary>
         protected override void ConfigureContainer(IUnityContainer container)
         {
-            // Регистрируем зависимости
             container
                 .RegisterType<IFileConvertingClientService, FileConvertingClientService>(new HierarchicalLifetimeManager())
                 .RegisterType<ISignatureClientService, SignatureClientService>(new HierarchicalLifetimeManager())
                 .RegisterType<IFileConvertingServerService, FileConvertingServerService>(new HierarchicalLifetimeManager())
-               .RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager())
+                .RegisterType<ISignatureServerService, SignatureServerService>(new HierarchicalLifetimeManager())
+                .RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
 
             GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container, HostSystemInformation.DataBasePath);

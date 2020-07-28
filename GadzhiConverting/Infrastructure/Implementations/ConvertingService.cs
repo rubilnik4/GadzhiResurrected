@@ -19,8 +19,12 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
+using GadzhiConverting.Infrastructure.Implementations.Services;
+using GadzhiConverting.Infrastructure.Interfaces.Services;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using static GadzhiCommon.Extensions.Functional.ExecuteTaskHandler;
+using GadzhiApplicationCommon.Models.Implementation.Functional;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -45,9 +49,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IProjectSettings _projectSettings;
 
         /// <summary>
-        /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части, обработки подписей
-        /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
+        /// Фабрика для создания сервисов WCF
+        /// </summary>
+        private readonly ConvertingServerServiceFactory _convertingServerServiceFactory;
 
         /// <summary>
         /// Конвертер из трансферной модели в серверную
@@ -71,7 +75,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
 
         public ConvertingService(IConvertingFileData convertingFileData,
                                  IProjectSettings projectSettings,
-                                 IServiceConsumer<IFileConvertingServerService> fileConvertingServerService,
+                                 IWcfServerServicesFactory wcfServerServicesFactory,
                                  IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
                                  IConverterServerPackageDataToDto converterServerPackageDataToDto,
                                  IMessagingService messagingService,
@@ -79,7 +83,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
+            _convertingServerServiceFactory = wcfServerServicesFactory?.ConvertingServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
             _converterServerPackageDataFromDto = converterServerPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataFromDto));
             _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
@@ -151,14 +155,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             _messagingService.ShowMessage("Запрос пакета в базе...");
 
-            var packageDataRequest = await _fileConvertingServerService.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName);
-            if (packageDataRequest != null)
+            var packageResult = await _convertingServerServiceFactory.
+                                      UsingServiceRetry(service => service.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName));
+            if (packageResult.OkStatus && packageResult.Value != null)
             {
-                var filesDataServer = await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageDataRequest);
+                var filesDataServer = await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageResult.Value);
                 _idPackage = filesDataServer.Id;
                 await ConvertingPackage(filesDataServer);
             }
-            else
+            else if (packageResult.OkStatus && packageResult.Value == null)
             {
                 await ActionsInEmptyQueue();
             }
@@ -202,17 +207,18 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private IPackageServer ReplyPackageIsComplete(IPackageServer packageServer) =>
             packageServer.SetStatusProcessingProject(StatusProcessingProject.ConvertingComplete).
-            Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Reply, 
+            Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Reply,
                                                  ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString()));
 
         /// <summary>
         /// Отправить промежуточный отчет
         /// </summary>
-        private async Task<IPackageServer> SendIntermediateResponse(IPackageServer packageServer) =>
+        private async Task<IResultValue<IPackageServer>> SendIntermediateResponse(IPackageServer packageServer) =>
             await _converterServerPackageDataToDto.FilesDataToIntermediateResponse(packageServer).
             Map(Task.FromResult).
-            MapBindAsync(fileDataRequest => _fileConvertingServerService.Operations.UpdateFromIntermediateResponse(fileDataRequest)).
-            MapAsync(packageServer.SetStatusProcessingProject);
+            MapBindAsync(fileDataRequest => _convertingServerServiceFactory.
+                                            UsingServiceRetry(service => service.Operations.UpdateFromIntermediateResponse(fileDataRequest))).
+            ResultValueOkAsync(packageServer.SetStatusProcessingProject);
 
         /// <summary>
         /// Отправить окончательный ответ
@@ -227,7 +233,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                         _messagingService.ShowMessage("Отправка данных в базу...");
 
                         var packageDataResponse = await _converterServerPackageDataToDto.FilesDataToResponse(packageServer);
-                        await _fileConvertingServerService.Operations.UpdateFromResponse(packageDataResponse);
+                        await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.UpdateFromResponse(packageDataResponse));
 
                         _messagingService.ShowMessage("Конвертация пакета закончена");
                         _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString());
@@ -246,13 +252,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отмена конвертирования
         /// </summary>
-        [Logger] 
+        [Logger]
         private async Task AbortConverting()
         {
             _messagingService.ShowMessage("Отмена выполнения конвертирования");
             if (_idPackage.HasValue)
             {
-                await _fileConvertingServerService.Operations.AbortConvertingById(_idPackage.Value);
+                await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.AbortConvertingById(_idPackage.Value));
             }
         }
 

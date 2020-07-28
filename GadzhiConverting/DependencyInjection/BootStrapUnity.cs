@@ -26,6 +26,7 @@ using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPar
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 using GadzhiWord.Word.Interfaces.Word;
 using Unity;
+using Unity.Lifetime;
 using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;
 using ApplicationOffice = GadzhiWord.Word.Implementations.ApplicationOfficePartial.ApplicationOffice;
 
@@ -82,7 +83,8 @@ namespace GadzhiConverting.DependencyInjection
 
             unityContainer.RegisterFactory<IWcfServerServicesFactory>(unity =>
                 new WcfServerServicesFactory(() => unity.Resolve<IServiceConsumer<IFileConvertingServerService>>(),
-                                             () => unity.Resolve<IServiceConsumer<ISignatureServerService>>()));
+                                             () => unity.Resolve<IServiceConsumer<ISignatureServerService>>()), 
+                                                                      new SingletonLifetimeManager());
         }
 
         /// <summary>

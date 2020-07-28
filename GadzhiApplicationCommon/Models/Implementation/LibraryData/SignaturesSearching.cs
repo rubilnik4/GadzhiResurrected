@@ -26,10 +26,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Функция загрузки подписей из базы данных по идентификаторам
         /// </summary>
-        private readonly Func<IEnumerable<SignatureFileRequest>, IList<ISignatureFileApp>> _getSignatures;
+        private readonly Func<IEnumerable<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> _getSignatures;
 
         public SignaturesSearching(IEnumerable<ISignatureLibraryApp> signaturesLibrary,
-                                   Func<IEnumerable<SignatureFileRequest>, IList<ISignatureFileApp>> getSignatures)
+                                   Func<IEnumerable<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> getSignatures)
         {
             if (signaturesLibrary == null) throw new ArgumentNullException(nameof(signaturesLibrary));
 
@@ -155,13 +155,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// </summary>
         public IResultAppCollection<ISignatureFileApp> GetSignaturesByIds(IEnumerable<SignatureFileRequest> personRequests) =>
             new ResultAppCollection<SignatureFileRequest>(personRequests).
-            ResultValueOkBind(requests =>
-                requests.
-                WhereContinue(_ => requests.Count > 0,
-                    okFunc: _ => _getSignatures(requests), 
-                    badFunc: _ => Enumerable.Empty<ISignatureFileApp>()).
-                ToList().
-                Map(signaturesFile => SignatureLeftJoinWithDataBase(requests, signaturesFile))).
+            ResultValueOkBind(requests => _getSignatures(requests).
+                                          ResultValueOkBind(signaturesFile => SignatureLeftJoinWithDataBase(requests, signaturesFile))).
             ToResultCollection();
 
         /// <summary>

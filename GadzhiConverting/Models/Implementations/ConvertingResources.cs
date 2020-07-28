@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
@@ -103,6 +104,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Получить подписи для Microstation
         /// </summary>
+        [Logger]
         private async Task<IResultValue<string>> GetSignaturesMicrostation() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesMicrostation()).
             ResultValueOkAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
@@ -112,6 +114,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Получить штампы для Microstation
         /// </summary>
+        [Logger]
         private async Task<IResultValue<string>> GetStampsMicrostation() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetStampsMicrostation()).
             ResultValueOkAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
@@ -120,6 +123,7 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Загрузить имена для подписей
         /// </summary>
+        [Logger]
         private async Task<IResultCollection<ISignatureLibrary>> GetSignatureNames() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesNames()).
             ResultValueOkAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
