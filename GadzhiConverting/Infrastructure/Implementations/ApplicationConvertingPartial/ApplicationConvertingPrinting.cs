@@ -19,6 +19,7 @@ using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
@@ -114,9 +115,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath,
                                              ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            IResultError PrintPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).
-                                              ToResultFromApplication();
-            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand);
+            IResultApplication PrintPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize);
+            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand).ToResultFromApplication();
         }
     }
 }

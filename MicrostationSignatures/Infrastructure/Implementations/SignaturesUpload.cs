@@ -25,10 +25,12 @@ using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
+using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiMicrostation.Factory;
 using MicrostationSignatures.Models.Enums;
+using GadzhiConverting.Infrastructure.Interfaces.Services;
 
 namespace MicrostationSignatures.Infrastructure.Implementations
 {
@@ -55,16 +57,16 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
         /// </summary>     
-        private readonly IServiceConsumer<IFileConvertingServerService> _fileConvertingServerService;
+        private readonly SignatureServerServiceFactory _signatureServerServiceFactory;
 
         public SignaturesUpload(IApplicationMicrostation applicationMicrostation, IMessagingService messagingService,
                                 IFileSystemOperations fileSystemOperations,
-                                IServiceConsumer<IFileConvertingServerService> fileConvertingServerService)
+                                IWcfServerServicesFactory wcfServerServicesFactory)
         {
             _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _fileConvertingServerService = fileConvertingServerService ?? throw new ArgumentNullException(nameof(fileConvertingServerService));
+            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
         }
 
         /// <summary>
@@ -176,7 +178,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
             await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
             Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
-            VoidBindAsync(signatures => _fileConvertingServerService.Operations.UploadSignatures(signatures)).
+            VoidBindAsync(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
             VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
 
         /// <summary>
@@ -194,13 +196,13 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// </summary>
         private async Task UploadMicrostationDataToDataBase(MicrostationDataFile microstationDataFile, MicrostationDataType microstationDataType) =>
             await ConverterMicrostationDataToDto.MicrostationDataFileToDto(microstationDataFile).
-                  Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
-                  VoidBindAsync(dataFile => microstationDataType switch
-                  {
-                      MicrostationDataType.Signature => _fileConvertingServerService.Operations.UploadSignaturesMicrostation(dataFile),
-                      MicrostationDataType.Stamp => _fileConvertingServerService.Operations.UploadStampsMicrostation(dataFile),
-                      _ => throw new ArgumentOutOfRangeException(nameof(microstationDataType), microstationDataType, @"Не найден тип данных Microstation")
-                  }).
-                  VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
+            Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
+            VoidBindAsync(dataFile => microstationDataType switch
+                {
+                    MicrostationDataType.Signature =>  _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignaturesMicrostation(dataFile)),
+                    MicrostationDataType.Stamp => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadStampsMicrostation(dataFile)),
+                    _ => throw new ArgumentOutOfRangeException(nameof(microstationDataType), microstationDataType, @"Не найден тип данных Microstation")
+                }).
+            VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
     }
 }

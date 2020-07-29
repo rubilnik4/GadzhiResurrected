@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Entities.Signatures;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.DataFile;
@@ -84,7 +85,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Записать подписи в базу данных
         /// </summary>      
-        public async Task UploadSignatures(IList<SignatureDto> signaturesDto)
+        public async Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto)
         {
             var signaturesEntity = ConverterDataFile.SignaturesFromDto(signaturesDto);
 
@@ -95,6 +96,8 @@ namespace GadzhiDAL.Services.Implementations
             }
 
             await unitOfWork.CommitAsync();
+
+            return Unit.Value;
         }
 
         /// <summary>
@@ -115,7 +118,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Записать данные Microstation в базу данных
         /// </summary>      
-        public async Task UploadMicrostationDataFile(MicrostationDataFileDto microstationDataFileDto, string idDataFile)
+        public async Task<Unit> UploadMicrostationDataFile(MicrostationDataFileDto microstationDataFileDto, string idDataFile)
         {
             var signatureMicrostationEntity = ConverterDataFile.MicrostationDataFileFromDto(microstationDataFileDto, idDataFile);
 
@@ -123,6 +126,7 @@ namespace GadzhiDAL.Services.Implementations
             await unitOfWork.Session.SaveOrUpdateAsync(signatureMicrostationEntity);
 
             await unitOfWork.CommitAsync();
+            return Unit.Value;
         }
     }
 }

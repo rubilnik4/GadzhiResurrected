@@ -63,6 +63,8 @@
     <Compile Include="Extensions\StringAdditional\TextExtensions.cs" />
     <Compile Include="Helpers\TextFormatting.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentTypeApp.cs" />
+    <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
+    <Compile Include="Infrastructure\Interfaces\IPdfCreatorService.cs" />
     <Compile Include="Models\Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampApplicationType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />
@@ -152,6 +154,26 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="PDFCreator">
+      <Guid>{1CE9DC08-9FBC-45C6-8A7C-4FE1E208A613}</Guid>
+      <VersionMajor>7</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBA">
+      <Guid>{000204EF-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>9</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -57,7 +57,7 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// <summary>
         /// Загрузить подписи
         /// </summary>
-        Task UploadSignatures(IList<SignatureDto> signaturesDto);
+        Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto);
 
         /// <summary>
         /// Получить подписи Microstation из базы данных
@@ -72,11 +72,11 @@ namespace GadzhiWcfHost.Infrastructure.Interfaces.Server
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
-        Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto);
+        Task<Unit> UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto);
 
         /// <summary>
         /// Загрузить штампы Microstation
         /// </summary>
-        Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto);
+        Task<Unit> UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto);
     }
 }

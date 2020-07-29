@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
@@ -29,7 +30,7 @@ namespace GadzhiDAL.Services.Interfaces
         /// <summary>
         /// Записать подписи в базу данных
         /// </summary>      
-        Task UploadSignatures(IList<SignatureDto> signaturesDto);
+        Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto);
 
         /// <summary>
         /// Получить данные Microstation из базы данных
@@ -39,6 +40,6 @@ namespace GadzhiDAL.Services.Interfaces
         /// <summary>
         /// Записать данные Microstation в базу данных
         /// </summary>      
-        Task UploadMicrostationDataFile(MicrostationDataFileDto microstationDataFileDto, string idDataFile);
+        Task<Unit> UploadMicrostationDataFile(MicrostationDataFileDto microstationDataFileDto, string idDataFile);
     }
 }

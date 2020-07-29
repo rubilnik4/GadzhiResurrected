@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.Contracts.Signatures;
@@ -44,7 +45,7 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Загрузить подписи
         /// </summary>
-        public async Task UploadSignatures(IList<SignatureDto> signaturesDto) => await _applicationServerConverting.UploadSignatures(signaturesDto);
+        public async Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto) => await _applicationServerConverting.UploadSignatures(signaturesDto);
 
         /// <summary>
         /// Получить подписи Microstation из базы данных
@@ -59,13 +60,13 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
-        public async Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
+        public async Task<Unit> UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
             await _applicationServerConverting.UploadSignaturesMicrostation(microstationDataFileDto);
 
         /// <summary>
         /// Загрузить штампы Microstation
         /// </summary>
-        public async Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
+        public async Task<Unit> UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
             await _applicationServerConverting.UploadStampsMicrostation(microstationDataFileDto);
     }
 }

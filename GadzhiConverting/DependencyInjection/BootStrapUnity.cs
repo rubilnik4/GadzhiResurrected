@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
+using GadzhiApplicationCommon.Infrastructure.Implementations;
+using GadzhiApplicationCommon.Infrastructure.Interfaces;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.Resources;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
@@ -68,7 +70,7 @@ namespace GadzhiConverting.DependencyInjection
         /// <summary>
         /// Регистрация WCF сервисов
         /// </summary>
-        private static void RegisterServices(IUnityContainer unityContainer)
+        public static void RegisterServices(IUnityContainer unityContainer)
         {
 
             var clientEndpoints = new ClientEndpoints();

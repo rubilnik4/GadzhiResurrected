@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
@@ -29,7 +30,7 @@ namespace GadzhiDTOServer.Contracts.Signatures
         /// Загрузить подписи
         /// </summary>
         [OperationContract]
-        Task UploadSignatures(IList<SignatureDto> signaturesDto);
+        Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto);
 
         /// <summary>
         /// Получить штампы Microstation из базы данных
@@ -47,12 +48,12 @@ namespace GadzhiDTOServer.Contracts.Signatures
         /// Загрузить подписи Microstation
         /// </summary>
         [OperationContract]
-        Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto);
+        Task<Unit> UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto);
 
         /// <summary>
         /// Загрузить штампы Microstation
         /// </summary>
         [OperationContract]
-        Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto);
+        Task<Unit> UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto);
     }
 }

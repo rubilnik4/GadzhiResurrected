@@ -18,16 +18,16 @@ namespace MicrostationSignatures
         /// <summary>
         /// Контейнер инверсии зависимости
         /// </summary>
-        private static readonly IUnityContainer Container = new UnityContainer();
+        private static readonly IUnityContainer _container = new UnityContainer();
 
         private static async Task Main()
         {
-            BootStrapUnity.ConfigureContainer(Container);
+            BootStrapUnity.ConfigureContainer(_container);
 
             MicrostationInstance.KillAllPreviousProcess();
 
-            var signaturesToJpeg = Container.Resolve<ISignaturesToJpeg>();
-            var projectSignatureSettings = Container.Resolve<IProjectSignatureSettings>();
+            var signaturesToJpeg = _container.Resolve<ISignaturesToJpeg>();
+            var projectSignatureSettings = _container.Resolve<IProjectSignatureSettings>();
 
             await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
             await signaturesToJpeg.SendMicrostationDataToDatabase(ProjectSignatureSettings.SignatureMicrostationFileName, 

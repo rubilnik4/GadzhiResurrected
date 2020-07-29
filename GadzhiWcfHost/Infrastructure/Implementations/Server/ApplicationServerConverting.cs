@@ -111,7 +111,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Загрузить подписи
         /// </summary>
-        public async Task UploadSignatures(IList<SignatureDto> signaturesDto) =>
+        public async Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto) =>
             await _signaturesService.UploadSignatures(signaturesDto).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                        Authentication.Authentication.GetIdentityName()));
@@ -135,7 +135,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
-        public async Task UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
+        public async Task<Unit> UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
             await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_SIGNATURES_ID).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                        Authentication.Authentication.GetIdentityName()));
@@ -143,7 +143,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Загрузить штампы Microstation
         /// </summary>
-        public async Task UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
+        public async Task<Unit> UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
             await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_STAMPS_ID).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                        Authentication.Authentication.GetIdentityName()));
