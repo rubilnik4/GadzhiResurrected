@@ -36,19 +36,19 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// Удалить все устаревшие пакеты
         /// </summary> 
         [OperationContract]
-        Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
+        Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
 
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary> 
         [OperationContract]
-        Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
+        Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>   
         [OperationContract]
-        Task AbortConvertingById(Guid id);
+        Task<Unit> AbortConvertingById(Guid id);
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 
 namespace GadzhiDAL.Services.Interfaces
@@ -23,21 +24,21 @@ namespace GadzhiDAL.Services.Interfaces
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>      
-        Task UpdateFromResponse(PackageDataResponseServer packageDataResponse);
+        Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        Task AbortConvertingById(Guid id);
+        Task<Unit> AbortConvertingById(Guid id);
 
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
-        Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
+        Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
 
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary>      
-        Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
+        Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
     }
 }

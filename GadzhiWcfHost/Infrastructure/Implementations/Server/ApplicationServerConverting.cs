@@ -13,6 +13,7 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiWcfHost.Infrastructure.Implementations.Logger;
 
@@ -63,7 +64,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>      
+        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>      
             await _filesDataServerService.UpdateFromResponse(packageDataResponse).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                        AuthLogging.GetParameterAuth(packageDataResponse.Id.ToString())));
@@ -71,7 +72,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
-        public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
+        public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
             await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this),
                                                        dateDeletion.ToShortDateString()));
@@ -79,7 +80,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary>      
-        public async Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
+        public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
             await _filesDataServerService.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this),
                                                        dateDeletion.ToShortDateString()));
@@ -87,7 +88,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
-        public async Task AbortConvertingById(Guid id) => 
+        public async Task<Unit> AbortConvertingById(Guid id) => 
             await _filesDataServerService.AbortConvertingById(id).
             Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this), id.ToString()));
         

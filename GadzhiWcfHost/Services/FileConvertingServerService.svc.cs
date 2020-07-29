@@ -52,18 +52,18 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
-        public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
+        public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
                 await _applicationServerConverting.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary>      
-        public async Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
+        public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
                 await _applicationServerConverting.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
-        public async Task AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
+        public async Task<Unit> AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
     }
 }

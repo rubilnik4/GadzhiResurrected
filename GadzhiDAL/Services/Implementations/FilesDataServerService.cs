@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Entities.FilesConvert.Errors;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
 using GadzhiDAL.Services.Interfaces;
@@ -46,7 +47,7 @@ namespace GadzhiDAL.Services.Implementations
 
             await unitOfWork.CommitAsync();
 
-            return packageDataRequest;
+            return packageDataRequest ?? PackageDataRequestServer.EmptyPackage;
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Обновить информацию после окончательного ответа. При отмене - удалить пакет
         /// </summary>      
-        public async Task UpdateFromResponse(PackageDataResponseServer packageDataResponse)
+        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse)
         {
             if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
 
@@ -86,12 +87,13 @@ namespace GadzhiDAL.Services.Implementations
 
             await unitOfWork.CommitAsync();
 
+            return Unit.Value;
         }
 
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
-        public async Task DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion)
+        public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var filesDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
@@ -102,12 +104,14 @@ namespace GadzhiDAL.Services.Implementations
                 await unitOfWork.Session.DeleteAsync(fileData);
             }
             await unitOfWork.CommitAsync();
+
+            return Unit.Value;
         }
 
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary>      
-        public async Task DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion)
+        public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var filesDataEntity = await unitOfWork.Session.Query<PackageDataErrorEntity>().
@@ -118,14 +122,16 @@ namespace GadzhiDAL.Services.Implementations
                 await unitOfWork.Session.DeleteAsync(fileData);
             }
             await unitOfWork.CommitAsync();
+
+            return Unit.Value;
         }
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        public async Task AbortConvertingById(Guid id)
+        public async Task<Unit> AbortConvertingById(Guid id)
         {
-            if (id == Guid.Empty) return;
+            if (id == Guid.Empty) return Unit.Value;
 
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.GetAsync<PackageDataEntity>(id.ToString());
@@ -133,6 +139,8 @@ namespace GadzhiDAL.Services.Implementations
             packageDataEntity?.AbortConverting(ClientServer.Server);
 
             await unitOfWork.CommitAsync();
+
+            return Unit.Value;
         }
 
         /// <summary>

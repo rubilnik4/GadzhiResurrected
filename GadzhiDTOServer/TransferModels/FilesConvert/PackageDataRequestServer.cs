@@ -21,6 +21,16 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public override IList<FileDataRequestServer> FilesData { get; set; }       
+        public override IList<FileDataRequestServer> FilesData { get; set; }
+
+        /// <summary>
+        /// Является ли пакет пустым
+        /// </summary>
+        public bool IsEmptyPackage() => FilesData == null || FilesData.Count == 0;
+
+        /// <summary>
+        /// Создать пустой пакет
+        /// </summary>
+        public static PackageDataRequestServer EmptyPackage => new PackageDataRequestServer();
     }
 }

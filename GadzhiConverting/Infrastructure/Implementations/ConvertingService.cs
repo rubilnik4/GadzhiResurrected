@@ -156,14 +156,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _messagingService.ShowMessage("Запрос пакета в базе...");
 
             var packageResult = await _convertingServerServiceFactory.
-                                      UsingServiceRetry(service => service.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName));
-            if (packageResult.OkStatus && packageResult.Value != null)
+                                UsingServiceRetry(service => service.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName));
+            if (packageResult.OkStatus && !packageResult.Value.IsEmptyPackage())
             {
                 var filesDataServer = await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageResult.Value);
                 _idPackage = filesDataServer.Id;
                 await ConvertingPackage(filesDataServer);
             }
-            else if (packageResult.OkStatus && packageResult.Value == null)
+            else if (packageResult.OkStatus && packageResult.Value.IsEmptyPackage())
             {
                 await ActionsInEmptyQueue();
             }
@@ -267,15 +267,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private async Task<IPackageServer> ConvertingFilesData(IPackageServer packageServer) =>
             await packageServer.FilesDataServer.
-                FirstOrDefault(fileData => !packageServer.IsCompleted && !fileData.IsCompleted).
-                Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(ErrorConvertingType.ArgumentNullReference, nameof(IFileDataServer)))).
-                ResultOkBad(
-                    okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
-                                        MapAsync(packageServer.ChangeFileDataServer).
-                                        MapBindAsync(SendIntermediateResponse).
-                                        MapBindAsync(ConvertingFilesData),
-                    badFunc: _ => Task.FromResult(packageServer)).
-                Value;
+            FirstOrDefault(fileData => !packageServer.IsCompleted && !fileData.IsCompleted).
+            Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(ErrorConvertingType.ArgumentNullReference, nameof(IFileDataServer)))).
+            ResultOkBad(
+                okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
+                                    MapAsync(packageServer.ChangeFileDataServer).
+                                    MapBindAsync(SendIntermediateResponse).
+                                    ResultValueOkAsync(ConvertingFilesData).
+                                    MapAsync(result => result.OkStatus ? result.Value : packageServer),
+                badFunc: _ => Task.FromResult(packageServer)).
+           Value;
 
         /// <summary>
         /// Конвертировать файл до превышения лимита
@@ -335,7 +336,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
                 _messagingService.ShowMessage("Очистка неиспользуемых пакетов...");
-                await _fileConvertingServerService.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow);
+                await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow));
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();
@@ -352,7 +353,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (timeElapsed.TotalDays > ProjectSettings.IntervalHoursToDeleteUnusedErrorPackages)
             {
                 _messagingService.ShowMessage("Очистка пакетов с ошибками...");
-                await _fileConvertingServerService.Operations.DeleteAllUnusedErrorPackagesUntilDate(dateTimeNow);
+                await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedErrorPackagesUntilDate(dateTimeNow));
 
                 Properties.Settings.Default.UnusedErrorDataCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();
@@ -388,7 +389,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 _convertingUpdaterSubscriptions?.Dispose();
             }
             AbortConverting().ConfigureAwait(false);
-            _fileConvertingServerService?.Dispose();
+            _convertingServerServiceFactory?.Dispose();
 
             _disposedValue = true;
         }

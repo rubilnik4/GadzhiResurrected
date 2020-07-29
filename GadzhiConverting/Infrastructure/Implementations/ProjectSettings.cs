@@ -23,11 +23,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ProjectSettings : IProjectSettings
     {
         /// <summary>
-        /// Журнал системных сообщений
-        /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
-
-        /// <summary>
         /// Фабрика для создания подключения к WCF сервису подписей для сервера
         /// </summary>    
         private readonly SignatureServerServiceFactory _signatureServerServiceFactory;
