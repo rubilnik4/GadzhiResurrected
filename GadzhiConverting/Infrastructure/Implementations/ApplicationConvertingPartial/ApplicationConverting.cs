@@ -11,6 +11,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 using GadzhiWord.Word.Interfaces.Word;
 
@@ -21,6 +23,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
     /// </summary>
     public partial class ApplicationConverting : IApplicationConverting
     {
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
         /// <summary>
         /// Модуль конвертации Microstation
         /// </summary>   

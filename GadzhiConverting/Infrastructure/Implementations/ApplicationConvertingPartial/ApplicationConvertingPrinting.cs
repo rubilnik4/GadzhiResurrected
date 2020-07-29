@@ -20,6 +20,10 @@ using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiCommon.Infrastructure.Implementations.Reflection;
+using GadzhiCommon.Models.Enums;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -30,7 +34,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
     {
         /// <summary>
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
-        /// </summary>       
+        /// </summary>
+        [Logger]
         private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                              IConvertingSettings convertingSettings, ColorPrint colorPrint) =>
             documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
@@ -43,15 +48,21 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                                   IFilePath filePath, IConvertingSettings convertingSettings, 
                                                                                   ColorPrint colorPrint) =>
             stampContainer.CompressFieldsRanges().
+            Void(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), nameof(stampContainer.CompressFieldsRanges))).
             Map(_ => stampContainer.InsertSignatures().ToResultCollectionFromApplication()).
+            ResultVoidOk(signatures => _loggerService.LogByObjects(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), 
+                                                                   signatures.Select(signature => signature.SignatureLibrary.PersonInformation.FullName))).
             ResultValueOkBind(signatures => StampContainerPdfPrinting(stampContainer.GetStampsToPrint().ToResultCollectionFromApplication(),
                                                                       documentLibrary, filePath, convertingSettings, colorPrint).
-                                            Void(_ => stampContainer.DeleteSignatures(signatures))).
+                                            Void(_ => stampContainer.DeleteSignatures(signatures)).
+                                            Void(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, 
+                                                                                 ReflectionInfo.GetMethodBase(this), nameof(stampContainer.DeleteSignatures)))).
             ToResultCollection();
 
         /// <summary>
         /// Печать штампов
         /// </summary>
+        [Logger]
         private IResultCollection<IFileDataSourceServer> StampContainerPdfPrinting(IResultCollection<IStamp> stampsToPrint, IDocumentLibrary documentLibrary,
                                                                                    IFilePath filePath, IConvertingSettings convertingSettings,
                                                                                    ColorPrint colorPrint) =>
@@ -83,6 +94,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             ResultVoidOk(pdfPrinter => SetDefaultPrinter(pdfPrinter.Name)).
             ResultValueOkBind(_ => PrintPdfCommand(documentLibrary, stamp, filePath.FilePathServer, colorPrint,
                                                    pdfPrinterInformation.Value.PrefixSearchPaperSize)).
+            ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), stamp.Name)).
             ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, stamp.PaperSize,
                                                         pdfPrinterInformation.Value.Name));
 
@@ -92,11 +104,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private static void SetDefaultPrinter(string printerName) =>
             PrinterSettings.InstalledPrinters.Cast<string>().
             WhereNull(printersInstall => printersInstall.Any(printerInstall => printerInstall.ContainsIgnoreCase(printerName)) &&
-                                         NativeMethods.SetDefaultPrinter(printerName));
+                                         NativeMethods.SetDefaultPrinter(printerName).
+                                         Void(_ => _loggerService.DebugLog($"Set printer {printerName}")));
 
         /// <summary>
         /// Команда печати PDF
         /// </summary>
+        [Logger]
         private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath,
                                              ColorPrint colorPrint, string prefixSearchPaperSize)
         {

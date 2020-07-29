@@ -21,10 +21,9 @@ using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiConverting.Infrastructure.Interfaces.Services;
+using GadzhiCommon.Models.Interfaces.Errors;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using static GadzhiCommon.Extensions.Functional.ExecuteTaskHandler;
-using GadzhiApplicationCommon.Models.Implementation.Functional;
-using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -282,7 +281,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Конвертировать файл до превышения лимита
         /// </summary>       
         private async Task<IFileDataServer> ConvertingByCountLimit(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
-            await fileDataServer.WhereOkAsyncBind(fileData => !fileData.IsCompleted,
+            await fileDataServer.
+            Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).
+            WhereOkAsyncBind(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
                         ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData, convertingSettings)).
                         ResultValueBad(_ => fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).
@@ -329,6 +330,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Проверить и удалить ненужные пакеты в базе
         /// </summary>
+        [Logger]
         private async Task CheckAndDeleteUnusedPackagesOnDataBase()
         {
             var dateTimeNow = DateTime.Now;
@@ -346,6 +348,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Проверить и удалить ненужные пакеты с ошибками в базе
         /// </summary>
+        [Logger]
         private async Task CheckAndDeleteUnusedErrorPackagesOnDataBase()
         {
             var dateTimeNow = DateTime.Now;
@@ -363,6 +366,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Очистить папку с обработанными файлами на жестком диске
         /// </summary>
+        [Logger]
         private async Task DeleteAllUnusedDataOnDisk()
         {
             var dateTimeNow = DateTime.Now;

@@ -18,6 +18,9 @@ using GadzhiConverting.Models.Interfaces.FilesConvert;
 using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiCommon.Infrastructure.Implementations.Reflection;
+using GadzhiCommon.Models.Enums;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {
@@ -29,15 +32,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Открыть документ
         /// </summary>
+        [Logger]
         public IResultValue<IDocumentLibrary> OpenDocument(string filePath) =>
             IsDocumentValid(filePath).
             ResultValueOkBind(GetActiveLibraryByExtension).
             ResultValueOkTry(activeLibrary => activeLibrary.OpenDocument(filePath).ToResultValueFromApplication(),
-                             new ErrorCommon(ErrorConvertingType.FileNotOpen, $"Ошибка открытия файла {filePath}"));
+                             new ErrorCommon(ErrorConvertingType.FileNotOpen, $"Ошибка открытия файла {filePath}")).
+            ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath));
 
         /// <summary>
         /// Сохранить документ
         /// </summary>
+        [Logger]
         public IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFilePath filePath) =>
             ExecuteAndHandleError(() => documentLibrary.SaveAs(filePath.FilePathServer),
                                   errorMessage: new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка сохранения файла {filePath.FileNameClient}")).
@@ -46,7 +52,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath, 
+        [Logger]
+        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                       IConvertingSettings convertingSettings, ColorPrint colorPrint) =>
             ExecuteBindResultValue(() => CreatePdfInDocument(documentLibrary, filePath, convertingSettings, colorPrint),
                                          new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath.FileNameClient}")).
@@ -55,7 +62,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Экспортировать файл
         /// </summary>
-        public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath, 
+        [Logger]
+        public IResultValue<IFileDataSourceServer> CreateExportFile(IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                     StampDocumentType stampDocumentType) =>
            ExecuteAndHandleError(() => documentLibrary.Export(filePath.FilePathServer, stampDocumentType),
                          errorMessage: new ErrorCommon(ErrorConvertingType.ExportError, $"Ошибка экспорта файла {filePath.FileNameClient}")).
@@ -64,6 +72,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Закрыть файл
         /// </summary>
+        [Logger]
         public IResultError CloseDocument(IDocumentLibrary documentLibrary, string filePath) =>
             ExecuteAndHandleError(documentLibrary.Close,
                           catchMethod: documentLibrary.CloseApplication,
