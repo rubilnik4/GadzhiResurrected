@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiDTOBase", "GadzhiDTOB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrostationSignatures", "MicrostationSignatures\MicrostationSignatures.csproj", "{0063BB4F-3E38-4481-905C-4B33CA839130}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiPdfPrinting", "GadzhiPdfPrinting\GadzhiPdfPrinting.csproj", "{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{0063BB4F-3E38-4481-905C-4B33CA839130}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0063BB4F-3E38-4481-905C-4B33CA839130}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0063BB4F-3E38-4481-905C-4B33CA839130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,9 +140,10 @@ Global
 		{965E6A1A-43FA-467D-9AB3-8B73260F7A8A} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 		{6CC66305-C66B-4D9B-9ECF-5089A5FE8369} = {F416117F-1C73-4708-9C1F-81EACF67A65D}
 		{0063BB4F-3E38-4481-905C-4B33CA839130} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
+		{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
 		SolutionGuid = {98F57CE6-3DBD-4E61-8716-023B38EBCE68}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal

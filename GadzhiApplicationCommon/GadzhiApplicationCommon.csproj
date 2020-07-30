@@ -63,8 +63,6 @@
     <Compile Include="Extensions\StringAdditional\TextExtensions.cs" />
     <Compile Include="Helpers\TextFormatting.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentTypeApp.cs" />
-    <Compile Include="Infrastructure\Implementations\PdfCreatorService.cs" />
-    <Compile Include="Infrastructure\Interfaces\IPdfCreatorService.cs" />
     <Compile Include="Models\Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampApplicationType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />

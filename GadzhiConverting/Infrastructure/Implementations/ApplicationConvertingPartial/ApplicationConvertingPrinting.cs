@@ -115,8 +115,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultError PrintPdfCommand(IDocumentLibrary documentLibrary, IStamp stamp, string filePath,
                                              ColorPrint colorPrint, string prefixSearchPaperSize)
         {
-            IResultApplication PrintPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize);
-            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand).ToResultFromApplication();
+            IResultError PrintPdfCommand() => documentLibrary.PrintStamp(stamp, colorPrint.ToApplication(), prefixSearchPaperSize).ToResultFromApplication();
+            return _pdfCreatorService.PrintPdfWithExecuteAction(filePath, PrintPdfCommand).ToResult();
         }
     }
 }

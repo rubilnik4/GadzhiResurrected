@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
-using GadzhiApplicationCommon.Infrastructure.Implementations;
-using GadzhiApplicationCommon.Infrastructure.Interfaces;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.Resources;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Application;
@@ -26,6 +24,8 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.Contracts.Signatures;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
+using GadzhiPdfPrinting.Infrastructure.Implementations;
+using GadzhiPdfPrinting.Infrastructure.Interfaces;
 using GadzhiWord.Word.Interfaces.Word;
 using Unity;
 using Unity.Lifetime;

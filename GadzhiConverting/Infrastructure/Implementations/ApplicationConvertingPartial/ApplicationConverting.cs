@@ -10,11 +10,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using GadzhiApplicationCommon.Infrastructure.Interfaces;
 using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
+using GadzhiPdfPrinting.Infrastructure.Interfaces;
 using GadzhiWord.Word.Interfaces.Word;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial

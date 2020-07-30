@@ -295,6 +295,10 @@
       <Project>{1c7a009e-1c9a-4cd7-9e5f-0c1f9db895cd}</Project>
       <Name>GadzhiMicrostation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GadzhiPdfPrinting\GadzhiPdfPrinting.csproj">
+      <Project>{20ed0b21-cdb2-4c6c-9e96-5fe6b9fa36eb}</Project>
+      <Name>GadzhiPdfPrinting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiWcfHost\GadzhiWcfHost.csproj">
       <Project>{ba2f2cab-9eeb-4f26-abb9-85c71fcb3175}</Project>
       <Name>GadzhiWcfHost</Name>
