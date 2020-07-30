@@ -1,12 +1,10 @@
-﻿using ChannelAdam.ServiceModel;
-using GadzhiCommon.Enums.FilesConvert;
+﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
-using GadzhiDTOServer.Contracts.FilesConvert;
 using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -338,6 +336,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
                 _messagingService.ShowMessage("Очистка неиспользуемых пакетов...");
+                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
+
                 await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow));
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
@@ -356,6 +356,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (timeElapsed.TotalDays > ProjectSettings.IntervalHoursToDeleteUnusedErrorPackages)
             {
                 _messagingService.ShowMessage("Очистка пакетов с ошибками...");
+                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
+
                 await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedErrorPackagesUntilDate(dateTimeNow));
 
                 Properties.Settings.Default.UnusedErrorDataCheck = new TimeSpan(dateTimeNow.Ticks);
@@ -366,7 +368,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Очистить папку с обработанными файлами на жестком диске
         /// </summary>
-        [Logger]
         private async Task DeleteAllUnusedDataOnDisk()
         {
             var dateTimeNow = DateTime.Now;
@@ -374,6 +375,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
             {
                 _messagingService.ShowMessage("Очистка пространства на жестком диске...");
+                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
+
                 await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory, DateTime.Now,
                                                                                     ProjectSettings.IntervalHoursToDeleteUnusedPackages));
 

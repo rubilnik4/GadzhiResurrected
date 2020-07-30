@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Implementation.Resources;
+﻿using System;
+using System.Runtime.InteropServices;
+using GadzhiApplicationCommon.Models.Implementation.Resources;
 using GadzhiWord.Factory;
 using GadzhiWord.Word.Interfaces;
 using InteropWord = Microsoft.Office.Interop.Word.Application;
@@ -29,7 +31,24 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private InteropWord ApplicationWord => _applicationWord ??= WordInstance.Instance();
+        private InteropWord ApplicationWord
+        {
+            get
+            {
+                _applicationWord ??= WordInstance.Instance();
+
+                try
+                {
+                    string version = _applicationWord.Version;
+                }
+                catch (COMException)
+                {
+                    _applicationWord = WordInstance.Instance();
+                }
+
+                return _applicationWord;
+            }
+        }
 
         /// <summary>
         /// Экземпляр приложения
@@ -39,7 +58,24 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private InteropExcel ApplicationExcel => _applicationExcel ??= ExcelInstance.Instance();
+        private InteropExcel ApplicationExcel
+        {
+            get
+            {
+                _applicationExcel ??= ExcelInstance.Instance();
+
+                try
+                {
+                    string version = _applicationExcel.Version;
+                }
+                catch (COMException)
+                {
+                    _applicationExcel = ExcelInstance.Instance();
+                }
+
+                return _applicationExcel;
+            }
+        }
 
         /// <summary>
         /// Загрузилась ли оболочка Word и Excel

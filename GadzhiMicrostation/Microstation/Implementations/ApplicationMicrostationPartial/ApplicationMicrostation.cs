@@ -3,6 +3,7 @@ using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using MicroStationDGN;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using GadzhiApplicationCommon.Models.Implementation.Resources;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial
@@ -30,7 +31,24 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Экземпляр приложения
         /// </summary>
-        private Application Application => _application ??= MicrostationInstance.Instance();
+        private Application Application
+        {
+            get
+            {
+                _application ??= MicrostationInstance.Instance();
+               
+                try
+                {
+                   string version =_application.Version;
+                }
+                catch(COMException)
+                {
+                    _application = MicrostationInstance.Instance();
+                }
+
+                return _application;
+            }
+        }
 
         /// <summary>
         /// Загрузилась ли оболочка Microstation
@@ -40,6 +58,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication() => _application.Quit();       
+        public void CloseApplication() => Application.Quit();       
     }
 }

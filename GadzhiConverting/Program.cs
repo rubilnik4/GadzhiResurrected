@@ -14,7 +14,7 @@ namespace GadzhiConverting
         /// <summary>
         /// Контейнер инверсии зависимости
         /// </summary>
-        private static readonly IUnityContainer Container = new UnityContainer();
+        private static readonly IUnityContainer _container = new UnityContainer();
 
         [Logger("----------Start application----------")]
         private static void Main()
@@ -22,9 +22,9 @@ namespace GadzhiConverting
             NativeMethods.Handler += Handler;
             NativeMethods.SetConsoleCtrlHandler(NativeMethods.Handler, true);
 
-            BootStrapUnity.ConfigureContainer(Container);
+            BootStrapUnity.ConfigureContainer(_container);
 
-            var applicationConverting = Container.Resolve<IConvertingService>();
+            var applicationConverting = _container.Resolve<IConvertingService>();
             applicationConverting.StartConverting();
 
             Console.ReadLine();
@@ -36,7 +36,7 @@ namespace GadzhiConverting
         [Logger("----------Close application----------")]
         private static bool Handler(NativeMethods.CtrlType sig)
         {
-            Container.Dispose();
+            _container.Dispose();
             return false;
         }
     }

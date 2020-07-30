@@ -18,7 +18,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private static readonly ILoggerService LoggerService = LoggerFactory.GetFileLogger();
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
         /// Уровень логгирования длс атрибутов
@@ -28,20 +28,20 @@ namespace GadzhiCommon.Infrastructure.Implementations.Logger
         /// <summary>
         /// Действия при вызове метода или конструктора
         /// </summary>
-        [Advice(Kind.Before, Targets = Target.Method | Target.Constructor)]
+        [Advice(Kind.Before, Targets = Target.Method | Target.Constructor | Target.Static)]
         public void LogEnterMethod([Argument(Source.Metadata)] MethodBase methodBase, [Argument(Source.Triggers)] Attribute[] triggers) =>
             GetMessageFromTriggers(triggers).
             WhereOk(message => !String.IsNullOrWhiteSpace(message),
                 okFunc: message => message.
-                                   Void(_ => LoggerService.LogByLevel(LoggerDefaultLevel, message))).
-            Void(_ => LoggerService.LogByMethodBase(LoggerDefaultLevel, methodBase));
+                                   Void(_ => _loggerService.LogByLevel(LoggerDefaultLevel, message))).
+            Void(_ => _loggerService.LogByMethodBase(LoggerDefaultLevel, methodBase));
 
         /// <summary>
         /// Действия при установке свойства
         /// </summary>
         [Advice(Kind.Before, Targets = Target.Setter)]
         public void LogEnteSetProperty([Argument(Source.Metadata)] MethodBase methodBase, [Argument(Source.Arguments)] object[] arguments) =>
-            LoggerService.LogByPropertySet(LoggerDefaultLevel, methodBase, arguments?.FirstOrDefault()?.ToString());
+            _loggerService.LogByPropertySet(LoggerDefaultLevel, methodBase, arguments?.FirstOrDefault()?.ToString());
 
 
         /// <summary>
