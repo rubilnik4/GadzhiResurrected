@@ -19,7 +19,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
         /// Стандартные диалоговые окна

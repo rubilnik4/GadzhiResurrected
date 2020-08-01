@@ -51,7 +51,7 @@ namespace GadzhiWord.Factory
         /// <summary>
         /// Уничтожить все предыдущие процессы
         /// </summary>
-        private static void KillAllPreviousProcess()
+        public static void KillAllPreviousProcess()
         {
             var wordProcesses = Process.GetProcesses().Where(process => process.ProcessName.ContainsIgnoreCase("word"));
             foreach (var wordProcess in wordProcesses)

@@ -32,7 +32,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
         /// Выполняется ли промежуточный запрос

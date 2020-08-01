@@ -89,6 +89,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public static int IntervalHoursToDeleteUnusedErrorPackages => 14;
 
         /// <summary>
+        /// Максимальное время ожидания между операциями
+        /// </summary>
+        public static int TimeOutMinutesOperation => 3;
+
+        /// <summary>
         /// Получить имя компьютера
         /// </summary>
         public static string NetworkName => Environment.UserDomainName + Path.DirectorySeparatorChar +

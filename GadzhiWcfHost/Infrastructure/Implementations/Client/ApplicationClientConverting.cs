@@ -24,7 +24,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в клиентской части

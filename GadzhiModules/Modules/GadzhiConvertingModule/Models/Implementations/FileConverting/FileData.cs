@@ -25,7 +25,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         public FileData(string filePath)
             : this(filePath, ColorPrint.BlackAndWhite)

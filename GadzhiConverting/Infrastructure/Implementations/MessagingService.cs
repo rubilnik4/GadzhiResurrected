@@ -9,6 +9,7 @@ using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Implementations.Functional;
+using GadzhiConverting.Infrastructure.Interfaces;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -20,12 +21,25 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+
+        /// <summary>
+        /// Дата и время выполнения операций
+        /// </summary>
+        private readonly IAccessService _accessService;
+
+        public MessagingService(IAccessService accessService)
+        {
+            _accessService = accessService ?? throw new ArgumentNullException(nameof(accessService));
+        }
 
         /// <summary>
         /// Отобразить сообщение
         /// </summary>
-        public void ShowMessage(string message) => Console.WriteLine(message);
+        public void ShowMessage(string message) =>
+            message.
+            Void(_ => Console.WriteLine(message)).
+            Void(_ => _accessService.SetLastTimeOperationByNow());
 
         /// <summary>
         /// Отобразить сообщение
@@ -38,7 +52,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 errorConverting.Description,
                 errorConverting.Exception?.Message}).
             Map(messages => String.Join("\n", messages.Where(message => !String.IsNullOrWhiteSpace(message)))).
-            Map(messageText => { Console.WriteLine(messageText); return Unit.Value; });
+            Map(messageText => { Console.WriteLine(messageText); return Unit.Value; }).
+            Void(_ => _accessService.SetLastTimeOperationByNow());
 
         /// <summary>
         /// Отобразить и добавить в журнал ошибки

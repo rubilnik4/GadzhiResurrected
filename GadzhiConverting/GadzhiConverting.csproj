@@ -199,6 +199,8 @@
     <Compile Include="Extensions\SignatureExtension.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\NativeMethods.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationKillService.cs" />
+    <Compile Include="Infrastructure\Implementations\AccessService.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingDocument.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingPrinting.cs" />
@@ -222,6 +224,8 @@
     <Compile Include="Infrastructure\Interfaces\Converters\ISignatureConverter.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Interfaces\IAccessService.cs" />
+    <Compile Include="Infrastructure\Interfaces\IApplicationKillService.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />

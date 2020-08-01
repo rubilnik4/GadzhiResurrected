@@ -49,14 +49,21 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private readonly IPdfCreatorService _pdfCreatorService;
 
-        public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation, 
+        /// <summary>
+        /// Класс для отображения изменений и логгирования
+        /// </summary>
+        private readonly IMessagingService _messagingService;
+
+        public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation,
                                      IApplicationLibrary<IDocumentWord> applicationWord,
-                                     IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService)
+                                     IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService,
+                                     IMessagingService messagingService)
         {
             _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
             _applicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
             _pdfCreatorService = pdfCreatorService ?? throw new ArgumentNullException(nameof(pdfCreatorService));
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
         }
 
         /// <summary>

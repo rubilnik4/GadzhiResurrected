@@ -70,13 +70,17 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConvertingService(IConvertingFileData convertingFileData,
-                                 IProjectSettings projectSettings,
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IApplicationKillService _applicationKillService;
+
+        public ConvertingService(IConvertingFileData convertingFileData, IProjectSettings projectSettings,
                                  IWcfServerServicesFactory wcfServerServicesFactory,
                                  IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
                                  IConverterServerPackageDataToDto converterServerPackageDataToDto,
-                                 IMessagingService messagingService,
-                                 IFileSystemOperations fileSystemOperations)
+                                 IMessagingService messagingService, IFileSystemOperations fileSystemOperations,
+                                 IApplicationKillService applicationKillService)
         {
             _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
             _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
@@ -85,6 +89,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _applicationKillService = applicationKillService ?? throw new ArgumentNullException(nameof(applicationKillService));
 
             _convertingUpdaterSubscriptions = new CompositeDisposable();
             _idPackage = null;
@@ -139,10 +144,28 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToServer)).
                 Where(_ => !IsConverting).
                 Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(ConvertingFirstInQueuePackage,
-                                                                                  beforeMethod: () => IsConverting = true,
-                                                                                  finallyMethod: () => IsConverting = false))).
+                                                                                  beforeMethod: StartConvertingFile,
+                                                                                  finallyMethod: StopConvertingFile))).
                 Concat().
                 Subscribe());
+
+        /// <summary>
+        /// Отметки при запуске конвертирования файла
+        /// </summary>
+        private void StartConvertingFile()
+        {
+            IsConverting = true;
+            _applicationKillService.StartScan();
+        }
+
+        /// <summary>
+        /// Отметки при завершении конвертирования файла
+        /// </summary>
+        private void StopConvertingFile()
+        {
+            IsConverting = false;
+            _applicationKillService.StopScan();
+        }
 
         /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
@@ -394,6 +417,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (disposing)
             {
                 _convertingUpdaterSubscriptions?.Dispose();
+                _applicationKillService.Dispose();
             }
             AbortConverting().ConfigureAwait(false);
             _convertingServerServiceFactory?.Dispose();

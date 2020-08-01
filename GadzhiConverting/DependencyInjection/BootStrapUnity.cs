@@ -50,6 +50,9 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterSingleton<IConvertingService, ConvertingService>();
 
             container.RegisterType<IMessagingService, MessagingService>();
+            container.RegisterFactory<IAccessService>(unity => new AccessService(ProjectSettings.TimeOutMinutesOperation),
+                                                      new ContainerControlledLifetimeManager());
+            container.RegisterType<IApplicationKillService, ApplicationKillService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();
             container.RegisterType<IConverterServerPackageDataFromDto, ConverterServerPackageDataFromDto>();
@@ -57,6 +60,7 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
+           
             RegisterServices(container);
             RegisterConvertingApplications(container);
 
@@ -64,7 +68,8 @@ namespace GadzhiConverting.DependencyInjection
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),
                                           unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationOffice)),
                                           unity.Resolve<IFileSystemOperations>(),
-                                          unity.Resolve<IPdfCreatorService>()));
+                                          unity.Resolve<IPdfCreatorService>(),
+                                          unity.Resolve<IMessagingService>()));
         }
 
         /// <summary>
