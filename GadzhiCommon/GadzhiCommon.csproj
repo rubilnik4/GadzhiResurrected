@@ -123,9 +123,8 @@
     <Compile Include="Extensions\Async\AsyncExtensions.cs" />
     <Compile Include="Extensions\Collection\EnumerableExtension.cs" />
     <Compile Include="Extensions\Functional\CurryExtensions.cs" />
-    <Compile Include="Extensions\Functional\ErrorExtension.cs" />
-    <Compile Include="Extensions\Functional\ExecuteBindHandler.cs" />
-    <Compile Include="Extensions\Functional\ExecuteTaskHandler.cs" />
+    <Compile Include="Extensions\Functional\Result\ExecuteResultHandler.cs" />
+    <Compile Include="Extensions\Functional\Result\ExecuteTaskResultHandler.cs" />
     <Compile Include="Extensions\Functional\MapAsyncExtensions.cs" />
     <Compile Include="Extensions\Functional\MapExtensions.cs" />
     <Compile Include="Extensions\Functional\Result\ResultCollectionExtensions.cs" />

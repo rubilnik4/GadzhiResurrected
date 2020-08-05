@@ -9,7 +9,7 @@ namespace GadzhiTest.Modules.FilesConvertModule.Model
     public class FileDataTest
     {
         /// <summary>
-        /// Проверяем правильность заполенния конструктора
+        /// Проверяем правильность заполнения конструктора
         /// </summary>
         [TestMethod]
         public void FileData_Initialize()

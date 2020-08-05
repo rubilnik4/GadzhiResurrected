@@ -15,7 +15,7 @@ using GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiConverting.Extensions;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
-using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
+using static GadzhiCommon.Extensions.Functional.Result.ExecuteResultHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;

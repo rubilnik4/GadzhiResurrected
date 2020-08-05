@@ -21,7 +21,7 @@ using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiConverting.Infrastructure.Interfaces.Services;
 using GadzhiCommon.Models.Interfaces.Errors;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
-using static GadzhiCommon.Extensions.Functional.ExecuteTaskHandler;
+using static GadzhiCommon.Extensions.Functional.Result.ExecuteTaskResultHandler;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {

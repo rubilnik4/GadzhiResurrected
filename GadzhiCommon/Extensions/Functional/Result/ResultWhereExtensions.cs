@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
-using static GadzhiCommon.Extensions.Functional.ExecuteBindHandler;
+using static GadzhiCommon.Extensions.Functional.Result.ExecuteResultHandler;
 
 namespace GadzhiCommon.Extensions.Functional.Result
 {

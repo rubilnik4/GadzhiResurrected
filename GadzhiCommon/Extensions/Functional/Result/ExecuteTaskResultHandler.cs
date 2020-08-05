@@ -4,12 +4,12 @@ using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
-namespace GadzhiCommon.Extensions.Functional
+namespace GadzhiCommon.Extensions.Functional.Result
 {
     /// <summary>
     /// Отлов ошибок и их суммирование с привязкой к результирующему ответу с вложенной асинхронностью
     /// </summary> 
-    public static class ExecuteTaskHandler
+    public static class ExecuteTaskResultHandler
     {
         /// <summary>
         /// Отлов ошибок и суммирование ошибок для модуля конвертации   
