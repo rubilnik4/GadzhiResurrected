@@ -24,7 +24,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
-        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
+        private readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
         /// Функция инициализации сервиса конвертации

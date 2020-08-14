@@ -17,10 +17,10 @@ namespace GadzhiConverting.Configuration
         /// </summary>
         private const string SECTION_NAME = "PrintersInformationSection";
 
-        public static RegisterPrintersInformationSection GetConfig()
-        {
-            return (RegisterPrintersInformationSection)ConfigurationManager.GetSection(SECTION_NAME) ?? new RegisterPrintersInformationSection();
-        }
+        public static RegisterPrintersInformationSection GetConfig() =>
+            (RegisterPrintersInformationSection)ConfigurationManager.GetSection(SECTION_NAME)
+            ?? new RegisterPrintersInformationSection();
+        
 
         /// <summary>
         /// Коллекция PDF принтеров

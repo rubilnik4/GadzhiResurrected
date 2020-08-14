@@ -60,12 +60,7 @@ namespace GadzhiConverting.Configuration
         /// <summary>
         /// Перечисление
         /// </summary>  
-        public new IEnumerator<PrinterInformationElement> GetEnumerator()
-        {
-            foreach (var key in this.BaseGetAllKeys())
-            {
-                yield return (PrinterInformationElement)BaseGet(key);
-            }
-        }
+        public new IEnumerator<PrinterInformationElement> GetEnumerator()=>
+            BaseGetAllKeys().Select(key => (PrinterInformationElement)BaseGet(key)).GetEnumerator();
     }
 }
