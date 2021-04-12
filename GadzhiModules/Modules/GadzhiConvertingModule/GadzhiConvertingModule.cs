@@ -65,7 +65,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
         /// </summary>
         private static void RegisterServices(IUnityContainer unityContainer)
         {
-
             var clientEndpoints = new ClientEndpoints();
 
             string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingClientService));

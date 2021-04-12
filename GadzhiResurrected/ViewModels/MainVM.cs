@@ -1,15 +1,10 @@
 ﻿using GadzhiModules.Modules;
 using Prism.Mvvm;
 
-namespace GadzhiResurrected.Vm
+namespace GadzhiResurrected.ViewModels
 {
     public class MainViewModel : BindableBase
     {
-        public MainViewModel()
-        {
-
-        }
-
         /// <summary>
         /// Название и версия
         /// </summary>
