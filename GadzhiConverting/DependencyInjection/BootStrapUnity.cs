@@ -50,8 +50,7 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterSingleton<IConvertingService, ConvertingService>();
 
             container.RegisterType<IMessagingService, MessagingService>();
-            container.RegisterFactory<IAccessService>(unity => new AccessService(ProjectSettings.TimeOutMinutesOperation),
-                                                      new ContainerControlledLifetimeManager());
+            container.RegisterFactory<IAccessService>(unity => new AccessService(ProjectSettings.TimeOutMinutesOperation));
             container.RegisterType<IApplicationKillService, ApplicationKillService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();

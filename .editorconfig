@@ -46,7 +46,7 @@ dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1611.severity = none
 
 # VSTHRD200: Use "Async" suffix for async methods
-dotnet_diagnostic.VSTHRD200.severity = none
+dotnet_diagnostic.VSTHRD200.severity = silent
 
 # SA1615: Element return value should be documented
 dotnet_diagnostic.SA1615.severity = none
@@ -71,3 +71,6 @@ dotnet_diagnostic.VSTHRD001.severity = none
 
 # VSTHRD101: Avoid unsupported async delegates
 dotnet_diagnostic.VSTHRD101.severity = none
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none

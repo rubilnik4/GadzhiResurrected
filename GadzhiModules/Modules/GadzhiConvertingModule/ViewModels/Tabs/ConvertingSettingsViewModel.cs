@@ -24,7 +24,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
         public ConvertingSettingsViewModel(IProjectSettings projectSettings, IProjectResources projectResources, IDialogService dialogService)
         {
-            _convertingSettings = projectSettings.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
+            _convertingSettings = projectSettings?.ConvertingSettings ?? throw new ArgumentNullException(nameof(projectSettings));
             PersonSignatures = projectResources?.PersonSignatures ?? throw new ArgumentNullException(nameof(projectResources));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         }
@@ -74,6 +74,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Принципы именования PDF
         /// </summary>
-        public IReadOnlyDictionary<PdfNamingType, string> PdfNamingTypes => PdfNamingConverter.PdfNamingString;
+        public static IReadOnlyDictionary<PdfNamingType, string> PdfNamingTypes => PdfNamingConverter.PdfNamingString;
     }
 }

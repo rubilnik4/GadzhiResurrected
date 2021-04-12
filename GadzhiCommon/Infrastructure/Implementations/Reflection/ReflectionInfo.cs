@@ -6,9 +6,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using GadzhiCommon.Extensions.Functional;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Operations;
 
 namespace GadzhiCommon.Infrastructure.Implementations.Reflection
 {

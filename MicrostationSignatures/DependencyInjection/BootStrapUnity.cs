@@ -31,8 +31,6 @@ namespace MicrostationSignatures.DependencyInjection
         /// </summary>
         public static void ConfigureContainer(IUnityContainer container)
         {
-
-
             container.RegisterType<IProjectSignatureSettings, ProjectSignatureSettings>();
             container.RegisterType<ISignaturesToJpeg, SignaturesUpload>();
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();

@@ -4,7 +4,6 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule;
-using GadzhiResurrected.ViewModels;
 using GadzhiResurrected.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -14,6 +13,7 @@ using System.Windows;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
+using GadzhiResurrected.Vm;
 using Unity;
 
 namespace GadzhiResurrected
@@ -21,7 +21,7 @@ namespace GadzhiResurrected
     /// <summary>
     /// Логика взаимодействия для App.xaml
     /// </summary>
-    public partial class App
+    public partial class App: PrismApplication
     {
         /// <summary>
         /// Запуск главного окна

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GadzhiWcfHost")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Wcf Host for Gadzhi")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GadzhiWcfHost")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Ivan Rubilnik")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

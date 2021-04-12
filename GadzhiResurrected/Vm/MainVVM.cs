@@ -1,7 +1,7 @@
 ﻿using GadzhiModules.Modules;
 using Prism.Mvvm;
 
-namespace GadzhiResurrected.ViewModels
+namespace GadzhiResurrected.Vm
 {
     public class MainViewModel : BindableBase
     {

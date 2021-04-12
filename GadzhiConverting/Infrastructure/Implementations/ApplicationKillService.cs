@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiMicrostation.Factory;
 using GadzhiWord.Factory;
@@ -59,10 +60,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Add(Observable.
                 Interval(TimeSpan.FromSeconds(SCAN_TIME_SECONDS)).
                 Where(_ => !_isScanning && _accessService.IsTimeOut).
-                Select(_ => Observable.FromAsync(() => ExecuteAndHandleErrorAsync(KillAllApplications,
-                                                                                  beforeMethod: () => _isScanning = true,
-                                                                                  finallyMethod: () => _isScanning = false))).
-                Concat().
+                Select(_ => ExecuteAndHandleError(KillAllApplications,
+                                                  beforeMethod: () => _isScanning = true,
+                                                  finallyMethod: () => _isScanning = false)).
                 Subscribe());
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Очистить приложения
         /// </summary>
-        private async Task KillAllApplications()
+        private static void KillAllApplications()
         {
             MicrostationInstance.KillAllPreviousProcess();
             WordInstance.KillAllPreviousProcess();

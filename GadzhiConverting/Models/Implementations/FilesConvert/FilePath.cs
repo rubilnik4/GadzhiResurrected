@@ -5,7 +5,6 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {

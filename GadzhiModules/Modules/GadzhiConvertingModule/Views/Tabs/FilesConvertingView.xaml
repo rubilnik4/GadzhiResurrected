@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dd="urn:gong-wpf-dragdrop"     
         mc:Ignorable="d"              
@@ -186,7 +186,7 @@
 
                     <materialDesign:DataGridComboBoxColumn.ElementStyle>
                         <Style TargetType="ComboBox">
-                            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
                         </Style>
                     </materialDesign:DataGridComboBoxColumn.ElementStyle>
                 </materialDesign:DataGridComboBoxColumn>
@@ -218,9 +218,9 @@
 
             </DataGrid.Columns>
 
-            <i:Interaction.Behaviors>
+            <b:Interaction.Behaviors>
                 <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding Path=(viewModelTabs:FilesConvertingViewModel.SelectedFilesData), Mode=TwoWay}" />
-            </i:Interaction.Behaviors>
+            </b:Interaction.Behaviors>
 
             <DataGrid.InputBindings>
                 <KeyBinding Command="{Binding Path=(viewModelTabs:FilesConvertingViewModel.RemoveFilesDelegateCommand)}" Key="Delete" />
