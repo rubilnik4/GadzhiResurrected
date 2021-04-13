@@ -11,7 +11,6 @@ using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using MicrostationSignatures.Infrastructure.Interfaces;
-using GadzhiConverting.Extensions;
 using MicrostationSignatures.Models.Implementations;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
@@ -19,18 +18,17 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using GadzhiMicrostation.Microstation.Interfaces;
 using System.IO;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
-using ChannelAdam.ServiceModel;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Implementations.LibraryData;
 using GadzhiCommon.Models.Interfaces.LibraryData;
-using GadzhiConverting.Infrastructure.Implementations.Converters;
-using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
-using GadzhiDTOServer.Contracts.FilesConvert;
-using GadzhiMicrostation.Factory;
 using MicrostationSignatures.Models.Enums;
-using GadzhiConverting.Infrastructure.Interfaces.Services;
+using GadzhiConvertingLibrary.Extensions;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Converters;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
+using MicrostationSignatures.Models.Interfaces;
 
 namespace MicrostationSignatures.Infrastructure.Implementations
 {
@@ -39,10 +37,26 @@ namespace MicrostationSignatures.Infrastructure.Implementations
     /// </summary>
     public class SignaturesUpload : ISignaturesToJpeg
     {
+        public SignaturesUpload(IApplicationMicrostation applicationMicrostation, IProjectSignatureSettings projectSignatureSettings,
+                                IMessagingService messagingService, IFileSystemOperations fileSystemOperations,
+                                IWcfServerServicesFactory wcfServerServicesFactory)
+        {
+            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
+            _projectSignatureSettings = projectSignatureSettings;
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
+        }
+
         /// <summary>
         /// Модуль конвертации Microstation
         /// </summary>   
         private readonly IApplicationMicrostation _applicationMicrostation;
+
+        /// <summary>
+        /// Параметры и установки
+        /// </summary>
+        private readonly IProjectSignatureSettings _projectSignatureSettings;
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -58,16 +72,6 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
         /// </summary>     
         private readonly SignatureServerServiceFactory _signatureServerServiceFactory;
-
-        public SignaturesUpload(IApplicationMicrostation applicationMicrostation, IMessagingService messagingService,
-                                IFileSystemOperations fileSystemOperations,
-                                IWcfServerServicesFactory wcfServerServicesFactory)
-        {
-            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
-        }
 
         /// <summary>
         /// Создать подписи из прикрепленной библиотеки Microstation в формате Jpeg и отправить в базу данных
@@ -132,7 +136,7 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         /// Получить список имен и подписей
         /// </summary>
         private IResultCollection<ISignatureLibrary> GetSignatures() =>
-            _applicationMicrostation.AttachLibrary(ProjectSignatureSettings.SignatureMicrostationFileName).
+            _applicationMicrostation.AttachLibrary(_projectSignatureSettings.SignatureMicrostationFileName).
             ToResultCollectionFromApplication().
             ResultVoid(_ => _messagingService.ShowMessage("Загрузка подписей")).
             ResultValueOk(libraryElements => libraryElements.

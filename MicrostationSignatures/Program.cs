@@ -22,17 +22,17 @@ namespace MicrostationSignatures
 
         private static async Task Main()
         {
-            BootStrapUnity.ConfigureContainer(_container);
+            BootStrapUnity.ConfigureContainer(_container, ProjectSignatureSettings.SignaturesSaveFolder);
 
             MicrostationInstance.KillAllPreviousProcess();
 
-            var signaturesToJpeg = _container.Resolve<ISignaturesToJpeg>();
             var projectSignatureSettings = _container.Resolve<IProjectSignatureSettings>();
+            var signaturesToJpeg = _container.Resolve<ISignaturesToJpeg>();
 
             await signaturesToJpeg.SendJpegSignaturesToDataBase(projectSignatureSettings.SignatureTemplateFilePath);
-            await signaturesToJpeg.SendMicrostationDataToDatabase(ProjectSignatureSettings.SignatureMicrostationFileName, 
+            await signaturesToJpeg.SendMicrostationDataToDatabase(projectSignatureSettings.SignatureMicrostationFileName, 
                                                                   MicrostationDataType.Signature);
-            await signaturesToJpeg.SendMicrostationDataToDatabase(ProjectSignatureSettings.StampMicrostationFileName,
+            await signaturesToJpeg.SendMicrostationDataToDatabase(projectSignatureSettings.StampMicrostationFileName,
                                                                   MicrostationDataType.Stamp);
 
             Console.ReadLine();

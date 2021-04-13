@@ -11,7 +11,7 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
-using GadzhiConverting.Infrastructure.Implementations.Services;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using Nito.AsyncEx.Synchronous;
@@ -23,6 +23,19 @@ namespace GadzhiConverting.Models.Implementations
     /// </summary>
     public class ConvertingResources
     {
+        public ConvertingResources(string signatureMicrostationFileName, string stampMicrostationFileName,
+                                 SignatureServerServiceFactory signatureServerServiceFactory,
+                                 IFileSystemOperations fileSystemOperations)
+        {
+            if (String.IsNullOrWhiteSpace(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
+            if (String.IsNullOrWhiteSpace(stampMicrostationFileName)) throw new ArgumentNullException(nameof(stampMicrostationFileName));
+
+            _signatureMicrostationFileName = signatureMicrostationFileName;
+            _stampMicrostationFileName = stampMicrostationFileName;
+            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+        }
+
         /// <summary>
         /// Путь для сохранения подписей Microstation
         /// </summary>
@@ -43,19 +56,6 @@ namespace GadzhiConverting.Models.Implementations
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConvertingResources(string signatureMicrostationFileName, string stampMicrostationFileName,
-                                   SignatureServerServiceFactory signatureServerServiceFactory,
-                                   IFileSystemOperations fileSystemOperations)
-        {
-            if (String.IsNullOrWhiteSpace(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
-            if (String.IsNullOrWhiteSpace(stampMicrostationFileName)) throw new ArgumentNullException(nameof(stampMicrostationFileName));
-
-            _signatureMicrostationFileName = signatureMicrostationFileName;
-            _stampMicrostationFileName = stampMicrostationFileName;
-            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-        }
-
         /// <summary>
         /// Имена для подписей
         /// </summary>
@@ -69,7 +69,8 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        public IResultCollection<ISignatureLibrary> SignatureNames => _signatureNames ??= SignatureNamesTask.WaitAndUnwrapException();
+        public IResultCollection<ISignatureLibrary> SignatureNames =>
+            _signatureNames ??= SignatureNamesTask.WaitAndUnwrapException();
 
         /// <summary>
         /// Подписи Microstation

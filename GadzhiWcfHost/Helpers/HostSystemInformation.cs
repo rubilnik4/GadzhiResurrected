@@ -16,7 +16,7 @@ namespace GadzhiWcfHost.Helpers
         public static string DataBasePath =>
             System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath.
                 Map(hostPath => new DirectoryInfo(hostPath)).
-                Map(directoryPath => directoryPath?.Parent?.FullName + "\\" +
+                Map(directoryPath => directoryPath?.FullName +
                                      SettingsServer.DataBaseDirectoryDefault + "\\" +
                                      SettingsServer.DataBaseNameDefault);
 

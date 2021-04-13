@@ -21,6 +21,7 @@ using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiConvertingLibrary.Extensions;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {

@@ -18,24 +18,38 @@ namespace MicrostationSignatures.Models.Implementations
         public ProjectSignatureSettings(IFileSystemOperations fileSystemOperations)
         {
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            PutSignatureTemplateToDataFolder();
         }
+
         /// <summary>
-        /// Папка с файловыми данными для конвертации
+        /// Подписи Microstation
         /// </summary>
-        public static string ConvertingResourcesFolder => new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).
-                                                          Parent?.Parent?.Parent?.FullName + Path.DirectorySeparatorChar +
-                                                          "GadzhiConverting" + Path.DirectorySeparatorChar +
-                                                          "Resources" + Path.DirectorySeparatorChar;
+        public const string SIGNATURE_MICROSTATION_FILE = "SignatureMicrostation.cel";
+
+        /// <summary>
+        /// Подписи Microstation
+        /// </summary>
+        public const string STAMP_MICROSTATION_FILE = "StampMicrostation.cel";
+
+        /// <summary>
+        /// Подписи Microstation
+        /// </summary>
+        public const string SIGNATURE_TEMPLATE_FILE = "SignatureTemplate.dgn";
 
         /// <summary>
         /// Подписи для Microstation
         /// </summary>
-        public static string SignatureMicrostationFileName => ConvertingResourcesFolder + "SignatureMicrostation.cel";
+        public string SignatureMicrostationFileName => DataResourcesFolder + SIGNATURE_MICROSTATION_FILE;
 
         /// <summary>
         /// Штампы для Microstation
         /// </summary>
-        public static string StampMicrostationFileName => ConvertingResourcesFolder + "StampMicrostation.cel";
+        public string StampMicrostationFileName => DataResourcesFolder + STAMP_MICROSTATION_FILE;
+
+        /// <summary>
+        /// Путь к файлу шаблону для преобразования подписей
+        /// </summary>
+        public string SignatureTemplateFilePath => DataResourcesFolder + SIGNATURE_TEMPLATE_FILE;
 
         /// <summary>
         /// Папка для сохранения подписей
@@ -49,16 +63,6 @@ namespace MicrostationSignatures.Models.Implementations
         public string DataResourcesFolder => AppDomain.CurrentDomain.BaseDirectory + "DataResources" + Path.DirectorySeparatorChar;
 
         /// <summary>
-        /// Путь к файлу шаблону для преобразования подписей
-        /// </summary>
-        private string _signatureTemplateFilePath;
-
-        /// <summary>
-        /// Путь к файлу шаблону для преобразования подписей
-        /// </summary>
-        public string SignatureTemplateFilePath => _signatureTemplateFilePath ??= PutSignatureTemplateToDataFolder();
-
-        /// <summary>
         /// Размер изображения подписи в пикселях
         /// </summary>
         public static (int Width, int Height) JpegPixelSize => (500, 250);
@@ -66,16 +70,19 @@ namespace MicrostationSignatures.Models.Implementations
         /// <summary>
         /// Скопировать ресурсы и вернуть пути их расположения
         /// </summary>        
-        private string PutSignatureTemplateToDataFolder()
+        private void PutSignatureTemplateToDataFolder()
         {
             _fileSystemOperations.CreateFolderByName(SignaturesSaveFolder);
-
             _fileSystemOperations.CreateFolderByName(DataResourcesFolder);
 
-            string templateFileName = Path.Combine(DataResourcesFolder, "SignatureTemplate.dgn");
+            string templateFileName = Path.Combine(DataResourcesFolder, SIGNATURE_TEMPLATE_FILE);
             _fileSystemOperations.SaveFileFromByte(templateFileName, Properties.Resources.SignatureTemplate);
 
-            return templateFileName;
+            string signatureFileName = Path.Combine(DataResourcesFolder, SIGNATURE_MICROSTATION_FILE);
+            _fileSystemOperations.SaveFileFromByte(signatureFileName, Properties.Resources.SignatureMicrostation);
+
+            string stampFileName = Path.Combine(DataResourcesFolder, STAMP_MICROSTATION_FILE);
+            _fileSystemOperations.SaveFileFromByte(stampFileName, Properties.Resources.StampMicrostation);
         }
     }
 }

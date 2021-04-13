@@ -3,9 +3,6 @@ using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.Resources;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiConverting.Infrastructure.Implementations;
-using GadzhiConverting.Infrastructure.Implementations.Converters;
-using GadzhiConverting.Infrastructure.Interfaces.Converters;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPartial;
 using MicrostationSignatures.Infrastructure.Implementations;
@@ -13,11 +10,13 @@ using MicrostationSignatures.Infrastructure.Interfaces;
 using Unity;
 using MicrostationSignatures.Models.Implementations;
 using MicrostationSignatures.Models.Interfaces;
-using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
-using GadzhiConverting.Infrastructure.Interfaces.Services;
+using GadzhiConvertingLibrary.Infrastructure.Implementations;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Converters;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces.Converters;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
 
 namespace MicrostationSignatures.DependencyInjection
 {
@@ -29,9 +28,9 @@ namespace MicrostationSignatures.DependencyInjection
         /// <summary>
         /// Зарегистрировать зависимости
         /// </summary>
-        public static void ConfigureContainer(IUnityContainer container)
+        public static void ConfigureContainer(IUnityContainer container, string signatureFolder)
         {
-            container.RegisterType<IProjectSignatureSettings, ProjectSignatureSettings>();
+            container.RegisterSingleton<IProjectSignatureSettings, ProjectSignatureSettings>();
             container.RegisterType<ISignaturesToJpeg, SignaturesUpload>();
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();
@@ -39,17 +38,20 @@ namespace MicrostationSignatures.DependencyInjection
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
 
-            GadzhiConverting.DependencyInjection.BootStrapUnity.RegisterServices(container);
+            GadzhiConvertingLibrary.DependencyInjection.BootStrapUnity.RegisterServices(container);
 
             var wcfServerServicesFactory = container.Resolve<IWcfServerServicesFactory>();
             var signatureConverter = container.Resolve<ISignatureConverter>();
             var signaturesLibrarySearching = new SignaturesSearching(Enumerable.Empty<ISignatureLibraryApp>(),
-                                                                     GetSignaturesSync(wcfServerServicesFactory.SignatureServerServiceFactory, signatureConverter,
-                                                                                       ProjectSettings.DataSignaturesFolder));
+                                                                     SignaturesFunctionSync.GetSignaturesSync(wcfServerServicesFactory.SignatureServerServiceFactory, 
+                                                                                                              signatureConverter, signatureFolder));
             container.RegisterFactory<IApplicationMicrostation>(unity =>
-                new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching,
-                                                                      ProjectSignatureSettings.SignatureMicrostationFileName,
-                                                                      ProjectSignatureSettings.StampMicrostationFileName)));
+                {
+                    var projectSignatureSettings = unity.Resolve<IProjectSignatureSettings>();
+                    return new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching,
+                                                                projectSignatureSettings.SignatureMicrostationFileName,
+                                                                projectSignatureSettings.StampMicrostationFileName));
+                });
         }
     }
 }

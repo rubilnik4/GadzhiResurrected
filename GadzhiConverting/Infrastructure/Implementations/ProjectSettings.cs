@@ -13,7 +13,7 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using System.Linq;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
-using GadzhiConverting.Infrastructure.Implementations.Services;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -87,11 +87,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Время (дни) через которое осуществляется удаление ненужных пакетов с ошибками на сервере
         /// </summary>
         public static int IntervalHoursToDeleteUnusedErrorPackages => 14;
-
-        /// <summary>
-        /// Максимальное время ожидания между операциями
-        /// </summary>
-        public static int TimeOutMinutesOperation => 3;
 
         /// <summary>
         /// Получить имя компьютера

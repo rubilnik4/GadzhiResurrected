@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiConverting.Infrastructure.Interfaces;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces;
 using GadzhiMicrostation.Factory;
 using GadzhiWord.Factory;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;

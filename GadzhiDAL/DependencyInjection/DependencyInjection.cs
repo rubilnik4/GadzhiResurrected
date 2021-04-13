@@ -17,7 +17,7 @@ namespace GadzhiDAL.DependencyInjection
         {
             container
                  //регистрируем фабрику
-                 .RegisterFactory<ISessionFactory>((unity) =>
+                 .RegisterFactory<ISessionFactory>(unity =>
                       NHibernateFactoryManager.Instance(NHibernateFactoryManager.SqLiteConfigurationFactory(dataBasePath)),
                                                         new ContainerControlledLifetimeManager())
 

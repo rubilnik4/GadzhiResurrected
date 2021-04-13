@@ -11,6 +11,7 @@ using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Extensions;
+using GadzhiConvertingLibrary.Extensions;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
 {

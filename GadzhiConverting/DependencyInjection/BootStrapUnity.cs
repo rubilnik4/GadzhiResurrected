@@ -13,23 +13,22 @@ using GadzhiConverting.Extensions;
 using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
-using GadzhiConverting.Infrastructure.Implementations.Services;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartial;
 using GadzhiConverting.Infrastructure.Interfaces.Converters;
-using GadzhiConverting.Infrastructure.Interfaces.Services;
+using GadzhiConvertingLibrary.Extensions;
+using GadzhiConvertingLibrary.Infrastructure.Implementations;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Converters;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces.Converters;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
-using GadzhiDTOServer.Contracts.FilesConvert;
-using GadzhiDTOServer.Contracts.Signatures;
 using GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
 using GadzhiPdfPrinting.Infrastructure.Implementations;
 using GadzhiPdfPrinting.Infrastructure.Interfaces;
 using GadzhiWord.Word.Interfaces.Word;
 using Unity;
-using Unity.Lifetime;
-using static GadzhiConverting.Infrastructure.Implementations.Converters.SignaturesFunctionSync;
 using ApplicationOffice = GadzhiWord.Word.Implementations.ApplicationOfficePartial.ApplicationOffice;
 
 namespace GadzhiConverting.DependencyInjection
@@ -50,7 +49,6 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterSingleton<IConvertingService, ConvertingService>();
 
             container.RegisterType<IMessagingService, MessagingService>();
-            container.RegisterFactory<IAccessService>(unity => new AccessService(ProjectSettings.TimeOutMinutesOperation));
             container.RegisterType<IApplicationKillService, ApplicationKillService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();
@@ -59,8 +57,8 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterType<IConverterDataFileFromDto, ConverterDataFileFromDto>();
             container.RegisterType<IPdfCreatorService, PdfCreatorService>();
 
-           
-            RegisterServices(container);
+
+            GadzhiConvertingLibrary.DependencyInjection.BootStrapUnity.RegisterServices(container);
             RegisterConvertingApplications(container);
 
             container.RegisterFactory<IApplicationConverting>(unity =>
@@ -69,28 +67,6 @@ namespace GadzhiConverting.DependencyInjection
                                           unity.Resolve<IFileSystemOperations>(),
                                           unity.Resolve<IPdfCreatorService>(),
                                           unity.Resolve<IMessagingService>()));
-        }
-
-        /// <summary>
-        /// Регистрация WCF сервисов
-        /// </summary>
-        public static void RegisterServices(IUnityContainer unityContainer)
-        {
-
-            var clientEndpoints = new ClientEndpoints();
-
-            string fileConvertingEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IFileConvertingServerService));
-            unityContainer.RegisterFactory<IServiceConsumer<IFileConvertingServerService>>(unity =>
-                ServiceConsumerFactory.Create<IFileConvertingServerService>(fileConvertingEndpoint));
-
-            string signatureEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(ISignatureServerService));
-            unityContainer.RegisterFactory<IServiceConsumer<ISignatureServerService>>(unity =>
-                ServiceConsumerFactory.Create<ISignatureServerService>(signatureEndpoint));
-
-            unityContainer.RegisterFactory<IWcfServerServicesFactory>(unity =>
-                new WcfServerServicesFactory(() => unity.Resolve<IServiceConsumer<IFileConvertingServerService>>(),
-                                             () => unity.Resolve<IServiceConsumer<ISignatureServerService>>()), 
-                                                                      new SingletonLifetimeManager());
         }
 
         /// <summary>
@@ -105,12 +81,12 @@ namespace GadzhiConverting.DependencyInjection
 
             var convertingResources = projectSettings.ConvertingResources;
             var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.Value.ToApplication(),
-                                                                     GetSignaturesSync(wcfServerServicesFactory.SignatureServerServiceFactory, 
-                                                                                       signatureConverter, ProjectSettings.DataSignaturesFolder));
+                                                                     SignaturesFunctionSync.GetSignaturesSync(wcfServerServicesFactory.SignatureServerServiceFactory,
+                                                                                                              signatureConverter, ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>
-                new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching, 
-                                                                      convertingResources.SignaturesMicrostation.Value, 
+                new ApplicationMicrostation(new MicrostationResources(signaturesLibrarySearching,
+                                                                      convertingResources.SignaturesMicrostation.Value,
                                                                       convertingResources.StampMicrostation.Value)));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationOffice), unity =>

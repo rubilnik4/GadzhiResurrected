@@ -17,9 +17,9 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
-using GadzhiConverting.Infrastructure.Implementations.Services;
-using GadzhiConverting.Infrastructure.Interfaces.Services;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
+using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using static GadzhiCommon.Extensions.Functional.Result.ExecuteTaskResultHandler;
 
