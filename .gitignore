@@ -355,3 +355,5 @@ GadzhiWcfHost/DataBase.gitignore/
 DataBase.gitignore/
 
 GadzhiSql/
+
+GadzhiSqlite/GadzhiSQLite.db

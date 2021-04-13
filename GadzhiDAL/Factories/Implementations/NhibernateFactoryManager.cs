@@ -8,14 +8,19 @@ using System.IO;
 
 namespace GadzhiDAL.Factories.Implementations
 {
-    //https://github.com/BrewingCoder/NhibernateUoWRepoPattern
     /// <summary>
     /// Фабрика для создания сессии подключения к БД
     /// </summary>
     public static class NHibernateFactoryManager
     {
+        /// <summary>
+        /// Фабрика создания подключения
+        /// </summary>
         private static Lazy<ISessionFactory> _lazySessionFactory;
 
+        /// <summary>
+        /// Загрузить сущность базы
+        /// </summary>
         public static ISessionFactory Instance(FluentConfiguration config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
@@ -30,22 +35,16 @@ namespace GadzhiDAL.Factories.Implementations
         /// <summary>
         /// Параметры для подключения базы данных SqLite
         /// </summary>
-        public static FluentConfiguration SqLiteConfigurationFactory(string dataBasePath)
-        {
-            string directoryPath = Path.GetDirectoryName(dataBasePath);
-            if (!String.IsNullOrWhiteSpace(directoryPath) && !Directory.Exists(directoryPath))
+        public static FluentConfiguration SqLiteConfigurationFactory() =>
+            Fluently.Configure().
+            Database(SQLiteConfiguration.Standard.
+                     ConnectionString(c => c.FromConnectionStringWithKey("SQLiteConnectionString"))).
+            Mappings(m => m.FluentMappings.AddFromAssemblyOf<PackageDataMap>()).
+            ExposeConfiguration(c =>
             {
-                Directory.CreateDirectory(directoryPath);
-            }
-
-            return Fluently.Configure()
-                .Database(SQLiteConfiguration.Standard.UsingFile(dataBasePath))
-                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<PackageDataMap>())
-                .ExposeConfiguration(c =>
-                {
-                    var schema = new SchemaUpdate(c);
-                    schema.Execute(false, true);
-                });
-        }
+                var schema = new SchemaUpdate(c);
+                schema.Execute(false, true);
+            });
+        
     }
 }

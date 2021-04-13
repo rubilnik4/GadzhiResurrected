@@ -27,22 +27,15 @@ namespace GadzhiWcfHost.DependencyInjection
         /// </summary>
         protected override void ConfigureContainer(IUnityContainer container)
         {
-            container
-                .RegisterType<IFileConvertingClientService, FileConvertingClientService>(new HierarchicalLifetimeManager())
-                .RegisterType<ISignatureClientService, SignatureClientService>(new HierarchicalLifetimeManager())
-                .RegisterType<IFileConvertingServerService, FileConvertingServerService>(new HierarchicalLifetimeManager())
-                .RegisterType<ISignatureServerService, SignatureServerService>(new HierarchicalLifetimeManager())
-                .RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager())
-                .RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
+            container.
+            RegisterType<IFileConvertingClientService, FileConvertingClientService>(new HierarchicalLifetimeManager()).
+            RegisterType<ISignatureClientService, SignatureClientService>(new HierarchicalLifetimeManager()).
+            RegisterType<IFileConvertingServerService, FileConvertingServerService>(new HierarchicalLifetimeManager()).
+            RegisterType<ISignatureServerService, SignatureServerService>(new HierarchicalLifetimeManager()).
+            RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager()).
+            RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
 
-            
-            GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container, GetSqlConnection());
+            GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container);
         }
-
-        /// <summary>
-        /// Получить строку подключения SQL
-        /// </summary>
-        private string GetSqlConnection() =>
-            ConfigurationManager.ConnectionStrings["SQLiteConnectionString"].ConnectionString;
     }
 }

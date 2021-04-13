@@ -10,11 +10,11 @@ namespace GadzhiDAL.DependencyInjection
 {
     public static class DependencyInjection
     {
-        public static void ConfigureContainer(IUnityContainer container, string dataBasePath)
+        public static void ConfigureContainer(IUnityContainer container)
         {
             container.
             RegisterFactory<ISessionFactory>(unity =>
-                NHibernateFactoryManager.Instance(NHibernateFactoryManager.SqLiteConfigurationFactory(dataBasePath)),
+                NHibernateFactoryManager.Instance(NHibernateFactoryManager.SqLiteConfigurationFactory()),
                                                   new ContainerControlledLifetimeManager()).
             RegisterType<IUnitOfWork, UnitOfWork>().
             RegisterType<IFilesDataServerService, FilesDataServerService>().

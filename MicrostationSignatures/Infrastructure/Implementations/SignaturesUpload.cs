@@ -182,8 +182,8 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
             await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
             Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
-            VoidBindAsync(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
-            VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
+            Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
+            VoidAsync(ShowMessage);
 
         /// <summary>
         /// Запаковать файл базы Microstation и преобразовать в байтовый массив
@@ -201,12 +201,21 @@ namespace MicrostationSignatures.Infrastructure.Implementations
         private async Task UploadMicrostationDataToDataBase(MicrostationDataFile microstationDataFile, MicrostationDataType microstationDataType) =>
             await ConverterMicrostationDataToDto.MicrostationDataFileToDto(microstationDataFile).
             Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
-            VoidBindAsync(dataFile => microstationDataType switch
+            Map(dataFile => microstationDataType switch
                 {
                     MicrostationDataType.Signature =>  _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignaturesMicrostation(dataFile)),
                     MicrostationDataType.Stamp => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadStampsMicrostation(dataFile)),
                     _ => throw new ArgumentOutOfRangeException(nameof(microstationDataType), microstationDataType, @"Не найден тип данных Microstation")
                 }).
-            VoidAsync(_ => _messagingService.ShowMessage("Данные записаны в базе"));
+            VoidAsync(ShowMessage);
+
+        /// <summary>
+        /// Отображение статуса отправки файлов
+        /// </summary>
+        private void ShowMessage(IResultValue<Unit> resultError) =>
+            resultError.
+            ResultVoidOk(_ => _messagingService.ShowMessage("Данные записаны в базе")).
+            ResultVoidBad(_ => _messagingService.ShowMessage("Обнаружены ошибки")).
+            ResultVoidBad(_ => _messagingService.ShowErrors(resultError.Errors));
     }
 }
