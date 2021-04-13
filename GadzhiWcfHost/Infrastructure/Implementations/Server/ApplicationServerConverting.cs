@@ -25,11 +25,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
     public class ApplicationServerConverting : IApplicationServerConverting
     {
         /// <summary>
-        /// Журнал системных сообщений
-        /// </summary>
-        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
-
-        /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
         /// </summary>
         private readonly IFilesDataServerService _filesDataServerService;
@@ -49,103 +44,78 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Server
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>           
         public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName) =>
-            await _filesDataServerService.GetFirstInQueuePackage(identityServerName).
-            VoidAsync(package => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
-                                                                  AuthLogging.GetParameterAuth(package?.Id.ToString() ?? "No Package")));
+            await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse) =>
-            await _filesDataServerService.UpdateFromIntermediateResponse(packageDataIntermediateResponse).
-            VoidAsync(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Update, ReflectionInfo.GetMethodBase(this),
-                                                            AuthLogging.GetParameterAuth(packageDataIntermediateResponse.Id.ToString())));
+            await _filesDataServerService.UpdateFromIntermediateResponse(packageDataIntermediateResponse);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>      
-            await _filesDataServerService.UpdateFromResponse(packageDataResponse).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       AuthLogging.GetParameterAuth(packageDataResponse.Id.ToString())));
+        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>
+            await _filesDataServerService.UpdateFromResponse(packageDataResponse);
 
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
         public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
-            await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this),
-                                                       dateDeletion.ToShortDateString()));
+            await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary>      
         public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
-            await _filesDataServerService.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this),
-                                                       dateDeletion.ToShortDateString()));
+            await _filesDataServerService.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
-        public async Task<Unit> AbortConvertingById(Guid id) => 
-            await _filesDataServerService.AbortConvertingById(id).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this), id.ToString()));
-        
+        public async Task<Unit> AbortConvertingById(Guid id) =>
+            await _filesDataServerService.AbortConvertingById(id);
+
         /// <summary>
         /// Загрузить имена из базы данных
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignaturesNames() =>
-            await _signaturesService.GetSignaturesNames().
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this), 
-                                                       Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.GetSignaturesNames();
 
         /// <summary>
         /// Загрузить подписи из базы данных по идентификаторам
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignatures(IList<string> ids) =>
-            await _signaturesService.GetSignatures(ids.Distinct().ToList()).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, ReflectionInfo.GetMethodBase(this),
-                                                       Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.GetSignatures(ids.Distinct().ToList());
 
         /// <summary>
         /// Загрузить подписи
         /// </summary>
         public async Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto) =>
-            await _signaturesService.UploadSignatures(signaturesDto).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.UploadSignatures(signaturesDto);
 
         /// <summary>
         /// Получить подписи Microstation из базы данных
         /// </summary>   
-        public async Task<MicrostationDataFileDto> GetSignaturesMicrostation ()=>
-            await _signaturesService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_SIGNATURES_ID).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       Authentication.Authentication.GetIdentityName()));
+        public async Task<MicrostationDataFileDto> GetSignaturesMicrostation() =>
+            await _signaturesService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
 
         /// <summary>
         /// Получить штампы Microstation из базы данных
         /// </summary>   
         public async Task<MicrostationDataFileDto> GetStampsMicrostation() =>
-            await _signaturesService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_STAMPS_ID).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.GetMicrostationDataFile(MicrostationDataFiles.MICROSTATION_STAMPS_ID);
 
         /// <summary>
         /// Загрузить подписи Microstation
         /// </summary>
         public async Task<Unit> UploadSignaturesMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
-            await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_SIGNATURES_ID).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_SIGNATURES_ID);
 
         /// <summary>
         /// Загрузить штампы Microstation
         /// </summary>
         public async Task<Unit> UploadStampsMicrostation(MicrostationDataFileDto microstationDataFileDto) =>
-            await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_STAMPS_ID).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.UploadMicrostationDataFile(microstationDataFileDto, MicrostationDataFiles.MICROSTATION_STAMPS_ID);
     }
 }

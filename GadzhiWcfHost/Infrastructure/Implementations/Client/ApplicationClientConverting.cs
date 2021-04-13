@@ -22,11 +22,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
     public class ApplicationClientConverting : IApplicationClientConverting
     {
         /// <summary>
-        /// Журнал системных сообщений
-        /// </summary>
-        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
-
-        /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в клиентской части
         /// </summary>
         private readonly IFilesDataClientService _filesDataClientService;
@@ -47,8 +42,6 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// </summary>
         public async Task<PackageDataIntermediateResponseClient> QueueFilesDataAndGetResponse(PackageDataRequestClient packageDataRequest)
         {
-            _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                             AuthLogging.GetParameterAuth(packageDataRequest?.Id));
             if (packageDataRequest == null) return new PackageDataIntermediateResponseClient();
 
             await QueueFilesData(packageDataRequest, Authentication.Authentication.GetIdentityName());
@@ -59,9 +52,7 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// Поставить файлы в очередь для обработки
         /// </summary>
         private async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName) =>
-            await _filesDataClientService.QueueFilesData(packageDataRequest, identityName).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
-                                                       AuthLogging.GetParameterAuth(packageDataRequest.Id)));
+            await _filesDataClientService.QueueFilesData(packageDataRequest, identityName);
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по Id номеру
@@ -73,40 +64,30 @@ namespace GadzhiWcfHost.Infrastructure.Implementations.Client
         /// Получить отконвертированные файлы по Id номеру
         /// </summary>
         public async Task<PackageDataResponseClient> GetFilesDataResponseById(Guid packageId) =>
-            await _filesDataClientService.GetFilesDataResponseById(packageId).
-            VoidAsync(package => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Download,
-                                                            ReflectionInfo.GetMethodBase(this), AuthLogging.GetParameterAuth(packageId)));
+            await _filesDataClientService.GetFilesDataResponseById(packageId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary>       
         public async Task SetFilesDataLoadedByClient(Guid packageId) =>
-            await _filesDataClientService.SetFilesDataLoadedByClient(packageId).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Request, 
-                                                       ReflectionInfo.GetMethodBase(this), AuthLogging.GetParameterAuth(packageId)));
+            await _filesDataClientService.SetFilesDataLoadedByClient(packageId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
         public async Task AbortConvertingById(Guid packageId) =>
-            await _filesDataClientService.AbortConvertingById(packageId).
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Abort, 
-                                                       ReflectionInfo.GetMethodBase(this), AuthLogging.GetParameterAuth(packageId)));
+            await _filesDataClientService.AbortConvertingById(packageId);
 
         /// <summary>
         /// Загрузить имена из базы данных
         /// </summary>      
         public async Task<IList<SignatureDto>> GetSignaturesNames() =>
-            await _signaturesService.GetSignaturesNames().
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Response, 
-                                                       ReflectionInfo.GetMethodBase(this), Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.GetSignaturesNames();
 
         /// <summary>
         /// Загрузить отделы из базы данных
         /// </summary>  
         public async Task<IList<DepartmentType>> GetSignaturesDepartments() =>
-            await _signaturesService.GetSignaturesDepartments().
-            Void(_ => _loggerService.LogByObjectMethod(LoggerLevel.Info, LoggerAction.Response, 
-                                                       ReflectionInfo.GetMethodBase(this), Authentication.Authentication.GetIdentityName()));
+            await _signaturesService.GetSignaturesDepartments();
     }
 }

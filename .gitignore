@@ -353,3 +353,5 @@ GadzhiWcfHost/ConvertingDirectory.gitignore/
 GadzhiWcfHost/DataBase.gitignore/
 
 DataBase.gitignore/
+
+GadzhiSql/

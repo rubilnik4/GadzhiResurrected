@@ -1,11 +1,11 @@
-﻿using GadzhiDAL.DependencyInjection;
+﻿using System.Configuration;
+using GadzhiDAL.DependencyInjection;
 using GadzhiDAL.Services.Implementations;
 using GadzhiDAL.Services.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.Contracts.Signatures;
-using GadzhiWcfHost.Helpers;
 using GadzhiWcfHost.Infrastructure.Implementations.Client;
 using GadzhiWcfHost.Infrastructure.Implementations.Server;
 using GadzhiWcfHost.Infrastructure.Interfaces.Client;
@@ -35,8 +35,14 @@ namespace GadzhiWcfHost.DependencyInjection
                 .RegisterType<IApplicationClientConverting, ApplicationClientConverting>(new HierarchicalLifetimeManager())
                 .RegisterType<IApplicationServerConverting, ApplicationServerConverting>(new HierarchicalLifetimeManager());
 
-            GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container, HostSystemInformation.DataBasePath);
+            
+            GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container, GetSqlConnection());
         }
 
+        /// <summary>
+        /// Получить строку подключения SQL
+        /// </summary>
+        private string GetSqlConnection() =>
+            ConfigurationManager.ConnectionStrings["SQLiteConnectionString"].ConnectionString;
     }
 }
