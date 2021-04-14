@@ -48,8 +48,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Папка для конвертирования файлов
         /// </summary>
-        public static string ConvertingDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                                    "//Converting.gitignore";
+        public static string ConvertingDirectory => 
+            ConfigurationManager.AppSettings.Get("ConvertingDirectory") 
+            ?? throw new ArgumentNullException(nameof(ConvertingDirectory));
 
         /// <summary>
         /// Папка с ресурсами и библиотеками

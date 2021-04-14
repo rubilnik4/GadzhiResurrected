@@ -16,6 +16,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,9 +29,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>GadzhiConverting</ProductName>
     <PublisherName>Ivan Rubilnik</PublisherName>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationRevision>7</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -312,10 +312,6 @@
     <ProjectReference Include="..\GadzhiPdfPrinting\GadzhiPdfPrinting.csproj">
       <Project>{20ed0b21-cdb2-4c6c-9e96-5fe6b9fa36eb}</Project>
       <Name>GadzhiPdfPrinting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GadzhiWcfHost\GadzhiWcfHost.csproj">
-      <Project>{ba2f2cab-9eeb-4f26-abb9-85c71fcb3175}</Project>
-      <Name>GadzhiWcfHost</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiWord\GadzhiWord.csproj">
       <Project>{F2ACA480-2C8F-47F2-AB66-50B8ECBE7D2A}</Project>

@@ -92,6 +92,7 @@ namespace GadzhiPdfPrinting.Infrastructure.Implementations
 
             pdfCreator.cPrinterStop = true;
             pdfCreator.cClose();
+            KillAllPreviousProcess();
 
             return _readyState ?
                    new ResultError() :

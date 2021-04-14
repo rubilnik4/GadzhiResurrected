@@ -357,3 +357,5 @@ DataBase.gitignore/
 GadzhiSql/
 
 GadzhiSqlite/GadzhiSQLite.db
+
+GadzhiConvertingFolder/
