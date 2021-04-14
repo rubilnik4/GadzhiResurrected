@@ -13,6 +13,25 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Отлов ошибок и суммирование ошибок для модуля конвертации   
         /// </summary> 
+        public static IResultValue<T> ExecuteBindResultValue<T>(Func<T> method)
+        {
+            if (method == null) throw new ArgumentNullException(nameof(method));
+
+            try
+            {
+                var result = new ResultValue<T>(method.Invoke());
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ErrorCommon(GetTypeException(ex), String.Empty, ex).
+                       ToResultValue<T>();
+            }
+        }
+
+        /// <summary>
+        /// Отлов ошибок и суммирование ошибок для модуля конвертации   
+        /// </summary> 
         public static IResultValue<T> ExecuteBindResultValue<T>(Func<IResultValue<T>> method, IErrorCommon errorMessage = null)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));

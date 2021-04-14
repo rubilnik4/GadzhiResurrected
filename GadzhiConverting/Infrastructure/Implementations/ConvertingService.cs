@@ -21,7 +21,7 @@ using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
-using static GadzhiCommon.Extensions.Functional.Result.ExecuteTaskResultHandler;
+using static GadzhiCommon.Extensions.Functional.Result.ExecuteResultHandler;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -199,6 +199,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                    Void(_ => _messagingService.ShowMessage($"Конвертация пакета {package.Id}")).
                                    Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation,
                                                                         ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString())).
+                                   Void(_ => KillPreviousRunProcesses()).
                                    Map(_ => ConvertingFilesData(package)).
                                    MapAsync(ReplyPackageIsComplete),
                 badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
@@ -291,8 +292,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(ErrorConvertingType.ArgumentNullReference, nameof(IFileDataServer)))).
             ResultOkBad(
                 okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
-                                    MapAsync(packageServer.ChangeFileDataServer).
-                                    MapBindAsync(SendIntermediateResponse).
+                                    Map(packageServer.ChangeFileDataServer).
+                                    Map(SendIntermediateResponse).
                                     ResultValueOkAsync(ConvertingFilesData).
                                     MapAsync(result => result.OkStatus ? result.Value : packageServer),
                 badFunc: _ => Task.FromResult(packageServer)).
@@ -301,14 +302,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл до превышения лимита
         /// </summary>       
-        private async Task<IFileDataServer> ConvertingByCountLimit(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
-            await fileDataServer.
+        private IFileDataServer ConvertingByCountLimit(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
+            fileDataServer.
             Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).
-            WhereOkAsyncBind(fileData => !fileData.IsCompleted,
+            WhereOk(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
-                        ExecuteBindResultValueAsync(() => _convertingFileData.Converting(fileData, convertingSettings)).
+                        ExecuteBindResultValue(() => _convertingFileData.Converting(fileData, convertingSettings)).
                         ResultValueBad(_ => fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).
-                                            VoidBindAsync(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))).
+                                            Void(fileDataUncompleted => KillPreviousRunProcesses()).
+                                            Void(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))).
                         Value);
 
         /// <summary>

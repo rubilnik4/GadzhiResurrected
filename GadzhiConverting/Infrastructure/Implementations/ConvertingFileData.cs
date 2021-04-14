@@ -58,13 +58,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Конвертировать файл
         /// </summary>
-        public async Task<IFileDataServer> Converting(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
-            await fileDataServer.
+        public IFileDataServer Converting(IFileDataServer fileDataServer, IConvertingSettings convertingSettings) =>
+            fileDataServer.
             Void(fileData => _messagingService.ShowMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             Void(fileData => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).
-            WhereContinueAsyncBind(fileData => fileData.IsValidByAttemptingCount,
-                okFunc: fileData => Task.Run(() => ConvertingFile(fileData, convertingSettings)),
-                badFunc: fileData => Task.FromResult(GetErrorByAttemptingCount(fileDataServer)));
+            WhereContinue(fileData => fileData.IsValidByAttemptingCount,
+                okFunc: fileData =>  ConvertingFile(fileData, convertingSettings),
+                badFunc: fileData => GetErrorByAttemptingCount(fileDataServer));
 
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения

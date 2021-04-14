@@ -25,8 +25,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Открыть файл
         /// </summary>
         public IResultAppValue<IDocumentMicrostation> OpenDocument(string filePath) =>
-            Application.OpenDesignFile(filePath, false).
-            Map(openDocument => new ResultAppValue<IDocumentMicrostation>((IDocumentMicrostation)new DocumentMicrostation(_application, this),
+            Application.OpenDesignFile(filePath).
+            Map(openDocument => new ResultAppValue<IDocumentMicrostation>(new DocumentMicrostation(_application, this),
                                                                           new ErrorApplication(ErrorApplicationType.FileNotOpen, 
                                                                                                "Документ Microstation не создан")));
     }
