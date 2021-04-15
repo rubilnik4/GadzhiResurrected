@@ -36,12 +36,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             get
             {
                 _application ??= MicrostationInstance.Instance();
-               
+
                 try
                 {
-                   string version =_application.Version;
+                    var _ =_application.Version;
                 }
-                catch(COMException)
+                catch
                 {
                     _application = MicrostationInstance.Instance();
                 }
@@ -54,10 +54,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Загрузилась ли оболочка Microstation
         /// </summary>
         public bool IsApplicationValid => Application != null;
-       
+
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication() => Application.Quit();       
+        public void CloseApplication()
+        {
+            _application?.Quit();
+            _application = null;
+        }
     }
 }

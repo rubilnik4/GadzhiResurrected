@@ -78,6 +78,15 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             };
 
         /// <summary>
+        /// Закрыть приложения
+        /// </summary>
+        public void CloseApplications()
+        {
+            _applicationMicrostation.CloseApplication();
+            _applicationWord.CloseApplication();
+        }
+
+        /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
         private IResultValue<IApplicationLibrary<IDocumentLibrary>> GetActiveLibraryByExtension(FileExtension fileExtension) =>

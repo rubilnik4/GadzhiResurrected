@@ -62,10 +62,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
             fileDataServer.
             Void(fileData => _messagingService.ShowMessage($"Конвертация файла {fileDataServer.FileNameClient}")).
             Void(fileData => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).
-            WhereContinue(fileData => fileData.IsValidByAttemptingCount,
-                okFunc: fileData =>  ConvertingFile(fileData, convertingSettings),
-                badFunc: fileData => GetErrorByAttemptingCount(fileDataServer));
+            Map(fileData => ConvertingFile(fileData, convertingSettings));
 
+        /// <summary>
+        /// Закрыть приложения
+        /// </summary>
+        public void CloseApplication() => _applicationConverting.CloseApplications();
+     
         /// <summary>
         /// Запустить конвертацию. Инициировать начальные значения
         /// </summary>      
@@ -150,7 +153,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                 IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                                 IConvertingSettings convertingSettings) =>
             documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
-            WhereContinue(stampContainer => stampContainer.StampDocumentType == StampDocumentType.Specification,
+            WhereContinue(stampContainer => stampContainer.StampDocumentType == StampDocumentType.Specification ||
+                                            stampContainer.StampDocumentType == StampDocumentType.Drawing,
                 okFunc: stampContainer => saveResult.ConcatResultValue(ExportFile(documentLibrary, filePath, stampContainer.StampDocumentType)),
                 badFunc: _ => saveResult);
 

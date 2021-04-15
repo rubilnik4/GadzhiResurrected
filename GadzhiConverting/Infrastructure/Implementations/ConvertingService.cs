@@ -18,6 +18,7 @@ using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
@@ -30,6 +31,24 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// </summary>
     public class ConvertingService : IConvertingService
     {
+        public ConvertingService(IConvertingFileData convertingFileData, IProjectSettings projectSettings,
+                                 IWcfServerServicesFactory wcfServerServicesFactory,
+                                 IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
+                                 IConverterServerPackageDataToDto converterServerPackageDataToDto,
+                                 IMessagingService messagingService, IFileSystemOperations fileSystemOperations)
+        {
+            _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
+            _convertingServerServiceFactory = wcfServerServicesFactory?.ConvertingServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
+            _converterServerPackageDataFromDto = converterServerPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataFromDto));
+            _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+         
+            _convertingUpdaterSubscriptions = new CompositeDisposable();
+            _idPackage = null;
+        }
+
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
@@ -71,31 +90,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private readonly IApplicationKillService _applicationKillService;
-
-        public ConvertingService(IConvertingFileData convertingFileData, IProjectSettings projectSettings,
-                                 IWcfServerServicesFactory wcfServerServicesFactory,
-                                 IConverterServerPackageDataFromDto converterServerPackageDataFromDto,
-                                 IConverterServerPackageDataToDto converterServerPackageDataToDto,
-                                 IMessagingService messagingService, IFileSystemOperations fileSystemOperations,
-                                 IApplicationKillService applicationKillService)
-        {
-            _convertingFileData = convertingFileData ?? throw new ArgumentNullException(nameof(convertingFileData));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _convertingServerServiceFactory = wcfServerServicesFactory?.ConvertingServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
-            _converterServerPackageDataFromDto = converterServerPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataFromDto));
-            _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _applicationKillService = applicationKillService ?? throw new ArgumentNullException(nameof(applicationKillService));
-
-            _convertingUpdaterSubscriptions = new CompositeDisposable();
-            _idPackage = null;
-        }
-
-        /// <summary>
         /// Идентификатор конвертируемого пакета
         /// </summary>
         private Guid? _idPackage;
@@ -129,7 +123,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private bool CheckSignatures() =>
             _projectSettings.ConvertingResources.
-            Map(resources => resources.SignatureNames.OkStatus).
+            Map(resources => resources.SignatureNames.OkStatus && resources.SignatureNames.Value.Count > 0).
             WhereBad(hasSignatures => hasSignatures,
                 badFunc: hasSignatures => hasSignatures.
                          Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(ErrorConvertingType.SignatureNotFound,
@@ -155,7 +149,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private void StartConvertingFile()
         {
             IsConverting = true;
-            _applicationKillService.StartScan();
         }
 
         /// <summary>
@@ -164,7 +157,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private void StopConvertingFile()
         {
             IsConverting = false;
-            _applicationKillService.StopScan();
         }
 
         /// <summary>
@@ -203,6 +195,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                    Map(_ => ConvertingFilesData(package)).
                                    MapAsync(ReplyPackageIsComplete),
                 badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
+            VoidAsync(_ => _convertingFileData.CloseApplication()).
             VoidBindAsync(SendResponse);
 
         /// <summary>
@@ -260,7 +253,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
                         _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString());
                         break;
                     }
-                //в случае если пользователь отменил конвертацию
                 case StatusProcessingProject.Abort:
                     _messagingService.ShowMessage("Конвертация пакета прервана");
                     _loggerService.InfoLog("Abort converting by user");
@@ -308,9 +300,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
             WhereOk(fileData => !fileData.IsCompleted,
                 okFunc: fileData =>
                         ExecuteBindResultValue(() => _convertingFileData.Converting(fileData, convertingSettings)).
-                        ResultValueBad(_ => fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).
-                                            Void(fileDataUncompleted => KillPreviousRunProcesses()).
-                                            Void(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))).
+                        ResultValueBad(errors => fileData.IsValidByAttemptingCount
+                                                 ? fileData.SetAttemptingCount(fileData.AttemptingConvertCount + 1).
+                                                   Void(_ => _convertingFileData.CloseApplication()).
+                                                   Map(fileDataUncompleted => ConvertingByCountLimit(fileDataUncompleted, convertingSettings))
+                                                 : new FileDataServer(fileData, StatusProcessing.ConvertingComplete, errors)).
                         Value);
 
         /// <summary>
@@ -419,7 +413,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (disposing)
             {
                 _convertingUpdaterSubscriptions?.Dispose();
-                _applicationKillService.Dispose();
             }
             AbortConverting().ConfigureAwait(false);
             _convertingServerServiceFactory?.Dispose();

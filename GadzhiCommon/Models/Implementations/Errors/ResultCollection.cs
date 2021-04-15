@@ -56,7 +56,7 @@ namespace GadzhiCommon.Models.Implementations.Errors
         public IResultCollection<T> ConcatResultValue(IResultValue<T> resultValue) =>
             resultValue != null ?
             new ResultCollection<T>(resultValue.Value != null 
-                                        ? Value.Append(resultValue.Value) 
+                                        ? Value.Concat(new List<T> { resultValue.Value }) 
                                         : Value,
                                     Errors.Union(resultValue.Errors)) :
             throw new ArgumentNullException(nameof(resultValue));

@@ -40,7 +40,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Тип приложения
         /// </summary>
-        public override StampApplicationType StampApplicationType => StampApplicationType.Word;
+        public override StampApplicationType StampApplicationType => StampApplicationType.Microstation;
 
         /// <summary>
         /// Формат

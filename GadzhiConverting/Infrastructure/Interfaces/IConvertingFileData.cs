@@ -10,5 +10,10 @@ namespace GadzhiConverting.Infrastructure.Interfaces
         /// Запустить конвертирование файла
         /// </summary>
         IFileDataServer Converting(IFileDataServer fileDataServer, IConvertingSettings convertingSettings);
+
+        /// <summary>
+        /// Закрыть приложения
+        /// </summary>
+        void CloseApplication();
     }
 }

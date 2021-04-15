@@ -22,6 +22,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
     /// </summary>
     public class ProjectSettings : IProjectSettings
     {
+        public ProjectSettings(SignatureServerServiceFactory signatureServerServiceFactory,
+                               IFileSystemOperations fileSystemOperations, IMessagingService messagingService)
+        {
+            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+        }
+
         /// <summary>
         /// Фабрика для создания подключения к WCF сервису подписей для сервера
         /// </summary>    
@@ -36,14 +44,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Класс для отображения изменений и логгирования
         /// </summary>
         private readonly IMessagingService _messagingService;
-
-        public ProjectSettings(SignatureServerServiceFactory signatureServerServiceFactory,
-                               IFileSystemOperations fileSystemOperations, IMessagingService messagingService)
-        {
-            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-        }
 
         /// <summary>
         /// Папка для конвертирования файлов

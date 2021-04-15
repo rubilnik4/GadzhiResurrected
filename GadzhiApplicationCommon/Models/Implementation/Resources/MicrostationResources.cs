@@ -12,9 +12,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.Resources
                                      string signatureMicrostationFileName, string stampMicrostationFileName)
         : base(signaturesSearching)
         {
-            if (String.IsNullOrEmpty(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
-            if (String.IsNullOrEmpty(stampMicrostationFileName)) throw new ArgumentNullException(nameof(stampMicrostationFileName));
-
             SignatureMicrostationFileName = signatureMicrostationFileName;
             StampMicrostationFileName = stampMicrostationFileName;
         }

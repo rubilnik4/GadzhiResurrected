@@ -87,8 +87,10 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         /// </summary>
         public void CloseApplication()
         {
-            ApplicationWord.Quit();
-            ApplicationExcel.Quit();
+            _applicationWord?.Quit();
+            _applicationExcel?.Quit();
+            _applicationWord = null;
+            _applicationExcel = null;
         }    
     }
 }

@@ -96,13 +96,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Не превышает ли количество попыток конвертирования
         /// </summary>
-        public bool IsValidByAttemptingCount => AttemptingConvertCount <= 2;
+        public bool IsValidByAttemptingCount => AttemptingConvertCount <= 1;
 
         /// <summary>
         /// Установить количество попыток конвертирования
         /// </summary>       
         public IFileDataServer SetAttemptingCount(int attemptingCount) =>
-            new FileDataServer(FilePathServer, FileNameClient, ColorPrint, StatusProcessing, 
+            new FileDataServer(FilePathServer, FilePathClient, ColorPrint, StatusProcessing, 
                                attemptingCount, FilesDataSourceServer, FileErrors);
     }
 }

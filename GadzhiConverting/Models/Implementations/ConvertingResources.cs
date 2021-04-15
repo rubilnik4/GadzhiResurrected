@@ -59,7 +59,8 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        private Task<IResultCollection<ISignatureLibrary>> SignatureNamesTask => GetSignatureNames();
+        private Task<IResultCollection<ISignatureLibrary>> SignatureNamesTask =>
+            GetSignatureNames();
 
         /// <summary>
         /// Имена для подписей
@@ -85,7 +86,8 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Подписи Microstation
         /// </summary>
-        public IResultValue<string> SignaturesMicrostation => _signaturesMicrostation ??= SignaturesMicrostationTask.WaitAndUnwrapException();
+        public IResultValue<string> SignaturesMicrostation => 
+            _signaturesMicrostation ??= SignaturesMicrostationTask.WaitAndUnwrapException();
 
         /// <summary>
         /// Штампы для Microstation
