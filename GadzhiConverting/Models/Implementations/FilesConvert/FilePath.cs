@@ -78,7 +78,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public IFilePath ChangeServerName(string serverName) =>
             (!String.IsNullOrWhiteSpace(serverName))
-                ? new FilePath(FileSystemOperations.ChangeFilePathNameWithoutExstension(FilePathServer, serverName),
+                ? new FilePath(FileSystemOperations.ChangeFilePathNameWithoutExtension(FilePathServer, serverName),
                                FilePathClient)
                 : this;
 
@@ -87,7 +87,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public IFilePath ChangeClientName(string clientName) =>
             (!String.IsNullOrWhiteSpace(clientName))
-                ? new FilePath(FilePathServer, FileSystemOperations.ChangeFilePathNameWithoutExstension(FilePathClient, clientName))
+                ? new FilePath(FilePathServer, FileSystemOperations.ChangeFilePathNameWithoutExtension(FilePathClient, clientName))
                 : this;
 
         /// <summary>

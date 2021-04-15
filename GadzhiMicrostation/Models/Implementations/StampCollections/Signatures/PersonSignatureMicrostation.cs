@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -42,6 +43,12 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// Дата
         /// </summary>
         public IStampTextField DateSignature { get; }
+
+        /// <summary>
+        /// Необходимо ли вставлять подпись в поле
+        /// </summary>
+        public override bool IsAbleToInsert =>
+            base.IsAbleToInsert && !ResponsiblePerson.Text.IsNullOrWhiteSpace();
 
         /// <summary>
         /// Вставить подпись

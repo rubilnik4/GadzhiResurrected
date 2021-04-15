@@ -93,14 +93,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultValueOkRaw(saveResult => CreatePdfToSaveResult(saveResult, documentLibrary, fileDataServer, convertingSettings).
                                            Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer, convertingSettings)).
                                            Map(CheckDataSourceExistence));
-        /// <summary>
-        /// Присвоить ошибку по количеству попыток конвертирования
-        /// </summary>      
-        private IFileDataServer GetErrorByAttemptingCount(IFileDataServer fileDataServer) =>
-            new ErrorCommon(ErrorConvertingType.AttemptingCount, "Превышено количество попыток конвертирования файла").
-            Void(errorDataServer => _messagingService.ShowAndLogError(errorDataServer)).
-            Map(errorDataServer => new FileDataServer(fileDataServer, StatusProcessing.ConvertingComplete, errorDataServer));
-
+       
         /// <summary>
         /// Загрузить файл и сохранить в папку для обработки
         /// </summary>   

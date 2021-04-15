@@ -6,13 +6,10 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
-using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiMicrostation.Models.Implementations;
 
 namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostationPartial

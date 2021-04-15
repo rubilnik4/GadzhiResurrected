@@ -12,15 +12,21 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
 {
     public class FileDataViewModelItem : BindableBase
     {
-        public FileDataViewModelItem(IFileData fileData)
+        public FileDataViewModelItem(IFileData fileData, Action<ColorPrint> setColorPrint)
         {
             FileData = fileData;
+            _setColorPrint = setColorPrint;
         }
 
         /// <summary>
         /// Модель данных для хранения информации о конвертируемом файле
         /// </summary>
         public IFileData FileData { get; }
+
+        /// <summary>
+        /// Установка цвета печати выделенных файлов
+        /// </summary>
+        private readonly Action<ColorPrint> _setColorPrint;
 
         /// <summary>
         /// Расширение файла
@@ -44,7 +50,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         public string ColorPrintName
         {
             get => ColorPrintConverter.ColorPrintToString(FileData.ColorPrint);
-            set => FileData.SetColorPrint(ColorPrintConverter.ConvertStringToColorPrint(value));
+            set => _setColorPrint(ColorPrintConverter.ConvertStringToColorPrint(value));
         }
 
         /// <summary>
@@ -74,6 +80,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// Завершилось ли конвертирование удачно
         /// </summary>
         private bool IsEndStatus => FileData.StatusProcessing == StatusProcessing.End;
+
+        /// <summary>
+        /// Изменить цвет печати
+        /// </summary>
+        public void ChangeColorPrint(ColorPrint colorPrint)
+        {
+            FileData.SetColorPrint(colorPrint) ;
+            RaisePropertyChanged(nameof(ColorPrintName));
+        }
 
         /// <summary>
         /// Обновление статуса обработки через событие

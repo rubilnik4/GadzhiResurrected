@@ -104,16 +104,22 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Выделенные строки
         /// </summary>
-        private IList<object> _selectedFilesData = new List<object>();
+        private IList<object> _selectedFilesDataItems = new List<object>();
 
         /// <summary>
         /// Выделенные строки
         /// </summary>
-        public IList<object> SelectedFilesData
+        public IList<object> SelectedFilesDataItems
         {
-            get => _selectedFilesData;
-            set => SetProperty(ref _selectedFilesData, value);
+            get => _selectedFilesDataItems;
+            set => SetProperty(ref _selectedFilesDataItems, value);
         }
+
+        /// <summary>
+        /// Выделенные строки
+        /// </summary>
+        public IReadOnlyCollection<FileDataViewModelItem> SelectedFilesDataItemViewModels =>
+            SelectedFilesDataItems.OfType<FileDataViewModelItem>().ToList();
 
         /// <summary>
         /// Очистить список файлов
@@ -207,7 +213,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         [Logger]
         private void RemoveFiles() =>
-            SelectedFilesData?.
+            SelectedFilesDataItems?.
             OfType<FileDataViewModelItem>().
             Select(fileVm => fileVm.FileData).
             Void(filesData => ExecuteAndHandleError(() => _applicationGadzhi.RemoveFiles(filesData)));
@@ -225,6 +231,17 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         [Logger]
         private async Task CloseApplication() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.CloseApplication);
+
+        /// <summary>
+        /// Установка цвета печати выделенных файлов
+        /// </summary>
+        private void SetColorPrintToSelectedItems(ColorPrint colorPrint)
+        {
+            foreach (var fileDataViewModelItem in SelectedFilesDataItemViewModels)
+            {
+                fileDataViewModelItem.ChangeColorPrint(colorPrint);
+            }
+        }
 
         /// <summary>
         /// Обновление данных после изменения модели
@@ -254,7 +271,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private void ActionOnTypeAdd(FilesChange filesChange)
         {
-            var fileDataViewModel = filesChange?.FilesData?.Select(fileData => new FileDataViewModelItem(fileData));
+            var fileDataViewModel = filesChange?.FilesData?.Select(fileData => new FileDataViewModelItem(fileData, SetColorPrintToSelectedItems));
             FilesDataCollection.AddRange(fileDataViewModel);
         }
 
@@ -271,7 +288,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             else
             {
                 FilesDataCollection.Clear();
-                var fileDataViewModel = filesChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData));
+                var fileDataViewModel = filesChange?.FilesDataProject?.Select(fileData => new FileDataViewModelItem(fileData, SetColorPrintToSelectedItems));
                 FilesDataCollection.AddRange(fileDataViewModel);
             }
         }

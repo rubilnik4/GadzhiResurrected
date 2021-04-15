@@ -23,9 +23,9 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Изменить имя в пути файла без изменения расширения
         /// </summary>
-        public static string ChangeFilePathNameWithoutExstension(string filePath, string fileName) =>
+        public static string ChangeFilePathNameWithoutExtension(string filePath, string fileName) =>
             Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
-            Path.GetFileNameWithoutExtension(fileName) + Path.GetExtension(filePath);
+            fileName + Path.GetExtension(filePath);
 
         /// <summary>
         /// Убрать точку из расширения файла и привести к нижнему регистру

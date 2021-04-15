@@ -58,7 +58,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>      
         protected Func<ISignatureLibraryApp, IResultAppValue<IStampField>> InsertSignatureFunc
             (IElementMicrostation previousElement, IElementMicrostation nextElement, StampFieldType stampFieldType) =>
-            (signatureLibrary) =>
+            signatureLibrary =>
                 _insertSignatureByFields(signatureLibrary.PersonId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation).
                 ResultValueOk(signature => new StampFieldMicrostation(signature, stampFieldType));
     }
