@@ -5,6 +5,7 @@ using GadzhiDTOServer.TransferModels.FilesConvert;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDAL.Entities.FilesConvert.Base.Components;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
@@ -19,19 +20,16 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// <summary>
         /// Обновить модель базы данных на основе промежуточного ответа
         /// </summary>      
-        public static PackageDataEntity UpdatePackageDataFromIntermediateResponse(PackageDataEntity packageDataEntity,
-                                                                                  PackageDataIntermediateResponseServer packageDataIntermediateResponse)
+        public static PackageDataEntity UpdatePackageDataFromShortResponse(PackageDataEntity packageDataEntity,
+                                                                           PackageDataShortResponseServer packageDataShortResponse)
         {
-            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
-            if (packageDataIntermediateResponse == null) throw new ArgumentNullException(nameof(packageDataIntermediateResponse));
+            packageDataEntity.StatusProcessingProject = packageDataShortResponse.StatusProcessingProject;
 
-            packageDataEntity.StatusProcessingProject = packageDataIntermediateResponse.StatusProcessingProject;
-
-            var filesDataIntermediateEntity = packageDataEntity.FileDataEntities?.
-                                              Join(packageDataIntermediateResponse.FilesData,
+            var filesDataIntermediateEntity = packageDataEntity.FileDataEntities.
+                                              Join(packageDataShortResponse.FilesData,
                                                    fileEntity => fileEntity.FilePath,
                                                    filesIntermediateResponse => filesIntermediateResponse.FilePath,
-                                                   UpdateFileDataFromIntermediateResponse).
+                                                   UpdateFileDataFromShortResponse).
                                               ToList();
             packageDataEntity.SetFileDataEntities(filesDataIntermediateEntity);
 
@@ -44,15 +42,12 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         public static PackageDataEntity UpdatePackageDataFromResponse(PackageDataEntity packageDataEntity,
                                                                       PackageDataResponseServer packageDataResponse)
         {
-            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
-            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
-
             if (CheckStatusProcessing.CompletedStatusProcessingProject.
                 Contains(packageDataEntity.StatusProcessingProject)) return packageDataEntity;
 
             packageDataEntity.StatusProcessingProject = packageDataResponse.StatusProcessingProject;
 
-            var fileDataEntities = packageDataEntity.FileDataEntities?.
+            var fileDataEntities = packageDataEntity.FileDataEntities.
                                    Join(packageDataResponse.FilesData,
                                    fileEntity => fileEntity.FilePath,
                                    fileResponse => fileResponse.FilePath,
@@ -64,17 +59,34 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         }
 
         /// <summary>
+        /// Обновить модель базы данных на основе промежуточного ответа с данными
+        /// </summary>      
+        public static void UpdateFileDataFromIntermediateResponse(PackageDataEntity packageDataEntity,
+                                                                  FileDataResponseServer fileDataResponseServer)
+        {
+            if (CheckStatusProcessing.CompletedStatusProcessingProject.
+                Contains(packageDataEntity.StatusProcessingProject)) return;
+
+            var fileDataEntity = packageDataEntity.FileDataEntities.First(fileData => fileData.FilePath == fileDataResponseServer.FilePath);
+            UpdateFileDataFromResponse(fileDataEntity, fileDataResponseServer);
+        }
+
+        /// <summary>
         /// Обновить модель файла данных на основе промежуточного ответа
         /// </summary>      
-        public static FileDataEntity UpdateFileDataFromIntermediateResponse(FileDataEntity fileDataEntity,
-                                                                                  FileDataIntermediateResponseServer fileDataResponse)
+        public static FileDataEntity UpdateFileDataFromShortResponse(FileDataEntity fileDataEntity, FileDataShortResponseServer fileDataResponse)
         {
-            if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
-            if (fileDataResponse == null) throw new ArgumentNullException(nameof(fileDataResponse));
-
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
+            if (fileDataEntity.FileDataSource.Count == 0)
+            {
+                var errorCommonResponse = new ErrorCommonResponse()
+                {
+                    ErrorConvertingType = ErrorConvertingType.IncorrectDataSource,
+                    ErrorDescription = "Ошибка загрузки данных на сервер",
+                };
+                fileDataResponse.FileErrors.Add(errorCommonResponse);
+            }
             fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
-
             return fileDataEntity;
         }
 
@@ -83,11 +95,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>      
         public static FileDataEntity UpdateFileDataFromResponse(FileDataEntity fileDataEntity, FileDataResponseServer fileDataResponse)
         {
-            if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
-            if (fileDataResponse == null) throw new ArgumentNullException(nameof(fileDataResponse));
-
             var fileDataSourceEntity = fileDataResponse.FilesDataSource?.AsQueryable().
-                                       Select(fileData => ToFileDataSource(fileData));
+                                                        Select(fileData => ToFileDataSource(fileData));
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
             fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
             fileDataEntity.SetFileDataSourceEntities(fileDataSourceEntity);
@@ -111,7 +120,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Преобразовать ошибки в формат БД
         /// </summary>
         public static ErrorComponent ToErrorComponent(ErrorCommonResponse error) =>
-            new ErrorComponent()
+            new ErrorComponent
             {
                 ErrorConvertingType = error.ErrorConvertingType,
                 ErrorDescription = error.ErrorDescription,

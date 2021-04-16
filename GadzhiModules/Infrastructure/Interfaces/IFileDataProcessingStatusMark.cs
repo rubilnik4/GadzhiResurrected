@@ -28,7 +28,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataIntermediateResponseClient fileDataResponse);
+        Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataShortResponseClient fileDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
@@ -44,6 +44,6 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
         Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
-                                                                  PackageDataIntermediateResponseClient packageDataIntermediateResponse);
+                                                                  PackageDataShortResponseClient packageDataShortResponse);
     }
 }

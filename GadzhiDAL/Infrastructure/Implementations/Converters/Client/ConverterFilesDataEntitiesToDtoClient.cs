@@ -22,10 +22,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
-        public static PackageDataIntermediateResponseClient PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
+        public static PackageDataShortResponseClient PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
                                                                                               FilesQueueInfo filesQueueInfo) =>
             (packageDataEntity != null)
-                ? new PackageDataIntermediateResponseClient()
+                ? new PackageDataShortResponseClient()
                 {
                     Id = Guid.Parse(packageDataEntity.Id),
                     StatusProcessingProject = packageDataEntity.StatusProcessingProject,
@@ -56,7 +56,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать файл модели базы данных в промежуточную
         /// </summary>
-        private static FileDataIntermediateResponseClient FileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
+        private static FileDataShortResponseClient FileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
         {
             if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
 
@@ -72,7 +72,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 fileConvertErrorType = new List<ErrorCommonResponse> { error };
             }
 
-            return new FileDataIntermediateResponseClient()
+            return new FileDataShortResponseClient()
             {
                 FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,

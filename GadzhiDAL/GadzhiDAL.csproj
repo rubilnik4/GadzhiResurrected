@@ -221,7 +221,7 @@
       <Name>GadzhiCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiDTOBase\GadzhiDTOBase.csproj">
-      <Project>{6cc66305-c66b-4d9b-9ecf-5089a5fe8369}</Project>
+      <Project>{6CC66305-C66B-4D9B-9ECF-5089A5FE8369}</Project>
       <Name>GadzhiDTOBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\GadzhiDTOClient\GadzhiDTOClient.csproj">

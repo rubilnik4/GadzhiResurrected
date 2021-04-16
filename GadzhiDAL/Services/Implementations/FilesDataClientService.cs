@@ -4,7 +4,6 @@ using GadzhiDAL.Entities.FilesConvert.Archive;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Models.Implementations;
-using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System;
 using System.Linq;
@@ -14,6 +13,7 @@ using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Client;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Errors;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 using Unity;
 
 namespace GadzhiDAL.Services.Implementations
@@ -48,7 +48,7 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID
         /// </summary>       
-        public async Task<PackageDataIntermediateResponseClient> GetFilesDataIntermediateResponseById(Guid id)
+        public async Task<PackageDataShortResponseClient> GetFilesDataIntermediateResponseById(Guid id)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());

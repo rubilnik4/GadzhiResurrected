@@ -16,13 +16,13 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         /// Отправить файлы для конвертирования
         /// </summary>
         [OperationContract]
-        Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequestClient);
+        Task<PackageDataShortResponseClient> SendFiles(PackageDataRequestClient packageDataRequestClient);
 
         /// <summary>
         /// Проверить статус файлов
         /// </summary>   
         [OperationContract]
-        Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid packageId);
+        Task<PackageDataShortResponseClient> CheckFilesStatusProcessing(Guid packageId);
 
         /// <summary>
         /// Отправить отконвертированные файлы

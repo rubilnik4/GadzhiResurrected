@@ -44,15 +44,15 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер пакета информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        public PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataIntermediateResponseClient packageDataIntermediateResponse)
+        public PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
         {
-            if (packageDataIntermediateResponse == null) throw new ArgumentNullException(nameof(packageDataIntermediateResponse));
+            if (packageDataShortResponse == null) throw new ArgumentNullException(nameof(packageDataShortResponse));
 
-            var packageStatus = packageDataIntermediateResponse.FilesData?.Select(ToFileStatusFromIntermediateResponse);
-            var queueStatus = ConvertToQueueInfoFromResponse(packageDataIntermediateResponse.FilesQueueInfo);
+            var packageStatus = packageDataShortResponse.FilesData?.Select(ToFileStatusFromIntermediateResponse);
+            var queueStatus = ConvertToQueueInfoFromResponse(packageDataShortResponse.FilesQueueInfo);
 
             return new PackageStatus(packageStatus,
-                                      packageDataIntermediateResponse.StatusProcessingProject,
+                                      packageDataShortResponse.StatusProcessingProject,
                                       queueStatus);
         }
 
@@ -98,7 +98,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        private static FileStatus ToFileStatusFromIntermediateResponse(FileDataIntermediateResponseClient fileResponse) =>
+        private static FileStatus ToFileStatusFromIntermediateResponse(FileDataShortResponseClient fileResponse) =>
             new FileStatus(fileResponse.FilePath,
                            fileResponse.StatusProcessing,
                            fileResponse.FileErrors.Select(ToErrorCommon));

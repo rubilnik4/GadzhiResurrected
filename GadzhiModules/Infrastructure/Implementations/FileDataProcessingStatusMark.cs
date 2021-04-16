@@ -86,9 +86,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Поменять статус файлов после промежуточного отчета
         /// </summary>       
-        public Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataIntermediateResponseClient packageDataIntermediateResponse)
+        public Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
         {
-            var filesStatusIntermediate = _converterClientPackageDataFromDto.ToPackageStatusFromIntermediateResponse(packageDataIntermediateResponse);
+            var filesStatusIntermediate = _converterClientPackageDataFromDto.ToPackageStatusFromIntermediateResponse(packageDataShortResponse);
             return Task.FromResult(filesStatusIntermediate);
         }
 
@@ -111,14 +111,14 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
         public async Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
-                                                                   PackageDataIntermediateResponseClient packageDataIntermediateResponse)
+                                                                   PackageDataShortResponseClient packageDataShortResponse)
         {
             var filesNotFound = await GetFilesNotFound(packageDataRequest?.FilesData);
-            var filesChangedStatus = await GetPackageStatusIntermediateResponse(packageDataIntermediateResponse);
+            var filesChangedStatus = await GetPackageStatusIntermediateResponse(packageDataShortResponse);
 
             var filesDataUnion = filesNotFound.FileStatus.UnionNotNull(filesChangedStatus.FileStatus);
             return new PackageStatus(filesDataUnion,
-                                     packageDataIntermediateResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
+                                     packageDataShortResponse?.StatusProcessingProject ?? StatusProcessingProject.Sending,
                                      filesChangedStatus.QueueStatus);
         }
     }

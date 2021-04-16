@@ -17,7 +17,7 @@ namespace GadzhiDAL.Services.Interfaces
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID
         /// </summary>       
-        Task<PackageDataIntermediateResponseClient> GetFilesDataIntermediateResponseById(Guid id);
+        Task<PackageDataShortResponseClient> GetFilesDataIntermediateResponseById(Guid id);
 
         /// <summary>
         /// Получить окончательный пакет отконвертированных файлов по номеру ID

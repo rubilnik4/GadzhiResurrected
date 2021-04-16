@@ -227,11 +227,13 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отправить промежуточный отчет
         /// </summary>
-        private async Task<IResultValue<IPackageServer>> SendIntermediateResponse(IPackageServer packageServer) =>
-            await _converterServerPackageDataToDto.FilesDataToIntermediateResponse(packageServer).
-            Map(Task.FromResult).
+        private async Task<IResultValue<IPackageServer>> SendIntermediateResponse(IPackageServer packageServer, IFileDataServer fileDataServer) =>
+            await _converterServerPackageDataToDto.FileDataToResponse(fileDataServer).
+            Void(_ => _messagingService.ShowMessage("Отправка данных в базу...")).
             MapBindAsync(fileDataRequest => _convertingServerServiceFactory.
-                                            UsingServiceRetry(service => service.Operations.UpdateFromIntermediateResponse(fileDataRequest))).
+                                            UsingServiceRetry(service => service.Operations.UpdateFromIntermediateResponse(packageServer.Id, fileDataRequest))).
+            ResultVoidBadAsync(errors => _loggerService.ErrorsLog(errors)).
+            ResultVoidBadAsync(errors => _messagingService.ShowErrors(errors)).
             ResultValueOkAsync(packageServer.SetStatusProcessingProject);
 
         /// <summary>
@@ -246,8 +248,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                     {
                         _messagingService.ShowMessage("Отправка данных в базу...");
 
-                        var packageDataResponse = await _converterServerPackageDataToDto.FilesDataToResponse(packageServer);
-                        var result = await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.UpdateFromResponse(packageDataResponse));
+                        var packageDataShortResponse = _converterServerPackageDataToDto.FilesDataToShortResponse(packageServer);
+                        var result = await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.UpdateFromResponse(packageDataShortResponse));
                         if (result.OkStatus)
                         {
                             _messagingService.ShowMessage("Конвертация пакета закончена");
@@ -255,7 +257,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
                         else
                         {
                             _loggerService.ErrorsLog(result.Errors);
-                            _messagingService.ShowMessage("Ошибка отправки данных");
                             _messagingService.ShowErrors(result.Errors);
                         }
                        
@@ -293,8 +294,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(ErrorConvertingType.ArgumentNullReference, nameof(IFileDataServer)))).
             ResultOkBad(
                 okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
-                                    Map(packageServer.ChangeFileDataServer).
-                                    Map(SendIntermediateResponse).
+                                    Map(fileDataConvert => packageServer.ChangeFileDataServer(fileDataConvert).
+                                                           Map(packageChanged => SendIntermediateResponse(packageChanged, fileDataConvert))).
                                     ResultValueOkAsync(ConvertingFilesData).
                                     MapAsync(result => result.OkStatus ? result.Value : packageServer),
                 badFunc: _ => Task.FromResult(packageServer)).
@@ -346,11 +347,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             var processes = Process.GetProcesses().
                             Where(process => process.ProcessName.ContainsIgnoreCase("ustation") ||
                                              process.ProcessName.ContainsIgnoreCase("winword"));
-
-            foreach (var process in processes)
-            {
-                process.Kill();
-            }
+            foreach (var process in processes) process.Kill();
         }
 
         /// <summary>

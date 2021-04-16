@@ -7,7 +7,7 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     /// Класс содержащий промежуточные данные о конвертируемом файле для клиента
     /// </summary>
     [DataContract]
-    public class FileDataIntermediateResponseClient : FileDataIntermediateResponseBase
+    public class FileDataShortResponseClient : FileDataShortResponseBase
     {
 
     }

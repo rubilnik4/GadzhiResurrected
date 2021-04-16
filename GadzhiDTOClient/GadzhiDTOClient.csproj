@@ -109,10 +109,10 @@
     <Compile Include="Contracts\FilesConvert\IFileConvertingClientService.cs" />
     <Compile Include="Contracts\Signatures\ISignatureClientService.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataSourceResponseClient.cs" />
-    <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponseClient.cs" />
+    <Compile Include="TransferModels\FilesConvert\FileDataShortResponseClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequestClient.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataResponseClient.cs" />
-    <Compile Include="TransferModels\FilesConvert\PackageDataIntermediateResponseClient.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataShortResponseClient.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataRequestClient.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataResponseClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

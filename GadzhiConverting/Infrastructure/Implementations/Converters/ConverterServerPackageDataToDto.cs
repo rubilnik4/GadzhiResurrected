@@ -29,9 +29,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
-        public PackageDataIntermediateResponseServer FilesDataToIntermediateResponse(IPackageServer packageServer) =>
+        public PackageDataShortResponseServer FilesDataToShortResponse(IPackageServer packageServer) =>
             (packageServer != null)
-                ? new PackageDataIntermediateResponseServer()
+                ? new PackageDataShortResponseServer()
                 {
                     Id = packageServer.Id,
                     StatusProcessingProject = packageServer.StatusProcessingProject,
@@ -61,8 +61,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в промежуточную
         /// </summary>
-        private static FileDataIntermediateResponseServer FileDataToIntermediateResponse(IFileDataServer fileDataServer) =>
-            new FileDataIntermediateResponseServer()
+        private static FileDataShortResponseServer FileDataToIntermediateResponse(IFileDataServer fileDataServer) =>
+            new FileDataShortResponseServer()
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
@@ -72,7 +72,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертировать файл серверной модели в окончательный ответ
         /// </summary>
-        private async Task<FileDataResponseServer> FileDataToResponse(IFileDataServer fileDataServer)
+        public async Task<FileDataResponseServer> FileDataToResponse(IFileDataServer fileDataServer)
         {
             var filesDataSourceTasks = fileDataServer.FilesDataSourceServer?.Select(FileDataSourceToResponse)
                                        ?? Enumerable.Empty<Task<(bool, FileDataSourceResponseServer)>>();

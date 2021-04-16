@@ -111,10 +111,10 @@
     <Compile Include="Infrastructure\Implementation\ValidateDTOdata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataSourceResponseServer.cs" />
-    <Compile Include="TransferModels\FilesConvert\FileDataIntermediateResponseServer.cs" />
+    <Compile Include="TransferModels\FilesConvert\FileDataShortResponseServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataRequestServer.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataResponseServer.cs" />
-    <Compile Include="TransferModels\FilesConvert\PackageDataIntermediateResponseServer.cs" />
+    <Compile Include="TransferModels\FilesConvert\PackageDataShortResponseServer.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataRequestServer.cs" />
     <Compile Include="TransferModels\FilesConvert\PackageDataResponseServer.cs" />
     <Compile Include="TransferModels\Signatures\MicrostationDataFileDto.cs" />

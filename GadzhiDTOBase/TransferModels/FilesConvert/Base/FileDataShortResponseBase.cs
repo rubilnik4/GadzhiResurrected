@@ -11,7 +11,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Класс содержащий промежуточные данные о конвертируемом файле
     /// </summary>
     [DataContract]
-    public abstract class FileDataIntermediateResponseBase : IFormattable
+    public abstract class FileDataShortResponseBase : IFormattable
     {       
         /// <summary>
         /// Путь файла

@@ -116,11 +116,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\ConvertingSettingsRequest.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\ErrorCommonResponse.cs" />
-    <Compile Include="TransferModels\FilesConvert\Base\FileDataIntermediateResponseBase.cs" />
+    <Compile Include="TransferModels\FilesConvert\Base\FileDataShortResponseBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\FileDataRequestBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\FileDataResponseBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\FileDataSourceResponseBase.cs" />
-    <Compile Include="TransferModels\FilesConvert\Base\PackageDataIntermediateResponseBase.cs" />
+    <Compile Include="TransferModels\FilesConvert\Base\PackageDataShortResponseBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataRequestBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataResponseBase.cs" />
     <Compile Include="TransferModels\Signatures\PersonInformationDto.cs" />

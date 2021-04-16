@@ -1,10 +1,11 @@
 ﻿using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
-using GadzhiWcfHost.Infrastructure.Interfaces.Client;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiDAL.Services.Interfaces;
+using GadzhiWcfHost.Infrastructure.Implementations.Authentication;
 
 namespace GadzhiWcfHost.Services
 {
@@ -16,43 +17,54 @@ namespace GadzhiWcfHost.Services
                      IncludeExceptionDetailInFaults = true)]
     public class FileConvertingClientService : IFileConvertingClientService
     {
-        /// <summary>
-        /// Сохранение, обработка, подготовка для отправки файлов
-        /// </summary>   
-        private readonly IApplicationClientConverting _applicationClientConverting;
-
-        public FileConvertingClientService(IApplicationClientConverting applicationClientConverting)
+        public FileConvertingClientService(IFilesDataClientService filesDataClientService)
         {
-            _applicationClientConverting = applicationClientConverting;
+            _filesDataClientService = filesDataClientService;
         }
+
+        /// <summary>
+        /// Сервис для добавления и получения данных о конвертируемых пакетах в клиентской части
+        /// </summary>
+        private readonly IFilesDataClientService _filesDataClientService;
 
         /// <summary>
         /// Сохранить файлы для конвертации в системе и отправить отчет
         /// </summary>
-        public async Task<PackageDataIntermediateResponseClient> SendFiles(PackageDataRequestClient packageDataRequest) =>
-                await _applicationClientConverting.QueueFilesDataAndGetResponse(packageDataRequest);
+        public async Task<PackageDataShortResponseClient> SendFiles(PackageDataRequestClient packageDataRequest)
+        {
+            if (packageDataRequest == null) return new PackageDataShortResponseClient();
+            await QueueFilesData(packageDataRequest, Authentication.GetIdentityName());
+            return await CheckFilesStatusProcessing(packageDataRequest.Id);
+        }
 
         /// <summary>
         /// Проверить статус файлов по Id номеру
         /// </summary>      
-        public async Task<PackageDataIntermediateResponseClient> CheckFilesStatusProcessing(Guid packageId) =>
-                await _applicationClientConverting.GetIntermediateFilesDataResponseById(packageId);
+        public async Task<PackageDataShortResponseClient> CheckFilesStatusProcessing(Guid packageId) =>
+            await _filesDataClientService.GetFilesDataIntermediateResponseById(packageId);
 
         /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
         public async Task<PackageDataResponseClient> GetCompleteFiles(Guid packageId) =>
-                await _applicationClientConverting.GetFilesDataResponseById(packageId);
+            await _filesDataClientService.GetFilesDataResponseById(packageId);
 
         /// <summary>
         /// Установить отметку о получении клиентом пакета
         /// </summary>       
         public async Task SetFilesDataLoadedByClient(Guid packageId) =>
-              await _applicationClientConverting.SetFilesDataLoadedByClient(packageId);
+            await _filesDataClientService.SetFilesDataLoadedByClient(packageId);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>       
-        public async Task AbortConvertingById(Guid packageId) => await _applicationClientConverting.AbortConvertingById(packageId);
+        public async Task AbortConvertingById(Guid packageId) =>
+            await _filesDataClientService.AbortConvertingById(packageId);
+
+        /// <summary>
+        /// Поставить файлы в очередь для обработки
+        /// </summary>
+        private async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName) =>
+            await _filesDataClientService.QueueFilesData(packageDataRequest, identityName);
     }
 }

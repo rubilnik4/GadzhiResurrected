@@ -24,13 +24,13 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         /// Обновить информацию после промежуточного ответа
         /// </summary>      
         [OperationContract]
-        Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse);
+        Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>  
         [OperationContract]
-        Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse);
+        Task<Unit> UpdateFromResponse(PackageDataShortResponseServer packageDataShortResponseServer);
 
         /// <summary>
         /// Удалить все устаревшие пакеты

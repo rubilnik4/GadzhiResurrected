@@ -29,7 +29,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
         {
             if (signatureEntities == null) throw new ArgumentNullException(nameof(signatureEntities));
             return signatureEntities.AsQueryable().
-                                     Select(signatire => SignatureToDto(signatire, signatureLoad)).
+                                     Select(signature => SignatureToDto(signature, signatureLoad)).
                                      ToList();
         }
 

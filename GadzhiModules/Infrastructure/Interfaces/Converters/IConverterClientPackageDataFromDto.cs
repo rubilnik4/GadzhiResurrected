@@ -12,7 +12,7 @@ namespace GadzhiModules.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Конвертер пакета информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataIntermediateResponseClient packageDataIntermediateResponse);
+        PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse);
 
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части перед сохранение

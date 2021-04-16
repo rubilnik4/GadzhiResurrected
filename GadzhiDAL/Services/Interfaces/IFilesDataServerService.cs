@@ -19,12 +19,12 @@ namespace GadzhiDAL.Services.Interfaces
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary>      
-        Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse);
+        Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>      
-        Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse);
+        Task<Unit> UpdateFromResponse(PackageDataShortResponseServer packageDataShortResponseServer);
 
         /// <summary>
         /// Отмена операции по номеру ID

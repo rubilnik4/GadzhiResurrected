@@ -7,7 +7,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Класс содержащий ответные данные о конвертируемом файле
     /// </summary>
     [DataContract]
-    public abstract class FileDataResponseBase<TFileDataSourceResponse> : FileDataIntermediateResponseBase
+    public abstract class FileDataResponseBase<TFileDataSourceResponse> : FileDataShortResponseBase
         where TFileDataSourceResponse: FileDataSourceResponseBase
     {
         /// <summary>

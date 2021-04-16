@@ -37,12 +37,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// </summary>      
         public virtual void SetFileDataEntities(IEnumerable<FileDataEntity> fileDataEntities)
         {
-            FileDataEntities = fileDataEntities?.Select(fileData =>
+            FileDataEntities = fileDataEntities.Select(fileData =>
             {
                 fileData.PackageDataEntity = this;
                 return fileData;
-            }).ToList()
-            ?? new List<FileDataEntity>();
+            }).ToList();
         }
 
         /// <summary>

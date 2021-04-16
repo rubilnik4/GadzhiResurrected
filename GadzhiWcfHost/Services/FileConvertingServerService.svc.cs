@@ -1,7 +1,6 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
-using GadzhiWcfHost.Infrastructure.Interfaces.Server;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using GadzhiDTOServer.TransferModels.Signatures;
 using System.Linq;
 using GadzhiCommon.Models.Implementations.Functional;
+using GadzhiDAL.Services.Interfaces;
 using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Services
@@ -21,49 +21,50 @@ namespace GadzhiWcfHost.Services
                      IncludeExceptionDetailInFaults = true)]
     public class FileConvertingServerService : IFileConvertingServerService
     {
-        /// <summary>
-        /// Класс для отправки пакетов на сервер
-        /// </summary>
-        private readonly IApplicationServerConverting _applicationServerConverting;
-
-        public FileConvertingServerService(IApplicationServerConverting applicationServerConverting)
+        public FileConvertingServerService(IFilesDataServerService filesDataServerService)
         {
-            _applicationServerConverting = applicationServerConverting;
+            _filesDataServerService = filesDataServerService;
         }
+
+        /// <summary>
+        /// Сервис для добавления и получения данных о конвертируемых пакетах серверной части
+        /// </summary>
+        private readonly IFilesDataServerService _filesDataServerService;
 
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>           
         public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)=>
-                await _applicationServerConverting.GetFirstInQueuePackage(identityServerName);       
+                await _filesDataServerService.GetFirstInQueuePackage(identityServerName);       
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
-        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse) =>
-                await _applicationServerConverting.UpdateFromIntermediateResponse(packageDataIntermediateResponse);
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer) =>
+                await _filesDataServerService.UpdateFromIntermediateResponse(packageId, fileDataResponseServer);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
-        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse) =>
-                await _applicationServerConverting.UpdateFromResponse(packageDataResponse);
+        public async Task<Unit> UpdateFromResponse(PackageDataShortResponseServer packageDataShortResponseServer) =>
+                await _filesDataServerService.UpdateFromResponse(packageDataShortResponseServer);
 
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
         public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
-                await _applicationServerConverting.DeleteAllUnusedPackagesUntilDate(dateDeletion);
+                await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Удалить все устаревшие пакеты с ошибками
         /// </summary>      
         public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
-                await _applicationServerConverting.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
+                await _filesDataServerService.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
-        public async Task<Unit> AbortConvertingById(Guid id) => await _applicationServerConverting.AbortConvertingById(id);
+        public async Task<Unit> AbortConvertingById(Guid id) => 
+            await _filesDataServerService.AbortConvertingById(id);
     }
 }

@@ -53,40 +53,34 @@ namespace GadzhiDAL.Services.Implementations
         /// <summary>
         /// Обновить информацию после промежуточного ответа. При отмене - удалить пакет
         /// </summary>      
-        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(PackageDataIntermediateResponseServer packageDataIntermediateResponse)
+        public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer)
         {
-            if (packageDataIntermediateResponse == null) throw new ArgumentNullException(nameof(packageDataIntermediateResponse));
-
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageDataIntermediateResponse.Id.ToString());
+            var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageId.ToString());
 
             if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, packageDataEntity))
             {
-                packageDataEntity = ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromIntermediateResponse(packageDataEntity, packageDataIntermediateResponse);
+                ConverterFilesDataEntitiesFromDtoServer.UpdateFileDataFromIntermediateResponse(packageDataEntity, fileDataResponseServer);
             }
 
             await unitOfWork.CommitAsync();
-
             return packageDataEntity.StatusProcessingProject;
         }
 
         /// <summary>
         /// Обновить информацию после окончательного ответа. При отмене - удалить пакет
         /// </summary>      
-        public async Task<Unit> UpdateFromResponse(PackageDataResponseServer packageDataResponse)
+        public async Task<Unit> UpdateFromResponse(PackageDataShortResponseServer packageDataShortResponseServer)
         {
-            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
-
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            var filesDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageDataResponse.Id.ToString());
+            var filesDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageDataShortResponseServer.Id.ToString());
 
             if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, filesDataEntity))
             {
-                ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromResponse(filesDataEntity, packageDataResponse);
+                ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromShortResponse(filesDataEntity, packageDataShortResponseServer);
             }
 
             await unitOfWork.CommitAsync();
-
             return Unit.Value;
         }
 
@@ -103,8 +97,8 @@ namespace GadzhiDAL.Services.Implementations
             {
                 await unitOfWork.Session.DeleteAsync(fileData);
             }
-            await unitOfWork.CommitAsync();
 
+            await unitOfWork.CommitAsync();
             return Unit.Value;
         }
 
@@ -121,8 +115,8 @@ namespace GadzhiDAL.Services.Implementations
             {
                 await unitOfWork.Session.DeleteAsync(fileData);
             }
+            
             await unitOfWork.CommitAsync();
-
             return Unit.Value;
         }
 
@@ -139,7 +133,6 @@ namespace GadzhiDAL.Services.Implementations
             packageDataEntity?.AbortConverting(ClientServer.Server);
 
             await unitOfWork.CommitAsync();
-
             return Unit.Value;
         }
 

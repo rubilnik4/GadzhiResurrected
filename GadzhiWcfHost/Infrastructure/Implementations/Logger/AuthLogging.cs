@@ -1,5 +1,4 @@
 ﻿using System;
-using GadzhiWcfHost.Infrastructure.Implementations.Client;
 
 namespace GadzhiWcfHost.Infrastructure.Implementations.Logger
 {

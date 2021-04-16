@@ -86,7 +86,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Отправить файлы для конвертации после подтверждения сервера
         /// </summary>
         private async Task<IResultError> SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest, 
-                                                                      PackageDataIntermediateResponseClient packageDataResponse) =>
+                                                                      PackageDataShortResponseClient packageDataResponse) =>
             await packageDataResponse.
             Void(_ => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                   packageDataRequest.FilesData, packageDataRequest.Id.ToString())).
