@@ -17,17 +17,17 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
     /// </summary>
     public abstract class SignatureWord : StampSignature
     {
-        /// <summary>
-        /// Подпись. Элемент Word
-        /// </summary>
-        private readonly IResultAppValue<IStampFieldWord> _signature;
-
         protected SignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature )
             : base(signatureLibrary)
         {
             _signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                              "Подпись не инициализирована"));
         }
+
+        /// <summary>
+        /// Подпись. Элемент Word
+        /// </summary>
+        private readonly IResultAppValue<IStampFieldWord> _signature;
 
         /// <summary>
         /// Подпись

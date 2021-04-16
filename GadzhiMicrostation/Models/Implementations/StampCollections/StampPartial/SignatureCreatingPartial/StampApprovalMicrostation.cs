@@ -54,7 +54,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Сформировать строку с подписью согласования согласно идентификатору Microstation
         /// </summary>
         private IResultAppValue<IStampApproval> GetStampApprovalById(IStampTextFieldMicrostation responsiblePerson,
-                                                                     Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+                                                                     Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                                                      IStampTextField actionType, IStampTextField dateSignature) =>
             SignaturesSearching.FindByIdOrFullNameOrRandom(responsiblePerson.ElementStamp.AttributePersonId,
                                                            responsiblePerson.MaxLengthWord, PersonId).

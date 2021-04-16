@@ -16,7 +16,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// </summary>
         public static IReadOnlyDictionary<string, FileExtension> DocAndDgnFileTypeDictionary => new Dictionary<string, FileExtension>()
         {
-            { "doc", FileExtension.Docx},
+            { "doc", FileExtension.Doc},
             { "docx", FileExtension.Docx},
             { "dgn", FileExtension.Dgn},
         };
@@ -26,7 +26,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// </summary>
         public static IReadOnlyDictionary<string, FileExtension> FileTypesValidDictionary => new Dictionary<string, FileExtension>()
         {
-            { "doc", FileExtension.Docx},
+            { "doc", FileExtension.Doc},
             { "docx", FileExtension.Docx},
             { "dgn", FileExtension.Dgn},
             { "pdf", FileExtension.Pdf},

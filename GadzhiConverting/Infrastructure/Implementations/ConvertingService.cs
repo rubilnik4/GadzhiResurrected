@@ -247,9 +247,18 @@ namespace GadzhiConverting.Infrastructure.Implementations
                         _messagingService.ShowMessage("Отправка данных в базу...");
 
                         var packageDataResponse = await _converterServerPackageDataToDto.FilesDataToResponse(packageServer);
-                        await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.UpdateFromResponse(packageDataResponse));
-
-                        _messagingService.ShowMessage("Конвертация пакета закончена");
+                        var result = await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.UpdateFromResponse(packageDataResponse));
+                        if (result.OkStatus)
+                        {
+                            _messagingService.ShowMessage("Конвертация пакета закончена");
+                        }
+                        else
+                        {
+                            _loggerService.ErrorsLog(result.Errors);
+                            _messagingService.ShowMessage("Ошибка отправки данных");
+                            _messagingService.ShowErrors(result.Errors);
+                        }
+                       
                         _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString());
                         break;
                     }

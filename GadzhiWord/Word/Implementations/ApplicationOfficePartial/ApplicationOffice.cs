@@ -39,7 +39,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
 
                 try
                 {
-                    string version = _applicationWord.Version;
+                    string _ = _applicationWord.Version;
                 }
                 catch (COMException)
                 {
@@ -66,7 +66,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
 
                 try
                 {
-                    string version = _applicationExcel.Version;
+                    string _ = _applicationExcel.Version;
                 }
                 catch (COMException)
                 {

@@ -12,6 +12,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Signatures;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
 {
@@ -57,7 +58,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Сформировать строку с подписью изменений согласно идентификатору Microstation
         /// </summary>
         private static IResultAppValue<IStampChange> GetStampChangeById(ISignatureLibraryApp personSignature,
-                                                                 Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+                                                                 Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                                                  IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                                                  IStampTextField documentChange, IStampTextField dateChange) => 
             new ChangeSignatureMicrostation(personSignature, insertSignatureFunc, numberChange, numberOfPlots, 

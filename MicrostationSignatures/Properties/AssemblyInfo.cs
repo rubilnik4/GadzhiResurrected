@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MicrostationSignatures")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Insert signatures to database")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MicrostationSignatures")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Ivan Rubilnik")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

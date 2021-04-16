@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Word.Interfaces.Word.Elements;
@@ -164,6 +165,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections
 
             foreach (var cell in tableWord.CellsElementWord)
             {
+                if (cell.Text.ContainsIgnoreCase("ХСВФ0-9140.4-Р-000-ЭС01-СО-001"))
+                {
+
+                }
                 if (CheckFieldType.IsFieldFullCode(cell, tableWord)) hasFullCode = true;
                 if (MarkersAdditionalStamp.MarkerContain(cell.TextNoSpaces)) hasShortMarker = true;
                 if (MarkersFullStamp.MarkerContain(cell.TextNoSpaces)) hasMainMarkers = true;

@@ -12,6 +12,7 @@ namespace GadzhiCommon.Enums.FilesConvert
     public enum FileExtension
     {
         Dgn,
+        Doc,
         Docx,
         Pdf,
         Dwg,

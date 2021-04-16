@@ -73,6 +73,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             fileExtensionMain switch
             {
                 FileExtension.Dgn => FileExtension.Dwg,
+                FileExtension.Doc => FileExtension.Xlsx,
                 FileExtension.Docx => FileExtension.Xlsx,
                 _ => throw new InvalidEnumArgumentException(nameof(fileExtensionMain), (int)fileExtensionMain, typeof(FileExtension))
             };
@@ -93,6 +94,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             fileExtension switch
             {
                 FileExtension.Dgn => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationMicrostation),
+                FileExtension.Doc => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
                 FileExtension.Docx => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
                 _ => new ErrorCommon(ErrorConvertingType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtension} не найдена").
                      ToResultValue<IApplicationLibrary<IDocumentLibrary>>()

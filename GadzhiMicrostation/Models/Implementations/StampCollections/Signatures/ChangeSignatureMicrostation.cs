@@ -6,6 +6,7 @@ using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiMicrostation.Models.Interfaces.StampCollections;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
 {
@@ -15,15 +16,15 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     public class ChangeSignatureMicrostation : SignatureMicrostation, IStampChange
     {
         public ChangeSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
-                                       Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+                                       Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                        IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                        IStampTextField documentChange, IStampTextField dateChange)
             : this(signatureLibrary, GetNotInitializedSignature(signatureLibrary?.PersonInformation.Surname),
                    insertSignatureFunc, numberChange, numberOfPlots, typeOfChange, documentChange, dateChange)
         { }
 
-        public ChangeSignatureMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampField> signature,
-                                       Func<ISignatureLibraryApp, IResultAppValue<IStampField>> insertSignatureFunc,
+        public ChangeSignatureMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampFieldMicrostation> signature,
+                                       Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                        IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                        IStampTextField documentChange, IStampTextField dateChange)
             : base(signatureLibrary, signature, insertSignatureFunc)
@@ -61,6 +62,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         public IStampTextField DateChange { get; }
 
         /// <summary>
+        /// Удалить подпись
+        /// </summary>
+        protected override IStampSignature SignatureDeleted =>
+             new ChangeSignatureMicrostation(SignatureLibrary, InsertSignatureFunc, NumberChange, NumberPlots,
+                                        TypeOfChange, DocumentChange, DateChange);
+
+        /// <summary>
         /// Необходимо ли вставлять подпись в поле
         /// </summary>
         public override bool IsAbleToInsert => IsPersonFieldValid && !NumberChange.Text.IsNullOrWhiteSpace();
@@ -71,12 +79,5 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
             new ChangeSignatureMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
                                         NumberChange, NumberPlots, TypeOfChange, DocumentChange, DateChange);
-
-        /// <summary>
-        /// Удалить подпись
-        /// </summary>
-        public override IStampSignature DeleteSignature() =>
-            new ChangeSignatureMicrostation(SignatureLibrary, InsertSignatureFunc, NumberChange, NumberPlots, 
-                                        TypeOfChange, DocumentChange, DateChange);
     }
 }

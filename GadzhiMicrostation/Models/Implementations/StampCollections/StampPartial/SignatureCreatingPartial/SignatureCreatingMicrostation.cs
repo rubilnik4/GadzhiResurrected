@@ -12,6 +12,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiMicrostation.Microstation.Interfaces.Elements;
 using GadzhiMicrostation.Models.Implementations.StampCollections.Fields;
 using GadzhiMicrostation.Models.Implementations.StampFieldNames;
+using GadzhiMicrostation.Models.Interfaces.StampCollections.Fields;
 using GadzhiMicrostation.Models.Interfaces.StampCollections.StampPartial;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartial.SignatureCreatingPartial
@@ -56,7 +57,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Функция вставки подписей из библиотеки
         /// </summary>      
-        protected Func<ISignatureLibraryApp, IResultAppValue<IStampField>> InsertSignatureFunc
+        protected Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> InsertSignatureFunc
             (IElementMicrostation previousElement, IElementMicrostation nextElement, StampFieldType stampFieldType) =>
             signatureLibrary =>
                 _insertSignatureByFields(signatureLibrary.PersonId, previousElement.AsTextElementMicrostation, nextElement.AsTextElementMicrostation).

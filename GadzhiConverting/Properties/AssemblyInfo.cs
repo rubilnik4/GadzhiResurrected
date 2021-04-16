@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GadzhiConverting")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Converting server to Gadzhi")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GadzhiConverting")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Ivan Rubilnik")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

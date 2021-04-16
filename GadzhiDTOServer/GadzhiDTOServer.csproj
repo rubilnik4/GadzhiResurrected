@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="Contracts\FilesConvert\IFileConvertingServerService.cs" />
     <Compile Include="Contracts\Signatures\ISignatureServerService.cs" />
+    <Compile Include="Contracts\Signatures\ITestService.cs" />
     <Compile Include="Infrastructure\Implementation\ValidateDTOdata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataSourceResponseServer.cs" />

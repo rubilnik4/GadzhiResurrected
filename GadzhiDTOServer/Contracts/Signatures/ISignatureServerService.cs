@@ -13,7 +13,6 @@ namespace GadzhiDTOServer.Contracts.Signatures
     [ServiceContract]
     public interface ISignatureServerService
     {
-
         /// <summary>
         /// Загрузить имена из базы данных
         /// </summary>
