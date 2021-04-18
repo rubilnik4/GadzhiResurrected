@@ -42,7 +42,7 @@ namespace GadzhiPdfPrinting.Infrastructure.Implementations
         /// <summary>
         /// Создать PDF файл с выполнением отложенной печати 
         /// </summary>       
-        public IResultError PrintPdfWithExecuteAction(string filePath, Func<IResultError> printFunction)=>
+        public IResultError PrintPdfWithExecuteAction(string filePath, Func<IResultError> printFunction) =>
             SetPrinterOptions(filePath).
             ResultValueOkBind(pdfCreator => new ResultValue<PDFCreator.clsPDFCreator>(pdfCreator)).
             ResultValueOkBind(pdfCreator => new ResultValue<Unit>(Unit.Value, PrintPdf(pdfCreator, printFunction).Errors)).
@@ -94,10 +94,10 @@ namespace GadzhiPdfPrinting.Infrastructure.Implementations
             pdfCreator.cClose();
             KillAllPreviousProcess();
 
-            return _readyState ?
+            return (_readyState || printFunctionResult.HasErrors ?
                    new ResultError() :
                    new ErrorCommon(ErrorConvertingType.PdfPrintingError, "Время создания PDF файла истекло").
-                   ToResult().
+                   ToResult()).
                    ConcatErrors(printFunctionResult.Errors);
         }
 

@@ -246,7 +246,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 case StatusProcessingProject.ConvertingComplete:
                 case StatusProcessingProject.Error:
                     {
-                        _messagingService.ShowMessage("Отправка данных в базу...");
+                        _messagingService.ShowMessage("Отправка данных пакета в базу...");
 
                         var packageDataShortResponse = _converterServerPackageDataToDto.FilesDataToShortResponse(packageServer);
                         var result = await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.UpdateFromResponse(packageDataShortResponse));

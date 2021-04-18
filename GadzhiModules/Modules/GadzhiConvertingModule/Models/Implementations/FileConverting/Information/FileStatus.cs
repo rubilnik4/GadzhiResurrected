@@ -41,5 +41,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// Список ошибок
         /// </summary>
         public IReadOnlyCollection<IErrorCommon> Errors { get; }
+
+        /// <summary>
+        /// Получить статус с измененным состоянием
+        /// </summary>
+        public FileStatus GetWithStatusProcessing(StatusProcessing statusProcessing) =>
+            new FileStatus(FilePath, statusProcessing, Errors);
     }
 }

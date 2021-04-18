@@ -58,6 +58,19 @@ namespace GadzhiDAL.Services.Implementations
         }
 
         /// <summary>
+        /// Получить файл по номеру ID
+        /// </summary>       
+        public async Task<FileDataResponseClient> GetFileDataResponseById(Guid id, string filePath)
+        {
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());
+            var fileDataEntity = packageDataEntity.FileDataEntities.First(entity => entity.FilePath == filePath);
+            var packageDataResponse = await ConverterFilesDataEntitiesToDtoClient.FileDataAccessToResponse(fileDataEntity);
+
+            return packageDataResponse;
+        }
+
+        /// <summary>
         /// Получить окончательный пакет отконвертированных файлов по номеру ID
         /// </summary>       
         public async Task<PackageDataResponseClient> GetFilesDataResponseById(Guid id)
@@ -65,8 +78,6 @@ namespace GadzhiDAL.Services.Implementations
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());
             var packageDataResponse = await ConverterFilesDataEntitiesToDtoClient.PackageDataAccessToResponse(packageDataEntity);
-
-            await unitOfWork.CommitAsync();
 
             return packageDataResponse;
         }

@@ -9,10 +9,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class FilesChange
     {
-        public FilesChange(IReadOnlyCollection<IFileData> filesDataProject,
-                           IEnumerable<IFileData> filesData,
-                           ActionType actionType,
-                           bool isStatusProcessingProjectChanged)
+        public FilesChange(IReadOnlyCollection<IFileData> filesDataProject, IFileData fileData,
+                           ActionType actionType, bool isStatusProcessingProjectChanged)
+            :this(filesDataProject, new List<IFileData>{ fileData }, actionType , isStatusProcessingProjectChanged)
+        { }
+
+        public FilesChange(IReadOnlyCollection<IFileData> filesDataProject, IEnumerable<IFileData> filesData,
+                           ActionType actionType, bool isStatusProcessingProjectChanged)
         {
             FilesDataProject = filesDataProject ?? new List<IFileData>().AsReadOnly();
             FilesData = filesData?.ToList().AsReadOnly() ?? new List<IFileData>().AsReadOnly();

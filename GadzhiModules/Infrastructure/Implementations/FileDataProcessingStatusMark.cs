@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
@@ -19,6 +20,17 @@ namespace GadzhiModules.Infrastructure.Implementations
     /// </summary>
     public class FileDataProcessingStatusMark : IFileDataProcessingStatusMark
     {
+        public FileDataProcessingStatusMark(IPackageData packageInfoProject,
+                                            IProjectSettings projectSettings,
+                                            IConverterClientPackageDataToDto converterClientPackageDataToDto,
+                                            IConverterClientPackageDataFromDto converterClientPackageDataFromDto)
+        {
+            _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
+            _converterClientPackageDataToDto = converterClientPackageDataToDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataToDto));
+            _converterClientPackageDataFromDto = converterClientPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataFromDto));
+        }
+
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
@@ -38,17 +50,6 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Конвертеры из трансферной модели в локальную
         /// </summary>  
         private readonly IConverterClientPackageDataFromDto _converterClientPackageDataFromDto;
-
-        public FileDataProcessingStatusMark(IPackageData packageInfoProject,
-                                            IProjectSettings projectSettings,
-                                            IConverterClientPackageDataToDto converterClientPackageDataToDto,
-                                            IConverterClientPackageDataFromDto converterClientPackageDataFromDto)
-        {
-            _packageInfoProject = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _converterClientPackageDataToDto = converterClientPackageDataToDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataToDto));
-            _converterClientPackageDataFromDto = converterClientPackageDataFromDto ?? throw new ArgumentNullException(nameof(converterClientPackageDataFromDto));
-        }
 
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
@@ -86,20 +87,29 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Поменять статус файлов после промежуточного отчета
         /// </summary>       
-        public Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
+        public PackageStatus GetPackageStatusIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
         {
             var filesStatusIntermediate = _converterClientPackageDataFromDto.ToPackageStatusFromIntermediateResponse(packageDataShortResponse);
-            return Task.FromResult(filesStatusIntermediate);
+            return filesStatusIntermediate;
         }
+
+        /// <summary>
+        /// Поменять статус файла после перед записью
+        /// </summary>       
+        public FileStatus GetFileStatusCompleteResponseBeforeWriting(FileDataResponseClient fileDataResponseClient) =>
+            ConverterClientPackageDataFromDto.ConvertToFileStatusFromResponse(fileDataResponseClient);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        public Task<PackageStatus> GetFilesStatusCompleteResponseBeforeWriting(PackageDataResponseClient packageDataResponse)
-        {
-            var filesStatusResponseBeforeWriting = _converterClientPackageDataFromDto.ToPackageStatus(packageDataResponse);
-            return Task.FromResult(filesStatusResponseBeforeWriting);
-        }
+        public PackageStatus GetFilesStatusCompleteResponseBeforeWriting(PackageDataResponseClient packageDataResponse) =>
+            _converterClientPackageDataFromDto.ToPackageStatus(packageDataResponse);
+
+        /// <summary>
+        /// Поменять статус файла после записи
+        /// </summary>       
+        public async Task<FileStatus> GetFileStatusCompleteResponseAndWritten(FileDataResponseClient fileDataResponseClient) =>
+            await _converterClientPackageDataFromDto.ToFileStatusFromResponseAndSaveFile(fileDataResponseClient);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и записи файлов
@@ -114,7 +124,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                                                    PackageDataShortResponseClient packageDataShortResponse)
         {
             var filesNotFound = await GetFilesNotFound(packageDataRequest?.FilesData);
-            var filesChangedStatus = await GetPackageStatusIntermediateResponse(packageDataShortResponse);
+            var filesChangedStatus = GetPackageStatusIntermediateResponse(packageDataShortResponse);
 
             var filesDataUnion = filesNotFound.FileStatus.UnionNotNull(filesChangedStatus.FileStatus);
             return new PackageStatus(filesDataUnion,

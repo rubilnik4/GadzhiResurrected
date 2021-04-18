@@ -75,6 +75,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         void RemoveFiles(IEnumerable<IFileData> filesData);
 
         /// <summary>
+        /// Получить список файлов для загрузки из базы
+        /// </summary>
+        IReadOnlyCollection<string> GetFilesToDownload(PackageStatus packageStatus);
+
+        /// <summary>
+        /// Изменить статус файла и присвоить при необходимости ошибку
+        /// </summary>
+        void ChangeFileStatus(FileStatus fileStatus);
+
+        /// <summary>
         /// Изменить статус файлов и присвоить при необходимости ошибку
         /// </summary>
         void ChangeFilesStatus(PackageStatus packageStatus);

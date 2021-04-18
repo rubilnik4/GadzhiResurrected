@@ -83,7 +83,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертировать файл модели базы данных в основной ответ
         /// </summary>
-        private static async Task<FileDataResponseClient> FileDataAccessToResponse(FileDataEntity fileDataEntity)
+        public static async Task<FileDataResponseClient> FileDataAccessToResponse(FileDataEntity fileDataEntity)
         {
             if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
 

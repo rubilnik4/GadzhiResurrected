@@ -25,5 +25,9 @@ namespace GadzhiModules.Infrastructure.Interfaces.Converters
         /// </summary>      
         Task<PackageStatus> ToFilesStatusAndSaveFiles(PackageDataResponseClient packageDataResponse);
 
+        /// <summary>
+        /// Конвертер информации из трансферной модели в класс клиентской части и сохранение файла
+        /// </summary>      
+        Task<FileStatus> ToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse);
     }
 }

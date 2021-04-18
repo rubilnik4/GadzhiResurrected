@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
@@ -67,8 +68,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Пути конвертируемых файлов
         /// </summary>
-        public IReadOnlyCollection<string> FilesDataPath => _filesData.Select(file => file.FilePath).
-                                                                       ToList().AsReadOnly();
+        public IReadOnlyCollection<string> FilesDataPath => 
+            _filesData.Select(file => file.FilePath).
+            ToList().AsReadOnly();
 
         /// <summary>
         /// Статус выполнения проекта
@@ -93,7 +95,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Добавить файл
         /// </summary>
-        public void AddFile(IFileData fileData) => AddFiles(new List<IFileData>() { fileData });
+        public void AddFile(IFileData fileData) => 
+            AddFiles(new List<IFileData> { fileData });
 
         /// <summary>
         /// Добавить файлы
@@ -148,6 +151,29 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         }
 
         /// <summary>
+        /// Получить список файлов для загрузки из базы
+        /// </summary>
+        public IReadOnlyCollection<string> GetFilesToDownload(PackageStatus packageStatus) =>
+            packageStatus.FileStatus.
+            Where(fileStatus => CheckStatusProcessing.CompletedStatusProcessing.Contains(fileStatus.StatusProcessing)).
+            Select(fileStatus => fileStatus.FilePath).
+            Intersect(_filesData.Where(fileData => !CheckStatusProcessing.CompletedStatusProcessing.Contains(fileData.StatusProcessing)).
+                                 Select(fileData => fileData.FilePath)).
+            ToList();
+
+        /// <summary>
+        /// Изменить статус файла и присвоить при необходимости ошибку
+        /// </summary>
+        public void ChangeFileStatus(FileStatus fileStatus)
+        {
+            var filesDataChanged = _filesData.First(file => file.FilePath == fileStatus.FilePath).
+                                   ChangeByFileStatus(fileStatus);
+
+            var fileChange = new FilesChange(_filesData, filesDataChanged, ActionType.StatusChange, false);
+            UpdateFileData(fileChange);
+        }
+
+        /// <summary>
         /// Изменить статус файла и присвоить при необходимости ошибку
         /// </summary>
         public void ChangeFilesStatus(PackageStatus packageStatus)
@@ -173,21 +199,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         public void ChangeAllFilesStatusAndSetError(IErrorCommon errorStatus)
         {
             FilesQueueInfo = new FilesQueueInfo();
-           // new ErrorCommon(FileConvertErrorType.AbortOperation, "Операция конвертирования отменена")
             var fileData = _filesData.Select(file => new FileStatus(file.FilePath, StatusProcessing.End, errorStatus));
             var filesStatus = new PackageStatus(fileData, StatusProcessingProject.End);
             ChangeFilesStatus(filesStatus);
         }
-
-        /// <summary>
-        /// Обновить список файлов
-        /// </summary>
-        private void UpdateFileData(FilesChange fileChange) => _fileDataChange?.OnNext(fileChange);
-
-        /// <summary>
-        /// Можно ли добавить файл в список для конвертирования
-        /// </summary>
-        private bool CanFileDataBeAddedToList(IFileData file) => file != null && _filesData.IndexOf(file) == -1;
 
         /// <summary>
         /// Установить статус конвертирования пакета
@@ -199,6 +214,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             StatusProcessingProject = statusProcessingProject;
             return true;
         }
+
+        /// <summary>
+        /// Обновить список файлов
+        /// </summary>
+        private void UpdateFileData(FilesChange fileChange) => _fileDataChange?.OnNext(fileChange);
+
+        /// <summary>
+        /// Можно ли добавить файл в список для конвертирования
+        /// </summary>
+        private bool CanFileDataBeAddedToList(IFileData file) => file != null && _filesData.IndexOf(file) == -1;
 
         #region IDisposable Support
         private bool _disposedValue;

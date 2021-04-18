@@ -28,17 +28,27 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>       
-        Task<PackageStatus> GetPackageStatusIntermediateResponse(PackageDataShortResponseClient fileDataResponse);
+        PackageStatus GetPackageStatusIntermediateResponse(PackageDataShortResponseClient fileDataResponse);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета и перед записью файлов
         /// </summary>       
-        Task<PackageStatus> GetFilesStatusCompleteResponseBeforeWriting(PackageDataResponseClient packageDataResponse);
+        FileStatus GetFileStatusCompleteResponseBeforeWriting(FileDataResponseClient fileDataResponseClient);
+
+        /// <summary>
+        /// Поменять статус файлов после окончательного отчета и перед записью файлов
+        /// </summary>       
+        PackageStatus GetFilesStatusCompleteResponseBeforeWriting(PackageDataResponseClient packageDataResponse);
+
+        /// <summary>
+        /// Поменять статус файла после записи
+        /// </summary>       
+        Task<FileStatus> GetFileStatusCompleteResponseAndWritten(FileDataResponseClient fileDataResponseClient);
 
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task<PackageStatus> GetFilesStatusCompleteResponseAndWritten(PackageDataResponseClient packageDataResponse);
+        Task <PackageStatus> GetFilesStatusCompleteResponseAndWritten(PackageDataResponseClient packageDataResponse);
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов

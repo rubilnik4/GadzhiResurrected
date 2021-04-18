@@ -44,6 +44,12 @@ namespace GadzhiWcfHost.Services
             await _filesDataClientService.GetFilesDataIntermediateResponseById(packageId);
 
         /// <summary>
+        /// Получить отконвертированный файл по Id номеру
+        /// </summary>      
+        public async Task<FileDataResponseClient> GetCompleteFile(Guid packageId, string filePath) =>
+            await _filesDataClientService.GetFileDataResponseById(packageId, filePath);
+
+        /// <summary>
         /// Отправить отконвертированные файлы по Id номеру
         /// </summary>      
         public async Task<PackageDataResponseClient> GetCompleteFiles(Guid packageId) =>

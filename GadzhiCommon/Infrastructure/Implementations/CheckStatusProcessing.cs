@@ -28,6 +28,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public static IReadOnlyList<StatusProcessing> CompletedStatusProcessing => new List<StatusProcessing>()
         {
             StatusProcessing.ConvertingComplete,
+            StatusProcessing.End,
         };
     }
 }

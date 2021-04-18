@@ -14,11 +14,13 @@ using GadzhiCommon.Infrastructure.Implementations.Services;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations.Services;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 
@@ -85,7 +87,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Отправить файлы для конвертации после подтверждения сервера
         /// </summary>
-        private async Task<IResultError> SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest, 
+        private async Task<IResultError> SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest,
                                                                       PackageDataShortResponseClient packageDataResponse) =>
             await packageDataResponse.
             Void(_ => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
@@ -112,30 +114,53 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Получить информацию о состоянии конвертируемых файлов
         /// </summary>
         private async Task<IResultError> UpdateStatusProcessing() =>
-            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id)).
-                                     ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.
+            UsingServiceRetry(service => service.Operations.CheckFilesStatusProcessing(_packageData.Id)).
+            ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
             ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetPackageStatusIntermediateResponse(packageDataResponse)).
-            ResultVoidOkAsync(packageStatus => _packageData.ChangeFilesStatus(packageStatus)).
+            ResultValueOkBindAsync(DownloadFilesData).
             ResultValueOkAsync(packageStatus => packageStatus.StatusProcessingProject.
                                                 WhereOkAsyncBind(statusProject => CheckStatusProcessing.CompletedStatusProcessingProject.Contains(statusProject),
                                                     okFunc: statusProject => statusProject.
-                                                                             VoidBindAsync(_ => GetCompleteFiles()).
+                                                                             VoidBindAsync(_ => MarkFilesComplete(packageStatus)).
                                                                              VoidAsync(_ => ClearSubscriptions()))).
             MapAsync(result => result.ToResult());
 
         /// <summary>
-        /// Получить отконвертированные файлы
+        /// Загрузить файлы
         /// </summary>
-        private async Task GetCompleteFiles() =>
-            await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingServiceRetry(service => service.Operations.GetCompleteFiles(_packageData.Id)).
-            ResultVoidBadBindAsync(_ => AbortPropertiesCommunication()).
-            ResultVoidOkAsync(packageDataResponse => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
-                                                                                 packageDataResponse.FilesData, packageDataResponse.Id.ToString())).
-            ResultValueOkAsync(packageDataResponse => _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseBeforeWriting(packageDataResponse).
-                                                      VoidAsync(filesStatusBeforeWrite => _packageData.ChangeFilesStatus(filesStatusBeforeWrite)).
-                                                      MapBindAsync(_ => _fileDataProcessingStatusMark.GetFilesStatusCompleteResponseAndWritten(packageDataResponse)).
-                                                      VoidAsync(filesStatusWrite => _packageData.ChangeFilesStatus(filesStatusWrite))).
-            ResultVoidOkBindAsync(_ => _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingService(service => service.Operations.SetFilesDataLoadedByClient(_packageData.Id))).
+        private async Task<IResultValue<PackageStatus>> DownloadFilesData(PackageStatus packageStatus)
+        {
+            var filesPath = _packageData.GetFilesToDownload(packageStatus);
+            var completeFilesTasks = filesPath.Select(GetCompleteFile);
+            var completeFiles = await Task.WhenAll(completeFilesTasks);
+            var errors = completeFiles.SelectMany(completeFile => completeFile.Errors.ToList());
+            return new ResultValue<PackageStatus>(packageStatus, errors);
+        }
+
+        /// <summary>
+        /// Получить отконвертированный файл
+        /// </summary>
+        private async Task<IResultError> GetCompleteFile(string filePath) =>
+            await _wcfClientServiceFactory.ConvertingClientServiceFactory.
+            UsingServiceRetry(service => service.Operations.GetCompleteFile(_packageData.Id, filePath)).
+            ResultVoidOkAsync(fileDataResponse => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
+                                                                              fileDataResponse, _packageData.Id.ToString())).
+            ResultValueOkAsync(fileDataResponse => _fileDataProcessingStatusMark.GetFileStatusCompleteResponseBeforeWriting(fileDataResponse).
+                                                   Void(fileStatusBeforeWrite => _packageData.ChangeFileStatus(fileStatusBeforeWrite)).
+                                                   Map(_ => _fileDataProcessingStatusMark.GetFileStatusCompleteResponseAndWritten(fileDataResponse)).
+                                                   VoidAsync(filesStatusWrite => _packageData.ChangeFileStatus(filesStatusWrite))).
+            MapAsync(result => result.ToResult());
+
+        /// <summary>
+        /// Отметить файлы как отконвертированные
+        /// </summary>
+        private async Task MarkFilesComplete(PackageStatus packageStatus) =>
+            await new ResultValue<PackageStatus>(new PackageStatus(packageStatus.FileStatus.Select(fileStatus => fileStatus.GetWithStatusProcessing(StatusProcessing.End)), 
+                                                                   StatusProcessingProject.End)).
+            ResultVoidOk(status => _packageData.ChangeFilesStatus(status)).
+            ResultVoidOk(status => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this), _packageData.Id.ToString())).
+            ResultVoidAsyncBind(_ => _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingService(service => service.Operations.SetFilesDataLoadedByClient(_packageData.Id))).
             ResultVoidBadBindAsync(_ => AbortPropertiesCommunication());
 
         /// <summary>

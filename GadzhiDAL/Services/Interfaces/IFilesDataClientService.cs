@@ -20,6 +20,11 @@ namespace GadzhiDAL.Services.Interfaces
         Task<PackageDataShortResponseClient> GetFilesDataIntermediateResponseById(Guid id);
 
         /// <summary>
+        /// Получить файл по номеру ID
+        /// </summary>       
+        Task<FileDataResponseClient> GetFileDataResponseById(Guid id, string filePath);
+
+        /// <summary>
         /// Получить окончательный пакет отконвертированных файлов по номеру ID
         /// </summary>       
         Task<PackageDataResponseClient> GetFilesDataResponseById(Guid id);

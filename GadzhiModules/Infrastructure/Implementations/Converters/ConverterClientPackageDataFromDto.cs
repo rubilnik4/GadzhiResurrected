@@ -46,8 +46,6 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
         {
-            if (packageDataShortResponse == null) throw new ArgumentNullException(nameof(packageDataShortResponse));
-
             var packageStatus = packageDataShortResponse.FilesData?.Select(ToFileStatusFromIntermediateResponse);
             var queueStatus = ConvertToQueueInfoFromResponse(packageDataShortResponse.FilesQueueInfo);
 
@@ -61,8 +59,6 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public PackageStatus ToPackageStatus(PackageDataResponseClient packageDataResponse)
         {
-            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
-
             var fileDataStatusResponse = ToPackageStatusFromResponse(packageDataResponse);
             return new PackageStatus(fileDataStatusResponse, StatusProcessingProject.Writing);
         }
@@ -72,8 +68,6 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<PackageStatus> ToFilesStatusAndSaveFiles(PackageDataResponseClient packageDataResponse)
         {
-            if (packageDataResponse == null) throw new ArgumentNullException(nameof(packageDataResponse));
-
             var fileDataStatusResponse = await ToPackageStatusFromResponseAndSaveFiles(packageDataResponse);
             var filesStatus = new PackageStatus(fileDataStatusResponse, StatusProcessingProject.End);
             return filesStatus;
@@ -106,14 +100,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части перед сохранением
         /// </summary>      
-        private static FileStatus ConvertToFileStatusFromResponse(FileDataResponseClient fileResponse) =>
+        public static FileStatus ConvertToFileStatusFromResponse(FileDataResponseClient fileResponse) =>
              new FileStatus(fileResponse.FilePath, StatusProcessing.Writing,
                             fileResponse.FileErrors.Select(ToErrorCommon));
 
         /// <summary>
         /// Конвертер информации из трансферной модели в класс клиентской части и сохранение файла
         /// </summary>      
-        private async Task<FileStatus> ToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse)
+        public async Task<FileStatus> ToFileStatusFromResponseAndSaveFile(FileDataResponseClient fileResponse)
         {
             var fileConvertSavedErrorType = await SaveFileDataSourceFromDtoResponse(fileResponse);
             var fileConvertErrorTypes = fileResponse.FileErrors.Select(ToErrorCommon).

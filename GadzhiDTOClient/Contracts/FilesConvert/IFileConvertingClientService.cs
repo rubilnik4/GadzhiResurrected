@@ -25,6 +25,12 @@ namespace GadzhiDTOClient.Contracts.FilesConvert
         Task<PackageDataShortResponseClient> CheckFilesStatusProcessing(Guid packageId);
 
         /// <summary>
+        /// Получить отконвертированный файл по Id номеру
+        /// </summary>
+        [OperationContract]
+        Task<FileDataResponseClient> GetCompleteFile(Guid packageId, string filePath);
+
+        /// <summary>
         /// Отправить отконвертированные файлы
         /// </summary>  
         [OperationContract]
