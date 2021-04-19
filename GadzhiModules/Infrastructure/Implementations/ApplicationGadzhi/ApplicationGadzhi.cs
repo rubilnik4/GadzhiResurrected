@@ -24,6 +24,25 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
     /// </summary>
     public partial class ApplicationGadzhi : IApplicationGadzhi
     {
+        public ApplicationGadzhi(IDialogService dialogService,
+                                 IProjectSettings projectSettings,
+                                 IFileSystemOperations fileSystemOperations,
+                                 IPackageData packageInfoProject,
+                                 IWcfClientServicesFactory wcfClientServiceFactory,
+                                 IFileDataProcessingStatusMark fileDataProcessingStatusMark,
+                                 IStatusProcessingInformation statusProcessingInformation)
+        {
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _packageData = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
+            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
+            _wcfClientServiceFactory = wcfClientServiceFactory ?? throw new ArgumentNullException(nameof(wcfClientServiceFactory));
+            _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
+            _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
+
+            _statusProcessingSubscriptions = new CompositeDisposable();
+        }
+
         /// <summary>
         /// Модель конвертируемых файлов
         /// </summary>     
@@ -64,25 +83,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private readonly CompositeDisposable _statusProcessingSubscriptions;
 
-        public ApplicationGadzhi(IDialogService dialogService,
-                                 IProjectSettings projectSettings,
-                                 IFileSystemOperations fileSystemOperations,
-                                 IPackageData packageInfoProject,
-                                 IWcfClientServicesFactory wcfClientServiceFactory,
-                                 IFileDataProcessingStatusMark fileDataProcessingStatusMark,
-                                 IStatusProcessingInformation statusProcessingInformation)
-        {
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _packageData = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _wcfClientServiceFactory = wcfClientServiceFactory ?? throw new ArgumentNullException(nameof(wcfClientServiceFactory));
-            _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
-            _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
-
-            _statusProcessingSubscriptions = new CompositeDisposable();
-        }
-
         /// <summary>
         /// Закрыть приложение
         /// </summary>
@@ -108,7 +108,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                   Properties.Settings.Default.PersonPatronymic ?? String.Empty,
                                   ConverterDepartmentType.DepartmentStringToTypeOrUnknown(Properties.Settings.Default.PersonDepartment)).
             Map(personInformation => new ConvertingSettings(new SignatureLibrary(Properties.Settings.Default.PersonId, personInformation),
-                                                             (PdfNamingType)Properties.Settings.Default.PdfNamingType));
+                                                            (PdfNamingType)Properties.Settings.Default.PdfNamingType,
+                                                            (ColorPrint)Properties.Settings.Default.ColorPrint));
 
         /// <summary>
         /// Сохранить конфигурацию приложения
@@ -122,6 +123,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             Properties.Settings.Default.PersonPatronymic = _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.Patronymic;
             Properties.Settings.Default.PersonDepartment = _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.Department;
             Properties.Settings.Default.PdfNamingType = (int)_projectSettings.ConvertingSettings.PdfNamingType;
+            Properties.Settings.Default.ColorPrint = (int)_projectSettings.ConvertingSettings.ColorPrint;
             Properties.Settings.Default.Save();
         }
 

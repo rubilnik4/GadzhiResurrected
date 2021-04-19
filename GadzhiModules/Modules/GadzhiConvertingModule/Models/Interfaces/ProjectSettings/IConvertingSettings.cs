@@ -1,4 +1,5 @@
 ﻿using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings
@@ -17,5 +18,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Project
         /// Принцип именования PDF
         /// </summary>
         PdfNamingType PdfNamingType { get; set; }
+
+        /// <summary>
+        /// Цвет печати по умолчанию
+        /// </summary>
+        ColorPrint ColorPrint { get; set; }
     }
 }

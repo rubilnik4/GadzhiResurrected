@@ -332,6 +332,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>       
         private async Task ActionsInEmptyQueue()
         {
+            await SignaturesOnDataBase();
             await CheckAndDeleteUnusedPackagesOnDataBase();
             await CheckAndDeleteUnusedErrorPackagesOnDataBase();
             await DeleteAllUnusedDataOnDisk();
@@ -348,6 +349,26 @@ namespace GadzhiConverting.Infrastructure.Implementations
                             Where(process => process.ProcessName.ContainsIgnoreCase("ustation") ||
                                              process.ProcessName.ContainsIgnoreCase("winword"));
             foreach (var process in processes) process.Kill();
+        }
+
+        /// <summary>
+        /// Проверить ресурсы в базе
+        /// </summary>
+        [Logger]
+        private async Task SignaturesOnDataBase()
+        {
+            var dateTimeNow = DateTime.Now;
+            var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.SignaturesCheck).Ticks);
+            if (timeElapsed.TotalHours > ProjectSettings.IntervalSignatureUpdate)
+            {
+                _messagingService.ShowMessage("Перезагрузка ресурсов...");
+                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
+
+                await _projectSettings.ConvertingResources.ReloadResources();
+
+                Properties.Settings.Default.SignaturesCheck = new TimeSpan(dateTimeNow.Ticks);
+                Properties.Settings.Default.Save();
+            }
         }
 
         /// <summary>

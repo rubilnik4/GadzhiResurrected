@@ -60,13 +60,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                ObservesProperty(() => IsConverting);
 
             AddFromFilesDelegateCommand = new DelegateCommand(
-               async () => await AddFromFiles(),
+               AddFromFiles,
                () => !IsLoading && !IsConverting).
                ObservesProperty(() => IsLoading).
                ObservesProperty(() => IsConverting);
 
             AddFromFoldersDelegateCommand = new DelegateCommand(
-               async () => await AddFromFolders(),
+               AddFromFolders,
                () => !IsLoading && !IsConverting).
                ObservesProperty(() => IsLoading).
                ObservesProperty(() => IsConverting);
@@ -159,9 +159,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Типы цветов для печати
         /// </summary>
-        public IEnumerable<string> ColorPrintToString => ColorPrintConverter.
-                                                         ColorPrintString.
-                                                         Select(color => color.Value);
+        public IReadOnlyCollection<string> ColorPrintToString =>
+            ColorPrintConverter.ColorPrintString;
 
         /// <summary>
         /// Статус обработки проекта
@@ -193,20 +192,22 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Добавить файлы для конвертации
         /// </summary>
         [Logger]
-        private async Task AddFromFiles() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFiles);
+        private void AddFromFiles() => 
+            ExecuteAndHandleError(_applicationGadzhi.AddFromFiles);
 
         /// <summary>
         /// Добавить папки для конвертации
         /// </summary>
         [Logger]
-        private async Task AddFromFolders() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.AddFromFolders);
+        private void AddFromFolders() => 
+            ExecuteAndHandleError(_applicationGadzhi.AddFromFolders);
 
         /// <summary>
         /// Добавить файлы и папки для конвертации
         /// </summary>
         [Logger]
-        private async Task AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths) =>
-            await ExecuteAndHandleErrorAsync(() => _applicationGadzhi.AddFromFilesOrDirectories(fileOrDirectoriesPaths));
+        private void  AddFromFilesAndFolders(IEnumerable<string> fileOrDirectoriesPaths) =>
+            ExecuteAndHandleError(() => _applicationGadzhi.AddFromFilesOrDirectories(fileOrDirectoriesPaths));
 
         /// <summary>
         /// Удалить файлы из списка
@@ -359,7 +360,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                 !dataObject.ContainsFileDropList()) return;
 
             var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
-            AddFromFilesAndFolders(filePaths).WaitAndUnwrapException();
+            AddFromFilesAndFolders(filePaths);
         }
     }
 

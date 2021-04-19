@@ -12,7 +12,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Словарь цвета печати в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintString =>
+        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintTypesString =>
             new Dictionary<ColorPrint, string>
             {
                 { ColorPrint.BlackAndWhite, "Черно-белый" },
@@ -21,11 +21,17 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             };
 
         /// <summary>
+        /// Типы цветов для печати
+        /// </summary>
+        public static IReadOnlyCollection<string> ColorPrintString =>
+            ColorPrintTypesString.Select(color => color.Value).ToList();
+
+        /// <summary>
         /// Преобразовать цветовое значение в наименование цвета
         /// </summary>       
         public static string ColorPrintToString(ColorPrint colorPrint)
         {
-            ColorPrintString.TryGetValue(colorPrint, out string colorPrintString);
+            ColorPrintTypesString.TryGetValue(colorPrint, out string colorPrintString);
             return colorPrintString;
         }
 
@@ -33,7 +39,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// Преобразовать наименование цвета в цветовое значение
         /// </summary>       
         public static ColorPrint ConvertStringToColorPrint(string colorPrint) =>
-            ColorPrintString?.FirstOrDefault(color => color.Value == colorPrint).Key
+            ColorPrintTypesString?.FirstOrDefault(color => color.Value == colorPrint).Key
             ?? ColorPrint.BlackAndWhite;
     }
 }

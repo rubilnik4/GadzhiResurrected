@@ -27,6 +27,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Converters.Errors
                 { ErrorConvertingType.Communication , "Связь с сервером не установлена" },
                 { ErrorConvertingType.NullReference , "Переменная не задана" },
                 { ErrorConvertingType.ArgumentNullReference , "Аргумент не задан" },
+                { ErrorConvertingType.ArgumentOutOfRange , "Превышение допустимых пределов" },
                 { ErrorConvertingType.FormatException , "Формат преобразования задан не верно" },
                 { ErrorConvertingType.InvalidEnumArgumentException , "Ошибка перечисления" },
                 { ErrorConvertingType.AttemptingCount , "Превышено число попыток" },

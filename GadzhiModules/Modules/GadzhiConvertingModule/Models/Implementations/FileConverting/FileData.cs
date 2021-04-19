@@ -22,15 +22,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class FileData : IFileData, IEquatable<IFileData>, IFormattable
     {
-        /// <summary>
-        /// Журнал системных сообщений
-        /// </summary>
-        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
-
-        public FileData(string filePath)
-            : this(filePath, ColorPrint.BlackAndWhite)
-        { }
-
         public FileData(string filePath, ColorPrint colorPrint)
         {
             string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
@@ -49,6 +40,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
 
             FileErrors = new List<IErrorCommon>();
         }
+
+        /// <summary>
+        /// Журнал системных сообщений
+        /// </summary>
+        private static readonly ILoggerService _loggerService = LoggerFactory.GetFileLogger();
 
         /// <summary>
         /// Расширение файла

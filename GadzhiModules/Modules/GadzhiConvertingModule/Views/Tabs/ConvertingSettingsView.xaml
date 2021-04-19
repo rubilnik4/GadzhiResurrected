@@ -13,6 +13,7 @@
         <Grid.Resources>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
                 <Setter Property="Margin" Value="5 10 20 10" />
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
             <Style TargetType="{x:Type ProgressBar}" x:Key="PreLoadingProgressData" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
@@ -47,7 +48,6 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0" 
-                           VerticalAlignment="Center" 
                            Text="Подпись">
                 </TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1">
@@ -76,6 +76,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -85,17 +86,27 @@
 
                 <TextBlock Grid.Row="0"
                        Grid.Column="0" 
-                       VerticalAlignment="Center" 
                        Text="Именование PDF">
                 </TextBlock>
                 <ComboBox Grid.Row="0"
                           Grid.Column="1" 
-                          SelectedValue="{Binding PdfNamingType}"
+                          SelectedValue="{Binding PdfNamingType, Mode=TwoWay}"
                           SelectedValuePath="Key"
                           ItemsSource="{Binding PdfNamingTypes}"
                           DisplayMemberPath="Value"  >
                 </ComboBox>
-                </Grid>
+
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0" 
+                           Text="Цвет по умолчанию">
+                </TextBlock>
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1" 
+                          SelectedValue="{Binding ColorPrintName, Mode=TwoWay}"
+                          ItemsSource="{Binding ColorPrintToString}">
+                </ComboBox>
+            </Grid>
         </GroupBox>
       
     </Grid>

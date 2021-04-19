@@ -94,5 +94,17 @@ namespace GadzhiModules.Properties {
                 this["PersonPatronymic"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ColorPrint {
+            get {
+                return ((int)(this["ColorPrint"]));
+            }
+            set {
+                this["ColorPrint"] = value;
+            }
+        }
     }
 }

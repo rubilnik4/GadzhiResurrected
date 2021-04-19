@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
@@ -13,10 +14,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
     /// </summary>
     public class ConvertingSettings : IConvertingSettings
     {
-        public ConvertingSettings(ISignatureLibrary personSignature, PdfNamingType pdfNamingType)
+        public ConvertingSettings(ISignatureLibrary personSignature, PdfNamingType pdfNamingType,
+                                  ColorPrint colorPrint)
         {
             PersonSignature = personSignature ?? throw new ArgumentNullException(nameof(personSignature));
             PdfNamingType = pdfNamingType;
+            ColorPrint = colorPrint;
         }
 
         /// <summary>
@@ -31,5 +34,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
 
         [Logger]
         public PdfNamingType PdfNamingType { get; set; }
+
+        /// <summary>
+        /// Цвет печати по умолчанию
+        /// </summary>
+        [Logger]
+        public ColorPrint ColorPrint { get; set; }
     }
 }

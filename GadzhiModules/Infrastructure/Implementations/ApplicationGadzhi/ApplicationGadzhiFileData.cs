@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using GadzhiCommon.Helpers.Dialogs;
+using GadzhiModules.Infrastructure.Implementations.Validates;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 
@@ -21,34 +23,34 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
-        public async Task AddFromFiles()
+        public void AddFromFiles()
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var filePaths = await _dialogService.OpenFileDialog(true, DialogFilters.DocAndDgn);
-            await AddFromFilesOrDirectories(filePaths);
+            var filePaths = _dialogService.OpenFileDialog(true, DialogFilters.DocAndDgn);
+            AddFromFilesOrDirectories(filePaths);
         }
 
         /// <summary>
         /// Указать папку для конвертации
         /// </summary>     
-        public async Task AddFromFolders()
+        public void AddFromFolders()
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var directoryPaths = await _dialogService.OpenFolderDialog(true);
-            await AddFromFilesOrDirectories(directoryPaths);
+            var directoryPaths = _dialogService.OpenFolderDialog(true);
+            AddFromFilesOrDirectories(directoryPaths);
         }
 
         /// <summary>
         /// Добавить файлы или папки для конвертации
         /// </summary>
-        public async Task AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths)
+        public void AddFromFilesOrDirectories(IEnumerable<string> fileOrDirectoriesPaths)
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var allFilePaths = await Task.FromResult(_fileSystemOperations.GetFilesFromPaths(fileOrDirectoriesPaths));
-            _packageData.AddFiles(allFilePaths);
+            var allFilePaths = _fileSystemOperations.GetFilesFromPaths(fileOrDirectoriesPaths).ToList();
+            _packageData.AddFiles(allFilePaths, _projectSettings.ConvertingSettings.ColorPrint);
         }
 
         /// <summary>

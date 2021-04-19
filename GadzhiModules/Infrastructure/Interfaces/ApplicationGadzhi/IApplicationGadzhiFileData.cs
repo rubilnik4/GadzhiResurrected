@@ -19,17 +19,17 @@ namespace GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>
-        Task AddFromFiles();
+        void AddFromFiles();
 
         /// <summary>
         /// Указать папку для конвертации
         /// </summary>       
-        Task AddFromFolders();
+        void AddFromFolders();
 
         /// <summary>
         /// Добавить файлы или папки для конвертации
         /// </summary>
-        Task AddFromFilesOrDirectories(IEnumerable<string> filesToRemove);
+        void AddFromFilesOrDirectories(IEnumerable<string> filesToRemove);
 
         /// <summary>
         /// Очистить список файлов

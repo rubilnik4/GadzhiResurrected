@@ -19,7 +19,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         ///  Выбор файлов
         /// </summary>    
-        public async Task<IEnumerable<string>> OpenFileDialog(bool isMultiSelect = false, string filter = "")
+        public IReadOnlyCollection<string> OpenFileDialog(bool isMultiSelect = false, string filter = "")
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog()
             {
@@ -27,24 +27,20 @@ namespace GadzhiModules.Infrastructure.Implementations
                 Filter = filter,
             };
 
-            if (openFileDialog.ShowDialog() == true)
-            {
-                return await Task.FromResult(openFileDialog.FileNames.ToList());
-            }
-            return await Task.FromResult(new List<string>());
+            return openFileDialog.ShowDialog() == true
+                ? openFileDialog.FileNames.ToList() 
+                : new List<string>();
         }
 
         /// <summary>
         /// Выбор папки
         /// </summary>     
-        public async Task<IEnumerable<string>> OpenFolderDialog(bool isMultiSelect = false)
+        public IReadOnlyCollection<string> OpenFolderDialog(bool isMultiSelect = false)
         {
-            using var commonOpenFileDialog = new CommonOpenFileDialog() { IsFolderPicker = true, Multiselect = isMultiSelect };
-            if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                return await Task.FromResult(commonOpenFileDialog.FileNames);
-            }
-            return await Task.FromResult(new List<string>());
+            using var commonOpenFileDialog = new CommonOpenFileDialog { IsFolderPicker = true, Multiselect = isMultiSelect };
+            return commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok 
+                ? commonOpenFileDialog.FileNames.ToList()
+                : new List<string>();
         }
 
         /// <summary>
@@ -56,7 +52,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// Сообщение об ошибке
         /// </summary>
         public async Task ShowError(IErrorCommon fileError) =>
-            await $"Тип ошибки: {ConverterErrorType.ErrorTypeToString(fileError.ErrorConvertingType)}".
+            await $"Тип ошибки: {ConverterErrorType.ErrorTypeToString(fileError.ErrorConvertingType)}.\nОписание: {fileError.Description}".
             VoidBindAsync(DialogFactory.GetErrorDialog);
 
         /// <summary>

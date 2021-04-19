@@ -21,6 +21,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         bool IsFileExist(string filePath);
 
         /// <summary>
+        /// Размер файла
+        /// </summary>
+        long GetFileSize(string filePath);
+
+        /// <summary>
         /// Получить вложенные папки
         /// </summary>        
         IEnumerable<string> GetDirectories(string directoryPath);

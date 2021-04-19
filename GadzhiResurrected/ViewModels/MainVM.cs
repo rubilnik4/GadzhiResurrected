@@ -1,4 +1,7 @@
-﻿using GadzhiModules.Modules;
+﻿using System.Deployment.Application;
+using System.Reflection;
+using GadzhiModules.Modules;
+using GadzhiResurrected.Infrastructure.Implementations.Reflections;
 using Prism.Mvvm;
 
 namespace GadzhiResurrected.ViewModels
@@ -8,7 +11,7 @@ namespace GadzhiResurrected.ViewModels
         /// <summary>
         /// Название и версия
         /// </summary>
-        private string _title = "Gadzhi";
+        private string _title = $"Gadzhi ({VersionReflection.GetClickOnceVersion()})";
 
         /// <summary>
         /// Название и версия

@@ -20,6 +20,7 @@ using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations.Services;
+using GadzhiModules.Infrastructure.Implementations.Validates;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
@@ -48,15 +49,17 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         public async Task ConvertingFiles()
         {
             if (_statusProcessingInformation.IsConverting) return;
-
-            var packageDataRequest = await PrepareFilesToSending();
-            if (!packageDataRequest.IsValid)
+            
+            var filesPath = _packageData.FilesData.Select(fileData => fileData.FilePath).ToList();
+            var resultError = FilesDataValidation.ValidateFilesData(filesPath, _fileSystemOperations);
+            if (resultError.HasErrors)
             {
-                await AbortPropertiesConverting(false, new ErrorCommon(ErrorConvertingType.FileNotFound, "Отсутствуют файлы для конвертации"));
-                await _dialogService.ShowMessage("Загрузите файлы для конвертирования");
+                await AbortPropertiesConverting(false, resultError.Errors.First());
+                await _dialogService.ShowError(resultError.Errors.First());
                 return;
             }
 
+            var packageDataRequest = await PrepareFilesToSending();
             var sendResult = await SendFilesToConverting(packageDataRequest);
             if (sendResult.OkStatus) SubscribeToIntermediateResponse();
         }
@@ -156,7 +159,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Отметить файлы как отконвертированные
         /// </summary>
         private async Task MarkFilesComplete(PackageStatus packageStatus) =>
-            await new ResultValue<PackageStatus>(new PackageStatus(packageStatus.FileStatus.Select(fileStatus => fileStatus.GetWithStatusProcessing(StatusProcessing.End)), 
+            await new ResultValue<PackageStatus>(new PackageStatus(packageStatus.FileStatus.Select(fileStatus => fileStatus.GetWithStatusProcessing(StatusProcessing.End)),
                                                                    StatusProcessingProject.End)).
             ResultVoidOk(status => _packageData.ChangeFilesStatus(status)).
             ResultVoidOk(status => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this), _packageData.Id.ToString())).

@@ -16,6 +16,7 @@
         Communication,
         NullReference,
         ArgumentNullReference,
+        ArgumentOutOfRange,
         FormatException,
         InvalidEnumArgumentException,
         AttemptingCount,

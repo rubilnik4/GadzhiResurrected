@@ -91,6 +91,12 @@ namespace GadzhiCommon.Infrastructure.Implementations
         public bool IsFileExist(string filePath) => File.Exists(filePath);
 
         /// <summary>
+        /// Размер файла
+        /// </summary>
+        public long GetFileSize(string filePath) =>
+            new FileInfo(filePath).Length;
+
+        /// <summary>
         /// Получить вложенные папки
         /// </summary>        
         public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);

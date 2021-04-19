@@ -105,6 +105,16 @@ namespace GadzhiConverting.Models.Implementations
         public IResultValue<string> StampMicrostation => _stampMicrostation ??= StampMicrostationTask.WaitAndUnwrapException();
 
         /// <summary>
+        /// Перезагрузить ресурсы
+        /// </summary>
+        public async Task ReloadResources()
+        {
+            _signatureNames = await GetSignatureNames();
+            _signaturesMicrostation = await GetSignaturesMicrostation();
+            _stampMicrostation = await GetStampsMicrostation();
+        }
+
+        /// <summary>
         /// Получить подписи для Microstation
         /// </summary>
         [Logger]
