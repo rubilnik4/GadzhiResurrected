@@ -51,17 +51,29 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             if (_statusProcessingInformation.IsConverting) return;
             
             var filesPath = _packageData.FilesData.Select(fileData => fileData.FilePath).ToList();
-            var resultError = FilesDataValidation.ValidateFilesData(filesPath, _fileSystemOperations);
-            if (resultError.HasErrors)
+            var resultErrorFileData = FilesDataValidation.ValidateFilesData(filesPath, _fileSystemOperations);
+            if (resultErrorFileData.HasErrors)
             {
-                await AbortPropertiesConverting(false, resultError.Errors.First());
-                await _dialogService.ShowError(resultError.Errors.First());
+                await AbortConvertingByError(resultErrorFileData);
                 return;
             }
 
             var packageDataRequest = await PrepareFilesToSending();
+            var resultErrorPackage = PackageDataValidation.ValidatePackageData(packageDataRequest);
+            if (resultErrorPackage.HasErrors)
+            {
+                await AbortConvertingByError(resultErrorPackage);
+                return;
+            }
+
             var sendResult = await SendFilesToConverting(packageDataRequest);
             if (sendResult.OkStatus) SubscribeToIntermediateResponse();
+        }
+
+        private async Task AbortConvertingByError(IResultError resultError)
+        {
+            await AbortPropertiesConverting(false, resultError.Errors.First());
+            await _dialogService.ShowError(resultError.Errors.First());
         }
 
         /// <summary>
@@ -69,7 +81,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task<PackageDataRequestClient> PrepareFilesToSending()
         {
-            var filesStatusInSending = await _fileDataProcessingStatusMark.GetFilesInSending();
+            var filesStatusInSending = _fileDataProcessingStatusMark.GetFilesInSending();
             _packageData.ChangeFilesStatus(filesStatusInSending);
 
             var filesDataRequest = await _fileDataProcessingStatusMark.GetFilesDataToRequest();
@@ -82,7 +94,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private async Task<IResultError> SendFilesToConverting(PackageDataRequestClient packageDataRequest) =>
             await _wcfClientServiceFactory.ConvertingClientServiceFactory.UsingService(service => service.Operations.SendFiles(packageDataRequest)).
             WhereContinueAsyncBind(packageResult => packageResult.OkStatus,
-                okFunc: packageResult => SendFilesToConvertingConnect(packageDataRequest, packageResult.Value),
+                okFunc: packageResult => Task.FromResult(SendFilesToConvertingConnect(packageDataRequest, packageResult.Value)),
                 badFunc: packageResult => packageResult.
                                           ResultVoidAsyncBind(_ => AbortPropertiesCommunication()).
                                           MapAsync(package => package.ToResult()));
@@ -90,14 +102,13 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Отправить файлы для конвертации после подтверждения сервера
         /// </summary>
-        private async Task<IResultError> SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest,
-                                                                      PackageDataShortResponseClient packageDataResponse) =>
-            await packageDataResponse.
+        private IResultError SendFilesToConvertingConnect(PackageDataRequestClient packageDataRequest, PackageDataShortResponseClient packageDataResponse) =>
+            packageDataResponse.
             Void(_ => _loggerService.LogByObjects(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this),
                                                   packageDataRequest.FilesData, packageDataRequest.Id.ToString())).
             Map(_ => _fileDataProcessingStatusMark.GetPackageStatusAfterSend(packageDataRequest, packageDataResponse)).
-            VoidAsync(filesStatusAfterSending => _packageData.ChangeFilesStatus(filesStatusAfterSending)).
-            MapAsync(_ => new ResultError());
+            Void(filesStatusAfterSending => _packageData.ChangeFilesStatus(filesStatusAfterSending)).
+            Map(_ => new ResultError());
 
         /// <summary>
         /// Подписаться на изменение статуса файлов при конвертировании

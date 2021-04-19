@@ -216,6 +216,7 @@
     <Compile Include="Infrastructure\Implementations\Services\SignatureClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\WcfClientServicesFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Validates\FilesDataValidation.cs" />
+    <Compile Include="Infrastructure\Implementations\Validates\PackageDataValidation.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
     <Compile Include="Infrastructure\Interfaces\Services\IWcfClientServicesFactory.cs" />

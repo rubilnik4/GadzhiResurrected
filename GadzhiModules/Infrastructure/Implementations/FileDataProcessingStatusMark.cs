@@ -60,19 +60,18 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Назначить всем файлам статус к отправке
         /// </summary>  
-        public Task<PackageStatus> GetFilesInSending()
+        public PackageStatus GetFilesInSending()
         {
             var filesSending = _packageInfoProject?.FilesData?.
                                Select(file => new FileStatus(file.FilePath, StatusProcessing.Sending));
 
-            var filesStatusInSending = new PackageStatus(filesSending, StatusProcessingProject.Sending);
-            return Task.FromResult(filesStatusInSending);
+            return new PackageStatus(filesSending, StatusProcessingProject.Sending);
         }
 
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        public Task<PackageStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest)
+        public PackageStatus GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest)
         {
             var fileDataRequestPaths = fileDataRequest?.Select(fileRequest => fileRequest.FilePath);
             var filesNotFound = _packageInfoProject?.FilesDataPath.
@@ -80,8 +79,7 @@ namespace GadzhiModules.Infrastructure.Implementations
                                 Select(filePath => new FileStatus(filePath, StatusProcessing.End,
                                                                   new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл не найден {filePath}")));
 
-            var filesStatusInSending = new PackageStatus(filesNotFound, StatusProcessingProject.Sending);
-            return Task.FromResult(filesStatusInSending);
+            return new PackageStatus(filesNotFound, StatusProcessingProject.Sending);
         }
 
         /// <summary>
@@ -120,10 +118,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        public async Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
-                                                                   PackageDataShortResponseClient packageDataShortResponse)
+        public PackageStatus GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest, PackageDataShortResponseClient packageDataShortResponse)
         {
-            var filesNotFound = await GetFilesNotFound(packageDataRequest?.FilesData);
+            var filesNotFound = GetFilesNotFound(packageDataRequest?.FilesData);
             var filesChangedStatus = GetPackageStatusIntermediateResponse(packageDataShortResponse);
 
             var filesDataUnion = filesNotFound.FileStatus.UnionNotNull(filesChangedStatus.FileStatus);

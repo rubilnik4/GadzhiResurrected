@@ -18,12 +18,12 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Назначить всем файлам статус к отправке
         /// </summary>  
-        Task<PackageStatus> GetFilesInSending();
+        PackageStatus GetFilesInSending();
 
         /// <summary>
         /// Пометить недоступные для отправки файлы ошибкой
         /// </summary>  
-        Task<PackageStatus> GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest);
+        PackageStatus GetFilesNotFound(IEnumerable<FileDataRequestClient> fileDataRequest);
 
         /// <summary>5
         /// Пометить недоступные для отправки файлы ошибкой
@@ -53,7 +53,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов
         /// </summary>
-        Task<PackageStatus> GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
-                                                                  PackageDataShortResponseClient packageDataShortResponse);
+        PackageStatus GetPackageStatusAfterSend(PackageDataRequestClient packageDataRequest,
+                                                PackageDataShortResponseClient packageDataShortResponse);
     }
 }

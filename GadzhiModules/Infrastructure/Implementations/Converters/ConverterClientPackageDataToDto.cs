@@ -31,8 +31,6 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<PackageDataRequestClient> ToPackageDataRequest(IPackageData packageData, IConvertingSettings convertingSetting)
         {
-            if (packageData == null) throw new ArgumentNullException(nameof(packageData));
-
             var filesRequestExistTask = packageData.FilesData?.
                                         Where(file => _fileSystemOperations.IsFileExist(file.FilePath)).
                                         Select(ToFileDataRequest)
