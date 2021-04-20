@@ -13,7 +13,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Расширение файла
         /// </summary>
-        FileExtension FileExtension { get; }
+        FileExtensionType FileExtensionType { get; }
 
         /// <summary>
         /// Имя файла
@@ -28,7 +28,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Цвет печати
         /// </summary>
-        ColorPrint ColorPrint { get; }
+        ColorPrintType ColorPrintType { get; }
 
         /// <summary>
         /// Статус обработки файла
@@ -43,12 +43,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Статус ошибок
         /// </summary>
-        StatusError StatusError { get; }
+        StatusErrorType StatusErrorType { get; }
 
         /// <summary>
         /// Изменить цвет печати
         /// </summary>
-        void SetColorPrint(ColorPrint colorPrint);
+        void SetColorPrint(ColorPrintType colorPrintType);
 
         /// <summary>
         /// Изменить статус и вид ошибки при необходимости

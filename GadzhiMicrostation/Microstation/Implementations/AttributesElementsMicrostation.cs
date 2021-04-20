@@ -89,7 +89,8 @@ namespace GadzhiMicrostation.Microstation.Implementations
         /// <summary>
         /// Получить имя поля в корректном написании
         /// </summary>
-        private static string GetAttributeNameInCorrectCase(string field) => field?.Trim().ToUpper(CultureInfo.CurrentCulture);
+        private static string GetAttributeNameInCorrectCase(string field) => 
+            field?.Trim().ToUpper(CultureInfo.CurrentCulture) ?? String.Empty;
 
         /// <summary>
         /// Прочитать/записать данные в блок

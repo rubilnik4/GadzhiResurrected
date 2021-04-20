@@ -23,6 +23,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Цвет печати
         /// </summary>       
-        public virtual ColorPrint ColorPrint { get; set; } 
+        public virtual ColorPrintType ColorPrintType { get; set; } 
     }
 }

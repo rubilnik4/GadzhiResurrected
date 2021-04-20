@@ -12,8 +12,14 @@
         xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
         xmlns:viewModeItems="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        d:DataContext="{d:DesignInstance Type=viewModelTabs:FilesConvertingViewModel, IsDesignTimeCreatable=False}"
-        >
+        d:DataContext="{d:DesignInstance Type=viewModelTabs:FilesConvertingViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.button.xaml" />
+              </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>

@@ -3,6 +3,7 @@ using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
@@ -17,10 +18,10 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// </summary>
     public abstract class SignatureMicrostation : StampSignature
     {
-        protected SignatureMicrostation(ISignatureLibraryApp signatureLibrary,
+        protected SignatureMicrostation(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier,
                                         IResultAppValue<IStampFieldMicrostation> signature,
                                         Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc)
-            :base(signatureLibrary)
+            : base(signatureLibrary, stampIdentifier)
         {
             _signature = signature ?? throw new ArgumentNullException(nameof(signature));
             InsertSignatureFunc = insertSignatureFunc ?? throw new ArgumentNullException(nameof(insertSignatureFunc));

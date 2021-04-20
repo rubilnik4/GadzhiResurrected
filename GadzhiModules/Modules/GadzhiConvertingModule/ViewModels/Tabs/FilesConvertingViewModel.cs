@@ -160,7 +160,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Типы цветов для печати
         /// </summary>
         public IReadOnlyCollection<string> ColorPrintToString =>
-            ColorPrintConverter.ColorPrintString;
+            ColorPrintConverter.ColorPrintsString;
 
         /// <summary>
         /// Статус обработки проекта
@@ -236,11 +236,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Установка цвета печати выделенных файлов
         /// </summary>
-        private void SetColorPrintToSelectedItems(ColorPrint colorPrint)
+        private void SetColorPrintToSelectedItems(ColorPrintType colorPrintType)
         {
             foreach (var fileDataViewModelItem in SelectedFilesDataItemViewModels)
             {
-                fileDataViewModelItem.ChangeColorPrint(colorPrint);
+                fileDataViewModelItem.ChangeColorPrint(colorPrintType);
             }
         }
 

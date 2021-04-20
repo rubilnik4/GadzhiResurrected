@@ -15,7 +15,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        FileExtension GetExportFileExtension(FileExtension fileExtensionMain);
+        FileExtensionType GetExportFileExtension(FileExtensionType fileExtensionTypeMain);
 
         /// <summary>
         /// Закрыть приложения

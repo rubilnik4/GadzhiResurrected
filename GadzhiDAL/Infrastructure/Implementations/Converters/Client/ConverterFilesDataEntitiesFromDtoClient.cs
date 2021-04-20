@@ -37,21 +37,20 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Преобразовать параметры конвертации из трансферной модели
         /// </summary>
         private static ConvertingSettingsComponent ConvertingSettingsToRequest(ConvertingSettingsRequest convertingSettings) =>
-            (convertingSettings != null)
-                ? new ConvertingSettingsComponent()
-                {
-                    PersonId = convertingSettings.PersonId,
-                    PdfNamingType = convertingSettings.PdfNamingType,
-                }
-                : throw new ArgumentNullException(nameof(convertingSettings));
+           new ConvertingSettingsComponent
+           {
+               PersonId = convertingSettings.PersonId,
+               PdfNamingType = convertingSettings.PdfNamingType,
+               ConvertingModeType = convertingSettings.ConvertingModeType,
+           };
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс базы данных
         /// </summary>      
         private static FileDataEntity ToFileData(FileDataRequestClient fileDataRequest) =>
-            new FileDataEntity()
+            new FileDataEntity
             {
-                ColorPrint = fileDataRequest.ColorPrint,
+                ColorPrintType = fileDataRequest.ColorPrintType,
                 FilePath = fileDataRequest.FilePath,
                 FileDataSource = fileDataRequest.FileDataSource,
             };

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiCommon.Extensions.StringAdditional;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;

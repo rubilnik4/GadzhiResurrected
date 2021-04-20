@@ -13,7 +13,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Цвет печати
         /// </summary>
-        ColorPrint ColorPrint { get; }
+        ColorPrintType ColorPrintType { get; }
 
         /// <summary>
         /// Статус обработки файла

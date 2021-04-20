@@ -12,7 +12,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
 {
     public class FileDataViewModelItem : BindableBase
     {
-        public FileDataViewModelItem(IFileData fileData, Action<ColorPrint> setColorPrint)
+        public FileDataViewModelItem(IFileData fileData, Action<ColorPrintType> setColorPrint)
         {
             FileData = fileData;
             _setColorPrint = setColorPrint;
@@ -26,12 +26,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// <summary>
         /// Установка цвета печати выделенных файлов
         /// </summary>
-        private readonly Action<ColorPrint> _setColorPrint;
+        private readonly Action<ColorPrintType> _setColorPrint;
 
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string FileExtension => FileData.FileExtension.ToString();
+        public string FileExtension => FileData.FileExtensionType.ToString();
 
         /// <summary>
         /// Имя файла
@@ -49,8 +49,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         [Logger]
         public string ColorPrintName
         {
-            get => ColorPrintConverter.ColorPrintToString(FileData.ColorPrint);
-            set => _setColorPrint(ColorPrintConverter.ConvertStringToColorPrint(value));
+            get => ColorPrintConverter.ColorPrintToString(FileData.ColorPrintType);
+            set => _setColorPrint(ColorPrintConverter.ColorPrintFromString(value));
         }
 
         /// <summary>
@@ -62,12 +62,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// <summary>
         /// Ошибка отсутствует
         /// </summary>
-        public bool IsNoError => IsEndStatus && FileData.StatusError == StatusError.NoError;
+        public bool IsNoError => IsEndStatus && FileData.StatusErrorType == StatusErrorType.NoError;
 
         /// <summary>
         /// Ошибка отсутствует
         /// /// </summary>
-        public bool IsCriticalError => IsEndStatus && FileData.StatusError == StatusError.CriticalError;
+        public bool IsCriticalError => IsEndStatus && FileData.StatusErrorType == StatusErrorType.CriticalError;
 
         /// <summary>
         /// Список ошибок
@@ -84,9 +84,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConv
         /// <summary>
         /// Изменить цвет печати
         /// </summary>
-        public void ChangeColorPrint(ColorPrint colorPrint)
+        public void ChangeColorPrint(ColorPrintType colorPrintType)
         {
-            FileData.SetColorPrint(colorPrint) ;
+            FileData.SetColorPrint(colorPrintType) ;
             RaisePropertyChanged(nameof(ColorPrintName));
         }
 

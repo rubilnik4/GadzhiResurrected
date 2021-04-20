@@ -32,7 +32,7 @@
     <ProductName>GadzhiConverting</ProductName>
     <PublisherName>Ivan Rubilnik</PublisherName>
     <MinimumRequiredVersion>1.0.0.16</MinimumRequiredVersion>
-    <ApplicationRevision>21</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -214,7 +214,6 @@
     <Compile Include="Extensions\ConvertingSettingsExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\NativeMethods.cs" />
-    <Compile Include="Infrastructure\Implementations\ApplicationKillService.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConverting.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingDocument.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationConvertingPartial\ApplicationConvertingPrinting.cs" />
@@ -225,12 +224,12 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\ConvertingModeChoice.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConvertingDocument.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Interfaces\Converters\IConverterServerPackageDataToDto.cs" />
-    <Compile Include="Infrastructure\Interfaces\IApplicationKillService.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
@@ -349,6 +348,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

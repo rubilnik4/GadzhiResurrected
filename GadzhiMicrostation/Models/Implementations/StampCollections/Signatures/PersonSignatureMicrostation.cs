@@ -1,5 +1,6 @@
 ﻿using System;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -13,17 +14,17 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
     /// </summary>
     public class PersonSignatureMicrostation : SignatureMicrostation, IStampPerson
     {
-        public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary,
+        public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier,
                                            Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                            IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
-            : this(signatureLibrary, GetNotInitializedSignature(responsiblePerson.MaxLengthWord), insertSignatureFunc,
+            : this(signatureLibrary, stampIdentifier, GetNotInitializedSignature(responsiblePerson.MaxLengthWord), insertSignatureFunc,
                    actionType, responsiblePerson, dateSignature)
         { }
 
-        public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary, IResultAppValue<IStampFieldMicrostation> signature,
+        public PersonSignatureMicrostation(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier, IResultAppValue<IStampFieldMicrostation> signature,
                                            Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                            IStampTextField actionType, IStampTextField responsiblePerson, IStampTextField dateSignature)
-            : base(signatureLibrary, signature, insertSignatureFunc)
+            : base(signatureLibrary, stampIdentifier, signature, insertSignatureFunc)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;
@@ -49,7 +50,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// Подпись после удаления
         /// </summary>
         protected override IStampSignature SignatureDeleted =>
-             new PersonSignatureMicrostation(SignatureLibrary, InsertSignatureFunc, ActionType, ResponsiblePerson, DateSignature);
+             new PersonSignatureMicrostation(SignatureLibrary, StampIdentifier, InsertSignatureFunc, ActionType, ResponsiblePerson, DateSignature);
 
         /// <summary>
         /// Необходимо ли вставлять подпись в поле
@@ -61,7 +62,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.Signatures
         /// Вставить подпись
         /// </summary>
         public override IStampSignature InsertSignature(ISignatureFileApp signatureFile) =>
-            new PersonSignatureMicrostation(SignatureLibrary, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
+            new PersonSignatureMicrostation(SignatureLibrary, StampIdentifier, InsertSignatureFunc.Invoke(signatureFile), InsertSignatureFunc,
                                         ActionType, ResponsiblePerson, DateSignature);
     }
 }

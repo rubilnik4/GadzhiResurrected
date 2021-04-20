@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.StringAdditional;
-using GadzhiCommon.Infrastructure.Implementations;
 
-namespace GadzhiCommon.Enums.FilesConvert
+namespace GadzhiCommon.Infrastructure.Implementations.FilesConvert
 {
     /// <summary>
     /// Список допустимых расширений для конвертации
@@ -14,24 +13,24 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// <summary>
         /// Список допустимых расширений для конвертации
         /// </summary>
-        public static IReadOnlyDictionary<string, FileExtension> DocAndDgnFileTypeDictionary => new Dictionary<string, FileExtension>()
+        public static IReadOnlyDictionary<string, FileExtensionType> DocAndDgnFileTypeDictionary => new Dictionary<string, FileExtensionType>()
         {
-            { "doc", FileExtension.Doc},
-            { "docx", FileExtension.Docx},
-            { "dgn", FileExtension.Dgn},
+            { "doc", FileExtensionType.Doc},
+            { "docx", FileExtensionType.Docx},
+            { "dgn", FileExtensionType.Dgn},
         };
 
         /// <summary>
         /// Список допустимых расширений
         /// </summary>
-        public static IReadOnlyDictionary<string, FileExtension> FileTypesValidDictionary => new Dictionary<string, FileExtension>()
+        public static IReadOnlyDictionary<string, FileExtensionType> FileTypesValidDictionary => new Dictionary<string, FileExtensionType>()
         {
-            { "doc", FileExtension.Doc},
-            { "docx", FileExtension.Docx},
-            { "dgn", FileExtension.Dgn},
-            { "pdf", FileExtension.Pdf},
-            { "dwg", FileExtension.Dwg},
-            { "xlsx", FileExtension.Xlsx},
+            { "doc", FileExtensionType.Doc},
+            { "docx", FileExtensionType.Docx},
+            { "dgn", FileExtensionType.Dgn},
+            { "pdf", FileExtensionType.Pdf},
+            { "dwg", FileExtensionType.Dwg},
+            { "xlsx", FileExtensionType.Xlsx},
         };
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// <summary>
         /// Получить допустимое расширение для конвертации
         /// </summary>
-        public static FileExtension GetDocAndDgnFileTypes(string extension) =>
+        public static FileExtensionType GetDocAndDgnFileTypes(string extension) =>
             DocAndDgnFileTypeDictionary[extension.ToLowerCaseCurrentCulture()];
 
         /// <summary>
@@ -57,14 +56,14 @@ namespace GadzhiCommon.Enums.FilesConvert
         /// <summary>
         /// Получить допустимое расширение для конвертации
         /// </summary>
-        public static FileExtension GetFileTypesValid(string extension) =>
+        public static FileExtensionType GetFileTypesValid(string extension) =>
             FileTypesValidDictionary[extension.ToLowerCaseCurrentCulture()];
 
         /// <summary>
         /// Сравнить расширения
         /// </summary>
-        public static bool IsFileExtensionEqual(string fileExtension, FileExtension extensionCompare) =>
-            extensionCompare.ToString().ToLowerCaseCurrentCulture() == 
+        public static bool IsFileExtensionEqual(string fileExtension, FileExtensionType extensionTypeCompare) =>
+            extensionTypeCompare.ToString().ToLowerCaseCurrentCulture() == 
             FileSystemOperations.ExtensionWithoutPoint(fileExtension).ToLowerCaseCurrentCulture();
     }
 }

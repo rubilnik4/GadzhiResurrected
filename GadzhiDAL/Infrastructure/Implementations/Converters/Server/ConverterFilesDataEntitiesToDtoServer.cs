@@ -31,13 +31,12 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
         private static ConvertingSettingsRequest ConvertingSettingsToRequest(ConvertingSettingsComponent convertingSettings) =>
-            (convertingSettings != null)
-                ? new ConvertingSettingsRequest()
-                {
-                    PersonId = convertingSettings.PersonId,
-                    PdfNamingType = convertingSettings.PdfNamingType,
-                }
-                : throw new ArgumentNullException(nameof(convertingSettings));
+            new ConvertingSettingsRequest
+            {
+                PersonId = convertingSettings.PersonId,
+                PdfNamingType = convertingSettings.PdfNamingType,
+                ConvertingModeType = convertingSettings.ConvertingModeType,
+            };
 
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос
@@ -48,7 +47,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             {
                 FilePath = fileDataEntity?.FilePath ?? throw new ArgumentNullException(nameof(fileDataEntity)),
                 StatusProcessing = fileDataEntity.StatusProcessing,
-                ColorPrint = fileDataEntity.ColorPrint,
+                ColorPrintType = fileDataEntity.ColorPrintType,
                 FileDataSource = fileDataEntity.FileDataSource.AsQueryable().ToArray(),
             };
         }

@@ -43,7 +43,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Errors
             (fileDataEntity != null)
                 ? new FileDataErrorEntity()
                 {
-                    ColorPrint = fileDataEntity.ColorPrint,
+                    ColorPrintType = fileDataEntity.ColorPrintType,
                     FilePath = fileDataEntity.FilePath,
                     FileErrorsStore = fileDataEntity.FileErrors.AsQueryable().ToList()
                 }

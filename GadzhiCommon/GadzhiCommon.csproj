@@ -106,16 +106,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\FilesConvert\ConvertingModeType.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentType.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Errors\ConverterErrorType.cs" />
     <Compile Include="Enums\ConvertingSettings\PdfNamingType.cs" />
-    <Compile Include="Enums\FilesConvert\ColorPrint.cs" />
+    <Compile Include="Enums\FilesConvert\ColorPrintType.cs" />
     <Compile Include="Enums\FilesConvert\ErrorConvertingType.cs" />
-    <Compile Include="Enums\FilesConvert\FileExtension.cs" />
-    <Compile Include="Enums\FilesConvert\StatusError.cs" />
+    <Compile Include="Enums\FilesConvert\FileExtensionType.cs" />
+    <Compile Include="Enums\FilesConvert\StatusErrorType.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
-    <Compile Include="Enums\FilesConvert\ValidFileExtensions.cs" />
+    <Compile Include="Infrastructure\Implementations\FilesConvert\ValidFileExtensions.cs" />
     <Compile Include="Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Extensions\Async\AsyncExtensions.cs" />
     <Compile Include="Extensions\Collection\EnumerableExtension.cs" />

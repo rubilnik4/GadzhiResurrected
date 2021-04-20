@@ -46,7 +46,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
 
             var fileDataArchiveEntity = new FileDataArchiveEntity()
             {
-                ColorPrint = fileDataEntity.ColorPrint,
+                ColorPrintType = fileDataEntity.ColorPrintType,
                 FilePath = fileDataEntity.FilePath,
             };
             var fileDataSourceServerEntities = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().

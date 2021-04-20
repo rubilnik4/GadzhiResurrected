@@ -7,8 +7,15 @@
              mc:Ignorable="d" 
              xmlns:conv="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
-             d:DataContext="{d:DesignInstance Type=viewModelTabs:ConvertingSettingsViewModel, IsDesignTimeCreatable=False}"
-             >
+             d:DataContext="{d:DesignInstance Type=viewModelTabs:ConvertingSettingsViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.progressbar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
@@ -77,6 +84,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -86,7 +94,7 @@
 
                 <TextBlock Grid.Row="0"
                        Grid.Column="0" 
-                       Text="Именование PDF">
+                       Text="Именование PDF:">
                 </TextBlock>
                 <ComboBox Grid.Row="0"
                           Grid.Column="1" 
@@ -99,12 +107,22 @@
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0" 
-                           Text="Цвет по умолчанию">
+                           Text="Цвет по умолчанию:">
                 </TextBlock>
                 <ComboBox Grid.Row="1"
                           Grid.Column="1" 
                           SelectedValue="{Binding ColorPrintName, Mode=TwoWay}"
-                          ItemsSource="{Binding ColorPrintToString}">
+                          ItemsSource="{Binding ColorPrintsString}">
+                </ComboBox>
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0" 
+                           Text="Тип конвертации:">
+                </TextBlock>
+                <ComboBox Grid.Row="2"
+                          Grid.Column="1" 
+                          SelectedValue="{Binding ConvertingModeName, Mode=TwoWay}"
+                          ItemsSource="{Binding ConvertingModesString}">
                 </ComboBox>
             </Grid>
         </GroupBox>

@@ -12,10 +12,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     public class ConvertingSettings : IConvertingSettings
     {
-        public ConvertingSettings(string personId, PdfNamingType pdfNamingType)
+        public ConvertingSettings(string personId, PdfNamingType pdfNamingType, ConvertingModeType convertingModeType)
         {
             PersonId = personId ?? String.Empty;
             PdfNamingType = pdfNamingType;
+            ConvertingModeType = convertingModeType;
         }
 
         /// <summary>
@@ -27,6 +28,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Принцип именование PDF
         /// </summary>
         public PdfNamingType PdfNamingType { get; }
+
+        /// <summary>
+        /// Тип конвертации
+        /// </summary>
+        public ConvertingModeType ConvertingModeType { get; }
 
         /// <summary>
         /// Информация о принтере PDF

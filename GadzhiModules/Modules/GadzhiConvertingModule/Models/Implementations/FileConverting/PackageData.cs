@@ -101,8 +101,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        public void AddFiles(IEnumerable<string> files, ColorPrint colorPrint) =>
-            files?.Select(f => new FileData(f, colorPrint)).Where(CanFileDataBeAddedToList).
+        public void AddFiles(IEnumerable<string> files, ColorPrintType colorPrintType) =>
+            files?.Select(f => new FileData(f, colorPrintType)).Where(CanFileDataBeAddedToList).
             Void(AddFiles);
 
         /// <summary>

@@ -4,6 +4,7 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -37,13 +38,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
             CheckFieldType.GetDepartmentType(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE].MaxLengthWord).
             Map(departmentType => GetSignatureInformation(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
                                                           PersonId, departmentType)).
-            ResultValueOk(signature => GetStampPersonFromFields(personRow, signature));
+            ResultValueOk(signature => GetStampPersonFromFields(personRow, signature, _stampIdentifier));
 
         /// <summary>
         /// Получить класс с ответственным лицом и подписью на основании полей Word
         /// </summary>
-        private static IStampPerson GetStampPersonFromFields(IRowElementWord personRow, ISignatureLibraryApp personSignature) =>
-            new PersonSignatureWord(personSignature,
+        private static IStampPerson GetStampPersonFromFields(IRowElementWord personRow, ISignatureLibraryApp personSignature,
+                                                             StampIdentifier stampIdentifier) =>
+            new PersonSignatureWord(personSignature, stampIdentifier,
                                 new StampFieldWord(personRow.CellsElement[PersonRowIndexes.SIGNATURE], StampFieldType.PersonSignature),
                                 new StampTextFieldWord(personRow.CellsElement[PersonRowIndexes.ACTION_TYPE], StampFieldType.PersonSignature),
                                 new StampTextFieldWord(personRow.CellsElement[PersonRowIndexes.RESPONSIBLE_PERSON], StampFieldType.PersonSignature),

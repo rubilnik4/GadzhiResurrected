@@ -7,6 +7,7 @@ using System.Reflection;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.Converters.Errors;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
@@ -22,7 +23,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class FileData : IFileData, IEquatable<IFileData>, IFormattable
     {
-        public FileData(string filePath, ColorPrint colorPrint)
+        public FileData(string filePath, ColorPrintType colorPrintType)
         {
             string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
             string fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -33,10 +34,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
             }
             if (!ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileExtension)) throw new KeyNotFoundException(nameof(fileExtension));
 
-            FileExtension = ValidFileExtensions.DocAndDgnFileTypeDictionary[fileExtension];
+            FileExtensionType = ValidFileExtensions.DocAndDgnFileTypeDictionary[fileExtension];
             FileName = fileName;
             FilePath = filePath;
-            ColorPrint = colorPrint;
+            ColorPrintType = colorPrintType;
 
             FileErrors = new List<IErrorCommon>();
         }
@@ -49,7 +50,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public FileExtension FileExtension { get; }
+        public FileExtensionType FileExtensionType { get; }
 
         /// <summary>
         /// Имя файла
@@ -64,7 +65,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Цвет печати
         /// </summary>
-        public ColorPrint ColorPrint { get; private set; }
+        public ColorPrintType ColorPrintType { get; private set; }
 
         /// <summary>
         /// Статус обработки файла
@@ -74,7 +75,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Статус ошибок
         /// </summary>
-        public StatusError StatusError =>
+        public StatusErrorType StatusErrorType =>
             ConverterErrorType.ErrorsTypeToStatusError(FileErrors.Select(error => error.ErrorConvertingType));
 
         /// <summary>
@@ -85,10 +86,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Изменить цвет печати
         /// </summary>
-        public void SetColorPrint(ColorPrint colorPrint)
+        public void SetColorPrint(ColorPrintType colorPrintType)
         {
-            ColorPrint = colorPrint;
-            _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Update, ReflectionInfo.GetMethodBase(this), ColorPrint, ToString());
+            ColorPrintType = colorPrintType;
+            _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Update, ReflectionInfo.GetMethodBase(this), ColorPrintType, ToString());
         }
 
         /// <summary>

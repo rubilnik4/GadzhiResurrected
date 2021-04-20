@@ -2,6 +2,7 @@
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
@@ -17,8 +18,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
     /// </summary>
     public abstract class SignatureWord : StampSignature
     {
-        protected SignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature )
-            : base(signatureLibrary)
+        protected SignatureWord(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier, IStampFieldWord signature )
+            : base(signatureLibrary, stampIdentifier)
         {
             _signature = new ResultAppValue<IStampFieldWord>(signature, new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                              "Подпись не инициализирована"));

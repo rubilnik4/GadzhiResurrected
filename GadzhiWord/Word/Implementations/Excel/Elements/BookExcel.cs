@@ -8,6 +8,7 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiWord.Extensions.Excel;
 using GadzhiWord.Word.Interfaces.Excel.Elements;
 using Microsoft.Office.Interop.Excel;
@@ -41,7 +42,7 @@ namespace GadzhiWord.Word.Implementations.Excel.Elements
         /// </summary>
         public IResultAppValue<string> SaveAs(string filePath) =>
             Path.GetExtension(filePath).
-            WhereContinue(fileExtension => ValidFileExtensions.IsFileExtensionEqual(fileExtension, FileExtension.Xlsx),
+            WhereContinue(fileExtension => ValidFileExtensions.IsFileExtensionEqual(fileExtension, FileExtensionType.Xlsx),
             okFunc: fileExtension => new ResultAppValue<string>(filePath).
                                      ResultVoidOk(_ => _workbook.SaveAs(filePath)),
             badFunc: fileExtension => new ResultAppValue<string>(new ErrorApplication(ErrorApplicationType.IncorrectExtension,

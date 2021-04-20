@@ -71,7 +71,7 @@ namespace GadzhiPdfPrinting.Infrastructure.Implementations
         private static bool PdfPathValid(string filePath) =>
             FileSystemOperations.ExtensionWithoutPointFromPath(filePath).
             Map(fileExtension => !String.IsNullOrEmpty(filePath) && !String.IsNullOrEmpty(fileExtension) &&
-                                  FileExtension.Pdf.ToString().ContainsIgnoreCase(fileExtension));
+                                  FileExtensionType.Pdf.ToString().ContainsIgnoreCase(fileExtension));
 
         /// <summary>
         /// Напечатать PDF

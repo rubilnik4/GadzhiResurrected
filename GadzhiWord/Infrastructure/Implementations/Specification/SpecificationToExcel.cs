@@ -8,7 +8,7 @@ using GadzhiWord.Models.Interfaces.Specification;
 using GadzhiWord.Word.Interfaces.Excel.Elements;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
-namespace GadzhiWord.Infractructure.Implementations.Specification
+namespace GadzhiWord.Infrastructure.Implementations.Specification
 {
     /// <summary>
     /// Экспорт таблицы из Word

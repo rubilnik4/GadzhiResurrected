@@ -4,6 +4,7 @@ using GadzhiApplicationCommon.Infrastructure.Implementations.Converters.LibraryD
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampDefinitions;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
@@ -50,14 +51,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
             ConverterDepartmentTypeApp.DepartmentParsing(approvalChiefRow.CellsElement[ApprovalChiefRowIndexes.DEPARTMENT].Text).
             Map(departmentType => SignaturesSearching.FindByFullNameOrRandom(approvalChiefRow.CellsElement[ApprovalChiefRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
                                                                              departmentType)).
-            ResultValueOk(signature => GetStampApprovalChiefFromFields(approvalChiefRow, signature));
+            ResultValueOk(signature => GetStampApprovalChiefFromFields(approvalChiefRow, signature, _stampIdentifier));
 
         /// <summary>
         /// Получить класс с ответственным лицом и подписью на основании полей Word для строк согласования тех требований с директорами
         /// </summary>
-        private static IStampApprovalChief GetStampApprovalChiefFromFields(IRowElementWord approvalChiefRow,
-                                                                           ISignatureLibraryApp approvalChiefSignature) =>
-            new ApprovalChiefSignatureWord(approvalChiefSignature,
+        private static IStampApprovalChief GetStampApprovalChiefFromFields(IRowElementWord approvalChiefRow, ISignatureLibraryApp approvalChiefSignature,
+                                                                           StampIdentifier stampIdentifier) =>
+            new ApprovalChiefSignatureWord(approvalChiefSignature, stampIdentifier,
                                             new StampFieldWord(approvalChiefRow.CellsElement[ApprovalChiefRowIndexes.SIGNATURE], StampFieldType.ApprovalChiefSignature),
                                             new StampTextFieldWord(approvalChiefRow.CellsElement[ApprovalChiefRowIndexes.RESPONSIBLE_PERSON], StampFieldType.ApprovalChiefSignature),
                                             new StampTextFieldWord(approvalChiefRow.CellsElement[ApprovalChiefRowIndexes.DEPARTMENT], StampFieldType.ApprovalChiefSignature));

@@ -21,7 +21,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
           : this(textNodeElement, ownerContainerMicrostation, true, false)
         { }
 
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public TextNodeElementMicrostation(TextNodeElement textNodeElement, IOwnerMicrostation ownerContainerMicrostation,
                                            bool isNeedCompress, bool isVertical)
             : base((Element)textNodeElement, ownerContainerMicrostation, isNeedCompress, isVertical)

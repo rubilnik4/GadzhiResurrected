@@ -83,7 +83,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
         /// </summary>
         public IResultAppCollection<IStampSignature> DeleteSignatures(IEnumerable<IStampSignature> signatures) =>
             _stamps.
-            ResultValueOkBind(stamps => stamps.Select(stamp => stamp.DeleteSignatures(signatures)).
+            ResultValueOkBind(stamps => stamps.Select(stamp => signatures.Where(signature => signature.StampIdentifier.Equals(stamp.StampSettings.Id)).
+                                                                          Map(stamp.DeleteSignatures) ).
                                                ToResultCollection()).
             ToResultCollection();
     }

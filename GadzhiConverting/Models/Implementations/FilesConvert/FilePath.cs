@@ -4,6 +4,7 @@ using System.IO;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
@@ -25,7 +26,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             string fileTypeClient = FileSystemOperations.ExtensionWithoutPointFromPath(filePathClient);
             if (fileTypeServer != fileTypeClient) throw new InvalidOperationException("Расширения клиентской и серверной частей не равны");
 
-            FileExtension = ValidFileExtensions.GetFileTypesValid(fileTypeServer);
+            FileExtensionType = ValidFileExtensions.GetFileTypesValid(fileTypeServer);
             FilePathServer = FileSystemOperations.GetValidFilePath(filePathServer);
             FilePathClient = FileSystemOperations.GetValidFilePath(filePathClient);
         }
@@ -43,7 +44,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        public FileExtension FileExtension { get; }
+        public FileExtensionType FileExtensionType { get; }
 
         /// <summary>
         /// Имя файла на сервере

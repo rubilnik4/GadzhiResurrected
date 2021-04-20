@@ -184,6 +184,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         }
 
         /// <summary>
+        /// Доступность элемента 
+        /// </summary>
+        public bool IsValid()
+        {
+            try
+            {
+                return _element.IsValid;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+          
+
+        /// <summary>
         /// Кэшированные атрибуты элемента
         /// </summary>
         protected IDictionary<ElementMicrostationAttributes, string> AttributeCaching { get; } =
@@ -201,7 +217,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// идентификатор личности
         /// </summary>    
-        public string AttributePersonId => GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.PersonId);
+        public string AttributePersonId => 
+            GetAttributeFromCacheOrLoad(ElementMicrostationAttributes.PersonId);
 
         /// <summary>
         /// Получить значение атрибута по его PersonId номеру
@@ -225,10 +242,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>       
         protected string GetAttributeFromCacheOrLoad(ElementMicrostationAttributes attributeElement)
         {
-            if (AttributeCaching.ContainsKey(attributeElement))
-            {
-                return AttributeCaching[attributeElement];
-            }
+            if (AttributeCaching.ContainsKey(attributeElement)) return AttributeCaching[attributeElement];
 
             string attribute = _element.GetAttributeById(attributeElement);
             AttributeCaching[attributeElement] = attribute;

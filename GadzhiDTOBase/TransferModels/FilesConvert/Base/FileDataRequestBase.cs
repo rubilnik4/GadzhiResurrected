@@ -22,7 +22,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Цвет печати
         /// </summary>
         [DataMember]
-        public ColorPrint ColorPrint { get; set; }
+        public ColorPrintType ColorPrintType { get; set; }
 
         /// <summary>
         /// Статус обработки файла

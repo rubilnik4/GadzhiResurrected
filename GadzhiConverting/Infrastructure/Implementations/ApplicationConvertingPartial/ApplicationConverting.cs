@@ -69,13 +69,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        public FileExtension GetExportFileExtension(FileExtension fileExtensionMain) =>
-            fileExtensionMain switch
+        public FileExtensionType GetExportFileExtension(FileExtensionType fileExtensionTypeMain) =>
+            fileExtensionTypeMain switch
             {
-                FileExtension.Dgn => FileExtension.Dwg,
-                FileExtension.Doc => FileExtension.Xlsx,
-                FileExtension.Docx => FileExtension.Xlsx,
-                _ => throw new InvalidEnumArgumentException(nameof(fileExtensionMain), (int)fileExtensionMain, typeof(FileExtension))
+                FileExtensionType.Dgn => FileExtensionType.Dwg,
+                FileExtensionType.Doc => FileExtensionType.Xlsx,
+                FileExtensionType.Docx => FileExtensionType.Xlsx,
+                _ => throw new InvalidEnumArgumentException(nameof(fileExtensionTypeMain), (int)fileExtensionTypeMain, typeof(FileExtensionType))
             };
 
         /// <summary>
@@ -90,13 +90,13 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения
         /// </summary>        
-        private IResultValue<IApplicationLibrary<IDocumentLibrary>> GetActiveLibraryByExtension(FileExtension fileExtension) =>
-            fileExtension switch
+        private IResultValue<IApplicationLibrary<IDocumentLibrary>> GetActiveLibraryByExtension(FileExtensionType fileExtensionType) =>
+            fileExtensionType switch
             {
-                FileExtension.Dgn => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationMicrostation),
-                FileExtension.Doc => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
-                FileExtension.Docx => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
-                _ => new ErrorCommon(ErrorConvertingType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtension} не найдена").
+                FileExtensionType.Dgn => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationMicrostation),
+                FileExtensionType.Doc => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
+                FileExtensionType.Docx => new ResultValue<IApplicationLibrary<IDocumentLibrary>>(_applicationWord),
+                _ => new ErrorCommon(ErrorConvertingType.LibraryNotFound, $"Библиотека конвертации для типа {fileExtensionType} не найдена").
                      ToResultValue<IApplicationLibrary<IDocumentLibrary>>()
             };
     }

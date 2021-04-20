@@ -53,14 +53,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
         private static ConvertingSettingsRequest ToConvertingSettingsRequest(IConvertingSettings convertingSetting) =>
-            (convertingSetting != null)
-                ? new ConvertingSettingsRequest()
-                {
-                    PersonId = convertingSetting.PersonSignature.PersonId ?? String.Empty,
-                    PdfNamingType = convertingSetting.PdfNamingType,
-
-                }
-                : throw new ArgumentNullException(nameof(convertingSetting));
+             new ConvertingSettingsRequest
+             {
+                 PersonId = convertingSetting.PersonSignature.PersonId ?? String.Empty,
+                 PdfNamingType = convertingSetting.PdfNamingType,
+                 ConvertingModeType = convertingSetting.ConvertingModeType,
+             };
 
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную
@@ -70,7 +68,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileData.FilePath);
             var fileDataRequestClient = new FileDataRequestClient()
             {
-                ColorPrint = fileData.ColorPrint,
+                ColorPrintType = fileData.ColorPrintType,
                 FilePath = fileData.FilePath,
                 StatusProcessing = fileData.StatusProcessing,
                 FileDataSource = fileDataSourceZip,

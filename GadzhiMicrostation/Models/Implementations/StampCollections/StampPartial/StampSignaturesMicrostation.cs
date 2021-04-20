@@ -28,7 +28,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Фабрика создания подписей Microstation
         /// </summary>
         protected override ISignatureCreating SignatureCreating =>
-            new SignatureCreatingMicrostation(this, InsertSignatureByFields, SignaturesSearching, StampSettings.PersonId);
+            new SignatureCreatingMicrostation(this, StampSettings.Id, InsertSignatureByFields, SignaturesSearching, StampSettings.PersonId);
 
         /// <summary>
         /// Вставить подписи
@@ -37,7 +37,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             StampCellElement.ApplicationMicrostation.
             Map(application => application.AttachLibrary(StampCellElement.ApplicationMicrostation.MicrostationResources.SignatureMicrostationFileName)).
             ResultVoidOk(_ => DeleteSignaturesPrevious()).
-            ResultValueOkBind(InsertSignaturesFromLibrary).
+            ResultValueOkBind(_ => InsertSignaturesFromLibrary()).
             ResultVoidOk(_ => StampCellElement.ApplicationMicrostation.DetachLibrary()).
             ToResultCollection();
 
@@ -64,39 +64,33 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             ToList().
             Map(signaturesDeleted =>
                     new ResultAppCollection<IStampSignature>(signaturesDeleted,
-                                                             signaturesDeleted.SelectMany(signature => signature.Signature.Errors),
                                                              new ErrorApplication(ErrorApplicationType.SignatureNotFound,
                                                                                   "Подписи для удаления не инициализированы")));
 
         /// <summary>
         /// Вставить подписи из библиотеки
         /// </summary>      
-        private IResultAppCollection<IStampSignature> InsertSignaturesFromLibrary(IList<LibraryElement> libraryElements) =>
+        private IResultAppCollection<IStampSignature> InsertSignaturesFromLibrary() =>
             StampSignatureFields.GetSignatures().
-            ResultValueOkBind(signatures => InsertSignatures(signatures,
-                                                             libraryElements.Select(libraryElement => libraryElement.Name).ToList())).
+            ResultValueOkBind(InsertSignatures).
             ToResultCollection();
 
 
         /// <summary>
         /// Вставить подписи и получить поля
         /// </summary>
-        private IResultAppCollection<IStampSignature> InsertSignatures(IEnumerable<IStampSignature> signatures, IList<string> libraryIds) =>
+        private IResultAppCollection<IStampSignature> InsertSignatures(IEnumerable<IStampSignature> signatures) =>
             signatures.
-            Select(signature => SearchSignatureToInsert(signature, libraryIds)).
+            Select(SearchSignatureToInsert).
             ToResultCollection();
 
         /// <summary>
         /// Найти подпись в базе и вставить
         /// </summary>
-        private IResultAppValue<IStampSignature> SearchSignatureToInsert(IStampSignature signature, IList<string> personIds) =>
+        private IResultAppValue<IStampSignature> SearchSignatureToInsert(IStampSignature signature) =>
             SignaturesSearching.
             FindByIdOrFullNameOrRandom(signature.SignatureLibrary.PersonId,
                                        signature.SignatureLibrary.PersonInformation.FullName, StampSettings.PersonId).
-            ResultValueContinue(signatureLibrary => personIds.IndexOf(signatureLibrary.PersonId) > 0,
-                okFunc: signatureLibrary => signatureLibrary,
-                badFunc: signatureLibrary => new ErrorApplication(ErrorApplicationType.SignatureNotFound,
-                                                                  $"Подпись {signatureLibrary.PersonId} не найдена в библиотеке Microstation")).
             ResultValueOk(signatureLibrary => new SignatureFileApp(signatureLibrary.PersonId, signatureLibrary.PersonInformation,
                                                                    String.Empty, signature.IsVertical)).
             ResultValueOk(signature.InsertSignature);

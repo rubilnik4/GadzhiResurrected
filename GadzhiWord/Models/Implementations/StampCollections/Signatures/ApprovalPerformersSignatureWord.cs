@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -22,9 +23,9 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public const int MAX_ROWS_COUNT = 8;
 
-        public ApprovalPerformersSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature,
+        public ApprovalPerformersSignatureWord(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier, IStampFieldWord signature,
                                                IStampTextField responsiblePerson, IStampTextField department, IStampTextField dateSignature)
-            : base(signatureLibrary, signature)
+            : base(signatureLibrary, stampIdentifier, signature)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             Department = department ?? throw new ArgumentNullException(nameof(department));

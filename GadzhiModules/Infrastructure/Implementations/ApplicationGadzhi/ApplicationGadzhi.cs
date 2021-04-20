@@ -109,7 +109,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                                   ConverterDepartmentType.DepartmentStringToTypeOrUnknown(Properties.Settings.Default.PersonDepartment)).
             Map(personInformation => new ConvertingSettings(new SignatureLibrary(Properties.Settings.Default.PersonId, personInformation),
                                                             (PdfNamingType)Properties.Settings.Default.PdfNamingType,
-                                                            (ColorPrint)Properties.Settings.Default.ColorPrint));
+                                                            (ColorPrintType)Properties.Settings.Default.ColorPrint,
+                                                            ConvertingModeType.All));
 
         /// <summary>
         /// Сохранить конфигурацию приложения
@@ -123,7 +124,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             Properties.Settings.Default.PersonPatronymic = _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.Patronymic;
             Properties.Settings.Default.PersonDepartment = _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.Department;
             Properties.Settings.Default.PdfNamingType = (int)_projectSettings.ConvertingSettings.PdfNamingType;
-            Properties.Settings.Default.ColorPrint = (int)_projectSettings.ConvertingSettings.ColorPrint;
+            Properties.Settings.Default.ColorPrint = (int)_projectSettings.ConvertingSettings.ColorPrintType;
             Properties.Settings.Default.Save();
         }
 

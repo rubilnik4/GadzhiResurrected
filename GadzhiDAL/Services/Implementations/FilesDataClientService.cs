@@ -41,7 +41,16 @@ namespace GadzhiDAL.Services.Implementations
             var packageDataEntity = ConverterFilesDataEntitiesFromDtoClient.ToPackageData(packageDataRequest, identityName);
 
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            await unitOfWork.Session.SaveAsync(packageDataEntity);
+            try
+            {
+                await unitOfWork.Session.SaveAsync(packageDataEntity);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
             await unitOfWork.CommitAsync();
         }
 

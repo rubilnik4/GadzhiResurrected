@@ -22,6 +22,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Project
         /// <summary>
         /// Цвет печати по умолчанию
         /// </summary>
-        ColorPrint ColorPrint { get; set; }
+        ColorPrintType ColorPrintType { get; set; }
+
+        /// <summary>
+        /// Тип конвертации
+        /// </summary>
+        ConvertingModeType ConvertingModeType { get; set; }
     }
 }

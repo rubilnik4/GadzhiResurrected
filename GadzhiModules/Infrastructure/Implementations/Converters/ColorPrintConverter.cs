@@ -12,34 +12,33 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// <summary>
         /// Словарь цвета печати в строковом значении
         /// </summary>
-        public static IReadOnlyDictionary<ColorPrint, string> ColorPrintTypesString =>
-            new Dictionary<ColorPrint, string>
+        public static IReadOnlyDictionary<ColorPrintType, string> ColorPrintTypesString =>
+            new Dictionary<ColorPrintType, string>
             {
-                { ColorPrint.BlackAndWhite, "Черно-белый" },
-                { ColorPrint.GrayScale, "Градации серого" },
-                { ColorPrint.Color, "Цветной" },
+                { ColorPrintType.BlackAndWhite, "Черно-белый" },
+                { ColorPrintType.GrayScale, "Градации серого" },
+                { ColorPrintType.Color, "Цветной" },
             };
 
         /// <summary>
         /// Типы цветов для печати
         /// </summary>
-        public static IReadOnlyCollection<string> ColorPrintString =>
+        public static IReadOnlyCollection<string> ColorPrintsString =>
             ColorPrintTypesString.Select(color => color.Value).ToList();
 
         /// <summary>
         /// Преобразовать цветовое значение в наименование цвета
         /// </summary>       
-        public static string ColorPrintToString(ColorPrint colorPrint)
+        public static string ColorPrintToString(ColorPrintType colorPrintType)
         {
-            ColorPrintTypesString.TryGetValue(colorPrint, out string colorPrintString);
+            ColorPrintTypesString.TryGetValue(colorPrintType, out string colorPrintString);
             return colorPrintString;
         }
 
         /// <summary>
         /// Преобразовать наименование цвета в цветовое значение
         /// </summary>       
-        public static ColorPrint ConvertStringToColorPrint(string colorPrint) =>
-            ColorPrintTypesString?.FirstOrDefault(color => color.Value == colorPrint).Key
-            ?? ColorPrint.BlackAndWhite;
+        public static ColorPrintType ColorPrintFromString(string colorPrint) =>
+            ColorPrintTypesString.FirstOrDefault(color => color.Value == colorPrint).Key;
     }
 }

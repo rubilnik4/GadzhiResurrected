@@ -18,6 +18,7 @@ using GadzhiConverting.Models.Interfaces.FilesConvert;
 using static GadzhiCommon.Extensions.Functional.Result.ExecuteResultHandler;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
@@ -55,8 +56,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         [Logger]
         public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath,
-                                                                      IConvertingSettings convertingSettings, ColorPrint colorPrint) =>
-            ExecuteBindResultValue(() => CreatePdfInDocument(documentLibrary, filePath, convertingSettings, colorPrint),
+                                                                      IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
+            ExecuteBindResultValue(() => CreatePdfInDocument(documentLibrary, filePath, convertingSettings, colorPrintType),
                                          new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath.FileNameClient}")).
             ToResultCollection();
 
@@ -83,7 +84,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить корректность файла. Записать ошибки
         /// </summary>    
-        private IResultValue<FileExtension> IsDocumentValid(string filePathDocument) =>
+        private IResultValue<FileExtensionType> IsDocumentValid(string filePathDocument) =>
             filePathDocument.
             WhereContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
                 okFunc: filePath => new ResultValue<string>(filePath),
@@ -95,12 +96,12 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Проверить допустимость использования расширения файла
         /// </summary>           
-        private static IResultValue<FileExtension> ValidateFileExtension(string fileExtension) =>
+        private static IResultValue<FileExtensionType> ValidateFileExtension(string fileExtension) =>
             fileExtension.
             WhereContinue(_ => ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileExtension),
-                   okFunc: extensionKey => new ResultValue<FileExtension>(ValidFileExtensions.GetDocAndDgnFileTypes(extensionKey)),
+                   okFunc: extensionKey => new ResultValue<FileExtensionType>(ValidFileExtensions.GetDocAndDgnFileTypes(extensionKey)),
                    badFunc: _ => new ErrorCommon(ErrorConvertingType.IncorrectExtension,
                                                  $"Расширение файла {fileExtension} не соответствует типам расширений doc или Dgn").
-                                 ToResultValue<FileExtension>());
+                                 ToResultValue<FileExtensionType>());
     }
 }

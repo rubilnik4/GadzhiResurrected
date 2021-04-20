@@ -4,6 +4,7 @@ using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
@@ -24,12 +25,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     /// </summary>
     public partial class SignatureCreatingMicrostation : SignatureCreating
     {
-        public SignatureCreatingMicrostation(IStampFieldsMicrostation stampFields,
+        public SignatureCreatingMicrostation(IStampFieldsMicrostation stampFields, StampIdentifier stampIdentifier,
                                              InsertSignatureFunc insertSignatureByFields,
                                              SignaturesSearching signaturesSearching, string personId)
             : base(signaturesSearching, personId)
         {
             _stampFields = stampFields ?? throw new ArgumentNullException(nameof(stampFields));
+            _stampIdentifier = stampIdentifier;
             _insertSignatureByFields = insertSignatureByFields ?? throw new ArgumentNullException(nameof(insertSignatureByFields));
         }
 
@@ -37,6 +39,11 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Поля штампа Microstation
         /// </summary>
         private readonly IStampFieldsMicrostation _stampFields;
+
+        /// <summary>
+        /// Идентификатор штампа
+        /// </summary>
+        private readonly StampIdentifier _stampIdentifier;
 
         /// <summary>
         /// Получить поля штампа на основе элементов Microstation

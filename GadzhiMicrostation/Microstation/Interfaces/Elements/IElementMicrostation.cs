@@ -81,6 +81,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         void Remove();
 
         /// <summary>
+        /// Доступность элемента 
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
         /// Получить значение атрибута по его PersonId номеру
         /// </summary>    
         string GetAttributeById(ElementMicrostationAttributes elementAttributes);

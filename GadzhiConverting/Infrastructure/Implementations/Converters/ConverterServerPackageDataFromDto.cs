@@ -53,7 +53,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         private static IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) =>
             (convertingSettingsRequest != null)
-                ? new ConvertingSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType)
+                ? new ConvertingSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType,
+                                         convertingSettingsRequest.ConvertingModeType)
                 : throw new ArgumentNullException(nameof(convertingSettingsRequest));
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         {
             var fileSavedCheck = await SaveFileFromDtoRequest(fileDataRequest, packageGuid);
 
-            return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath, fileDataRequest.ColorPrint,
+            return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath, fileDataRequest.ColorPrintType,
                                       StatusProcessing.InQueue, fileSavedCheck.Errors);
         }
 

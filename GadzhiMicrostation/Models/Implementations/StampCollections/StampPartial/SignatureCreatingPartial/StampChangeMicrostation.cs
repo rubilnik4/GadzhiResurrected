@@ -5,6 +5,7 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
@@ -51,17 +52,18 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
             var dateChange = _stampFields.GetFieldFromElements(foundFields, StampFieldChanges.GetFieldsDateChange(), StampFieldType.ChangeSignature);
             var insertSignatureFunc = InsertSignatureFunc(documentChange.ElementStamp, dateChange.ElementStamp, StampFieldType.ChangeSignature);
 
-            return GetStampChangeById(personSignature, insertSignatureFunc, numberChange, numberOfPlots, typeOfChange, documentChange, dateChange);
+            return GetStampChangeById(personSignature, _stampIdentifier, insertSignatureFunc, numberChange,
+                                      numberOfPlots, typeOfChange, documentChange, dateChange);
         }
 
         /// <summary>
         /// Сформировать строку с подписью изменений согласно идентификатору Microstation
         /// </summary>
-        private static IResultAppValue<IStampChange> GetStampChangeById(ISignatureLibraryApp personSignature,
+        private static IResultAppValue<IStampChange> GetStampChangeById(ISignatureLibraryApp personSignature, StampIdentifier stampIdentifier,
                                                                  Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                                                  IStampTextField numberChange, IStampTextField numberOfPlots, IStampTextField typeOfChange,
                                                                  IStampTextField documentChange, IStampTextField dateChange) => 
-            new ChangeSignatureMicrostation(personSignature, insertSignatureFunc, numberChange, numberOfPlots, 
+            new ChangeSignatureMicrostation(personSignature, stampIdentifier, insertSignatureFunc, numberChange, numberOfPlots, 
                                             typeOfChange, documentChange, dateChange).
             Map(stampChange => new ResultAppValue<IStampChange>(stampChange));
     }

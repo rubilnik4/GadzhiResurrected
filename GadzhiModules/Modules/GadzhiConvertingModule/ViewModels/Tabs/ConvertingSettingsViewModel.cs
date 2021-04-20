@@ -86,14 +86,30 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         [Logger]
         public string ColorPrintName
         {
-            get => ColorPrintConverter.ColorPrintToString(_convertingSettings.ColorPrint);
-            set => _convertingSettings.ColorPrint = ColorPrintConverter.ConvertStringToColorPrint(value);
+            get => ColorPrintConverter.ColorPrintToString(_convertingSettings.ColorPrintType);
+            set => _convertingSettings.ColorPrintType = ColorPrintConverter.ColorPrintFromString(value);
         }
 
         /// <summary>
         /// Типы цветов для печати
         /// </summary>
-        public IReadOnlyCollection<string> ColorPrintToString =>
-            ColorPrintConverter.ColorPrintString;
+        public IReadOnlyCollection<string> ColorPrintsString =>
+            ColorPrintConverter.ColorPrintsString;
+
+        /// <summary>
+        /// Тип конвертации строковое значение
+        /// </summary>
+        [Logger]
+        public string ConvertingModeName
+        {
+            get => ConvertingModeTypeConverter.ConvertingModeToString(_convertingSettings.ConvertingModeType);
+            set => _convertingSettings.ConvertingModeType = ConvertingModeTypeConverter.ConvertingModeFromString(value);
+        }
+
+        /// <summary>
+        /// Типы конвертаций
+        /// </summary>
+        public IReadOnlyCollection<string> ConvertingModesString =>
+            ConvertingModeTypeConverter.ConvertingModeString;
     }
 }

@@ -13,7 +13,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Archive
         {
             Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.FilePath).Not.Nullable().Default("");         
-            Map(x => x.ColorPrint).CustomType<ColorPrint>().Not.Nullable();
+            Map(x => x.ColorPrintType).CustomType<ColorPrintType>().Not.Nullable();
             HasMany(x => x.FileDataSourceServerArchiveEntities).Inverse().Cascade.All();
             References(x => x.PackageDataArchiveEntity);
         }

@@ -1,4 +1,6 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.Errors;
+﻿using System;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 
@@ -13,6 +15,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
         /// Имя с идентификатором
         /// </summary>    
         ISignatureLibraryApp SignatureLibrary { get; }
+
+        /// <summary>
+        /// Идентификатор штампа
+        /// </summary>
+        StampIdentifier StampIdentifier { get; }
 
         /// <summary>
         /// Подпись

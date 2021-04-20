@@ -61,13 +61,13 @@ namespace GadzhiCommon.Infrastructure.Implementations.Converters.Errors
         /// <summary>
         /// Определить наличие ошибок
         /// </summary>
-        public static StatusError ErrorsTypeToStatusError(IEnumerable<ErrorConvertingType> fileConvertErrorsType)
+        public static StatusErrorType ErrorsTypeToStatusError(IEnumerable<ErrorConvertingType> fileConvertErrorsType)
         {
             var fileConvertErrorsTypeCollection = fileConvertErrorsType?.ToList() ?? new List<ErrorConvertingType>();
 
             return (fileConvertErrorsTypeCollection.Count == 0)
-                ? StatusError.NoError
-                : StatusError.CriticalError;
+                ? StatusErrorType.NoError
+                : StatusErrorType.CriticalError;
         }
     }
 }

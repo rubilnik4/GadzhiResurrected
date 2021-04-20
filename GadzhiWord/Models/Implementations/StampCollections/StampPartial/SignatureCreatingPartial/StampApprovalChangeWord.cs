@@ -4,6 +4,7 @@ using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -50,13 +51,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
             CheckFieldType.GetDepartmentType(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.ACTION_TYPE].MaxLengthWord).
             Map(departmentType => GetSignatureInformation(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON].MaxLengthWord,
                                                           PersonId, departmentType)).
-            ResultValueOk(signature => GetStampApprovalChangeFromFields(approvalChangeRow, signature));
+            ResultValueOk(signature => GetStampApprovalChangeFromFields(approvalChangeRow, signature, _stampIdentifier));
 
         /// <summary>
         /// Получить класс с ответственным лицом и подписью на основании полей Word для штампа согласования
         /// </summary>
-        private static IStampApprovalChange GetStampApprovalChangeFromFields(IRowElementWord approvalChangeRow, ISignatureLibraryApp approvalChangeSignature) =>
-            new ApprovalChangeSignatureWord(approvalChangeSignature,
+        private static IStampApprovalChange GetStampApprovalChangeFromFields(IRowElementWord approvalChangeRow, ISignatureLibraryApp approvalChangeSignature,
+                                                                             StampIdentifier stampIdentifier) =>
+            new ApprovalChangeSignatureWord(approvalChangeSignature, stampIdentifier,
                                             new StampFieldWord(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.SIGNATURE], StampFieldType.ApprovalChangeSignature),
                                             new StampTextFieldWord(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.ACTION_TYPE], StampFieldType.ApprovalChangeSignature),
                                             new StampTextFieldWord(approvalChangeRow.CellsElement[ApprovalChangeRowIndexes.RESPONSIBLE_PERSON], StampFieldType.ApprovalChangeSignature),

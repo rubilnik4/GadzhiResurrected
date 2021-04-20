@@ -17,6 +17,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Validates
         /// Проверить файлы перед отправкой на корректность
         /// </summary>
         public static IResultError ValidatePackageData(PackageDataRequestClient packageDataRequestClient) =>
+            ValidateSignature(packageDataRequestClient);
+
+        /// <summary>
+        /// Проверить подпись
+        /// </summary>
+        public static IResultError ValidateSignature(PackageDataRequestClient packageDataRequestClient) =>
             !String.IsNullOrWhiteSpace(packageDataRequestClient.ConvertingSettings.PersonId)
             ? new ResultError()
             : new ResultError(new ErrorCommon(ErrorConvertingType.SignatureNotFound, "Необходимо выбрать подпись в параметрах"));

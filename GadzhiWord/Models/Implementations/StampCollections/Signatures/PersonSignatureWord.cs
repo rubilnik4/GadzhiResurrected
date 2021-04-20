@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -17,9 +18,10 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public const int FIELDS_COUNT = 4;
 
-        public PersonSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature, IStampTextField actionType,
+        public PersonSignatureWord(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier, IStampFieldWord signature, 
+                                   IStampTextField actionType,
                                    IStampTextField responsiblePerson, IStampTextField dateSignature)
-            : base(signatureLibrary, signature)
+            : base(signatureLibrary, stampIdentifier, signature)
         {
             ResponsiblePerson = responsiblePerson ?? throw new ArgumentNullException(nameof(responsiblePerson));
             ActionType = actionType;

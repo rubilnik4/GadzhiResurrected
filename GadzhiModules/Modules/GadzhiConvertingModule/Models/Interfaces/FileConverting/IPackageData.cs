@@ -62,7 +62,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Добавить файлы
         /// </summary>
-        void AddFiles(IEnumerable<string> files, ColorPrint colorPrint);
+        void AddFiles(IEnumerable<string> files, ColorPrintType colorPrintType);
 
         /// <summary>
         /// Очистить список файлов

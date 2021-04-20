@@ -7,11 +7,15 @@ using System.Threading.Tasks;
 namespace GadzhiCommon.Enums.FilesConvert
 {
     /// <summary>
-    /// Статус ошибки конвертирования
-    /// </summary>
-    public enum StatusError
+    /// Типы допустимых расширений
+    /// </summary>   
+    public enum FileExtensionType
     {
-        NoError,
-        CriticalError
+        Dgn,
+        Doc,
+        Docx,
+        Pdf,
+        Dwg,
+        Xlsx,
     }
 }

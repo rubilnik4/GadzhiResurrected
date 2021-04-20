@@ -171,7 +171,7 @@
     <Compile Include="Word\Implementations\ApplicationOfficePartial\ApplicationOfficePrinting.cs" />
     <Compile Include="Word\Implementations\Converters\WordPaperSizeToString.cs" />
     <Compile Include="Word\Implementations\Excel\Elements\BookExcel.cs" />
-    <Compile Include="Infractructure\Implementations\Specification\SpecificationToExcel.cs" />
+    <Compile Include="Infrastructure\Implementations\Specification\SpecificationToExcel.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWord.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumentWordElements.cs" />
     <Compile Include="Word\Implementations\Word\DocumentWordPartial\DocumnetWordExport.cs" />

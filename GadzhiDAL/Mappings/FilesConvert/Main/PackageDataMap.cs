@@ -22,6 +22,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
                 {
                     m.Map(x => x.PersonId).Not.Nullable();
                     m.Map(x => x.PdfNamingType).CustomType<PdfNamingType>().Not.Nullable();
+                    m.Map(x => x.ConvertingModeType).CustomType<ConvertingModeType>().Not.Nullable();
                 });
             HasMany(x => x.FileDataEntities)
                     .Inverse()

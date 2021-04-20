@@ -58,6 +58,14 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                 return;
             }
 
+            await ConvertingPreparedFiles();
+        }
+
+        /// <summary>
+        /// Отправка подготовленных файлов
+        /// </summary>
+        private async Task ConvertingPreparedFiles()
+        {
             var packageDataRequest = await PrepareFilesToSending();
             var resultErrorPackage = PackageDataValidation.ValidatePackageData(packageDataRequest);
             if (resultErrorPackage.HasErrors)

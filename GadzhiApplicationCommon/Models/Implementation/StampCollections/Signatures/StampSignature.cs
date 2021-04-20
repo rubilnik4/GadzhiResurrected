@@ -11,15 +11,21 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Signatu
     /// </summary>
     public abstract class StampSignature : IStampSignature
     {
-        protected StampSignature(ISignatureLibraryApp signatureLibrary)
+        protected StampSignature(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier)
         {
             SignatureLibrary = signatureLibrary ?? throw new ArgumentNullException(nameof(signatureLibrary));
+            StampIdentifier = stampIdentifier;
         }
 
         /// <summary>
         /// Имя с идентификатором
         /// </summary>    
         public ISignatureLibraryApp SignatureLibrary { get; }
+
+        /// <summary>
+        /// Идентификатор штампа
+        /// </summary>
+        public StampIdentifier StampIdentifier { get; }
 
         /// <summary>
         /// Подпись

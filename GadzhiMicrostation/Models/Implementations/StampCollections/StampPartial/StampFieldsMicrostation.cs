@@ -75,7 +75,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                             IEnumerable<string> fieldsSearch)
             where TElement : IElementMicrostation =>
             cellSubElements.
-            Where(subElement => subElement is IRangeBaseElementMicrostation<TElement> && subElement is TElement).
+            Where(subElement => subElement is IRangeBaseElementMicrostation<TElement> && 
+                                subElement is TElement).
             Cast<IRangeBaseElementMicrostation<TElement>>().
             Where(subElement => fieldsSearch?.Contains(subElement.AttributeControlName) == true).
             Select(subElement => subElement.Clone(StampFieldMain.IsControlVertical(subElement.AttributeControlName)));

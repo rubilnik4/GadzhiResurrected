@@ -6,7 +6,7 @@ using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
-using GadzhiWord.Infractructure.Implementations.Specification;
+using GadzhiWord.Infrastructure.Implementations.Specification;
 using GadzhiWord.Models.Implementations.Specification;
 using GadzhiWord.Models.Interfaces.Specification;
 using GadzhiWord.Word.Interfaces.Excel.Elements;

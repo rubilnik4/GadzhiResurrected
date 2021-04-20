@@ -49,7 +49,6 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterSingleton<IConvertingService, ConvertingService>();
 
             container.RegisterType<IMessagingService, MessagingService>();
-            container.RegisterType<IApplicationKillService, ApplicationKillService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();
             container.RegisterType<IConverterServerPackageDataFromDto, ConverterServerPackageDataFromDto>();

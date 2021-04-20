@@ -12,7 +12,7 @@ namespace GadzhiConvertingLibrary.Extensions
         /// <summary>
         /// Конвертировать тип цвета печати в версию для приложения
         /// </summary>
-        public static ColorPrintApplication ToApplication(this ColorPrint colorPrint) => 
-            ColorPrintToApplicationConverter.ToApplication(colorPrint);      
+        public static ColorPrintApplication ToApplication(this ColorPrintType colorPrintType) => 
+            ColorPrintToApplicationConverter.ToApplication(colorPrintType);      
     }
 }

@@ -20,7 +20,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Тип расширения файла
         /// </summary>
-        FileExtension FileExtension { get; }
+        FileExtensionType FileExtensionType { get; }
 
         /// <summary>
         /// Имя файла на сервере

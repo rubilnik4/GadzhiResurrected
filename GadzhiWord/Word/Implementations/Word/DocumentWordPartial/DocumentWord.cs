@@ -11,6 +11,7 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiWord.Models.Implementations.Specification;
 using GadzhiWord.Models.Implementations.Specification.Table;
 using GadzhiWord.Models.Interfaces.Specification;
@@ -93,7 +94,7 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// </summary>
         public IResultApplication SaveAs(string filePath) =>
             Path.GetExtension(filePath).
-            WhereContinue(fileExtension => ValidFileExtensions.IsFileExtensionEqual(fileExtension, FileExtension.Docx),
+            WhereContinue(fileExtension => ValidFileExtensions.IsFileExtensionEqual(fileExtension, FileExtensionType.Docx),
             okFunc: fileExtension => new ResultApplication().
                                          ResultVoidOk(_ => _document.SaveAs(filePath)).
                                          ToResultApplication(),

@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
@@ -17,10 +18,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Signatures
         /// </summary>
         public const int FIELDS_COUNT = 6;
 
-        public ChangeSignatureWord(ISignatureLibraryApp signatureLibrary, IStampFieldWord signature, IStampTextField numberChange,
+        public ChangeSignatureWord(ISignatureLibraryApp signatureLibrary, StampIdentifier stampIdentifier, 
+                                   IStampFieldWord signature, IStampTextField numberChange,
                                IStampTextField numberPlots, IStampTextField typeOfChange, IStampTextField documentChange,
                                IStampTextField dateChange)
-            : base(signatureLibrary, signature)
+            : base(signatureLibrary, stampIdentifier, signature)
         {
             NumberChange = numberChange;
             NumberPlots = numberPlots;
