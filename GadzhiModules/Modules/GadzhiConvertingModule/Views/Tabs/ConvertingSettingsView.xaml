@@ -55,7 +55,7 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0" 
-                           Text="Подпись">
+                           Text="Подпись:">
                 </TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1">
                     <ProgressBar Style="{StaticResource PreLoadingProgressData}"
@@ -81,49 +81,43 @@
                   Margin="10">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0"
                        Grid.Column="0" 
-                       Text="Именование PDF:">
-                </TextBlock>
+                       Text="Именование PDF:"/>
                 <ComboBox Grid.Row="0"
                           Grid.Column="1" 
                           SelectedValue="{Binding PdfNamingType, Mode=TwoWay}"
                           SelectedValuePath="Key"
                           ItemsSource="{Binding PdfNamingTypes}"
-                          DisplayMemberPath="Value"  >
-                </ComboBox>
+                          DisplayMemberPath="Value"/>
 
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0" 
-                           Text="Цвет по умолчанию:">
-                </TextBlock>
+                           Text="Цвет по умолчанию:"/>
                 <ComboBox Grid.Row="1"
                           Grid.Column="1" 
                           SelectedValue="{Binding ColorPrintName, Mode=TwoWay}"
-                          ItemsSource="{Binding ColorPrintsString}">
-                </ComboBox>
+                          ItemsSource="{Binding ColorPrintsString}"/>
 
                 <TextBlock Grid.Row="2"
                            Grid.Column="0" 
-                           Text="Тип конвертации:">
-                </TextBlock>
+                           Text="Тип конвертации:"/>
                 <ComboBox Grid.Row="2"
                           Grid.Column="1" 
                           SelectedValue="{Binding ConvertingModeName, Mode=TwoWay}"
-                          ItemsSource="{Binding ConvertingModesString}">
-                </ComboBox>
+                          ItemsSource="{Binding ConvertingModesString}"/>
             </Grid>
         </GroupBox>
       

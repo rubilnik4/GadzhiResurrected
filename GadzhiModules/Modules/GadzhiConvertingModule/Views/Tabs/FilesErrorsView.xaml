@@ -7,10 +7,18 @@
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              xmlns:viewModeItems="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErrorsViewModelItems"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:FilesErrorsViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <Style x:Key="TextBlockDataGrid" 
-                   TargetType="TextBlock">
+                   TargetType="{x:Type TextBlock}" 
+                   BasedOn="{StaticResource MaterialDesignTextBlock}">
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </Grid.Resources>

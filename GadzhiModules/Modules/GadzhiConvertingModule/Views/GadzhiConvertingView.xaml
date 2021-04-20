@@ -13,18 +13,29 @@
              xmlns:viewModelsBase="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base"
              d:DataContext="{d:DesignInstance Type=viewModels:GadzhiConvertingViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">
-            <viewTabs:FilesConvertingView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModelTabs:FilesErrorsViewModel}">
-            <viewTabs:FilesErrorsView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModelTabs:ConvertingSettingsViewModel}">
-            <viewTabs:ConvertingSettingsView />
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignExtensions;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <materialDesign:DialogHost Identifier="RootDialog">
-        <Grid>
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewModelTabs:FilesConvertingViewModel}">
+                <viewTabs:FilesConvertingView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModelTabs:FilesErrorsViewModel}">
+                <viewTabs:FilesErrorsView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModelTabs:ConvertingSettingsViewModel}">
+                <viewTabs:ConvertingSettingsView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModelTabs:ServerViewModel}">
+                <viewTabs:ServerView />
+            </DataTemplate>
+        </Grid.Resources>
+
+        <materialDesign:DialogHost Identifier="RootDialog">
             <TabControl Style="{StaticResource MaterialDesignTabControl}"
                         SelectedValue="{Binding SelectedTabViewModel}"
                         ItemsSource="{Binding TabViewModelsVisible}">
@@ -34,6 +45,7 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
             </TabControl>
-        </Grid>
-    </materialDesign:DialogHost>
+
+        </materialDesign:DialogHost>
+    </Grid>
 </UserControl>

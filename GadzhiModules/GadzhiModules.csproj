@@ -255,6 +255,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
     </Compile>
@@ -281,6 +282,9 @@
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml.cs">
       <DependentUpon>FilesErrorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerView.xaml.cs">
+      <DependentUpon>ServerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\RegionNames.cs" />
@@ -331,6 +335,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

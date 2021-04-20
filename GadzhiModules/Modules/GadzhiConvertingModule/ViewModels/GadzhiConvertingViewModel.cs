@@ -19,27 +19,22 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
 {
     public class GadzhiConvertingViewModel : BindableBase, IDisposable
     {
-        /// <summary>
-        /// Подписка на обновление модели
-        /// </summary>
-        private readonly IReadOnlyList<IDisposable> _tabViewModelsVisibility;
+       
 
         public GadzhiConvertingViewModel(IUnityContainer container)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-
-            _tabViewModels = new List<ViewModelBase>
-            {
-                container.Resolve<FilesConvertingViewModel>(),
-                container.Resolve<FilesErrorsViewModel>(),
-                container.Resolve<ConvertingSettingsViewModel>(),
-            };
+            _tabViewModels = GetTabViewModels(container);
             _tabViewModelsVisibility = SubscribeToViewsVisibility(_tabViewModels);
 
             TabViewModelsVisible = new ObservableCollection<ViewModelBase>();
             BindingOperations.EnableCollectionSynchronization(TabViewModelsVisible, _tabViewModelsVisibleLock);
             UpdateTabViewModelsVisible().WaitAndUnwrapException();
         }
+
+        /// <summary>
+        /// Подписка на обновление модели
+        /// </summary>
+        private readonly IReadOnlyList<IDisposable> _tabViewModelsVisibility;
 
         /// <summary>
         /// Модели вкладок
@@ -81,7 +76,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
             TabViewModelsVisible.AddRange(tabsVisible);
 
             await CheckResultConvertingDialog(_tabViewModels.OfType<FilesConvertingViewModel>().FirstOrDefault(),
-                                             _tabViewModels.OfType<FilesErrorsViewModel>().FirstOrDefault());
+                                              _tabViewModels.OfType<FilesErrorsViewModel>().FirstOrDefault());
         }
 
         /// <summary>
@@ -122,6 +117,18 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
                                             Concat().
                                             Subscribe()).
         ToList();
+
+        /// <summary>
+        /// Получить список вкладок
+        /// </summary>
+        private static IReadOnlyCollection<ViewModelBase> GetTabViewModels(IUnityContainer container) =>
+            new List<ViewModelBase>
+            {
+                container.Resolve<FilesConvertingViewModel>(),
+                container.Resolve<FilesErrorsViewModel>(),
+                container.Resolve<ConvertingSettingsViewModel>(),
+                container.Resolve<ServerViewModel>(),
+            };
 
         #region IDisposable Support
         private bool _disposedValue;
