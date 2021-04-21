@@ -13,6 +13,7 @@ using System.Windows;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels;
 using GadzhiResurrected.ViewModels;
 using Unity;
 

@@ -45,6 +45,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Errors
                 {
                     ColorPrintType = fileDataEntity.ColorPrintType,
                     FilePath = fileDataEntity.FilePath,
+
                     FileErrorsStore = fileDataEntity.FileErrors.AsQueryable().ToList()
                 }
                 : throw new ArgumentNullException(nameof(fileDataEntity));

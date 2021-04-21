@@ -19,5 +19,10 @@ namespace GadzhiModules.Infrastructure.Interfaces.Services
         /// Фабрика для создания сервиса подписей
         /// </summary>
         SignatureClientServiceFactory SignatureClientServiceFactory { get; }
+
+        /// <summary>
+        /// Фабрика для создания подключения к WCF сервису состояния сервера
+        /// </summary>
+        ServerStateClientServiceFactory ServerStateClientServiceFactory { get; }
     }
 }

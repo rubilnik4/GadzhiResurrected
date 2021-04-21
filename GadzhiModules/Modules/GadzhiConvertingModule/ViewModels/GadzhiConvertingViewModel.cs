@@ -19,8 +19,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
 {
     public class GadzhiConvertingViewModel : BindableBase, IDisposable
     {
-       
-
         public GadzhiConvertingViewModel(IUnityContainer container)
         {
             _tabViewModels = GetTabViewModels(container);

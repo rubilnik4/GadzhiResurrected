@@ -37,7 +37,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         /// <summary>
         /// Пауза при повторном обращении в секундах
         /// </summary>
-        public static int RetryDelaySeconds => 15;
+        public static int RetryDelayMilliseconds => 5000;
 
         /// <summary>
         /// Является ли текущая попытка последней

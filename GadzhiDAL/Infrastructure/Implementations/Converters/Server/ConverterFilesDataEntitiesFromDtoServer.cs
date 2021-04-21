@@ -79,7 +79,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
             if (fileDataEntity.FileDataSource.Count == 0)
             {
-                var errorCommonResponse = new ErrorCommonResponse()
+                var errorCommonResponse = new ErrorCommonResponse
                 {
                     ErrorConvertingType = ErrorConvertingType.IncorrectDataSource,
                     ErrorDescription = "Ошибка загрузки данных на сервер",
@@ -108,9 +108,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Обновить модель файла данных на основе окончательного ответа
         /// </summary>      
         public static FileDataSourceEntity ToFileDataSource(FileDataSourceResponseServer fileDataSourceResponseServer) =>
-            new FileDataSourceEntity()
+            new FileDataSourceEntity
             {
-                FileName = fileDataSourceResponseServer?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceResponseServer)),
+                FileName = fileDataSourceResponseServer.FileName,
+                FileExtensionType = fileDataSourceResponseServer.FileExtensionType,
                 FileDataSource = fileDataSourceResponseServer.FileDataSource,
                 PaperSize = fileDataSourceResponseServer.PaperSize,
                 PrinterName = fileDataSourceResponseServer.PrinterName,

@@ -12,7 +12,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// </summary>
     [DataContract]
     public abstract class FileDataShortResponseBase : IFormattable
-    {       
+    {
         /// <summary>
         /// Путь файла
         /// </summary>
@@ -23,7 +23,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Статус обработки файла
         /// </summary>
         [DataMember]
-        public StatusProcessing StatusProcessing { get; set; }        
+        public StatusProcessing StatusProcessing { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла

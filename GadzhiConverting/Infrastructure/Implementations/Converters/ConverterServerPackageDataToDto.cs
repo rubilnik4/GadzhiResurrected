@@ -30,22 +30,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// Конвертировать серверную модель в промежуточную
         /// </summary>       
         public PackageDataShortResponseServer FilesDataToShortResponse(IPackageServer packageServer) =>
-            (packageServer != null)
-                ? new PackageDataShortResponseServer()
-                {
-                    Id = packageServer.Id,
-                    StatusProcessingProject = packageServer.StatusProcessingProject,
-                    FilesData = packageServer.FilesDataServer?.Select(FileDataToIntermediateResponse).ToList(),
-                }
-                : throw new ArgumentNullException(nameof(packageServer));
+           new PackageDataShortResponseServer
+           {
+               Id = packageServer.Id,
+               StatusProcessingProject = packageServer.StatusProcessingProject,
+               FilesData = packageServer.FilesDataServer?.Select(FileDataToIntermediateResponse).ToList(),
+           };
 
         /// <summary>
         /// Конвертировать серверную модель в окончательный ответ
         /// </summary>          
         public async Task<PackageDataResponseServer> FilesDataToResponse(IPackageServer packageServer)
         {
-            if (packageServer == null) throw new ArgumentNullException(nameof(packageServer));
-
             var filesDataToResponseTasks = packageServer.FilesDataServer?.Select(FileDataToResponse)
                                            ?? Enumerable.Empty<Task<FileDataResponseServer>>();
             var filesDataToResponse = await Task.WhenAll(filesDataToResponseTasks);
@@ -62,7 +58,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// Конвертировать файл серверной модели в промежуточную
         /// </summary>
         private static FileDataShortResponseServer FileDataToIntermediateResponse(IFileDataServer fileDataServer) =>
-            new FileDataShortResponseServer()
+            new FileDataShortResponseServer
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
@@ -81,7 +77,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
                                            Where(fileSuccess => fileSuccess.Success).
                                            Select(fileSuccess => fileSuccess.FileDataSourceResponse);
 
-            return new FileDataResponseServer()
+            return new FileDataResponseServer
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
@@ -100,6 +96,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             var fileDataSourceResponseServer = new FileDataSourceResponseServer()
             {
                 FileName = fileDataSourceServer.FileNameClient,
+                FileExtensionType = fileDataSourceServer.FileExtensionType,
                 PaperSize = fileDataSourceServer.PaperSize,
                 PrinterName = fileDataSourceServer.PrinterName,
                 FileDataSource = fileDataSourceZip,
@@ -111,12 +108,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// Преобразовать ошибку в трансферную модель
         /// </summary> 
         private static ErrorCommonResponse ToErrorCommon(IErrorCommon error) =>
-            (error != null)
-                ? new ErrorCommonResponse()
-                {
-                    ErrorConvertingType = error.ErrorConvertingType,
-                    ErrorDescription = error.Description,
-                }
-                : throw new ArgumentNullException(nameof(error));
+          new ErrorCommonResponse
+          {
+              ErrorConvertingType = error.ErrorConvertingType,
+              ErrorDescription = error.Description,
+          };
     }
 }

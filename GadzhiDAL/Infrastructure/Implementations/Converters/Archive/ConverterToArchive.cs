@@ -60,9 +60,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
         /// Конвертировать информацию о готовых файлах в архивную версию
         /// </summary>     
         public static FileDataSourceArchiveEntity FileDataSourceToArchive(FileDataSourceEntity fileDataSourceEntity) =>
-            new FileDataSourceArchiveEntity()
+            new FileDataSourceArchiveEntity
             {
-                FileName = fileDataSourceEntity?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceEntity)),
+                FileName = fileDataSourceEntity.FileName,
+                FileExtensionType = fileDataSourceEntity.FileExtensionType,
                 PaperSize = fileDataSourceEntity.PaperSize,
                 PrinterName = fileDataSourceEntity.PrinterName,
             };

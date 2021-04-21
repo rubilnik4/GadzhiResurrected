@@ -94,7 +94,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         public async Task<IResultValue<TResult>> UsingServiceRetry<TResult>(Expression<Func<TService, Task<TResult>>> serviceExpression,
                                                                             RetryService retryService) =>
             await UsingServiceDefault(serviceExpression).
-            ResultVoidBadBindAsync(_ => Task.Delay(RetryService.RetryDelaySeconds)).
+            ResultVoidBadBindAsync(_ => Task.Delay(RetryService.RetryDelayMilliseconds)).
             ResultValueBadBindAsync(errors => retryService.IsRetryLast()
                                               ? Task.FromResult((IResultValue<TResult>)new ResultValue<TResult>(errors))
                                               : UsingServiceRetry(serviceExpression, retryService.NextRetry()));

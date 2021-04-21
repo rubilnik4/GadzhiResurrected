@@ -3,115 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
+             xmlns:serverViews="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.ServerViews"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:ServerViewModel, IsDesignTimeCreatable=False}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.progressbar.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
-        <Grid.Resources>
-            <Style x:Key="TextBlockCommon" 
-                   TargetType="{x:Type TextBlock}" 
-                   BasedOn="{StaticResource MaterialDesignTextBlock}">
-                <Setter Property="Margin" Value="35 2 30 2" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="FontWeight" Value="DemiBold" />
-            </Style>
-            <Style x:Key="TextBlockDescription" 
-                   TargetType="{x:Type TextBlock}" 
-                   BasedOn="{StaticResource TextBlockCommon}">
-                <Setter Property="FontWeight" Value="Bold" />
-            </Style>
-
-
-        </Grid.Resources>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Row="0"
-                  Header="Отработано"
-                  Height="Auto"
-                  Margin="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <serverViews:ServerInfoView Grid.Column="0" 
+                                        />
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <serverViews:ServerTotalView Grid.Column="1"
+                                         DataContext="{Binding ServerTotalViewModel}"/>
+        </Grid>
 
-                <TextBlock Grid.Row="0"
-                           Grid.Column="0" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="DGN:"/>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="1"
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-                <TextBlock Grid.Row="0"
-                           Grid.Column="2" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="DOC:"/>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="PDF:"/>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="1" 
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-                <TextBlock Grid.Row="1"
-                           Grid.Column="2" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="DWG:"/>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-                <TextBlock Grid.Row="2"
-                           Grid.Column="0" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="XLS:"/>
-                <TextBlock Grid.Row="2"
-                           Grid.Column="1" 
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-                <TextBlock Grid.Row="2"
-                           Grid.Column="2" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Всего:"/>
-                <TextBlock Grid.Row="2"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-            </Grid>
-        </GroupBox>
+        <serverViews:ServerDetailView Grid.Row="1"/>
     </Grid>
 </UserControl>

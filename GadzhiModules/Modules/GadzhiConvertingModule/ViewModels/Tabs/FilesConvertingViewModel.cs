@@ -24,17 +24,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// </summary>
     public class FilesConvertingViewModel : ViewModelBase, IDropTarget
     {
-
-        /// <summary>
-        /// Слой инфраструктуры
-        /// </summary>        
-        private readonly IApplicationGadzhi _applicationGadzhi;
-
-        /// <summary>
-        /// Текущий статус конвертирования
-        /// </summary>        
-        private readonly IStatusProcessingInformation _statusProcessingInformation;
-
         public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation,
                                         IDialogService dialogService)
         {
@@ -47,6 +36,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
             InitializeDelegateCommands();
         }
+
+        /// <summary>
+        /// Слой инфраструктуры
+        /// </summary>        
+        private readonly IApplicationGadzhi _applicationGadzhi;
+
+        /// <summary>
+        /// Текущий статус конвертирования
+        /// </summary>        
+        private readonly IStatusProcessingInformation _statusProcessingInformation;
 
         /// <summary>
         /// Инициализировать команды
@@ -363,5 +362,4 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             AddFromFilesAndFolders(filePaths);
         }
     }
-
 }

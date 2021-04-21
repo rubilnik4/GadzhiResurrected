@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
 using GadzhiCommon.Infrastructure.Implementations.Services;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.Contracts.ServerStates;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Interfaces.Services;
 
@@ -15,13 +16,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
     public class WcfClientServicesFactory : IWcfClientServicesFactory
     {
         public WcfClientServicesFactory(Func<IServiceConsumer<IFileConvertingClientService>> getConvertingService,
-                                        Func<IServiceConsumer<ISignatureClientService>> getSignatureService)
+                                        Func<IServiceConsumer<ISignatureClientService>> getSignatureService,
+                                        Func<IServiceConsumer<IServerStateClientService>> getServerStateClientService)
         {
-            if (getConvertingService == null) throw new ArgumentNullException(nameof(getConvertingService));
-            if (getSignatureService == null) throw new ArgumentNullException(nameof(getSignatureService));
-
             ConvertingClientServiceFactory = new ConvertingClientServiceFactory(getConvertingService, RetryServiceDefault);
             SignatureClientServiceFactory = new SignatureClientServiceFactory(getSignatureService);
+            ServerStateClientServiceFactory = new ServerStateClientServiceFactory(getServerStateClientService);
         }
 
         /// <summary>
@@ -38,6 +38,11 @@ namespace GadzhiModules.Infrastructure.Implementations.Services
         /// Фабрика для создания сервиса подписей
         /// </summary>
         public SignatureClientServiceFactory SignatureClientServiceFactory { get; }
+
+        /// <summary>
+        /// Фабрика для создания подключения к WCF сервису состояния сервера
+        /// </summary>
+        public ServerStateClientServiceFactory ServerStateClientServiceFactory { get; }
 
         /// <summary>
         /// Параметры повторных подключений для серверной части

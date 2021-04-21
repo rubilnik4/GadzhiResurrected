@@ -11,19 +11,16 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.progressbar.xaml" />
+                <ResourceDictionary Source="/GadzhiModules;component/Modules/GadzhiConvertingModule/Views/Resources/GadzhiResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
-            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
-                <Setter Property="Margin" Value="5 10 20 10" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-
-            <Style TargetType="{x:Type ProgressBar}" x:Key="PreLoadingProgressData" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
+            <Style  x:Key="PreLoadingProgressData"
+                    TargetType="{x:Type ProgressBar}" 
+                    BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
                 <Setter Property="Value" Value="0" />
                 <Setter Property="IsIndeterminate" Value="True" />
                 <Setter Property="Margin" Value="0 0 10 0" />
@@ -41,7 +38,7 @@
 
         <GroupBox Grid.Column="0" 
                   Header="Личные данные"
-                  Margin="10">
+                  Style="{StaticResource GroupBoxGadzhi}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -55,7 +52,8 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0" 
-                           Text="Подпись:">
+                           Text="Подпись:"
+                           Style="{StaticResource TextBlockDescription}">
                 </TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1">
                     <ProgressBar Style="{StaticResource PreLoadingProgressData}"
@@ -94,7 +92,8 @@
 
                 <TextBlock Grid.Row="0"
                        Grid.Column="0" 
-                       Text="Именование PDF:"/>
+                       Text="Именование PDF:"
+                       Style="{StaticResource TextBlockDescription}"/>
                 <ComboBox Grid.Row="0"
                           Grid.Column="1" 
                           SelectedValue="{Binding PdfNamingType, Mode=TwoWay}"
@@ -105,7 +104,8 @@
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0" 
-                           Text="Цвет по умолчанию:"/>
+                           Text="Цвет по умолчанию:"
+                           Style="{StaticResource TextBlockDescription}"/>
                 <ComboBox Grid.Row="1"
                           Grid.Column="1" 
                           SelectedValue="{Binding ColorPrintName, Mode=TwoWay}"
@@ -113,7 +113,8 @@
 
                 <TextBlock Grid.Row="2"
                            Grid.Column="0" 
-                           Text="Тип конвертации:"/>
+                           Text="Тип конвертации:"
+                           Style="{StaticResource TextBlockDescription}"/>
                 <ComboBox Grid.Row="2"
                           Grid.Column="1" 
                           SelectedValue="{Binding ConvertingModeName, Mode=TwoWay}"

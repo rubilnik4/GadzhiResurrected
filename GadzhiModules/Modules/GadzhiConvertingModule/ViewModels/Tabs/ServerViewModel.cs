@@ -1,14 +1,17 @@
 ﻿using System;
+using GadzhiModules.Infrastructure.Implementations.Services;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerViewModels;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
     public class ServerViewModel : ViewModelBase
     {
-        public ServerViewModel(IDialogService dialogService)
+        public ServerViewModel(IDialogService dialogService, ServerStateClientServiceFactory serverStateClientServiceFactory)
         {
-            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            DialogService = dialogService;
+            ServerTotalViewModel = new ServerTotalViewModel(serverStateClientServiceFactory);
         }
 
         /// <summary>
@@ -20,5 +23,18 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Название
         /// </summary>
         public override string Title => "Сервер";
+
+        /// <summary>
+        /// Статистика обработанных файлов
+        /// </summary>
+        public ServerTotalViewModel ServerTotalViewModel { get; }
+
+        #region IDisposable Support
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ServerTotalViewModel.Dispose();
+        }
+        #endregion
     }
 }

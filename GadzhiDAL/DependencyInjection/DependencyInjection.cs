@@ -17,9 +17,10 @@ namespace GadzhiDAL.DependencyInjection
                 NHibernateFactoryManager.Instance(NHibernateFactoryManager.SqLiteConfigurationFactory()),
                                                   new ContainerControlledLifetimeManager()).
             RegisterType<IUnitOfWork, UnitOfWork>().
-            RegisterType<IFilesDataServerService, FilesDataServerService>().
-            RegisterType<IFilesDataClientService, FilesDataClientService>().
-            RegisterType<ISignaturesService, SignaturesService>(new HierarchicalLifetimeManager());
+            RegisterType<IFilesDataServerService, FilesDataServerService>(new HierarchicalLifetimeManager()).
+            RegisterType<IFilesDataClientService, FilesDataClientService>(new HierarchicalLifetimeManager()).
+            RegisterType<ISignaturesService, SignaturesService>(new HierarchicalLifetimeManager()).
+            RegisterType<IServerStateService, ServerStateService>(new HierarchicalLifetimeManager());
         }
     }
 }

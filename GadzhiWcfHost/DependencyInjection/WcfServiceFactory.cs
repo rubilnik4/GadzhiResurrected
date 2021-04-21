@@ -3,6 +3,7 @@ using GadzhiDAL.DependencyInjection;
 using GadzhiDAL.Services.Implementations;
 using GadzhiDAL.Services.Interfaces;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.Contracts.ServerStates;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using GadzhiDTOServer.Contracts.Signatures;
@@ -27,7 +28,8 @@ namespace GadzhiWcfHost.DependencyInjection
             RegisterType<IFileConvertingClientService, FileConvertingClientService>(new HierarchicalLifetimeManager()).
             RegisterType<ISignatureClientService, SignatureClientService>(new HierarchicalLifetimeManager()).
             RegisterType<IFileConvertingServerService, FileConvertingServerService>(new HierarchicalLifetimeManager()).
-            RegisterType<ISignatureServerService, SignatureServerService>(new HierarchicalLifetimeManager());
+            RegisterType<ISignatureServerService, SignatureServerService>(new HierarchicalLifetimeManager()).
+            RegisterType<IServerStateClientService, ServerStateClientService>(new HierarchicalLifetimeManager());
 
             GadzhiDAL.DependencyInjection.DependencyInjection.ConfigureContainer(container);
         }

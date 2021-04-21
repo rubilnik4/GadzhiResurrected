@@ -21,15 +21,15 @@ namespace GadzhiDAL.Services.Implementations
     /// </summary>
     public class SignaturesService : ISignaturesService
     {
+        public SignaturesService(IUnityContainer container)
+        {
+            _container = container;
+        }
+
         /// <summary>
         ///Контейнер зависимостей
         /// </summary>
         private readonly IUnityContainer _container;
-
-        public SignaturesService(IUnityContainer container)
-        {
-            _container = container ?? throw new ArgumentNullException(nameof(container));
-        }
 
         /// <summary>
         /// Загрузить имена из базы данных
@@ -43,8 +43,6 @@ namespace GadzhiDAL.Services.Implementations
                                                      ThenBy(signature => signature.PersonInformation.Name).
                                                      ToListAsync();
             var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, false);
-
-            await unitOfWork.CommitAsync();
 
             return signaturesDto;
         }
@@ -60,8 +58,6 @@ namespace GadzhiDAL.Services.Implementations
                                                Select(signature => signature.PersonInformation.DepartmentType).
                                                Distinct().
                                                ToListAsync();
-            await unitOfWork.CommitAsync();
-
             return departments;
         }
 
@@ -76,8 +72,6 @@ namespace GadzhiDAL.Services.Implementations
                                                      Where(signature => ids.Contains(signature.Id)).
                                                      ToListAsync();
             var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, true);
-
-            await unitOfWork.CommitAsync();
 
             return signaturesDto;
         }
@@ -109,8 +103,6 @@ namespace GadzhiDAL.Services.Implementations
 
             var signatureMicrostationEntity = await unitOfWork.Session.LoadAsync<MicrostationDataFileEntity>(idDataFile);
             var signatureMicrostationDto = ConverterDataFile.SignatureMicrostationToDto(signatureMicrostationEntity);
-
-            await unitOfWork.CommitAsync();
 
             return signatureMicrostationDto;
         }

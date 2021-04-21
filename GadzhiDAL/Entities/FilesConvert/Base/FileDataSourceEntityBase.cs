@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 
 namespace GadzhiDAL.Entities.FilesConvert.Base
 {
@@ -20,6 +21,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// Имя и расширение файла
         /// </summary>       
         public virtual string FileName { get; set; }
+
+        /// <summary>
+        /// Путь файла
+        /// </summary>      
+        public virtual FileExtensionType FileExtensionType { get; set; }
 
         /// <summary>
         /// Формат печати
