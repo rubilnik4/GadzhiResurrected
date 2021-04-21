@@ -177,6 +177,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\Errors\ConverterToErrorsStore.cs" />
     <Compile Include="Mappings\FilesConvert\Errors\FileDataErrorMap.cs" />
     <Compile Include="Mappings\FilesConvert\Errors\PackageDataErrorMap.cs" />
+    <Compile Include="Models\Implementations\FileExtensionCount.cs" />
     <Compile Include="Models\Implementations\MicrostationDataFileEntity.cs" />
     <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataEntity.cs" />
