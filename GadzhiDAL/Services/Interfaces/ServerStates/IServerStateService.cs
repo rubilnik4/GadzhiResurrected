@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GadzhiDTOBase.TransferModels.ServerStates;
 
-namespace GadzhiDAL.Services.Interfaces
+namespace GadzhiDAL.Services.Interfaces.ServerStates
 {
     /// <summary>
     /// Получение информации о серверах в БД

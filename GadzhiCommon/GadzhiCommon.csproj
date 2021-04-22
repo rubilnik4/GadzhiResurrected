@@ -149,6 +149,7 @@
     <Compile Include="Infrastructure\Implementations\Services\WcfServiceFactory.cs" />
     <Compile Include="Infrastructure\Interfaces\Services\IWcfServiceFactory.cs" />
     <Compile Include="Models\Enums\LoggerAction.cs" />
+    <Compile Include="Models\Enums\ServerStates\ServerActivityType.cs" />
     <Compile Include="Models\Implementations\Functional\Unit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
@@ -170,6 +171,8 @@
     <Compile Include="Models\Implementations\LibraryData\SignatureFile.cs" />
     <Compile Include="Models\Implementations\LibraryData\SignatureFileData.cs" />
     <Compile Include="Models\Implementations\LibraryData\SignatureLibrary.cs" />
+    <Compile Include="Models\Implementations\ServerStates\ServerDetailBase.cs" />
+    <Compile Include="Models\Implementations\ServerStates\ServerDetailQueue.cs" />
     <Compile Include="Models\Interfaces\Errors\IErrorCommon.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultValue.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultError.cs" />
@@ -179,6 +182,9 @@
     <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />
     <Compile Include="Models\Enums\LoggerLevel.cs" />
     <Compile Include="Models\Interfaces\ServerStates\IServerCompleteFiles.cs" />
+    <Compile Include="Models\Interfaces\ServerStates\IServerDetail.cs" />
+    <Compile Include="Models\Interfaces\ServerStates\IServerDetailQueue.cs" />
+    <Compile Include="Models\Interfaces\ServerStates\IServersInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

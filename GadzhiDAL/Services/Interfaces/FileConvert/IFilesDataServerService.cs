@@ -4,7 +4,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 
-namespace GadzhiDAL.Services.Interfaces
+namespace GadzhiDAL.Services.Interfaces.FileConvert
 {
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах серверной части

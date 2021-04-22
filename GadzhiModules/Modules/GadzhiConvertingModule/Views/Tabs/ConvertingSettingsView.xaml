@@ -18,14 +18,6 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
-            <Style  x:Key="PreLoadingProgressData"
-                    TargetType="{x:Type ProgressBar}" 
-                    BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
-                <Setter Property="Value" Value="0" />
-                <Setter Property="IsIndeterminate" Value="True" />
-                <Setter Property="Margin" Value="0 0 10 0" />
-            </Style>
-
             <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"
                                             TrueValue="Visible" 
                                             FalseValue="Collapsed"/>
@@ -57,9 +49,9 @@
                 </TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1">
                     <ProgressBar Style="{StaticResource PreLoadingProgressData}"
-                                 Visibility="{Binding PersonSignatures.IsNotCompleted, Converter={StaticResource VisibilityConverter}}" >
-                    </ProgressBar>
-
+                                 Visibility="{Binding PersonSignatures.IsNotCompleted, Converter={StaticResource VisibilityConverter}}"
+                                 Margin="0 0 10 0"/>
+                 
                     <ComboBox materialDesign:HintAssist.Hint="{Binding PersonSignatureLoading}"
                               SelectedValue="{Binding PersonSignature}"
                               ItemsSource="{Binding PersonSignatures.Result.Value}"

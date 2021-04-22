@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
              xmlns:serverViewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerViewModels"
+             xmlns:converters="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
+             d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=serverViewModels:ServerTotalViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -15,83 +16,86 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <converters:BoolToVisibilityConverter x:Key="VisibilityConverter"
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Hidden"/>
+        </Grid.Resources>
 
-        <GroupBox Grid.Row="0"
-                  Header="Отработано"
-                  Height="Auto"
+        <GroupBox Header="Отработано"
                   Style="{StaticResource GroupBoxGadzhi}">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <Grid Visibility="{Binding ServerCompleteFilesClient.OkStatus, Converter={StaticResource VisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0"
+                    <TextBlock Grid.Row="0"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="DGN:"/>
-                <TextBlock Grid.Row="0"
+                    <TextBlock Grid.Row="0"
                            Grid.Column="1"
                            Style="{StaticResource TextBlockCommon}"
                            Text="{Binding DgnCount}"/>
 
-                <TextBlock Grid.Row="0"
+                    <TextBlock Grid.Row="0"
                            Grid.Column="2" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="DOC:"/>
-                <TextBlock Grid.Row="0"
+                    <TextBlock Grid.Row="0"
                            Grid.Column="3" 
                            Style="{StaticResource TextBlockCommon}"
                            Text="{Binding DocCount}"/>
 
-                <TextBlock Grid.Row="1"
+                    <TextBlock Grid.Row="1"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="PDF:"/>
-                <TextBlock Grid.Row="1"
+                    <TextBlock Grid.Row="1"
                            Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
                            Text="{Binding PdfCount}"/>
 
-                <TextBlock Grid.Row="1"
+                    <TextBlock Grid.Row="1"
                            Grid.Column="2" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="DWG:"/>
-                <TextBlock Grid.Row="1"
+                    <TextBlock Grid.Row="1"
                            Grid.Column="3" 
                            Style="{StaticResource TextBlockCommon}"
                            Text="{Binding DwgCount}"/>
 
-                <TextBlock Grid.Row="2"
+                    <TextBlock Grid.Row="2"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="XLS:"/>
-                <TextBlock Grid.Row="2"
+                    <TextBlock Grid.Row="2"
                            Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
                            Text="{Binding XlsCount}"/>
 
-                <TextBlock Grid.Row="2"
+                    <TextBlock Grid.Row="2"
                            Grid.Column="2" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Всего:"/>
-                <TextBlock Grid.Row="2"
+                    <TextBlock Grid.Row="2"
                            Grid.Column="3" 
                            Style="{StaticResource TextBlockCommon}"
                            Text="{Binding TotalCount}"/>
+                </Grid>
 
+                <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                             Visibility="{Binding ServerCompleteFilesClient.HasErrors, Converter={StaticResource VisibilityConverter}}"/>
             </Grid>
         </GroupBox>
     </Grid>

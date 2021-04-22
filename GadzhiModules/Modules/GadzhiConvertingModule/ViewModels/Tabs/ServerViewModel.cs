@@ -11,7 +11,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         public ServerViewModel(IDialogService dialogService, ServerStateClientServiceFactory serverStateClientServiceFactory)
         {
             DialogService = dialogService;
-            ServerTotalViewModel = new ServerTotalViewModel(serverStateClientServiceFactory);
+            ServerTotalViewModel = new ServerTotalViewModel(serverStateClientServiceFactory, () => IsSelected);
+            ServerInfoViewModel = new ServerInfoViewModel(serverStateClientServiceFactory, () => IsSelected);
+            ServerDetailViewModel = new ServerDetailViewModel(serverStateClientServiceFactory, () => IsSelected);
         }
 
         /// <summary>
@@ -29,11 +31,23 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         public ServerTotalViewModel ServerTotalViewModel { get; }
 
+        /// <summary>
+        /// Информация о серверах
+        /// </summary>
+        public ServerInfoViewModel ServerInfoViewModel { get; }
+
+        /// <summary>
+        /// Подробная информация о сервере
+        /// </summary>
+        public ServerDetailViewModel ServerDetailViewModel { get; }
+
         #region IDisposable Support
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             ServerTotalViewModel.Dispose();
+            ServerInfoViewModel.Dispose();
+            ServerDetailViewModel.Dispose();
         }
         #endregion
     }

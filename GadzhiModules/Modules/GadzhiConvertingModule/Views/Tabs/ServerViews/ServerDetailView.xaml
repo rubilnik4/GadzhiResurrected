@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:serverViewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerViewModels"
+             xmlns:converters="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=serverViewModels:ServerDetailViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,6 +17,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.Resources>
+            <converters:BoolToVisibilityConverter x:Key="VisibilityConverterHidden"
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Hidden"/>
+
+            <converters:BoolToVisibilityConverter x:Key="VisibilityConverterCollapse"
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Collapsed"/>
+        </Grid.Resources>
+
         <GroupBox Grid.Row="0"
                   Header="Сервер:"
                   Height="Auto"
@@ -21,99 +35,122 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0"
+                    <TextBlock Grid.Row="0"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Выберите сервер:"/>
-                <ComboBox Grid.Row="0"
-                          Grid.Column="1" 
-                          SelectedValue="{Binding PdfNamingType, Mode=TwoWay}"
-                          SelectedValuePath="Key"
-                          ItemsSource="{Binding PdfNamingTypes}"/>
+                    <DockPanel Grid.Row="0"
+                           Grid.Column="1">
+                        <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                                 Visibility="{Binding ServerNames.IsNotCompleted, Converter={StaticResource VisibilityConverterCollapse}}"
+                                 Margin="0 0 10 0"/>
 
-                <TextBlock Grid.Row="1"
+                        <ComboBox materialDesign:HintAssist.Hint="Выберите сервер"
+                              SelectedValue="{Binding SelectedServerName, Mode=TwoWay}"
+                              ItemsSource="{Binding ServerNames.Result}"/>
+                    </DockPanel>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                                 Visibility="{Binding IsDetailLoading, Converter={StaticResource VisibilityConverterHidden}}"/>
+                    <Grid Visibility="{Binding IsDetailLoaded, Converter={StaticResource VisibilityConverterHidden}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Статус:"/>
-                <TextBlock Grid.Row="1"
+                        <TextBlock Grid.Row="0"
                            Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding Status}"/>
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="2" 
+                        <TextBlock Grid.Row="1"
+                           Grid.Column="0" 
+                           Style="{StaticResource TextBlockDescription}"
+                           Text="Последняя активность:"/>
+                        <TextBlock Grid.Row="1"
+                           Grid.Column="1" 
+                           Style="{StaticResource TextBlockCommon}"
+                           Text="{Binding LastAccess}"/>
+
+                        <TextBlock Grid.Row="2"
+                           Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Текущий пользователь:"/>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="3" 
+                        <TextBlock Grid.Row="2"
+                           Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding CurrentUser}"/>
 
-                <TextBlock Grid.Row="2"
+                        <TextBlock Grid.Row="3"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Текущий пакет:"/>
-                <TextBlock Grid.Row="2"
+                        <TextBlock Grid.Row="3"
                            Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding CurrentPackage}"/>
 
-                <TextBlock Grid.Row="2"
-                           Grid.Column="2" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Текущий файл:"/>
-                <TextBlock Grid.Row="2"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
-
-                <TextBlock Grid.Row="3"
+                        <TextBlock Grid.Row="4"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
-                           Text="Пакетов в очереди:"/>
-                <TextBlock Grid.Row="3"
+                           Text="Текущий файл:"/>
+                        <TextBlock Grid.Row="4"
                            Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding CurrentFile}"/>
 
-                <TextBlock Grid.Row="3"
-                           Grid.Column="2" 
+                        <TextBlock Grid.Row="5"
+                           Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Файлов в очереди:"/>
-                <TextBlock Grid.Row="3"
-                           Grid.Column="3" 
+                        <TextBlock Grid.Row="5"
+                           Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding FilesInQueue}"/>
 
-                <TextBlock Grid.Row="4"
+                        <TextBlock Grid.Row="6"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Пакетов обработано:"/>
-                <TextBlock Grid.Row="4"
+                        <TextBlock Grid.Row="6"
                            Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding PackagesComplete}"/>
 
-                <TextBlock Grid.Row="4"
-                           Grid.Column="2" 
+                        <TextBlock Grid.Row="7"
+                           Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Файлов обработано:"/>
-                <TextBlock Grid.Row="4"
-                           Grid.Column="3" 
+                        <TextBlock Grid.Row="7"
+                           Grid.Column="1" 
                            Style="{StaticResource TextBlockCommon}"
-                           Text="0"/>
+                           Text="{Binding FilesComplete}"/>
+                    </Grid>
+                </Grid>
             </Grid>
         </GroupBox>
     </Grid>

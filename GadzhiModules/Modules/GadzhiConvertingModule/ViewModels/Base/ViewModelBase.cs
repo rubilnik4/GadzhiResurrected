@@ -37,6 +37,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base
         public virtual bool Visibility => true;
 
         /// <summary>
+        /// Выбрана ли страница
+        /// </summary>
+        public bool IsSelected { get; set; }
+
+        /// <summary>
         /// Подписка на изменение видимости
         /// </summary>
         private readonly Subject<bool> _visibilityChange = new Subject<bool>();

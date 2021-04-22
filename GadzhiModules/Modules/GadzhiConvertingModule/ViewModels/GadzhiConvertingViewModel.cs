@@ -61,7 +61,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         public ViewModelBase SelectedTabViewModel
         {
             get => _selectedTabViewModel;
-            set => SetProperty(ref _selectedTabViewModel, value);
+            set
+            {
+                if (_selectedTabViewModel != null) _selectedTabViewModel.IsSelected = false;
+                SetProperty(ref _selectedTabViewModel, value);
+                _selectedTabViewModel.IsSelected = true;
+            }
+
         }
 
         /// <summary>
@@ -109,12 +115,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// Подписаться на обновление свойства видимости отображения
         /// </summary>
         private IReadOnlyList<IDisposable> SubscribeToViewsVisibility(IEnumerable<ViewModelBase> tabViewModels) =>
-        tabViewModels.
-        Select(tabViewModel => tabViewModel.VisibilityChange.
-                                            Select(_ => Observable.FromAsync(UpdateTabViewModelsVisible)).
-                                            Concat().
-                                            Subscribe()).
-        ToList();
+            tabViewModels.
+            Select(tabViewModel => tabViewModel.VisibilityChange.
+                                   Select(_ => Observable.FromAsync(UpdateTabViewModelsVisible)).
+                                   Concat().
+                                   Subscribe()).
+            ToList();
 
         /// <summary>
         /// Получить список вкладок

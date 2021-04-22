@@ -4,6 +4,7 @@ using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiDAL.Infrastructure.Implementations.DateTimes;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
@@ -27,6 +28,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             filesDataEntity.SetId(packageDataRequest.Id);
             filesDataEntity.IdentityLocalName = identityName;
             filesDataEntity.IdentityServerName = String.Empty;
+            filesDataEntity.CreationDateTime = DateTimeService.GetDateTimeNow();
             filesDataEntity.ConvertingSettings = ConvertingSettingsToRequest(packageDataRequest.ConvertingSettings);
             filesDataEntity.SetFileDataEntities(packageDataAccess);
 

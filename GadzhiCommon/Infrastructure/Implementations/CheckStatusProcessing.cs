@@ -23,11 +23,20 @@ namespace GadzhiCommon.Infrastructure.Implementations
         };
 
         /// <summary>
+        /// Список статусов, означающих взятых в процесс конвертирования
+        /// </summary>       
+        public static IReadOnlyList<StatusProcessingProject> OperatingStatusProcessingProject =>
+            CompletedStatusProcessingProject.
+            Concat(new List<StatusProcessingProject> { StatusProcessingProject.InQueue }).
+            ToList();
+
+        /// <summary>
         /// Список статусов, означающих завершенность конвертирования файла на стороне сервера
         /// </summary>
         public static IReadOnlyList<StatusProcessing> CompletedStatusProcessing => new List<StatusProcessing>()
         {
             StatusProcessing.ConvertingComplete,
+            StatusProcessing.Writing,
             StatusProcessing.End,
         };
     }

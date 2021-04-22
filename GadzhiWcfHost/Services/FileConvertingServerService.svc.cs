@@ -9,6 +9,7 @@ using GadzhiDTOServer.TransferModels.Signatures;
 using System.Linq;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.FileConvert;
 using GadzhiDTOBase.TransferModels.Signatures;
 
 namespace GadzhiWcfHost.Services

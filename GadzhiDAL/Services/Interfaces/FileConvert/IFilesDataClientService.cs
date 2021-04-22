@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 
-namespace GadzhiDAL.Services.Interfaces
+namespace GadzhiDAL.Services.Interfaces.FileConvert
 {
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части

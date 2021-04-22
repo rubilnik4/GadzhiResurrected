@@ -171,12 +171,15 @@
     <Compile Include="Entities\FilesConvert\Errors\PackageDataErrorEntity.cs" />
     <Compile Include="Entities\FilesConvert\Main\ConvertingSettingsComponent.cs" />
     <Compile Include="Entities\FilesConvert\Main\FileDataSourceEntity.cs" />
+    <Compile Include="Entities\FilesConvert\ServerStates\ServerAccessEntity.cs" />
     <Compile Include="Entities\Signatures\MicrostationDataFiles.cs" />
     <Compile Include="Entities\Signatures\Components\PersonInformationComponent.cs" />
     <Compile Include="Entities\Signatures\SignatureEntity.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Errors\ConverterToErrorsStore.cs" />
+    <Compile Include="Infrastructure\Implementations\DateTimes\DateTimeService.cs" />
     <Compile Include="Mappings\FilesConvert\Errors\FileDataErrorMap.cs" />
     <Compile Include="Mappings\FilesConvert\Errors\PackageDataErrorMap.cs" />
+    <Compile Include="Mappings\FilesConvert\ServerStates\ServerAccessMap.cs" />
     <Compile Include="Models\Implementations\FileExtensionCount.cs" />
     <Compile Include="Models\Implementations\MicrostationDataFileEntity.cs" />
     <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
@@ -201,14 +204,18 @@
     <Compile Include="Mappings\Signatures\MicrostationDataFileMap.cs" />
     <Compile Include="Models\Implementations\FilesQueueInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Implementations\FilesDataServerService.cs" />
-    <Compile Include="Services\Implementations\FilesDataClientService.cs" />
-    <Compile Include="Services\Implementations\ServerStateService.cs" />
+    <Compile Include="Services\Implementations\FileConvert\FilesDataServerService.cs" />
+    <Compile Include="Services\Implementations\FileConvert\FilesDataClientService.cs" />
+    <Compile Include="Services\Implementations\ServerStates\ServerAccessService.cs" />
+    <Compile Include="Services\Implementations\ServerStates\ServerInfoService.cs" />
+    <Compile Include="Services\Implementations\ServerStates\ServerStateService.cs" />
     <Compile Include="Services\Implementations\SignaturesService.cs" />
-    <Compile Include="Services\Interfaces\IFilesDataServerService.cs" />
-    <Compile Include="Services\Interfaces\IFilesDataClientService.cs" />
-    <Compile Include="Services\Interfaces\IServerStateService.cs" />
+    <Compile Include="Services\Interfaces\FileConvert\IFilesDataServerService.cs" />
+    <Compile Include="Services\Interfaces\FileConvert\IFilesDataClientService.cs" />
+    <Compile Include="Services\Interfaces\ServerStates\IServerInfoService.cs" />
+    <Compile Include="Services\Interfaces\ServerStates\IServerStateService.cs" />
     <Compile Include="Services\Interfaces\ISignaturesService.cs" />
+    <Compile Include="Services\Interfaces\ServerStates\IServerAccessService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -8,24 +8,25 @@
              xmlns:serverViews="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.ServerViews"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:ServerViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <serverViews:ServerInfoView Grid.Column="0" 
-                                        />
+            <serverViews:ServerInfoView Grid.Row="0" 
+                                        DataContext="{Binding ServerInfoViewModel}"/>
 
-            <serverViews:ServerTotalView Grid.Column="1"
+            <serverViews:ServerTotalView Grid.Row="1"
                                          DataContext="{Binding ServerTotalViewModel}"/>
         </Grid>
 
-        <serverViews:ServerDetailView Grid.Row="1"/>
+        <serverViews:ServerDetailView Grid.Column="1"
+                                      DataContext="{Binding ServerDetailViewModel}"/>
     </Grid>
 </UserControl>

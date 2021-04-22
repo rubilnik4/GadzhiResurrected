@@ -208,7 +208,10 @@
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiServices.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerActivityConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ServerStates\ServerCompleteFilesConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerStates\ServerDetailConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerStates\ServersInfoConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
@@ -233,6 +236,8 @@
     <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerCompleteFilesClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerDetailClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServersInfoClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\GadzhiConvertingModule.cs" />
@@ -245,6 +250,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IFileData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ServerStates\IServerCompleteFilesClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ServerStates\IServerDetailClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Base\DialogViewModelBase.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\DialogButtonsType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogFactory.cs" />
@@ -260,6 +266,8 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerInfoViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerTotalViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>

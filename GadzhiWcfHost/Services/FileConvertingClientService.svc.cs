@@ -4,6 +4,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.FileConvert;
 using GadzhiWcfHost.Infrastructure.Implementations.Authentication;
 
 namespace GadzhiWcfHost.Services

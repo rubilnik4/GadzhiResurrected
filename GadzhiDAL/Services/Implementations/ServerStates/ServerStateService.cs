@@ -6,16 +6,14 @@ using GadzhiCommon.Extensions.Functional;
 using GadzhiDAL.Entities.FilesConvert.Archive;
 using GadzhiDAL.Entities.FilesConvert.Base;
 using GadzhiDAL.Entities.FilesConvert.Main;
-using GadzhiDAL.Entities.Signatures;
 using GadzhiDAL.Factories.Interfaces;
-using GadzhiDAL.Infrastructure.Implementations.Converters.DataFile;
 using GadzhiDAL.Models.Implementations;
-using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.ServerStates;
 using GadzhiDTOBase.TransferModels.ServerStates;
 using NHibernate.Linq;
 using Unity;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiDAL.Services.Implementations.ServerStates
 {
     /// <summary>
     /// Получение информации о серверах в БД

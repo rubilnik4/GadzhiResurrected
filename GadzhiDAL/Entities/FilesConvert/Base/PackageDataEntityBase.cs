@@ -20,7 +20,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Время создания запроса на конвертирование
         /// </summary>
-        public virtual DateTime CreationDateTime { get; set; } = DateTime.Now;
+        public virtual DateTime CreationDateTime { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// Идентификация имени локального пользователя

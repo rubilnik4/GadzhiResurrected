@@ -11,6 +11,7 @@ using GadzhiModules.Infrastructure.Implementations.Converters.ServerStates;
 using GadzhiModules.Infrastructure.Implementations.Services;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ServerStates;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ServerStates;
 using Nito.Mvvm;
 using Prism.Mvvm;
 
@@ -21,10 +22,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
     /// </summary>
     public class ServerTotalViewModel : BindableBase, IDisposable
     {
-        public ServerTotalViewModel(ServerStateClientServiceFactory serverStateClientServiceFactory)
+        public ServerTotalViewModel(ServerStateClientServiceFactory serverStateClientServiceFactory, Func<bool> isSelected)
         {
             _serverStateClientServiceFactory = serverStateClientServiceFactory;
-            ServerCompleteFilesClient = new ResultValue<ServerCompleteFilesClient>(new ErrorCommon(ErrorConvertingType.Communication, "Данные не загружены"));
+            _isSelected = isSelected;
+            ServerCompleteFilesClient = new ResultValue<ServerCompleteFilesClient>(new ErrorCommon(ErrorConvertingType.ValueNotInitialized, "Данные не загружены"));
             _subscriptions = new CompositeDisposable(SubscribeToServerTotalUpdate());
         }
 
@@ -34,19 +36,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
         private readonly ServerStateClientServiceFactory _serverStateClientServiceFactory;
 
         /// <summary>
-        /// Получить информацию о состоянии конвертируемых файлов. Таймер с подпиской
+        /// Отрыта ли форма
+        /// </summary>
+        private readonly Func<bool> _isSelected;
+
+        /// <summary>
+        /// Подписки
         /// </summary>
         private readonly CompositeDisposable _subscriptions;
 
         /// <summary>
         /// Обработанные файлы
         /// </summary>
-        private IResultValue<ServerCompleteFilesClient> _serverCompleteFilesClient;
+        private IResultValue<IServerCompleteFilesClient> _serverCompleteFilesClient;
 
         /// <summary>
         /// Обработанные файлы
         /// </summary>
-        public IResultValue<ServerCompleteFilesClient> ServerCompleteFilesClient
+        public IResultValue<IServerCompleteFilesClient> ServerCompleteFilesClient
         {
             get => _serverCompleteFilesClient;
             private set
@@ -103,6 +110,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
         private IDisposable SubscribeToServerTotalUpdate() =>
             Observable.
             Interval(TimeSpan.FromSeconds(ProjectSettings.IntervalSecondsToIntermediateResponse)).
+            Where(_ => _isSelected()).
             Select(_ => Observable.FromAsync(GetServerCompleteFilesClient)).
             Concat().
             Subscribe();
@@ -110,10 +118,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
         /// <summary>
         /// Получить модель обработанных файлов
         /// </summary>
-        private async Task<IResultValue<ServerCompleteFilesClient>> GetServerCompleteFilesClient() =>
+        private async Task<IResultValue<IServerCompleteFilesClient>> GetServerCompleteFilesClient() =>
              await _serverStateClientServiceFactory.UsingServiceRetry(service => service.Operations.GetServerCompleteFiles()).
              ResultValueOkAsync(ServerCompleteFilesConverter.ToClient).
-             VoidAsync(serverCompleteFilesClient => ServerCompleteFilesClient = serverCompleteFilesClient);
+             ResultVoidOkAsync(serverCompleteFilesClient => ServerCompleteFilesClient = new ResultValue<IServerCompleteFilesClient>(serverCompleteFilesClient));
 
         #region IDisposable
         public void Dispose()

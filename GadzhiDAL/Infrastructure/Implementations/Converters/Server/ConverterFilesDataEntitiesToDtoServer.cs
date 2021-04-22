@@ -17,7 +17,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Конвертировать из модели базы данных в запрос
         /// </summary>          
         public static PackageDataRequestServer PackageDataToRequest(PackageDataEntity packageDataEntity) =>
-            (packageDataEntity != null)
+            packageDataEntity != null
                 ? new PackageDataRequestServer()
                 {
                     Id = Guid.Parse(packageDataEntity.Id),

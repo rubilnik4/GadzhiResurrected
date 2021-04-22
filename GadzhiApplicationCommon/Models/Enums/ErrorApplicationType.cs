@@ -17,6 +17,7 @@
         NullReference,
         ArgumentNullReference,
         ArgumentOutOfRange,
+        ValueNotInitialized,
         FormatException,
         InvalidEnumArgumentException,
         AttemptingCount,

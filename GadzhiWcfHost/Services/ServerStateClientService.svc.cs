@@ -5,9 +5,13 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Models.Enums.ServerStates;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.ServerStates;
 using GadzhiDTOBase.TransferModels.ServerStates;
 using GadzhiDTOClient.Contracts.ServerStates;
+using GadzhiWcfHost.Infrastructure.Implementations.ServerStates;
 
 namespace GadzhiWcfHost.Services
 {
@@ -19,9 +23,12 @@ namespace GadzhiWcfHost.Services
                      IncludeExceptionDetailInFaults = true)]
     public class ServerStateClientService : IServerStateClientService
     {
-        public ServerStateClientService(IServerStateService serverStateService)
+        public ServerStateClientService(IServerStateService serverStateService, IServerInfoService serverInfoService,
+                                        IServerAccessService serverAccessService)
         {
             _serverStateService = serverStateService;
+            _serverInfoService = serverInfoService;
+            _serverAccessService = serverAccessService;
         }
 
         /// <summary>
@@ -30,9 +37,51 @@ namespace GadzhiWcfHost.Services
         private readonly IServerStateService _serverStateService;
 
         /// <summary>
+        /// Информация о работе серверов в БД
+        /// </summary>
+        private readonly IServerInfoService _serverInfoService;
+
+        /// <summary>
+        /// Сервис определения времени доступа к серверам
+        /// </summary>
+        private readonly IServerAccessService _serverAccessService;
+
+        /// <summary>
         /// Получить информацию о обработанных файлах
         /// </summary>
         public async Task<ServerCompleteFilesResponse> GetServerCompleteFiles() =>
             await _serverStateService.GetServerCompleteFiles();
+
+        /// <summary>
+        /// Получить информацию серверах
+        /// </summary>
+        public async Task<ServersInfoResponse> GetServersInfo() =>
+            await _serverInfoService.GetServersInfo();
+
+        /// <summary>
+        /// Получить список серверов
+        /// </summary>
+        public async Task<IList<string>> GetServersNames() =>
+            await _serverAccessService.GetServerNames().
+            MapAsync(serverNames => serverNames.ToList());
+
+        /// <summary>
+        /// Получить информацию о сервере
+        /// </summary>
+        public async Task<ServerDetailResponse> GetServerDetail(string serverName) =>
+            await _serverAccessService.GetLastAccess(serverName).
+            WhereContinueAsyncBind(lastAccess => lastAccess.HasValue,
+                okFunc: lastAccess => GetServerDetail(serverName, lastAccess!.Value),
+                badFunc: _ => Task.FromResult(ServerDetailFactory.CreateNotInitialize(serverName)));
+
+        /// <summary>
+        /// Получить информацию о доступном сервере
+        /// </summary>
+        private async Task<ServerDetailResponse> GetServerDetail(string serverName, DateTime lastAccess) =>
+            await _serverInfoService.GetServerDetailQueue(serverName).
+            MapAsync(detailQueue =>
+                new ServerDetailResponse(serverName, lastAccess, detailQueue,
+                                         ServerDetailFactory.GetServerActivityType(lastAccess, detailQueue.CurrentPackage)));
+        
     }
 }

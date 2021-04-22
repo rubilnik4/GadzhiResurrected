@@ -182,6 +182,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Implementations\Authentication\Authentication.cs" />
     <Compile Include="Infrastructure\Implementations\Logger\AuthLogging.cs" />
+    <Compile Include="Infrastructure\Implementations\ServerStates\ServerDetailFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileConvertingServerService.svc.cs">
       <DependentUpon>FileConvertingServerService.svc</DependentUpon>

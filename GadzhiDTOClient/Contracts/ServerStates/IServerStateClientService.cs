@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiDTOBase.TransferModels.ServerStates;
 
@@ -15,5 +16,23 @@ namespace GadzhiDTOClient.Contracts.ServerStates
         /// </summary>
         [OperationContract]
         Task<ServerCompleteFilesResponse> GetServerCompleteFiles();
+
+        /// <summary>
+        /// Получить информацию серверах
+        /// </summary>
+        [OperationContract]
+        Task<ServersInfoResponse> GetServersInfo();
+
+        /// <summary>
+        /// Получить список серверов
+        /// </summary>
+        [OperationContract]
+        Task<IList<string>> GetServersNames();
+
+        /// <summary>
+        /// Получить информацию о сервере
+        /// </summary>
+        [OperationContract]
+        Task<ServerDetailResponse> GetServerDetail(string serverName);
     }
 }

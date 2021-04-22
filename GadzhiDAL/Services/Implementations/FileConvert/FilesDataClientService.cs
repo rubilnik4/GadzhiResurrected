@@ -1,22 +1,20 @@
-﻿using GadzhiCommon.Infrastructure.Implementations;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
-using GadzhiDAL.Entities.FilesConvert.Archive;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
-using GadzhiDAL.Models.Implementations;
-using NHibernate.Linq;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Client;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Errors;
-using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Models.Implementations;
+using GadzhiDAL.Services.Interfaces.FileConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
+using NHibernate.Linq;
 using Unity;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiDAL.Services.Implementations.FileConvert
 {
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах клиентской части
@@ -30,7 +28,7 @@ namespace GadzhiDAL.Services.Implementations
 
         public FilesDataClientService(IUnityContainer container)
         {
-            _container = container ?? throw new ArgumentNullException(nameof(container));
+            _container = container;
         }
 
         /// <summary>
@@ -39,18 +37,8 @@ namespace GadzhiDAL.Services.Implementations
         public async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName)
         {
             var packageDataEntity = ConverterFilesDataEntitiesFromDtoClient.ToPackageData(packageDataRequest, identityName);
-
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            try
-            {
-                await unitOfWork.Session.SaveAsync(packageDataEntity);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-           
+            await unitOfWork.Session.SaveAsync(packageDataEntity);
             await unitOfWork.CommitAsync();
         }
 

@@ -1,36 +1,42 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommonServer.Enums;
-using GadzhiDAL.Entities.FilesConvert.Main;
-using GadzhiDAL.Factories.Interfaces;
-using GadzhiDTOServer.TransferModels.FilesConvert;
-using NHibernate.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Functional;
+using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert.Errors;
+using GadzhiDAL.Entities.FilesConvert.Main;
+using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
-using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.FileConvert;
+using GadzhiDAL.Services.Interfaces.ServerStates;
+using GadzhiDTOServer.TransferModels.FilesConvert;
+using NHibernate.Linq;
 using Unity;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiDAL.Services.Implementations.FileConvert
 {
     /// <summary>
     /// Сервис для добавления и получения данных о конвертируемых пакетах серверной части
     /// </summary>
     public class FilesDataServerService : IFilesDataServerService
     {
+        public FilesDataServerService(IUnityContainer container, IServerAccessService serverAccessService)
+        {
+            _container = container;
+            _serverAccessService = serverAccessService;
+        }
+
         /// <summary>
         ///Контейнер зависимостей
         /// </summary>
         private readonly IUnityContainer _container;
 
-        public FilesDataServerService(IUnityContainer container)
-        {
-            _container = container ?? throw new ArgumentNullException(nameof(container));
-        }
+        /// <summary>
+        /// Сервис определения времени доступа к серверам
+        /// </summary>
+        private readonly IServerAccessService _serverAccessService;
 
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
@@ -38,6 +44,8 @@ namespace GadzhiDAL.Services.Implementations
         public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
+
+            await _serverAccessService.UpdateLastAccess(identityServerName);
             var packageDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
                                           OrderBy(package=> package.CreationDateTime).
                                           FirstOrDefaultAsync(ConditionConverting(identityServerName));
