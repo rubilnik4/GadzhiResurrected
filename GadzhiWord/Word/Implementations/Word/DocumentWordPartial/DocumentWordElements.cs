@@ -15,6 +15,7 @@ using GadzhiWord.Models.Implementations.StampCollections.StampCreating;
 using GadzhiWord.Word.Implementations.Word.Elements;
 using GadzhiWord.Word.Implementations.Word.Interop;
 using GadzhiWord.Word.Interfaces.Word.Elements;
+using Microsoft.Office.Interop.Word;
 
 namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
 {
@@ -57,13 +58,23 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             SelectMany(section => section.Footers.ToEnumerable()).
             SelectMany(SearchInRange.GetTablesFromFooter).
             ToList().
+            Map(GetTableStampTypes).
+            ResultValueBad(tableStamp => tableStamp.Concat(GetTableStampTypes(_document.Tables.ToEnumerable()).Value
+                                                           ?? Enumerable.Empty<TableStampType>()).
+                                                    ToList()).
+            ResultValueOkBind(tableStamp => GetStampsInOrder(tableStamp, convertingSettings)).
+            ToResultCollection();
+
+        /// <summary>
+        /// Получить штампы
+        /// </summary>
+        private IResultAppCollection<TableStampType> GetTableStampTypes(IEnumerable<Table> tables) =>
+            tables.
             Select(table => new TableElementWord(table, ToOwnerWord)).
             Select(GetTableStamp).
             Where(tableStamp => tableStamp.StampType != StampType.Unknown).
             OrderBy(tableStamp => tableStamp.StampType).
-            Map(StampValidatingWord.ValidateTableStampsByType).
-            ResultValueOkBind(tableStamp => GetStampsInOrder(tableStamp, convertingSettings)).
-            ToResultCollection();
+            Map(StampValidatingWord.ValidateTableStampsByType);
 
         /// <summary>
         /// Получить таблицу и тип соответствующего штампа

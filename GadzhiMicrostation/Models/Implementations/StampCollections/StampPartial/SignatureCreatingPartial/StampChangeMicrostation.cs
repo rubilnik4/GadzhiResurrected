@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
@@ -30,6 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                                             "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
                                                              changeNames => GetStampChangeRow(changeNames, signatureLibrary))).
+            ResultValueOk(changeRows => changeRows.Where(changeRow => !String.IsNullOrEmpty(changeRow.DocumentChange.Text))).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
         /// <summary>

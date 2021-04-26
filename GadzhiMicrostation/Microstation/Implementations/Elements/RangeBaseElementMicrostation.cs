@@ -5,6 +5,7 @@ using GadzhiMicrostation.Models.Enums;
 using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
+using GadzhiMicrostation.Models.Implementations.StampFieldNames;
 
 namespace GadzhiMicrostation.Microstation.Implementations.Elements
 {
@@ -14,6 +15,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
     public abstract class RangeBaseElementMicrostation<TElementRange> : ElementMicrostation, IRangeBaseElementMicrostation<TElementRange>
         where TElementRange: IElementMicrostation
     {
+        protected RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
+                                               bool isNeedCompress)
+            : base(element, ownerContainerMicrostation)
+        {
+            _element = element;
+            IsNeedCompress = isNeedCompress;
+        }
+
         /// <summary>
         /// Экземпляр элемента Microstation
         /// </summary>
@@ -27,16 +36,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Вертикальное расположение
         /// </summary>
-        public bool IsVertical { get; }
+        private bool? _isVertical = null;
 
-        protected RangeBaseElementMicrostation(Element element, IOwnerMicrostation ownerContainerMicrostation,
-                                               bool isNeedCompress, bool isVertical)
-            : base(element, ownerContainerMicrostation)
-        {
-            _element = element;
-            IsNeedCompress = isNeedCompress;
-            IsVertical = isVertical;
-        }
+        /// <summary>
+        /// Вертикальное расположение
+        /// </summary>
+        public bool IsVertical => _isVertical ??= StampFieldMain.IsControlVertical(AttributeControlName);
 
         /// <summary>
         /// Координаты точки вставки
@@ -101,11 +106,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Копировать элемент
         /// </summary>
-        public abstract TElementRange Clone(bool isVertical);
+        public abstract TElementRange Clone();
 
         /// <summary>
         /// Копировать элемент
         /// </summary>
-        protected override TElement Clone<TElement>() => (TElement)(IElementMicrostation)Clone(IsVertical);
+        protected override TElement Clone<TElement>() => (TElement)(IElementMicrostation)Clone();
     }
 }

@@ -35,7 +35,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private static IResultValue<string> GetFileNameByNamingType(string fileName, PdfNamingType pdfNamingType, IStamp stamp) =>
             pdfNamingType switch
             {
-                PdfNamingType.ByFile => GetFileNameByIndex(fileName, stamp),
+                PdfNamingType.ByFile => GetFileNameByIndex(fileName.Trim(), stamp),
                 PdfNamingType.ByCode => GetFileNameByCode(stamp),
                 PdfNamingType.BySheet => GetFileNameBySheet(stamp),
                 _ => throw new ArgumentOutOfRangeException(nameof(pdfNamingType), pdfNamingType, null)

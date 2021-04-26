@@ -14,6 +14,13 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
     /// </summary>
     public class TableElementWord : ITableElementWord
     {
+        public TableElementWord(Table tableElement, IOwnerWord ownerWord)
+        {
+            _tableElement = tableElement ?? throw new ArgumentNullException(nameof(tableElement));
+            ApplicationOffice = ownerWord.ApplicationOffice ?? throw new ArgumentNullException(nameof(ownerWord));
+            DocumentWord = ownerWord.DocumentWord;
+        }
+
         /// <summary>
         /// Элемент таблица Word
         /// </summary>
@@ -28,13 +35,6 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// Модель или лист в файле
         /// </summary>
         public IDocumentWord DocumentWord { get; }
-
-        public TableElementWord(Table tableElement, IOwnerWord ownerWord)
-        {
-            _tableElement = tableElement ?? throw new ArgumentNullException(nameof(tableElement));
-            ApplicationOffice = ownerWord.ApplicationOffice ?? throw new ArgumentNullException(nameof(ownerWord));
-            DocumentWord = ownerWord.DocumentWord;
-        }
 
         /// <summary>
         /// Получить строки таблицы

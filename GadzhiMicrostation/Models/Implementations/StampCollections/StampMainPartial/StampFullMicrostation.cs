@@ -7,7 +7,10 @@ using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPartial.SignatureCreatingPartial;
+using GadzhiApplicationCommon.Models.Interfaces.Errors;
+using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampTypes;
 
 namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPartial
@@ -34,7 +37,14 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampMainPa
             SignatureCreating.GetStampPersonRows().
             Map(personRows => new StampSignatureFields(new SignaturesBuilder().
                                                        AddStampPersons(personRows).
-                                                       AddStampChanges(SignatureCreating.GetStampChangeRows(personRows.Value?.FirstOrDefault()?.SignatureLibrary)).
+                                                       AddStampChanges(SignatureCreating.GetStampChangeRows(GetPersonSignature(personRows))).
                                                        AddStampApprovals(SignatureCreating.GetStampApprovalRows())));
+
+        /// <summary>
+        /// Получить стандартную подпись при отсутствии основных строк
+        /// </summary>
+        private ISignatureLibraryApp GetPersonSignature(IResultAppCollection<IStampPerson> personRows) =>
+            personRows.Value?.FirstOrDefault()?.SignatureLibrary
+            ?? SignaturesSearching.FindById(StampSettings.PersonId);
     }
 }

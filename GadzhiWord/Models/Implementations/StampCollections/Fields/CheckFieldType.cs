@@ -97,7 +97,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
             !String.IsNullOrWhiteSpace(cellElement.TextNoSpaces) &&
             cellElement.TextNoSpaces.Length >= 4 &&
             (Int32.TryParse(cellElement.TextNoSpaces.Substring(0, 4), out _) ||
-            cellElement.TextNoSpaces.Split('-').Any(splitText => Int32.TryParse(splitText.Substring(0, 4), out _)));
+            cellElement.TextNoSpaces.Split('-').Any(splitText => splitText.Length >= 4 &&
+                                                                 Int32.TryParse(splitText.Substring(0, 4), out _)));
 
         /// <summary>
         /// Является ли поле номером текущего листа

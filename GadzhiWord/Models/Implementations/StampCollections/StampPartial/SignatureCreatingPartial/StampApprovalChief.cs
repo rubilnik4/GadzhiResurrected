@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Infrastructure.Implementations.Converters.LibraryData;
 using GadzhiApplicationCommon.Models.Enums;
@@ -42,6 +43,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
                                       Where(row => ConverterDepartmentTypeApp.HasDepartmentType(row.CellsElement[ApprovalChiefRowIndexes.DEPARTMENT].Text)).
                                       Select(GetStampApprovalChiefFromRow).
                                       ToResultCollection()).
+            ResultValueBad(rows => new List<IStampApprovalChief>()).
             ToResultCollection();
 
         /// <summary>

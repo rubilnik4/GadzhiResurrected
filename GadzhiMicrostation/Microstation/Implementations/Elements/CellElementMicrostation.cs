@@ -21,12 +21,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         private readonly CellElement _cellElement;
 
         public CellElementMicrostation(CellElement cellElement, IOwnerMicrostation ownerContainerMicrostation)
-           : this(cellElement, ownerContainerMicrostation, false, false)
+           : this(cellElement, ownerContainerMicrostation, false)
         { }
 
        public CellElementMicrostation(CellElement cellElement, IOwnerMicrostation ownerContainerMicrostation,
-                                       bool isNeedCompress, bool isVertical)
-            : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress, isVertical)
+                                       bool isNeedCompress)
+            : base((Element)cellElement, ownerContainerMicrostation, isNeedCompress)
         {
             _cellElement = cellElement ?? throw new ArgumentNullException(nameof(cellElement));
         }
@@ -115,6 +115,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
                 if (elementCurrent.ID64 == elementMicrostation?.Id)
                 {
                     _cellElement.ReplaceCurrentElement(SubElementsPair[elementMicrostation]);
+                    elementMicrostation.SetElement((Element)elementCurrent);
                     break;
                 }
             }
@@ -149,7 +150,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Копировать элемент
         /// </summary>
-        public override ICellElementMicrostation Clone(bool isVertical) =>
-            new CellElementMicrostation(_cellElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
+        public override ICellElementMicrostation Clone() =>
+            new CellElementMicrostation(_cellElement, OwnerContainerMicrostation, IsNeedCompress);
     }
 }

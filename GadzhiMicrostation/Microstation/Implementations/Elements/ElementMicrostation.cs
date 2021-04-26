@@ -23,11 +23,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
             ModelMicrostation = OwnerContainerMicrostation.ModelMicrostation;
         }
 
-
         /// <summary>
         /// Экземпляр элемента Microstation
         /// </summary>
-        private readonly Element _element;
+        private Element _element;
 
         /// <summary>
         /// Родительский элемент
@@ -225,6 +224,14 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// </summary>       
         public string GetAttributeById(ElementMicrostationAttributes elementAttribute) =>
             GetAttributeFromCacheOrLoad(elementAttribute);
+
+        /// <summary>
+        /// Установить элемент
+        /// </summary>
+        public void SetElement(Element element)
+        {
+            _element = element;
+        }
 
         /// <summary>
         /// Записать значение атрибута по его PersonId номеру

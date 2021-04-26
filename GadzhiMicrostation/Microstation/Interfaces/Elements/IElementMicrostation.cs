@@ -2,6 +2,7 @@
 using GadzhiMicrostation.Models.Enums;
 using System.Collections.Generic;
 using System.Drawing;
+using MicroStationDGN;
 
 namespace GadzhiMicrostation.Microstation.Interfaces.Elements
 {
@@ -89,6 +90,11 @@ namespace GadzhiMicrostation.Microstation.Interfaces.Elements
         /// Получить значение атрибута по его PersonId номеру
         /// </summary>    
         string GetAttributeById(ElementMicrostationAttributes elementAttributes);
+
+        /// <summary>
+        /// Установить элемент
+        /// </summary>
+        void SetElement(Element element);
 
         /// <summary>
         /// Записать значение атрибута по его PersonId номеру

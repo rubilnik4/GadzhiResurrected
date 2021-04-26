@@ -120,7 +120,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         private static Func<ICellElementMicrostation, ICellElementMicrostation> CreateSignatureCell(RangeMicrostation signatureRange,
                                                                                                     bool isVertical) =>
-            cellElement => cellElement.Clone(isVertical).
+            cellElement => cellElement.Clone().
                            Map(cell => SignatureMove(cell, signatureRange)).
                            Map(cell => SignatureRotate(cell, isVertical)).
                            Map(cell => SignatureScale(cell, signatureRange)).

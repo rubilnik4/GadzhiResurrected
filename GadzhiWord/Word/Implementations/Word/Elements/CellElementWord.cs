@@ -64,8 +64,7 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         public void InsertPicture(string filePath)
         {
             if (String.IsNullOrWhiteSpace(filePath)) return;
-
-            _cellElement.Range.Delete();
+            if (_cellElement.Range.InlineShapes.Count > 0) _cellElement.Range.Delete();
             _cellElement.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
             _cellElement.VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
             _cellElement.Range.InlineShapes.AddPicture(filePath, false, true);

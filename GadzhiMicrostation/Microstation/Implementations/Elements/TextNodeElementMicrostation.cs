@@ -18,12 +18,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         private readonly TextNodeElement _textNodeElement;
 
         public TextNodeElementMicrostation(TextNodeElement textNodeElement, IOwnerMicrostation ownerContainerMicrostation)
-          : this(textNodeElement, ownerContainerMicrostation, true, false)
+          : this(textNodeElement, ownerContainerMicrostation, true)
         { }
 
         public TextNodeElementMicrostation(TextNodeElement textNodeElement, IOwnerMicrostation ownerContainerMicrostation,
-                                           bool isNeedCompress, bool isVertical)
-            : base((Element)textNodeElement, ownerContainerMicrostation, isNeedCompress, isVertical)
+                                           bool isNeedCompress)
+            : base((Element)textNodeElement, ownerContainerMicrostation, isNeedCompress)
         {
             _textNodeElement = textNodeElement ?? throw new ArgumentNullException(nameof(textNodeElement));
         }
@@ -70,8 +70,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Копировать элемент
         /// </summary>
-        public override ITextNodeElementMicrostation Clone(bool isVertical) =>
-            new TextNodeElementMicrostation(_textNodeElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
+        public override ITextNodeElementMicrostation Clone() =>
+            new TextNodeElementMicrostation(_textNodeElement, OwnerContainerMicrostation, IsNeedCompress);
 
         /// <summary>
         /// Переместить текстовое поле

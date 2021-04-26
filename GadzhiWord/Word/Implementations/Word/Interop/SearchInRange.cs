@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiWord.Extensions.Word;
+using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Word;
+using Shapes = Microsoft.Office.Interop.Word.Shapes;
 
 namespace GadzhiWord.Word.Implementations.Word.Interop
 {
@@ -29,6 +31,8 @@ namespace GadzhiWord.Word.Implementations.Word.Interop
         /// Найти таблицы в фигуре
         /// </summary>
         public static IEnumerable<Table> GetTablesFromShapes(Shapes shapes) =>
-            shapes.ToEnumerable().SelectMany(shape => shape.TextFrame.ContainingRange.Tables.ToEnumerable());
+            shapes.ToEnumerable().
+            Where(shape => shape.AutoShapeType != MsoAutoShapeType.msoShapeMixed).
+            SelectMany(shape => shape.TextFrame.ContainingRange.Tables.ToEnumerable());
     }
 }

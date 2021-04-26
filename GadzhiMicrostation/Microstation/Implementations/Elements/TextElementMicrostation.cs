@@ -19,13 +19,12 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         private readonly TextElement _textElement;
 
         public TextElementMicrostation(TextElement textElement, IOwnerMicrostation ownerContainerMicrostation)
-            : this(textElement, ownerContainerMicrostation, true, false)
+            : this(textElement, ownerContainerMicrostation, true)
         { }
 
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public TextElementMicrostation(TextElement textElement, IOwnerMicrostation ownerContainerMicrostation,
-                                       bool isNeedCompress, bool isVertical)
-            : base((Element)textElement, ownerContainerMicrostation, isNeedCompress, isVertical)
+                                       bool isNeedCompress)
+            : base((Element)textElement, ownerContainerMicrostation, isNeedCompress)
         {
             _textElement = textElement ?? throw new ArgumentNullException(nameof(textElement));
         }
@@ -86,7 +85,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.Elements
         /// <summary>
         /// Копировать элемент
         /// </summary>
-        public override ITextElementMicrostation Clone(bool isVertical) =>
-            new TextElementMicrostation(_textElement, OwnerContainerMicrostation, IsNeedCompress, isVertical);
+        public override ITextElementMicrostation Clone() =>
+            new TextElementMicrostation(_textElement, OwnerContainerMicrostation, IsNeedCompress);
     }
 }
