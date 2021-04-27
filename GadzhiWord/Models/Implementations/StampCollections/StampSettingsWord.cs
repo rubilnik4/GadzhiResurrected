@@ -21,6 +21,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         }
 
         /// <summary>
+        /// Высота строки таблицы
+        /// </summary>
+        public const decimal HEIGHT_TABLE_ROW = 0.3m;
+
+        /// <summary>
         /// Формат
         /// </summary>
         public string PaperSize { get; }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiWord.Extensions.Word;
+using GadzhiWord.Word.Implementations.Word.Enums;
 using GadzhiWord.Word.Interfaces;
 using GadzhiWord.Word.Interfaces.Word;
 using GadzhiWord.Word.Interfaces.Word.Elements;
@@ -72,6 +74,23 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         public int ColumnsCountInitial => _columnsCountInitial ??= _tableElement.Columns.Count;
 
         /// <summary>
+        /// Тип высоты строк
+        /// </summary>
+        public HeightRowsType HeightRowsType =>
+            _tableElement.Rows.HeightRule switch
+            {
+                WdRowHeightRule.wdRowHeightAtLeast => HeightRowsType.AtLeast,
+                WdRowHeightRule.wdRowHeightExactly => HeightRowsType.Exactly,
+                _ => HeightRowsType.Auto,
+            };
+
+        /// <summary>
+        /// Высота строк
+        /// </summary>
+        public decimal HeightRows =>
+            (decimal)_tableElement.Application.PointsToCentimeters(_tableElement.Rows.Height);
+
+        /// <summary>
         /// Проверить существование ячейки 
         /// </summary>
         public bool HasCellElement(int rowIndex, int columnIndex) =>
@@ -81,6 +100,30 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// Скопировать таблицу в буфер
         /// </summary>
         public void CopyToClipBoard() => _tableElement.Range.Copy();
+
+        /// <summary>
+        /// Установить автоподбор ширины таблицы
+        /// </summary>
+        public void SetAutoFit(bool autoFit) =>
+            _tableElement.AllowAutoFit = autoFit;
+        
+
+        /// <summary>
+        /// Установить тип высоты строк
+        /// </summary>
+        public void SetHeightRowsType(HeightRowsType heightRowsType) =>
+            _tableElement.Rows.HeightRule = heightRowsType switch
+            {
+                HeightRowsType.AtLeast => WdRowHeightRule.wdRowHeightAtLeast,
+                HeightRowsType.Exactly => WdRowHeightRule.wdRowHeightExactly,
+                _ => WdRowHeightRule.wdRowHeightAuto
+            };
+
+        /// <summary>
+        /// Установить высоту строк
+        /// </summary>
+        public void SetHeightRows(decimal height) =>
+            _tableElement.Rows.Height = _tableElement.Application.CentimetersToPoints((float)height);
 
         /// <summary>
         /// Получить строки таблицы

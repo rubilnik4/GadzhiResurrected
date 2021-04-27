@@ -14,6 +14,7 @@ using System.Linq;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
+using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 
 namespace GadzhiConverting.Infrastructure.Implementations
 {
@@ -23,10 +24,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ProjectSettings : IProjectSettings
     {
         public ProjectSettings(SignatureServerServiceFactory signatureServerServiceFactory,
-                               IFileSystemOperations fileSystemOperations, IMessagingService messagingService)
+                               IFileSystemOperations fileSystemOperations, IConverterDataFileFromDto converterDataFileFromDto,
+                               IMessagingService messagingService)
         {
             _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _converterDataFileFromDto = converterDataFileFromDto;
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
         }
 
@@ -39,6 +42,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Преобразование подписи в трансферную модель
+        /// </summary>
+        private readonly IConverterDataFileFromDto _converterDataFileFromDto;
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -108,7 +116,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Пути ресурсов модулей конвертации
         /// </summary>
-        public ConvertingResources ConvertingResources => _convertingResources ??= GetConvertingResourcesLoaded();
+        public ConvertingResources ConvertingResources =>
+            _convertingResources ??= GetConvertingResourcesLoaded();
 
         /// <summary>
         /// Загрузить стартовый набор ресурсов для начала конвертирования
@@ -143,7 +152,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             string stampMicrostationFileName = Path.Combine(DataResourcesFolder, "stampMicrostation.cel");
 
             return new ConvertingResources(signatureMicrostationFileName, stampMicrostationFileName,
-                                           _signatureServerServiceFactory, _fileSystemOperations);
+                                           _signatureServerServiceFactory, _converterDataFileFromDto, _fileSystemOperations);
         }
     }
 }

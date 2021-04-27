@@ -42,7 +42,7 @@ namespace GadzhiDAL.Services.Implementations
                                                      OrderBy(signature => signature.PersonInformation.Surname).
                                                      ThenBy(signature => signature.PersonInformation.Name).
                                                      ToListAsync();
-            var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, false);
+            var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, true);
 
             return signaturesDto;
         }

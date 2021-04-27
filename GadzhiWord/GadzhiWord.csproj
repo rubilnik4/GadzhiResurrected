@@ -183,6 +183,7 @@
     <Compile Include="Word\Implementations\Word\Elements\TableElementWord.cs" />
     <Compile Include="Word\Implementations\Word\Elements\RowElementWord.cs" />
     <Compile Include="Word\Implementations\Excel\Elements\SheetExcel.cs" />
+    <Compile Include="Word\Implementations\Word\Enums\HeightRowsType.cs" />
     <Compile Include="Word\Implementations\Word\Interop\SearchInRange.cs" />
     <Compile Include="Word\Interfaces\Excel\Elements\IBookExcel.cs" />
     <Compile Include="Word\Implementations\Excel\Helpers\ColumnNamesExcel.cs" />

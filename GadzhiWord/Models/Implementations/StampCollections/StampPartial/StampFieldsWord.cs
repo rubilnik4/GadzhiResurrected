@@ -7,6 +7,7 @@ using GadzhiWord.Models.Implementations.StampCollections.Fields;
 using GadzhiWord.Models.Interfaces.StampCollections.Fields;
 using GadzhiWord.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiWord.Word.Implementations.Word.Elements;
+using GadzhiWord.Word.Implementations.Word.Enums;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 
 namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
@@ -42,9 +43,16 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
             Map(cells => new RowElementWord(cells));
 
         /// <summary>
-        /// Вписать текстовые поля в рамки
+        /// Вписать текстовые поля в рамки. Выполнить форматирование
         /// </summary>
-        public override IEnumerable<bool> CompressFieldsRanges() => Enumerable.Empty<bool>();
+        public override IEnumerable<bool> CompressFieldsRanges() =>
+            TableStamp.
+            Void(tableStamp => tableStamp.SetAutoFit(false)).
+            WhereBad(tableStamp => tableStamp.HeightRowsType == HeightRowsType.Exactly,
+                     tableStamp => tableStamp.Void(_ => tableStamp.SetHeightRowsType(HeightRowsType.Exactly))).
+            WhereBad(tableStamp => tableStamp.HeightRows == 0,
+                     tableStamp => tableStamp.Void(_ => tableStamp.SetHeightRows(StampSettingsWord.HEIGHT_TABLE_ROW))).
+            Map(_ => Enumerable.Empty<bool>());
 
         /// <summary>
         /// Получить поля штампа

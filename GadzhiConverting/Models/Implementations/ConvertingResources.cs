@@ -4,15 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChannelAdam.ServiceModel;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Implementations.Converters;
+using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
+using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.Contracts.FilesConvert;
 using Nito.AsyncEx.Synchronous;
 
@@ -24,8 +28,9 @@ namespace GadzhiConverting.Models.Implementations
     public class ConvertingResources
     {
         public ConvertingResources(string signatureMicrostationFileName, string stampMicrostationFileName,
-                                 SignatureServerServiceFactory signatureServerServiceFactory,
-                                 IFileSystemOperations fileSystemOperations)
+                                   SignatureServerServiceFactory signatureServerServiceFactory,
+                                   IConverterDataFileFromDto converterDataFileFromDto, 
+                                   IFileSystemOperations fileSystemOperations)
         {
             if (String.IsNullOrWhiteSpace(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
             if (String.IsNullOrWhiteSpace(stampMicrostationFileName)) throw new ArgumentNullException(nameof(stampMicrostationFileName));
@@ -33,6 +38,7 @@ namespace GadzhiConverting.Models.Implementations
             _signatureMicrostationFileName = signatureMicrostationFileName;
             _stampMicrostationFileName = stampMicrostationFileName;
             _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
+            _converterDataFileFromDto = converterDataFileFromDto;
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
         }
 
@@ -52,25 +58,35 @@ namespace GadzhiConverting.Models.Implementations
         private readonly SignatureServerServiceFactory _signatureServerServiceFactory;
 
         /// <summary>
+        /// Преобразование подписи в трансферную модель
+        /// </summary>
+        private readonly IConverterDataFileFromDto _converterDataFileFromDto;
+
+        /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
         /// <summary>
+        /// Папка с подписями
+        /// </summary>
+        public static string SignatureFolder => AppDomain.CurrentDomain.BaseDirectory + "Signatures";
+
+        /// <summary>
         /// Имена для подписей
         /// </summary>
-        private Task<IResultCollection<ISignatureLibrary>> SignatureNamesTask =>
+        private Task<IResultCollection<ISignatureFile>> SignatureNamesTask =>
             GetSignatureNames();
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        private IResultCollection<ISignatureLibrary> _signatureNames;
+        private IResultCollection<ISignatureFile> _signatureNames;
 
         /// <summary>
         /// Имена для подписей
         /// </summary>
-        public IResultCollection<ISignatureLibrary> SignatureNames =>
+        public IResultCollection<ISignatureFile> SignatureNames =>
             _signatureNames ??= SignatureNamesTask.WaitAndUnwrapException();
 
         /// <summary>
@@ -137,9 +153,14 @@ namespace GadzhiConverting.Models.Implementations
         /// Загрузить имена для подписей
         /// </summary>
         [Logger]
-        private async Task<IResultCollection<ISignatureLibrary>> GetSignatureNames() =>
+        private async Task<IResultCollection<ISignatureFile>> GetSignatureNames() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesNames()).
-            ResultValueOkAsync(ConverterDataFileFromDto.SignaturesLibraryFromDto).
+            ResultValueOkBindAsync(signatures => new ResultValue<string>(_fileSystemOperations.CreateFolderByName(SignatureFolder)).
+                                                 WhereBad(_ => _fileSystemOperations.IsDirectoryExist(SignatureFolder),
+                                                          _ => new ResultValue<string>(new ErrorCommon(ErrorConvertingType.FileNotSaved,
+                                                                                                       "Папка для сохранения подписей не создана"))).
+                                                 Map(result => Task.FromResult((IResultValue<IList<SignatureDto>>)new ResultValue<IList<SignatureDto>>(signatures)))).
+            ResultValueOkAsync(signatures => _converterDataFileFromDto.SignaturesFileFromDtoAsync(signatures, SignatureFolder)).
             MapAsync(result => result.ToResultCollection());
     }
 }

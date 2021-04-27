@@ -25,13 +25,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
         /// <summary>
         /// Преобразовать идентификаторы с подписью в трансферную модель
         /// </summary>
-        public static IList<SignatureDto> SignaturesToDto(IList<SignatureEntity> signatureEntities, bool signatureLoad)
-        {
-            if (signatureEntities == null) throw new ArgumentNullException(nameof(signatureEntities));
-            return signatureEntities.AsQueryable().
-                                     Select(signature => SignatureToDto(signature, signatureLoad)).
-                                     ToList();
-        }
+        public static IList<SignatureDto> SignaturesToDto(IList<SignatureEntity> signatureEntities, bool signatureLoad) =>
+            signatureEntities.AsQueryable().
+                              Select(signature => SignatureToDto(signature, signatureLoad)).
+                              ToList();
 
         /// <summary>
         /// Преобразовать идентификатор с подписью Microstation в модель базы банных
