@@ -76,11 +76,10 @@ namespace GadzhiConverting.DependencyInjection
         {
             var signatureConverter = container.Resolve<ISignatureConverter>();
             var projectSettings = container.Resolve<IProjectSettings>();
-            var wcfServerServicesFactory = container.Resolve<IWcfServerServicesFactory>();
 
             var convertingResources = projectSettings.ConvertingResources;
             var signaturesLibrarySearching = new SignaturesSearching(convertingResources.SignatureNames.Value.ToApplication(),
-                                                                     SignaturesFunctionSync.GetSignaturesSync(wcfServerServicesFactory.SignatureServerServiceFactory,
+                                                                     SignaturesFunctionSync.GetSignaturesSync(convertingResources.SignatureNames,
                                                                                                               signatureConverter, ProjectSettings.DataSignaturesFolder));
 
             container.RegisterFactory<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation), unity =>

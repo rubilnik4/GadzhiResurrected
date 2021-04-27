@@ -29,56 +29,57 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
         /// <summary>
         /// Получить подписи по идентификаторам синхронно 
         /// </summary>
-        public static Func<IEnumerable<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSync(SignatureServerServiceFactory signatureServerServiceFactory,
-                                                                                                                         ISignatureConverter signatureConverter,
-                                                                                                                         string signatureFolder) =>
+        [Logger]
+        public static Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSync(SignatureServerServiceFactory signatureServerServiceFactory,
+                                                                                                                   ISignatureConverter signatureConverter,
+                                                                                                                   string signatureFolder) =>
             signatureFileRequest => GetSignaturesSyncList(signatureServerServiceFactory, signatureConverter, signatureFolder).
                                     Map(getSignaturesFunc => getSignaturesFunc(signatureFileRequest.ToList()));
-
-        /// <summary>
-        /// Получить подписи по идентификаторам синхронно 
-        /// </summary>
-        [Logger]
-        private static Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSyncList(SignatureServerServiceFactory signatureServerServiceFactory,
-                                                                                                                        ISignatureConverter signatureConverter, string signatureFolder) =>
-            signaturesFileRequest =>
-                signaturesFileRequest.
-                Select(signatureRequest => signatureRequest.PersonId).
-                Map(ids => signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignatures(ids.ToList()))).
-                WaitAndUnwrapException().
-                ToResultValueApplication().
-                ResultValueOk(ConverterDataFileFromDto.SignaturesFileDataFromDto).
-                ResultValueOk(signaturesFileData => signaturesFileRequest.
-                                                    Join(signaturesFileData,
-                                                         signatureFileRequest => signatureFileRequest.PersonId,
-                                                         signatureFileData => signatureFileData.PersonId,
-                                                         (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData, 
-                                                                                                                      signatureFileRequest))).
-                ResultValueOk(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
-                                                                       ToApplication()).
-                ToResultCollection();
 
         /// <summary>
         /// Получить подписи по идентификаторам синхронно из папки 
         /// </summary>
         [Logger]
-        private static Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSyncList(IResultCollection<ISignatureFile> signatureFile,
-                                                                                                                        ISignatureConverter signatureConverter, string signatureFolder) =>
+        public static Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSync(IResultCollection<ISignatureFile> signatureFile,
+                                                                                                                   ISignatureConverter signatureConverter, string signatureFolder) =>
             signaturesFileRequest =>
                 signaturesFileRequest.
                 Select(signatureRequest => signatureRequest.PersonId).
                 Map(ids => signatureFile.ResultValueOk(signatures => signatures.Where(signature => ids.Contains(signature.PersonId)))).
-                ResultValueOk(signatures => signatures.Select(signature => new SignatureFileData())).
+                ResultValueOk(signatureConverter.FromSignaturesFile).
                 ToResultValueApplication().
-                ResultValueOk(signaturesFileData => signaturesFileRequest.
+                Map(signatures => GetSignaturesFileApp(signatures, signaturesFileRequest, signatureConverter, signatureFolder));
+
+        /// <summary>
+        /// Получить подписи по идентификаторам синхронно 
+        /// </summary>
+
+        private static Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> GetSignaturesSyncList(SignatureServerServiceFactory signatureServerServiceFactory,
+                                                                                                                        ISignatureConverter signatureConverter, string signatureFolder) =>
+            signaturesFileRequest =>
+                signaturesFileRequest.
+                    Select(signatureRequest => signatureRequest.PersonId).
+                    Map(ids => signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignatures(ids.ToList()))).
+                    WaitAndUnwrapException().
+                    ToResultValueApplication().
+                    ResultValueOk(ConverterDataFileFromDto.SignaturesFileDataFromDto).
+                    Map(signatures => GetSignaturesFileApp(signatures, signaturesFileRequest, signatureConverter, signatureFolder));
+
+        /// <summary>
+        /// Получить сохраненные подписи
+        /// </summary>
+        private static IResultAppCollection<ISignatureFileApp> GetSignaturesFileApp(IResultAppValue<IReadOnlyCollection<ISignatureFileData>> signatures,
+                                                                                    IList<SignatureFileRequest> signaturesFileRequest,
+                                                                                    ISignatureConverter signatureConverter, string signatureFolder) =>
+            signatures.
+            ResultValueOk(signaturesFileData => signaturesFileRequest.
                               Join(signaturesFileData,
                                    signatureFileRequest => signatureFileRequest.PersonId,
                                    signatureFileData => signatureFileData.PersonId,
-                                   (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData,
-                                                                                                                                                 signatureFileRequest))).
-                ResultValueOk(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
-                                                                       ToApplication()).
-                ToResultCollection();
+                                   (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData, signatureFileRequest))).
+            ResultValueOk(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
+                                                                   ToApplication()).
+            ToResultCollection();
 
         /// <summary>
         /// Повернуть изображение подписи

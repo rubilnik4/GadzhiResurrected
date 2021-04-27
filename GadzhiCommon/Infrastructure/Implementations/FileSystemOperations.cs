@@ -240,6 +240,17 @@ namespace GadzhiCommon.Infrastructure.Implementations
         }
 
         /// <summary>
+        /// Получить файл в виде двоичного кода
+        /// </summary>   
+        public async Task<byte[]> GetFileFromPath(string filePath)
+        {
+            using var input = File.Open(filePath, FileMode.Open);
+            using var output = new MemoryStream();
+            await input.CopyToAsync(output);
+            return output.ToArray();
+        }
+
+        /// <summary>
         /// Копировать файл
         /// </summary>   
         public bool CopyFile(string fileSource, string fileDestination)

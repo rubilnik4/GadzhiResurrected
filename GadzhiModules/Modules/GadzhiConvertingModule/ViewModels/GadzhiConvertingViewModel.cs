@@ -24,9 +24,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
             _tabViewModels = GetTabViewModels(container);
             _tabViewModelsVisibility = SubscribeToViewsVisibility(_tabViewModels);
 
-            TabViewModelsVisible = new ObservableCollection<ViewModelBase>();
             BindingOperations.EnableCollectionSynchronization(TabViewModelsVisible, _tabViewModelsVisibleLock);
-            UpdateTabViewModelsVisible().WaitAndUnwrapException();
         }
 
         /// <summary>
@@ -42,7 +40,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// <summary>
         /// Видимые модели вкладок
         /// </summary>
-        public ObservableCollection<ViewModelBase> TabViewModelsVisible { get; }
+        public IReadOnlyCollection<ViewModelBase> TabViewModelsVisible =>
+            _tabViewModels.Where(tab => tab.Visibility).ToList();
 
         /// <summary>
         /// Блокировка списка ошибок для других потоков
@@ -65,7 +64,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
             {
                 if (_selectedTabViewModel != null) _selectedTabViewModel.IsSelected = false;
                 SetProperty(ref _selectedTabViewModel, value);
-                _selectedTabViewModel.IsSelected = true;
+                if (_selectedTabViewModel != null) _selectedTabViewModel.IsSelected = true;
             }
 
         }
@@ -75,10 +74,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// </summary>
         private async Task UpdateTabViewModelsVisible()
         {
-            TabViewModelsVisible.Clear();
-            var tabsVisible = _tabViewModels.Where(tab => tab.Visibility);
-            TabViewModelsVisible.AddRange(tabsVisible);
-
+            RaisePropertyChanged(nameof(TabViewModelsVisible));
             await CheckResultConvertingDialog(_tabViewModels.OfType<FilesConvertingViewModel>().FirstOrDefault(),
                                               _tabViewModels.OfType<FilesErrorsViewModel>().FirstOrDefault());
         }
@@ -100,14 +96,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         [Logger]
         private async Task ShowResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
         {
-            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
+            bool showErrors = await DialogFactory.GetResultDialog(hasErrors);
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
-                bool showErrors = await DialogFactory.GetResultDialog(hasErrors);
-                if (showErrors)
-                {
-                    SelectedTabViewModel = filesErrorsViewModel;
-                }
+                if (showErrors) SelectedTabViewModel = filesErrorsViewModel;
             });
         }
 

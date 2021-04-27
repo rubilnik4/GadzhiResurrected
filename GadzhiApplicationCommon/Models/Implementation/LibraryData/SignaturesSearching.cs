@@ -19,11 +19,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     public class SignaturesSearching
     {
         public SignaturesSearching(IEnumerable<ISignatureLibraryApp> signaturesLibrary,
-                                   Func<IEnumerable<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> getSignatures)
+                                   Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> getSignatures)
         {
-            if (signaturesLibrary == null) throw new ArgumentNullException(nameof(signaturesLibrary));
-
-            _getSignatures = getSignatures ?? throw new ArgumentNullException(nameof(getSignatures));
+            _getSignatures = getSignatures;
             _signaturesLibrary = new SortedList<string, ISignatureLibraryApp>(signaturesLibrary.ToDictionary(signature => signature.PersonId,
                                                                                                              signature => signature));
         }
@@ -36,7 +34,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// <summary>
         /// Функция загрузки подписей из базы данных по идентификаторам
         /// </summary>
-        private readonly Func<IEnumerable<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> _getSignatures;
+        private readonly Func<IList<SignatureFileRequest>, IResultAppCollection<ISignatureFileApp>> _getSignatures;
 
         /// <summary>
         /// Список имен

@@ -76,6 +76,11 @@ namespace GadzhiCommon.Infrastructure.Interfaces
         Task<bool> SaveFileFromByte(string filePath, byte[] fileByte);
 
         /// <summary>
+        /// Получить файл в виде двоичного кода
+        /// </summary>   
+        Task<byte[]> GetFileFromPath(string filePath);
+
+        /// <summary>
         /// Копировать файл
         /// </summary>   
         bool CopyFile(string fileSource, string fileDestination);
