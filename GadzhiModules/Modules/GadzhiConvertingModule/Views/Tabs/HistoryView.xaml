@@ -3,19 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:HistoryViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/GadzhiModules;component/Modules/GadzhiConvertingModule/Views/Resources/GadzhiResources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.listbox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.chip.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -23,7 +18,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0"
@@ -38,75 +33,93 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="0.6*"/>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="0.2*"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.6*"/>
                         <ColumnDefinition Width="0.2*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="0.8*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ListBox Grid.Row="0"
-                             Grid.Column="0"
-                             Style="{StaticResource MaterialDesignChoiceChipAccentRadioButton}">
-                        <ListBoxItem>
-                            Mercury
-                        </ListBoxItem>
-                        <ListBoxItem
-                            IsSelected="True">
-                            Venus
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            Earth
-                        </ListBoxItem>
-                        <ListBoxItem
-                            IsEnabled="False">
-                            Pluto
-                        </ListBoxItem>
-                    </ListBox>
-
-                    <!--<TextBlock Grid.Row="0"
+                    <TextBlock Grid.Row="0"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
-                           Text="Дата с:"/>
-                    <DatePicker Grid.Row="0"
-                                Grid.Column="1"
-                                SelectedDate="{Binding DateTimeFrom, Mode=TwoWay}"
-                                DisplayDateEnd="{Binding DateTimeNow, Mode=OneWay}"/>
+                           Text="Режим:"/>
+                    <ListBox Grid.Row="0"
+                             Grid.Column="1"
+                             Style="{StaticResource MaterialDesignChoiceChipPrimaryListBox}"
+                             ItemsSource="{Binding HistoryTypes}"
+                             SelectedItem="{Binding SelectedHistoryType, Mode=TwoWay}"/>
+
 
                     <TextBlock Grid.Row="1"
                            Grid.Column="0" 
                            Style="{StaticResource TextBlockDescription}"
+                           Text="Пользователь:"/>
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="1" 
+                              materialDesign:HintAssist.Hint="Выберите пользователя"/>
+
+                    <TextBlock Grid.Row="0"
+                           Grid.Column="3" 
+                           Style="{StaticResource TextBlockDescription}"
+                           Text="Дата с:"/>
+                    <DatePicker Grid.Row="0"
+                                Grid.Column="4"
+                                SelectedDate="{Binding DateTimeFrom, Mode=TwoWay}"
+                                DisplayDateEnd="{Binding DateTimeNow, Mode=OneWay}"/>
+
+                    <TextBlock Grid.Row="1"
+                           Grid.Column="3" 
+                           Style="{StaticResource TextBlockDescription}"
                            Text="Дата по:"/>
                     <DatePicker Grid.Row="1"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 SelectedDate="{Binding DateTimeTo, Mode=TwoWay}"
                                 DisplayDateStart="{Binding DateTimeFrom, Mode=OneWay}"
                                 DisplayDateEnd="{Binding DateTimeNow, Mode=OneWay}"/>
 
                     <TextBlock Grid.Row="0"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Пользователь:"/>
+                               Grid.Column="6" 
+                               Style="{StaticResource TextBlockDescription}"
+                               Text="Тип файла:"/>
                     <ComboBox Grid.Row="0"
-                           Grid.Column="4" />
-
-                    <TextBlock Grid.Row="0"
-                           Grid.Column="6" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Тип файла:"/>
-                    <ComboBox Grid.Row="0"
-                           Grid.Column="7"/>
+                              Grid.Column="7"
+                              ItemsSource="{Binding FileExtensionTypes}"
+                              SelectedItem="{Binding SelectedFileExtensionType, Mode=TwoWay}"
+                              IsEnabled="False"/>
 
                     <TextBlock Grid.Row="1"
                            Grid.Column="6" 
                            Style="{StaticResource TextBlockDescription}"
                            Text="Формат:"/>
                     <ComboBox Grid.Row="1"
-                           Grid.Column="7" />-->
+                              Grid.Column="7"
+                              IsEnabled="False"/>
                 </Grid>
             </Grid>
         </GroupBox>
+
+        <Border Grid.Row="1"
+                Margin="10 0 10 5"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
+                BorderThickness="1" 
+                Padding="1">
+            <DataGrid 
+                  HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch"                  
+                  ItemsSource="{Binding FilesDataCollection}" 
+                  EnableRowVirtualization="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Тип" 
+                                    Binding="{Binding FileExtension}" 
+                                    Width="0.15*"
+                                    IsReadOnly="True">
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+       
     </Grid>
 </UserControl>

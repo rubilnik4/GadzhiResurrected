@@ -18,7 +18,7 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         /// <summary>
         /// Открыть документ
         /// </summary>
-        public IResultAppValue<IDocumentWord> OpenDocument(string filePath) =>
+        public IResultAppValue<IDocumentWord> OpenDocument(string filePath, string fileName) =>
            new ResultAppValue<IDocumentWord>(new DocumentWord(ApplicationWord.Documents.Open(filePath), this),
                                              new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Word не создан"));
 

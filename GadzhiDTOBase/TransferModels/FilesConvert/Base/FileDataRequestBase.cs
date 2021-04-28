@@ -36,6 +36,18 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         [DataMember]
         public byte[] FileDataSource { get; set; }
 
+        /// <summary>
+        /// Тип расширения дополнительного файла
+        /// </summary>
+        [DataMember]
+        public string FileExtensionAdditional { get; set; }
+
+        /// <summary>
+        /// Файл данных в формате zip GZipStream
+        /// </summary>
+        [DataMember]
+        public byte[] FileDataSourceAdditional { get; set; }
+
         #region IFormattable Support
         public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);
 

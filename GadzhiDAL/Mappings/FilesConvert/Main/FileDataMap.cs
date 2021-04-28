@@ -17,6 +17,8 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
             Map(x => x.ColorPrintType).CustomType<ColorPrintType>().Not.Nullable();
             Map(x => x.StatusProcessing).CustomType<StatusProcessing>().Not.Nullable();          
             Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();
+            Map(x => x.FileExtensionAdditional);
+            Map(x => x.FileDataSourceAdditional).CustomType<BinaryBlobType>().LazyLoad();
             HasMany(x => x.FileErrors).Component(x => 
                                                  {
                                                      x.Map(e => e.ErrorConvertingType);

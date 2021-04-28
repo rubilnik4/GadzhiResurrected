@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPartial;
 using GadzhiMicrostation.Microstation.Interfaces.DocumentMicrostationPartial;
@@ -24,10 +25,11 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Открыть файл
         /// </summary>
-        public IResultAppValue<IDocumentMicrostation> OpenDocument(string filePath) =>
+        public IResultAppValue<IDocumentMicrostation> OpenDocument(string filePath, string fileName) =>
             Application.OpenDesignFile(filePath).
             Map(openDocument => new ResultAppValue<IDocumentMicrostation>(new DocumentMicrostation(_application, this),
                                                                           new ErrorApplication(ErrorApplicationType.FileNotOpen, 
-                                                                                               "Документ Microstation не создан")));
+                                                                                               "Документ Microstation не создан"))).
+            ResultValueOk(openDocument => openDocument.Void(_ => ChangeAttachNameFiles(filePath, fileName)));
     }
 }

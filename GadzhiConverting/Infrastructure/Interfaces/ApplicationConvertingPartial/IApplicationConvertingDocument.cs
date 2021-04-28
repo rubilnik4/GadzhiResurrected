@@ -23,7 +23,7 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Открыть документ
         /// </summary>
-        IResultValue<IDocumentLibrary> OpenDocument(string filePath);
+        IResultValue<IDocumentLibrary> OpenDocument(string filePath, string fileName);
 
         /// <summary>
         /// Сохранить документ

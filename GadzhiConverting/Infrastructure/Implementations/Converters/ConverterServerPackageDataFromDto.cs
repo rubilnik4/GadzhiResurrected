@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiDTOServer.Infrastructure.Implementation;
 
@@ -77,14 +78,31 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             if (errorsFromValidation.Count > 0) return new FileSavedCheck(errorsFromValidation);
 
             string directoryPath = _fileSystemOperations.CreateFolderByName(ProjectSettings.ConvertingDirectory, packageGuid);
-            string filePath = Path.Combine(directoryPath, Guid.NewGuid() + Path.GetExtension(fileDataRequest.FilePath));
+            var fileGuid = Guid.NewGuid();
+            string filePath = Path.Combine(directoryPath, fileGuid + Path.GetExtension(fileDataRequest.FilePath));
             if (String.IsNullOrWhiteSpace(directoryPath) ||
                 !await _fileSystemOperations.UnzipFileAndSave(filePath, fileDataRequest.FileDataSource))
             {
                 return new FileSavedCheck(new ErrorCommon(ErrorConvertingType.RejectToSave, $"Невозможно сохранить файл {filePath}"));
             }
+            await SaveAdditionalFile(fileDataRequest, directoryPath, fileGuid);
 
             return new FileSavedCheck(filePath);
+        }
+
+        /// <summary>
+        /// Сохранить дополнительный файл
+        /// </summary>
+        private async Task SaveAdditionalFile(FileDataRequestServer fileDataRequest, string directoryPath, Guid guidPackage)
+        {
+            if (!String.IsNullOrWhiteSpace(fileDataRequest.FileExtensionAdditional) &&
+              fileDataRequest.FileDataSourceAdditional != null &&
+              fileDataRequest.FileDataSourceAdditional.Length > 0)
+            {
+                var additionalFilePath = FileSystemOperations.CombineFilePath(directoryPath, guidPackage.ToString(),
+                                                                              fileDataRequest.FileExtensionAdditional);
+                await _fileSystemOperations.UnzipFileAndSave(additionalFilePath, fileDataRequest.FileDataSourceAdditional);
+            }
         }
     }
 }

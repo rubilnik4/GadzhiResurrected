@@ -5,6 +5,9 @@ using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Interfaces.Converters;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
@@ -66,12 +69,23 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<(bool Success, FileDataRequestClient FileDataSourceRequest)> ToFileDataRequest(IFileData fileData)
         {
             (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileData.FilePath);
-            var fileDataRequestClient = new FileDataRequestClient()
+
+            var filePathAdditional = AdditionalFileExtensions.FileExtensions.
+                                     Select(extension => FileSystemOperations.ChangeFileName(fileData.FilePath, fileData.FileName,
+                                                                                             extension)).
+                                     FirstOrDefault(filePath => _fileSystemOperations.IsFileExist(filePath));
+            (bool _, var fileDataSourceZipAdditional) = !String.IsNullOrWhiteSpace(filePathAdditional) 
+                    ? await _fileSystemOperations.FileToByteAndZip(filePathAdditional)
+                    : (false, null);
+
+            var fileDataRequestClient = new FileDataRequestClient
             {
                 ColorPrintType = fileData.ColorPrintType,
                 FilePath = fileData.FilePath,
                 StatusProcessing = fileData.StatusProcessing,
                 FileDataSource = fileDataSourceZip,
+                FileExtensionAdditional = FileSystemOperations.ExtensionWithoutPointFromPath(filePathAdditional),
+                FileDataSourceAdditional = fileDataSourceZipAdditional,
             };
             return (success, fileDataRequestClient);
         }

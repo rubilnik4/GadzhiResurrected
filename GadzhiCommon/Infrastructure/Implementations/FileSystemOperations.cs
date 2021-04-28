@@ -28,6 +28,13 @@ namespace GadzhiCommon.Infrastructure.Implementations
             fileName + Path.GetExtension(filePath);
 
         /// <summary>
+        /// Изменить имя в пути файла с изменением расширения
+        /// </summary>
+        public static string ChangeFileName(string filePath, string fileName, string extension) =>
+            Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
+            fileName + "." + extension;
+
+        /// <summary>
         /// Убрать точку из расширения файла и привести к нижнему регистру
         /// </summary>      
         public static string ExtensionWithoutPoint(string extension) =>

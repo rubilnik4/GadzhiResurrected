@@ -55,6 +55,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 ColorPrintType = fileDataRequest.ColorPrintType,
                 FilePath = fileDataRequest.FilePath,
                 FileDataSource = fileDataRequest.FileDataSource,
+                FileExtensionAdditional = fileDataRequest.FileExtensionAdditional,
+                FileDataSourceAdditional = fileDataRequest.FileDataSourceAdditional,
             };
     }
 }

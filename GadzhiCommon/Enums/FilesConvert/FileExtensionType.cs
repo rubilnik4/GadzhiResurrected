@@ -16,6 +16,9 @@ namespace GadzhiCommon.Enums.FilesConvert
         Docx,
         Pdf,
         Dwg,
+        Xls,
         Xlsx,
+        All,
+        Undefined,
     }
 }

@@ -6,6 +6,7 @@ using GadzhiMicrostation.Models.Implementations.Coordinates;
 using MicroStationDGN;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
@@ -31,21 +32,21 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             var cellDefaultOrigin = new CellElementMicrostation(cellElement, modelMicrostation.ToOwnerMicrostation());
             var cellElementMicrostation = additionalParameters?.Invoke(cellDefaultOrigin) ?? cellDefaultOrigin;
 
-            _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element) cellElement);
+            _application.ActiveDesignFile.Models[modelMicrostation.IdName].AddElement((Element)cellElement);
 
             return new ResultAppValue<ICellElementMicrostation>(cellElementMicrostation,
                                                                 new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Элемент подписи не найден"));
         }
 
-    /// <summary>
-    /// Создать ячейку на основе шаблона в библиотеке
-    /// </summary>       
-    public IResultAppValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
-                                                                                    IModelMicrostation modelMicrostation,
-                                                                                    Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null) =>
-            AttachLibrary(MicrostationResources.SignatureMicrostationFileName).
-            ResultValueOkBind(libraryElements => CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParameters)).
-            ResultVoidOk(_ => DetachLibrary());
+        /// <summary>
+        /// Создать ячейку на основе шаблона в библиотеке
+        /// </summary>       
+        public IResultAppValue<ICellElementMicrostation> CreateSignatureFromLibrary(string cellName, PointMicrostation origin,
+                                                                                        IModelMicrostation modelMicrostation,
+                                                                                        Func<ICellElementMicrostation, ICellElementMicrostation> additionalParameters = null) =>
+                AttachLibrary(MicrostationResources.SignatureMicrostationFileName).
+                ResultValueOkBind(libraryElements => CreateCellElementFromLibrary(cellName, origin, modelMicrostation, additionalParameters)).
+                ResultVoidOk(_ => DetachLibrary());
 
         /// <summary>
         /// Подключить библиотеку
@@ -61,6 +62,22 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// Отключить библиотеку
         /// </summary>      
         public void DetachLibrary() => _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
+
+        /// <summary>
+        /// Изменить имя вложенных файлов
+        /// </summary>
+        public void ChangeAttachNameFiles(string filePath, string fileName)
+        {
+            var rasterManager = Application.RasterManager;
+           if (rasterManager.Rasters.Count != 1) return;
+
+            var raster = rasterManager.Rasters[1];
+            var rasterPath = Path.GetDirectoryName(filePath) +  "\\" + Path.GetFileNameWithoutExtension(fileName) + 
+                             Path.GetExtension(raster.RasterInformation.FullName);
+            var rasterAttached = rasterManager.Rasters.Attach(rasterPath);
+            rasterAttached.GeoReferenceInformation.set_Origin(raster.GeoReferenceInformation.get_Origin());
+            rasterAttached.GeoReferenceInformation.set_Extent(raster.GeoReferenceInformation.get_Extent());
+        }
 
         /// <summary>
         /// Кэшировать элементы

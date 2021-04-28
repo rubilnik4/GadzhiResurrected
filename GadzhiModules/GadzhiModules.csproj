@@ -61,14 +61,14 @@
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
       <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignColors, Version=1.2.6.1513, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.1.2.6\lib\net45\MaterialDesignColors.dll</HintPath>
+    <Reference Include="MaterialDesignColors, Version=2.0.0.2422, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.2.0.0\lib\net452\MaterialDesignColors.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignExtensions, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignExtensions.3.1.0\lib\net45\MaterialDesignExtensions.dll</HintPath>
+    <Reference Include="MaterialDesignExtensions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c5ebccebe084d64f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignExtensions.3.3.0\lib\net45\MaterialDesignExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=3.1.3.1513, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.3.1.3\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.0.0.2422, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.4.0.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -204,6 +204,8 @@
     <Compile Include="Helpers\Wpf\Behaviors\HyperLinkExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\ConvertingFileTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\PdfNamingConverter.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiServices.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
     <Compile Include="Infrastructure\Interfaces\Services\IWcfClientServicesFactory.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\Histories\HistoryType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
@@ -424,9 +427,10 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.0.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.0.0\build\MaterialDesignThemes.targets'))" />
   </Target>
   <Import Project="..\packages\MaterialDesignThemes.3.1.0-ci981\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.1.0-ci981\build\MaterialDesignThemes.targets')" />
   <Import Project="..\packages\Xamarin.Forms.4.5.0.187-pre2\build\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.4.5.0.187-pre2\build\Xamarin.Forms.targets')" />
-  <Import Project="..\packages\MaterialDesignThemes.3.1.3\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.1.3\build\MaterialDesignThemes.targets')" />
   <Import Project="..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets" Condition="Exists('..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets')" />
+  <Import Project="..\packages\MaterialDesignThemes.4.0.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.0.0\build\MaterialDesignThemes.targets')" />
 </Project>

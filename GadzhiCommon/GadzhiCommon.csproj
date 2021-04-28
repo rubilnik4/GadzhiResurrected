@@ -106,6 +106,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\FilesConvert\ConvertingFileType.cs" />
     <Compile Include="Enums\FilesConvert\ConvertingModeType.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentType.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Errors\ConverterErrorType.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Enums\FilesConvert\StatusErrorType.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
+    <Compile Include="Infrastructure\Implementations\FilesConvert\AdditionalFileExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\FilesConvert\ValidFileExtensions.cs" />
     <Compile Include="Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Extensions\Async\AsyncExtensions.cs" />

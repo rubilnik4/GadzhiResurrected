@@ -43,12 +43,14 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>
         private static FileDataRequestServer FileDataToRequest(FileDataEntity fileDataEntity)
         {
-            return new FileDataRequestServer()
+            return new FileDataRequestServer
             {
-                FilePath = fileDataEntity?.FilePath ?? throw new ArgumentNullException(nameof(fileDataEntity)),
+                FilePath = fileDataEntity.FilePath,
                 StatusProcessing = fileDataEntity.StatusProcessing,
                 ColorPrintType = fileDataEntity.ColorPrintType,
                 FileDataSource = fileDataEntity.FileDataSource.AsQueryable().ToArray(),
+                FileExtensionAdditional = fileDataEntity.FileExtensionAdditional,
+                FileDataSourceAdditional = fileDataEntity.FileDataSourceAdditional?.AsQueryable().ToArray(),
             };
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Helpers;
+using GadzhiWord.Models.Implementations.StampCollections;
 using GadzhiWord.Word.Interfaces.Word.Elements;
 using Microsoft.Office.Interop.Word;
 
@@ -65,6 +66,9 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         {
             if (String.IsNullOrWhiteSpace(filePath)) return;
             if (_cellElement.Range.InlineShapes.Count > 0) _cellElement.Range.Delete();
+            if (_cellElement.HeightRule != WdRowHeightRule.wdRowHeightExactly) _cellElement.HeightRule = WdRowHeightRule.wdRowHeightExactly;
+            if (_cellElement.Height == 0) _cellElement.Height = _cellElement.Application.CentimetersToPoints((float)StampSettingsWord.HEIGHT_TABLE_ROW);
+
             _cellElement.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
             _cellElement.VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
             _cellElement.Range.InlineShapes.AddPicture(filePath, false, true);

@@ -35,10 +35,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Открыть документ
         /// </summary>
         [Logger]
-        public IResultValue<IDocumentLibrary> OpenDocument(string filePath) =>
+        public IResultValue<IDocumentLibrary> OpenDocument(string filePath, string fileName) =>
             IsDocumentValid(filePath).
             ResultValueOkBind(GetActiveLibraryByExtension).
-            ResultValueOkTry(activeLibrary => activeLibrary.OpenDocument(filePath).ToResultValueFromApplication(),
+            ResultValueOkTry(activeLibrary => activeLibrary.OpenDocument(filePath, fileName).ToResultValueFromApplication(),
                              new ErrorCommon(ErrorConvertingType.FileNotOpen, $"Ошибка открытия файла {filePath}")).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath));
 

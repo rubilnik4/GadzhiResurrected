@@ -22,6 +22,16 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         public virtual IList<byte> FileDataSource { get; set; }
 
         /// <summary>
+        /// Расширение дополнительного файла
+        /// </summary>       
+        public virtual string FileExtensionAdditional { get; set; }
+
+        /// <summary>
+        /// Дополнительный файл данных в формате zip GZipStream
+        /// </summary>       
+        public virtual IList<byte> FileDataSourceAdditional { get; set; }
+
+        /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
         public virtual IList<ErrorComponent> FileErrors { get; set; }

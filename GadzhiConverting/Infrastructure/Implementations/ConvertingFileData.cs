@@ -108,7 +108,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                 okFunc: _ => new ResultValue<string>(savingPath),
                                                 badFunc: _ => new ErrorCommon(ErrorConvertingType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
                                             ToResultValue<string>())).
-            ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
+            ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer, filePath.FileNameServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>

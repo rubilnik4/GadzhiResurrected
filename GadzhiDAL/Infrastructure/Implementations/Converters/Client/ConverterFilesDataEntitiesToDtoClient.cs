@@ -23,7 +23,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Конвертировать из модели базы данных в промежуточную
         /// </summary>       
         public static PackageDataShortResponseClient PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
-                                                                                              FilesQueueInfo filesQueueInfo) =>
+                                                                                       FilesQueueInfo filesQueueInfo) =>
             (packageDataEntity != null)
                 ? new PackageDataShortResponseClient()
                 {

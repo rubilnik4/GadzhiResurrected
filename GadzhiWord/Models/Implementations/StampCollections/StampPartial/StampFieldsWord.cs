@@ -48,10 +48,6 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         public override IEnumerable<bool> CompressFieldsRanges() =>
             TableStamp.
             Void(tableStamp => tableStamp.SetAutoFit(false)).
-            WhereBad(tableStamp => tableStamp.HeightRowsType == HeightRowsType.Exactly,
-                     tableStamp => tableStamp.Void(_ => tableStamp.SetHeightRowsType(HeightRowsType.Exactly))).
-            WhereBad(tableStamp => tableStamp.HeightRows == 0,
-                     tableStamp => tableStamp.Void(_ => tableStamp.SetHeightRows(StampSettingsWord.HEIGHT_TABLE_ROW))).
             Map(_ => Enumerable.Empty<bool>());
 
         /// <summary>

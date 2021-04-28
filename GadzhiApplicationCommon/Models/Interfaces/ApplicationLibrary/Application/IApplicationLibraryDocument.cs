@@ -16,7 +16,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Applicati
         /// <summary>
         /// Открыть документ
         /// </summary>
-        IResultAppValue<TDocumentLibrary> OpenDocument(string filePath);
+        IResultAppValue<TDocumentLibrary> OpenDocument(string filePath, string fileName);
             
     }
 }
