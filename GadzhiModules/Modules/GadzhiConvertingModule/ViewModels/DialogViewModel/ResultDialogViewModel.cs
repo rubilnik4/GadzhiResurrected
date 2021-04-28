@@ -27,6 +27,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
         /// </summary>
         public override string Title => "Итоги";
 
+        /// <summary>
+        /// Сообщение
+        /// </summary>
         public string Message => (NoErrors)
                                  ? "Прекрасно! Файлы готовы"
                                  : "Упс! Что-то пошло не так...";

@@ -130,6 +130,16 @@
                                                  Style="{StaticResource PackIconToolBarStyle}"/>
                     </Button.Content>
                 </Button>
+
+                <Separator />
+
+                <Button Command="{Binding AboutApplicationDelegateCommand}"
+                        ToolTip="О программе">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Information"                                         
+                                                 Style="{StaticResource PackIconToolBarStyle}"/>
+                    </Button.Content>
+                </Button>
             </ToolBar>
         </DockPanel>
 

@@ -11,13 +11,12 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              MinWidth="300"
-             d:DataContext="{d:DesignInstance Type=viewModelDialog:ResultDialogViewModel, IsDesignTimeCreatable=False}"
-             >
+             d:DataContext="{d:DesignInstance Type=viewModelDialog:ResultDialogViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <Grid.Resources >
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
-                    <ResourceDictionary Source="DialogResource.xaml"/>
+                    <ResourceDictionary Source="/GadzhiModules;component/Modules/GadzhiConvertingModule/Views/Resources/DialogResource.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
 
                 <converters:BoolToVisibilityConverter x:Key="VisibilityConverter"

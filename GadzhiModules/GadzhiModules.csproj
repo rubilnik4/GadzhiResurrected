@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\HyperLinkExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\PdfNamingConverter.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ServerStates\IServerDetailClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Base\DialogViewModelBase.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\DialogButtonsType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\AboutApplicationDialogViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogFactory.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\MessageDialogType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\MessageDialogViewModel.cs" />
@@ -265,10 +267,14 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerInfoViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerTotalViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\AboutApplicationDialogView.xaml.cs">
+      <DependentUpon>AboutApplicationDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
     </Compile>
@@ -295,6 +301,9 @@
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml.cs">
       <DependentUpon>FilesErrorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryView.xaml.cs">
+      <DependentUpon>HistoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerView.xaml.cs">
       <DependentUpon>ServerView.xaml</DependentUpon>
@@ -328,7 +337,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\DialogResource.xaml">
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\AboutApplicationDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Resources\DialogResource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -361,6 +374,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

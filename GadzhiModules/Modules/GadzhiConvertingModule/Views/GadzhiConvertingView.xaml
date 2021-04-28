@@ -33,6 +33,9 @@
             <DataTemplate DataType="{x:Type viewModelTabs:ServerViewModel}">
                 <viewTabs:ServerView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModelTabs:HistoryViewModel}">
+                <viewTabs:HistoryView />
+            </DataTemplate>
         </Grid.Resources>
 
         <materialDesign:DialogHost Identifier="RootDialog">

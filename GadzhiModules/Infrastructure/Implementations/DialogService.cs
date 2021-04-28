@@ -46,7 +46,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Информационное сообщение
         /// </summary>  
-        public async Task ShowMessage(string message) => await DialogFactory.GetMessageDialog(message);
+        public async Task ShowMessage(string message) => 
+            await DialogFactory.GetMessageDialog(message);
 
         /// <summary>
         /// Сообщение об ошибке

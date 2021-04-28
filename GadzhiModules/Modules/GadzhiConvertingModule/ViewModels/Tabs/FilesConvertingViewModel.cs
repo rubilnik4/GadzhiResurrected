@@ -10,10 +10,14 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Enums.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.ReactiveSubjects;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesConvertingViewModelItems;
+using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
 using GongSolutions.Wpf.DragDrop;
+using MaterialDesignThemes.Wpf;
 using Nito.AsyncEx.Synchronous;
 using Prism.Commands;
 
@@ -27,9 +31,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         public FilesConvertingViewModel(IApplicationGadzhi applicationGadzhi, IStatusProcessingInformation statusProcessingInformation,
                                         IDialogService dialogService)
         {
-            _applicationGadzhi = applicationGadzhi ?? throw new ArgumentNullException(nameof(applicationGadzhi));
-            _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
-            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            _applicationGadzhi = applicationGadzhi;
+            _statusProcessingInformation = statusProcessingInformation;
+            DialogService = dialogService;
 
             FilesDataCollection = new ObservableCollection<FileDataViewModelItem>();
             applicationGadzhi.FileDataChange.Subscribe(OnFilesInfoUpdated);
@@ -83,6 +87,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
                ObservesProperty(() => IsConverting);
 
             CloseApplicationDelegateCommand = new DelegateCommand(async () => await CloseApplication());
+
+            AboutApplicationDelegateCommand = new DelegateCommand(async () => await AboutApplication());
         }
 
         /// <summary>
@@ -149,6 +155,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Закрыть приложение
         /// </summary>       
         public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
+
+        /// <summary>
+        /// О приложении
+        /// </summary>       
+        public DelegateCommand AboutApplicationDelegateCommand { get; private set; }
 
         /// <summary>
         /// Индикатор конвертирования файлов
@@ -230,7 +241,22 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Закрыть приложение
         /// </summary>
         [Logger]
-        private async Task CloseApplication() => await ExecuteAndHandleErrorAsync(_applicationGadzhi.CloseApplication);
+        private async Task CloseApplication() => 
+            await ExecuteAndHandleErrorAsync(_applicationGadzhi.CloseApplication);
+
+        /// <summary>
+        /// О приложении
+        /// </summary>
+        [Logger]
+        private static async Task AboutApplication()
+        {
+            //var messageDialogViewModel = new MessageDialogViewModel(MessageDialogType.Information, "");
+            //var messageDialogView = new MessageDialogView(messageDialogViewModel);
+            //await DialogHost.Show(messageDialogView, "RootDialog");
+            var aboutApplicationDialogViewModel = new AboutApplicationDialogViewModel();
+            var aboutApplicationDialogView = new AboutApplicationDialogView(aboutApplicationDialogViewModel);
+            await DialogHost.Show(aboutApplicationDialogView, "RootDialog");
+        }
 
         /// <summary>
         /// Установка цвета печати выделенных файлов

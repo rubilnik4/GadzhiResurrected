@@ -96,10 +96,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         [Logger]
         private async Task ShowResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
         {
-            bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
-            bool showErrors = await DialogFactory.GetResultDialog(hasErrors);
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
+                bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
+                bool showErrors = await DialogFactory.GetResultDialog(hasErrors);
                 if (showErrors) SelectedTabViewModel = filesErrorsViewModel;
             });
         }
@@ -125,6 +125,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
                 container.Resolve<FilesErrorsViewModel>(),
                 container.Resolve<ConvertingSettingsViewModel>(),
                 container.Resolve<ServerViewModel>(),
+                container.Resolve<HistoryViewModel>(),
             };
 
         #region IDisposable Support
