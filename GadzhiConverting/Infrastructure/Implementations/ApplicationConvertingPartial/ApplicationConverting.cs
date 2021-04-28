@@ -24,6 +24,18 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
     /// </summary>
     public partial class ApplicationConverting : IApplicationConverting
     {
+        public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation,
+                                     IApplicationLibrary<IDocumentWord> applicationWord,
+                                     IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService,
+                                     IMessagingService messagingService)
+        {
+            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
+            _applicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
+            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _pdfCreatorService = pdfCreatorService ?? throw new ArgumentNullException(nameof(pdfCreatorService));
+            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+        }
+
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
@@ -53,18 +65,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Класс для отображения изменений и логгирования
         /// </summary>
         private readonly IMessagingService _messagingService;
-
-        public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation,
-                                     IApplicationLibrary<IDocumentWord> applicationWord,
-                                     IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService,
-                                     IMessagingService messagingService)
-        {
-            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
-            _applicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _pdfCreatorService = pdfCreatorService ?? throw new ArgumentNullException(nameof(pdfCreatorService));
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-        }
 
         /// <summary>
         /// Выбрать библиотеку конвертации по типу расширения

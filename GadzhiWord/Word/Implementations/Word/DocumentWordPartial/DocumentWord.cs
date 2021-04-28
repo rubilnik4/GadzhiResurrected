@@ -30,6 +30,12 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
     /// </summary>
     public partial class DocumentWord : IDocumentWord
     {
+        public DocumentWord(Document document, IApplicationOffice applicationOffice)
+        {
+            _document = document ?? throw new ArgumentNullException(nameof(document));
+            ApplicationOffice = applicationOffice ?? throw new ArgumentNullException(nameof(applicationOffice));
+        }
+
         /// <summary>
         /// Экземпляр файла
         /// </summary>
@@ -40,12 +46,6 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// </summary>
         public IApplicationOffice ApplicationOffice { get; }
 
-        public DocumentWord(Document document, IApplicationOffice applicationOffice)
-        {
-            _document = document ?? throw new ArgumentNullException(nameof(document));
-            ApplicationOffice = applicationOffice ?? throw new ArgumentNullException(nameof(applicationOffice));
-        }
-
         /// <summary>
         /// Путь к файлу
         /// </summary>
@@ -55,6 +55,11 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Путь к файлу
         /// </summary>
         public string FullName => _fullName ??= _document?.FullName;
+
+        /// <summary>
+        /// Наличие дополнительных файлов
+        /// </summary>
+        public bool HasAdditional => false;
 
         /// <summary>
         /// Загрузился ли файл
@@ -135,5 +140,10 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Закрыть приложение
         /// </summary>
         public void CloseApplication() => ApplicationOffice.CloseApplication();
+
+        /// <summary>
+        /// Отключить дополнительные файлы
+        /// </summary>
+        public void DetachAdditional() { }
     }
 }

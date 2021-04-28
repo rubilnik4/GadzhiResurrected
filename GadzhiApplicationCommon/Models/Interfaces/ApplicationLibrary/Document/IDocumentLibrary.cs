@@ -23,7 +23,12 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
-        bool IsDocumentValid { get; }      
+        bool IsDocumentValid { get; }
+
+        /// <summary>
+        /// Наличие дополнительных файлов
+        /// </summary>
+        public bool HasAdditional { get; }
 
         /// <summary>
         /// Сохранить файл
@@ -44,6 +49,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// Экспорт файла в другие форматы
         /// </summary>      
         IResultAppValue<string> Export(string filePath, StampDocumentType stampDocumentType);
+
+        /// <summary>
+        /// Отключить дополнительные файлы
+        /// </summary>
+        void DetachAdditional();
 
         /// <summary>
         /// Закрыть файл файл

@@ -25,11 +25,13 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Открыть файл
         /// </summary>
-        public IResultAppValue<IDocumentMicrostation> OpenDocument(string filePath, string fileName) =>
+        public IResultAppValue<IDocumentMicrostation> OpenDocument(string filePath) =>
             Application.OpenDesignFile(filePath).
-            Map(openDocument => new ResultAppValue<IDocumentMicrostation>(new DocumentMicrostation(_application, this),
-                                                                          new ErrorApplication(ErrorApplicationType.FileNotOpen, 
-                                                                                               "Документ Microstation не создан"))).
-            ResultValueOk(openDocument => openDocument.Void(_ => ChangeAttachNameFiles(filePath, fileName)));
+            Map(openDocument => 
+                    openDocument.Map(_ => AttachAdditionalFiles(filePath)).
+                                 Map(hasAttachment => new ResultAppValue<IDocumentMicrostation>(new DocumentMicrostation(_application, this, hasAttachment),
+                                                                                                new ErrorApplication(ErrorApplicationType.FileNotOpen,
+                                                                                                                     "Документ Microstation не создан"))));
+
     }
 }

@@ -61,22 +61,34 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Отключить библиотеку
         /// </summary>      
-        public void DetachLibrary() => _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
+        public void DetachLibrary() => 
+            _application.CadInputQueue.SendCommand("DETACH LIBRARY ");
 
         /// <summary>
-        /// Изменить имя вложенных файлов
+        /// Присоединить дополнительные файлы
         /// </summary>
-        public void ChangeAttachNameFiles(string filePath, string fileName)
+        public bool AttachAdditionalFiles(string filePath)
         {
             var rasterManager = Application.RasterManager;
-           if (rasterManager.Rasters.Count != 1) return;
+            if (rasterManager.Rasters.Count != 1) return false;
 
             var raster = rasterManager.Rasters[1];
-            var rasterPath = Path.GetDirectoryName(filePath) +  "\\" + Path.GetFileNameWithoutExtension(fileName) + 
-                             Path.GetExtension(raster.RasterInformation.FullName);
+            string rasterPath = Path.GetDirectoryName(filePath) +  "\\" + Path.GetFileNameWithoutExtension(filePath) + 
+                                Path.GetExtension(raster.RasterInformation.FullName);
             var rasterAttached = rasterManager.Rasters.Attach(rasterPath);
             rasterAttached.GeoReferenceInformation.set_Origin(raster.GeoReferenceInformation.get_Origin());
             rasterAttached.GeoReferenceInformation.set_Extent(raster.GeoReferenceInformation.get_Extent());
+            return true;
+        }
+
+        /// <summary>
+        /// Отключить дополнительные файлы
+        /// </summary>
+        public void DetachAdditional()
+        {
+            var rasterManager = Application.RasterManager;
+            if (rasterManager.Rasters.Count != 2) return;
+            rasterManager.Rasters[2].Close();
         }
 
         /// <summary>

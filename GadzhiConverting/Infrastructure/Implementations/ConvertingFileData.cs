@@ -93,6 +93,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             fileDataSourceServer.
             ResultValueOkRaw(saveResult => CreatePdfToSaveResult(saveResult, documentLibrary, fileDataServer, convertingSettings).
                                            Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer, convertingSettings)).
+                                           ResultValueOk(filesData => filesData.Void(_ => documentLibrary.DetachAdditional())).
+                                           ToResultCollection().
                                            Map(CheckDataSourceExistence));
        
         /// <summary>
@@ -108,7 +110,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                 okFunc: _ => new ResultValue<string>(savingPath),
                                                 badFunc: _ => new ErrorCommon(ErrorConvertingType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
                                             ToResultValue<string>())).
-            ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer, filePath.FileNameServer)).
+            ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
         /// <summary>

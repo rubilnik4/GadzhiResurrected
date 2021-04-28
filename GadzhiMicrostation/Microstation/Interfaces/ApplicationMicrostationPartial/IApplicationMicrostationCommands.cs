@@ -32,6 +32,16 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         IResultAppCollection<LibraryElement> AttachLibrary(string libraryPath);
 
         /// <summary>
+        /// Присоединить дополнительные файлы
+        /// </summary>
+        bool AttachAdditionalFiles(string filePath);
+
+        /// <summary>
+        /// Отключить дополнительные файлы
+        /// </summary>
+        public void DetachAdditional();
+
+        /// <summary>
         /// Отключить библиотеку
         /// </summary>      
         void DetachLibrary();
