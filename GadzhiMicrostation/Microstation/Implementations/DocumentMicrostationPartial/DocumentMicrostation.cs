@@ -30,12 +30,10 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
     /// </summary>
     public partial class DocumentMicrostation : IDocumentMicrostation
     {
-        public DocumentMicrostation(Application application, IApplicationMicrostation applicationMicrostation, 
-                                    bool hasAdditional)
+        public DocumentMicrostation(Application application, IApplicationMicrostation applicationMicrostation)
         {
             _application = application;
             ApplicationMicrostation = applicationMicrostation;
-            HasAdditional = hasAdditional;
         }
 
         /// <summary>
@@ -47,11 +45,6 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
         /// Класс для работы с приложением Microstation
         /// </summary>
         public IApplicationMicrostation ApplicationMicrostation { get; }
-
-        /// <summary>
-        /// Наличие дополнительных файлов
-        /// </summary>
-        public bool HasAdditional { get; }
 
         /// <summary>
         /// Текущий документ
@@ -101,13 +94,17 @@ namespace GadzhiMicrostation.Microstation.Implementations.DocumentMicrostationPa
                                                                                  $"Некорректное расширение {fileExtension} для файла типа dgn")));
 
         /// <summary>
+        /// Подключить дополнительные файлы
+        /// </summary>
+        public void AttachAdditional() =>
+            ApplicationMicrostation.AttachAdditional(FullName);
+        
+
+        /// <summary>
         /// Отключить дополнительные файлы
         /// </summary>
-        public void DetachAdditional()
-        {
-            if (!HasAdditional) return;
+        public void DetachAdditional() =>
             ApplicationMicrostation.DetachAdditional();
-        }
 
         /// <summary>
         /// Закрыть файл файл

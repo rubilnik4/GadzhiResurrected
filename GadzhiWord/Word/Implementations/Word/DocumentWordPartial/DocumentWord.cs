@@ -57,11 +57,6 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         public string FullName => _fullName ??= _document?.FullName;
 
         /// <summary>
-        /// Наличие дополнительных файлов
-        /// </summary>
-        public bool HasAdditional => false;
-
-        /// <summary>
         /// Загрузился ли файл
         /// </summary>
         public bool IsDocumentValid => _document != null;
@@ -140,6 +135,11 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// Закрыть приложение
         /// </summary>
         public void CloseApplication() => ApplicationOffice.CloseApplication();
+
+        /// <summary>
+        /// Подключить дополнительные файлы
+        /// </summary>
+        public void AttachAdditional() { }
 
         /// <summary>
         /// Отключить дополнительные файлы

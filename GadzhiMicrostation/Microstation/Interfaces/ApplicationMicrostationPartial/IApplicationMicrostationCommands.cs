@@ -34,7 +34,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Присоединить дополнительные файлы
         /// </summary>
-        bool AttachAdditionalFiles(string filePath);
+        bool AttachAdditional(string filePath);
 
         /// <summary>
         /// Отключить дополнительные файлы

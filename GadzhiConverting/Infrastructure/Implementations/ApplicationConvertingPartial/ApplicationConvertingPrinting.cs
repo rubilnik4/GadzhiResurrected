@@ -23,6 +23,7 @@ using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Models.Enums;
+using GadzhiConverting.Infrastructure.Implementations.Converting;
 using GadzhiConvertingLibrary.Extensions;
 
 namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingPartial
@@ -36,23 +37,37 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>
         [Logger]
-        private IResultCollection<IFileDataSourceServer> CreatePdfInDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
-                                                                             IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
+        private IResultCollection<IFileDataSourceServer> CreateProcessingDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
+                                                                                 IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
             documentLibrary.
             Void(_ => _messagingService.ShowMessage("Обработка штампов...")).
             GetStampContainer(convertingSettings.ToApplication()).
-            Map(stampContainer => StampContainerPdfActions(stampContainer, documentLibrary, filePath, convertingSettings, colorPrintType));
+            Map(stampContainer => StampContainerProcessing(stampContainer, documentLibrary, filePath, convertingSettings, colorPrintType));
 
         /// <summary>
         /// Обработать штампы и начать печать
         /// </summary>
-        private IResultCollection<IFileDataSourceServer> StampContainerPdfActions(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
+        private IResultCollection<IFileDataSourceServer> StampContainerProcessing(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
                                                                                   IFilePath filePath, IConvertingSettings convertingSettings,
                                                                                   ColorPrintType colorPrintType) =>
             stampContainer.
+            Void(_ => _messagingService.ShowMessage("Подключение дополнительных элементов...")).
+            Void(_ => documentLibrary.AttachAdditional()).
             Void(_ => _messagingService.ShowMessage("Форматирование полей...")).
             CompressFieldsRanges().
             Void(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), nameof(stampContainer.CompressFieldsRanges))).
+            WhereContinue(_ => ConvertingModeChoice.IsPdfConvertingNeed(convertingSettings.ConvertingModeType),
+                          _ => StampContainerCreatePdf(stampContainer, documentLibrary, filePath, convertingSettings, colorPrintType),
+                          _ => new ResultCollection<IFileDataSourceServer>()).
+            Void(_ => documentLibrary.DetachAdditional());
+
+        /// <summary>
+        /// Произвести печать PDF
+        /// </summary>
+        private IResultCollection<IFileDataSourceServer> StampContainerCreatePdf(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
+                                                                                 IFilePath filePath, IConvertingSettings convertingSettings,
+                                                                                 ColorPrintType colorPrintType) =>
+            stampContainer.
             Void(_ => _messagingService.ShowMessage("Вставка подписей...")).
             Map(_ => stampContainer.InsertSignatures().ToResultCollectionFromApplication()).
             ResultVoidOk(signatures => _loggerService.LogByObjects(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this),

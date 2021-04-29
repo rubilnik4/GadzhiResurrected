@@ -26,11 +26,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         bool IsDocumentValid { get; }
 
         /// <summary>
-        /// Наличие дополнительных файлов
-        /// </summary>
-        public bool HasAdditional { get; }
-
-        /// <summary>
         /// Сохранить файл
         /// </summary>
         void Save();
@@ -49,6 +44,11 @@ namespace GadzhiApplicationCommon.Models.Interfaces.ApplicationLibrary.Document
         /// Экспорт файла в другие форматы
         /// </summary>      
         IResultAppValue<string> Export(string filePath, StampDocumentType stampDocumentType);
+
+        /// <summary>
+        /// Подключить дополнительные файлы
+        /// </summary>
+        void AttachAdditional();
 
         /// <summary>
         /// Отключить дополнительные файлы

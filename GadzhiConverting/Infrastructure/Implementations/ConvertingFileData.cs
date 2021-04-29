@@ -91,11 +91,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                    IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                                    IConvertingSettings convertingSettings) =>
             fileDataSourceServer.
-            ResultValueOkRaw(saveResult => CreatePdfToSaveResult(saveResult, documentLibrary, fileDataServer, convertingSettings).
-                                           Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer, convertingSettings)).
-                                           ResultValueOk(filesData => filesData.Void(_ => documentLibrary.DetachAdditional())).
-                                           ToResultCollection().
-                                           Map(CheckDataSourceExistence));
+                ResultValueOkRaw(saveResult => saveResult.ConcatResult(CreatePdf(documentLibrary, fileDataServer, convertingSettings)).
+                                               Map(saveResultPdf => ExportFileToSaveResult(saveResultPdf, documentLibrary, fileDataServer, convertingSettings)).
+                                               Map(CheckDataSourceExistence));
        
         /// <summary>
         /// Загрузить файл и сохранить в папку для обработки
@@ -119,16 +117,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private static IResultValue<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary, IFilePath filePath) =>
             new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient).
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource));
-
-        /// <summary>
-        /// Создать PDF и добавить в список обработанных файлов
-        /// </summary>
-        private IResultCollection<IFileDataSourceServer> CreatePdfToSaveResult(IResultCollection<IFileDataSourceServer> saveResult,
-                                                                               IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
-                                                                               IConvertingSettings convertingSettings) =>
-            saveResult.ConcatResult(ConvertingModeChoice.IsPdfConvertingNeed(convertingSettings.ConvertingModeType) 
-                                        ? CreatePdf(documentLibrary, fileDataServer, convertingSettings)
-                                        : saveResult);
 
         /// <summary>
         /// Создать PDF

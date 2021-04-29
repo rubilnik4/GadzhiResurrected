@@ -67,7 +67,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Присоединить дополнительные файлы
         /// </summary>
-        public bool AttachAdditionalFiles(string filePath)
+        public bool AttachAdditional(string filePath)
         {
             var rasterManager = Application.RasterManager;
             if (rasterManager.Rasters.Count != 1) return false;
@@ -89,6 +89,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             var rasterManager = Application.RasterManager;
             if (rasterManager.Rasters.Count != 2) return;
             rasterManager.Rasters[2].Close();
+            rasterManager.Rasters[2].ExtendedInformation.IsSelected = true;
+            rasterManager.Rasters.Detach();
         }
 
         /// <summary>
