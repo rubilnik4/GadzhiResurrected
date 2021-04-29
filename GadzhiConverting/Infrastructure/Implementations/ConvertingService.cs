@@ -347,7 +347,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             var processes = Process.GetProcesses().
                             Where(process => process.ProcessName.ContainsIgnoreCase("ustation") ||
-                                             process.ProcessName.ContainsIgnoreCase("winword"));
+                                             process.ProcessName.ContainsIgnoreCase("winword") ||
+                                             process.ProcessName.ContainsIgnoreCase("excel"));
             foreach (var process in processes) process.Kill();
         }
 

@@ -10,6 +10,7 @@ using GadzhiDAL.Infrastructure.Implementations.Converters.Client;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Errors;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces.FileConvert;
+using GadzhiDAL.Services.Interfaces.ServerStates;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using Unity;
@@ -26,18 +27,25 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         /// </summary>
         private readonly IUnityContainer _container;
 
-        public FilesDataClientService(IUnityContainer container)
+        public FilesDataClientService(IUnityContainer container, IAccessService accessService)
         {
             _container = container;
+            _accessService = accessService;
         }
+
+        /// <summary>
+        /// Сервис определения времени доступа
+        /// </summary>
+        private readonly IAccessService _accessService;
 
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу
         /// </summary>       
         public async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName)
         {
-            var packageDataEntity = ConverterFilesDataEntitiesFromDtoClient.ToPackageData(packageDataRequest, identityName);
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            await _accessService.UpdateLastClientAccess(identityName);
+            var packageDataEntity = ConverterFilesDataEntitiesFromDtoClient.ToPackageData(packageDataRequest, identityName);
             await unitOfWork.Session.SaveAsync(packageDataEntity);
             await unitOfWork.CommitAsync();
         }

@@ -22,10 +22,10 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
     /// </summary>
     public class FilesDataServerService : IFilesDataServerService
     {
-        public FilesDataServerService(IUnityContainer container, IServerAccessService serverAccessService)
+        public FilesDataServerService(IUnityContainer container, IAccessService accessService)
         {
             _container = container;
-            _serverAccessService = serverAccessService;
+            _accessService = accessService;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         /// <summary>
         /// Сервис определения времени доступа к серверам
         /// </summary>
-        private readonly IServerAccessService _serverAccessService;
+        private readonly IAccessService _accessService;
 
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
@@ -45,7 +45,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
-            await _serverAccessService.UpdateLastAccess(identityServerName);
+            await _accessService.UpdateLastServerAccess(identityServerName);
             var packageDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
                                           OrderBy(package=> package.CreationDateTime).
                                           FirstOrDefaultAsync(ConditionConverting(identityServerName));

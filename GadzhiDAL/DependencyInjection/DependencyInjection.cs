@@ -26,7 +26,7 @@ namespace GadzhiDAL.DependencyInjection
             RegisterType<ISignaturesService, SignaturesService>(new HierarchicalLifetimeManager()).
             RegisterType<IServerStateService, ServerStateService>(new HierarchicalLifetimeManager()).
             RegisterType<IServerInfoService, ServerInfoService>(new HierarchicalLifetimeManager()).
-            RegisterType<IServerAccessService, ServerAccessService>(new HierarchicalLifetimeManager());
+            RegisterType<IAccessService, AccessService>(new HierarchicalLifetimeManager());
         }
     }
 }

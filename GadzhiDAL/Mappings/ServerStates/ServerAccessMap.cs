@@ -1,7 +1,7 @@
 ﻿using FluentNHibernate.Mapping;
-using GadzhiDAL.Entities.FilesConvert.ServerStates;
+using GadzhiDAL.Entities.ServerStates;
 
-namespace GadzhiDAL.Mappings.FilesConvert.ServerStates
+namespace GadzhiDAL.Mappings.ServerStates
 {
     /// <summary>
     /// Структура в БД для доступа сервера
@@ -10,7 +10,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.ServerStates
     {
         public ServerAccessMap()
         {
-            Id(x => x.ServerIdentity).Not.Nullable();
+            Id(x => x.Identity).Not.Nullable().Default("");
             Map(x => x.LastAccess).Not.Nullable();
         }
     }

@@ -27,6 +27,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         public override string Title => "Сервер";
 
         /// <summary>
+        /// Выбор вкладки
+        /// </summary>
+        private bool _isSelected;
+
+        /// <summary>
+        /// Выбор вкладки
+        /// </summary>
+        public override bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                ServerDetailViewModel.OnInitialize();
+            }
+        }
+
+        /// <summary>
         /// Статистика обработанных файлов
         /// </summary>
         public ServerTotalViewModel ServerTotalViewModel { get; }

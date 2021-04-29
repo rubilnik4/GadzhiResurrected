@@ -24,11 +24,11 @@ namespace GadzhiWcfHost.Services
     public class ServerStateClientService : IServerStateClientService
     {
         public ServerStateClientService(IServerStateService serverStateService, IServerInfoService serverInfoService,
-                                        IServerAccessService serverAccessService)
+                                        IAccessService accessService)
         {
             _serverStateService = serverStateService;
             _serverInfoService = serverInfoService;
-            _serverAccessService = serverAccessService;
+            _accessService = accessService;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Сервис определения времени доступа к серверам
         /// </summary>
-        private readonly IServerAccessService _serverAccessService;
+        private readonly IAccessService _accessService;
 
         /// <summary>
         /// Получить информацию о обработанных файлах
@@ -61,15 +61,22 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Получить список серверов
         /// </summary>
-        public async Task<IList<string>> GetServersNames() =>
-            await _serverAccessService.GetServerNames().
+        public async Task<IList<string>> GetServerNames() =>
+            await _accessService.GetServerNames().
             MapAsync(serverNames => serverNames.ToList());
+
+        /// <summary>
+        /// Получить список пользователей
+        /// </summary>
+        public async Task<IList<string>> GetClientNames() =>
+            await _accessService.GetClientNames().
+            MapAsync(clientNames => clientNames.ToList());
 
         /// <summary>
         /// Получить информацию о сервере
         /// </summary>
         public async Task<ServerDetailResponse> GetServerDetail(string serverName) =>
-            await _serverAccessService.GetLastAccess(serverName).
+            await _accessService.GetServerLastAccess(serverName).
             WhereContinueAsyncBind(lastAccess => lastAccess.HasValue,
                 okFunc: lastAccess => GetServerDetail(serverName, lastAccess!.Value),
                 badFunc: _ => Task.FromResult(ServerDetailFactory.CreateNotInitialize(serverName)));

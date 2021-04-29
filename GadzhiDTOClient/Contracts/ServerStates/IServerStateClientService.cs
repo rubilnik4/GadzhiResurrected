@@ -27,7 +27,13 @@ namespace GadzhiDTOClient.Contracts.ServerStates
         /// Получить список серверов
         /// </summary>
         [OperationContract]
-        Task<IList<string>> GetServersNames();
+        Task<IList<string>> GetServerNames();
+
+        /// <summary>
+        /// Получить список пользователей
+        /// </summary>
+        [OperationContract]
+        Task<IList<string>> GetClientNames();
 
         /// <summary>
         /// Получить информацию о сервере

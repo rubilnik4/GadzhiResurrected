@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
+             xmlns:historyViews="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.HistoryViews"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:HistoryViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
@@ -21,85 +22,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Grid.Row="0"
-                  Header="Параметры выбора"
-                  Style="{StaticResource GroupBoxGadzhi}">
-            <Grid>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.2*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="0.6*"/>
-                        <ColumnDefinition Width="0.2*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="0.8*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Row="0"
-                           Grid.Column="0" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Режим:"/>
-                    <ListBox Grid.Row="0"
-                             Grid.Column="1"
-                             Style="{StaticResource MaterialDesignChoiceChipPrimaryListBox}"
-                             ItemsSource="{Binding HistoryTypes}"
-                             SelectedItem="{Binding SelectedHistoryType, Mode=TwoWay}"/>
-
-
-                    <TextBlock Grid.Row="1"
-                           Grid.Column="0" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Пользователь:"/>
-                    <ComboBox Grid.Row="1"
-                              Grid.Column="1" 
-                              materialDesign:HintAssist.Hint="Выберите пользователя"/>
-
-                    <TextBlock Grid.Row="0"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Дата с:"/>
-                    <DatePicker Grid.Row="0"
-                                Grid.Column="4"
-                                SelectedDate="{Binding DateTimeFrom, Mode=TwoWay}"
-                                DisplayDateEnd="{Binding DateTimeNow, Mode=OneWay}"/>
-
-                    <TextBlock Grid.Row="1"
-                           Grid.Column="3" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Дата по:"/>
-                    <DatePicker Grid.Row="1"
-                                Grid.Column="4"
-                                SelectedDate="{Binding DateTimeTo, Mode=TwoWay}"
-                                DisplayDateStart="{Binding DateTimeFrom, Mode=OneWay}"
-                                DisplayDateEnd="{Binding DateTimeNow, Mode=OneWay}"/>
-
-                    <TextBlock Grid.Row="0"
-                               Grid.Column="6" 
-                               Style="{StaticResource TextBlockDescription}"
-                               Text="Тип файла:"/>
-                    <ComboBox Grid.Row="0"
-                              Grid.Column="7"
-                              ItemsSource="{Binding FileExtensionTypes}"
-                              SelectedItem="{Binding SelectedFileExtensionType, Mode=TwoWay}"
-                              IsEnabled="False"/>
-
-                    <TextBlock Grid.Row="1"
-                           Grid.Column="6" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Формат:"/>
-                    <ComboBox Grid.Row="1"
-                              Grid.Column="7"
-                              IsEnabled="False"/>
-                </Grid>
-            </Grid>
-        </GroupBox>
+        <historyViews:HistoryFilterView Grid.Row="0" 
+                                        DataContext="{Binding HistoryFilterViewModel}"/>
 
         <Border Grid.Row="1"
                 Margin="10 0 10 5"

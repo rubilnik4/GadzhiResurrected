@@ -195,9 +195,7 @@
     <Compile Include="Word\Interfaces\Word\IDocumentWord.cs" />
     <Compile Include="Word\Interfaces\Excel\Elements\ISheetExcel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Word\Implementations\Excel\Export\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
       <Project>{965E6A1A-43FA-467D-9AB3-8B73260F7A8A}</Project>

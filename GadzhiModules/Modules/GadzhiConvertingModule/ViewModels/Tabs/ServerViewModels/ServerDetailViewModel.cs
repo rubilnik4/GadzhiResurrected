@@ -27,8 +27,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
         {
             _serverStateClientServiceFactory = serverStateClientServiceFactory;
             _isSelected = isSelected;
-            ServerNames = NotifyTask.Create(GetServerNames);
             _subscriptions = new CompositeDisposable(SubscribeToServerDetailUpdate());
+        }
+
+        /// <summary>
+        /// Действия при загрузке
+        /// </summary>
+        public void OnInitialize()
+        {
+            ServerNames ??= NotifyTask.Create(GetServerNames);
         }
 
         /// <summary>
@@ -49,7 +56,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
         /// <summary>
         /// Список серверов
         /// </summary>
-        public NotifyTask<IReadOnlyCollection<string>> ServerNames { get; }
+        public NotifyTask<IReadOnlyCollection<string>> ServerNames { get; private set; }
 
         /// <summary>
         /// Выбранный сервер
@@ -190,7 +197,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.ServerVie
         /// Получить список серверов
         /// </summary>
         public async Task<IReadOnlyCollection<string>> GetServerNames() =>
-            await _serverStateClientServiceFactory.UsingServiceRetry(service => service.Operations.GetServersNames()).
+            await _serverStateClientServiceFactory.UsingServiceRetry(service => service.Operations.GetServerNames()).
             WhereContinueAsync(result => result.OkStatus,
                                okFunc: result => result.Value.ToList(),
                                badFunc: result => new List<string>());

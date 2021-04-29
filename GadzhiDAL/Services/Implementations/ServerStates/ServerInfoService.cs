@@ -19,10 +19,10 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
     /// </summary>
     public class ServerInfoService : IServerInfoService
     {
-        public ServerInfoService(IUnityContainer container, IServerAccessService serverAccessService)
+        public ServerInfoService(IUnityContainer container, IAccessService accessService)
         {
             _container = container;
-            _serverAccessService = serverAccessService;
+            _accessService = accessService;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         /// <summary>
         /// Сервис определения времени доступа к серверам
         /// </summary>
-        private readonly IServerAccessService _serverAccessService;
+        private readonly IAccessService _accessService;
 
         /// <summary>
         /// Получить информацию серверах
@@ -42,7 +42,7 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
-            var serverNames = await _serverAccessService.GetServerNames();
+            var serverNames = await _accessService.GetServerNames();
             int completePackages = await GetCompletePackages(unitOfWork);
             int completeFiles = await GetCompleteFiles(unitOfWork);
             int queuePackages = await GetQueuePackages(unitOfWork);

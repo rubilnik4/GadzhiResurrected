@@ -1,17 +1,16 @@
 ﻿using System;
-using GadzhiDAL.Entities.FilesConvert.Base;
 
-namespace GadzhiDAL.Entities.FilesConvert.ServerStates
+namespace GadzhiDAL.Entities.ServerStates
 {
     /// <summary>
-    /// Сущность доступа сервера
+    /// Сущность доступа
     /// </summary>
-    public class ServerAccessEntity
+    public abstract class BaseAccessEntity
     {
         /// <summary>
         /// Имя сервера
         /// </summary>
-        public virtual string ServerIdentity { get; set; }
+        public virtual string Identity { get; set; }
 
         /// <summary>
         /// Последний доступ

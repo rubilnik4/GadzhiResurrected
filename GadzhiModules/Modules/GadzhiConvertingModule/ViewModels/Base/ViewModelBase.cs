@@ -39,7 +39,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base
         /// <summary>
         /// Выбрана ли страница
         /// </summary>
-        public bool IsSelected { get; set; }
+        public virtual bool IsSelected { get; set; }
 
         /// <summary>
         /// Подписка на изменение видимости

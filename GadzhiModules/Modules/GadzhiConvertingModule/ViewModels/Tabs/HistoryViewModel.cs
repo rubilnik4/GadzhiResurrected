@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations.Converters.Histories;
+using GadzhiModules.Infrastructure.Implementations.Services;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 {
@@ -13,9 +15,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// </summary>
     public class HistoryViewModel : ViewModelBase
     {
-        public HistoryViewModel(IDialogService dialogService)
+        public HistoryViewModel(IDialogService dialogService, ServerStateClientServiceFactory serverStateClientServiceFactory)
         {
             DialogService = dialogService;
+            HistoryFilterViewModel = new HistoryFilterViewModel(serverStateClientServiceFactory);
         }
         /// <summary>
         /// Стандартные диалоговые окна
@@ -28,43 +31,34 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         public override string Title => "История";
 
         /// <summary>
-        /// Типы режимов историй
+        /// Выбор вкладки
         /// </summary>
-        public IReadOnlyCollection<string> HistoryTypes =>
-            HistoryTypeConverter.HistoriesString;
+        private bool _isSelected;
 
         /// <summary>
-        /// Текущий режим типа истории
+        /// Выбор вкладки
         /// </summary>
-        public string SelectedHistoryType { get; set; } = 
-            HistoryTypeConverter.HistoriesString.FirstOrDefault();
+        public override bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                HistoryFilterViewModel.OnInitialize();
+            }
+        }
 
         /// <summary>
-        /// Типы расширений
+        /// Фильтры поиска в истории
         /// </summary>
-        public IReadOnlyCollection<string> FileExtensionTypes =>
-            ConvertingFileTypeConverter.FileExtensionsString;
+        public HistoryFilterViewModel HistoryFilterViewModel { get; }
 
-        /// <summary>
-        /// Текущее расширение
-        /// </summary>
-        public string SelectedFileExtensionType { get; set; } =
-            ConvertingFileTypeConverter.FileExtensionsString.FirstOrDefault();
-
-        /// <summary>
-        /// Дата с
-        /// </summary>
-        public DateTime DateTimeFrom { get; set; } = DateTimeNow;
-
-        /// <summary>
-        /// Дата по
-        /// </summary>
-        public DateTime DateTimeTo { get; set; } = DateTimeNow;
-
-        /// <summary>
-        /// Текущее время
-        /// </summary>
-        public static DateTime DateTimeNow =>
-            DateTime.Now;
+        #region IDisposable Support
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            HistoryFilterViewModel.Dispose();
+        }
+        #endregion
     }
 }
