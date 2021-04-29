@@ -19,6 +19,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         {
             DialogService = dialogService;
             HistoryFilterViewModel = new HistoryFilterViewModel(serverStateClientServiceFactory);
+            HistoryDataViewModel = new HistoryDataViewModel();
         }
         /// <summary>
         /// Стандартные диалоговые окна
@@ -52,6 +53,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// Фильтры поиска в истории
         /// </summary>
         public HistoryFilterViewModel HistoryFilterViewModel { get; }
+
+        /// <summary>
+        /// Данные поиска истории
+        /// </summary>
+        public HistoryDataViewModel HistoryDataViewModel { get; }
 
         #region IDisposable Support
         protected override void Dispose(bool disposing)

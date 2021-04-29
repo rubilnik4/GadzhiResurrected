@@ -271,6 +271,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryDataViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
@@ -308,6 +309,9 @@
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryView.xaml.cs">
       <DependentUpon>HistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataView.xaml.cs">
+      <DependentUpon>HistoryDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryFilterView.xaml.cs">
       <DependentUpon>HistoryFilterView.xaml</DependentUpon>
@@ -385,6 +389,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -30,7 +30,12 @@
                   Header="Параметры выбора"
                   Style="{StaticResource GroupBoxGadzhi}">
             <Grid>
-                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -110,6 +115,20 @@
                     <ComboBox Grid.Row="1"
                               Grid.Column="7"
                               IsEnabled="False"/>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      Margin="0 3 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <Button Grid.Column="1"
+                            Content="Получить"
+                            Command="{Binding }"/>
                 </Grid>
             </Grid>
         </GroupBox>

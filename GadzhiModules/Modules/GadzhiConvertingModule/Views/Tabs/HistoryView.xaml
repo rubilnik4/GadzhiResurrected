@@ -25,25 +25,8 @@
         <historyViews:HistoryFilterView Grid.Row="0" 
                                         DataContext="{Binding HistoryFilterViewModel}"/>
 
-        <Border Grid.Row="1"
-                Margin="10 0 10 5"
-                BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
-                BorderThickness="1" 
-                Padding="1">
-            <DataGrid 
-                  HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"                  
-                  ItemsSource="{Binding FilesDataCollection}" 
-                  EnableRowVirtualization="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Тип" 
-                                    Binding="{Binding FileExtension}" 
-                                    Width="0.15*"
-                                    IsReadOnly="True">
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
-       
+        <historyViews:HistoryDataView Grid.Row="1" 
+                                      DataContext="{Binding HistoryDataViewModel}"/>
+
     </Grid>
 </UserControl>
