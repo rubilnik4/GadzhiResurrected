@@ -262,10 +262,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">    
-      <IsTransformFile>true</IsTransformFile>
-    </None>
+  <ItemGroup>  
     <None Include="App.Debug.config">
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>true</IsTransformFile>
@@ -281,6 +278,11 @@
     </None>
     <None Include="Resources\SignatureMicrostation.cel" />
     <None Include="Resources\StampMicrostation.cel" />
+  </ItemGroup>
+   <ItemGroup>
+    <None Include="App.config">
+      <TransformOnBuild>true</TransformOnBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GadzhiApplicationCommon\GadzhiApplicationCommon.csproj">
