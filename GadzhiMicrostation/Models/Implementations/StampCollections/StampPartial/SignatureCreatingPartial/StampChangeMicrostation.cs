@@ -31,7 +31,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
                                                                                             "Не найден идентификатор основной подписи")).
             ResultValueOk(signature => GetStampSignatureRows(StampFieldType.ChangeSignature, 
                                                              changeNames => GetStampChangeRow(changeNames, signatureLibrary))).
-            ResultValueOk(changeRows => changeRows.Where(changeRow => !String.IsNullOrEmpty(changeRow.DocumentChange.Text))).
+            ResultValueOk(changeRows => changeRows.Where(ChangeSignatureValidation)).
             ToResultCollection(new ErrorApplication(ErrorApplicationType.SignatureNotFound, "Штамп подписей замены не найден"));
 
         /// <summary>

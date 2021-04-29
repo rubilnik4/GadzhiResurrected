@@ -57,5 +57,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Получить строки согласования без подписи для опросных листов и тех требований с директорами
         /// </summary>
         public abstract IResultAppCollection<IStampApprovalChief> GetStampApprovalChiefRows();
+
+        /// <summary>
+        /// Проверка необходимости вставки подписи в строку изменений
+        /// </summary>
+        protected bool ChangeSignatureValidation(IStampChange stampChange) =>
+             !String.IsNullOrEmpty(stampChange.DocumentChange.Text);
     }
 }

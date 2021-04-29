@@ -263,16 +263,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <TransformOnBuild>true</TransformOnBuild>
-    </None>
+    <Content Include="App.config" />
     <None Include="App.Debug.config">
       <DependentUpon>App.config</DependentUpon>
-      <IsTransformFile>true</IsTransformFile>
     </None>
     <None Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
-      <IsTransformFile>true</IsTransformFile>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -357,4 +353,4 @@
     <Error Condition="!Exists('..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets'))" />
   </Target>
   <Import Project="..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets" Condition="Exists('..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets')" />
- </Project>
+</Project>

@@ -28,6 +28,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
                                                ChangeRowIndexes.NUMBER_CHANGE, ChangeSignatureWord.FIELDS_COUNT)).
             Where(row => row.CellsElement.Count >= ChangeSignatureWord.FIELDS_COUNT).
             Select(row => GetStampChangeFromRow(row, signatureLibrary, _stampIdentifier)).
+            ToResultCollection().
+            ResultValueOk(changeRows => changeRows.Where(ChangeSignatureValidation)).
             ToResultCollection();
 
         /// <summary>
