@@ -263,12 +263,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.config" />
+    <None Include="App.config">    
+      <IsTransformFile>true</IsTransformFile>
+    </None>
     <None Include="App.Debug.config">
       <DependentUpon>App.config</DependentUpon>
+      <IsTransformFile>true</IsTransformFile>
     </None>
     <None Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
+      <IsTransformFile>true</IsTransformFile>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -351,6 +355,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets'))" />
+    <Error Condition="!Exists('..\packages\SlowCheetah.2.5.48\build\SlowCheetah.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SlowCheetah.2.5.48\build\SlowCheetah.targets'))" />
   </Target>
   <Import Project="..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets" Condition="Exists('..\packages\AspectInjector.2.4.0\build\netstandard2.0\AspectInjector.targets')" />
+  <Import Project="..\packages\SlowCheetah.2.5.48\build\SlowCheetah.targets" Condition="Exists('..\packages\SlowCheetah.2.5.48\build\SlowCheetah.targets')" />
 </Project>
