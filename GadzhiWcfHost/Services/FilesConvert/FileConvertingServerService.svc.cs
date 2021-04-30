@@ -1,18 +1,13 @@
-﻿using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDTOServer.Contracts.FilesConvert;
-using GadzhiDTOServer.TransferModels.FilesConvert;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using GadzhiDTOServer.TransferModels.Signatures;
-using System.Linq;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Functional;
-using GadzhiDAL.Services.Interfaces;
 using GadzhiDAL.Services.Interfaces.FileConvert;
-using GadzhiDTOBase.TransferModels.Signatures;
+using GadzhiDTOServer.Contracts.FilesConvert;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 
-namespace GadzhiWcfHost.Services
+namespace GadzhiWcfHost.Services.FilesConvert
 {
     /// <summary>
     /// Сервис для конвертирования файлов. Контракт используется серверной частью
@@ -35,37 +30,31 @@ namespace GadzhiWcfHost.Services
         /// <summary>
         /// Получить первый в очереди пакет на конвертирование
         /// </summary>           
-        public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName)=>
-                await _filesDataServerService.GetFirstInQueuePackage(identityServerName);       
+        public async Task<PackageDataRequestServer> GetFirstInQueuePackage(string identityServerName) =>
+            await _filesDataServerService.GetFirstInQueuePackage(identityServerName);
 
         /// <summary>
         /// Обновить информацию после промежуточного ответа
         /// </summary> 
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer) =>
-                await _filesDataServerService.UpdateFromIntermediateResponse(packageId, fileDataResponseServer);
+            await _filesDataServerService.UpdateFromIntermediateResponse(packageId, fileDataResponseServer);
 
         /// <summary>
         /// Обновить информацию после окончательного ответа
         /// </summary>
         public async Task<Unit> UpdateFromResponse(PackageDataShortResponseServer packageDataShortResponseServer) =>
-                await _filesDataServerService.UpdateFromResponse(packageDataShortResponseServer);
+            await _filesDataServerService.UpdateFromResponse(packageDataShortResponseServer);
 
         /// <summary>
         /// Удалить все устаревшие пакеты
         /// </summary>      
         public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion) =>
-                await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion);
-
-        /// <summary>
-        /// Удалить все устаревшие пакеты с ошибками
-        /// </summary>      
-        public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion) =>
-                await _filesDataServerService.DeleteAllUnusedErrorPackagesUntilDate(dateDeletion);
+            await _filesDataServerService.DeleteAllUnusedPackagesUntilDate(dateDeletion);
 
         /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>
-        public async Task<Unit> AbortConvertingById(Guid id) => 
+        public async Task<Unit> AbortConvertingById(Guid id) =>
             await _filesDataServerService.AbortConvertingById(id);
     }
 }

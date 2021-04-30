@@ -16,12 +16,15 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                 { StatusProcessingProject.NeedToLoadFiles, "Перетащите барахлишко на экран" },
                 { StatusProcessingProject.NeedToStartConverting, "Жмите конвертировать" },
                 { StatusProcessingProject.Sending, "Отправляем файлики" },
-                { StatusProcessingProject.InQueue, "Ожидаем своей очереди" },
-                { StatusProcessingProject.Converting, "Процесс пошел" },
-                { StatusProcessingProject.Receiving, "Возвращаем блудных сынов" },
+                { StatusProcessingProject.InQueue, "В очереди" },
+                { StatusProcessingProject.Converting, "Конвертация" },
+                { StatusProcessingProject.ConvertingComplete, "Конвертация завершена" },
+                { StatusProcessingProject.Receiving, "Отправка клиенту" },
                 { StatusProcessingProject.Writing, "Пишем в папочки" },
-                { StatusProcessingProject.End, "Финиш" },
-                { StatusProcessingProject.Error, "Непредвиденные ошибочки" },
+                { StatusProcessingProject.End, "Завершено" },
+                { StatusProcessingProject.Error, "Ошибки" },
+                { StatusProcessingProject.Abort, "Отменено" },
+                { StatusProcessingProject.Archived, "В архиве" },
             };
 
         /// <summary>

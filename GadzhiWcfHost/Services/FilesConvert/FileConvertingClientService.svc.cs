@@ -1,13 +1,12 @@
-﻿using GadzhiDTOClient.Contracts.FilesConvert;
-using GadzhiDTOClient.TransferModels.FilesConvert;
-using System;
+﻿using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using GadzhiDAL.Services.Interfaces;
 using GadzhiDAL.Services.Interfaces.FileConvert;
+using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiWcfHost.Infrastructure.Implementations.Authentication;
 
-namespace GadzhiWcfHost.Services
+namespace GadzhiWcfHost.Services.FilesConvert
 {
     /// <summary>
     /// Сервис для конвертирования файлов. Контракт используется клиентской частью

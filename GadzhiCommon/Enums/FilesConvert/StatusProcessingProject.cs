@@ -16,5 +16,6 @@
         End,
         Error,
         Abort,
+        Archived,
     }
 }

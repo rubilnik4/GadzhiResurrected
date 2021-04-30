@@ -13,11 +13,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     public class PackageDataEntity : PackageDataEntityBase
     {
         /// <summary>
-        /// Статус выполнения проекта
-        /// </summary>      
-        public virtual StatusProcessingProject StatusProcessingProject { get; set; } = StatusProcessingProject.InQueue;
-
-        /// <summary>
         /// Количество попыток конвертирования
         /// </summary>      
         public virtual int AttemptingConvertCount { get; set; }

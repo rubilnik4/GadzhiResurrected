@@ -143,23 +143,15 @@
             </ToolBar>
         </DockPanel>
 
-        <DataGrid Grid.Row="1"
-                  HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"                  
+        <DataGrid Grid.Row="1"                 
                   ItemsSource="{Binding FilesDataCollection}"                   
                   SelectionMode="Extended"  
-                  SelectionUnit="FullRow"                 
-                  AutoGenerateColumns="False"                
+                  SelectionUnit="FullRow"     
+                  AutoGenerateColumns="False"
                   EnableRowVirtualization="True"
-                  CanUserReorderColumns="False"   
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False" 
-                  CanUserSortColumns="False"
-                  CanUserResizeRows="False"
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
-                  dd:DragDrop.DropHandler="{Binding}"
-                  >
+                  dd:DragDrop.DropHandler="{Binding}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип" 
                                     Binding="{Binding FileExtension}" 

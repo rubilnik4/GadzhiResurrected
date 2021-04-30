@@ -46,7 +46,7 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var accessEntities = await unitOfWork.Session.Query<TAccess>().ToListAsync();
-            return accessEntities.Select(entity => entity.Identity).ToList();
+            return accessEntities.Select(entity => entity.Identity).OrderBy(identity => identity).ToList();
         }
 
         /// <summary>

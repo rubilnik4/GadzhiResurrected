@@ -205,6 +205,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\ConvertingFileTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\PdfNamingConverter.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiFileData.cs" />
@@ -221,6 +222,7 @@
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\HistoryClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ServerStateClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\SignatureClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\WcfClientServicesFactory.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\Histories\HistoryType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
@@ -273,6 +276,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryDataViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerInfoViewModel.cs" />

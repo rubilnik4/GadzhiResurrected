@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiCommon.Models.Enums.ServerStates;
-using GadzhiDAL.Services.Interfaces;
 using GadzhiDAL.Services.Interfaces.ServerStates;
 using GadzhiDTOBase.TransferModels.ServerStates;
 using GadzhiDTOClient.Contracts.ServerStates;
 using GadzhiWcfHost.Infrastructure.Implementations.ServerStates;
 
-namespace GadzhiWcfHost.Services
+namespace GadzhiWcfHost.Services.ServerStates
 {
     /// <summary>
     /// Сервис получения информации о состоянии сервера
@@ -64,13 +60,6 @@ namespace GadzhiWcfHost.Services
         public async Task<IList<string>> GetServerNames() =>
             await _accessService.GetServerNames().
             MapAsync(serverNames => serverNames.ToList());
-
-        /// <summary>
-        /// Получить список пользователей
-        /// </summary>
-        public async Task<IList<string>> GetClientNames() =>
-            await _accessService.GetClientNames().
-            MapAsync(clientNames => clientNames.ToList());
 
         /// <summary>
         /// Получить информацию о сервере

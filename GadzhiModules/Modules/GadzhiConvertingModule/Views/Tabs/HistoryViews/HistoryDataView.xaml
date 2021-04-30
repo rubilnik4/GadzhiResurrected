@@ -6,7 +6,6 @@
              mc:Ignorable="d"
              xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels"
              xmlns:converters="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=viewModels:HistoryDataViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,21 +15,38 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.Resources>
+            <converters:BoolToVisibilityConverter x:Key="VisibilityConverterHidden"
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Hidden"/>
+        </Grid.Resources>
+
+        <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                     Visibility="{Binding HistoryViewModelItems.IsNotCompleted, Converter={StaticResource VisibilityConverterHidden}}"/>
         <Border Margin="10 0 10 5"
-                BorderBrush="{StaticResource PrimaryHueMidBrush}" 
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
                 BorderThickness="1" 
                 Padding="1">
-            <DataGrid 
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch"                  
-                ItemsSource="{Binding FilesDataCollection}" 
-                EnableRowVirtualization="True">
+            <DataGrid ItemsSource="{Binding HistoryViewModelItems.Result}" 
+                      SelectedItem="{Binding SelectedHistoryViewModelItem, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      EnableRowVirtualization="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Тип" 
-                                        Binding="{Binding FileExtension}" 
-                                        Width="0.15*"
-                                        IsReadOnly="True">
-                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Дата" 
+                                        Width="*"
+                                        Binding="{Binding CreationDateTime}"/>
+
+                    <DataGridTextColumn Header="Пользователь" 
+                                        Width="*"
+                                        Binding="{Binding ClientName}"/>
+
+                    <DataGridTextColumn Header="Статус" 
+                                        Width="*"
+                                        Binding="{Binding StatusProcessingProject}"/>
+
+                    <DataGridTextColumn Header="Файлов" 
+                                        Width="*"
+                                        Binding="{Binding FilesCount}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

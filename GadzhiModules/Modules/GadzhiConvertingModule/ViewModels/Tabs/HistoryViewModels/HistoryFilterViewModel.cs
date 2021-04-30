@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiDTOBase.TransferModels.Histories;
 using GadzhiModules.Infrastructure.Implementations.Converters.Histories;
 using GadzhiModules.Infrastructure.Implementations.Services;
 using Nito.Mvvm;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels
@@ -15,9 +17,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
     /// </summary>
     public class HistoryFilterViewModel : BindableBase, IDisposable
     {
-        public HistoryFilterViewModel(ServerStateClientServiceFactory serverStateClientServiceFactory)
+        public HistoryFilterViewModel(HistoryClientServiceFactory historyClientServiceFactory,
+                                      Action<HistoryDataRequest> historySearch)
         {
-            _serverStateClientServiceFactory = serverStateClientServiceFactory;
+            _historyClientServiceFactory = historyClientServiceFactory;
+            HistorySearchCommand = new DelegateCommand(() => historySearch(GetHistoryDataRequest()));
         }
 
         /// <summary>
@@ -34,9 +38,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         public const string FILTER_CLIENTS_ALL = "Все";
 
         /// <summary>
-        /// Фабрика для создания подключения к WCF сервису состояния сервера
+        /// Фабрика для создания подключения к WCF сервису получения истории конвертирования
         /// </summary>
-        private readonly ServerStateClientServiceFactory _serverStateClientServiceFactory;
+        private readonly HistoryClientServiceFactory _historyClientServiceFactory;
+
+        /// <summary>
+        /// Команда поиска
+        /// </summary>
+        public DelegateCommand HistorySearchCommand { get; }
 
         /// <summary>
         /// Типы режимов историй
@@ -100,18 +109,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         /// <summary>
         /// Получить список пользователей
         /// </summary>
-        public async Task<IReadOnlyCollection<string>> GetClientNames() =>
-            await _serverStateClientServiceFactory.UsingServiceRetry(service => service.Operations.GetClientNames()).
+        private async Task<IReadOnlyCollection<string>> GetClientNames() =>
+            await _historyClientServiceFactory.UsingServiceRetry(service => service.Operations.GetClientNames()).
             WhereContinueAsync(result => result.OkStatus,
                                okFunc: result => result.Value.ToList(),
                                badFunc: result => new List<string>()).
             MapAsync(names => new List<string> { FILTER_CLIENTS_ALL }.Concat(names).ToList()).
             VoidAsync(names => SelectedClientName = names.First());
 
+        /// <summary>
+        /// Получить запрос поиска истории
+        /// </summary>
+        private HistoryDataRequest GetHistoryDataRequest() =>
+            HistoryDataConverter.ToHistoryDataRequest(DateTimeFrom, DateTimeTo, SelectedClientName);
+
         #region IDisposable
         public void Dispose()
         {
-            _serverStateClientServiceFactory?.Dispose();
+            _historyClientServiceFactory?.Dispose();
         }
         #endregion
     }

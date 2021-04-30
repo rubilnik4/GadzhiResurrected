@@ -35,10 +35,5 @@ namespace GadzhiDAL.Services.Interfaces.FileConvert
         /// Удалить все устаревшие пакеты
         /// </summary>      
         Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
-
-        /// <summary>
-        /// Удалить все устаревшие пакеты с ошибками
-        /// </summary>      
-        Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
     }
 }

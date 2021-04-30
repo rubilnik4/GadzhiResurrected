@@ -334,7 +334,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         {
             await SignaturesOnDataBase();
             await CheckAndDeleteUnusedPackagesOnDataBase();
-            await CheckAndDeleteUnusedErrorPackagesOnDataBase();
             await DeleteAllUnusedDataOnDisk();
             await QueueIsEmpty();
         }
@@ -385,29 +384,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 _messagingService.ShowMessage("Очистка неиспользуемых пакетов...");
                 _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
 
-                await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow));
+                var  result = await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow));
+                if(result.HasErrors)
+                {
+                    _messagingService.ShowErrors(result.Errors);
+                    _loggerService.ErrorsLog(result.Errors);
+                }
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        /// <summary>
-        /// Проверить и удалить ненужные пакеты с ошибками в базе
-        /// </summary>
-        [Logger]
-        private async Task CheckAndDeleteUnusedErrorPackagesOnDataBase()
-        {
-            var dateTimeNow = DateTime.Now;
-            var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedErrorDataCheck).Ticks);
-            if (timeElapsed.TotalDays > ProjectSettings.IntervalHoursToDeleteUnusedErrorPackages)
-            {
-                _messagingService.ShowMessage("Очистка пакетов с ошибками...");
-                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
-
-                await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedErrorPackagesUntilDate(dateTimeNow));
-
-                Properties.Settings.Default.UnusedErrorDataCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();
             }
         }

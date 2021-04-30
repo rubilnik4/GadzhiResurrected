@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\FilesConvert\IFileConvertingClientService.cs" />
+    <Compile Include="Contracts\Histories\IHistoryClientService.cs" />
     <Compile Include="Contracts\ServerStates\IServerStateClientService.cs" />
     <Compile Include="Contracts\Signatures\ISignatureClientService.cs" />
     <Compile Include="TransferModels\FilesConvert\FileDataSourceResponseClient.cs" />

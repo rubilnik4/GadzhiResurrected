@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
 {
@@ -19,13 +20,12 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
         /// </summary>    
         public static async Task<PackageDataArchiveEntity> PackageDataToArchive(PackageDataEntity packageDataEntity)
         {
-            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
-
-            var filesDataArchiveEntity = new PackageDataArchiveEntity()
+            var filesDataArchiveEntity = new PackageDataArchiveEntity
             {
                 CreationDateTime = packageDataEntity.CreationDateTime,
                 IdentityLocalName = packageDataEntity.IdentityLocalName,
-                IdentityServerName = packageDataEntity.IdentityServerName
+                IdentityServerName = packageDataEntity.IdentityServerName,
+                StatusProcessingProject = StatusProcessingProject.Archived,
             };
             filesDataArchiveEntity.SetId(Guid.Parse(packageDataEntity.Id));
 
@@ -44,7 +44,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Archive
         {
             if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
 
-            var fileDataArchiveEntity = new FileDataArchiveEntity()
+            var fileDataArchiveEntity = new FileDataArchiveEntity
             {
                 ColorPrintType = fileDataEntity.ColorPrintType,
                 FilePath = fileDataEntity.FilePath,

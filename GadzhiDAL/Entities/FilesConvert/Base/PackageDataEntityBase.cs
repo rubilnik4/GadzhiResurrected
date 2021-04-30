@@ -13,6 +13,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     public abstract class PackageDataEntityBase : EntityBase<string>
     {
         /// <summary>
+        /// Статус выполнения проекта
+        /// </summary>      
+        public virtual StatusProcessingProject StatusProcessingProject { get; set; } = StatusProcessingProject.InQueue;
+
+        /// <summary>
         /// Идентификатор
         /// </summary>
         public override string Id { get; protected set; }

@@ -123,6 +123,8 @@
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataShortResponseBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataRequestBase.cs" />
     <Compile Include="TransferModels\FilesConvert\Base\PackageDataResponseBase.cs" />
+    <Compile Include="TransferModels\Histories\HistoryDataRequest.cs" />
+    <Compile Include="TransferModels\Histories\HistoryDataResponse.cs" />
     <Compile Include="TransferModels\ServerStates\ServerCompleteFilesResponse.cs" />
     <Compile Include="TransferModels\ServerStates\ServerDetailQueueResponse.cs" />
     <Compile Include="TransferModels\ServerStates\ServerDetailResponse.cs" />

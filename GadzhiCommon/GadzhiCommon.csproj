@@ -179,6 +179,7 @@
     <Compile Include="Models\Interfaces\Errors\IResultValue.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultError.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultCollection.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\Histories\IHistoryData.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFile.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFileData.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />

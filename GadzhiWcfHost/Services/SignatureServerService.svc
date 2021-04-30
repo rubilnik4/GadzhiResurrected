@@ -1,7 +1,0 @@
-﻿<%@ ServiceHost 
-    Language="C#" 
-    Debug="true" 
-    Service="GadzhiWcfHost.Services.SignatureServerService" 
-    CodeBehind="SignatureServerService.svc.cs" 
-    Factory="GadzhiWcfHost.DependencyInjection.WcfServiceFactory"
-    %>

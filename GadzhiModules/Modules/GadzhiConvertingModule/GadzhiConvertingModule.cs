@@ -4,6 +4,7 @@ using GadzhiCommon.Helpers.Wcf;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiDTOClient.Contracts.FilesConvert;
+using GadzhiDTOClient.Contracts.Histories;
 using GadzhiDTOClient.Contracts.ServerStates;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Implementations;
@@ -80,10 +81,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
             unityContainer.RegisterFactory<IServiceConsumer<IServerStateClientService>>(unity =>
                 ServiceConsumerFactory.Create<IServerStateClientService>(serverStateEndpoint));
 
+            string historyEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IHistoryClientService));
+            unityContainer.RegisterFactory<IServiceConsumer<IHistoryClientService>>(unity =>
+                ServiceConsumerFactory.Create<IHistoryClientService>(historyEndpoint));
+
             unityContainer.RegisterFactory<IWcfClientServicesFactory>(unity =>
                 new WcfClientServicesFactory(() => unity.Resolve<IServiceConsumer<IFileConvertingClientService>>(),
                                              () => unity.Resolve<IServiceConsumer<ISignatureClientService>>(),
-                                             () => unity.Resolve<IServiceConsumer<IServerStateClientService>>()));
+                                             () => unity.Resolve<IServiceConsumer<IServerStateClientService>>(),
+                                             () => unity.Resolve<IServiceConsumer<IHistoryClientService>>()));
 
         }
     }

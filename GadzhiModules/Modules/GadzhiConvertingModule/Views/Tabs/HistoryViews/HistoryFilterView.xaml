@@ -17,10 +17,6 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
-            <converters:BoolToVisibilityConverter x:Key="VisibilityConverterHidden"
-                                                  TrueValue="Visible" 
-                                                  FalseValue="Hidden"/>
-
             <converters:BoolToVisibilityConverter x:Key="VisibilityConverterCollapse"
                                                   TrueValue="Visible" 
                                                   FalseValue="Collapsed"/>
@@ -125,10 +121,9 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-
                     <Button Grid.Column="1"
                             Content="Получить"
-                            Command="{Binding }"/>
+                            Command="{Binding HistorySearchCommand}"/>
                 </Grid>
             </Grid>
         </GroupBox>

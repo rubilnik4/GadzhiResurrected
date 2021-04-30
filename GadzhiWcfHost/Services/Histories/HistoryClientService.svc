@@ -1,0 +1,5 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" 
+                Service="GadzhiWcfHost.Services.Histories.HistoryClientService" 
+                CodeBehind="HistoryClientService.svc.cs" 
+                Factory="GadzhiWcfHost.DependencyInjection.WcfServiceFactory"
+%>

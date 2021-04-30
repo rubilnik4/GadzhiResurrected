@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
 using GadzhiDAL.Services.Interfaces;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOClient.Contracts.Signatures;
 
-namespace GadzhiWcfHost.Services
+namespace GadzhiWcfHost.Services.Signatures
 {
     /// <summary>
     /// Сервис для получения информации о подписях. Контракт используется клиентской частью

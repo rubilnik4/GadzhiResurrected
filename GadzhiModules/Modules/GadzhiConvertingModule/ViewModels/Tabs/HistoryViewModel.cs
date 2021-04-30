@@ -15,11 +15,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// </summary>
     public class HistoryViewModel : ViewModelBase
     {
-        public HistoryViewModel(IDialogService dialogService, ServerStateClientServiceFactory serverStateClientServiceFactory)
+        public HistoryViewModel(IDialogService dialogService,
+                                HistoryClientServiceFactory historyClientServiceFactory)
         {
             DialogService = dialogService;
-            HistoryFilterViewModel = new HistoryFilterViewModel(serverStateClientServiceFactory);
-            HistoryDataViewModel = new HistoryDataViewModel();
+            HistoryDataViewModel = new HistoryDataViewModel(historyClientServiceFactory);
+            HistoryFilterViewModel = new HistoryFilterViewModel(historyClientServiceFactory, HistoryDataViewModel.UpdateHistoryData);
         }
         /// <summary>
         /// Стандартные диалоговые окна

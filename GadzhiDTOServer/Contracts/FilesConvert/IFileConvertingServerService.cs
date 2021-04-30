@@ -39,12 +39,6 @@ namespace GadzhiDTOServer.Contracts.FilesConvert
         Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion);
 
         /// <summary>
-        /// Удалить все устаревшие пакеты с ошибками
-        /// </summary> 
-        [OperationContract]
-        Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion);
-
-        /// <summary>
         /// Отмена операции по номеру ID
         /// </summary>   
         [OperationContract]

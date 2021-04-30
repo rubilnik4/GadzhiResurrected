@@ -1,5 +1,5 @@
 ﻿<%@ ServiceHost Language="C#" Debug="true" 
-                Service="GadzhiWcfHost.Services.ServerStateClientService" 
+                Service="GadzhiWcfHost.Services.ServerStates.ServerStateClientService" 
                 CodeBehind="ServerStateClientService.svc.cs" 
                 Factory="GadzhiWcfHost.DependencyInjection.WcfServiceFactory"
 %>

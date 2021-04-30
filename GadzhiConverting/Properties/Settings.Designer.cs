@@ -50,18 +50,6 @@ namespace GadzhiConverting.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
-        public global::System.TimeSpan UnusedErrorDataCheck {
-            get {
-                return ((global::System.TimeSpan)(this["UnusedErrorDataCheck"]));
-            }
-            set {
-                this["UnusedErrorDataCheck"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
         public global::System.TimeSpan SignaturesCheck {
             get {
                 return ((global::System.TimeSpan)(this["SignaturesCheck"]));

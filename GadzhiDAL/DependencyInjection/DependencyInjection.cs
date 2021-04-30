@@ -2,9 +2,11 @@
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Services.Implementations;
 using GadzhiDAL.Services.Implementations.FileConvert;
+using GadzhiDAL.Services.Implementations.Histories;
 using GadzhiDAL.Services.Implementations.ServerStates;
 using GadzhiDAL.Services.Interfaces;
 using GadzhiDAL.Services.Interfaces.FileConvert;
+using GadzhiDAL.Services.Interfaces.Histories;
 using GadzhiDAL.Services.Interfaces.ServerStates;
 using NHibernate;
 using Unity;
@@ -26,7 +28,8 @@ namespace GadzhiDAL.DependencyInjection
             RegisterType<ISignaturesService, SignaturesService>(new HierarchicalLifetimeManager()).
             RegisterType<IServerStateService, ServerStateService>(new HierarchicalLifetimeManager()).
             RegisterType<IServerInfoService, ServerInfoService>(new HierarchicalLifetimeManager()).
-            RegisterType<IAccessService, AccessService>(new HierarchicalLifetimeManager());
+            RegisterType<IAccessService, AccessService>(new HierarchicalLifetimeManager()).
+            RegisterType<IHistoryService, HistoryService>(new HierarchicalLifetimeManager());
         }
     }
 }

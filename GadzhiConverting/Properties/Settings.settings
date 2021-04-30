@@ -8,9 +8,6 @@
     <Setting Name="ConvertingDataFolderCheck" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:00</Value>
     </Setting>
-    <Setting Name="UnusedErrorDataCheck" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:00:00</Value>
-    </Setting>
     <Setting Name="SignaturesCheck" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:00</Value>
     </Setting>

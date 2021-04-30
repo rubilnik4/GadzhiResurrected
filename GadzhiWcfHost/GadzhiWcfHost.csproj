@@ -170,11 +170,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Services\FileConvertingServerService.svc" />
-    <Content Include="Services\FileConvertingClientService.svc" />
-    <Content Include="Services\ServerStateClientService.svc" />
-    <Content Include="Services\SignatureClientService.svc" />
-    <Content Include="Services\SignatureServerService.svc" />
+    <Content Include="Services\FilesConvert\FileConvertingServerService.svc" />
+    <Content Include="Services\FilesConvert\FileConvertingClientService.svc" />
+    <Content Include="Services\Histories\HistoryClientService.svc" />
+    <Content Include="Services\ServerStates\ServerStateClientService.svc" />
+    <Content Include="Services\Signatures\SignatureClientService.svc" />
+    <Content Include="Services\Signatures\SignatureServerService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -184,19 +185,22 @@
     <Compile Include="Infrastructure\Implementations\Logger\AuthLogging.cs" />
     <Compile Include="Infrastructure\Implementations\ServerStates\ServerDetailFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\FileConvertingServerService.svc.cs">
+    <Compile Include="Services\FilesConvert\FileConvertingServerService.svc.cs">
       <DependentUpon>FileConvertingServerService.svc</DependentUpon>
     </Compile>
-    <Compile Include="Services\FileConvertingClientService.svc.cs">
+    <Compile Include="Services\FilesConvert\FileConvertingClientService.svc.cs">
       <DependentUpon>FileConvertingClientService.svc</DependentUpon>
     </Compile>
-    <Compile Include="Services\ServerStateClientService.svc.cs">
+    <Compile Include="Services\Histories\HistoryClientService.svc.cs">
+      <DependentUpon>HistoryClientService.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ServerStates\ServerStateClientService.svc.cs">
       <DependentUpon>ServerStateClientService.svc</DependentUpon>
     </Compile>
-    <Compile Include="Services\SignatureClientService.svc.cs">
+    <Compile Include="Services\Signatures\SignatureClientService.svc.cs">
       <DependentUpon>SignatureClientService.svc</DependentUpon>
     </Compile>
-    <Compile Include="Services\SignatureServerService.svc.cs">
+    <Compile Include="Services\Signatures\SignatureServerService.svc.cs">
       <DependentUpon>SignatureServerService.svc</DependentUpon>
     </Compile>
   </ItemGroup>

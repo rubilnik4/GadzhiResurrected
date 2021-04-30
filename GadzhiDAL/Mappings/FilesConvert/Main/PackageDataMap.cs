@@ -14,7 +14,7 @@ namespace GadzhiDAL.Mappings.FilesConvert.Main
         {
             Id(x => x.Id).Not.Nullable();
             Map(x => x.CreationDateTime).Not.Nullable();
-            Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>().Not.Nullable();
+            Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>().Not.Nullable().Default("10");
             Map(x => x.IdentityLocalName).Not.Nullable().Default("");
             Map(x => x.IdentityServerName).Not.Nullable().Default("");
             Map(x => x.AttemptingConvertCount).Not.Nullable();

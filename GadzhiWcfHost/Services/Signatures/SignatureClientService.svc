@@ -1,5 +1,5 @@
 ﻿<%@ ServiceHost Language="C#" Debug="true" 
-                Service="GadzhiWcfHost.Services.SignatureClientService" 
+                Service="GadzhiWcfHost.Services.Signatures.SignatureClientService" 
                 CodeBehind="SignatureClientService.svc.cs" 
                 Factory="GadzhiWcfHost.DependencyInjection.WcfServiceFactory"
     %>

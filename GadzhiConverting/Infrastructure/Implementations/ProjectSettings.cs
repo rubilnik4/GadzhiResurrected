@@ -98,11 +98,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
         public static int IntervalSignatureUpdate => 12;
 
         /// <summary>
-        /// Время (дни) через которое осуществляется удаление ненужных пакетов с ошибками на сервере
-        /// </summary>
-        public static int IntervalHoursToDeleteUnusedErrorPackages => 14;
-
-        /// <summary>
         /// Получить имя компьютера
         /// </summary>
         public static string NetworkName => Environment.UserDomainName + Path.DirectorySeparatorChar +

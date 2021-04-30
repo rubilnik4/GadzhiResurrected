@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommonServer.Enums;
-using GadzhiDAL.Entities.FilesConvert.Errors;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
+using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
 using GadzhiDAL.Services.Interfaces.FileConvert;
 using GadzhiDAL.Services.Interfaces.ServerStates;
@@ -47,7 +47,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
 
             await _accessService.UpdateLastServerAccess(identityServerName);
             var packageDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
-                                          OrderBy(package=> package.CreationDateTime).
+                                          OrderBy(package => package.CreationDateTime).
                                           FirstOrDefaultAsync(ConditionConverting(identityServerName));
 
             packageDataEntity?.StartConverting(identityServerName);
@@ -98,32 +98,16 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         public async Task<Unit> DeleteAllUnusedPackagesUntilDate(DateTime dateDeletion)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            var filesDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
-                                        Where(filesData => filesData.CreationDateTime < dateDeletion).
-                                        ToListAsync();
-            foreach (var fileData in filesDataEntity)
+            var packageDataEntities = await unitOfWork.Session.Query<PackageDataEntity>().
+                                      Where(filesData => filesData.CreationDateTime < dateDeletion).
+                                      ToListAsync();
+
+            foreach (var packageDataEntity in packageDataEntities)
             {
-                await unitOfWork.Session.DeleteAsync(fileData);
+                var packageDataArchiveEntity = await ConverterToArchive.PackageDataToArchive(packageDataEntity);
+                await unitOfWork.Session.SaveOrUpdateAsync(packageDataArchiveEntity);
             }
 
-            await unitOfWork.CommitAsync();
-            return Unit.Value;
-        }
-
-        /// <summary>
-        /// Удалить все устаревшие пакеты с ошибками
-        /// </summary>      
-        public async Task<Unit> DeleteAllUnusedErrorPackagesUntilDate(DateTime dateDeletion)
-        {
-            using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            var filesDataEntity = await unitOfWork.Session.Query<PackageDataErrorEntity>().
-                                        Where(filesData => filesData.CreationDateTime < dateDeletion).
-                                        ToListAsync();
-            foreach (var fileData in filesDataEntity)
-            {
-                await unitOfWork.Session.DeleteAsync(fileData);
-            }
-            
             await unitOfWork.CommitAsync();
             return Unit.Value;
         }

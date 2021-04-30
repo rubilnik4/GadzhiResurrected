@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Client;
-using GadzhiDAL.Infrastructure.Implementations.Converters.Errors;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces.FileConvert;
 using GadzhiDAL.Services.Interfaces.ServerStates;
@@ -94,11 +94,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());
-            var packageDataArchiveEntity = await ConverterToArchive.PackageDataToArchive(packageDataEntity);
-
-            await SetFileDataToErrorStore(unitOfWork, packageDataEntity);
-            await unitOfWork.Session.SaveAsync(packageDataArchiveEntity);
-            await unitOfWork.Session.DeleteAsync(packageDataEntity);
+            packageDataEntity.StatusProcessingProject = StatusProcessingProject.End;
 
             await unitOfWork.CommitAsync();
         }
@@ -133,18 +129,6 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
                                                       CountAsync();
 
             return new FilesQueueInfo(filesInQueueCount, packagesInQueueCount);
-        }
-
-        /// <summary>
-        /// Переместить файлы в хранилище ошибок при наличии
-        /// </summary>
-        private static async Task SetFileDataToErrorStore(IUnitOfWork unitOfWork, PackageDataEntity packageDataEntity)
-        {
-            if (packageDataEntity.FileDataEntities.Any(fileData => fileData.FileErrors.Count > 0))
-            {
-                var packageDataErrorEntity = await ConverterToErrorsStore.PackageDataToErrorStore(packageDataEntity);
-                await unitOfWork.Session.SaveAsync(packageDataErrorEntity);
-            }
         }
     }
 }

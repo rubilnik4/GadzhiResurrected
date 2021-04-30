@@ -1,4 +1,5 @@
 ﻿using FluentNHibernate.Mapping;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Archive;
 
 namespace GadzhiDAL.Mappings.FilesConvert.Archive
@@ -11,7 +12,8 @@ namespace GadzhiDAL.Mappings.FilesConvert.Archive
         public PackageDataArchiveMap()
         {
             Id(x => x.Id);
-            Map(x => x.CreationDateTime).Not.Nullable();        
+            Map(x => x.CreationDateTime).Not.Nullable();
+            Map(x => x.StatusProcessingProject).CustomType<StatusProcessingProject>().Not.Nullable().Default("11");
             Map(x => x.IdentityLocalName).Not.Nullable().Default("");
             Map(x => x.IdentityServerName).Not.Nullable().Default("");           
             HasMany(x => x.FileDataArchiveEntities).
