@@ -221,6 +221,7 @@
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
+    <Compile Include="Infrastructure\Implementations\Identities\ClientIdentity.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\HistoryClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ServerStateClientServiceFactory.cs" />

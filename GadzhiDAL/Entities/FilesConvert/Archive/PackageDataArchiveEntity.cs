@@ -11,19 +11,14 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class PackageDataArchiveEntity : PackageDataEntityBase
-    { 
-        /// <summary>
-        /// Данные о отконвертированных файлах
-        /// </summary>       
-        public virtual IList<FileDataArchiveEntity> FileDataArchiveEntities { get; protected set; }       
-
+    public class PackageDataArchiveEntity : PackageDataEntityBase<FileDataArchiveEntity, FileDataSourceArchiveEntity>
+    {
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки
         /// </summary>      
         public virtual void SetFileDataArchiveEntities(IEnumerable<FileDataArchiveEntity> fileDataArchiveEntities)
         {
-            FileDataArchiveEntities = fileDataArchiveEntities?.Select(fileDataArchive =>
+            FileDataEntities = fileDataArchiveEntities?.Select(fileDataArchive =>
             {
                 fileDataArchive.PackageDataArchiveEntity = this;
                 return fileDataArchive;

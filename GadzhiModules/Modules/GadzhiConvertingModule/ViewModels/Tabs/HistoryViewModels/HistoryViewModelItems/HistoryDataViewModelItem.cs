@@ -12,36 +12,36 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
     {
         public HistoryDataViewModelItem(IHistoryData historyData)
         {
-            _historyData = historyData;
+            HistoryData = historyData;
         }
 
         /// <summary>
         /// Данные истории конвертаций
         /// </summary>
-        private readonly IHistoryData _historyData;
+        public IHistoryData HistoryData { get; }
 
         /// <summary>
         /// Дата пакета
         /// </summary>
         public string CreationDateTime =>
-            _historyData.CreationDateTime.ToString("G");
+            HistoryData.CreationDateTime.ToString("G");
 
         /// <summary>
         /// Имя пользователя
         /// </summary>
         public string ClientName =>
-            _historyData.ClientName;
+            HistoryData.ClientName;
 
         /// <summary>
         /// Статус обработки проекта
         /// </summary>
         public string StatusProcessingProject =>
-            StatusProcessingProjectConverter.StatusProcessingProjectToString(_historyData.StatusProcessingProject);
+            StatusProcessingProjectConverter.StatusProcessingProjectToString(HistoryData.StatusProcessingProject);
 
         /// <summary>
         /// Количество файлов
         /// </summary>
         public int FilesCount =>
-            _historyData.FilesCount;
+            HistoryData.FilesCount;
     }
 }

@@ -81,7 +81,7 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         private static async Task<(int, int)> GetCompletePackagesAndFilesArchive(IUnitOfWork unitOfWork, string serverName) =>
             await unitOfWork.Session.Query<PackageDataArchiveEntity>().
             Where(package => package.IdentityServerName == serverName).
-            Select(package => package.FileDataArchiveEntities.Count).
+            Select(package => package.FileDataEntities.Count).
             ToListAsync().
             MapAsync(packageCount => (packageCount.Count, packageCount.Sum()));
 

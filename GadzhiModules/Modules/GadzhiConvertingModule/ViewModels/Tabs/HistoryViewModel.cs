@@ -16,10 +16,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     public class HistoryViewModel : ViewModelBase
     {
         public HistoryViewModel(IDialogService dialogService,
-                                HistoryClientServiceFactory historyClientServiceFactory)
+                                HistoryClientServiceFactory historyClientServiceFactory,
+                                ConvertingClientServiceFactory convertingClientServiceFactory)
         {
             DialogService = dialogService;
-            HistoryDataViewModel = new HistoryDataViewModel(historyClientServiceFactory);
+            HistoryDataViewModel = new HistoryDataViewModel(historyClientServiceFactory, convertingClientServiceFactory);
             HistoryFilterViewModel = new HistoryFilterViewModel(historyClientServiceFactory, HistoryDataViewModel.UpdateHistoryData);
         }
         /// <summary>

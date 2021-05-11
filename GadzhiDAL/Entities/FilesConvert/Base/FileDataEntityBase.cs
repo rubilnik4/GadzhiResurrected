@@ -8,7 +8,8 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public abstract class FileDataEntityBase : EntityBase<int>
+    public abstract class FileDataEntityBase <TSourceEntity> : EntityBase<int>
+        where TSourceEntity: FileDataSourceEntityBase
     {       
         /// <summary>
         /// Идентификатор
@@ -23,6 +24,11 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Цвет печати
         /// </summary>       
-        public virtual ColorPrintType ColorPrintType { get; set; } 
+        public virtual ColorPrintType ColorPrintType { get; set; }
+
+        /// <summary>
+        /// Файлы отконвертированных данных в формате zip GZipStream
+        /// </summary>      
+        public virtual IList<TSourceEntity> FileDataSourceServerEntities { get; protected set; }
     }
 }

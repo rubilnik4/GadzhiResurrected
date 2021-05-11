@@ -8,13 +8,8 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FileDataArchiveEntity : FileDataEntityBase
+    public class FileDataArchiveEntity : FileDataEntityBase<FileDataSourceArchiveEntity>
     {
-        /// <summary>
-        /// Файлы отконвертированных данных в формате zip GZipStream
-        /// </summary>      
-        public virtual IList<FileDataSourceArchiveEntity> FileDataSourceServerArchiveEntities { get; protected set; }
-
         /// <summary>
         /// Ссылка на родительский класс
         /// </summary>
@@ -25,7 +20,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Archive
         /// </summary>      
         public virtual void SetFileDataSourceArchiveEntities(IEnumerable<FileDataSourceArchiveEntity> fileDataSourceArchiveEntities)
         {
-            FileDataSourceServerArchiveEntities = fileDataSourceArchiveEntities?.Select(fileDataSourceArchiveEntity =>
+            FileDataSourceServerEntities = fileDataSourceArchiveEntities?.Select(fileDataSourceArchiveEntity =>
             {
                 fileDataSourceArchiveEntity.FileDataArchiveEntity = this;
                 return fileDataSourceArchiveEntity;

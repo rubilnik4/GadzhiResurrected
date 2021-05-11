@@ -28,4 +28,9 @@
         <Setter Property="IsIndeterminate" Value="True" />
     </Style>
 
+    <Style x:Key="ButtonResult"
+                   TargetType="Button"
+                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+        <Setter Property="MinWidth" Value="200" />
+    </Style>
 </ResourceDictionary>

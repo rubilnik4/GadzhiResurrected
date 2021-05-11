@@ -9,7 +9,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FileDataEntity : FileDataEntityBase
+    public class FileDataEntity : FileDataEntityBase<FileDataSourceEntity>
     {
         /// <summary>
         /// Статус обработки файла
@@ -35,11 +35,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// Тип ошибки при конвертации файла
         /// </summary>
         public virtual IList<ErrorComponent> FileErrors { get; set; }
-
-        /// <summary>
-        /// Файлы отконвертированных данных в формате zip GZipStream
-        /// </summary>      
-        public virtual IList<FileDataSourceEntity> FileDataSourceServerEntities { get; protected set; }
 
         /// <summary>
         /// Ссылка на родительский класс

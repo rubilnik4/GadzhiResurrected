@@ -10,7 +10,9 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public abstract class PackageDataEntityBase : EntityBase<string>
+    public abstract class PackageDataEntityBase<TFileEntity, TFileSourceEntity> : EntityBase<string>
+        where TFileEntity : FileDataEntityBase<TFileSourceEntity>
+        where TFileSourceEntity: FileDataSourceEntityBase
     {
         /// <summary>
         /// Статус выполнения проекта
@@ -38,11 +40,16 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         public virtual string IdentityServerName { get; set; } = String.Empty;
 
         /// <summary>
+        /// Данные о отконвертированных файлах
+        /// </summary>       
+        public virtual IList<TFileEntity> FileDataEntities { get; protected set; }
+
+        /// <summary>
         /// Установить идентификатор
         /// </summary>        
         public virtual void SetId(Guid id)
         {
             Id = id.ToString();
-        }       
+        }
     }
 }

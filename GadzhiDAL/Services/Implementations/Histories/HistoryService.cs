@@ -37,24 +37,26 @@ namespace GadzhiDAL.Services.Implementations.Histories
         public async Task<IList<HistoryDataResponse>> GetHistoryData(HistoryDataRequest historyDataRequest)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            var historyArchive = await GetHistoryBase<PackageDataArchiveEntity>(unitOfWork, historyDataRequest);
-            var history = await GetHistoryBase<PackageDataEntity>(unitOfWork, historyDataRequest);
+            var historyArchive = await GetHistoryBase<PackageDataArchiveEntity, FileDataArchiveEntity, FileDataSourceArchiveEntity>(unitOfWork, historyDataRequest);
+            var history = await GetHistoryBase<PackageDataEntity, FileDataEntity, FileDataSourceEntity>(unitOfWork, historyDataRequest);
             return historyArchive.Concat(history).ToList();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private static async Task<IReadOnlyCollection<HistoryDataResponse>> GetHistoryBase<TEntity>(IUnitOfWork unitOfWork,
+        private static async Task<IReadOnlyCollection<HistoryDataResponse>> GetHistoryBase<TEntity, TFileEntity, TFileSourceEntity>(IUnitOfWork unitOfWork,
                                                                                                     HistoryDataRequest historyDataRequest)
-            where TEntity : PackageDataEntityBase =>
+            where TEntity : PackageDataEntityBase<TFileEntity, TFileSourceEntity>
+            where TFileEntity : FileDataEntityBase<TFileSourceEntity>
+            where TFileSourceEntity : FileDataSourceEntityBase =>
             await unitOfWork.Session.Query<TEntity>().
             Where(package => package.CreationDateTime >= GetDateTimeByDate(historyDataRequest.DateTimeFrom) &&
                              package.CreationDateTime <= GetDateTimeByDate(historyDataRequest.DateTimeTo.AddDays(1)) &&
                              (String.IsNullOrWhiteSpace(historyDataRequest.ClientName) || package.IdentityLocalName == historyDataRequest.ClientName)).
             OrderBy(package => package.CreationDateTime).
             ToListAsync().
-            MapAsync(HistoryDataConverter.ToResponses);
+            MapAsync(HistoryDataConverter.ToResponses<TEntity, TFileEntity, TFileSourceEntity>);
 
         /// <summary>
         /// Получить дату без времени

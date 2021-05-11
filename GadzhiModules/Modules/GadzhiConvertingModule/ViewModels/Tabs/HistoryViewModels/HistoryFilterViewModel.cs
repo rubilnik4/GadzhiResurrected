@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiDTOBase.TransferModels.Histories;
 using GadzhiModules.Infrastructure.Implementations.Converters.Histories;
+using GadzhiModules.Infrastructure.Implementations.Identities;
 using GadzhiModules.Infrastructure.Implementations.Services;
 using Nito.Mvvm;
 using Prism.Commands;
@@ -21,7 +23,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
                                       Action<HistoryDataRequest> historySearch)
         {
             _historyClientServiceFactory = historyClientServiceFactory;
-            HistorySearchCommand = new DelegateCommand(() => historySearch(GetHistoryDataRequest()));
+            HistorySearchCommand = new DelegateCommand(() => historySearch(GetHistoryDataRequest()),
+                                                       () => ClientNames.IsCompleted);
         }
 
         /// <summary>
@@ -30,6 +33,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         public void OnInitialize()
         {
             ClientNames ??= NotifyTask.Create(GetClientNames);
+            ClientNames.PropertyChanged += ClientNamesOnPropertyChanged;
         }
 
         /// <summary>
@@ -115,13 +119,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
                                okFunc: result => result.Value.ToList(),
                                badFunc: result => new List<string>()).
             MapAsync(names => new List<string> { FILTER_CLIENTS_ALL }.Concat(names).ToList()).
-            VoidAsync(names => SelectedClientName = names.First());
+            VoidAsync(names => SelectedClientName = names.Contains(ClientIdentity.ClientIdentityName)
+                                ? ClientIdentity.ClientIdentityName
+                                : names.First());
 
         /// <summary>
         /// Получить запрос поиска истории
         /// </summary>
         private HistoryDataRequest GetHistoryDataRequest() =>
             HistoryDataConverter.ToHistoryDataRequest(DateTimeFrom, DateTimeTo, SelectedClientName);
+
+
+        /// <summary>
+        /// Событие при изменении имен пользователей
+        /// </summary>
+        private void ClientNamesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            HistorySearchCommand.RaiseCanExecuteChanged();
+        }
 
         #region IDisposable
         public void Dispose()

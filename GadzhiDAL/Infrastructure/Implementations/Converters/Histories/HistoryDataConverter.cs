@@ -14,16 +14,20 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Histories
         /// <summary>
         /// Преобразовать в транспортные модели
         /// </summary>
-        public static IReadOnlyCollection<HistoryDataResponse> ToResponses<TEntity>(IEnumerable<TEntity> packages)
-            where TEntity : PackageDataEntityBase =>
-            packages.Select(ToResponse).ToList();
+        public static IReadOnlyCollection<HistoryDataResponse> ToResponses<TEntity, TFileEntity, TFileSourceEntity>(IEnumerable<TEntity> packages)
+            where TEntity : PackageDataEntityBase<TFileEntity, TFileSourceEntity>
+            where TFileEntity : FileDataEntityBase<TFileSourceEntity>
+            where TFileSourceEntity : FileDataSourceEntityBase =>
+            packages.Select(ToResponse<TEntity, TFileEntity, TFileSourceEntity>).ToList();
 
         /// <summary>
         /// Преобразовать в транспортную модель
         /// </summary>
-        public static HistoryDataResponse ToResponse<TEntity>(TEntity package)
-            where TEntity : PackageDataEntityBase =>
+        public static HistoryDataResponse ToResponse<TEntity, TFileEntity, TFileSourceEntity>(TEntity package)
+            where TEntity : PackageDataEntityBase<TFileEntity, TFileSourceEntity>
+            where TFileEntity : FileDataEntityBase<TFileSourceEntity>
+            where TFileSourceEntity : FileDataSourceEntityBase =>
             new HistoryDataResponse(Guid.Parse(package.Id), package.CreationDateTime, package.IdentityLocalName,
-                                    package.StatusProcessingProject, 0);
+                                    package.StatusProcessingProject, package.FileDataEntities.Count);
     }
 }

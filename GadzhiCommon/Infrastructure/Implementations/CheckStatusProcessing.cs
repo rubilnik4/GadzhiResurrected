@@ -20,6 +20,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             StatusProcessingProject.ConvertingComplete,
             StatusProcessingProject.Error,
             StatusProcessingProject.Abort,
+            StatusProcessingProject.End,
         };
 
         /// <summary>

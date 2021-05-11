@@ -10,7 +10,7 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     /// <summary>
     /// Класс содержащий данные о конвертируемом пакете в базе данных
     /// </summary>
-    public class PackageDataEntity : PackageDataEntityBase
+    public class PackageDataEntity : PackageDataEntityBase<FileDataEntity, FileDataSourceEntity>
     {
         /// <summary>
         /// Количество попыток конвертирования
@@ -21,11 +21,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// Данные о отконвертированных файлах
         /// </summary>       
         public virtual ConvertingSettingsComponent ConvertingSettings { get; set; }
-
-        /// <summary>
-        /// Данные о отконвертированных файлах
-        /// </summary>       
-        public virtual IList<FileDataEntity> FileDataEntities { get; protected set; }
 
         /// <summary>
         /// Поместить файлы в пакет для конвертирования и присвоить ссылки

@@ -58,11 +58,10 @@
                              ItemsSource="{Binding HistoryTypes}"
                              SelectedItem="{Binding SelectedHistoryType, Mode=TwoWay}"/>
 
-
                     <TextBlock Grid.Row="1"
-                           Grid.Column="0" 
-                           Style="{StaticResource TextBlockDescription}"
-                           Text="Пользователь:"/>
+                               Grid.Column="0" 
+                               Style="{StaticResource TextBlockDescription}"
+                               Text="Пользователь:"/>
 
                     <DockPanel Grid.Row="1"
                                Grid.Column="1">
@@ -117,13 +116,14 @@
                       Margin="0 3 0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <Button Grid.Column="1"
                             Content="Получить"
-                            Command="{Binding HistorySearchCommand}"/>
+                            Command="{Binding HistorySearchCommand}"
+                            Style="{StaticResource ButtonResult}"/>
                 </Grid>
             </Grid>
         </GroupBox>
