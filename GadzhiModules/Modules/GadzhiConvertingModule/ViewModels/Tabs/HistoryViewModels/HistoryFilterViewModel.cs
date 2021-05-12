@@ -20,7 +20,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
     public class HistoryFilterViewModel : BindableBase, IDisposable
     {
         public HistoryFilterViewModel(HistoryClientServiceFactory historyClientServiceFactory,
-                                      Action<HistoryDataRequest> historySearch)
+                                      Func<HistoryDataRequest, Task> historySearch)
         {
             _historyClientServiceFactory = historyClientServiceFactory;
             HistorySearchCommand = new DelegateCommand(() => historySearch(GetHistoryDataRequest()),

@@ -48,6 +48,12 @@ namespace GadzhiWcfHost.Services.Histories
         /// Получить список пакетов
         /// </summary>
         public async Task<IList<HistoryDataResponse>> GetHistoryData(HistoryDataRequest historyDataRequest) =>
-         await _historyService.GetHistoryData(historyDataRequest);
+            await _historyService.GetHistoryData(historyDataRequest);
+
+        /// <summary>
+        /// Получить файла обработанных данных по идентификатору
+        /// </summary>
+        public async Task<IList<HistoryFileDataResponse>> GetHistoryFileData(Guid packageId) =>
+            await _historyService.GetHistoryFileData(packageId);
     }
 }

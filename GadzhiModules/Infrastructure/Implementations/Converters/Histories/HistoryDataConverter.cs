@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GadzhiCommon.Models.Interfaces.LibraryData.Histories;
+using GadzhiCommon.Models.Interfaces.Histories;
 using GadzhiDTOBase.TransferModels.Histories;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Histories;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels;

@@ -5,6 +5,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations.Converters.Histories;
 using GadzhiModules.Infrastructure.Implementations.Services;
 using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels;
 
@@ -15,12 +16,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
     /// </summary>
     public class HistoryViewModel : ViewModelBase
     {
-        public HistoryViewModel(IDialogService dialogService,
-                                HistoryClientServiceFactory historyClientServiceFactory,
-                                ConvertingClientServiceFactory convertingClientServiceFactory)
+        public HistoryViewModel(IDialogService dialogService, HistoryClientServiceFactory historyClientServiceFactory,
+                                ConvertingClientServiceFactory convertingClientServiceFactory,
+                                IConverterClientPackageDataFromDto converterClientPackageDataFromDto)
         {
             DialogService = dialogService;
-            HistoryDataViewModel = new HistoryDataViewModel(historyClientServiceFactory, convertingClientServiceFactory);
+            HistoryDataViewModel = new HistoryDataViewModel(historyClientServiceFactory, convertingClientServiceFactory, 
+                                                            converterClientPackageDataFromDto, dialogService);
             HistoryFilterViewModel = new HistoryFilterViewModel(historyClientServiceFactory, HistoryDataViewModel.UpdateHistoryData);
         }
         /// <summary>

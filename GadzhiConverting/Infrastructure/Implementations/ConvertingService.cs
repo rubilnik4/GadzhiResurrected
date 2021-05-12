@@ -113,7 +113,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             if (!CheckSignatures()) return;
 
             _messagingService.ShowMessage("Запуск процесса конвертирования...");
-            KillPreviousRunProcesses();
+            ConvertingTimeActions.KillPreviousRunProcesses();
 
             SubscribeToDataBase();
         }
@@ -146,18 +146,16 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Отметки при запуске конвертирования файла
         /// </summary>
-        private void StartConvertingFile()
-        {
+        private void StartConvertingFile() =>
             IsConverting = true;
-        }
+        
 
         /// <summary>
         /// Отметки при завершении конвертирования файла
         /// </summary>
-        private void StopConvertingFile()
-        {
+        private void StopConvertingFile() =>
             IsConverting = false;
-        }
+        
 
         /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
@@ -191,7 +189,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                    Void(_ => _messagingService.ShowMessage($"Конвертация пакета {package.Id}")).
                                    Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation,
                                                                         ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString())).
-                                   Void(_ => KillPreviousRunProcesses()).
+                                   Void(_ => ConvertingTimeActions.KillPreviousRunProcesses()).
                                    Map(_ => ConvertingFilesData(package)).
                                    MapAsync(ReplyPackageIsComplete),
                 badFunc: package => Task.FromResult(ReplyPackageIsInvalid(package))).
@@ -332,88 +330,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>       
         private async Task ActionsInEmptyQueue()
         {
-            await SignaturesOnDataBase();
-            await CheckAndDeleteUnusedPackagesOnDataBase();
-            await DeleteAllUnusedDataOnDisk();
+            await ConvertingTimeActions.SignaturesOnDataBase(_projectSettings, _messagingService, _loggerService);
+            await ConvertingTimeActions.CheckAndDeleteUnusedPackagesOnDataBase(_convertingServerServiceFactory, _messagingService, _loggerService);
+            await ConvertingTimeActions.DeleteAllUnusedDataOnDisk(_fileSystemOperations, _messagingService, _loggerService);
             await QueueIsEmpty();
-        }
-
-        /// <summary>
-        /// Удалить все предыдущие запущенные процессы
-        /// </summary>
-        [Logger]
-        private static void KillPreviousRunProcesses()
-        {
-            var processes = Process.GetProcesses().
-                            Where(process => process.ProcessName.ContainsIgnoreCase("ustation") ||
-                                             process.ProcessName.ContainsIgnoreCase("winword") ||
-                                             process.ProcessName.ContainsIgnoreCase("excel"));
-            foreach (var process in processes) process.Kill();
-        }
-
-        /// <summary>
-        /// Проверить ресурсы в базе
-        /// </summary>
-        [Logger]
-        private async Task SignaturesOnDataBase()
-        {
-            var dateTimeNow = DateTime.Now;
-            var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.SignaturesCheck).Ticks);
-            if (timeElapsed.TotalHours > ProjectSettings.IntervalSignatureUpdate)
-            {
-                _messagingService.ShowMessage("Перезагрузка ресурсов...");
-                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
-
-                await _projectSettings.ConvertingResources.ReloadResources();
-
-                Properties.Settings.Default.SignaturesCheck = new TimeSpan(dateTimeNow.Ticks);
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        /// <summary>
-        /// Проверить и удалить ненужные пакеты в базе
-        /// </summary>
-        [Logger]
-        private async Task CheckAndDeleteUnusedPackagesOnDataBase()
-        {
-            var dateTimeNow = DateTime.Now;
-            var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.UnusedDataCheck).Ticks);
-            if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
-            {
-                _messagingService.ShowMessage("Очистка неиспользуемых пакетов...");
-                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
-
-                var  result = await _convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow));
-                if(result.HasErrors)
-                {
-                    _messagingService.ShowErrors(result.Errors);
-                    _loggerService.ErrorsLog(result.Errors);
-                }
-
-                Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        /// <summary>
-        /// Очистить папку с обработанными файлами на жестком диске
-        /// </summary>
-        private async Task DeleteAllUnusedDataOnDisk()
-        {
-            var dateTimeNow = DateTime.Now;
-            var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.ConvertingDataFolderCheck).Ticks);
-            if (timeElapsed.TotalHours > ProjectSettings.IntervalHoursToDeleteUnusedPackages)
-            {
-                _messagingService.ShowMessage("Очистка пространства на жестком диске...");
-                _loggerService.LogByMethodBase(LoggerLevel.Debug, ReflectionInfo.GetMethodBase(this));
-
-                await Task.Run(() => _fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory, DateTime.Now,
-                                                                                    ProjectSettings.IntervalHoursToDeleteUnusedPackages));
-
-                Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
-                Properties.Settings.Default.Save();
-            }
         }
 
         #region IDisposable Support

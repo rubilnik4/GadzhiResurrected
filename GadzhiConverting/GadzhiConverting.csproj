@@ -225,6 +225,7 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\ConvertingTimeActions.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\ConvertingModeChoice.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />

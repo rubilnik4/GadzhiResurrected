@@ -1,6 +1,6 @@
 ﻿using System;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.Interfaces.LibraryData.Histories;
+using GadzhiCommon.Models.Interfaces.Histories;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels.HistoryViewModelItems

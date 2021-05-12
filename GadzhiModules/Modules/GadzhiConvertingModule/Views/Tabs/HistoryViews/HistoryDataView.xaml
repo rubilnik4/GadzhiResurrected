@@ -20,9 +20,6 @@
                                                   TrueValue="Visible" 
                                                   FalseValue="Hidden"/>
         </Grid.Resources>
-
-        <ProgressBar Style="{StaticResource PreLoadingProgressData}"
-                     Visibility="{Binding HistoryViewModelItems.IsNotCompleted, Converter={StaticResource VisibilityConverterHidden}}"/>
         
         <Border Margin="10 0 10 5"
                 BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
@@ -35,7 +32,7 @@
                 </Grid.RowDefinitions>
 
                 <DataGrid Grid.Row="0"
-                          ItemsSource="{Binding HistoryViewModelItems.Result}"
+                          ItemsSource="{Binding HistoryViewModelItems}"
                           SelectedItem="{Binding SelectedHistoryViewModelItem, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           EnableRowVirtualization="True"
@@ -60,6 +57,10 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
+                <ProgressBar Grid.Row="0"
+                             Style="{StaticResource PreLoadingProgressData}"
+                             Visibility="{Binding IsLoading, Converter={StaticResource VisibilityConverterHidden}}"/>
+
                 <Grid Grid.Row="1"
                       Margin="0 5 0 3">
                     <Grid.ColumnDefinitions>
@@ -76,7 +77,8 @@
                             Command="{Binding DownloadFilesDataCommand}"/>
                     <Button Grid.Column="3"
                             Content="Просмотреть файлы"
-                            Style="{StaticResource ButtonResult}"/>
+                            Style="{StaticResource ButtonResult}"
+                            Command="{Binding ShowFilesDataCommand}"/>
                 </Grid>
             </Grid>
         </Border>

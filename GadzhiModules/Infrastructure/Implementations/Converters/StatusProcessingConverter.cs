@@ -20,6 +20,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                 { StatusProcessing.ConvertingComplete, "Удачненько" },
                 { StatusProcessing.Writing , "Записываем" },
                 { StatusProcessing.End, "Готово" },
+                { StatusProcessing.Archive, "В архиве" },
             };
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
@@ -7,10 +8,12 @@ using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
-using GadzhiCommon.Models.Interfaces.LibraryData.Histories;
 using GadzhiDTOBase.TransferModels.Histories;
+using GadzhiDTOClient.TransferModels.FilesConvert;
 using GadzhiModules.Infrastructure.Implementations.Converters.Histories;
 using GadzhiModules.Infrastructure.Implementations.Services;
+using GadzhiModules.Infrastructure.Interfaces;
+using GadzhiModules.Infrastructure.Interfaces.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels.HistoryViewModelItems;
 using Nito.Mvvm;
 using Prism.Commands;
@@ -24,12 +27,17 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
     public class HistoryDataViewModel : BindableBase
     {
         public HistoryDataViewModel(HistoryClientServiceFactory historyClientServiceFactory,
-                                    ConvertingClientServiceFactory convertingClientServiceFactory)
+                                    ConvertingClientServiceFactory convertingClientServiceFactory,
+                                    IConverterClientPackageDataFromDto converterClientPackageDataFromDto,
+                                    IDialogService dialogService)
         {
             _historyClientServiceFactory = historyClientServiceFactory;
             _convertingClientServiceFactory = convertingClientServiceFactory;
-            DownloadFilesDataCommand = new DelegateCommand(async () => await GetFilesData(),
-                                                           CanDownloadFilesData);
+            _converterClientPackageDataFromDto = converterClientPackageDataFromDto;
+            _dialogService = dialogService;
+            DownloadFilesDataCommand = new DelegateCommand(async () => await GetFilesData(), CanDownloadFilesData);
+            ShowFilesDataCommand = new DelegateCommand(async () => await ShowFilesData(),
+                                                       () => SelectedHistoryViewModelItem != null);
         }
 
         /// <summary>
@@ -43,15 +51,39 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         private readonly ConvertingClientServiceFactory _convertingClientServiceFactory;
 
         /// <summary>
-        /// Данные истории конвертаций
+        /// Конвертеры из трансферной модели в локальную
+        /// </summary>  
+        private readonly IConverterClientPackageDataFromDto _converterClientPackageDataFromDto;
+
+        /// <summary>
+        /// Стандартные диалоговые окна
         /// </summary>
-        private NotifyTask<IReadOnlyCollection<HistoryDataViewModelItem>> _historyViewModelItems =
-            NotifyTask.Create(Task.FromResult((IReadOnlyCollection<HistoryDataViewModelItem>)new List<HistoryDataViewModelItem>()));
+        private readonly IDialogService _dialogService;
+
+        /// <summary>
+        /// Загрузка
+        /// </summary>
+        private bool _isLoading;
+
+        /// <summary>
+        /// Загрузка
+        /// </summary>
+        public bool IsLoading 
+        {
+            get => _isLoading;
+            private set => SetProperty(ref _isLoading, value); 
+        }
 
         /// <summary>
         /// Данные истории конвертаций
         /// </summary>
-        public NotifyTask<IReadOnlyCollection<HistoryDataViewModelItem>> HistoryViewModelItems
+        private IReadOnlyCollection<HistoryDataViewModelItem> _historyViewModelItems =
+            new List<HistoryDataViewModelItem>();
+
+        /// <summary>
+        /// Данные истории конвертаций
+        /// </summary>
+        public IReadOnlyCollection<HistoryDataViewModelItem> HistoryViewModelItems
         {
             get => _historyViewModelItems;
             private set => SetProperty(ref _historyViewModelItems, value);
@@ -61,6 +93,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         /// Команда получения файлов
         /// </summary>
         public DelegateCommand DownloadFilesDataCommand { get; }
+
+        /// <summary>
+        /// Команда просмотра файлов
+        /// </summary>
+        public DelegateCommand ShowFilesDataCommand { get; }
 
         /// <summary>
         /// Выбранная позиция данных истории
@@ -77,14 +114,19 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
             {
                 SetProperty(ref _selectedHistoryViewModelItem, value);
                 DownloadFilesDataCommand.RaiseCanExecuteChanged();
+                ShowFilesDataCommand.RaiseCanExecuteChanged();
             }
         }
 
         /// <summary>
         /// Обновить данные истории конвертаций
         /// </summary>
-        public void UpdateHistoryData(HistoryDataRequest historyDataRequest) =>
-            HistoryViewModelItems = NotifyTask.Create(GetHistoryData(historyDataRequest));
+        public Task UpdateHistoryData(HistoryDataRequest historyDataRequest) =>
+            new ResultValue<HistoryDataRequest>(historyDataRequest).
+            ResultVoidOk(_ => IsLoading = true).
+            ResultValueOkAsync(GetHistoryData).
+            ResultVoidOkAsync(historyViewModelItems => HistoryViewModelItems = historyViewModelItems).
+            ResultVoidAsync(_ => IsLoading = false);
 
         /// <summary>
         /// Получить данные истории конвертаций
@@ -102,11 +144,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         /// </summary>
         private async Task GetFilesData() =>
             await new ResultValue<HistoryDataViewModelItem>(SelectedHistoryViewModelItem,
-                                                            new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
-                                                                            "Строка не выделена")).
-            ResultValueOkAsync(package => _convertingClientServiceFactory.
-                                          UsingServiceRetry(service => service.Operations.GetCompleteFiles(package.HistoryData.PackageId))).
-            ResultValueOkAsync(package => package);
+                                                            new ErrorCommon(ErrorConvertingType.ValueNotInitialized, "Строка не выделена")).
+            ResultVoidOk(_ => IsLoading = true).
+            ResultValueOkBindAsync(package => _convertingClientServiceFactory.
+                UsingServiceRetry(service => service.Operations.GetCompleteFiles(package.HistoryData.PackageId))).
+            ResultValueOkAsync(package => _converterClientPackageDataFromDto.ToFilesStatusAndSaveFiles(package)).
+            ResultValueOkAsync(packageStatus => Path.GetDirectoryName(packageStatus.FileStatus.First().FilePath)).
+            ResultVoidAsync(_ => IsLoading = false).
+            ResultVoidOkAsync(filePath => _dialogService.ShowMessage($"Файлы загружены\nПуть: {filePath}")).
+            ResultVoidBadAsync(errors => _dialogService.ShowErrors(errors));
 
         /// <summary>
         /// Доступность загрузки данных
@@ -114,5 +160,19 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         private bool CanDownloadFilesData() =>
             SelectedHistoryViewModelItem != null &&
             CheckStatusProcessing.CompletedStatusProcessingProject.Contains(SelectedHistoryViewModelItem.HistoryData.StatusProcessingProject);
+
+        /// <summary>
+        /// Просмотреть файлы из выбранного пакета
+        /// </summary>
+        /// <returns></returns>
+        private async Task ShowFilesData() =>
+            await new ResultValue<HistoryDataViewModelItem>(SelectedHistoryViewModelItem,
+                                                            new ErrorCommon(ErrorConvertingType.ValueNotInitialized, "Строка не выделена")).
+            ResultVoidOk(_ => IsLoading = true).
+            ResultValueOkBindAsync(package => _historyClientServiceFactory.
+                UsingServiceRetry(service => service.Operations.GetHistoryFileData(package.HistoryData.PackageId))).
+            ResultValueOkAsync(HistoryFileDataConverter.ToClients).
+            ResultVoidAsync(_ => IsLoading = false)
+        ;
     }
 }

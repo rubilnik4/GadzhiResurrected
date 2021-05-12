@@ -1,7 +1,7 @@
 ﻿using System;
 using GadzhiCommon.Enums.FilesConvert;
 
-namespace GadzhiCommon.Models.Interfaces.LibraryData.Histories
+namespace GadzhiCommon.Models.Interfaces.Histories
 {
     /// <summary>
     /// Данные истории конвертаций

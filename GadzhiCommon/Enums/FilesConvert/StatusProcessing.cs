@@ -12,5 +12,6 @@
         ConvertingComplete,
         Writing,
         End,
+        Archive
     }
 }

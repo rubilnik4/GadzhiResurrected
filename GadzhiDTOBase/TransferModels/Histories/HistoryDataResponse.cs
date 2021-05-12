@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiCommon.Models.Interfaces.LibraryData.Histories;
+using GadzhiCommon.Models.Interfaces.Histories;
 
 namespace GadzhiDTOBase.TransferModels.Histories
 {

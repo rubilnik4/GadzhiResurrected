@@ -12,11 +12,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
     public class FileDataEntity : FileDataEntityBase<FileDataSourceEntity>
     {
         /// <summary>
-        /// Статус обработки файла
-        /// </summary>     
-        public virtual StatusProcessing StatusProcessing { get; set; } = StatusProcessing.InQueue;
-
-        /// <summary>
         /// Конвертируемый файл данных в формате zip GZipStream
         /// </summary>       
         public virtual IList<byte> FileDataSource { get; set; }
@@ -30,11 +25,6 @@ namespace GadzhiDAL.Entities.FilesConvert.Main
         /// Дополнительный файл данных в формате zip GZipStream
         /// </summary>       
         public virtual IList<byte> FileDataSourceAdditional { get; set; }
-
-        /// <summary>
-        /// Тип ошибки при конвертации файла
-        /// </summary>
-        public virtual IList<ErrorComponent> FileErrors { get; set; }
 
         /// <summary>
         /// Ссылка на родительский класс

@@ -106,6 +106,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             {
                 var packageDataArchiveEntity = await ConverterToArchive.PackageDataToArchive(packageDataEntity);
                 await unitOfWork.Session.SaveOrUpdateAsync(packageDataArchiveEntity);
+                await unitOfWork.Session.DeleteAsync(packageDataEntity);
             }
 
             await unitOfWork.CommitAsync();

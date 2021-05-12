@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiDTOBase.TransferModels.Histories;
@@ -22,5 +23,11 @@ namespace GadzhiDTOClient.Contracts.Histories
         /// </summary>
         [OperationContract]
         Task<IList<HistoryDataResponse>> GetHistoryData(HistoryDataRequest historyDataRequest);
+
+        /// <summary>
+        /// Получить файла обработанных данных по идентификатору
+        /// </summary>
+        [OperationContract]
+        Task<IList<HistoryFileDataResponse>> GetHistoryFileData(Guid packageId);
     }
 }

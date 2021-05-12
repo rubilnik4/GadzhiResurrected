@@ -2,6 +2,7 @@
 using GadzhiDAL.Entities.FilesConvert.Main;
 using System.Collections.Generic;
 using System.Linq;
+using GadzhiDAL.Entities.FilesConvert.Base.Components;
 
 namespace GadzhiDAL.Entities.FilesConvert.Base
 {
@@ -27,8 +28,18 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         public virtual ColorPrintType ColorPrintType { get; set; }
 
         /// <summary>
+        /// Статус обработки файла
+        /// </summary>     
+        public virtual StatusProcessing StatusProcessing { get; set; }
+
+        /// <summary>
         /// Файлы отконвертированных данных в формате zip GZipStream
         /// </summary>      
         public virtual IList<TSourceEntity> FileDataSourceServerEntities { get; protected set; }
+
+        /// <summary>
+        /// Тип ошибки при конвертации файла
+        /// </summary>
+        public virtual IList<ErrorComponent> FileErrors { get; set; }
     }
 }

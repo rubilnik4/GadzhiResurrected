@@ -4,6 +4,7 @@ using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDAL.Infrastructure.Implementations.DateTimes;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
@@ -57,6 +58,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                 FileDataSource = fileDataRequest.FileDataSource,
                 FileExtensionAdditional = fileDataRequest.FileExtensionAdditional,
                 FileDataSourceAdditional = fileDataRequest.FileDataSourceAdditional,
+                StatusProcessing = StatusProcessing.InQueue,
             };
     }
 }
