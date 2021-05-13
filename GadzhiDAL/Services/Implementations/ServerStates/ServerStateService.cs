@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
-using GadzhiDAL.Entities.FilesConvert.Archive;
-using GadzhiDAL.Entities.FilesConvert.Base;
-using GadzhiDAL.Entities.FilesConvert.Main;
+using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces.ServerStates;
@@ -36,20 +34,17 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         public async Task<ServerCompleteFilesResponse> GetServerCompleteFiles()
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var countSource = await GetServerSourceCompleteFiles(unitOfWork);
 
-            var countSourceArchive = await GetServerSourceCompleteFiles<FileDataSourceArchiveEntity>(unitOfWork);
-            var countSource = await GetServerSourceCompleteFiles<FileDataSourceEntity>(unitOfWork);
-
-            return GetServerCompleteFiles(countSourceArchive, countSource);
+            return GetServerCompleteFiles(countSource);
         }
 
         /// <summary>
         /// Получить информацию о обработанных файлах из архива и текущего списка
         /// </summary>
-        private static async Task<IReadOnlyCollection<FileExtensionCount>> GetServerSourceCompleteFiles <TSource>(IUnitOfWork unitOfWork)
-            where TSource: FileDataSourceEntityBase =>
+        private static async Task<IReadOnlyCollection<FileExtensionCount>> GetServerSourceCompleteFiles(IUnitOfWork unitOfWork)=>
             await unitOfWork.Session.
-            Query<TSource>().
+            Query<FileDataSourceEntity>().
             GroupBy(entity => entity.FileExtensionType).
             Select(group => new { Key = group.Key, Count = group.Count() }).
             ToListAsync().
@@ -58,17 +53,13 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         /// <summary>
         /// Получить информацию о обработанных файлах
         /// </summary>
-        private static ServerCompleteFilesResponse GetServerCompleteFiles(IEnumerable<FileExtensionCount> sourceArchiveCount,
-                                                                          IEnumerable<FileExtensionCount> sourceCount) =>
-            sourceArchiveCount.
-            Union(sourceCount).
-            ToList().
-            Map(completeFiles => new ServerCompleteFilesResponse(GetCompleteFilesCount(completeFiles, FileExtensionType.Dgn),
-                                                                 GetCompleteFilesCount(completeFiles, FileExtensionType.Doc) +
-                                                                 GetCompleteFilesCount(completeFiles, FileExtensionType.Docx),
-                                                                 GetCompleteFilesCount(completeFiles, FileExtensionType.Pdf),
-                                                                 GetCompleteFilesCount(completeFiles, FileExtensionType.Dwg),
-                                                                 GetCompleteFilesCount(completeFiles, FileExtensionType.Xlsx)));
+        private static ServerCompleteFilesResponse GetServerCompleteFiles(IReadOnlyCollection<FileExtensionCount> sourceCount) =>
+            new ServerCompleteFilesResponse(GetCompleteFilesCount(sourceCount, FileExtensionType.Dgn),
+                                                                 GetCompleteFilesCount(sourceCount, FileExtensionType.Doc) +
+                                                                 GetCompleteFilesCount(sourceCount, FileExtensionType.Docx),
+                                                                 GetCompleteFilesCount(sourceCount, FileExtensionType.Pdf),
+                                                                 GetCompleteFilesCount(sourceCount, FileExtensionType.Dwg),
+                                                                 GetCompleteFilesCount(sourceCount, FileExtensionType.Xlsx));
         /// <summary>
         /// Получить количество обработанных файлов по типу 
         /// </summary>

@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiDAL.Entities.FilesConvert.Archive;
-using GadzhiDAL.Entities.FilesConvert.Main;
+using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Services.Interfaces.ServerStates;
 using GadzhiDTOBase.TransferModels.ServerStates;
@@ -58,32 +57,18 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
 
             (string currentUser, string currentPackage, string currentFile, int filesInQueue) = await GetCurrentPackage(unitOfWork, serverName);
-            (int archivePackages, int archiveFiles) = await GetCompletePackagesAndFilesArchive(unitOfWork, serverName);
             (int packages, int files) = await GetCompletePackagesAndFiles(unitOfWork, serverName);
             return new ServerDetailQueueResponse(currentUser, currentPackage, currentFile, filesInQueue,
-                                                 packages + archivePackages, files + archiveFiles);
+                                                 packages, files);
         }
 
         /// <summary>
         /// Получить количество готовых пакетов
         /// </summary>
         private static async Task<int> GetCompletePackages(IUnitOfWork unitOfWork) =>
-            await unitOfWork.Session.Query<PackageDataArchiveEntity>().CountAsync().
-            MapBindAsync(archiveCount =>
-                unitOfWork.Session.
-                Query<PackageDataEntity>().
-                CountAsync(package => CheckStatusProcessing.CompletedStatusProcessingProject.Contains(package.StatusProcessingProject)).
-                MapAsync(count => count + archiveCount));
-
-        /// <summary>
-        /// Получить количество готовых пакетов по серверу в архиве
-        /// </summary>
-        private static async Task<(int, int)> GetCompletePackagesAndFilesArchive(IUnitOfWork unitOfWork, string serverName) =>
-            await unitOfWork.Session.Query<PackageDataArchiveEntity>().
-            Where(package => package.IdentityServerName == serverName).
-            Select(package => package.FileDataEntities.Count).
-            ToListAsync().
-            MapAsync(packageCount => (packageCount.Count, packageCount.Sum()));
+            await unitOfWork.Session.
+            Query<PackageDataEntity>().
+            CountAsync(package => CheckStatusProcessing.CompletedStatusProcessingProject.Contains(package.StatusProcessingProject));
 
         /// <summary>
         /// Получить количество готовых пакетов по серверу
@@ -103,12 +88,9 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         /// Получить количество готовых файлов
         /// </summary>
         private static async Task<int> GetCompleteFiles(IUnitOfWork unitOfWork) =>
-            await unitOfWork.Session.Query<FileDataArchiveEntity>().CountAsync().
-            MapBindAsync(archiveCount =>
-                unitOfWork.Session.
-                Query<FileDataEntity>().
-                CountAsync(fileData => CheckStatusProcessing.CompletedStatusProcessing.Contains(fileData.StatusProcessing)).
-                MapAsync(count => count + archiveCount));
+            await unitOfWork.Session.
+            Query<FileDataEntity>().
+            CountAsync(fileData => CheckStatusProcessing.CompletedStatusProcessing.Contains(fileData.StatusProcessing));
 
         /// <summary>
         /// Получить количество пакетов в очереди

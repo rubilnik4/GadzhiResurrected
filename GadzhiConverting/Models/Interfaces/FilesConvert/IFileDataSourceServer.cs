@@ -12,7 +12,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Формат печати
         /// </summary>
-        string PaperSize { get; }
+        IReadOnlyCollection<string> PaperSizes { get; }
 
         /// <summary>
         /// Имя принтера

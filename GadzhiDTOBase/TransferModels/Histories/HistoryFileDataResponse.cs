@@ -13,12 +13,13 @@ namespace GadzhiDTOBase.TransferModels.Histories
     public class HistoryFileDataResponse: IHistoryFileData
     {
         public HistoryFileDataResponse(string filePath, StatusProcessing statusProcessing,
-                                       IList<FileExtensionType> fileExtensionTypes, int errorCount)
+                                       IList<FileExtensionType> fileExtensionTypes, int errorCount, IList<string> paperSizes)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
             FileExtensionTypesList = fileExtensionTypes;
             ErrorCount = errorCount;
+            PaperSizesList = paperSizes;
         }
 
         /// <summary>
@@ -51,5 +52,18 @@ namespace GadzhiDTOBase.TransferModels.Histories
         /// </summary>
         [DataMember]
         public int ErrorCount { get; private set; }
+
+        /// <summary>
+        /// Форматы
+        /// </summary>
+        [DataMember]
+        public IList<string> PaperSizesList { get; private set; }
+
+        /// <summary>
+        /// Форматы
+        /// </summary>
+        [IgnoreDataMember]
+        public IReadOnlyCollection<string> PaperSizes =>
+            PaperSizesList.ToList();
     }
 }

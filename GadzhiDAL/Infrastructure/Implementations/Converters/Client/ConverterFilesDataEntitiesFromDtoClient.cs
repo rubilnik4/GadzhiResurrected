@@ -1,10 +1,11 @@
 ﻿using System;
-using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Components;
 using GadzhiDAL.Infrastructure.Implementations.DateTimes;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 

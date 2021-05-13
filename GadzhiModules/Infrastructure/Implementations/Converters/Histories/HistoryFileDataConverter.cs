@@ -24,6 +24,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters.Histories
         /// </summary>
         public static IHistoryFileData ToClient(HistoryFileDataResponse historyFileDataResponse) =>
             new HistoryFileDataClient(historyFileDataResponse.FilePath, historyFileDataResponse.StatusProcessing,
-                                      historyFileDataResponse.FileExtensionTypes, historyFileDataResponse.ErrorCount);
+                                      historyFileDataResponse.FileExtensionTypes, historyFileDataResponse.ErrorCount,
+                                      historyFileDataResponse.PaperSizes);
     }
 }

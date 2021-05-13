@@ -1,13 +1,14 @@
 ﻿using System;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Base.Components;
+using GadzhiDAL.Entities.PaperSizes;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
@@ -95,8 +96,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>      
         public static FileDataEntity UpdateFileDataFromResponse(FileDataEntity fileDataEntity, FileDataResponseServer fileDataResponse)
         {
-            var fileDataSourceEntity = fileDataResponse.FilesDataSource?.AsQueryable().
-                                                        Select(fileData => ToFileDataSource(fileData));
+            var fileDataSourceEntity = fileDataResponse.FilesDataSource?.Select(ToFileDataSource);
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
             fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
             fileDataEntity.SetFileDataSourceEntities(fileDataSourceEntity);
@@ -110,10 +110,13 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         public static FileDataSourceEntity ToFileDataSource(FileDataSourceResponseServer fileDataSourceResponseServer) =>
             new FileDataSourceEntity
             {
+                Id = Guid.NewGuid().ToString(),
                 FileName = fileDataSourceResponseServer.FileName,
                 FileExtensionType = fileDataSourceResponseServer.FileExtensionType,
                 FileDataSource = fileDataSourceResponseServer.FileDataSource,
-                PaperSize = fileDataSourceResponseServer.PaperSize,
+                PaperSizes = fileDataSourceResponseServer.PaperSizes.
+                             Select(paperSize => new PaperSizeEntity { PaperSize = paperSize}).
+                             ToList(),
                 PrinterName = fileDataSourceResponseServer.PrinterName,
             };
 

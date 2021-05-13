@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GadzhiDAL.Entities.FilesConvert.Base
+namespace GadzhiDAL.Entities.Base
 {
     /// <summary>
     /// Базовый класс для сущностей

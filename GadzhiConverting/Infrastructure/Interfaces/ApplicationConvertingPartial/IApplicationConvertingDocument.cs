@@ -33,8 +33,9 @@ namespace GadzhiConverting.Infrastructure.Interfaces.ApplicationConvertingPartia
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
-        IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath, 
-                                                               IConvertingSettings convertingSettings, ColorPrintType colorPrintType);
+        IResultCollection<IFileDataSourceServer> CreateProcessingFile(IDocumentLibrary documentLibrary, IFilePath filePathMain,
+                                                                      IFilePath filePathPdf, IConvertingSettings convertingSettings,
+                                                                      ColorPrintType colorPrintType);
 
         /// <summary>
         /// Экспортировать файл

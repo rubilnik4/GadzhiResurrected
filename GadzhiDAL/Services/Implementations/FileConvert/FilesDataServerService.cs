@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommonServer.Enums;
-using GadzhiDAL.Entities.FilesConvert.Main;
+using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
@@ -63,16 +63,24 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         /// </summary>      
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer)
         {
-            using var unitOfWork = _container.Resolve<IUnitOfWork>();
-            var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageId.ToString());
-
-            if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, packageDataEntity))
+            try
             {
-                ConverterFilesDataEntitiesFromDtoServer.UpdateFileDataFromIntermediateResponse(packageDataEntity, fileDataResponseServer);
-            }
+                using var unitOfWork = _container.Resolve<IUnitOfWork>();
+                var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageId.ToString());
 
-            await unitOfWork.CommitAsync();
-            return packageDataEntity.StatusProcessingProject;
+                if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, packageDataEntity))
+                {
+                    ConverterFilesDataEntitiesFromDtoServer.UpdateFileDataFromIntermediateResponse(packageDataEntity, fileDataResponseServer);
+                }
+
+                await unitOfWork.CommitAsync();
+                return packageDataEntity.StatusProcessingProject;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return StatusProcessingProject.Writing;
         }
 
         /// <summary>
@@ -104,9 +112,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
 
             foreach (var packageDataEntity in packageDataEntities)
             {
-                var packageDataArchiveEntity = await ConverterToArchive.PackageDataToArchive(packageDataEntity);
-                await unitOfWork.Session.SaveOrUpdateAsync(packageDataArchiveEntity);
-                await unitOfWork.Session.DeleteAsync(packageDataEntity);
+                ConverterToArchive.PackageDataToArchive(packageDataEntity);
             }
 
             await unitOfWork.CommitAsync();

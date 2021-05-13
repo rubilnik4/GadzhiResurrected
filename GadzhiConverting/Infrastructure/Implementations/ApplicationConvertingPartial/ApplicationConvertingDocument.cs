@@ -55,10 +55,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Сохранить файл PDF
         /// </summary>
         [Logger]
-        public IResultCollection<IFileDataSourceServer> CreatePdfFile(IDocumentLibrary documentLibrary, IFilePath filePath,
+        public IResultCollection<IFileDataSourceServer> CreateProcessingFile(IDocumentLibrary documentLibrary, IFilePath filePathMain, IFilePath filePathPdf,
                                                                       IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
-            ExecuteBindResultValue(() => CreateProcessingDocument(documentLibrary, filePath, convertingSettings, colorPrintType),
-                                         new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка сохранения файла PDF {filePath.FileNameClient}")).
+            ExecuteBindResultValue(() => CreateProcessingDocument(documentLibrary, filePathMain, filePathPdf, convertingSettings, colorPrintType),
+                                         new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка обработки файла {filePathMain.FileNameClient}")).
             ToResultCollection();
 
         /// <summary>

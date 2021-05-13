@@ -1,6 +1,5 @@
 ﻿using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
-using GadzhiDAL.Entities.FilesConvert.Main;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Base.Components;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 

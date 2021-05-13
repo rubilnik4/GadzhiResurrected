@@ -90,6 +90,21 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         }
 
         /// <summary>
+        /// Данные истории конвертации файлов
+        /// </summary>
+        private IReadOnlyCollection<HistoryFileDataViewModelItem> _historyFileViewModelItems =
+            new List<HistoryFileDataViewModelItem>();
+
+        /// <summary>
+        /// Данные истории конвертации файлов
+        /// </summary>
+        public IReadOnlyCollection<HistoryFileDataViewModelItem> HistoryFileViewModelItems
+        {
+            get => _historyFileViewModelItems;
+            private set => SetProperty(ref _historyFileViewModelItems, value);
+        }
+
+        /// <summary>
         /// Команда получения файлов
         /// </summary>
         public DelegateCommand DownloadFilesDataCommand { get; }
@@ -169,10 +184,19 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
             await new ResultValue<HistoryDataViewModelItem>(SelectedHistoryViewModelItem,
                                                             new ErrorCommon(ErrorConvertingType.ValueNotInitialized, "Строка не выделена")).
             ResultVoidOk(_ => IsLoading = true).
-            ResultValueOkBindAsync(package => _historyClientServiceFactory.
-                UsingServiceRetry(service => service.Operations.GetHistoryFileData(package.HistoryData.PackageId))).
+            ResultValueOkAsync(historyData => GetHistoryFileData(historyData.HistoryData.PackageId)).
+            ResultVoidOkAsync(historyFileViewModelItems => HistoryFileViewModelItems = historyFileViewModelItems).
+            ResultVoidAsync(_ => IsLoading = false);
+
+        /// <summary>
+        /// Получить данные истории конвертаций
+        /// </summary>
+        private async Task<IReadOnlyCollection<HistoryFileDataViewModelItem>> GetHistoryFileData(Guid packageId) =>
+            await _historyClientServiceFactory.UsingServiceRetry(service => service.Operations.GetHistoryFileData(packageId)).
             ResultValueOkAsync(HistoryFileDataConverter.ToClients).
-            ResultVoidAsync(_ => IsLoading = false)
-        ;
+            ResultValueOkAsync(historyFiles => historyFiles.Select(historyFile => new HistoryFileDataViewModelItem(historyFile))).
+            WhereContinueAsync(result => result.OkStatus,
+                               okFunc: result => result.Value.ToList(),
+                               badFunc: result => new List<HistoryFileDataViewModelItem>());
     }
 }

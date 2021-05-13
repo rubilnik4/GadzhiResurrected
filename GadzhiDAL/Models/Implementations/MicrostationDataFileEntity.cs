@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GadzhiDAL.Entities.Base;
 using GadzhiDAL.Entities.FilesConvert.Base;
 
 namespace GadzhiDAL.Models.Implementations

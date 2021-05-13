@@ -24,7 +24,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Получить штампы для печати
         /// </summary>
-        IResultAppCollection <IStamp> GetStampsToPrint();
+        IResultAppCollection<IStamp> GetStampsToPrint();
 
         /// <summary>
         /// Сжать поля
@@ -34,7 +34,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections
         /// <summary>
         /// Вставить подписи
         /// </summary>
-        IResultAppCollection <IStampSignature> InsertSignatures();
+        IResultAppCollection<IStampSignature> InsertSignatures();
 
         /// <summary>
         /// Удалить подписи

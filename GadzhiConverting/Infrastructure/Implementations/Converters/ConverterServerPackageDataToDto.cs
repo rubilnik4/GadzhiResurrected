@@ -97,7 +97,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             {
                 FileName = fileDataSourceServer.FileNameClient,
                 FileExtensionType = fileDataSourceServer.FileExtensionType,
-                PaperSize = fileDataSourceServer.PaperSize,
+                PaperSizes = fileDataSourceServer.PaperSizes.ToList(),
                 PrinterName = fileDataSourceServer.PrinterName,
                 FileDataSource = fileDataSourceZip,
             };

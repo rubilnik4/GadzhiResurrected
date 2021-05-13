@@ -11,12 +11,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Hi
     public class HistoryFileDataClient: IHistoryFileData
     {
         public HistoryFileDataClient(string filePath, StatusProcessing statusProcessing, 
-                                     IEnumerable<FileExtensionType> convertingFileTypes, int errorCount)
+                                     IEnumerable<FileExtensionType> convertingFileTypes, int errorCount, 
+                                     IEnumerable<string> paperSizes)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
             FileExtensionTypes = convertingFileTypes.ToList();
             ErrorCount = errorCount;
+            PaperSizes = paperSizes.ToList();
         }
 
         /// <summary>
@@ -38,5 +40,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Hi
         /// Количество ошибок
         /// </summary>
         public int ErrorCount { get; }
+
+        /// <summary>
+        /// Форматы
+        /// </summary>
+        public IReadOnlyCollection<string> PaperSizes { get; }
     }
 }

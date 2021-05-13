@@ -27,5 +27,10 @@ namespace GadzhiCommon.Models.Interfaces.Histories
         /// Количество ошибок
         /// </summary>
         int ErrorCount { get; }
+
+        /// <summary>
+        /// Форматы
+        /// </summary>
+        IReadOnlyCollection<string> PaperSizes { get; }
     }
 }

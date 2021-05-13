@@ -1,9 +1,9 @@
 ﻿using FluentNHibernate.Mapping;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDAL.Entities.FilesConvert.Main;
+using GadzhiDAL.Entities.FilesConvert;
 using NHibernate.Type;
 
-namespace GadzhiDAL.Mappings.FilesConvert.Main
+namespace GadzhiDAL.Mappings.FilesConvert
 {
     /// <summary>
     /// Структура в БД для конвертируемого файла

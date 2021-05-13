@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using GadzhiDAL.Entities.Base;
 using GadzhiDAL.Entities.FilesConvert.Base;
 using GadzhiDAL.Entities.Signatures.Components;
 

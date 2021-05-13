@@ -37,29 +37,42 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>
         [Logger]
-        private IResultCollection<IFileDataSourceServer> CreateProcessingDocument(IDocumentLibrary documentLibrary, IFilePath filePath,
+        private IResultCollection<IFileDataSourceServer> CreateProcessingDocument(IDocumentLibrary documentLibrary, IFilePath filePathMain, IFilePath filePathPdf,
                                                                                  IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
             documentLibrary.
             Void(_ => _messagingService.ShowMessage("Обработка штампов...")).
             GetStampContainer(convertingSettings.ToApplication()).
-            Map(stampContainer => StampContainerProcessing(stampContainer, documentLibrary, filePath, convertingSettings, colorPrintType));
+            Map(stampContainer => StampContainerProcessing(stampContainer, documentLibrary, filePathMain,
+                                                           filePathPdf, convertingSettings, colorPrintType));
 
         /// <summary>
         /// Обработать штампы и начать печать
         /// </summary>
         private IResultCollection<IFileDataSourceServer> StampContainerProcessing(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
-                                                                                  IFilePath filePath, IConvertingSettings convertingSettings,
-                                                                                  ColorPrintType colorPrintType) =>
+                                                                                  IFilePath filePathMain, IFilePath filePathPdf,
+                                                                                  IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
             stampContainer.
             Void(_ => _messagingService.ShowMessage("Подключение дополнительных элементов...")).
             Void(_ => documentLibrary.AttachAdditional()).
             Void(_ => _messagingService.ShowMessage("Форматирование полей...")).
             CompressFieldsRanges().
             Void(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), nameof(stampContainer.CompressFieldsRanges))).
+            Map(_ => GetSavedFileDataSource(stampContainer, documentLibrary, filePathMain)).
             WhereContinue(_ => ConvertingModeChoice.IsPdfConvertingNeed(convertingSettings.ConvertingModeType),
-                          _ => StampContainerCreatePdf(stampContainer, documentLibrary, filePath, convertingSettings, colorPrintType),
-                          _ => new ResultCollection<IFileDataSourceServer>()).
+                          filesDataSource => filesDataSource.ConcatResult(StampContainerCreatePdf(stampContainer, documentLibrary, filePathPdf, 
+                                                                                                  convertingSettings, colorPrintType)),
+                          filesDataSource => filesDataSource).
             Void(_ => documentLibrary.DetachAdditional());
+
+
+        /// <summary>
+        /// Получить путь к сохраненному файлу для обработки
+        /// </summary>        
+        private static IResultCollection<IFileDataSourceServer> GetSavedFileDataSource(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
+                                                                                       IFilePath filePath) =>
+            new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient, 
+                                     stampContainer.GetStampsToPrint().Value?.Select(stamp => stamp.PaperSize) ?? Enumerable.Empty<string>()).
+            Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource).ToResultCollection());
 
         /// <summary>
         /// Произвести печать PDF

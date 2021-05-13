@@ -13,17 +13,5 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     /// </summary>
     [DataContract]
     public class FileDataSourceResponseServer : FileDataSourceResponseBase
-    {
-        /// <summary>
-        /// Формат печати
-        /// </summary>
-        [DataMember]
-        public string PaperSize { get; set; }
-
-        /// <summary>
-        /// Имя принтера
-        /// </summary>
-        [DataMember]
-        public string PrinterName { get; set; }
-    }
+    { }
 }

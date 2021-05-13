@@ -280,6 +280,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryDataViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerInfoViewModel.cs" />

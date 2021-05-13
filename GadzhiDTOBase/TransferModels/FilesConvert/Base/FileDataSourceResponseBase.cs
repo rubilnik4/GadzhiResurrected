@@ -23,6 +23,18 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         public FileExtensionType FileExtensionType { get; set; }
 
         /// <summary>
+        /// Формат печати
+        /// </summary>
+        [DataMember]
+        public IList<string> PaperSizes { get; set; }
+
+        /// <summary>
+        /// Имя принтера
+        /// </summary>
+        [DataMember]
+        public string PrinterName { get; set; }
+
+        /// <summary>
         /// Файл данных в формате zip GZipStream
         /// </summary>
         [DataMember]

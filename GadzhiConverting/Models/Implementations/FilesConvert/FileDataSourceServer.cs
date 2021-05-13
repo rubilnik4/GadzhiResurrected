@@ -14,23 +14,34 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     public class FileDataSourceServer : FilePath, IFileDataSourceServer
     {
         public FileDataSourceServer(string filePathServer, string filePathClient)
-            : this(filePathServer, filePathClient, "-", "-")
+            : this(filePathServer, filePathClient, new List<string> { "-" }, "-")
+        { }
+
+        public FileDataSourceServer(string filePathServer, string filePathClient, string paperSize)
+           : this(filePathServer, filePathClient, new List<string> { paperSize }, "-")
+        { }
+
+        public FileDataSourceServer(string filePathServer, string filePathClient, IEnumerable<string> paperSizes)
+       : this(filePathServer, filePathClient, paperSizes, "-")
         { }
 
         public FileDataSourceServer(string filePathServer, string filePathClient, string paperSize, string printerName)
+          : this(filePathServer, filePathClient, new List<string> { paperSize }, printerName)
+        { }
+
+        public FileDataSourceServer(string filePathServer, string filePathClient, IEnumerable<string> paperSizes, string printerName)
             : base(filePathServer, filePathClient)
         {
-            if (String.IsNullOrWhiteSpace(paperSize)) throw new ArgumentNullException(nameof(paperSize));
             if (String.IsNullOrWhiteSpace(printerName)) throw new ArgumentNullException(nameof(printerName));
 
-            PaperSize = paperSize;
+            PaperSizes = paperSizes.ToList();
             PrinterName = printerName;
         }
 
         /// <summary>
         /// Формат печати
         /// </summary>
-        public string PaperSize { get; }
+        public IReadOnlyCollection<string> PaperSizes { get; }
 
         /// <summary>
         /// Имя принтера

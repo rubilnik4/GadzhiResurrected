@@ -19,16 +19,16 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampCo
     /// </summary>
     public class StampContainer : IStampContainer
     {
-        /// <summary>
-        /// Штампы
-        /// </summary>
-        private readonly IResultAppCollection<IStamp> _stamps;
-
         public StampContainer(IResultAppCollection<IStamp> stamps, StampContainerType stampContainerType)
         {
             _stamps = stamps ?? throw new ArgumentNullException(nameof(stamps));
             StampContainerType = stampContainerType;
         }
+
+        /// <summary>
+        /// Штампы
+        /// </summary>
+        private readonly IResultAppCollection<IStamp> _stamps;
 
         /// <summary>
         /// Тип контейнера штампов

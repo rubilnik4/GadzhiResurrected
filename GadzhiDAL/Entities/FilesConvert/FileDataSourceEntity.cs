@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiDAL.Entities.Base;
+using GadzhiDAL.Entities.PaperSizes;
 
-namespace GadzhiDAL.Entities.FilesConvert.Base
+namespace GadzhiDAL.Entities.FilesConvert
 {
     /// <summary>
     /// Информация об отконвертированных файлах в базе данных
     /// </summary>
-    public abstract class FileDataSourceEntityBase: EntityBase<int>
+    public class FileDataSourceEntity: EntityBase<int>
     {
         /// <summary>
         /// Идентификатор
@@ -30,11 +28,21 @@ namespace GadzhiDAL.Entities.FilesConvert.Base
         /// <summary>
         /// Формат печати
         /// </summary>
-        public virtual string PaperSize { get; set; }
+        public virtual IList<PaperSizeEntity> PaperSizes { get; set; }
 
         /// <summary>
         /// Имя принтера
         /// </summary>
         public virtual string PrinterName { get; set; }
+
+        /// <summary>
+        /// Файл данных в формате zip GZipStream
+        /// </summary>       
+        public virtual IList<byte> FileDataSource { get; set; }
+
+        /// <summary>
+        /// Ссылка на родительский класс
+        /// </summary>
+        public virtual FileDataEntity FileDataEntity { get; set; }
     }
 }

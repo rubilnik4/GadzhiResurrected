@@ -1,10 +1,11 @@
-﻿using GadzhiDAL.Entities.FilesConvert.Main;
-using GadzhiDTOBase.TransferModels.FilesConvert.Base;
+﻿using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.FilesConvert.Components;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
 {
