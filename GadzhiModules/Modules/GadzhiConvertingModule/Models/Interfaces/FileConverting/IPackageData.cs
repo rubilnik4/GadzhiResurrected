@@ -82,7 +82,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileCon
         /// <summary>
         /// Изменить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        void ChangeFileStatus(FileStatus fileStatus);
+        void ChangeFileStatus(StatusProcessingProject statusProcessingProject, FileStatus fileStatus);
 
         /// <summary>
         /// Изменить статус файлов и присвоить при необходимости ошибку

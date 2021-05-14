@@ -8,7 +8,5 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     /// </summary>
     [DataContract]
     public class FileDataShortResponseServer : FileDataShortResponseBase
-    {
-
-    }
+    { }
 }

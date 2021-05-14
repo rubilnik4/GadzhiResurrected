@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -56,39 +58,33 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         private void InitializeDelegateCommands()
         {
-            ClearFilesDelegateCommand = new DelegateCommand(
-               ClearFiles,
-               () => !IsLoading && !IsConverting).
-               ObservesProperty(() => IsLoading).
-               ObservesProperty(() => IsConverting);
+            ClearFilesCommand = new DelegateCommand(ClearFiles, () => !IsLoading && !IsConverting).
+                                        ObservesProperty(() => IsLoading).
+                                        ObservesProperty(() => IsConverting);
 
-            AddFromFilesDelegateCommand = new DelegateCommand(
-               AddFromFiles,
-               () => !IsLoading && !IsConverting).
-               ObservesProperty(() => IsLoading).
-               ObservesProperty(() => IsConverting);
+            AddFromFilesCommand = new DelegateCommand(AddFromFiles, () => !IsLoading && !IsConverting).
+                                          ObservesProperty(() => IsLoading).
+                                          ObservesProperty(() => IsConverting);
 
-            AddFromFoldersDelegateCommand = new DelegateCommand(
-               AddFromFolders,
-               () => !IsLoading && !IsConverting).
-               ObservesProperty(() => IsLoading).
-               ObservesProperty(() => IsConverting);
+            AddFromFoldersCommand = new DelegateCommand(AddFromFolders, () => !IsLoading && !IsConverting).
+                                            ObservesProperty(() => IsLoading).
+                                            ObservesProperty(() => IsConverting);
 
-            RemoveFilesDelegateCommand = new DelegateCommand(
-               RemoveFiles,
-               () => !IsLoading && !IsConverting).
-               ObservesProperty(() => IsLoading).
-               ObservesProperty(() => IsConverting);
+            RemoveFilesCommand = new DelegateCommand(RemoveFiles, () => !IsLoading && !IsConverting).
+                                         ObservesProperty(() => IsLoading).
+                                         ObservesProperty(() => IsConverting);
 
-            ConvertingFilesDelegateCommand = new DelegateCommand(
-               async () => await ConvertingFiles(),
-               () => !IsLoading && !IsConverting).
-               ObservesProperty(() => IsLoading).
-               ObservesProperty(() => IsConverting);
+            OpenContainingFolderCommand = new DelegateCommand(OpenContainingFolder, 
+                                                              () => SelectedFilesDataItemViewModels?.Count > 0).
+                                          ObservesProperty(() => SelectedFilesDataItems);
 
-            CloseApplicationDelegateCommand = new DelegateCommand(async () => await CloseApplication());
+            ConvertingFilesCommand = new DelegateCommand(async () => await ConvertingFiles(),
+                                                                 () => !IsLoading && !IsConverting).
+                                             ObservesProperty(() => IsLoading).
+                                             ObservesProperty(() => IsConverting);
 
-            AboutApplicationDelegateCommand = new DelegateCommand(async () => await AboutApplication());
+            CloseApplicationCommand = new DelegateCommand(async () => await CloseApplication());
+            AboutApplicationCommand = new DelegateCommand(async () => await AboutApplication());
         }
 
         /// <summary>
@@ -129,37 +125,42 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// <summary>
         /// Очистить список файлов
         /// </summary>       
-        public DelegateCommand ClearFilesDelegateCommand { get; private set; }
+        public DelegateCommand ClearFilesCommand { get; private set; }
 
         /// <summary>
         /// Добавить файлы для конвертации
         /// </summary>       
-        public DelegateCommand AddFromFilesDelegateCommand { get; private set; }
+        public DelegateCommand AddFromFilesCommand { get; private set; }
 
         /// <summary>
         /// Добавить папки для конвертации
         /// </summary>       
-        public DelegateCommand AddFromFoldersDelegateCommand { get; private set; }
+        public DelegateCommand AddFromFoldersCommand { get; private set; }
 
         /// <summary>
         /// Удалить файлы из списка
         /// </summary>       
-        public DelegateCommand RemoveFilesDelegateCommand { get; private set; }
+        public DelegateCommand RemoveFilesCommand { get; private set; }
+
+        /// <summary>
+        /// Удалить файлы из списка
+        /// </summary>       
+        public DelegateCommand OpenContainingFolderCommand { get; private set; }
 
         /// <summary>
         /// Конвертировать файлы
         /// </summary>       
-        public DelegateCommand ConvertingFilesDelegateCommand { get; private set; }
+        public DelegateCommand ConvertingFilesCommand { get; private set; }
 
         /// <summary>
         /// Закрыть приложение
         /// </summary>       
-        public DelegateCommand CloseApplicationDelegateCommand { get; private set; }
+        public DelegateCommand CloseApplicationCommand { get; private set; }
 
         /// <summary>
         /// О приложении
         /// </summary>       
-        public DelegateCommand AboutApplicationDelegateCommand { get; private set; }
+        public DelegateCommand AboutApplicationCommand { get; private set; }
 
         /// <summary>
         /// Индикатор конвертирования файлов
@@ -386,6 +387,16 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
 
             var filePaths = dataObject.GetFileDropList().Cast<string>().ToList();
             AddFromFilesAndFolders(filePaths);
+        }
+
+        /// <summary>
+        /// Открыть папку, содержащую файл
+        /// </summary>
+        private void OpenContainingFolder()
+        {
+            if (SelectedFilesDataItemViewModels == null || SelectedFilesDataItemViewModels.Count == 0) return;
+            string directoryPath = Path.GetDirectoryName(SelectedFilesDataItemViewModels.First().FilePath)?? String.Empty;
+            Process.Start(directoryPath);
         }
     }
 }

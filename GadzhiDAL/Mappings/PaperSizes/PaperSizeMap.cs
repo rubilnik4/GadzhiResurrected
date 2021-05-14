@@ -11,7 +11,6 @@ namespace GadzhiDAL.Mappings.PaperSizes
         public PaperSizeMap()
         {
             Id(x => x.PaperSize).Not.Nullable().Default("");
-            HasManyToMany(x => x.FileDataSources).Inverse();
         }
     }
 }

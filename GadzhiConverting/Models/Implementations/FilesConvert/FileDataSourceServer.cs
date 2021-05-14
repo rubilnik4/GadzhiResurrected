@@ -34,7 +34,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         {
             if (String.IsNullOrWhiteSpace(printerName)) throw new ArgumentNullException(nameof(printerName));
 
-            PaperSizes = paperSizes.ToList();
+            PaperSizes = paperSizes.Distinct().OrderBy(paperSize => paperSize).ToList();
             PrinterName = printerName;
         }
 

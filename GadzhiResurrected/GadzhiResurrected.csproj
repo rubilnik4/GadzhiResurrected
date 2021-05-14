@@ -34,7 +34,7 @@
     <ProductName>Gadzhi</ProductName>
     <PublisherName>Ivan Rubilnik</PublisherName>
     <MinimumRequiredVersion>1.0.0.9</MinimumRequiredVersion>
-    <ApplicationRevision>29</ApplicationRevision>
+    <ApplicationRevision>30</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -237,7 +237,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>  
+    </EmbeddedResource>
     <None Include="App.Debug.config">
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>true</IsTransformFile>
@@ -252,7 +252,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-   <ItemGroup>
+  <ItemGroup>
     <None Include="App.config">
       <TransformOnBuild>true</TransformOnBuild>
     </None>

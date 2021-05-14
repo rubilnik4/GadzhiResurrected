@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d"
-             xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels"
              xmlns:converters="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
+             xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels"
+             xmlns:historyViews="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.HistoryViews.HistoryDataItems"
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:HistoryDataViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,68 +20,27 @@
             <converters:BoolToVisibilityConverter x:Key="VisibilityConverterHidden"
                                                   TrueValue="Visible" 
                                                   FalseValue="Hidden"/>
+            <converters:BoolToVisibilityConverter x:Key="VisibilityConverterCollapsed"
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Collapsed"/>
         </Grid.Resources>
-        
+
         <Border Margin="10 0 10 5"
                 BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
                 BorderThickness="1" 
                 Padding="1">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <Grid Visibility="{Binding IsPackageMode, Converter={StaticResource VisibilityConverterCollapsed}}">
+                    <historyViews:HistoryDataPartView DataContext="{Binding HistoryDataViewModelPart}"/>
+                </Grid>
 
-                <DataGrid Grid.Row="0"
-                          ItemsSource="{Binding HistoryViewModelItems}"
-                          SelectedItem="{Binding SelectedHistoryViewModelItem, Mode=TwoWay}"
-                          AutoGenerateColumns="False"
-                          EnableRowVirtualization="True"
-                          IsReadOnly="True"
-                          SelectionUnit="FullRow">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Дата"
-                                            Width="*"
-                                            Binding="{Binding CreationDateTime}" />
-
-                        <DataGridTextColumn Header="Пользователь"
-                                            Width="*"
-                                            Binding="{Binding ClientName}" />
-
-                        <DataGridTextColumn Header="Статус"
-                                            Width="*"
-                                            Binding="{Binding StatusProcessingProject}" />
-
-                        <DataGridTextColumn Header="Файлов"
-                                            Width="0.5*"
-                                            Binding="{Binding FilesCount}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-
-                <ProgressBar Grid.Row="0"
-                             Style="{StaticResource PreLoadingProgressData}"
-                             Visibility="{Binding IsLoading, Converter={StaticResource VisibilityConverterHidden}}"/>
-
-                <Grid Grid.Row="1"
-                      Margin="0 5 0 3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Button Grid.Column="1"
-                            Content="Получить файлы"
-                            Style="{StaticResource ButtonResult}"
-                            Command="{Binding DownloadFilesDataCommand}"/>
-                    <Button Grid.Column="3"
-                            Content="Просмотреть файлы"
-                            Style="{StaticResource ButtonResult}"
-                            Command="{Binding ShowFilesDataCommand}"/>
+                <Grid Visibility="{Binding IsFileMode, Converter={StaticResource VisibilityConverterCollapsed}}">
+                    <historyViews:HistoryFileDataPartView DataContext="{Binding HistoryFileDataViewModelPart}"/>
                 </Grid>
             </Grid>
         </Border>
+
+        <ProgressBar Style="{StaticResource PreLoadingProgressData}"
+                     Visibility="{Binding IsLoading, Converter={StaticResource VisibilityConverterHidden}}"/>
     </Grid>
 </UserControl>

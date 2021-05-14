@@ -154,7 +154,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         private async Task<IResultValue<PackageStatus>> DownloadFilesData(PackageStatus packageStatus)
         {
             var filesPath = _packageData.GetFilesToDownload(packageStatus);
-            var completeFilesTasks = filesPath.Select(GetCompleteFile);
+            var completeFilesTasks = filesPath.Select(filePath => GetCompleteFile(packageStatus, filePath));
             var completeFiles = await Task.WhenAll(completeFilesTasks);
             var errors = completeFiles.SelectMany(completeFile => completeFile.Errors.ToList());
             return new ResultValue<PackageStatus>(packageStatus, errors);
@@ -163,15 +163,16 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Получить отконвертированный файл
         /// </summary>
-        private async Task<IResultError> GetCompleteFile(string filePath) =>
+        private async Task<IResultError> GetCompleteFile(PackageStatus packageStatus, string filePath) =>
             await _wcfClientServiceFactory.ConvertingClientServiceFactory.
             UsingServiceRetry(service => service.Operations.GetCompleteFile(_packageData.Id, filePath)).
             ResultVoidOkAsync(fileDataResponse => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                                                               fileDataResponse, _packageData.Id.ToString())).
-            ResultValueOkAsync(fileDataResponse => _fileDataProcessingStatusMark.GetFileStatusCompleteResponseBeforeWriting(fileDataResponse).
-                                                   Void(fileStatusBeforeWrite => _packageData.ChangeFileStatus(fileStatusBeforeWrite)).
-                                                   Map(_ => _fileDataProcessingStatusMark.GetFileStatusCompleteResponseAndWritten(fileDataResponse)).
-                                                   VoidAsync(filesStatusWrite => _packageData.ChangeFileStatus(filesStatusWrite))).
+            ResultValueOkAsync(fileDataResponse => 
+                _fileDataProcessingStatusMark.GetFileStatusCompleteResponseBeforeWriting(fileDataResponse).
+                Void(fileStatusBeforeWrite => _packageData.ChangeFileStatus(packageStatus.StatusProcessingProject, fileStatusBeforeWrite)).
+                Map(_ => _fileDataProcessingStatusMark.GetFileStatusCompleteResponseAndWritten(fileDataResponse)).
+                VoidAsync(filesStatusWrite => _packageData.ChangeFileStatus(packageStatus.StatusProcessingProject, filesStatusWrite))).
             MapAsync(result => result.ToResult());
 
         /// <summary>

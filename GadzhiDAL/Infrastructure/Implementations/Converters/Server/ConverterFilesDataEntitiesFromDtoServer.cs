@@ -110,13 +110,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         public static FileDataSourceEntity ToFileDataSource(FileDataSourceResponseServer fileDataSourceResponseServer) =>
             new FileDataSourceEntity
             {
-                Id = Guid.NewGuid().ToString(),
                 FileName = fileDataSourceResponseServer.FileName,
                 FileExtensionType = fileDataSourceResponseServer.FileExtensionType,
                 FileDataSource = fileDataSourceResponseServer.FileDataSource,
-                PaperSizes = fileDataSourceResponseServer.PaperSizes.
-                             Select(paperSize => new PaperSizeEntity { PaperSize = paperSize}).
-                             ToList(),
+                PaperSizes = fileDataSourceResponseServer.PaperSizes.ToList(),
                 PrinterName = fileDataSourceResponseServer.PrinterName,
             };
 

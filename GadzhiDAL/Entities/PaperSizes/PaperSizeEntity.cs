@@ -12,10 +12,5 @@ namespace GadzhiDAL.Entities.PaperSizes
         /// Наименование формата
         /// </summary>
         public virtual string PaperSize { get; set; }
-
-        /// <summary>
-        /// Отконвертированные файлы
-        /// </summary>
-        public virtual IList<FileDataSourceEntity> FileDataSources { get; set; }
     }
 }

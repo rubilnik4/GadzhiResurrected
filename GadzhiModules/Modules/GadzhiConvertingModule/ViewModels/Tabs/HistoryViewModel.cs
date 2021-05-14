@@ -23,7 +23,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             DialogService = dialogService;
             HistoryDataViewModel = new HistoryDataViewModel(historyClientServiceFactory, convertingClientServiceFactory, 
                                                             converterClientPackageDataFromDto, dialogService);
-            HistoryFilterViewModel = new HistoryFilterViewModel(historyClientServiceFactory, HistoryDataViewModel.UpdateHistoryData);
+            HistoryFilterViewModel = new HistoryFilterViewModel(historyClientServiceFactory, 
+                                                                HistoryDataViewModel.HistoryDataViewModelPart.UpdateHistoryData);
         }
         /// <summary>
         /// Стандартные диалоговые окна

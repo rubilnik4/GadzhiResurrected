@@ -68,7 +68,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Пути конвертируемых файлов
         /// </summary>
-        public IReadOnlyCollection<string> FilesDataPath => 
+        public IReadOnlyCollection<string> FilesDataPath =>
             _filesData.Select(file => file.FilePath).
             ToList().AsReadOnly();
 
@@ -95,7 +95,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Добавить файл
         /// </summary>
-        public void AddFile(IFileData fileData) => 
+        public void AddFile(IFileData fileData) =>
             AddFiles(new List<IFileData> { fileData });
 
         /// <summary>
@@ -163,12 +163,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Изменить статус файла и присвоить при необходимости ошибку
         /// </summary>
-        public void ChangeFileStatus(FileStatus fileStatus)
+        public void ChangeFileStatus(StatusProcessingProject statusProcessingProject, FileStatus fileStatus)
         {
+            bool isStatusProjectChanged = SetStatusProcessingProject(statusProcessingProject);
             var filesDataChanged = _filesData.First(file => file.FilePath == fileStatus.FilePath).
                                    ChangeByFileStatus(fileStatus);
 
-            var fileChange = new FilesChange(_filesData, filesDataChanged, ActionType.StatusChange, false);
+            var fileChange = new FilesChange(_filesData, filesDataChanged, ActionType.StatusChange, isStatusProjectChanged);
             UpdateFileData(fileChange);
         }
 
@@ -217,12 +218,13 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Обновить список файлов
         /// </summary>
-        private void UpdateFileData(FilesChange fileChange) => _fileDataChange?.OnNext(fileChange);
+        private void UpdateFileData(FilesChange fileChange) =>
+            _fileDataChange?.OnNext(fileChange);
 
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования
         /// </summary>
-        private bool CanFileDataBeAddedToList(IFileData file) => 
+        private bool CanFileDataBeAddedToList(IFileData file) =>
             file != null && _filesData.IndexOf(file) == -1;
 
         #region IDisposable Support

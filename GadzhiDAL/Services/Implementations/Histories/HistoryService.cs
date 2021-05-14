@@ -80,7 +80,7 @@ namespace GadzhiDAL.Services.Implementations.Histories
                                                            ToList(),
                                             fileDataEntity.FileErrors?.Count ?? 0, 
                                             fileDataEntity.FileDataSourceServerEntities.FirstOrDefault()?.
-                                                           PaperSizes.Select(paperSize => paperSize.PaperSize).ToList()
+                                                           PaperSizes.ToList()
                                                            ?? new List<string>())).
             ToList();
 

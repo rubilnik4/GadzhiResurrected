@@ -37,10 +37,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         /// <summary>
         /// Типы обработанных файлов
         /// </summary>
-        public IReadOnlyCollection<string> FileExtensionTypes =>
+        public string FileExtensionTypes =>
             HistoryFileData.FileExtensionTypes.
             Select(fileType => fileType.ToString()).
-            ToList();
+            DefaultIfEmpty("").
+            Aggregate((first, second) => first + "; " + second);
 
         /// <summary>
         /// Количество ошибок
@@ -53,6 +54,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         /// </summary>
         public string PaperSizes =>
             HistoryFileData.PaperSizes.
-            Aggregate(String.Empty, (first, second) => first + "; " + second);
+            DefaultIfEmpty("").
+            Aggregate((first, second) => first + "; " + second);
     }
 }

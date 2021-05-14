@@ -6,6 +6,7 @@ using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
+using GadzhiDAL.Entities.PaperSizes;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Archive;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Server;
@@ -63,24 +64,17 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         /// </summary>      
         public async Task<StatusProcessingProject> UpdateFromIntermediateResponse(Guid packageId, FileDataResponseServer fileDataResponseServer)
         {
-            try
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageId.ToString());
+
+            if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, packageDataEntity))
             {
-                using var unitOfWork = _container.Resolve<IUnitOfWork>();
-                var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(packageId.ToString());
-
-                if (!await DeleteFilesDataOnAbortionStatus(unitOfWork, packageDataEntity))
-                {
-                    ConverterFilesDataEntitiesFromDtoServer.UpdateFileDataFromIntermediateResponse(packageDataEntity, fileDataResponseServer);
-                }
-
-                await unitOfWork.CommitAsync();
-                return packageDataEntity.StatusProcessingProject;
+                ConverterFilesDataEntitiesFromDtoServer.UpdateFileDataFromIntermediateResponse(packageDataEntity, fileDataResponseServer);
             }
-            catch (Exception ex)
-            {
 
-            }
-            return StatusProcessingProject.Writing;
+            await PaperSizeUpdate(unitOfWork, fileDataResponseServer);
+            await unitOfWork.CommitAsync();
+            return packageDataEntity.StatusProcessingProject;
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             {
                 ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromShortResponse(filesDataEntity, packageDataShortResponseServer);
             }
-
+            
             await unitOfWork.CommitAsync();
             return Unit.Value;
         }
@@ -134,6 +128,22 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             await unitOfWork.CommitAsync();
             return Unit.Value;
         }
+
+        /// <summary>
+        /// Добавить форматы
+        /// </summary>
+        private static async Task PaperSizeUpdate(IUnitOfWork unitOfWork, FileDataResponseServer fileDataResponseServer)
+        {
+            var paperSizes = fileDataResponseServer.FilesDataSource.
+                             SelectMany(fileDataSource => fileDataSource.PaperSizes).Distinct().
+                             Select(paperSize => new PaperSizeEntity { PaperSize = paperSize });
+            foreach (var paperSize in paperSizes)
+            {
+                await unitOfWork.Session.SaveOrUpdateAsync(paperSize);
+            }
+        }
+            //await unitOfWork.Session.
+            //SaveOrUpdateAsync();
 
         /// <summary>
         /// Проверить статус пакета. При отмене - удалить

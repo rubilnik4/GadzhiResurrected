@@ -2,6 +2,7 @@
 using GadzhiModules.Infrastructure.Interfaces;
 using System;
 using System.Linq;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -14,21 +15,21 @@ namespace GadzhiModules.Infrastructure.Implementations
     /// </summary>
     public class StatusProcessingInformation : IStatusProcessingInformation
     {
-        /// <summary>
-        /// Модель конвертируемых файлов
-        /// </summary>     
-        public IPackageData PackageInfoProject { get; }
-
         public StatusProcessingInformation(IPackageData packageInfoProject)
         {
             PackageInfoProject = packageInfoProject;
         }
 
         /// <summary>
+        /// Модель конвертируемых файлов
+        /// </summary>     
+        public IPackageData PackageInfoProject { get; }
+
+        /// <summary>
         /// Индикатор конвертирования файлов
         /// </summary>
-        public bool IsConverting => StatusProcessingProjectConverter.StatusProcessingProjectIsConverting.
-                                    Contains(PackageInfoProject.StatusProcessingProject);
+        public bool IsConverting =>
+            StatusProcessingProjectIsConverting.Contains(PackageInfoProject.StatusProcessingProject);
 
         /// <summary>
         /// Информация о количестве файлов в очереди на сервере
@@ -72,17 +73,17 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Получить статус обработки проекта c процентом выполнения
         /// </summary>       
-        public string GetStatusProcessingProjectName()
-        {
-            string statusProcessingProjectName = StatusProcessingProjectToString(PackageInfoProject.StatusProcessingProject);
-
-            return PackageInfoProject.StatusProcessingProject switch
+        public string GetStatusProcessingProjectName() =>
+            PackageInfoProject.StatusProcessingProject switch
             {
-                StatusProcessingProject.InQueue => $"{statusProcessingProjectName}. Впереди {FilesQueueInfo.FilesInQueueCount} файлика(ов)",
-                StatusProcessingProject.Converting => $"{statusProcessingProjectName}. Выполнено {PercentageOfComplete}%",
-                _ => statusProcessingProjectName,
+                StatusProcessingProject.InQueue =>
+                    $"{StatusProcessingProjectToString(PackageInfoProject.StatusProcessingProject)}. " +
+                    $"Впереди {FilesQueueInfo.FilesInQueueCount} файлика(ов)",
+                StatusProcessingProject.Converting =>
+                    $"{StatusProcessingProjectToString(PackageInfoProject.StatusProcessingProject)}. " +
+                    $"Выполнено {PercentageOfComplete}%",
+                _ => StatusProcessingProjectToString(PackageInfoProject.StatusProcessingProject),
             };
-        }
 
         /// <summary>
         /// Вычислить процент отконвертированных файлов для очереди
@@ -101,7 +102,8 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// </summary>
         private int CalculateConvertingPercentage()
         {
-            double numberComplete = PackageInfoProject.FilesData.Count(file => file.StatusProcessing == StatusProcessing.ConvertingComplete);
+            double numberComplete = PackageInfoProject.FilesData.Count(
+                file => CheckStatusProcessing.CompletedStatusProcessing.Contains(file.StatusProcessing));
             double numberTotal = PackageInfoProject.FilesData.Count;
 
             double percentagePerform = (numberTotal > 0) ?

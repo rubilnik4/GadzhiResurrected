@@ -280,7 +280,9 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryDataViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelPart.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelPart.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerInfoViewModel.cs" />
@@ -323,6 +325,12 @@
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryFilterView.xaml.cs">
       <DependentUpon>HistoryFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryDataPartView.xaml.cs">
+      <DependentUpon>HistoryDataPartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryFileDataPartView.xaml.cs">
+      <DependentUpon>HistoryFileDataPartView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerView.xaml.cs">
       <DependentUpon>ServerView.xaml</DependentUpon>
@@ -405,6 +413,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryDataPartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryFileDataPartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

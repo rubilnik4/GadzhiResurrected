@@ -91,7 +91,7 @@
                      OverflowMode ="Never"
                      HorizontalAlignment="Stretch">
 
-                <Button Command="{Binding AddFromFilesDelegateCommand}"
+                <Button Command="{Binding AddFromFilesCommand}"
                         ToolTip="Загрузить файлы">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Files"                                         
@@ -99,7 +99,7 @@
                     </Button.Content>
                 </Button>
 
-                <Button Command="{Binding AddFromFoldersDelegateCommand}" 
+                <Button Command="{Binding AddFromFoldersCommand}" 
                         ToolTip="Загрузить папки">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Folders"                                         
@@ -109,7 +109,7 @@
 
                 <Separator />
 
-                <Button Command="{Binding ClearFilesDelegateCommand}"
+                <Button Command="{Binding ClearFilesCommand}"
                         ToolTip="Очистить список">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Eraser"                                         
@@ -117,7 +117,7 @@
                     </Button.Content>
                 </Button>
 
-                <Button Command="{Binding RemoveFilesDelegateCommand}"
+                <Button Command="{Binding RemoveFilesCommand}"
                         ToolTip="Удалить из списка">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="FileDocumentBoxRemove"                                         
@@ -125,9 +125,17 @@
                     </Button.Content>
                 </Button>
 
+                <Button Command="{Binding OpenContainingFolderCommand}"
+                        ToolTip="Открыть папку файла">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="FolderInformation"                                         
+                                                 Style="{StaticResource PackIconToolBarStyle}"/>
+                    </Button.Content>
+                </Button>
+
                 <Separator />
 
-                <Button Command="{Binding AboutApplicationDelegateCommand}"
+                <Button Command="{Binding AboutApplicationCommand}"
                         ToolTip="О программе">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Information"                                         
@@ -225,7 +233,7 @@
             </b:Interaction.Behaviors>
 
             <DataGrid.InputBindings>
-                <KeyBinding Command="{Binding Path=(viewModelTabs:FilesConvertingViewModel.RemoveFilesDelegateCommand)}" Key="Delete" />
+                <KeyBinding Command="{Binding Path=(viewModelTabs:FilesConvertingViewModel.RemoveFilesCommand)}" Key="Delete" />
             </DataGrid.InputBindings>
         </DataGrid>
 
@@ -246,7 +254,7 @@
                     <ProgressBar Grid.Row="1"      
                                  Visibility="{Binding  IsConverting, 
                                               Converter={StaticResource VisibilityConverter}}"                                           
-                                 IsIndeterminate="{Binding IsIndeterminateProgressBar}"
+                                 IsIndeterminate="True"
                                  Value="{Binding PercentageOfComplete, Mode=OneWay}"
                                  MinHeight="0"
                                  Maximum="100"
@@ -267,11 +275,11 @@
 
             <Button Grid.Column="1"
                         Content="Конвертировать" 
-                        Command="{Binding ConvertingFilesDelegateCommand}" 
+                        Command="{Binding ConvertingFilesCommand}" 
                         Style="{StaticResource ButtonResult}"/>
             <Button Grid.Column="3"
                         Content="Закрыть"
-                        Command="{Binding CloseApplicationDelegateCommand}" 
+                        Command="{Binding CloseApplicationCommand}" 
                         Style="{StaticResource ButtonResult}"/>
         </Grid>
     </Grid>

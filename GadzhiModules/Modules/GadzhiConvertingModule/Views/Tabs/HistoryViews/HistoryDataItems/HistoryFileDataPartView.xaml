@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.HistoryViews.HistoryDataItems.HistoryFileDataPartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:viewModels="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels.HistoryViewModelItems"
+             d:DataContext="{d:DesignInstance Type=viewModels:HistoryFileDataViewModelPart, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/GadzhiModules;component/Modules/GadzhiConvertingModule/Views/Resources/GadzhiResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="0"
+                  ItemsSource="{Binding HistoryFileViewModelItems}"
+                  AutoGenerateColumns="False"
+                  EnableRowVirtualization="True"
+                  IsReadOnly="True"
+                  SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Имя файла" 
+                                        Width="2*" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="viewModels:HistoryFileDataViewModelItem">
+                            <TextBlock Text="{Binding FilePath}"
+                                       ToolTip="{Binding FilePath}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Статус"
+                                    Width="0.8*"
+                                    Binding="{Binding StatusProcessing}" />
+                <DataGridTextColumn Header="Типы"
+                                    Width="*"
+                                    Binding="{Binding FileExtensionTypes}" />
+                <DataGridTextColumn Header="Форматы"
+                                    Width="*"
+                                    Binding="{Binding PaperSizes}" />
+                <DataGridTextColumn Header="Ошибки"
+                                    Width="0.5*"
+                                    Binding="{Binding ErrorCount}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="1"
+              Margin="0 5 0 3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                    Content="Назад"
+                    Style="{StaticResource ButtonResult}"
+                    Command="{Binding ShowHistoryDataCommand}" />
+        </Grid>
+    </Grid>
+</UserControl>

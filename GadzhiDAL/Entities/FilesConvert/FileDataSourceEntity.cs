@@ -28,7 +28,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Формат печати
         /// </summary>
-        public virtual IList<PaperSizeEntity> PaperSizes { get; set; }
+        public virtual IList<string> PaperSizes { get; set; }
 
         /// <summary>
         /// Имя принтера
