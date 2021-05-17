@@ -46,6 +46,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
                PersonId = convertingSettings.PersonId,
                PdfNamingType = convertingSettings.PdfNamingType,
                ConvertingModeType = convertingSettings.ConvertingModeType,
+               UseDefaultSignature = convertingSettings.UseDefaultSignature,
            };
 
         /// <summary>

@@ -21,6 +21,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             StatusProcessingProject.Error,
             StatusProcessingProject.Abort,
             StatusProcessingProject.End,
+            StatusProcessingProject.Archived,
         };
 
         /// <summary>
@@ -39,6 +40,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
             StatusProcessing.ConvertingComplete,
             StatusProcessing.Writing,
             StatusProcessing.End,
+            StatusProcessing.Archive,
         };
     }
 }

@@ -5,10 +5,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.FilesConvert
 {
     public class ConvertingSettingsApp
     {
-        public ConvertingSettingsApp(string personId, PdfNamingTypeApplication pdfNamingType)
+        public ConvertingSettingsApp(string personId, PdfNamingTypeApplication pdfNamingType, bool useDefaultSignature)
         {
             PersonId = personId ?? String.Empty;
             PdfNamingType = pdfNamingType;
+            UseDefaultSignature = useDefaultSignature;
         }
 
         /// <summary>
@@ -20,5 +21,10 @@ namespace GadzhiApplicationCommon.Models.Implementation.FilesConvert
         /// Принцип именование PDF
         /// </summary>
         public PdfNamingTypeApplication PdfNamingType { get; }
+
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        public bool UseDefaultSignature { get; }
     }
 }

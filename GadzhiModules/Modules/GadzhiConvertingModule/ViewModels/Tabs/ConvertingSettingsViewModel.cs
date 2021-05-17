@@ -111,5 +111,15 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
         /// </summary>
         public IReadOnlyCollection<string> ConvertingModesString =>
             ConvertingModeTypeConverter.ConvertingModeString;
+
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        [Logger]
+        public bool UseDefaultSignature
+        {
+            get => _convertingSettings.UseDefaultSignature;
+            set => _convertingSettings.UseDefaultSignature = value;
+        }
     }
 }

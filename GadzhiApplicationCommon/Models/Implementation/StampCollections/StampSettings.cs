@@ -9,8 +9,9 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections
     /// </summary>
     public class StampSettings: ConvertingSettingsApp
     {
-        public StampSettings(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType)
-            :base(personId, pdfNamingType)
+        public StampSettings(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType,
+                             bool useDefaultSignature)
+            :base(personId, pdfNamingType, useDefaultSignature)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
         }

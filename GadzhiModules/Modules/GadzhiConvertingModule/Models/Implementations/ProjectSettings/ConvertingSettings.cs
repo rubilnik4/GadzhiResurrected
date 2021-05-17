@@ -15,12 +15,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
     public class ConvertingSettings : IConvertingSettings
     {
         public ConvertingSettings(ISignatureLibrary personSignature, PdfNamingType pdfNamingType,
-                                  ColorPrintType colorPrintType, ConvertingModeType convertingModeType)
+                                  ColorPrintType colorPrintType, ConvertingModeType convertingModeType,
+                                  bool useDefaultSignature)
         {
             PersonSignature = personSignature ?? throw new ArgumentNullException(nameof(personSignature));
             PdfNamingType = pdfNamingType;
             ColorPrintType = colorPrintType;
             ConvertingModeType = convertingModeType;
+            UseDefaultSignature = useDefaultSignature;
         }
 
         /// <summary>
@@ -47,5 +49,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
         /// </summary>
         [Logger]
         public ConvertingModeType ConvertingModeType { get; set; }
+
+        /// <summary>
+        /// Использовать подпись по умолчанию для разработчика
+        /// </summary>
+        [Logger]
+        public bool UseDefaultSignature { get; set; }
     }
 }

@@ -85,12 +85,9 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Поменять статус файлов после промежуточного отчета
         /// </summary>       
-        public PackageStatus GetPackageStatusIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
-        {
-            var filesStatusIntermediate = _converterClientPackageDataFromDto.ToPackageStatusFromIntermediateResponse(packageDataShortResponse);
-            return filesStatusIntermediate;
-        }
-
+        public PackageStatus GetPackageStatusIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse) =>
+            _converterClientPackageDataFromDto.ToPackageStatusFromIntermediateResponse(packageDataShortResponse);
+             
         /// <summary>
         /// Поменять статус файла после перед записью
         /// </summary>       

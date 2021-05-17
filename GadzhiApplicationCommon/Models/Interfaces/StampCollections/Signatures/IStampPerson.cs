@@ -1,4 +1,5 @@
-﻿using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
+﻿using GadzhiApplicationCommon.Models.Enums.StampCollections;
+using GadzhiApplicationCommon.Models.Interfaces.StampCollections.Fields;
 
 namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
 {
@@ -20,6 +21,6 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.Signatures
         /// <summary>
         /// Дата
         /// </summary>
-        IStampTextField DateSignature { get; } 
-    }
+        IStampTextField DateSignature { get; }
+}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Infrastructure.Implementations.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
@@ -25,8 +26,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         public SignatureCreatingWord(ITableElementWord tableStamp, StampIdentifier stampIdentifier, IResultAppValue<ITableElementWord> tableApprovalPerformers,
                                      IResultAppValue<ITableElementWord> tableApprovalChief,
                                      IStampFieldsWord stampFieldsWord, StampDocumentType stampDocumentType,
-                                     SignaturesSearching signaturesSearching, string personId)
-            : base(signaturesSearching, personId)
+                                     SignaturesSearching signaturesSearching, string personId, bool useDefaultSignature)
+            : base(signaturesSearching, personId, useDefaultSignature)
         {
             _tableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
             _stampIdentifier = stampIdentifier;
@@ -70,11 +71,14 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial.Signat
         /// Получить информацию об ответственном лице по имени
         /// </summary>      
         private IResultAppValue<ISignatureLibraryApp> GetSignatureInformation(string personName, string personId,
-                                                                              PersonDepartmentType personDepartmentType) =>
+                                                                              PersonDepartmentType personDepartmentType, string actionType) =>
             new ResultAppValue<ISignatureLibraryApp>(SignaturesSearching.FindById(personId),
                                                      new ErrorApplication(ErrorApplicationType.SignatureNotFound, $"Подпись {personName} не найдена")).
             ResultValueOk(signature => signature.PersonInformation.DepartmentType).
             ResultValueOk(departmentType => SignaturesSearching.CheckDepartmentAccordingToType(departmentType, personDepartmentType)).
-            ResultValueOkBind(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked));
+            ResultValueOkBind(departmentChecked => SignaturesSearching.FindByFullNameOrRandom(personName, departmentChecked)).
+            ResultValueOk(personAttributeId => SignaturesActionType.GetPersonIdByActionType(personAttributeId.PersonId,
+                                                                                            UseDefaultSignature, PersonId, actionType)).
+            ResultValueOk(personCheckedId => SignaturesSearching.FindById(personCheckedId));
     }
 }

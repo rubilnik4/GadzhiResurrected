@@ -12,11 +12,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
 {
     public class ConvertingSettings : IConvertingSettings
     {
-        public ConvertingSettings(string personId, PdfNamingType pdfNamingType, ConvertingModeType convertingModeType)
+        public ConvertingSettings(string personId, PdfNamingType pdfNamingType, 
+                                  ConvertingModeType convertingModeType, bool useDefaultSignature)
         {
             PersonId = personId ?? String.Empty;
             PdfNamingType = pdfNamingType;
             ConvertingModeType = convertingModeType;
+            UseDefaultSignature = useDefaultSignature;
         }
 
         /// <summary>
@@ -33,6 +35,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Тип конвертации
         /// </summary>
         public ConvertingModeType ConvertingModeType { get; }
+
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        public bool UseDefaultSignature { get; }
 
         /// <summary>
         /// Информация о принтере PDF

@@ -37,8 +37,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>      
         public async Task<IPackageServer> ToFilesDataServerAndSaveFile(PackageDataRequestServer packageDataRequest)
         {
-            if (packageDataRequest == null) throw new ArgumentNullException(nameof(packageDataRequest));
-
             var filesDataServerToConvertTask = packageDataRequest.FilesData?.Select(fileData =>
                                                ToFileDataServerAndSaveFile(fileData, packageDataRequest.Id.ToString()));
             var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask ?? new List<Task<IFileDataServer>>());
@@ -52,11 +50,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать параметры конвертации из трансферной модели
         /// </summary>
-        private static IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) =>
-            (convertingSettingsRequest != null)
-                ? new ConvertingSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType,
-                                         convertingSettingsRequest.ConvertingModeType)
-                : throw new ArgumentNullException(nameof(convertingSettingsRequest));
+        private static IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) => 
+            new ConvertingSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType,
+                                   convertingSettingsRequest.ConvertingModeType, convertingSettingsRequest.UseDefaultSignature);
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
@@ -64,7 +60,6 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         private async Task<IFileDataServer> ToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest, string packageGuid)
         {
             var fileSavedCheck = await SaveFileFromDtoRequest(fileDataRequest, packageGuid);
-
             return new FileDataServer(fileSavedCheck.FilePath, fileDataRequest.FilePath, fileDataRequest.ColorPrintType,
                                       StatusProcessing.InQueue, fileSavedCheck.Errors);
         }

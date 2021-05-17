@@ -1,4 +1,5 @@
 ﻿using System;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.LibraryData;
@@ -12,10 +13,12 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
     /// </summary>
     public abstract class SignatureCreating : ISignatureCreating
     {
-        protected SignatureCreating(SignaturesSearching signaturesSearching, string personId)
+        protected SignatureCreating(SignaturesSearching signaturesSearching, string personId, bool useDefaultSignature)
         {
+            UseDefaultSignature = useDefaultSignature;
             SignaturesSearching = signaturesSearching ?? throw new ArgumentNullException(nameof(signaturesSearching));
             PersonId = personId ?? throw new ArgumentNullException(nameof(personId));
+            UseDefaultSignature = useDefaultSignature;
         }
 
         /// <summary>
@@ -27,6 +30,11 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Идентификатор личной подписи
         /// </summary>
         protected string PersonId { get; }
+
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        protected bool UseDefaultSignature { get; }
 
         /// <summary>
         /// Получить строки с ответственным лицом без подписи
@@ -62,6 +70,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// Проверка необходимости вставки подписи в строку изменений
         /// </summary>
         protected bool ChangeSignatureValidation(IStampChange stampChange) =>
-             !String.IsNullOrEmpty(stampChange.DocumentChange.Text);
+             !stampChange.DocumentChange.Text.IsNullOrWhiteSpace();
     }
 }

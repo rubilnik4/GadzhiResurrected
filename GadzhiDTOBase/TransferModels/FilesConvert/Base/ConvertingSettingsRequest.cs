@@ -12,22 +12,37 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     [DataContract]
     public class ConvertingSettingsRequest
     {
+        public ConvertingSettingsRequest(string personId, PdfNamingType pdfNamingType,
+                                         ConvertingModeType convertingModeType, bool useDefaultSignature)
+        {
+            PersonId = personId;
+            PdfNamingType = pdfNamingType;
+            ConvertingModeType = convertingModeType;
+            UseDefaultSignature = useDefaultSignature;
+        }
+
         /// <summary>
         /// Идентификатор личной подписи
         /// </summary>
         [DataMember]
-        public string PersonId { get; set; }
+        public string PersonId { get; private set; }
 
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
         [DataMember]
-        public PdfNamingType PdfNamingType { get; set; }
+        public PdfNamingType PdfNamingType { get; private set; }
 
         /// <summary>
         /// Тип конвертации
         /// </summary>
         [DataMember]
-        public ConvertingModeType ConvertingModeType { get; set; }
+        public ConvertingModeType ConvertingModeType { get; private set; }
+
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        [DataMember]
+        public bool UseDefaultSignature { get; private set; }
     }
 }

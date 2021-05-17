@@ -56,12 +56,9 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
         private static ConvertingSettingsRequest ToConvertingSettingsRequest(IConvertingSettings convertingSetting) =>
-             new ConvertingSettingsRequest
-             {
-                 PersonId = convertingSetting.PersonSignature.PersonId ?? String.Empty,
-                 PdfNamingType = convertingSetting.PdfNamingType,
-                 ConvertingModeType = convertingSetting.ConvertingModeType,
-             };
+             new ConvertingSettingsRequest(convertingSetting.PersonSignature.PersonId ?? String.Empty,
+                                           convertingSetting.PdfNamingType, convertingSetting.ConvertingModeType,
+                                           convertingSetting.UseDefaultSignature);
 
         /// <summary>
         /// Конвертер информации о файле из локальной модели в трансферную

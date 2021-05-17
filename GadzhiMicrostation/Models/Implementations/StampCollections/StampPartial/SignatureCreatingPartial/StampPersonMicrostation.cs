@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Infrastructure.Implementations.StampCollections.Signatures;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
@@ -56,9 +57,13 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         private IResultAppValue<IStampPerson> GetStampPersonById(IStampTextFieldMicrostation responsiblePerson,
                                                                  Func<ISignatureLibraryApp, IResultAppValue<IStampFieldMicrostation>> insertSignatureFunc,
                                                                  IStampTextField actionType, IStampTextField dateSignature) =>
-            SignaturesSearching.FindByIdOrFullNameOrRandom(responsiblePerson.ElementStamp.AttributePersonId,
-                                                           responsiblePerson.MaxLengthWord, PersonId).
-            ResultValueOk(personSignature => new PersonSignatureMicrostation(personSignature, _stampIdentifier, insertSignatureFunc, actionType,
-                                                                         responsiblePerson, dateSignature));
+            SignaturesActionType.GetPersonIdByActionType(responsiblePerson.ElementStamp.AttributePersonId, UseDefaultSignature,
+                                                         PersonId, actionType.Text).
+            Map(personIdByActionType => SignaturesSearching.FindByIdOrFullNameOrRandom(personIdByActionType, responsiblePerson.MaxLengthWord, 
+                                                                                       PersonId)).
+            ResultValueOk(personSignature => new PersonSignatureMicrostation(personSignature, _stampIdentifier, insertSignatureFunc,
+                                                                             actionType, responsiblePerson, dateSignature));
+
+      
     }
 }

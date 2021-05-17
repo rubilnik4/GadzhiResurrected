@@ -11,8 +11,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     public class StampSettingsWord: StampSettings
     {
         public StampSettingsWord(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType, 
-                                 string paperSize, StampOrientationType orientationType)
-            :base(id, personId, pdfNamingType)
+                                 string paperSize, StampOrientationType orientationType, bool useDefaultSignature)
+            :base(id, personId, pdfNamingType, useDefaultSignature)
         {
             PaperSize = !String.IsNullOrWhiteSpace(paperSize)
                       ? paperSize

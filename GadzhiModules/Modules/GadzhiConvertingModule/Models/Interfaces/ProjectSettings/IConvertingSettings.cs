@@ -28,5 +28,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Project
         /// Тип конвертации
         /// </summary>
         ConvertingModeType ConvertingModeType { get; set; }
+
+        /// <summary>
+        /// Использовать подпись по умолчанию для разработчика
+        /// </summary>
+        bool UseDefaultSignature { get; set; }
     }
 }

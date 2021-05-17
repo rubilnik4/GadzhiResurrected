@@ -16,8 +16,6 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.Fields
     {
         public StampSignatureFields(SignaturesBuilder signaturesBuilder)
         {
-            if (signaturesBuilder == null) throw new ArgumentNullException(nameof(signaturesBuilder));
-
             StampPersons = signaturesBuilder.StampPersons;
             StampChanges = signaturesBuilder.StampChanges;
             StampApprovals = signaturesBuilder.StampApprovals;

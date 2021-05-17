@@ -24,7 +24,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// </summary>
         protected override ISignatureCreating SignatureCreating  => 
             new SignatureCreatingWord(TableStamp, StampSettings.Id, TableApprovalPerformers, TableApprovalChief, this, 
-                                      StampDocumentType, SignaturesSearching, StampSettings.PersonId);
+                                      StampDocumentType, SignaturesSearching, StampSettings.PersonId, StampSettings.UseDefaultSignature);
 
         /// <summary>
         /// Вставить подписи

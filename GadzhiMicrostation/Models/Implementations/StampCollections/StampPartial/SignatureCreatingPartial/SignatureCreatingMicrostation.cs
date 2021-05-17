@@ -26,9 +26,9 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
     public partial class SignatureCreatingMicrostation : SignatureCreating
     {
         public SignatureCreatingMicrostation(IStampFieldsMicrostation stampFields, StampIdentifier stampIdentifier,
-                                             InsertSignatureFunc insertSignatureByFields,
-                                             SignaturesSearching signaturesSearching, string personId)
-            : base(signaturesSearching, personId)
+                                             InsertSignatureFunc insertSignatureByFields, SignaturesSearching signaturesSearching,
+                                             string personId, bool useDefaultSignature)
+            : base(signaturesSearching, personId, useDefaultSignature)
         {
             _stampFields = stampFields ?? throw new ArgumentNullException(nameof(stampFields));
             _stampIdentifier = stampIdentifier;

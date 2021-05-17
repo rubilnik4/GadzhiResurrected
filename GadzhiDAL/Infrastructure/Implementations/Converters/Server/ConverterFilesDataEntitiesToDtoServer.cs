@@ -32,12 +32,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
         private static ConvertingSettingsRequest ConvertingSettingsToRequest(ConvertingSettingsComponent convertingSettings) =>
-            new ConvertingSettingsRequest
-            {
-                PersonId = convertingSettings.PersonId,
-                PdfNamingType = convertingSettings.PdfNamingType,
-                ConvertingModeType = convertingSettings.ConvertingModeType,
-            };
+            new ConvertingSettingsRequest(convertingSettings.PersonId, convertingSettings.PdfNamingType,
+                                           convertingSettings.ConvertingModeType, convertingSettings.UseDefaultSignature);
 
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос

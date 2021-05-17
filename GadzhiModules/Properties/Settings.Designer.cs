@@ -106,5 +106,17 @@ namespace GadzhiModules.Properties {
                 this["ColorPrint"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseDefaultSignature {
+            get {
+                return ((bool)(this["UseDefaultSIgnature"]));
+            }
+            set {
+                this["UseDefaultSIgnature"] = value;
+            }
+        }
     }
 }

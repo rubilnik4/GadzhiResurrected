@@ -25,6 +25,10 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// Тип конвертации
         /// </summary>
         ConvertingModeType ConvertingModeType { get; }
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        bool UseDefaultSignature { get; }
 
         /// <summary>
         /// Информация о принтере PDF

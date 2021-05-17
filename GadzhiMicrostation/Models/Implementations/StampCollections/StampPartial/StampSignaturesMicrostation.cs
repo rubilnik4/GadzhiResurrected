@@ -28,7 +28,8 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// Фабрика создания подписей Microstation
         /// </summary>
         protected override ISignatureCreating SignatureCreating =>
-            new SignatureCreatingMicrostation(this, StampSettings.Id, InsertSignatureByFields, SignaturesSearching, StampSettings.PersonId);
+            new SignatureCreatingMicrostation(this, StampSettings.Id, InsertSignatureByFields, SignaturesSearching,
+                                              StampSettings.PersonId, StampSettings.UseDefaultSignature);
 
         /// <summary>
         /// Вставить подписи

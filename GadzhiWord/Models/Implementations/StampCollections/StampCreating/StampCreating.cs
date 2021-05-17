@@ -84,7 +84,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         public static StampSettingsWord GetStampSettingsWord(int stampIndex, ConvertingSettingsApp convertingSettings,
                                                              string paperSize, StampOrientationType stampOrientationType) =>
             new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId,
-                                  convertingSettings.PdfNamingType, paperSize, stampOrientationType);
+                                  convertingSettings.PdfNamingType, paperSize, stampOrientationType, convertingSettings.UseDefaultSignature);
 
         /// <summary>
         /// Найти поле основного шифра в таблицах документа

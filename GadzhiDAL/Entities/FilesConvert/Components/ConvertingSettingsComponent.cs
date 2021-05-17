@@ -23,5 +23,10 @@ namespace GadzhiDAL.Entities.FilesConvert.Components
         /// Принцип именования PDF
         /// </summary>
         public ConvertingModeType ConvertingModeType { get; set; } = ConvertingModeType.All;
+
+        /// <summary>
+        /// Использовать подпись по умолчанию
+        /// </summary>
+        public bool UseDefaultSignature { get; set; }
     }
 }
