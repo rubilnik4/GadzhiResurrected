@@ -185,6 +185,7 @@
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFileData.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />
     <Compile Include="Models\Enums\LoggerLevel.cs" />
+    <Compile Include="Models\Interfaces\Likes\ILikeIdentity.cs" />
     <Compile Include="Models\Interfaces\ServerStates\IServerCompleteFiles.cs" />
     <Compile Include="Models\Interfaces\ServerStates\IServerDetail.cs" />
     <Compile Include="Models\Interfaces\ServerStates\IServerDetailQueue.cs" />

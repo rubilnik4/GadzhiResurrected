@@ -29,7 +29,7 @@ namespace GadzhiApplicationCommon.Infrastructure.Implementations.Converters.Libr
                 _ when departmentText.Contains("ТОПНГ") => DepartmentTypeApp.ToPng,
                 _ when departmentText.Contains("ТО ПНГ") => DepartmentTypeApp.ToPng,
                 _ when departmentText.Contains("ГИП") => DepartmentTypeApp.Gip,
-                _ when departmentText.ContainsIgnoreCase("главный инженер") => DepartmentTypeApp.Gip,
+                _ when departmentText.ContainsIgnoreCase("главныйинженер") => DepartmentTypeApp.Gip,
                 _ when departmentText.ContainsIgnoreCase("директор") => DepartmentTypeApp.Aup,
                 _ => DepartmentTypeApp.Unknown,
             };

@@ -8,6 +8,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:GadzhiModules.Helpers.Wpf.Converters"
              xmlns:viewModelDialog="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel"
+             xmlns:resultType="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Models.Enums.DialogViewModel"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              MinWidth="300"
@@ -22,6 +23,13 @@
                 <converters:BoolToVisibilityConverter x:Key="VisibilityConverter"
                                                   TrueValue="Visible" 
                                                   FalseValue="Collapsed"/>
+
+                <Style x:Key="ButtonResultDialog" 
+                        TargetType="Button"
+                        BasedOn="{StaticResource MaterialDesignIconButton}">
+                    <Setter Property="Height" Value="32"/>
+                    <Setter Property="Width" Value="32"/>
+                </Style>
             </ResourceDictionary>
         </Grid.Resources>
 
@@ -39,15 +47,35 @@
       
         <StackPanel Grid.Row="1"
                     Style="{StaticResource StackPanelResult}">
-            <materialDesign:PackIcon Kind="ThumbUp"
-                                     Style="{StaticResource PackIconResultStyle}"
-                                     Visibility="{Binding NoErrors, Converter={StaticResource VisibilityConverter}}"/>
-            <materialDesign:PackIcon Kind="ThumbDown"
-                                     Style="{StaticResource PackIconResultStyle}"
-                                     Foreground="{StaticResource ColorRedError}"
-                                     Visibility="{Binding HasErrors, Converter={StaticResource VisibilityConverter}}"/>
+            <Button Style="{StaticResource ButtonResultDialog}"
+                    ToolTip="Ставь лайк!"
+                    IsDefault="True"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                    Visibility="{Binding NoErrors, Converter={StaticResource VisibilityConverter}}">
+                <materialDesign:PackIcon Kind="ThumbUp"
+                                         Style="{StaticResource PackIconResultStyle}"/>
+                <Button.CommandParameter>
+                    <resultType:DialogResultType>Like</resultType:DialogResultType>
+                </Button.CommandParameter>
+            </Button>
+
+            <Button Style="{StaticResource ButtonResultDialog}"
+                    IsCancel="True"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                    Visibility="{Binding HasErrors, Converter={StaticResource VisibilityConverter}}">
+                <materialDesign:PackIcon Kind="ThumbDown"
+                                         Style="{StaticResource PackIconResultStyle}"
+                                         Foreground="{StaticResource ColorRedError}"/>
+                <Button.CommandParameter>
+                    <resultType:DialogResultType>Close</resultType:DialogResultType>
+                </Button.CommandParameter>
+            </Button>
+           
             <TextBlock Text="{Binding Message}"
-                       VerticalAlignment="Center"/>
+                       FontSize ="14"
+                       FontStretch="Normal"
+                       VerticalAlignment="Center"
+                       Margin="5 0 0 0"/>
         </StackPanel>
 
         <DockPanel Grid.Row="2"
@@ -64,7 +92,7 @@
                         Content="Отлично"
                         Style="{StaticResource ButtonResult}">
                     <Button.CommandParameter>
-                        <system:Boolean>False</system:Boolean>
+                        <resultType:DialogResultType>Close</resultType:DialogResultType>
                     </Button.CommandParameter>
                 </Button>
             </Grid>
@@ -85,7 +113,7 @@
                         Content="Ошибки"
                         Style="{StaticResource ButtonResult}">
                     <Button.CommandParameter>
-                        <system:Boolean>True</system:Boolean>
+                        <resultType:DialogResultType>Error</resultType:DialogResultType>
                     </Button.CommandParameter>
                 </Button>
 
@@ -95,7 +123,7 @@
                         Content="Закрыть"
                         Style="{StaticResource ButtonResult}">
                     <Button.CommandParameter>
-                        <system:Boolean>False</system:Boolean>
+                        <resultType:DialogResultType>Close</resultType:DialogResultType>
                     </Button.CommandParameter>
                 </Button>
             </Grid>

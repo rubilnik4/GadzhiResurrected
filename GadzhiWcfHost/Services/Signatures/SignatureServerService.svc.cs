@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Entities.Signatures;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.Signatures;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.Contracts.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
@@ -45,6 +46,12 @@ namespace GadzhiWcfHost.Services.Signatures
         /// </summary>
         public async Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto) =>
             await _signaturesService.UploadSignatures(signaturesDto);
+
+        /// <summary>
+        /// Удалить подписи
+        /// </summary>
+        public async Task<Unit> DeleteSignatures() =>
+            await _signaturesService.DeleteSignatures();
 
         /// <summary>
         /// Получить подписи Microstation из базы данных

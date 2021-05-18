@@ -5,6 +5,7 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.Contracts.Histories;
+using GadzhiDTOClient.Contracts.Likes;
 using GadzhiDTOClient.Contracts.ServerStates;
 using GadzhiDTOClient.Contracts.Signatures;
 using GadzhiModules.Infrastructure.Implementations;
@@ -84,6 +85,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule
             string historyEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(IHistoryClientService));
             unityContainer.RegisterFactory<IServiceConsumer<IHistoryClientService>>(unity =>
                 ServiceConsumerFactory.Create<IHistoryClientService>(historyEndpoint));
+
+            string likeEndpoint = clientEndpoints.GetEndpointByInterfaceFullPath(typeof(ILikeClientService));
+            unityContainer.RegisterFactory<IServiceConsumer<ILikeClientService>>(unity =>
+                ServiceConsumerFactory.Create<ILikeClientService>(likeEndpoint));
 
             unityContainer.RegisterFactory<IWcfClientServicesFactory>(unity =>
                 new WcfClientServicesFactory(() => unity.Resolve<IServiceConsumer<IFileConvertingClientService>>(),

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
@@ -9,12 +8,13 @@ using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.DataFile;
 using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.Signatures;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 using NHibernate.Linq;
 using Unity;
 
-namespace GadzhiDAL.Services.Implementations
+namespace GadzhiDAL.Services.Implementations.Signatures
 {
     /// <summary>
     /// Получение и запись из БД подписей и идентификаторов
@@ -91,6 +91,21 @@ namespace GadzhiDAL.Services.Implementations
 
             await unitOfWork.CommitAsync();
 
+            return Unit.Value;
+        }
+
+        /// <summary>
+        /// Удалить подписи в базе данных
+        /// </summary>      
+        public async Task<Unit> DeleteSignatures()
+        {
+            using var unitOfWork = _container.Resolve<IUnitOfWork>();
+            var signaturesEntity = await unitOfWork.Session.Query<SignatureEntity>().ToListAsync();
+            foreach (var signatureEntity in signaturesEntity)
+            {
+                await unitOfWork.Session.DeleteAsync(signatureEntity);
+            }
+            await unitOfWork.CommitAsync();
             return Unit.Value;
         }
 

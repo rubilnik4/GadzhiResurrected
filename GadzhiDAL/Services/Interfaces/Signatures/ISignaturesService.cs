@@ -5,7 +5,7 @@ using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOServer.TransferModels.Signatures;
 
-namespace GadzhiDAL.Services.Interfaces
+namespace GadzhiDAL.Services.Interfaces.Signatures
 {
     /// <summary>
     /// Получение и запись из БД подписей и идентификаторов
@@ -31,6 +31,11 @@ namespace GadzhiDAL.Services.Interfaces
         /// Записать подписи в базу данных
         /// </summary>      
         Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto);
+
+        /// <summary>
+        /// Удалить подписи в базе данных
+        /// </summary>      
+        Task<Unit> DeleteSignatures();
 
         /// <summary>
         /// Получить данные Microstation из базы данных

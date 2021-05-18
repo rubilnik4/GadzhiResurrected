@@ -88,7 +88,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Services
         public async Task<IResultValue<TResult>> UsingServiceRetry<TResult>(Expression<Func<TService, Task<TResult>>> serviceExpression) =>
             await UsingServiceRetry(serviceExpression, _retryService);
 
-        /// <summary>
+       /// <summary>
         /// Выполнить функцию для сервиса, проверить на ошибки и выполнить повторное подключение при сбое
         /// </summary>
         public async Task<IResultValue<TResult>> UsingServiceRetry<TResult>(Expression<Func<TService, Task<TResult>>> serviceExpression,

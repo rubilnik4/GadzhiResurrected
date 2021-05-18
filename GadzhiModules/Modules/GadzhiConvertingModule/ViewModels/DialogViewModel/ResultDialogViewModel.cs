@@ -1,4 +1,6 @@
-﻿using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
+﻿using System.Threading.Tasks;
+using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
+using Prism.Commands;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel
 {
@@ -31,7 +33,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
         /// Сообщение
         /// </summary>
         public string Message => (NoErrors)
-                                 ? "Прекрасно! Файлы готовы"
+                                 ? "Ставь лайк! Файлы готовы"
                                  : "Упс! Что-то пошло не так...";
     }
 }

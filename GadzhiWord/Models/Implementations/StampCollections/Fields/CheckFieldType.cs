@@ -41,7 +41,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.Fields
         /// Является ли таблица списком согласований с директорами для тех требований
         /// </summary>
         public static bool IsTableApprovalChief(ITableElementWord table) =>
-            table?.RowsCountInitial <= ApprovalChiefSignatureWord.MAX_ROWS_COUNT &&
+            table.RowsCountInitial <= ApprovalChiefSignatureWord.MAX_ROWS_COUNT &&
             table.ColumnsCountInitial == ApprovalChiefSignatureWord.FIELDS_COUNT &&
             table.HasCellElement(0, 0) &&
             StampMarkersWord.MarkersApprovalChiefTable.MarkerContain(table.RowsElementWord[0].CellsElement[0].TextNoSpaces);

@@ -8,6 +8,9 @@ using System.Windows;
 using System.Windows.Data;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
+using GadzhiModules.Infrastructure.Implementations.Services;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Enums.DialogViewModel;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs;
@@ -19,13 +22,26 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
 {
     public class GadzhiConvertingViewModel : BindableBase, IDisposable
     {
-        public GadzhiConvertingViewModel(IUnityContainer container)
+        public GadzhiConvertingViewModel(IUnityContainer container, LikeClientServiceFactory likeClientServiceFactory, 
+                                         IProjectSettings projectSettings)
         {
+            _likeClientServiceFactory = likeClientServiceFactory;
+            _projectSettings = projectSettings;
             _tabViewModels = GetTabViewModels(container);
             _tabViewModelsVisibility = SubscribeToViewsVisibility(_tabViewModels);
 
             BindingOperations.EnableCollectionSynchronization(TabViewModelsVisible, _tabViewModelsVisibleLock);
         }
+
+        /// <summary>
+        /// Фабрика для создания подключения к WCF сервису получения лайков
+        /// </summary>
+        private readonly LikeClientServiceFactory _likeClientServiceFactory;
+
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
+        private readonly IProjectSettings _projectSettings;
 
         /// <summary>
         /// Подписка на обновление модели
@@ -66,7 +82,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
                 SetProperty(ref _selectedTabViewModel, value);
                 if (_selectedTabViewModel != null) _selectedTabViewModel.IsSelected = true;
             }
-
         }
 
         /// <summary>
@@ -82,7 +97,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// <summary>
         /// Проверить необходимость вызова диалогового окна результатов конвертации
         /// </summary>
-        private async Task CheckResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
+        private async Task CheckResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, 
+                                                       FilesErrorsViewModel filesErrorsViewModel)
         {
             if (filesConvertingViewModel?.StatusProcessingProject == StatusProcessingProject.End)
             {
@@ -94,13 +110,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
         /// Вызвать диалоговое окно результатов конвертирования
         /// </summary>
         [Logger]
-        private async Task ShowResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel, FilesErrorsViewModel filesErrorsViewModel)
+        private async Task ShowResultConvertingDialog(FilesConvertingViewModel filesConvertingViewModel,
+                                                      FilesErrorsViewModel filesErrorsViewModel)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 bool hasErrors = filesConvertingViewModel.FilesDataCollection.Any(fileData => fileData.IsCriticalError);
-                bool showErrors = await DialogFactory.GetResultDialog(hasErrors);
-                if (showErrors) SelectedTabViewModel = filesErrorsViewModel;
+                var resultDialogType = await DialogFactory.GetResultDialog(hasErrors);
+                switch (resultDialogType)
+                {
+                    case DialogResultType.Error:
+                        SelectedTabViewModel = filesErrorsViewModel;
+                        break;
+                    case DialogResultType.Like:
+                        await _likeClientServiceFactory.UsingServiceRetry(likeService => 
+                            likeService.Operations.SendLike(_projectSettings.ConvertingSettings.PersonSignature.PersonId,
+                                                            _projectSettings.ConvertingSettings.PersonSignature.PersonInformation.FullName));
+                        break;
+                }
             });
         }
 

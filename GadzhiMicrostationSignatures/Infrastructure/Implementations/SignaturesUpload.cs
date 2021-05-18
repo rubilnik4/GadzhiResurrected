@@ -180,8 +180,11 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// Загрузить подписи в базу
         /// </summary>
         private async Task UploadSignaturesToDataBase(IReadOnlyList<ISignatureFileData> signatureFileData) =>
-            await ConverterDataFileToDto.SignaturesToDto(signatureFileData).
-            Void(_ => _messagingService.ShowMessage("Отправка данных в базу")).
+            await signatureFileData.
+            Void(_ => _messagingService.ShowMessage("Удаление подписей в базе")).
+            Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteSignatures())).
+            Map(_ => ConverterDataFileToDto.SignaturesToDto(signatureFileData)).
+            Void(_ => _messagingService.ShowMessage("Отправка подписей в базу")).
             Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
             VoidAsync(ShowMessage);
 

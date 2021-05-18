@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.LibraryData;
 using GadzhiDAL.Services.Interfaces;
+using GadzhiDAL.Services.Interfaces.Signatures;
 using GadzhiDTOBase.TransferModels.Signatures;
 using GadzhiDTOClient.Contracts.Signatures;
 

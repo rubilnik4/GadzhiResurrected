@@ -1,0 +1,5 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" 
+                Service="GadzhiWcfHost.Services.Likes.LikeClientService" 
+                CodeBehind="LikeClientService.svc.cs" 
+                Factory="GadzhiWcfHost.DependencyInjection.WcfServiceFactory"
+%>

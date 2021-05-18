@@ -153,11 +153,11 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// </summary>
         private async Task<IResultValue<PackageStatus>> DownloadFilesData(PackageStatus packageStatus)
         {
-            _packageData.ChangeFilesStatus(packageStatus);
             var filesPath = _packageData.GetFilesToDownload(packageStatus);
             var completeFilesTasks = filesPath.Select(filePath => GetCompleteFile(packageStatus, filePath));
             var completeFiles = await Task.WhenAll(completeFilesTasks);
             var errors = completeFiles.SelectMany(completeFile => completeFile.Errors.ToList());
+            _packageData.ChangeFilesStatus(packageStatus);
             return new ResultValue<PackageStatus>(packageStatus, errors);
         }
 

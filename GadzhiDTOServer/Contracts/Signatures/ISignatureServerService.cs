@@ -32,6 +32,12 @@ namespace GadzhiDTOServer.Contracts.Signatures
         Task<Unit> UploadSignatures(IList<SignatureDto> signaturesDto);
 
         /// <summary>
+        /// Загрузить подписи
+        /// </summary>
+        [OperationContract]
+        Task<Unit> DeleteSignatures();
+
+        /// <summary>
         /// Получить штампы Microstation из базы данных
         /// </summary>
         [OperationContract]

@@ -17,7 +17,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
     /// </summary>
     public abstract partial class StampWord : Stamp
     {
-        protected StampWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching, ITableElementWord tableStamp)
+        protected StampWord(StampSettingsWord stampSettingsWord, SignaturesSearching signaturesSearching,
+                            ITableElementWord tableStamp)
             : base(stampSettingsWord, signaturesSearching)
         {
             TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));

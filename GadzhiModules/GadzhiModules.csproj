@@ -208,6 +208,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryFileDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Likes\LikeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\PdfNamingConverter.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiServices.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="Infrastructure\Implementations\Identities\ClientIdentity.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\HistoryClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\LikeClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ServerStateClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\SignatureClientServiceFactory.cs" />
     <Compile Include="Infrastructure\Implementations\Services\WcfClientServicesFactory.cs" />
@@ -233,11 +235,13 @@
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
     <Compile Include="Infrastructure\Interfaces\Services\IWcfClientServicesFactory.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\DialogResultType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\Histories\HistoryType.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Likes\LikeIdentityClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />

@@ -163,6 +163,7 @@
     <Compile Include="Entities\FilesConvert\Components\ErrorComponent.cs" />
     <Compile Include="Entities\FilesConvert\Components\ConvertingSettingsComponent.cs" />
     <Compile Include="Entities\FilesConvert\FileDataSourceEntity.cs" />
+    <Compile Include="Entities\Likes\LikeIdentityEntity.cs" />
     <Compile Include="Entities\PaperSizes\PaperSizeEntity.cs" />
     <Compile Include="Entities\ServerStates\BaseAccessEntity.cs" />
     <Compile Include="Entities\ServerStates\ClientAccessEntity.cs" />
@@ -171,7 +172,9 @@
     <Compile Include="Entities\Signatures\Components\PersonInformationComponent.cs" />
     <Compile Include="Entities\Signatures\SignatureEntity.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Likes\LikeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\DateTimes\DateTimeService.cs" />
+    <Compile Include="Mappings\Likes\LikeMap.cs" />
     <Compile Include="Mappings\PaperSizes\PaperSizeMap.cs" />
     <Compile Include="Mappings\ServerStates\ClientAccessMap.cs" />
     <Compile Include="Mappings\ServerStates\ServerAccessMap.cs" />
@@ -199,16 +202,18 @@
     <Compile Include="Services\Implementations\FileConvert\FilesDataServerService.cs" />
     <Compile Include="Services\Implementations\FileConvert\FilesDataClientService.cs" />
     <Compile Include="Services\Implementations\Histories\HistoryService.cs" />
+    <Compile Include="Services\Implementations\Likes\LikeService.cs" />
     <Compile Include="Services\Implementations\ServerStates\AccessService.cs" />
     <Compile Include="Services\Implementations\ServerStates\ServerInfoService.cs" />
     <Compile Include="Services\Implementations\ServerStates\ServerStateService.cs" />
-    <Compile Include="Services\Implementations\SignaturesService.cs" />
+    <Compile Include="Services\Implementations\Signatures\SignaturesService.cs" />
     <Compile Include="Services\Interfaces\FileConvert\IFilesDataServerService.cs" />
     <Compile Include="Services\Interfaces\FileConvert\IFilesDataClientService.cs" />
     <Compile Include="Services\Interfaces\Histories\IHistoryService.cs" />
+    <Compile Include="Services\Interfaces\Likes\ILikeService.cs" />
     <Compile Include="Services\Interfaces\ServerStates\IServerInfoService.cs" />
     <Compile Include="Services\Interfaces\ServerStates\IServerStateService.cs" />
-    <Compile Include="Services\Interfaces\ISignaturesService.cs" />
+    <Compile Include="Services\Interfaces\Signatures\ISignaturesService.cs" />
     <Compile Include="Services\Interfaces\ServerStates\IAccessService.cs" />
   </ItemGroup>
   <ItemGroup>

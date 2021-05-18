@@ -173,6 +173,7 @@
     <Content Include="Services\FilesConvert\FileConvertingServerService.svc" />
     <Content Include="Services\FilesConvert\FileConvertingClientService.svc" />
     <Content Include="Services\Histories\HistoryClientService.svc" />
+    <Content Include="Services\Likes\LikeClientService.svc" />
     <Content Include="Services\ServerStates\ServerStateClientService.svc" />
     <Content Include="Services\Signatures\SignatureClientService.svc" />
     <Content Include="Services\Signatures\SignatureServerService.svc" />
@@ -193,6 +194,9 @@
     </Compile>
     <Compile Include="Services\Histories\HistoryClientService.svc.cs">
       <DependentUpon>HistoryClientService.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Likes\LikeClientService.svc.cs">
+      <DependentUpon>LikeClientService.svc</DependentUpon>
     </Compile>
     <Compile Include="Services\ServerStates\ServerStateClientService.svc.cs">
       <DependentUpon>ServerStateClientService.svc</DependentUpon>

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Enums.DialogViewModel;
 using GadzhiModules.Modules.GadzhiConvertingModule.Views.DialogViews;
 using MaterialDesignThemes.Wpf;
@@ -37,7 +38,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
         {
             var okCancelDialogViewModel = new OkCancelDialogViewModel(DialogButtonsType.OkCancel, message);
             var okCancelDialogView = new OkCancelDialogView(okCancelDialogViewModel);
-            return (bool)await DialogHost.Show(okCancelDialogView, "RootDialog");
+            return await DialogHost.Show(okCancelDialogView, "RootDialog").
+                   MapAsync(dialogResult => (bool)dialogResult);
         }
 
         /// <summary>
@@ -47,18 +49,19 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.DialogViewMode
         {
             var okCancelDialogViewModel = new OkCancelDialogViewModel(DialogButtonsType.RetryCancel, message);
             var okCancelDialogView = new OkCancelDialogView(okCancelDialogViewModel);
-            return (bool)await DialogHost.Show(okCancelDialogView, "RootDialog");
+            return await DialogHost.Show(okCancelDialogView, "RootDialog").
+                   MapAsync(dialogResult => (bool)dialogResult);
         }
 
         /// <summary>
         /// Создать диалоговое окно результатов конвертирования
         /// </summary>
-        /// <returns>Показать ошибки</returns>
-        public static async Task<bool> GetResultDialog(bool hasErrors)
+        public static async Task<DialogResultType> GetResultDialog(bool hasErrors)
         {
             var successDialogViewModel = new ResultDialogViewModel(hasErrors);
             var successDialogView = new ResultDialogView(successDialogViewModel);
-            return (bool)await DialogHost.Show(successDialogView, "RootDialog");
+            return await DialogHost.Show(successDialogView, "RootDialog").
+                   MapAsync(dialogResult => (DialogResultType)dialogResult);
         }
     }
 }
