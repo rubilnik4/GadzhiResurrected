@@ -13,6 +13,7 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using System.Linq;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 
@@ -74,12 +75,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        private static IPrintersInformation _printersInformation;
+        private IResultValue<IPrintersInformation> _printersInformation;
 
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        public static IPrintersInformation PrintersInformation => 
+        public IResultValue<IPrintersInformation> PrintersInformation => 
             _printersInformation ??= ConverterPrintingConfiguration.ToPrintersInformation();
 
         /// <summary>

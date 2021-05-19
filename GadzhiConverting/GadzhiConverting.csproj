@@ -209,7 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\PrinterInformationElement.cs" />
-    <Compile Include="Configuration\PrintersPdfCollection.cs" />
+    <Compile Include="Configuration\PrintersCollection.cs" />
     <Compile Include="Configuration\RegisterPrintersInformationSection.cs" />
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Extensions\ConvertingSettingsExtensions.cs" />
@@ -226,6 +226,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
     <Compile Include="Infrastructure\Implementations\ConvertingTimeActions.cs" />
+    <Compile Include="Infrastructure\Implementations\ConvertingValidation.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\ConvertingModeChoice.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />
@@ -235,7 +236,7 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
-    <Compile Include="Models\Converters\SettingsApplicationConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterSettingsApplication.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
     <Compile Include="Models\Implementations\FilesConvert\ConvertingSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilePath.cs" />

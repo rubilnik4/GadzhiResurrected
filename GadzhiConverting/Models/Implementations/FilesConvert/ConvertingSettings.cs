@@ -13,12 +13,14 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     public class ConvertingSettings : IConvertingSettings
     {
         public ConvertingSettings(string personId, PdfNamingType pdfNamingType, 
-                                  ConvertingModeType convertingModeType, bool useDefaultSignature)
+                                  ConvertingModeType convertingModeType, bool useDefaultSignature,
+                                  IResultValue<IPrintersInformation> printersInformation)
         {
             PersonId = personId ?? String.Empty;
             PdfNamingType = pdfNamingType;
             ConvertingModeType = convertingModeType;
             UseDefaultSignature = useDefaultSignature;
+            PrintersInformation = printersInformation;
         }
 
         /// <summary>
@@ -42,15 +44,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public bool UseDefaultSignature { get; }
 
         /// <summary>
-        /// Информация о принтере PDF
+        /// Информация о принтерах
         /// </summary>
-        public IResultValue<IPrinterInformation> PdfPrinterInformation =>
-            new ResultValue<IPrinterInformation>(PrintersInformation.PrintersPdf.FirstOrDefault(),
-                                                 new ErrorCommon(ErrorConvertingType.PrinterNotInstall, "PDF принтер не найден"));
-
-        /// <summary>
-        /// Информация о установленных в системе принтерах
-        /// </summary>
-        private static IPrintersInformation PrintersInformation => ProjectSettings.PrintersInformation;
+        public IResultValue<IPrintersInformation> PrintersInformation { get; }
     }
 }

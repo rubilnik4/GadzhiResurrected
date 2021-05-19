@@ -36,5 +36,15 @@ namespace GadzhiCommon.Extensions.Functional
 
             return (arg2, arg3) => @this(arg1, arg2, arg3);
         }
+
+        /// <summary>
+        /// Преобразование функции высшего порядка для трех аргументов
+        /// </summary>
+        public static Func<TIn2, TIn3, TIn4, TOut> Curry<TIn1, TIn2, TIn3, TIn4, TOut>(this Func<TIn1, TIn2, TIn3, TIn4, TOut> @this, TIn1 arg1)
+        {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+
+            return (arg2, arg3, arg4) => @this(arg1, arg2, arg3, arg4);
+        }
     }
 }

@@ -10,8 +10,8 @@ namespace GadzhiConverting.Configuration
     /// <summary>
     /// Конфигурационный файл. Параметры принтеров
     /// </summary>
-    [ConfigurationCollection(typeof(PrintersPdfCollection), AddItemName = nameof(PrinterInformationElement))]
-    public class PrintersPdfCollection : ConfigurationElementCollection, IEnumerable<PrinterInformationElement>
+    [ConfigurationCollection(typeof(PrintersCollection), AddItemName = nameof(PrinterInformationElement))]
+    public class PrintersCollection : ConfigurationElementCollection, IEnumerable<PrinterInformationElement>
     {
         /// <summary>
         /// Получить элемент по индексу

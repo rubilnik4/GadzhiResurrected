@@ -25,7 +25,7 @@ namespace GadzhiConverting.Configuration
         /// <summary>
         /// Коллекция PDF принтеров
         /// </summary>
-        [ConfigurationProperty(nameof(PrintersPdfCollection))]
-        public PrintersPdfCollection PrintersPdfCollection => this[nameof(PrintersPdfCollection)] as PrintersPdfCollection;
+        [ConfigurationProperty(nameof(PrintersCollection))]
+        public PrintersCollection PrintersCollection => this[nameof(PrintersCollection)] as PrintersCollection;
     }
 }

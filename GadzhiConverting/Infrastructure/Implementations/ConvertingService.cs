@@ -110,7 +110,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         [Logger]
         public void StartConverting()
         {
-            if (!CheckSignatures()) return;
+            if (!ConvertingValidation.CheckSignatures(_projectSettings, _messagingService) ||
+                !ConvertingValidation.CheckPrinters(_projectSettings, _messagingService)) return;
 
             _messagingService.ShowMessage("Запуск процесса конвертирования...");
             ConvertingTimeActions.KillPreviousRunProcesses();
@@ -118,16 +119,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             SubscribeToDataBase();
         }
 
-        /// <summary>
-        /// Проверить наличие базы подписей
-        /// </summary>
-        private bool CheckSignatures() =>
-            _projectSettings.ConvertingResources.
-            Map(resources => resources.SignatureNames.OkStatus && resources.SignatureNames.Value.Count > 0).
-            WhereBad(hasSignatures => hasSignatures,
-                badFunc: hasSignatures => hasSignatures.
-                         Void(_ => _messagingService.ShowAndLogError(new ErrorCommon(ErrorConvertingType.SignatureNotFound,
-                                                                                     "База подписей не загружена. Отмена запуска"))));
+       
 
         /// <summary>
         /// Подписаться на обновление пакетов из базы данных

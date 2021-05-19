@@ -31,8 +31,8 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         bool UseDefaultSignature { get; }
 
         /// <summary>
-        /// Информация о принтере PDF
+        /// Информация о принтерах
         /// </summary>
-        IResultValue<IPrinterInformation> PdfPrinterInformation { get; }
+        IResultValue<IPrintersInformation> PrintersInformation { get; }
     }
 }
