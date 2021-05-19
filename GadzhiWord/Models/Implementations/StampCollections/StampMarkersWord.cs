@@ -97,6 +97,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
             "Нач.гр",
             "Гл.спец",
             "Нач.сек",
+            "Начсек",
             "Нач.отд",
             "Зам.Нач.отд",
             "Н.контр",

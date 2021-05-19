@@ -21,7 +21,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters.Likes
         /// Преобразовать в клиентскую модель
         /// </summary>
         public static ILikeIdentity ToClient(LikeIdentityResponse likeIdentityResponse) =>
-            new LikeIdentityClient(likeIdentityResponse.PersonId, likeIdentityResponse.PersonFullname, 
-                                   likeIdentityResponse.LikeCount);
+            new LikeIdentityClient(likeIdentityResponse.PersonId, likeIdentityResponse.PersonFullname,
+                                   likeIdentityResponse.LastDateLike, likeIdentityResponse.LikeCount);
     }
 }

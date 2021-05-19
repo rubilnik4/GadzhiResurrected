@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Models.Interfaces.Likes;
+﻿using System;
+using GadzhiCommon.Models.Interfaces.Likes;
 
 namespace GadzhiDAL.Entities.Likes
 {
@@ -16,6 +17,11 @@ namespace GadzhiDAL.Entities.Likes
         /// Имя пользователя
         /// </summary>
         public virtual string PersonFullname { get; set; }
+
+        /// <summary>
+        /// Последнее обновление
+        /// </summary>
+        public virtual DateTime LastDateLike { get; set; }
 
         /// <summary>
         /// Количество лайков

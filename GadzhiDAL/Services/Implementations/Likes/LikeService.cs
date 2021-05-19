@@ -7,6 +7,7 @@ using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Entities.Likes;
 using GadzhiDAL.Factories.Interfaces;
 using GadzhiDAL.Infrastructure.Implementations.Converters.Likes;
+using GadzhiDAL.Infrastructure.Implementations.DateTimes;
 using GadzhiDAL.Services.Interfaces.Likes;
 using GadzhiDTOBase.TransferModels.Likes;
 using GadzhiDTOBase.TransferModels.Signatures;
@@ -49,10 +50,11 @@ namespace GadzhiDAL.Services.Implementations.Likes
             var likeEntity = await unitOfWork.Session.GetAsync<LikeIdentityEntity>(personId);
             if (likeEntity == null)
             {
-                var likeUpdateEntity = new LikeIdentityEntity 
-                { 
+                var likeUpdateEntity = new LikeIdentityEntity
+                {
                     PersonId = personId,
                     PersonFullname = personFullName,
+                    LastDateLike = DateTimeService.GetDateTimeNow(),
                     LikeCount = 1
                 };
                 await unitOfWork.Session.SaveOrUpdateAsync(likeUpdateEntity);
@@ -60,6 +62,7 @@ namespace GadzhiDAL.Services.Implementations.Likes
             else
             {
                 likeEntity.PersonFullname = personFullName;
+                likeEntity.LastDateLike = DateTimeService.GetDateTimeNow();
                 likeEntity.LikeCount += 1;
             }
             await unitOfWork.CommitAsync();

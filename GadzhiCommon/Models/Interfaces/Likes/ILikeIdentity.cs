@@ -1,4 +1,6 @@
-﻿namespace GadzhiCommon.Models.Interfaces.Likes
+﻿using System;
+
+namespace GadzhiCommon.Models.Interfaces.Likes
 {
     /// <summary>
     /// Пользователь с лайком
@@ -14,6 +16,11 @@
         /// Имя пользователя
         /// </summary>
         string PersonFullname { get; }
+
+        /// <summary>
+        /// Последнее обновление
+        /// </summary>
+        DateTime LastDateLike { get; }
 
         /// <summary>
         /// Количество лайков

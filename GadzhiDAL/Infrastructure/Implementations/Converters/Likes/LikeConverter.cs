@@ -21,6 +21,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Likes
         /// </summary>
         public static LikeIdentityResponse ToResponse(LikeIdentityEntity likeIdentityEntity) =>
             new LikeIdentityResponse(likeIdentityEntity.PersonId, likeIdentityEntity.PersonFullname,
-                                     likeIdentityEntity.LikeCount);
+                                     likeIdentityEntity.LastDateLike, likeIdentityEntity.LikeCount);
     }
 }

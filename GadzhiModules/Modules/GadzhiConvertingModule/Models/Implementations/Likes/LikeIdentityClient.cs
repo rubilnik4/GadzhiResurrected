@@ -1,4 +1,5 @@
-﻿using GadzhiCommon.Models.Interfaces.Likes;
+﻿using System;
+using GadzhiCommon.Models.Interfaces.Likes;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Likes
 {
@@ -7,10 +8,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Li
     /// </summary>
     public class LikeIdentityClient: ILikeIdentity
     {
-        public LikeIdentityClient(string personId, string personFullname, int likeCount)
+        public LikeIdentityClient(string personId, string personFullname, DateTime lastDateLike, int likeCount)
         {
             PersonId = personId;
             PersonFullname = personFullname;
+            LastDateLike = lastDateLike;
             LikeCount = likeCount;
         }
 
@@ -23,6 +25,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Li
         /// Имя пользователя
         /// </summary>
         public string PersonFullname { get; }
+
+        /// <summary>
+        /// Последнее обновление
+        /// </summary>
+        public DateTime LastDateLike { get; }
 
         /// <summary>
         /// Количество лайков

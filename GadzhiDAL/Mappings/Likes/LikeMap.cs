@@ -1,4 +1,6 @@
-﻿using FluentNHibernate.Mapping;
+﻿using System;
+using System.Globalization;
+using FluentNHibernate.Mapping;
 using GadzhiDAL.Entities.Likes;
 using GadzhiDAL.Entities.ServerStates;
 
@@ -13,6 +15,7 @@ namespace GadzhiDAL.Mappings.Likes
         {
             Id(x => x.PersonId).Not.Nullable().Default("");
             Map(x => x.PersonFullname).Not.Nullable().Default("");
+            Map(x => x.LastDateLike).Not.Nullable();
             Map(x => x.LikeCount).Not.Nullable().Default("0");
         }
     }

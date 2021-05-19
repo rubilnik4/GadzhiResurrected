@@ -153,6 +153,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels
                 container.Resolve<ConvertingSettingsViewModel>(),
                 container.Resolve<ServerViewModel>(),
                 container.Resolve<HistoryViewModel>(),
+                container.Resolve<LikeViewModel>(),
             };
 
         #region IDisposable Support

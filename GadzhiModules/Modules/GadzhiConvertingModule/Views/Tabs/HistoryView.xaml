@@ -6,7 +6,6 @@
              mc:Ignorable="d" 
              xmlns:viewModelTabs="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs"
              xmlns:historyViews="clr-namespace:GadzhiModules.Modules.GadzhiConvertingModule.Views.Tabs.HistoryViews"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=viewModelTabs:HistoryViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
