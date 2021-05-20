@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Interfaces.LibraryData;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings
@@ -15,13 +17,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
     public class ConvertingSettings : IConvertingSettings
     {
         public ConvertingSettings(ISignatureLibrary personSignature, PdfNamingType pdfNamingType,
-                                  ColorPrintType colorPrintType, ConvertingModeType convertingModeType,
-                                  bool useDefaultSignature)
+                                  ColorPrintType colorPrintType, bool useDefaultSignature)
         {
-            PersonSignature = personSignature ?? throw new ArgumentNullException(nameof(personSignature));
+            PersonSignature = personSignature;
             PdfNamingType = pdfNamingType;
             ColorPrintType = colorPrintType;
-            ConvertingModeType = convertingModeType;
             UseDefaultSignature = useDefaultSignature;
         }
 
@@ -45,10 +45,24 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Pr
         public ColorPrintType ColorPrintType { get; set; }
 
         /// <summary>
-        /// Тип конвертации
+        /// Типы конвертации
         /// </summary>
         [Logger]
-        public ConvertingModeType ConvertingModeType { get; set; }
+        public IReadOnlyCollection<ConvertingMode> ConvertingModes { get; } = 
+            ConvertingModeTypeConverter.ConvertingModeTypesString.Keys.
+            Select(convertingMode => new ConvertingMode(convertingMode,
+                                                        ConvertingModeTypeConverter.DefaultConvertingModeTypes.
+                                                                                    Contains(convertingMode))).
+            ToList();
+
+        /// <summary>
+        /// Выбранные типы конвертации
+        /// </summary>
+        public IReadOnlyCollection<ConvertingModeType> ConvertingModesUsed =>
+            ConvertingModes.
+            Where(convertingMode => convertingMode.IsUsed).
+            Select(convertingMode => convertingMode.ConvertingModeType).
+            ToList();
 
         /// <summary>
         /// Использовать подпись по умолчанию для разработчика

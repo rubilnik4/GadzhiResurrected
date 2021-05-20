@@ -4,7 +4,7 @@ using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiConverting.Infrastructure.Interfaces;
 
-namespace GadzhiConverting.Infrastructure.Implementations
+namespace GadzhiConverting.Infrastructure.Implementations.Converting
 {
     /// <summary>
     /// Проверка перед стартом

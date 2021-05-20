@@ -21,7 +21,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        public virtual StatusProcessingProject StatusProcessingProject { get; set; } = StatusProcessingProject.InQueue;
+        public virtual StatusProcessingProject StatusProcessingProject { get; set; }
 
         /// <summary>
         /// Время создания запроса на конвертирование

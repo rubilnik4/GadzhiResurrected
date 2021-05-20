@@ -24,28 +24,24 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>       
         public static PackageDataShortResponseClient PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
                                                                                        FilesQueueInfo filesQueueInfo) =>
-            (packageDataEntity != null)
-                ? new PackageDataShortResponseClient()
-                {
-                    Id = Guid.Parse(packageDataEntity.Id),
-                    StatusProcessingProject = packageDataEntity.StatusProcessingProject,
-                    FilesData = packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).ToList(),
-                    FilesQueueInfo = FilesQueueInfoToResponse(filesQueueInfo),
-                }
-                : throw new ArgumentNullException(nameof(packageDataEntity));
+           new PackageDataShortResponseClient()
+           {
+               Id = Guid.Parse(packageDataEntity.Id),
+               StatusProcessingProject = packageDataEntity.StatusProcessingProject,
+               FilesData = packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).ToList(),
+               FilesQueueInfo = FilesQueueInfoToResponse(filesQueueInfo),
+           };
 
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
         public static async Task<PackageDataResponseClient> PackageDataAccessToResponse(PackageDataEntity packageDataEntity)
         {
-            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
-
             var filesDataTasks = packageDataEntity.FileDataEntities.AsQueryable().
                                  Select(fileData => FileDataAccessToResponse(fileData));
             var filesData = await Task.WhenAll(filesDataTasks);
 
-            return new PackageDataResponseClient()
+            return new PackageDataResponseClient
             {
                 Id = Guid.Parse(packageDataEntity.Id),
                 StatusProcessingProject = packageDataEntity.StatusProcessingProject,
@@ -103,7 +99,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Конвертировать информацию о количестве файлов в очереди
         /// </summary>        
         private static FilesQueueInfoResponseClient FilesQueueInfoToResponse(FilesQueueInfo filesQueueInfo) =>
-            new FilesQueueInfoResponseClient()
+            new FilesQueueInfoResponseClient
             {
                 FilesInQueueCount = filesQueueInfo?.FilesInQueueCount ?? 0,
                 PackagesInQueueCount = filesQueueInfo?.PackagesInQueueCount ?? 0,
@@ -113,7 +109,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Конвертировать информацию о готовых файлах
         /// </summary>        
         private static FileDataSourceResponseClient FileDataSourceToResponse(FileDataSourceEntity fileDataSourceEntity) =>
-            new FileDataSourceResponseClient()
+            new FileDataSourceResponseClient
             {
                 FileName = fileDataSourceEntity?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceEntity)),
                 FileDataSource = fileDataSourceEntity.FileDataSource?.AsQueryable().ToArray(),
@@ -123,12 +119,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// Конвертировать ошибки в трансферную модель
         /// </summary>
         private static ErrorCommonResponse ToErrorCommon(ErrorComponent errorComponent) =>
-            (errorComponent != null)
-            ? new ErrorCommonResponse()
+            new ErrorCommonResponse
             {
                 ErrorConvertingType = errorComponent.ErrorConvertingType,
                 ErrorDescription = errorComponent.ErrorDescription
-            }
-            : throw new ArgumentNullException(nameof(errorComponent));
+            };
     }
 }

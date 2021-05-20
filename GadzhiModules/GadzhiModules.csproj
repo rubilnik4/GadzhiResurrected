@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\ListBoxSelectedItemsBehavior.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\HyperLinkExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
@@ -221,7 +222,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Implementations\Identities\ClientIdentity.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Likes\LikeIdentityClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ConvertingMode.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />

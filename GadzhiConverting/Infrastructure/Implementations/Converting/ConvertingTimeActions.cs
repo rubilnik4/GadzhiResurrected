@@ -4,14 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
-using GadzhiCommon.Models.Enums;
 using GadzhiConverting.Infrastructure.Interfaces;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 
-namespace GadzhiConverting.Infrastructure.Implementations
+namespace GadzhiConverting.Infrastructure.Implementations.Converting
 {
     /// <summary>
     /// Ежедневные действия предварительной загрузки

@@ -113,7 +113,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultCollection<IFileDataSourceServer> CreateProcessingFile(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
                                                                    IConvertingSettings convertingSettings) =>
             new ResultError().
-            ResultVoidOk(_ => _messagingService.ShowMessage("Создание файлов PDF")).
+            ResultVoidOk(_ => _messagingService.ShowMessage("Создание файлов PDF и печать")).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).
             ResultValueOkBind(_ => 
                 _applicationConverting.
@@ -131,7 +131,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                                                                 IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                                 IConvertingSettings convertingSettings) =>
             documentLibrary.GetStampContainer(convertingSettings.ToApplication()).
-            WhereContinue(stampContainer => ConvertingModeChoice.IsDwgConvertingNeed(convertingSettings.ConvertingModeType) &&
+            WhereContinue(stampContainer => ConvertingModeChoice.IsDwgConvertingNeed(convertingSettings.ConvertingModeTypes) &&
                                             (stampContainer.StampDocumentType == StampDocumentType.Specification ||
                                              stampContainer.StampDocumentType == StampDocumentType.Drawing),
                 okFunc: stampContainer => saveResult.ConcatResultValue(ExportFile(documentLibrary, filePath, stampContainer.StampDocumentType)),
@@ -175,7 +175,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
         [Logger]
         private IResultCollection<IFileDataSourceServer> CheckDataSourceExistence(IResultCollection<IFileDataSourceServer> fileDataSourceResult) =>
             fileDataSourceResult.Value.
-            Where(fileDataSource => !_fileSystemOperations.IsFileExist(fileDataSource.FilePathServer)).
+            Where(fileDataSource => fileDataSource.ConvertingModeType != ConvertingModeType.Print &&
+                                    !_fileSystemOperations.IsFileExist(fileDataSource.FilePathServer)).
             ToList().
             Map(fileDataSources => new
             {

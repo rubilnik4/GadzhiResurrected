@@ -51,7 +51,7 @@
                     <ProgressBar Style="{StaticResource PreLoadingProgressData}"
                                  Visibility="{Binding PersonSignatures.IsNotCompleted, Converter={StaticResource VisibilityConverter}}"
                                  Margin="0 0 10 0"/>
-                 
+
                     <ComboBox materialDesign:HintAssist.Hint="{Binding PersonSignatureLoading}"
                               SelectedValue="{Binding PersonSignature}"
                               ItemsSource="{Binding PersonSignatures.Result.Value}"
@@ -91,36 +91,42 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0"
-                       Grid.Column="0" 
-                       Text="Именование PDF:"
-                       Style="{StaticResource TextBlockDescription}"/>
-                <ComboBox Grid.Row="0"
+                           Grid.Column="0" 
+                           Text="Тип конвертации:"
+                           Style="{StaticResource TextBlockDescription}"/>
+                <ListBox Grid.Row="0"
+                         Grid.Column="1" 
+                         Style="{StaticResource MaterialDesignFilterChipOutlineListBox}"
+                         ItemsSource="{Binding ConvertingModes}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" 
+                               BasedOn="{StaticResource MaterialDesignFilterChipOutlineListBoxItem}">
+                            <Setter Property="IsSelected" Value="{Binding IsUsed, Mode=TwoWay}"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0" 
+                           Text="Именование PDF:"
+                           Style="{StaticResource TextBlockDescription}"/>
+                <ComboBox Grid.Row="1"
                           Grid.Column="1" 
                           SelectedValue="{Binding PdfNamingType, Mode=TwoWay}"
                           SelectedValuePath="Key"
                           ItemsSource="{Binding PdfNamingTypes}"
                           DisplayMemberPath="Value"/>
 
-
-                <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="2"
                            Grid.Column="0" 
                            Text="Цвет по умолчанию:"
                            Style="{StaticResource TextBlockDescription}"/>
-                <ComboBox Grid.Row="1"
+                <ComboBox Grid.Row="2"
                           Grid.Column="1" 
                           SelectedValue="{Binding ColorPrintName, Mode=TwoWay}"
                           ItemsSource="{Binding ColorPrintsString}"/>
-
-                <TextBlock Grid.Row="2"
-                           Grid.Column="0" 
-                           Text="Тип конвертации:"
-                           Style="{StaticResource TextBlockDescription}"/>
-                <ComboBox Grid.Row="2"
-                          Grid.Column="1" 
-                          SelectedValue="{Binding ConvertingModeName, Mode=TwoWay}"
-                          ItemsSource="{Binding ConvertingModesString}"/>
             </Grid>
         </GroupBox>
-      
+
     </Grid>
 </UserControl>

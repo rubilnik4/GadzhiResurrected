@@ -19,7 +19,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>          
         public static PackageDataRequestServer PackageDataToRequest(PackageDataEntity packageDataEntity) =>
             packageDataEntity != null
-                ? new PackageDataRequestServer()
+                ? new PackageDataRequestServer
                 {
                     Id = Guid.Parse(packageDataEntity.Id),
                     AttemptingConvertCount = packageDataEntity.AttemptingConvertCount,
@@ -33,7 +33,8 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>
         private static ConvertingSettingsRequest ConvertingSettingsToRequest(ConvertingSettingsComponent convertingSettings) =>
             new ConvertingSettingsRequest(convertingSettings.PersonId, convertingSettings.PdfNamingType,
-                                           convertingSettings.ConvertingModeType, convertingSettings.UseDefaultSignature);
+                                           convertingSettings.ConvertingModeTypes.ToList(), 
+                                           convertingSettings.UseDefaultSignature);
 
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос

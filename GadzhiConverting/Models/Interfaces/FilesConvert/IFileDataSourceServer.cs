@@ -10,6 +10,11 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
     public interface  IFileDataSourceServer: IFilePath, IEnumerable<IFileDataSourceServer>
     {
         /// <summary>
+        /// Тип конвертации
+        /// </summary>
+        ConvertingModeType ConvertingModeType { get; }
+
+        /// <summary>
         /// Формат печати
         /// </summary>
         IReadOnlyCollection<string> PaperSizes { get; }

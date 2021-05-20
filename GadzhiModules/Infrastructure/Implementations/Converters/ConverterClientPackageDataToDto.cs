@@ -44,7 +44,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                                Where(fileSuccess => fileSuccess.Success).
                                                Select(fileSuccess => fileSuccess.FileDataSourceRequest);
 
-            return new PackageDataRequestClient()
+            return new PackageDataRequestClient
             {
                 Id = packageData.GenerateId(),
                 FilesData = filesRequestEnsuredWithBytes.ToList(),
@@ -57,7 +57,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>
         private static ConvertingSettingsRequest ToConvertingSettingsRequest(IConvertingSettings convertingSetting) =>
              new ConvertingSettingsRequest(convertingSetting.PersonSignature.PersonId ?? String.Empty,
-                                           convertingSetting.PdfNamingType, convertingSetting.ConvertingModeType,
+                                           convertingSetting.PdfNamingType, convertingSetting.ConvertingModesUsed.ToList(),
                                            convertingSetting.UseDefaultSignature);
 
         /// <summary>

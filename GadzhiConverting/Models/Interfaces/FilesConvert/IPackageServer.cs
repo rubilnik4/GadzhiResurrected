@@ -24,7 +24,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Параметры конвертации
         /// </summary>
-        IConvertingSettings ConvertingSettings { get; }
+        IConvertingPackageSettings ConvertingPackageSettings { get; }
 
         /// <summary>
         /// Статус выполнения проекта

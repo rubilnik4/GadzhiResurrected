@@ -26,15 +26,15 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
             var packageDataAccess = packageDataRequest.FilesData?.AsQueryable().
                                     Select(fileData => ToFileData(fileData));
 
-            var filesDataEntity = new PackageDataEntity();
-            filesDataEntity.SetId(packageDataRequest.Id);
-            filesDataEntity.IdentityLocalName = identityName;
-            filesDataEntity.IdentityServerName = String.Empty;
-            filesDataEntity.CreationDateTime = DateTimeService.GetDateTimeNow();
-            filesDataEntity.ConvertingSettings = ConvertingSettingsToRequest(packageDataRequest.ConvertingSettings);
-            filesDataEntity.SetFileDataEntities(packageDataAccess);
-
-            return filesDataEntity;
+            var packageDataEntity = new PackageDataEntity();
+            packageDataEntity.SetId(packageDataRequest.Id);
+            packageDataEntity.IdentityLocalName = identityName;
+            packageDataEntity.IdentityServerName = String.Empty;
+            packageDataEntity.CreationDateTime = DateTimeService.GetDateTimeNow();
+            packageDataEntity.ConvertingSettings = ConvertingSettingsToRequest(packageDataRequest.ConvertingSettings);
+            packageDataEntity.SetFileDataEntities(packageDataAccess);
+            packageDataEntity.StatusProcessingProject = StatusProcessingProject.InQueue;
+            return packageDataEntity;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
            {
                PersonId = convertingSettings.PersonId,
                PdfNamingType = convertingSettings.PdfNamingType,
-               ConvertingModeType = convertingSettings.ConvertingModeType,
+               ConvertingModeTypes = convertingSettings.ConvertingModeTypes,
                UseDefaultSignature = convertingSettings.UseDefaultSignature,
            };
 

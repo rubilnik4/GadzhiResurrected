@@ -17,17 +17,17 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     {
         public PackageServer(IPackageServer packageServer, IEnumerable<IFileDataServer> filesDataServer)
             : this(packageServer.NonNull().Id, packageServer.NonNull().AttemptingConvertCount,
-                  packageServer.NonNull().StatusProcessingProject, packageServer.NonNull().ConvertingSettings,
+                  packageServer.NonNull().StatusProcessingProject, packageServer.NonNull().ConvertingPackageSettings,
                   filesDataServer)
         { }
 
         public PackageServer(Guid id, int attemptingConvertCount, StatusProcessingProject statusProcessingProject,
-                             IConvertingSettings convertingSettings, IEnumerable<IFileDataServer> filesDataServer)
+                             IConvertingPackageSettings convertingSettings, IEnumerable<IFileDataServer> filesDataServer)
         {
             Id = id;
             AttemptingConvertCount = attemptingConvertCount;
             StatusProcessingProject = statusProcessingProject;
-            ConvertingSettings = convertingSettings ?? throw new ArgumentNullException(nameof(convertingSettings));
+            ConvertingPackageSettings = convertingSettings ?? throw new ArgumentNullException(nameof(convertingSettings));
             FilesDataServer = filesDataServer?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(filesDataServer));
         }
 
@@ -44,7 +44,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Параметры конвертации
         /// </summary>
-        public IConvertingSettings ConvertingSettings{ get; }
+        public IConvertingPackageSettings ConvertingPackageSettings { get; }
 
         /// <summary>
         /// Статус выполнения проекта
@@ -81,14 +81,14 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// </summary>
         public IPackageServer SetErrorToAllFiles(IErrorCommon filesError) =>
             FilesDataServer.Select(fileData => new FileDataServer(fileData, StatusProcessing.ConvertingComplete, filesError)).
-            Map(filesData => new PackageServer(Id, AttemptingConvertCount, StatusProcessingProject, ConvertingSettings, filesData));
+            Map(filesData => new PackageServer(Id, AttemptingConvertCount, StatusProcessingProject, ConvertingPackageSettings, filesData));
 
         /// <summary>
         /// Присвоить статус обработки проекта
         /// </summary>     
         public IPackageServer SetStatusProcessingProject(StatusProcessingProject statusProcessingProject) =>
             statusProcessingProject != StatusProcessingProject ?
-            new PackageServer(Id, AttemptingConvertCount, statusProcessingProject, ConvertingSettings, FilesDataServer) :
+            new PackageServer(Id, AttemptingConvertCount, statusProcessingProject, ConvertingPackageSettings, FilesDataServer) :
             this;
 
         /// <summary>

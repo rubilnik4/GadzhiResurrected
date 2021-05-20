@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.LibraryData;
@@ -13,11 +14,11 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     public class ConvertingSettingsRequest
     {
         public ConvertingSettingsRequest(string personId, PdfNamingType pdfNamingType,
-                                         ConvertingModeType convertingModeType, bool useDefaultSignature)
+                                         IList<ConvertingModeType> convertingModeTypes, bool useDefaultSignature)
         {
             PersonId = personId;
             PdfNamingType = pdfNamingType;
-            ConvertingModeType = convertingModeType;
+            ConvertingModeTypes = convertingModeTypes;
             UseDefaultSignature = useDefaultSignature;
         }
 
@@ -25,24 +26,24 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Идентификатор личной подписи
         /// </summary>
         [DataMember]
-        public string PersonId { get; private set; }
+        public string PersonId { get; set; }
 
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
         [DataMember]
-        public PdfNamingType PdfNamingType { get; private set; }
+        public PdfNamingType PdfNamingType { get; set; }
 
         /// <summary>
         /// Тип конвертации
         /// </summary>
         [DataMember]
-        public ConvertingModeType ConvertingModeType { get; private set; }
+        public IList<ConvertingModeType> ConvertingModeTypes { get; set; }
 
         /// <summary>
         /// Использовать подпись по умолчанию
         /// </summary>
         [DataMember]
-        public bool UseDefaultSignature { get; private set; }
+        public bool UseDefaultSignature { get; set; }
     }
 }

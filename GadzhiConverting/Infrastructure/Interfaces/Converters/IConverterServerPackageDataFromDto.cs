@@ -2,6 +2,8 @@
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiDTOServer.TransferModels.FilesConvert;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConverting.Models.Interfaces.Printers;
 
 namespace GadzhiConverting.Infrastructure.Interfaces.Converters
 {

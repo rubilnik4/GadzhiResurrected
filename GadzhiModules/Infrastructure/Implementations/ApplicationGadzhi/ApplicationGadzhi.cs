@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,6 +11,7 @@ using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Implementations.LibraryData;
+using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
 using GadzhiModules.Infrastructure.Interfaces.Services;
@@ -110,7 +112,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             Map(personInformation => new ConvertingSettings(new SignatureLibrary(Properties.Settings.Default.PersonId, personInformation),
                                                             (PdfNamingType)Properties.Settings.Default.PdfNamingType,
                                                             (ColorPrintType)Properties.Settings.Default.ColorPrint,
-                                                            ConvertingModeType.All, Properties.Settings.Default.UseDefaultSignature));
+                                                            Properties.Settings.Default.UseDefaultSignature));
 
         /// <summary>
         /// Сохранить конфигурацию приложения

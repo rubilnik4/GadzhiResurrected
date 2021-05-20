@@ -53,7 +53,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             ResultCurryOkBind(printerInformation.PrinterFormatType.HasValue
                                   ? new ResultValue<PrinterFormatType>(printerInformation.PrinterFormatType.Value)
                                   : new ResultValue<PrinterFormatType>(new ErrorCommon(ErrorConvertingType.ValueNotInitialized, "Отсутствует формат принтера"))).
-            ResultCurryOkBind(new ResultValue<string>(printerInformation.Name, new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
+            ResultCurryOkBind(new ResultValue<string>(printerInformation.PrefixSearchPaperSize, new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
                                                                                                      "Отсутствует префикс принтера"))).
             ResultValueOk(func => func());
     }

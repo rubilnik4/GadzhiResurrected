@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
 
@@ -17,12 +18,12 @@ namespace GadzhiDAL.Entities.FilesConvert.Components
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
-        public PdfNamingType PdfNamingType { get; set; } = PdfNamingType.ByFile;
+        public PdfNamingType PdfNamingType { get; set; }
 
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
-        public ConvertingModeType ConvertingModeType { get; set; } = ConvertingModeType.All;
+        public IList<ConvertingModeType> ConvertingModeTypes { get; set; }
 
         /// <summary>
         /// Использовать подпись по умолчанию

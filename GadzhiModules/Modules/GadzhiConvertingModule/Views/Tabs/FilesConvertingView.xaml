@@ -229,7 +229,7 @@
             </DataGrid.Columns>
 
             <b:Interaction.Behaviors>
-                <bev:DataGridSelectedItemsBlendBehavior SelectedItems="{Binding Path=(viewModelTabs:FilesConvertingViewModel.SelectedFilesDataItems), Mode=TwoWay}" />
+                <bev:DataGridSelectedItemsBehavior SelectedItems="{Binding Path=(viewModelTabs:FilesConvertingViewModel.SelectedFilesDataItems), Mode=TwoWay}" />
             </b:Interaction.Behaviors>
 
             <DataGrid.InputBindings>

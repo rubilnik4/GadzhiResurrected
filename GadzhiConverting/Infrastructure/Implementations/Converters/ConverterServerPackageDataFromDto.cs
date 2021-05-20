@@ -13,6 +13,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConverting.Models.Interfaces.Printers;
 using GadzhiDTOServer.Infrastructure.Implementation;
 
 namespace GadzhiConverting.Infrastructure.Implementations.Converters
@@ -29,7 +31,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
 
         public ConverterServerPackageDataFromDto(IFileSystemOperations fileSystemOperations)
         {
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _fileSystemOperations = fileSystemOperations;
         }
 
         /// <summary>
@@ -50,9 +52,9 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Преобразовать параметры конвертации из трансферной модели
         /// </summary>
-        private static IConvertingSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) => 
-            new ConvertingSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType,
-                                   convertingSettingsRequest.ConvertingModeType, convertingSettingsRequest.UseDefaultSignature);
+        private static IConvertingPackageSettings ToConvertingSettings(ConvertingSettingsRequest convertingSettingsRequest) => 
+            new ConvertingPackageSettings(convertingSettingsRequest.PersonId, convertingSettingsRequest.PdfNamingType,
+                                   convertingSettingsRequest.ConvertingModeTypes, convertingSettingsRequest.UseDefaultSignature);
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс

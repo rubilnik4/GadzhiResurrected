@@ -49,7 +49,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         public IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFilePath filePath) =>
             ExecuteAndHandleError(() => documentLibrary.SaveAs(filePath.FilePathServer),
                                   errorMessage: new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка сохранения файла {filePath.FileNameClient}")).
-            ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
+            ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, ConvertingModeType.Main));
 
         /// <summary>
         /// Сохранить файл PDF
@@ -69,7 +69,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                     StampDocumentType stampDocumentType) =>
            ExecuteAndHandleError(() => documentLibrary.Export(filePath.FilePathServer, stampDocumentType),
                          errorMessage: new ErrorCommon(ErrorConvertingType.ExportError, $"Ошибка экспорта файла {filePath.FileNameClient}")).
-            ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
+           ResultValueOk(fileExportPath => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, ConvertingModeType.Export));
 
         /// <summary>
         /// Закрыть файл

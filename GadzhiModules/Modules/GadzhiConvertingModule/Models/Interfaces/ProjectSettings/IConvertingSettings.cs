@@ -1,6 +1,11 @@
-﻿using GadzhiCommon.Enums.ConvertingSettings;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Interfaces.LibraryData;
+using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings
 {
@@ -25,9 +30,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Project
         ColorPrintType ColorPrintType { get; set; }
 
         /// <summary>
-        /// Тип конвертации
+        /// Типы конвертации
         /// </summary>
-        ConvertingModeType ConvertingModeType { get; set; }
+        IReadOnlyCollection<ConvertingMode> ConvertingModes { get; }
+
+        /// <summary>
+        /// Выбранные типы конвертации
+        /// </summary>
+        IReadOnlyCollection<ConvertingModeType> ConvertingModesUsed { get; }
 
         /// <summary>
         /// Использовать подпись по умолчанию для разработчика

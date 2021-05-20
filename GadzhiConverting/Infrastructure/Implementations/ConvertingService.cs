@@ -18,6 +18,7 @@ using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
 using GadzhiCommon.Models.Enums;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiConverting.Infrastructure.Implementations.Converting;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
@@ -283,7 +284,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             FirstOrDefault(fileData => !packageServer.IsCompleted && !fileData.IsCompleted).
             Map(fileData => new ResultValue<IFileDataServer>(fileData, new ErrorCommon(ErrorConvertingType.ArgumentNullReference, nameof(IFileDataServer)))).
             ResultOkBad(
-                okFunc: fileData => ConvertingByCountLimit(fileData, packageServer.ConvertingSettings).
+                okFunc: fileData => ConvertingByCountLimit(fileData, new ConvertingSettings(packageServer.ConvertingPackageSettings,
+                                                                                            _projectSettings.PrintersInformation)).
                                     Map(fileDataConvert => packageServer.ChangeFileDataServer(fileDataConvert).
                                                            Map(packageChanged => SendIntermediateResponse(packageChanged, fileDataConvert))).
                                     ResultValueOkAsync(ConvertingFilesData).

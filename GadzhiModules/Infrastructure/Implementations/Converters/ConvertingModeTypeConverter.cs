@@ -15,9 +15,9 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         public static IReadOnlyDictionary<ConvertingModeType, string> ConvertingModeTypesString =>
             new Dictionary<ConvertingModeType, string>
             {
-                { ConvertingModeType.All, "Все типы" },
-                { ConvertingModeType.Pdf, "Только PDF" },
-                { ConvertingModeType.Export, "Только DWG и XLS" },
+                { ConvertingModeType.Pdf, "PDF" },
+                { ConvertingModeType.Export, "DWG/XLS" },
+                { ConvertingModeType.Print, "Печать" },
             };
 
         /// <summary>
@@ -40,5 +40,11 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>       
         public static ConvertingModeType ConvertingModeFromString(string colorPrint) =>
             ConvertingModeTypesString.FirstOrDefault(convertingMode => convertingMode.Value == colorPrint).Key;
+
+        /// <summary>
+        /// Типы конвертации по умолчанию
+        /// </summary>
+        public static IReadOnlyCollection<ConvertingModeType> DefaultConvertingModeTypes =>
+            new List<ConvertingModeType> { ConvertingModeType.Pdf, ConvertingModeType.Export };
     }
 }
