@@ -50,7 +50,7 @@ namespace GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartia
         /// <summary>
         /// Формат
         /// </summary>
-        string PaperSize { get; }
+        StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Тип расположения штампа

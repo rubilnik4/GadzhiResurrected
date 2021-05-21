@@ -82,7 +82,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampCreating
         /// Получить параметры штампа Word
         /// </summary>
         public static StampSettingsWord GetStampSettingsWord(int stampIndex, ConvertingSettingsApp convertingSettings,
-                                                             string paperSize, StampOrientationType stampOrientationType) =>
+                                                             StampPaperSizeType paperSize, StampOrientationType stampOrientationType) =>
             new StampSettingsWord(new StampIdentifier(stampIndex), convertingSettings.PersonId,
                                   convertingSettings.PdfNamingType, paperSize, stampOrientationType, convertingSettings.UseDefaultSignature);
 

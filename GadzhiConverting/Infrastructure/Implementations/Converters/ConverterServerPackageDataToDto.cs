@@ -93,11 +93,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         {
             (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePathServer);
 
-            var fileDataSourceResponseServer = new FileDataSourceResponseServer()
+            var fileDataSourceResponseServer = new FileDataSourceResponseServer
             {
                 FileName = fileDataSourceServer.FileNameClient,
                 FileExtensionType = fileDataSourceServer.FileExtensionType,
-                PaperSizes = fileDataSourceServer.PaperSizes.ToList(),
+                PaperSizes = fileDataSourceServer.PaperSizes.Select(paperSize => paperSize.ToString()).ToList(),
                 PrinterName = fileDataSourceServer.PrinterName,
                 FileDataSource = fileDataSourceZip,
             };

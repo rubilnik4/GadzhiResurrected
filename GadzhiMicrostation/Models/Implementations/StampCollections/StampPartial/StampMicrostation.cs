@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.StringAdditional;
+using GadzhiApplicationCommon.Infrastructure.Implementations.Converters.StampCollections;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Implementation.LibraryData;
 using GadzhiApplicationCommon.Models.Implementation.StampCollections;
@@ -25,7 +27,7 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// </summary>
         public ICellElementMicrostation StampCellElement { get; }
 
-        protected StampMicrostation(StampSettings stampSettings, ICellElementMicrostation stampCellElement, 
+        protected StampMicrostation(StampSettings stampSettings, ICellElementMicrostation stampCellElement,
                                     SignaturesSearching signaturesSearching)
             : base(stampSettings, signaturesSearching)
         {
@@ -45,18 +47,19 @@ namespace GadzhiMicrostation.Models.Implementations.StampCollections.StampPartia
         /// <summary>
         /// Формат
         /// </summary>
-        public override string PaperSize =>
+        public override StampPaperSizeType PaperSize =>
             StampCellElement.SubElements.
             FirstOrDefault(subElement => subElement.IsTextElementMicrostation &&
                                          StampFieldMain.IsFormatField(subElement.AsTextElementMicrostation.Text)).
-            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text));
+            Map(subElement => StampFieldMain.GetPaperSizeFromField(subElement.AsTextElementMicrostation.Text)).
+            Map(ConverterStampPaperSize.ToPaperSize);
 
         /// <summary>
         /// Тип расположения штампа
         /// </summary>
-        public override StampOrientationType Orientation => 
-            StampCellElement.Range.Width >= StampCellElement.Range.Height 
-            ? StampOrientationType.Landscape
-            : StampOrientationType.Portrait;
+        public override StampOrientationType Orientation =>
+            StampCellElement.Range.Width >= StampCellElement.Range.Height
+                ? StampOrientationType.Landscape
+                : StampOrientationType.Portrait;
     }
 }

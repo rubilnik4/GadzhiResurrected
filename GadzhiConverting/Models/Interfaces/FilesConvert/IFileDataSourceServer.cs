@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 
@@ -17,7 +18,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Формат печати
         /// </summary>
-        IReadOnlyCollection<string> PaperSizes { get; }
+        IReadOnlyCollection<StampPaperSizeType> PaperSizes { get; }
 
         /// <summary>
         /// Имя принтера

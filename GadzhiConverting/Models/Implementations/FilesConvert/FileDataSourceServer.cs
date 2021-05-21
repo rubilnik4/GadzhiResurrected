@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
@@ -15,26 +16,27 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     public class FileDataSourceServer : FilePath, IFileDataSourceServer
     {
         public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType)
-            : this(filePathServer, filePathClient, convertingModeType, new List<string> { "-" }, "-")
+            : this(filePathServer, filePathClient, convertingModeType, 
+                   new List<StampPaperSizeType> {StampPaperSizeType.Undefined}, "-")
         { }
 
         public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType,
-                                    string paperSize)
-           : this(filePathServer, filePathClient, convertingModeType, new List<string> { paperSize }, "-")
+                                    StampPaperSizeType paperSize)
+           : this(filePathServer, filePathClient, convertingModeType, new List<StampPaperSizeType> { paperSize }, "-")
         { }
 
         public FileDataSourceServer(string filePathServer, string filePathClient, 
-                                    ConvertingModeType convertingModeType, IEnumerable<string> paperSizes)
+                                    ConvertingModeType convertingModeType, IEnumerable<StampPaperSizeType> paperSizes)
        : this(filePathServer, filePathClient, convertingModeType, paperSizes, "-")
         { }
 
-        public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType, 
-                                    string paperSize, string printerName)
-          : this(filePathServer, filePathClient, convertingModeType, new List<string> { paperSize }, printerName)
+        public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType,
+                                    StampPaperSizeType paperSize, string printerName)
+          : this(filePathServer, filePathClient, convertingModeType, new List<StampPaperSizeType> { paperSize }, printerName)
         { }
 
         public FileDataSourceServer(string filePathServer, string filePathClient,
-                                    ConvertingModeType convertingModeType, IEnumerable<string> paperSizes, string printerName)
+                                    ConvertingModeType convertingModeType, IEnumerable<StampPaperSizeType> paperSizes, string printerName)
             : base(filePathServer, filePathClient)
         {
             if (String.IsNullOrWhiteSpace(printerName)) throw new ArgumentNullException(nameof(printerName));
@@ -52,7 +54,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Формат печати
         /// </summary>
-        public IReadOnlyCollection<string> PaperSizes { get; }
+        public IReadOnlyCollection<StampPaperSizeType> PaperSizes { get; }
 
         /// <summary>
         /// Имя принтера

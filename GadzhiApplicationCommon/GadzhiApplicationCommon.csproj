@@ -64,6 +64,7 @@
     <Compile Include="Extensions\StringAdditional\TextExtensions.cs" />
     <Compile Include="Helpers\TextFormatting.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\LibraryData\ConverterDepartmentTypeApp.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\StampCollections\ConverterStampPaperSize.cs" />
     <Compile Include="Infrastructure\Implementations\StampCollections\Signatures\SignaturesActionType.cs" />
     <Compile Include="Models\Enums\LibraryData\DepartmentType.cs" />
     <Compile Include="Models\Enums\Printers\PrinterFormatType.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Models\Enums\StampCollections\StampApplicationType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampContainerType.cs" />
     <Compile Include="Models\Enums\StampCollections\StampDocumentType.cs" />
+    <Compile Include="Models\Enums\StampCollections\StampPaperSizeType.cs" />
     <Compile Include="Models\Implementation\Functional\Unit.cs" />
     <Compile Include="Helpers\RandomInstance.cs" />
     <Compile Include="Models\Enums\ColorPrintApplication.cs" />

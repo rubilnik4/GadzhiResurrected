@@ -60,8 +60,8 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Установить формат печати характерный для принтера
         /// </summary>       
-        public IResultApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
-            GetPrinterPaperSize(drawSize, prefixSearchPaperSize).
+        public IResultApplication SetPrinterPaperSize(StampPaperSizeType paperSize, string prefixSearchPaperSize) =>
+            GetPrinterPaperSize(paperSize, prefixSearchPaperSize).
             ResultVoidOk(paperName =>
             {
                 Application.CadInputQueue.SendKeyin("print driver printer.pltcfg");
@@ -104,18 +104,19 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
         /// <summary>
         /// Получить формат принтера по формату штампа
         /// </summary>      
-        private static IResultAppValue<string> GetPrinterPaperSize(string drawSize, string prefixSearchPaperSize) =>
+        private static IResultAppValue<string> GetPrinterPaperSize(StampPaperSizeType paperSize, string prefixSearchPaperSize) =>
             new PageSettings().
             Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>()).
-            FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, PreparePaperSize(drawSize), prefixSearchPaperSize)).
-            Map(paperSize => new ResultAppValue<string>(paperSize?.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
-                                                                                                   $"Формат печати {drawSize} не найден")));
+            FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, paperSize, prefixSearchPaperSize)).
+            Map(paperSizeChecked => new ResultAppValue<string>(paperSizeChecked.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
+                                                                                                                $"Формат печати {paperSize} не найден")));
 
         /// <summary>
         /// Проверить соответствие формата
         /// </summary>    
-        private static bool CheckPaperSizeName(string paperName, string drawPaperSize, string prefixSearchPaperSize)
+        private static bool CheckPaperSizeName(string paperName, StampPaperSizeType paperSize, string prefixSearchPaperSize)
         {
+            string drawPaperSize = paperSize.ToString();
             if (paperName?.ContainsIgnoreCase(drawPaperSize) != true ||
                 paperName.ContainsIgnoreCase(prefixSearchPaperSize) != true) return false;
 
@@ -137,11 +138,5 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             }
             return success;
         }
-
-        /// <summary>
-        /// Преобразовать формат бумаги к корректному виду
-        /// </summary>
-        private static string PreparePaperSize(string drawPaperSize) => 
-            drawPaperSize?.Replace('х', 'x').Trim();
     }
 }

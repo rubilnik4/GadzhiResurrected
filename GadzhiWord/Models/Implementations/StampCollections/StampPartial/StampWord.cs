@@ -21,8 +21,8 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
                             ITableElementWord tableStamp)
             : base(stampSettingsWord, signaturesSearching)
         {
-            TableStamp = tableStamp ?? throw new ArgumentNullException(nameof(tableStamp));
-            PaperSize = stampSettingsWord?.PaperSize ?? throw new ArgumentNullException(nameof(stampSettingsWord));
+            TableStamp = tableStamp;
+            PaperSize = stampSettingsWord.PaperSize;
             Orientation = stampSettingsWord.Orientation;
         }
 
@@ -53,7 +53,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections.StampPartial
         /// <summary>
         /// Формат
         /// </summary>
-        public override string PaperSize { get; }
+        public override StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Тип расположения штампа

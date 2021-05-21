@@ -59,7 +59,7 @@ namespace GadzhiApplicationCommon.Models.Implementation.StampCollections.StampPa
         /// <summary>
         /// Формат
         /// </summary>
-        public abstract string PaperSize { get; }
+        public abstract StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Тип расположения штампа

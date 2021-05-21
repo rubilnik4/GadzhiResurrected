@@ -19,6 +19,7 @@ using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiConverting.Helpers;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
@@ -63,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                      convertingSettings, ConvertingModeType.Pdf, colorPrintType).
                                             Map(filesDataSource.ConcatResult),
                           filesDataSource => filesDataSource).
-           WhereContinue(_ => ConvertingModeChoice.IsPrintConvertingNeed(convertingSettings.ConvertingModeTypes),
+            WhereContinue(_ => ConvertingModeChoice.IsPrintConvertingNeed(convertingSettings.ConvertingModeTypes),
                          filesDataSource => StampContainerPrint(stampContainer, documentLibrary, filePathPdf,
                                                                 convertingSettings, ConvertingModeType.Print, colorPrintType).
                                             Map(filesDataSource.ConcatResult),
@@ -77,7 +78,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private static IResultCollection<IFileDataSourceServer> GetSavedFileDataSource(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
                                                                                        IFilePath filePath) =>
             new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient, ConvertingModeType.Main,
-                                     stampContainer.GetStampsToPrint().Value?.Select(stamp => stamp.PaperSize) ?? Enumerable.Empty<string>()).
+                                     stampContainer.GetStampsToPrint().Value?.Select(stamp => stamp.PaperSize) ?? Enumerable.Empty<StampPaperSizeType>()).
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource).ToResultCollection());
 
         /// <summary>
@@ -145,16 +146,16 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>
         private IResultValue<IFileDataSourceServer> CreatePrintingService(IDocumentLibrary documentLibrary, IStamp stamp, IFilePath filePath,
                                                                           ConvertingModeType convertingModeType, ColorPrintType colorPrintType, 
-                                                                          IResultValue<IPrinterInformation> pdfPrinterInformation) =>
-            pdfPrinterInformation.
-            ResultVoidOk(pdfPrinter => _messagingService.ShowMessage($"Установка принтера {pdfPrinter.Name}")).
-            ResultVoidOk(pdfPrinter => SetDefaultPrinter(pdfPrinter.Name)).
-            ResultVoidOk(pdfPrinter => _messagingService.ShowMessage($"Печать файла {filePath.FileNameClient}")).
+                                                                          IResultValue<IPrinterInformation> printerInformation) =>
+            printerInformation.
+            ResultVoidOk(printer => _messagingService.ShowMessage($"Установка принтера {printer.Name}")).
+            ResultVoidOk(printer => SetDefaultPrinter(printer.Name)).
+            ResultVoidOk(printer => _messagingService.ShowMessage($"Печать файла {filePath.FileNameClient}")).
             ResultValueOkBind(_ => PrintCommand(documentLibrary, stamp, filePath.FilePathServer, convertingModeType, colorPrintType,
-                                                pdfPrinterInformation.Value.PrefixSearchPaperSize)).
+                                                printerInformation.Value.PrefixSearchPaperSize)).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath.FilePathServer)).
             ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, convertingModeType,
-                                                        stamp.PaperSize, pdfPrinterInformation.Value.Name));
+                                                        stamp.PaperSize, printerInformation.Value.Name));
 
         /// <summary>
         /// Команда печати
@@ -186,6 +187,5 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             WhereNull(printersInstall => printersInstall.Any(printerInstall => printerInstall.ContainsIgnoreCase(printerName)) &&
                                          NativeMethods.SetDefaultPrinter(printerName).
                                          Void(_ => _loggerService.DebugLog($"Set printer {printerName}")));
-
     }
 }
