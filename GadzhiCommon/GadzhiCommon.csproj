@@ -117,6 +117,7 @@
     <Compile Include="Enums\FilesConvert\StatusErrorType.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
+    <Compile Include="Infrastructure\Implementations\FilePathOperations.cs" />
     <Compile Include="Infrastructure\Implementations\FilesConvert\AdditionalFileExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\FilesConvert\ValidFileExtensions.cs" />
     <Compile Include="Enums\LibraryData\DepartmentType.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Infrastructure\Implementations\Reflection\ReflectionInfo.cs" />
     <Compile Include="Infrastructure\Implementations\Services\RetryService.cs" />
     <Compile Include="Infrastructure\Implementations\Services\WcfServiceFactory.cs" />
+    <Compile Include="Infrastructure\Interfaces\IFilePathOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\Services\IWcfServiceFactory.cs" />
     <Compile Include="Models\Enums\LoggerAction.cs" />
     <Compile Include="Models\Enums\ServerStates\ServerActivityType.cs" />
@@ -156,7 +158,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />
-    <Compile Include="Helpers\FileSystem\FileSavedCheck.cs" />
     <Compile Include="Infrastructure\Implementations\CheckStatusProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />

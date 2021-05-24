@@ -50,11 +50,11 @@ namespace GadzhiConverting.Configuration
         /// </summary>
         /// <returns></returns>
         protected override ConfigurationElement CreateNewElement() => new PrinterInformationElement();
-        
+
         /// <summary>
         /// Получить ключ
         /// </summary>
-        protected override object GetElementKey(ConfigurationElement element) => (element as PrinterInformationElement)?.Name 
+        protected override object GetElementKey(ConfigurationElement element) => (element as PrinterInformationElement)?.Id 
                                                                                  ?? String.Empty;
 
         /// <summary>

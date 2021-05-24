@@ -34,7 +34,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
         /// </summary>
         public IResultValue<IPrinterInformation> PdfPrinter =>
             Printers.FirstOrDefault(printer => printer.PrinterType == PrinterType.Pdf).
-            Map(printer => new ResultValue<IPrinterInformation>(printer, new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
+            Map(printer => new ResultValue<IPrinterInformation>(printer, new ErrorCommon(ErrorConvertingType.PrinterNotInstall,
                                                                                          "Отсутствуют PDF принтеры")));
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
                                       printer.PrinterFormatType == PrinterFormatType.Big).
             WhereContinue(printers => printers.Any(),
                           printers => new ResultCollection<IPrinterInformation>(printers),
-                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
+                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.PrinterNotInstall,
                                                                                                 "Отсутствуют большие черно-белые принтеры"))).
             ResultValueOk(printers => printers[new Random().Next(printers.Count)]);
 
@@ -57,7 +57,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
                                       printer.PrinterFormatType == PrinterFormatType.Small).
             WhereContinue(printers => printers.Any(),
                           printers => new ResultCollection<IPrinterInformation>(printers),
-                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
+                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.PrinterNotInstall,
                                                                                                 "Отсутствуют малые черно-белые принтеры"))).
             ResultValueOk(printers => printers[new Random().Next(printers.Count)]);
 
@@ -69,7 +69,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
                                       printer.PrinterFormatType == PrinterFormatType.Big).
             WhereContinue(printers => printers.Any(),
                           printers => new ResultCollection<IPrinterInformation>(printers),
-                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
+                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.PrinterNotInstall,
                                                                                                 "Отсутствуют большие цветные принтеры"))).
             ResultValueOk(printers => printers[new Random().Next(printers.Count)]);
 
@@ -81,7 +81,7 @@ namespace GadzhiConverting.Models.Implementations.Printers
                                       printer.PrinterFormatType == PrinterFormatType.Small).
             WhereContinue(printers => printers.Any(),
                           printers => new ResultCollection<IPrinterInformation>(printers),
-                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.ValueNotInitialized,
+                          printers => new ResultCollection<IPrinterInformation>(new ErrorCommon(ErrorConvertingType.PrinterNotInstall,
                                                                                                 "Отсутствуют малые цветные принтеры"))).
             ResultValueOk(printers => printers[new Random().Next(printers.Count)]);
 

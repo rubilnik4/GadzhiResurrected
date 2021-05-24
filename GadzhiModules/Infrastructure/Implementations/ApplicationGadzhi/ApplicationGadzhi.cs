@@ -26,22 +26,20 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
     /// </summary>
     public partial class ApplicationGadzhi : IApplicationGadzhi
     {
-        public ApplicationGadzhi(IDialogService dialogService,
-                                 IProjectSettings projectSettings,
-                                 IFileSystemOperations fileSystemOperations,
-                                 IPackageData packageInfoProject,
-                                 IWcfClientServicesFactory wcfClientServiceFactory,
+        public ApplicationGadzhi(IDialogService dialogService, IProjectSettings projectSettings,
+                                 IFileSystemOperations fileSystemOperations, IFilePathOperations filePathOperations,
+                                 IPackageData packageInfoProject, IWcfClientServicesFactory wcfClientServiceFactory, 
                                  IFileDataProcessingStatusMark fileDataProcessingStatusMark,
                                  IStatusProcessingInformation statusProcessingInformation)
         {
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _packageData = packageInfoProject ?? throw new ArgumentNullException(nameof(packageInfoProject));
-            _projectSettings = projectSettings ?? throw new ArgumentNullException(nameof(projectSettings));
-            _wcfClientServiceFactory = wcfClientServiceFactory ?? throw new ArgumentNullException(nameof(wcfClientServiceFactory));
-            _fileDataProcessingStatusMark = fileDataProcessingStatusMark ?? throw new ArgumentNullException(nameof(fileDataProcessingStatusMark));
-            _statusProcessingInformation = statusProcessingInformation ?? throw new ArgumentNullException(nameof(statusProcessingInformation));
-
+            _dialogService = dialogService;
+            _fileSystemOperations = fileSystemOperations;
+            _filePathOperations = filePathOperations;
+            _packageData = packageInfoProject;
+            _projectSettings = projectSettings;
+            _wcfClientServiceFactory = wcfClientServiceFactory;
+            _fileDataProcessingStatusMark = fileDataProcessingStatusMark;
+            _statusProcessingInformation = statusProcessingInformation;
             _statusProcessingSubscriptions = new CompositeDisposable();
         }
 
@@ -69,6 +67,11 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Операции с путями файлов
+        /// </summary>
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Текущий статус конвертирования

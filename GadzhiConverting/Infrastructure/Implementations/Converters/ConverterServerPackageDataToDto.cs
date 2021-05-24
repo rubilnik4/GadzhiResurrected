@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
@@ -70,39 +72,32 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// </summary>
         public async Task<FileDataResponseServer> FileDataToResponse(IFileDataServer fileDataServer)
         {
-            var filesDataSourceTasks = fileDataServer.FilesDataSourceServer?.Select(FileDataSourceToResponse)
-                                       ?? Enumerable.Empty<Task<(bool, FileDataSourceResponseServer)>>();
+            var filesDataSourceTasks = fileDataServer.FilesDataSourceServer.Select(FileDataSourceToResponse);
             var filesDataSource = await Task.WhenAll(filesDataSourceTasks);
-            var filesDataSourceWithBytes = filesDataSource.
-                                           Where(fileSuccess => fileSuccess.Success).
-                                           Select(fileSuccess => fileSuccess.FileDataSourceResponse);
-
             return new FileDataResponseServer
             {
                 FilePath = fileDataServer.FilePathClient,
                 StatusProcessing = fileDataServer.StatusProcessing,
-                FilesDataSource = filesDataSourceWithBytes.ToList(),
-                FileErrors = fileDataServer.FileErrors.Select(ToErrorCommon).ToList(),
+                FilesDataSource = filesDataSource.Select(resultSource => resultSource.Value).ToList(),
+                FileErrors = fileDataServer.FileErrors.Concat(filesDataSource.SelectMany(resultSource => resultSource.Errors)).
+                                            Select(ToErrorCommon).ToList(),
             };
         }
 
         /// <summary>
         /// Конвертировать список отконвертированных файлов в окончательный ответ
         /// </summary>
-        private async Task<(bool Success, FileDataSourceResponseServer FileDataSourceResponse)> FileDataSourceToResponse(IFileDataSourceServer fileDataSourceServer)
-        {
-            (bool success, var fileDataSourceZip) = await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePathServer);
-
-            var fileDataSourceResponseServer = new FileDataSourceResponseServer
-            {
-                FileName = fileDataSourceServer.FileNameClient,
-                FileExtensionType = fileDataSourceServer.FileExtensionType,
-                PaperSizes = fileDataSourceServer.PaperSizes.Select(paperSize => paperSize.ToString()).ToList(),
-                PrinterName = fileDataSourceServer.PrinterName,
-                FileDataSource = fileDataSourceZip,
-            };
-            return (success, fileDataSourceResponseServer);
-        }
+        private async Task<IResultValue<FileDataSourceResponseServer>> FileDataSourceToResponse(IFileDataSourceServer fileDataSourceServer) =>
+            await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePathServer).
+            MapAsync(resultFile =>
+                new FileDataSourceResponseServer
+                {
+                    FileName = fileDataSourceServer.FileNameClient,
+                    FileExtensionType = fileDataSourceServer.FileExtensionType,
+                    PaperSizes = fileDataSourceServer.PaperSizes.Select(paperSize => paperSize.ToString()).ToList(),
+                    PrinterName = fileDataSourceServer.PrinterName,
+                    FileDataSource = resultFile.Value,
+                }.Map(fileSource => new ResultValue<FileDataSourceResponseServer>(fileSource, resultFile.Errors)));
 
         /// <summary>
         /// Преобразовать ошибку в трансферную модель

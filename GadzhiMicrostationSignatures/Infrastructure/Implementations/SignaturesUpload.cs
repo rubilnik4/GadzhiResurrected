@@ -39,13 +39,14 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
     {
         public SignaturesUpload(IApplicationMicrostation applicationMicrostation, IProjectSignatureSettings projectSignatureSettings,
                                 IMessagingService messagingService, IFileSystemOperations fileSystemOperations,
-                                IWcfServerServicesFactory wcfServerServicesFactory)
+                                IFilePathOperations filePathOperations, IWcfServerServicesFactory wcfServerServicesFactory)
         {
-            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
+            _applicationMicrostation = applicationMicrostation ;
             _projectSignatureSettings = projectSignatureSettings;
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
+            _messagingService = messagingService ;
+            _fileSystemOperations = fileSystemOperations ;
+            _filePathOperations = filePathOperations;
+            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ;
         }
 
         /// <summary>
@@ -67,6 +68,11 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Операции с путями файлов
+        /// </summary>
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
@@ -115,7 +121,7 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         private IResultValue<IDocumentMicrostation> MicrostationFileOpen(string filePathMicrostation) =>
             new ResultValue<string>(filePathMicrostation, new ErrorCommon(ErrorConvertingType.FileNotFound,
                                                                           "Не задан путь к файлу Microstation")).
-            ResultValueContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
+            ResultValueContinue(filePath => _filePathOperations.IsFileExist(filePath),
                 okFunc: filePath => filePath,
                 badFunc: filePath => new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл {filePath} не существует")).
             ResultVoidOk(filePath => _messagingService.ShowMessage($"Загрузка файла {filePath}")).
@@ -192,11 +198,7 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// Запаковать файл базы Microstation и преобразовать в байтовый массив
         /// </summary>
         private Task<IResultValue<byte[]>> MicrostationDataBaseToZip(string filePath) =>
-            _fileSystemOperations.FileToByteAndZip(filePath).
-             WhereContinueAsync(successAndZip => successAndZip.Success,
-                                okFunc: successAndZip => (IResultValue<byte[]>)new ResultValue<byte[]>(successAndZip.Zip),
-                                badFunc: successAndZip => new ResultValue<byte[]>(new ErrorCommon(ErrorConvertingType.IncorrectDataSource,
-                                                                                                  "Невозможно преобразовать файл в формат zip")));
+            _fileSystemOperations.FileToByteAndZip(filePath);
 
         /// <summary>
         /// Загрузить данные Microstation в базу

@@ -30,16 +30,14 @@ namespace GadzhiConverting.Models.Implementations
         public ConvertingResources(string signatureMicrostationFileName, string stampMicrostationFileName,
                                    SignatureServerServiceFactory signatureServerServiceFactory,
                                    IConverterDataFileFromDto converterDataFileFromDto, 
-                                   IFileSystemOperations fileSystemOperations)
+                                   IFileSystemOperations fileSystemOperations, IFilePathOperations filePathOperations)
         {
-            if (String.IsNullOrWhiteSpace(signatureMicrostationFileName)) throw new ArgumentNullException(nameof(signatureMicrostationFileName));
-            if (String.IsNullOrWhiteSpace(stampMicrostationFileName)) throw new ArgumentNullException(nameof(stampMicrostationFileName));
-
             _signatureMicrostationFileName = signatureMicrostationFileName;
             _stampMicrostationFileName = stampMicrostationFileName;
-            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
+            _signatureServerServiceFactory = signatureServerServiceFactory;
             _converterDataFileFromDto = converterDataFileFromDto;
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _fileSystemOperations = fileSystemOperations;
+            _filePathOperations = filePathOperations;
         }
 
         /// <summary>
@@ -66,6 +64,11 @@ namespace GadzhiConverting.Models.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Папка с подписями
@@ -137,7 +140,7 @@ namespace GadzhiConverting.Models.Implementations
         private async Task<IResultValue<string>> GetSignaturesMicrostation() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesMicrostation()).
             ResultValueOkAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
-            ResultValueOkBindAsync(signatures => _fileSystemOperations.UnzipFileAndSaveWithResult(_signatureMicrostationFileName, 
+            ResultValueOkBindAsync(signatures => _fileSystemOperations.UnzipFileAndSave(_signatureMicrostationFileName, 
                                                                                                   signatures.MicrostationDataBase));
 
         /// <summary>
@@ -147,7 +150,7 @@ namespace GadzhiConverting.Models.Implementations
         private async Task<IResultValue<string>> GetStampsMicrostation() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetStampsMicrostation()).
             ResultValueOkAsync(ConverterMicrostationDataFromDto.MicrostationDataFileFromDto).
-            ResultValueOkBindAsync(stamps => _fileSystemOperations.UnzipFileAndSaveWithResult(_stampMicrostationFileName, 
+            ResultValueOkBindAsync(stamps => _fileSystemOperations.UnzipFileAndSave(_stampMicrostationFileName, 
                                                                                               stamps.MicrostationDataBase));
         /// <summary>
         /// Загрузить имена для подписей
@@ -156,11 +159,12 @@ namespace GadzhiConverting.Models.Implementations
         private async Task<IResultCollection<ISignatureFile>> GetSignatureNames() =>
             await _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.GetSignaturesNames()).
             ResultValueOkBindAsync(signatures => new ResultValue<string>(_fileSystemOperations.CreateFolderByName(SignatureFolder)).
-                                                 WhereBad(_ => _fileSystemOperations.IsDirectoryExist(SignatureFolder),
+                                                 WhereBad(_ => _filePathOperations.IsDirectoryExist(SignatureFolder),
                                                           _ => new ResultValue<string>(new ErrorCommon(ErrorConvertingType.FileNotSaved,
                                                                                                        "Папка для сохранения подписей не создана"))).
                                                  Map(result => Task.FromResult((IResultValue<IList<SignatureDto>>)new ResultValue<IList<SignatureDto>>(signatures)))).
-            ResultValueOkAsync(signatures => _converterDataFileFromDto.SignaturesFileFromDtoAsync(signatures, SignatureFolder)).
+            ResultValueOkBindAsync(signatures => _converterDataFileFromDto.SignaturesFileFromDtoAsync(signatures, SignatureFolder).
+                                                 MapAsync(result =>(IResultValue<IReadOnlyCollection<ISignatureFile>>)result)).
             MapAsync(result => result.ToResultCollection());
     }
 }

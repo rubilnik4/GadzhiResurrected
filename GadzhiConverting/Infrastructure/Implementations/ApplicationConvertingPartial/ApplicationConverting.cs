@@ -26,14 +26,15 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
     {
         public ApplicationConverting(IApplicationLibrary<IDocumentMicrostation> applicationMicrostation,
                                      IApplicationLibrary<IDocumentWord> applicationWord,
-                                     IFileSystemOperations fileSystemOperations, IPdfCreatorService pdfCreatorService,
-                                     IMessagingService messagingService)
+                                     IFileSystemOperations fileSystemOperations, IFilePathOperations filePathOperations,
+                                     IPdfCreatorService pdfCreatorService, IMessagingService messagingService)
         {
-            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
-            _applicationWord = applicationWord ?? throw new ArgumentNullException(nameof(applicationWord));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _pdfCreatorService = pdfCreatorService ?? throw new ArgumentNullException(nameof(pdfCreatorService));
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+            _applicationMicrostation = applicationMicrostation;
+            _applicationWord = applicationWord;
+            _fileSystemOperations = fileSystemOperations;
+            _filePathOperations = filePathOperations;
+            _pdfCreatorService = pdfCreatorService;
+            _messagingService = messagingService;
         }
 
         /// <summary>
@@ -55,6 +56,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Управление печатью пдф

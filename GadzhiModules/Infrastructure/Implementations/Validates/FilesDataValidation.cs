@@ -27,18 +27,18 @@ namespace GadzhiModules.Infrastructure.Implementations.Validates
         /// <summary>
         /// Проверить файлы перед отправкой на корректность
         /// </summary>
-        public static IResultError ValidateFilesData(IReadOnlyCollection<string> filePaths, IFileSystemOperations fileSystemOperations) =>
+        public static IResultError ValidateFilesData(IReadOnlyCollection<string> filePaths, IFilePathOperations filePathOperations) =>
             filePaths.
-            Select(filePath => ValidateByPath(filePath, fileSystemOperations)).
+            Select(filePath => ValidateByPath(filePath, filePathOperations)).
             Aggregate((IResultError)new ResultError(), (first, second) => first.ConcatErrors(second.Errors)).
             ConcatErrors(ValidateByCount(filePaths).Errors).
-            ConcatErrors(ValidateBySize(filePaths, fileSystemOperations).Errors);
+            ConcatErrors(ValidateBySize(filePaths, filePathOperations).Errors);
 
         /// <summary>
         /// Проверить файлы на наличие
         /// </summary>
-        public static IResultError ValidateByPath(string filePath, IFileSystemOperations fileSystemOperations) =>
-            fileSystemOperations.IsFileExist(filePath)
+        public static IResultError ValidateByPath(string filePath, IFilePathOperations filePathOperations) =>
+            filePathOperations.IsFileExist(filePath)
                 ? new ResultError()
                 : new ResultError(new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл {filePath} не найден"));
 
@@ -57,9 +57,9 @@ namespace GadzhiModules.Infrastructure.Implementations.Validates
             /// <summary>
             /// Проверить на объем данных
             /// </summary>
-        public static IResultError ValidateBySize(IReadOnlyCollection<string> filePaths, IFileSystemOperations fileSystemOperations) =>
+        public static IResultError ValidateBySize(IReadOnlyCollection<string> filePaths, IFilePathOperations filePathOperations) =>
             filePaths.
-            Select(fileSystemOperations.GetFileSize).
+            Select(filePathOperations.GetFileSize).
             DefaultIfEmpty(0).
             Sum() <= FILES_SIZE_MAX * 1_000_000
                 ? new ResultError()

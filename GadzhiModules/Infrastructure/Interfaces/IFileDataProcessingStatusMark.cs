@@ -1,6 +1,7 @@
 ﻿using GadzhiDTOClient.TransferModels.FilesConvert;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 
 namespace GadzhiModules.Infrastructure.Interfaces
@@ -13,7 +14,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        Task<PackageDataRequestClient> GetFilesDataToRequest();
+        Task<IResultValue<PackageDataRequestClient>> GetFilesDataToRequest();
 
         /// <summary>
         /// Назначить всем файлам статус к отправке
@@ -48,7 +49,7 @@ namespace GadzhiModules.Infrastructure.Interfaces
         /// <summary>
         /// Поменять статус файлов после окончательного отчета
         /// </summary>       
-        Task <PackageStatus> GetFilesStatusCompleteResponseAndWritten(PackageDataResponseClient packageDataResponse);
+        Task<PackageStatus> GetFilesStatusCompleteResponseAndWritten(PackageDataResponseClient packageDataResponse);
 
         /// <summary>
         /// Пометить неотправленные файлы ошибкой и изменить статус отправленных файлов

@@ -18,31 +18,26 @@ namespace GadzhiDTOServer.Infrastructure.Implementation
         /// <summary>
         /// Проверить целостность выходных данных для конвертации
         /// </summary>
-        public static IReadOnlyList<IErrorCommon> IsFileDataRequestValid(FileDataRequestBase fileDataRequest)
+        public static IResultError IsFileDataRequestValid(FileDataRequestBase fileDataRequest)
         {
-            var errors = new List<IErrorCommon>();
-
             string fileName = Path.GetFileNameWithoutExtension(fileDataRequest?.FilePath);
-            string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(fileDataRequest?.FilePath);
+            string fileExtension = FilePathOperations.ExtensionWithoutPointFromPath(fileDataRequest?.FilePath);
 
             bool isValidName = !String.IsNullOrWhiteSpace(fileName);
             bool isValidExtension = ValidFileExtensions.ContainsInDocAndDgnFileTypes(fileExtension);
             bool isValidDataSource = fileDataRequest?.FileDataSource != null;
 
+            var errors = new List<IErrorCommon>();
             if (!isValidName)
-            {
                 errors.Add(new ErrorCommon(ErrorConvertingType.IncorrectFileName, $"Некорректное имя файла {fileName}"));
-            }
+            
             if (!isValidExtension)
-            {
                 errors.Add(new ErrorCommon(ErrorConvertingType.IncorrectExtension, $"Некорректное расширение файла {fileExtension}"));
-            }
+            
             if (!isValidDataSource)
-            {
                 errors.Add(new ErrorCommon(ErrorConvertingType.IncorrectDataSource, $"Некорректные входные данные конвертации"));
-            }
-
-            return errors;
+            
+            return new ResultError(errors);
         }
     }
 }

@@ -39,8 +39,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// Сформировать путь для сохранения подписи
         /// </summary>
         public static string GetFilePathByFolder(string signatureFolderPath, string personId, bool isVerticalImage) =>
-            FileSystemOperations.CombineFilePath(signatureFolderPath, 
-                                                 personId + (isVerticalImage ? "_rotated" : String.Empty), 
-                                                 SaveFormat);
+            FilePathOperations.CombineFilePath(signatureFolderPath, personId + (isVerticalImage ? "_rotated" : String.Empty), 
+                                               SaveFormat);
     }
 }

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
@@ -21,230 +22,54 @@ namespace GadzhiCommon.Infrastructure.Implementations
     public class FileSystemOperations : IFileSystemOperations
     {
         /// <summary>
-        /// Изменить имя в пути файла без изменения расширения
-        /// </summary>
-        public static string ChangeFilePathNameWithoutExtension(string filePath, string fileName) =>
-            Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
-            fileName + Path.GetExtension(filePath);
-
-        /// <summary>
-        /// Изменить имя в пути файла с изменением расширения
-        /// </summary>
-        public static string ChangeFileName(string filePath, string fileName, string extension) =>
-            Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
-            fileName + "." + extension;
-
-        /// <summary>
-        /// Убрать точку из расширения файла и привести к нижнему регистру
-        /// </summary>      
-        public static string ExtensionWithoutPoint(string extension) =>
-            extension?.ToLowerCaseCurrentCulture().TrimStart('.');
-
-        /// <summary>
-        /// Взять расширение. Убрать точку из расширения файла и привести к нижнему регистру
-        /// </summary>      
-        public static string ExtensionWithoutPointFromPath(string path) =>
-           Path.GetExtension(path).
-           Map(ExtensionWithoutPoint);
-
-        /// <summary>
-        /// Заменить недопустимые символы в имени файла
-        /// </summary>
-        public static string GetValidFileName(string fileName)
-        {
-            string regexSearch = new string(Path.GetInvalidFileNameChars()) + ".";
-            var regexName = new Regex($"[{Regex.Escape(regexSearch)}]");
-            return regexName.Replace(fileName, "_");
-        }
-
-        /// <summary>
-        /// Заменить недопустимые символы в пути файла
-        /// </summary>
-        public static string GetValidFilePath(string filePath)
-        {
-            var regexSearch = new string(Path.GetInvalidPathChars());
-            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
-            return r.Replace(filePath, "_");
-        }
-
-        /// <summary>
-        /// Является ли путь папкой
-        /// </summary>    
-        public static bool IsDirectory(string directoryPath) => !String.IsNullOrEmpty(directoryPath) &&
-                                                                String.IsNullOrEmpty(Path.GetExtension(directoryPath));
-
-        /// <summary>
-        /// Является ли путь файлом
-        /// </summary>       
-        public static bool IsFile(string filePath) => !String.IsNullOrEmpty(filePath) &&
-                                                      !String.IsNullOrEmpty(Path.GetExtension(filePath));
-
-        /// <summary>
-        /// Получить полное имя файла по директории, имени и расширению
-        /// </summary>       
-        public static string CombineFilePath(string directoryPath, string fileNameWithoutExtension, string extension) =>
-             directoryPath.AddSlashesToPath() +
-             fileNameWithoutExtension + "." +
-             extension?.TrimStart('.');
-
-        /// <summary>
-        /// Существует ли папка
-        /// </summary>     
-        public bool IsDirectoryExist(string directoryPath) => Directory.Exists(directoryPath);
-
-        /// <summary>
-        /// Существует ли файл
-        /// </summary>      
-        public bool IsFileExist(string filePath) => File.Exists(filePath);
-
-        /// <summary>
-        /// Размер файла
-        /// </summary>
-        public long GetFileSize(string filePath) =>
-            new FileInfo(filePath).Length;
-
-        /// <summary>
-        /// Получить вложенные папки
-        /// </summary>        
-        public IEnumerable<string> GetDirectories(string directoryPath) => Directory.GetDirectories(directoryPath);
-
-        /// <summary>
-        /// Получить вложенные файлы
-        /// </summary>       
-        public IEnumerable<string> GetFiles(string filePath) => Directory.GetFiles(filePath);
-
-        /// <summary>
-        /// Поиск файлов на один уровень ниже и в текущих папках. Допустимо передавать пути файлов для дальнейшего объединения      
-        /// </summary>    
-        public IEnumerable<string> GetFilesFromPaths(IEnumerable<string> fileOrDirectoriesPaths) =>
-            fileOrDirectoriesPaths.
-            Map(paths => paths?.ToList() ?? new List<string>()).
-            Map(paths => GetFilesFromDirectory(paths).
-                         Union(paths.Where(IsFile)));
-
-        /// <summary>
-        /// Получить пути файлов из папок
-        /// </summary>
-        public IEnumerable<string> GetFilesFromDirectory(IEnumerable<string> directoriesPaths) =>
-            directoriesPaths?.
-            Where(directoryPath => IsDirectory(directoryPath) && IsDirectoryExist(directoryPath)).
-            ToList().
-            Map(directoriesPath => directoriesPath.Union(directoriesPath.SelectMany(GetDirectories))).
-            SelectMany(GetFiles)
-            ?? Enumerable.Empty<string>();
-
-        /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
         public void DeleteAllDataInDirectory(string directoryPath, DateTime timeNow, int hoursElapsed = -1)
         {
             if (String.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath)) return;
-
             var directoryInfo = new DirectoryInfo(directoryPath);
-
             foreach (var fileInfo in directoryInfo.EnumerateFiles())
             {
-                if ((timeNow - fileInfo.LastWriteTime).Ticks >= hoursElapsed && !IsFileLocked(fileInfo))
+                if ((timeNow - fileInfo.LastWriteTime).Ticks >= hoursElapsed && !IsFileLocked(fileInfo).OkStatus)
                 {
                     fileInfo.Delete();
                 }
             }
             foreach (var dir in directoryInfo.EnumerateDirectories())
             {
-                try
+                if ((timeNow - dir.LastWriteTime).Ticks >= hoursElapsed)
                 {
-                    if ((timeNow - dir.LastWriteTime).Ticks >= hoursElapsed)
-                    {
-                        dir.Delete(true);
-                    }
+                    dir.Delete(true);
                 }
-                catch (IOException)
-                { }
             }
         }
 
         /// <summary>
         /// Удалить файл
         /// </summary>
-        public void DeleteFile(string filePath)
-        {
-            if (!IsFileExist(filePath)) throw new FileNotFoundException(filePath);
+        public void DeleteFile(string filePath) =>
             File.Delete(filePath);
-        }
 
         /// <summary>
         /// Представить файл в двоичном виде и запаковать
         /// </summary>
-        public async Task<(bool Success, byte[] Zip)> FileToByteAndZip(string filePath)
-        {
-            try
-            {
-                using var input = File.Open(filePath, FileMode.Open);
-                using var output = new MemoryStream();
-                using (var zip = new GZipStream(output, CompressionMode.Compress))
-                {
-                    await input.CopyToAsync(zip);
-                }
-                return (true, output.ToArray());
-            }
-            catch (IOException)
-            { }
-
-            return (false, null);
-        }
+        public async Task<IResultValue<byte[]>> FileToByteAndZip(string filePath) =>
+            await ExecuteTaskResultHandler.ExecuteBindResultValueAsync(() => FileToByteZip(filePath));
 
         /// <summary>
         /// Распаковать файл из двоичного вида и сохранить
         /// </summary>
-        public async Task<bool> UnzipFileAndSave(string filePath, IList<byte> fileByte)
-        {
-            if (String.IsNullOrEmpty(filePath) || fileByte == null) return false;
-
-            try
-            {
-                using var input = new MemoryStream(fileByte.ToArray());
-                using var zip = new GZipStream(input, CompressionMode.Decompress);
-                using var output = File.Create(filePath);
-                await zip.CopyToAsync(output);
-
-                return true;
-            }
-            catch (IOException)
-            { }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Распаковать, сохранить файл и вернуть его путь
-        /// </summary>
-        public Task<IResultValue<string>> UnzipFileAndSaveWithResult(string filepath, IList<byte> fileToSave) =>
-            UnzipFileAndSave(filepath, fileToSave).
-            WhereContinueAsync(successZip => successZip,
-                               okFunc: _ => new ResultValue<string>(filepath),
-                               badFunc: _ => new ErrorCommon(ErrorConvertingType.FileNotFound, "Файл подписей Microstation не сохранен").
-                                             ToResultValue<string>());
+        public async Task<IResultValue<string>> UnzipFileAndSave(string filePath, byte[] fileByte) =>
+            await filePath.WhereContinueAsyncBind(_ => !String.IsNullOrEmpty(filePath) && fileByte != null,
+                okFunc: _ => ExecuteTaskResultHandler.ExecuteBindResultValueAsync(() => FileFromByteZip(filePath, fileByte)),
+                badFunc: _ => new ResultValue<string>(new ErrorCommon(ErrorConvertingType.FileNotSaved, $"Невозможно сохранить файл {filePath}")).
+                              Map(result => Task.FromResult((IResultValue<string>)result)));
 
         /// <summary>
         /// Сохранить файл на диск из двоичного кода
         /// </summary>   
-        public async Task<bool> SaveFileFromByte(string filePath, byte[] fileByte)
-        {
-            if (String.IsNullOrEmpty(filePath) || fileByte == null) return false;
-
-            try
-            {
-                using var sourceStream = File.Create(filePath);
-                sourceStream.Seek(0, SeekOrigin.End);
-                await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
-
-                return true;
-            }
-            catch (IOException)
-            { }
-
-            return false;
-        }
+        public async Task<IResultValue<string>> SaveFileFromByte(string filePath, byte[] fileByte) =>
+            await ExecuteTaskResultHandler.ExecuteBindResultValueAsync(() => FileToByte(filePath, fileByte));
 
         /// <summary>
         /// Получить файл в виде двоичного кода
@@ -260,26 +85,21 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Копировать файл
         /// </summary>   
-        public bool CopyFile(string fileSource, string fileDestination)
-        {
-            if (String.IsNullOrWhiteSpace(fileDestination)) return false;
-            if (!IsFileExist(fileSource)) return false;
-
-            try
-            {
-                File.Copy(fileSource, fileDestination, true);
-                return true;
-            }
-            catch (IOException)
-            {
-                return false;
-            }
-        }
+        public IResultValue<string> CopyFile(string fileSource, string fileDestination) =>
+            fileSource.WhereContinue(_ => !String.IsNullOrEmpty(fileSource) && !String.IsNullOrEmpty(fileDestination),
+                okFunc: _ => ExecuteResultHandler.ExecuteBindResultValue(() =>
+                        {
+                            File.Copy(fileSource, fileDestination, true);
+                            return fileDestination;
+                        }),
+                badFunc: _ => new ResultValue<string>(new ErrorCommon(ErrorConvertingType.FileNotSaved,
+                                                                      $"Невозможно скопировать файл {fileSource}")));
 
         /// <summary>
         /// Создать поддиректорию и присвоить идентификатор
         /// </summary>     
-        public string CreateFolderByGuid(string startingPath) => CreateFolderByName(startingPath, Guid.NewGuid().ToString());
+        public string CreateFolderByGuid(string startingPath) => 
+            CreateFolderByName(startingPath, Guid.NewGuid().ToString());
 
         /// <summary>
         /// Создать поддиректорию
@@ -290,19 +110,50 @@ namespace GadzhiCommon.Infrastructure.Implementations
              FullName;
 
         /// <summary>
+        /// Запаковать файл
+        /// </summary>
+        public static async Task<byte[]> FileToByteZip(string filePath)
+        {
+            using var input = File.Open(filePath, FileMode.Open);
+            using var output = new MemoryStream();
+            using (var zip = new GZipStream(output, CompressionMode.Compress))
+            {
+                await input.CopyToAsync(zip);
+            }
+            return output.ToArray();
+        }
+
+        /// <summary>
+        /// Распаковать файл
+        /// </summary>
+        private static async Task<string> FileFromByteZip(string filePath, IList<byte> fileByte)
+        {
+            using var input = new MemoryStream(fileByte.ToArray());
+            using var zip = new GZipStream(input, CompressionMode.Decompress);
+            using var output = File.Create(filePath);
+            await zip.CopyToAsync(output);
+            return filePath;
+        }
+
+        /// <summary>
+        ///  Преобразовать файл в байтовый массив
+        /// </summary>
+        private static async Task<string> FileToByte(string filePath, byte[] fileByte)
+        {
+            using var sourceStream = File.Create(filePath);
+            sourceStream.Seek(0, SeekOrigin.End);
+            await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
+            return filePath;
+        }
+
+        /// <summary>
         /// Проверка, используется ли файл
         /// </summary>
-        private static bool IsFileLocked(FileInfo file)
-        {
-            try
+        private static IResultError IsFileLocked(FileInfo file) =>
+            ExecuteResultHandler.ExecuteBindResultValue(() =>
             {
                 using var stream = file?.Open(FileMode.Open, FileAccess.Read, FileShare.None);
-            }
-            catch (IOException)
-            {
-                return true;
-            }
-            return false;
-        }
+                return file;
+            }).ToResult();
     }
 }

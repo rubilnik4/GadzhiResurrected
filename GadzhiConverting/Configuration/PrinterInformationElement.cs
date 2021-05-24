@@ -14,6 +14,13 @@ namespace GadzhiConverting.Configuration
     public class PrinterInformationElement : ConfigurationElement
     {
         /// <summary>
+        /// Идентификатор принтера
+        /// </summary>
+        [ConfigurationProperty(nameof(Id), IsRequired = true)]
+        public string Id =>
+            this[nameof(Id)] as string;
+
+        /// <summary>
         /// Имя принтера
         /// </summary>
         [ConfigurationProperty(nameof(Name), IsRequired = true)]

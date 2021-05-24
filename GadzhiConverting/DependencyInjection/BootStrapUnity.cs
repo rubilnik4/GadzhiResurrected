@@ -50,6 +50,7 @@ namespace GadzhiConverting.DependencyInjection
 
             container.RegisterType<IMessagingService, MessagingService>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
+            container.RegisterType<IFilePathOperations, FilePathOperations>();
             container.RegisterType<ISignatureConverter, SignatureConverter>();
             container.RegisterType<IConverterServerPackageDataFromDto, ConverterServerPackageDataFromDto>();
             container.RegisterType<IConverterServerPackageDataToDto, ConverterServerPackageDataToDto>();
@@ -63,9 +64,8 @@ namespace GadzhiConverting.DependencyInjection
             container.RegisterFactory<IApplicationConverting>(unity =>
                 new ApplicationConverting(unity.Resolve<IApplicationLibrary<IDocumentMicrostation>>(nameof(ApplicationMicrostation)),
                                           unity.Resolve<IApplicationLibrary<IDocumentWord>>(nameof(ApplicationOffice)),
-                                          unity.Resolve<IFileSystemOperations>(),
-                                          unity.Resolve<IPdfCreatorService>(),
-                                          unity.Resolve<IMessagingService>()));
+                                          unity.Resolve<IFileSystemOperations>(), unity.Resolve<IFilePathOperations>(),
+                                          unity.Resolve<IPdfCreatorService>(), unity.Resolve<IMessagingService>()));
         }
 
         /// <summary>

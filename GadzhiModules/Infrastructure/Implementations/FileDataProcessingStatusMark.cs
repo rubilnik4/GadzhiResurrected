@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
 using GadzhiCommon.Models.Implementations.Errors;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting.Information;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.FileConverting;
@@ -54,7 +55,7 @@ namespace GadzhiModules.Infrastructure.Implementations
         /// <summary>
         /// Получить файлы готовые к отправке с байтовыми массивами
         /// </summary>       
-        public async Task<PackageDataRequestClient> GetFilesDataToRequest() =>
+        public async Task<IResultValue<PackageDataRequestClient>> GetFilesDataToRequest() =>
             await _converterClientPackageDataToDto.ToPackageDataRequest(_packageInfoProject, _projectSettings.ConvertingSettings);
 
         /// <summary>

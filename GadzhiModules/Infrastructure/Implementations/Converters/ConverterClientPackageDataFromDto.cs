@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -142,7 +143,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                                                            string convertingDirectoryName)
         {
             string fileName = Path.GetFileNameWithoutExtension(fileDataSourceResponseClient.FileName);
-            string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FileName));
+            string fileExtension = FilePathOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FileName));
             string fileExtensionValid = ValidFileExtensions.GetFileTypesValid(fileExtension).ToString().ToLowerCaseCurrentCulture();
             string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtensionValid.ToUpperCaseCurrentCulture());
 
@@ -153,12 +154,10 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             if (fileDataSourceResponseClient.FileDataSource.Length == 0) return new ErrorCommon(ErrorConvertingType.IncorrectDataSource,
                                                                                                 $"Некорректные входные данные {fileName}");
 
-            string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
-            Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource);
-
-            await _dialogService.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool,
-                                                                   $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
-
+            string filePath = FilePathOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
+            Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource).
+                                                 MapAsync(result => result.OkStatus);
+            await _dialogService.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool, $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
             return new ErrorCommon(ErrorConvertingType.NoError, "Ошибки отсутствуют");
         }
         /// <summary>

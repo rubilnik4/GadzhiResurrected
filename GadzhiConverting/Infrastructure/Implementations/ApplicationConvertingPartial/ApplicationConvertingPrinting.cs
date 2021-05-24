@@ -124,8 +124,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                         ResultValueOk(fileNames => stamps.Zip(fileNames, (stamp, fileName) => (stamp, fileName)))).
             ResultValueOkBind(stampsFileName => CreatePrintingCollection(stampsFileName, documentLibrary, filePath, 
                                                                          convertingModeType, colorPrintType, 
-                                                                         convertingSettings.PrintersInformation.
-                                                                         ResultValueOkBind(printers => printers.PdfPrinter))).
+                                                                         convertingSettings.PrintersInformation)).
             ToResultCollection();
 
         /// <summary>
@@ -134,11 +133,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         private IResultCollection<IFileDataSourceServer> CreatePrintingCollection(IEnumerable<(IStamp Stamp, string FileName)> stampsFileName,
                                                                                   IDocumentLibrary documentLibrary, IFilePath filePath,
                                                                                   ConvertingModeType convertingModeType, ColorPrintType colorPrintType,
-                                                                                  IResultValue<IPrinterInformation> pdfPrinterInformation) =>
+                                                                                  IResultValue<IPrintersInformation> printersInformation) =>
             stampsFileName.
             Select(stampFileName => filePath.ChangeServerName(stampFileName.FileName).ChangeClientName(stampFileName.FileName).
-                                    Map(filePathChanged => CreatePrintingService(documentLibrary, stampFileName.Stamp, filePathChanged,
-                                                                                 convertingModeType, colorPrintType, pdfPrinterInformation))).
+                Map(filePathChanged => CreatePrintingService(documentLibrary, stampFileName.Stamp, filePathChanged,
+                                                             convertingModeType, colorPrintType, 
+                                                             printersInformation.ResultValueOkBind(printers => 
+                                                                printers.GetPrinter(convertingModeType, colorPrintType,
+                                                                                    stampFileName.Stamp.PaperSize))))).
             ToResultCollection();
 
         /// <summary>

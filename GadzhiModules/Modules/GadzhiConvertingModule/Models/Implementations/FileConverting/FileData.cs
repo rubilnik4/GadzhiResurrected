@@ -25,7 +25,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     {
         public FileData(string filePath, ColorPrintType colorPrintType)
         {
-            string fileExtension = FileSystemOperations.ExtensionWithoutPointFromPath(filePath);
+            string fileExtension = FilePathOperations.ExtensionWithoutPointFromPath(filePath);
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(filePath))

@@ -86,11 +86,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>    
         private IResultValue<FileExtensionType> IsDocumentValid(string filePathDocument) =>
             filePathDocument.
-            WhereContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
+            WhereContinue(filePath => _filePathOperations.IsFileExist(filePath),
                 okFunc: filePath => new ResultValue<string>(filePath),
                 badFunc: filePath => new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл {filePath} не найден").
                                      ToResultValue<string>()).
-            ResultValueOk(FileSystemOperations.ExtensionWithoutPointFromPath).
+            ResultValueOk(FilePathOperations.ExtensionWithoutPointFromPath).
             ResultValueOkBind(ValidateFileExtension);
 
         /// <summary>

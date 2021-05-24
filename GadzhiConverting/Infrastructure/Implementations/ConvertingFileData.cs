@@ -28,6 +28,15 @@ namespace GadzhiConverting.Infrastructure.Implementations
 {
     public class ConvertingFileData : IConvertingFileData
     {
+        public ConvertingFileData(IMessagingService messagingService, IApplicationConverting applicationConverting,
+                                  IFileSystemOperations fileSystemOperations, IFilePathOperations filePathOperations)
+        {
+            _messagingService = messagingService;
+            _applicationConverting = applicationConverting;
+            _fileSystemOperations = fileSystemOperations;
+            _filePathOperations = filePathOperations;
+        }
+
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
@@ -48,13 +57,10 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
 
-        public ConvertingFileData(IMessagingService messagingService, IApplicationConverting applicationConverting,
-                                  IFileSystemOperations fileSystemOperations)
-        {
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-            _applicationConverting = applicationConverting ?? throw new ArgumentNullException(nameof(applicationConverting));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-        }
+        /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Конвертировать файл
@@ -99,11 +105,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultVoidOk(_ => _messagingService.ShowMessage("Загрузка файла")).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath.FileNameServer)).
             ResultValueOk(_ => CreateSavingPath(filePath.FilePathServer, filePath.FileExtensionType)).
-            ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath).
-                                            WhereContinue(copyResult => copyResult,
-                                                okFunc: _ => new ResultValue<string>(savingPath),
-                                                badFunc: _ => new ErrorCommon(ErrorConvertingType.FileNotSaved, $"Ошибка сохранения файла {savingPath}").
-                                            ToResultValue<string>())).
+            ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath)).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
 
@@ -165,7 +167,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Path.GetDirectoryName(filePathServer).
             Map(directory => _fileSystemOperations.CreateFolderByName(Path.Combine(directory, Path.GetFileNameWithoutExtension(filePathServer)),
                                                                                 fileExtensionType.ToString())).
-            Map(serverDirectory => FileSystemOperations.CombineFilePath(serverDirectory,
+            Map(serverDirectory => FilePathOperations.CombineFilePath(serverDirectory,
                                                                         Path.GetFileNameWithoutExtension(filePathServer),
                                                                         fileExtensionType.ToString().ToLowerCaseCurrentCulture()));
 
@@ -176,7 +178,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         private IResultCollection<IFileDataSourceServer> CheckDataSourceExistence(IResultCollection<IFileDataSourceServer> fileDataSourceResult) =>
             fileDataSourceResult.Value.
             Where(fileDataSource => fileDataSource.ConvertingModeType != ConvertingModeType.Print &&
-                                    !_fileSystemOperations.IsFileExist(fileDataSource.FilePathServer)).
+                                    !_filePathOperations.IsFileExist(fileDataSource.FilePathServer)).
             ToList().
             Map(fileDataSources => new
             {

@@ -77,8 +77,9 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
                                    signatureFileRequest => signatureFileRequest.PersonId,
                                    signatureFileData => signatureFileData.PersonId,
                                    (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData, signatureFileRequest))).
-            ResultValueOk(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
-                                                                   ToApplication()).
+            ResultValueOkBind(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
+                                                    ResultValueOk(signatureFiles => signatureFiles.ToApplication()).
+                                                    ToResultValueApplication()).
             ToResultCollection();
 
         /// <summary>
