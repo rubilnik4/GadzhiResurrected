@@ -43,7 +43,6 @@ namespace GadzhiDAL.Services.Implementations.Signatures
                                                      ThenBy(signature => signature.PersonInformation.Name).
                                                      ToListAsync();
             var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, true);
-
             return signaturesDto;
         }
 

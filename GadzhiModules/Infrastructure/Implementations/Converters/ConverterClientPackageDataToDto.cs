@@ -22,11 +22,11 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
     /// </summary>  
     public class ConverterClientPackageDataToDto : IConverterClientPackageDataToDto
     {
-        public ConverterClientPackageDataToDto(IFileSystemOperations fileSystemOperations, IFilePathOperations filePathOperations)
+        public ConverterClientPackageDataToDto(IFileSystemOperations fileSystemOperations,
+                                               IFilePathOperations filePathOperations)
         {
             _fileSystemOperations = fileSystemOperations;
             _filePathOperations = filePathOperations;
-            ;
         }
 
         /// <summary>
@@ -43,19 +43,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// Конвертер пакета информации о файле из локальной модели в трансферную
         /// </summary>      
         public async Task<IResultValue<PackageDataRequestClient>> ToPackageDataRequest(IPackageData packageData,
-                                                                                       IConvertingSettings convertingSetting)
-        {
-            var filesRequestTask = packageData.FilesData.Select(ToFileDataRequest);
-            var filesRequest = await Task.WhenAll(filesRequestTask);
-            return filesRequest.ToResultCollection().
-                   ResultValueOk(requests => new PackageDataRequestClient
-                   {
-                       Id = packageData.GenerateId(),
-                       FilesData = requests.ToList(),
-                       ConvertingSettings = ToConvertingSettingsRequest(convertingSetting),
-                   });
-        }
-
+                                                                                       IConvertingSettings convertingSetting) =>
+            await packageData.FilesData.Select(ToFileDataRequest).
+            Map(Task.WhenAll).
+            MapAsync(filesRequest =>
+                filesRequest.ToResultCollection().
+                ResultValueOk(requests => new PackageDataRequestClient(packageData.GenerateId(),
+                                                                       ToConvertingSettingsRequest(convertingSetting),
+                                                                       requests.ToList())));
         /// <summary>
         /// Преобразовать параметры конвертации в трансферную модель
         /// </summary>
@@ -83,15 +78,10 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             await fileAdditionalPath.
             WhereContinueAsyncBind(filePath => !String.IsNullOrWhiteSpace(filePath),
                 filePath => _fileSystemOperations.FileToByteAndZip(filePath),
-                filePath => Task.FromResult((IResultValue<byte[]>)new ResultValue<byte[]>(null))).
-            ResultValueOkAsync(fileAdditionalSource => new FileDataRequestClient
-            {
-                ColorPrintType = fileData.ColorPrintType,
-                FilePath = fileData.FilePath,
-                StatusProcessing = fileData.StatusProcessing,
-                FileDataSource = fileSource,
-                FileExtensionAdditional = FilePathOperations.ExtensionWithoutPointFromPath(fileAdditionalPath),
-                FileDataSourceAdditional = fileAdditionalSource,
-            });
+                filePath => Task.FromResult((IResultValue<byte[]>)new ResultValue<byte[]>(new byte[0]))).
+            ResultValueOkAsync(fileAdditionalSource =>
+                new FileDataRequestClient(fileData.FilePath, fileData.ColorPrintType, fileData.StatusProcessing,
+                                          fileSource, FilePathOperations.ExtensionWithoutPointFromPath(fileAdditionalPath),
+                                          fileAdditionalSource));
     }
 }

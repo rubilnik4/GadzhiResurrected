@@ -200,11 +200,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
                 _ when !packageServer.IsValidByAttemptingCount => new ErrorCommon(ErrorConvertingType.AttemptingCount, "Превышено количество попыток конвертирования пакета"),
                 _ => throw new ArgumentOutOfRangeException(nameof(packageServer))
             };
-
             _messagingService.ShowAndLogError(error);
-
-            return packageServer.SetErrorToAllFiles(error).
-                   SetStatusProcessingProject(StatusProcessingProject.Error);
+            return packageServer.SetErrorToAllFiles(error).SetStatusProcessingProject(StatusProcessingProject.Error);
         }
 
         /// <summary>

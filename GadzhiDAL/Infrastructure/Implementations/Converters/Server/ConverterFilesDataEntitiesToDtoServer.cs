@@ -19,14 +19,11 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>          
         public static PackageDataRequestServer PackageDataToRequest(PackageDataEntity packageDataEntity) =>
             packageDataEntity != null
-                ? new PackageDataRequestServer
-                {
-                    Id = Guid.Parse(packageDataEntity.Id),
-                    AttemptingConvertCount = packageDataEntity.AttemptingConvertCount,
-                    ConvertingSettings = ConvertingSettingsToRequest(packageDataEntity.ConvertingSettings),
-                    FilesData = packageDataEntity.FileDataEntities.Select(FileDataToRequest).ToList(),
-                }
-                : null;
+                ? new PackageDataRequestServer(Guid.Parse(packageDataEntity.Id),
+                                               ConvertingSettingsToRequest(packageDataEntity.ConvertingSettings),
+                                               packageDataEntity.FileDataEntities.Select(FileDataToRequest).ToList(),
+                                               packageDataEntity.AttemptingConvertCount)
+                : PackageDataRequestServer.EmptyPackage;
 
         /// <summary>
         /// Преобразовать параметры конвертации в трансферную модель
@@ -39,17 +36,10 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// <summary>
         /// Конвертировать файл модели базы данных в запрос
         /// </summary>
-        private static FileDataRequestServer FileDataToRequest(FileDataEntity fileDataEntity)
-        {
-            return new FileDataRequestServer
-            {
-                FilePath = fileDataEntity.FilePath,
-                StatusProcessing = fileDataEntity.StatusProcessing,
-                ColorPrintType = fileDataEntity.ColorPrintType,
-                FileDataSource = fileDataEntity.FileDataSource.AsQueryable().ToArray(),
-                FileExtensionAdditional = fileDataEntity.FileExtensionAdditional,
-                FileDataSourceAdditional = fileDataEntity.FileDataSourceAdditional?.AsQueryable().ToArray(),
-            };
-        }
+        private static FileDataRequestServer FileDataToRequest(FileDataEntity fileDataEntity) =>
+            new FileDataRequestServer(fileDataEntity.FilePath, fileDataEntity.ColorPrintType, fileDataEntity.StatusProcessing, 
+                                      fileDataEntity.FileDataSource.ToArray(), fileDataEntity.FileExtensionAdditional,
+                                      fileDataEntity.FileDataSourceAdditional?.ToArray());
+        
     }
 }

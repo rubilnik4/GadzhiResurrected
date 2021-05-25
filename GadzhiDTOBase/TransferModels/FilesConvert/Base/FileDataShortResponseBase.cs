@@ -13,23 +13,31 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     [DataContract]
     public abstract class FileDataShortResponseBase : IFormattable
     {
+        protected FileDataShortResponseBase(string filePath, StatusProcessing statusProcessing,
+                                            IList<ErrorCommonResponse> fileErrors)
+        {
+            FilePath = filePath;
+            StatusProcessing = statusProcessing;
+            FileErrors = fileErrors;
+        }
+
         /// <summary>
         /// Путь файла
         /// </summary>
         [DataMember]
-        public string FilePath { get; set; }
+        public string FilePath { get; private set; }
 
         /// <summary>
         /// Статус обработки файла
         /// </summary>
         [DataMember]
-        public StatusProcessing StatusProcessing { get; set; }
+        public StatusProcessing StatusProcessing { get; private set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
         /// </summary>
         [DataMember]
-        public IList<ErrorCommonResponse> FileErrors { get; set; }
+        public IList<ErrorCommonResponse> FileErrors { get; private set; }
 
         #region IFormattable Support
         public override string ToString() => ToString(String.Empty, CultureInfo.CurrentCulture);

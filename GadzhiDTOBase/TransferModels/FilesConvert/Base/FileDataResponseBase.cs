@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using GadzhiCommon.Enums.FilesConvert;
 
 namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
 {
@@ -8,12 +9,19 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// </summary>
     [DataContract]
     public abstract class FileDataResponseBase<TFileDataSourceResponse> : FileDataShortResponseBase
-        where TFileDataSourceResponse: FileDataSourceResponseBase
+        where TFileDataSourceResponse : FileDataSourceResponseBase
     {
+        protected FileDataResponseBase(string filePath, StatusProcessing statusProcessing,
+                                       IList<ErrorCommonResponse> fileErrors, IList<TFileDataSourceResponse> filesDataSource)
+            : base(filePath, statusProcessing, fileErrors)
+        {
+            FilesDataSource = filesDataSource;
+        }
+
         /// <summary>
         /// Информация об отконвертированных файлах в серверной части
         /// </summary>
         [DataMember]
-        public abstract IList<TFileDataSourceResponse> FilesDataSource { get; set; }
+        public IList<TFileDataSourceResponse> FilesDataSource { get; private set; }
     }
 }

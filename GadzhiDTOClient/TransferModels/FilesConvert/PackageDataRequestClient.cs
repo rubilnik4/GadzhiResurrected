@@ -12,16 +12,9 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     [DataContract]
     public class PackageDataRequestClient : PackageDataRequestBase<FileDataRequestClient>
     {
-        /// <summary>
-        /// Данные о конвертируемых файлах
-        /// </summary>
-        [DataMember]
-        public override IList<FileDataRequestClient> FilesData { get; set; }
-
-        /// <summary>
-        /// Удовлетворяет ли модель условиям для отправки
-        /// </summary>
-        [IgnoreDataMember]
-        public bool IsValid => FilesData?.Any() == true;
+        public PackageDataRequestClient(Guid id, ConvertingSettingsRequest convertingSettings,
+                                        IList<FileDataRequestClient> filesData)
+            : base(id, convertingSettings, filesData)
+        { }
     }
 }

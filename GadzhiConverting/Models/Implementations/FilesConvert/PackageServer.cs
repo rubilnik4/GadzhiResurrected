@@ -27,8 +27,8 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             Id = id;
             AttemptingConvertCount = attemptingConvertCount;
             StatusProcessingProject = statusProcessingProject;
-            ConvertingPackageSettings = convertingSettings ?? throw new ArgumentNullException(nameof(convertingSettings));
-            FilesDataServer = filesDataServer?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(filesDataServer));
+            ConvertingPackageSettings = convertingSettings;
+            FilesDataServer = filesDataServer.ToList().AsReadOnly();
         }
 
         /// <summary>

@@ -75,19 +75,6 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
                 MapAsync(result => (IResultValue<PackageDataRequestClient>)new ResultValue<PackageDataRequestClient>(package, result.Errors))).
              ResultVoidOkAsync(_ => SubscribeToIntermediateResponse());
 
-        //{
-        //    var packageDataRequest = await PrepareFilesToSending();
-        //    var resultErrorPackage = ;
-        //    if (resultErrorPackage.HasErrors)
-        //    {
-        //        await ;
-        //        return;
-        //    }
-
-        //    var sendResult = await ;
-        //    if (sendResult.OkStatus) ;
-        //}
-
         /// <summary>
         /// Отмена конвертирования из-за ошибок
         /// </summary>

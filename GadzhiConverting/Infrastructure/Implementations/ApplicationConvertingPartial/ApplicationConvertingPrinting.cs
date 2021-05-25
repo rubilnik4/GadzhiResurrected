@@ -38,19 +38,19 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Найти все доступные штампы на всех листах. Начать обработку каждого из них
         /// </summary>
         [Logger]
-        private IResultCollection<IFileDataSourceServer> CreateProcessingDocument(IDocumentLibrary documentLibrary, IFilePath filePathMain, IFilePath filePathPdf,
+        private IResultCollection<IFileDataSourceServer> CreateProcessingDocument(IDocumentLibrary documentLibrary, FilePathCollection filePathCollection,
                                                                                  IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
             documentLibrary.
             Void(_ => _messagingService.ShowMessage("Обработка штампов...")).
             GetStampContainer(convertingSettings.ToApplication()).
-            Map(stampContainer => StampContainerProcessing(stampContainer, documentLibrary, filePathMain,
-                                                           filePathPdf, convertingSettings, colorPrintType));
+            Map(stampContainer => StampContainerProcessing(stampContainer, documentLibrary, filePathCollection,
+                                                           convertingSettings, colorPrintType));
 
         /// <summary>
         /// Обработать штампы и начать печать
         /// </summary>
         private IResultCollection<IFileDataSourceServer> StampContainerProcessing(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
-                                                                                  IFilePath filePathMain, IFilePath filePathPdf,
+                                                                                  FilePathCollection filePathCollection,
                                                                                   IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
             stampContainer.
             Void(_ => _messagingService.ShowMessage("Подключение дополнительных элементов...")).
@@ -58,14 +58,14 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             Void(_ => _messagingService.ShowMessage("Форматирование полей...")).
             CompressFieldsRanges().
             Void(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), nameof(stampContainer.CompressFieldsRanges))).
-            Map(_ => GetSavedFileDataSource(stampContainer, documentLibrary, filePathMain)).
+            Map(_ => GetSavedFileDataSource(stampContainer, documentLibrary, filePathCollection.FilePathMain)).
             WhereContinue(_ => ConvertingModeChoice.IsPdfConvertingNeed(convertingSettings.ConvertingModeTypes),
-                          filesDataSource => StampContainerCreatePdf(stampContainer, documentLibrary, filePathPdf,
+                          filesDataSource => StampContainerCreatePdf(stampContainer, documentLibrary, filePathCollection.FilePathPdf,
                                                                      convertingSettings, ConvertingModeType.Pdf, colorPrintType).
                                             Map(filesDataSource.ConcatResult),
                           filesDataSource => filesDataSource).
             WhereContinue(_ => ConvertingModeChoice.IsPrintConvertingNeed(convertingSettings.ConvertingModeTypes),
-                         filesDataSource => StampContainerPrint(stampContainer, documentLibrary, filePathPdf,
+                         filesDataSource => StampContainerPrint(stampContainer, documentLibrary, filePathCollection.FilePathPrint,
                                                                 convertingSettings, ConvertingModeType.Print, colorPrintType).
                                             Map(filesDataSource.ConcatResult),
                          filesDataSource => filesDataSource).

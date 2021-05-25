@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDTOClient.TransferModels.FilesConvert
@@ -9,6 +11,9 @@ namespace GadzhiDTOClient.TransferModels.FilesConvert
     [DataContract]
     public class FileDataShortResponseClient : FileDataShortResponseBase
     {
-
+        public FileDataShortResponseClient(string filePath, StatusProcessing statusProcessing,
+                                           IList<ErrorCommonResponse> fileErrors)
+            :base(filePath, statusProcessing, fileErrors)
+        { }
     }
 }

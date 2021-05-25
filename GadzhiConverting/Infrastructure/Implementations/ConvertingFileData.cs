@@ -104,7 +104,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowMessage("Загрузка файла")).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath.FileNameServer)).
-            ResultValueOk(_ => CreateSavingPath(filePath.FilePathServer, filePath.FileExtensionType)).
+            ResultValueOk(_ => ConvertingFilePath.CreateSavingPath(filePath.FilePathServer, filePath.FileExtensionType, _fileSystemOperations)).
             ResultValueOkBind(savingPath => _fileSystemOperations.CopyFile(filePath.FilePathServer, savingPath)).
             ResultValueOkBind(_ => _applicationConverting.OpenDocument(filePath.FilePathServer)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors));
@@ -119,9 +119,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).
             ResultValueOkBind(_ => 
                 _applicationConverting.
-               CreateProcessingFile(documentLibrary,
-                                    fileDataServer.ChangeServerPath(CreateSavingPath(fileDataServer.FilePathServer, fileDataServer.FileExtensionType)),
-                                    fileDataServer.ChangeServerPath(CreateSavingPath(fileDataServer.FilePathServer, FileExtensionType.Pdf)),
+               CreateProcessingFile(documentLibrary, ConvertingFilePath.GetFilePathCollection(fileDataServer, _fileSystemOperations),
                                     convertingSettings, fileDataServer.ColorPrintType)).
             Void(result => _messagingService.ShowAndLogErrors(result.Errors)).
             ToResultCollection();
@@ -146,8 +144,9 @@ namespace GadzhiConverting.Infrastructure.Implementations
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowMessage("Экспорт файла")).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath.FileNameServer)).
-            ResultValueOk(_ => CreateSavingPath(filePath.FilePathServer,
-                                                               _applicationConverting.GetExportFileExtension(filePath.FileExtensionType))).
+            ResultValueOk(_ => ConvertingFilePath.CreateSavingPath(filePath.FilePathServer,
+                                                                   _applicationConverting.GetExportFileExtension(filePath.FileExtensionType),
+                                                                   _fileSystemOperations)).
             ResultValueOkBind(fileExportPath => _applicationConverting.CreateExportFile(documentLibrary, filePath.ChangeServerPath(fileExportPath), 
                                                                                         stampDocumentType)).
             Void(result => _messagingService.ShowErrors(result.Errors));
@@ -160,17 +159,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Void(_ => _messagingService.ShowMessage($"Конвертация файла {filePath.FileNameClient} завершена")).
             Void(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), filePath.FileNameServer));
 
-        /// <summary>
-        /// Создать папку для сохранения отконвертированных файлов по типу расширения
-        /// </summary>       
-        private string CreateSavingPath(string filePathServer, FileExtensionType fileExtensionType) =>
-            Path.GetDirectoryName(filePathServer).
-            Map(directory => _fileSystemOperations.CreateFolderByName(Path.Combine(directory, Path.GetFileNameWithoutExtension(filePathServer)),
-                                                                                fileExtensionType.ToString())).
-            Map(serverDirectory => FilePathOperations.CombineFilePath(serverDirectory,
-                                                                        Path.GetFileNameWithoutExtension(filePathServer),
-                                                                        fileExtensionType.ToString().ToLowerCaseCurrentCulture()));
-
+       
         /// <summary>
         /// Проверить наличие сохраненных файлов
         /// </summary>
@@ -189,7 +178,5 @@ namespace GadzhiConverting.Infrastructure.Implementations
             Void(filesOrErrors => _messagingService.ShowAndLogErrors(filesOrErrors.errors)).
             Map(filesOrErrors => new ResultCollection<IFileDataSourceServer>(fileDataSourceResult.Value.Except(filesOrErrors.fileDataSources),
                                                                              fileDataSourceResult.Errors.Concat(filesOrErrors.errors)));
-
-       
     }
 }

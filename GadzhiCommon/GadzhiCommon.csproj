@@ -182,6 +182,7 @@
     <Compile Include="Models\Interfaces\Errors\IResultCollection.cs" />
     <Compile Include="Models\Interfaces\Histories\IHistoryData.cs" />
     <Compile Include="Models\Interfaces\Histories\IHistoryFileData.cs" />
+    <Compile Include="Models\Interfaces\Histories\IHistoryFileDataSource.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFile.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFileData.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />

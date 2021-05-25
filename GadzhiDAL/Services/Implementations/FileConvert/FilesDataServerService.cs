@@ -56,7 +56,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
 
             await unitOfWork.CommitAsync();
 
-            return packageDataRequest ?? PackageDataRequestServer.EmptyPackage;
+            return packageDataRequest;
         }
 
         /// <summary>

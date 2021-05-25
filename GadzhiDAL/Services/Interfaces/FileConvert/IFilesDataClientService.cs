@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 
 namespace GadzhiDAL.Services.Interfaces.FileConvert
@@ -12,7 +13,7 @@ namespace GadzhiDAL.Services.Interfaces.FileConvert
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу
         /// </summary> 
-        Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName);
+        Task<Unit> QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName);
 
         /// <summary>
         /// Получить промежуточный ответ о состоянии конвертируемых файлов по номеру ID

@@ -12,6 +12,14 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     public abstract class PackageDataRequestBase<TFileDataRequest>
         where TFileDataRequest: FileDataRequestBase
     {
+        protected PackageDataRequestBase(Guid id, ConvertingSettingsRequest convertingSettings, 
+                                         IList<TFileDataRequest> filesData)
+        {
+            Id = id;
+            ConvertingSettings = convertingSettings;
+            FilesData = filesData;
+        }
+
         /// <summary>
         /// ID идентификатор
         /// </summary>
@@ -28,6 +36,6 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Данные о конвертируемых файлах
         /// </summary>
         [DataMember]
-        public abstract IList<TFileDataRequest> FilesData { get; set; }
+        public IList<TFileDataRequest> FilesData { get; set; }
     }
 }

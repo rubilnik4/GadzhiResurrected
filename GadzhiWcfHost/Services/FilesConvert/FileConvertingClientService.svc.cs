@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using GadzhiCommon.Extensions.Functional;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Services.Interfaces.FileConvert;
 using GadzhiDTOClient.Contracts.FilesConvert;
 using GadzhiDTOClient.TransferModels.FilesConvert;
@@ -29,12 +31,9 @@ namespace GadzhiWcfHost.Services.FilesConvert
         /// <summary>
         /// Сохранить файлы для конвертации в системе и отправить отчет
         /// </summary>
-        public async Task<PackageDataShortResponseClient> SendFiles(PackageDataRequestClient packageDataRequest)
-        {
-            if (packageDataRequest == null) return new PackageDataShortResponseClient();
-            await QueueFilesData(packageDataRequest, Authentication.GetIdentityName());
-            return await CheckFilesStatusProcessing(packageDataRequest.Id);
-        }
+        public async Task<PackageDataShortResponseClient> SendFiles(PackageDataRequestClient packageDataRequest) =>
+             await QueueFilesData(packageDataRequest, Authentication.GetIdentityName()).
+             MapBindAsync(_ => CheckFilesStatusProcessing(packageDataRequest.Id));
 
         /// <summary>
         /// Проверить статус файлов по Id номеру
@@ -69,7 +68,7 @@ namespace GadzhiWcfHost.Services.FilesConvert
         /// <summary>
         /// Поставить файлы в очередь для обработки
         /// </summary>
-        private async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName) =>
+        private async Task<Unit> QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName) =>
             await _filesDataClientService.QueueFilesData(packageDataRequest, identityName);
     }
 }

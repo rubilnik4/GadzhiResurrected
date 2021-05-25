@@ -78,15 +78,6 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         public static FileDataEntity UpdateFileDataFromShortResponse(FileDataEntity fileDataEntity, FileDataShortResponseServer fileDataResponse)
         {
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
-            if (fileDataEntity.FileDataSource.Count == 0)
-            {
-                var errorCommonResponse = new ErrorCommonResponse
-                {
-                    ErrorConvertingType = ErrorConvertingType.IncorrectDataSource,
-                    ErrorDescription = "Ошибка загрузки данных на сервер",
-                };
-                fileDataResponse.FileErrors.Add(errorCommonResponse);
-            }
             fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
             return fileDataEntity;
         }

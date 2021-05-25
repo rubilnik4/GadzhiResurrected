@@ -8,22 +8,29 @@ namespace GadzhiDTOBase.TransferModels.Signatures
     [DataContract]
     public class SignatureDto
     {
+        public SignatureDto(string personId, PersonInformationDto personInformation, byte[] signatureJpeg)
+        {
+            PersonId = personId;
+            PersonInformation = personInformation;
+            SignatureJpeg = signatureJpeg;
+        }
+
         /// <summary>
         /// Идентификатор
         /// </summary>
         [DataMember]
-        public string PersonId { get; set; }
+        public string PersonId { get; private set; }
 
         /// <summary>
         /// Фамилия
         /// </summary>
         [DataMember]
-        public PersonInformationDto PersonInformation { get; set; }
+        public PersonInformationDto PersonInformation { get; private set; }
 
         /// <summary>
         /// Подпись в формате Jpeg
         /// </summary>
         [DataMember]
-        public byte[] SignatureJpeg { get; set; }
+        public byte[] SignatureJpeg { get; private set; }
     }
 }

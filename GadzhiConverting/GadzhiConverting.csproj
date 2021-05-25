@@ -225,6 +225,7 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\ConvertingFilePath.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\ConvertingTimeActions.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\ConvertingValidation.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\ConvertingModeChoice.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Models\Implementations\FilesConvert\ConvertingPackageSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\ConvertingSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilePath.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FilePathCollection.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IConvertingPackageSettings.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IConvertingSettings.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFilePath.cs" />

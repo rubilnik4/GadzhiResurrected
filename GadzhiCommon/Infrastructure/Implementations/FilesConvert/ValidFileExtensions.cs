@@ -31,6 +31,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.FilesConvert
             { "pdf", FileExtensionType.Pdf},
             { "dwg", FileExtensionType.Dwg},
             { "xlsx", FileExtensionType.Xlsx},
+            { "print", FileExtensionType.Print},
         };
 
         /// <summary>
