@@ -58,7 +58,7 @@ namespace GadzhiDAL.Services.Implementations.Histories
         /// Получить список обработанных пакетов по дате
         /// </summary>
         private static async Task<IList<HistoryDataResponse>> GetHistory(IUnitOfWork unitOfWork,
-                                                                                           HistoryDataRequest historyDataRequest) =>
+                                                                         HistoryDataRequest historyDataRequest) =>
             await unitOfWork.Session.Query<PackageDataEntity>().
             Where(package => package.CreationDateTime >= GetDateTimeByDate(historyDataRequest.DateTimeFrom) &&
                              package.CreationDateTime <= GetDateTimeByDate(historyDataRequest.DateTimeTo.AddDays(1)) &&
@@ -75,15 +75,16 @@ namespace GadzhiDAL.Services.Implementations.Histories
             package.FileDataEntities.
             Select(fileDataEntity =>
                 new HistoryFileDataResponse(fileDataEntity.FilePath, fileDataEntity.StatusProcessing,
-                                            fileDataEntity.FileDataSourceServerEntities.
-                                                           Select(fileSource => fileSource.FileExtensionType).
-                                                           ToList(),
-                                            fileDataEntity.FileErrors?.Count ?? 0, 
-                                            fileDataEntity.FileDataSourceServerEntities.FirstOrDefault()?.
-                                                           PaperSizes.ToList()
-                                                           ?? new List<string>())).
+                                            fileDataEntity.FileDataSourceServerEntities.Select(GetHistorySource).ToList(),
+                                            fileDataEntity.FileErrors?.Count ?? 0)).
             ToList();
 
+        /// <summary>
+        /// Получить обработанный файл
+        /// </summary>
+        private static HistoryFileDataSourceResponse GetHistorySource(FileDataSourceEntity fileDataSourceEntity) =>
+            new HistoryFileDataSourceResponse(fileDataSourceEntity.FileExtensionType, fileDataSourceEntity.PrinterName,
+                                              fileDataSourceEntity.PaperSize);
 
         /// <summary>
         /// Получить дату без времени

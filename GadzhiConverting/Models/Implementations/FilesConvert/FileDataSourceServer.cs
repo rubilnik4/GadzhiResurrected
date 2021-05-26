@@ -16,32 +16,19 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
     public class FileDataSourceServer : FilePath, IFileDataSourceServer
     {
         public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType)
-            : this(filePathServer, filePathClient, convertingModeType, 
-                   new List<StampPaperSizeType> {StampPaperSizeType.Undefined}, "-")
-        { }
-
-        public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType,
-                                    StampPaperSizeType paperSize)
-           : this(filePathServer, filePathClient, convertingModeType, new List<StampPaperSizeType> { paperSize }, "-")
+            : this(filePathServer, filePathClient, convertingModeType, StampPaperSizeType.Undefined, "-")
         { }
 
         public FileDataSourceServer(string filePathServer, string filePathClient, 
-                                    ConvertingModeType convertingModeType, IEnumerable<StampPaperSizeType> paperSizes)
-       : this(filePathServer, filePathClient, convertingModeType, paperSizes, "-")
+                                    ConvertingModeType convertingModeType, StampPaperSizeType paperSize)
+       : this(filePathServer, filePathClient, convertingModeType, paperSize, "-")
         { }
 
         public FileDataSourceServer(string filePathServer, string filePathClient, ConvertingModeType convertingModeType,
                                     StampPaperSizeType paperSize, string printerName)
-          : this(filePathServer, filePathClient, convertingModeType, new List<StampPaperSizeType> { paperSize }, printerName)
-        { }
-
-        public FileDataSourceServer(string filePathServer, string filePathClient,
-                                    ConvertingModeType convertingModeType, IEnumerable<StampPaperSizeType> paperSizes, string printerName)
             : base(filePathServer, filePathClient)
         {
-            if (String.IsNullOrWhiteSpace(printerName)) throw new ArgumentNullException(nameof(printerName));
-
-            PaperSizes = paperSizes.Distinct().OrderBy(paperSize => paperSize).ToList();
+            PaperSize = paperSize;
             PrinterName = printerName;
             ConvertingModeType = convertingModeType;
         }
@@ -54,7 +41,7 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// <summary>
         /// Формат печати
         /// </summary>
-        public IReadOnlyCollection<StampPaperSizeType> PaperSizes { get; }
+        public StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Имя принтера
@@ -62,17 +49,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public string PrinterName { get; }
 
         #region IEnumerable
-        /// <summary>
-        /// Реализация перечисления
-        /// </summary>  
         public IEnumerator<IFileDataSourceServer> GetEnumerator()
         {
             yield return this;
         }
 
-        /// <summary>
-        /// Реализация перечисления
-        /// </summary>  
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
     }

@@ -2,23 +2,22 @@
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Histories;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Histories;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Histories
 {
     /// <summary>
     /// Данные истории конвертации файла на клиенте
     /// </summary>
-    public class HistoryFileDataClient: IHistoryFileData
+    public class HistoryFileDataClient: IHistoryFileDataClient
     {
         public HistoryFileDataClient(string filePath, StatusProcessing statusProcessing, 
-                                     IEnumerable<FileExtensionType> convertingFileTypes, int errorCount, 
-                                     IEnumerable<string> paperSizes)
+                                     IEnumerable<IHistoryFileDataSource> historyFileDataSources, int errorCount)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
-            FileExtensionTypes = convertingFileTypes.ToList();
+            HistoryFileDataSources = historyFileDataSources.ToList();
             ErrorCount = errorCount;
-            PaperSizes = paperSizes.ToList();
         }
 
         /// <summary>
@@ -34,16 +33,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Hi
         /// <summary>
         /// Типы обработанных файлов
         /// </summary>
-        public IReadOnlyCollection<FileExtensionType> FileExtensionTypes { get; }
+        public IReadOnlyCollection<IHistoryFileDataSource> HistoryFileDataSources { get; }
 
         /// <summary>
         /// Количество ошибок
         /// </summary>
         public int ErrorCount { get; }
-
-        /// <summary>
-        /// Форматы
-        /// </summary>
-        public IReadOnlyCollection<string> PaperSizes { get; }
     }
 }

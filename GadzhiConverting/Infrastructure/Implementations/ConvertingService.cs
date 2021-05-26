@@ -120,8 +120,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
             SubscribeToDataBase();
         }
 
-       
-
         /// <summary>
         /// Подписаться на обновление пакетов из базы данных
         /// </summary>

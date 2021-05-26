@@ -11,7 +11,6 @@ using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiConvertingLibrary.Infrastructure.Interfaces.Converters;
 using Nito.AsyncEx.Synchronous;
-using static GadzhiCommon.Infrastructure.Implementations.FileSystemOperations;
 
 namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
 {
@@ -34,7 +33,7 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
         /// Сохранить изображения подписей асинхронно
         /// </summary>
         public async Task<IResultCollection<ISignatureFile>> ToSignaturesFileAsync(IEnumerable<ISignatureFileData> signaturesFileData,
-                                                                               string signatureFolder)
+                                                                                   string signatureFolder)
         {
             var signatureTasks = signaturesFileData.Select(signatureFileData => ToSignatureFileAsync(signatureFileData, signatureFolder));
             var signatures = await Task.WhenAll(signatureTasks);
@@ -70,8 +69,9 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
         /// </summary>
         private async Task<IResultValue<ISignatureFile>> ToSignatureFileAsync(ISignatureFileData signatureFileData,
                                                                               string signatureFolder) =>
-             await _fileSystemOperations.SaveFileFromByte(FilePathOperations.CombineFilePath(signatureFolder, signatureFileData.PersonId, SignatureFile.SaveFormat),
-                                                          signatureFileData.SignatureFileDataSource).
+             await _fileSystemOperations.SaveFileFromByte(FilePathOperations.CombineFilePath(signatureFolder, signatureFileData.PersonId,
+                                                                                             SignatureFile.SaveFormat),
+                                                          signatureFileData.SignatureSource.ToArray()).
              ResultValueOkAsync(filePath => new SignatureFile(signatureFileData.PersonId, signatureFileData.PersonInformation,
                                                               signatureFolder, signatureFileData.IsVerticalImage));
 
@@ -80,7 +80,7 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
         /// </summary>
         private IResultValue<ISignatureFile> ToSignatureFile(ISignatureFileData signatureFileData, string signatureFolder) =>
             SignatureFile.GetFilePathByFolder(signatureFolder, signatureFileData.PersonId, signatureFileData.IsVerticalImage).
-            Map(signatureFilePath => _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureFileData.SignatureFileDataSource).
+            Map(signatureFilePath => _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureFileData.SignatureSource.ToArray()).
                                      WaitAndUnwrapException()).
             ResultValueOk(signatureFilePath => new SignatureFile(signatureFileData.PersonId, signatureFileData.PersonInformation,
                                                                  signatureFilePath, signatureFileData.IsVerticalImage));
@@ -88,22 +88,22 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
         /// <summary>
         /// Получить изображения подписи асинхронно
         /// </summary>
-        private async Task<ISignatureFileData> FromSignatureFileAsync(ISignatureFile signatureFile)
+        private async Task<ISignatureFileData> FromSignatureFileAsync(ISignatureFile signatureFileBase)
         {
-            var signatureFileData = await _fileSystemOperations.GetFileFromPath(signatureFile.SignatureFilePath);
-            return new SignatureFileData(signatureFile.PersonId, signatureFile.PersonInformation,
-                                         signatureFileData, signatureFile.IsVerticalImage);
+            var signatureFileData = await _fileSystemOperations.GetFileFromPath(signatureFileBase.SignatureFilePath);
+            return new SignatureFileData(signatureFileBase.PersonId, signatureFileBase.PersonInformation,
+                                         signatureFileData, signatureFileBase.IsVerticalImage);
         }
 
         /// <summary>
         /// Получить изображения подписи
         /// </summary>
-        private ISignatureFileData FromSignatureFile(ISignatureFile signatureFile)
+        private ISignatureFileData FromSignatureFile(ISignatureFile signatureFileBase)
         {
-            var signatureFileData = _fileSystemOperations.GetFileFromPath(signatureFile.SignatureFilePath).
+            var signatureFileData = _fileSystemOperations.GetFileFromPath(signatureFileBase.SignatureFilePath).
                                                           WaitAndUnwrapException();
-            return new SignatureFileData(signatureFile.PersonId, signatureFile.PersonInformation,
-                                         signatureFileData, signatureFile.IsVerticalImage);
+            return new SignatureFileData(signatureFileBase.PersonId, signatureFileBase.PersonInformation,
+                                         signatureFileData, signatureFileBase.IsVerticalImage);
         }
     }
 }

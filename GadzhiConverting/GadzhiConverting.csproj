@@ -243,7 +243,6 @@
     <Compile Include="Models\Implementations\FilesConvert\ConvertingSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilePath.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilePathCollection.cs" />
-    <Compile Include="Models\Interfaces\FilesConvert\IConvertingPackageSettings.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IConvertingSettings.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFilePath.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />

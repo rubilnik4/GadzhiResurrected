@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiCommon.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Models.Implementations.FilesConvert
 {

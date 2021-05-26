@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Entities.FilesConvert.Base.Components;
+using GadzhiDAL.Entities.FilesConvert.Components;
 using GadzhiDAL.Entities.PaperSizes;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
@@ -32,7 +33,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                                                    filesIntermediateResponse => filesIntermediateResponse.FilePath,
                                                    UpdateFileDataFromShortResponse).
                                               ToList();
-            packageDataEntity.SetFileDataEntities(filesDataIntermediateEntity);
+            packageDataEntity.FileDataEntities = filesDataIntermediateEntity;
 
             return packageDataEntity;
         }
@@ -47,15 +48,13 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
                 Contains(packageDataEntity.StatusProcessingProject)) return packageDataEntity;
 
             packageDataEntity.StatusProcessingProject = packageDataResponse.StatusProcessingProject;
-
             var fileDataEntities = packageDataEntity.FileDataEntities.
                                    Join(packageDataResponse.FilesData,
                                    fileEntity => fileEntity.FilePath,
                                    fileResponse => fileResponse.FilePath,
                                    UpdateFileDataFromResponse).
                                    ToList();
-            packageDataEntity.SetFileDataEntities(fileDataEntities);
-
+            packageDataEntity.FileDataEntities = fileDataEntities;
             return packageDataEntity;
         }
 
@@ -87,35 +86,28 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>      
         public static FileDataEntity UpdateFileDataFromResponse(FileDataEntity fileDataEntity, FileDataResponseServer fileDataResponse)
         {
-            var fileDataSourceEntity = fileDataResponse.FilesDataSource?.Select(ToFileDataSource);
+            var fileDataSourceEntity = fileDataResponse.FilesDataSource.
+                                       Select(fileData => ToFileDataSource(fileData, fileDataEntity)).
+                                       ToList();
             fileDataEntity.StatusProcessing = fileDataResponse.StatusProcessing;
             fileDataEntity.FileErrors = fileDataResponse.FileErrors.Select(ToErrorComponent).ToList();
-            fileDataEntity.SetFileDataSourceEntities(fileDataSourceEntity);
-
+            fileDataEntity.FileDataSourceServerEntities = fileDataSourceEntity;
             return fileDataEntity;
         }
 
         /// <summary>
         /// Обновить модель файла данных на основе окончательного ответа
         /// </summary>      
-        public static FileDataSourceEntity ToFileDataSource(FileDataSourceResponseServer fileDataSourceResponseServer) =>
-            new FileDataSourceEntity
-            {
-                FileName = fileDataSourceResponseServer.FileName,
-                FileExtensionType = fileDataSourceResponseServer.FileExtensionType,
-                FileDataSource = fileDataSourceResponseServer.FileDataSource,
-                PaperSizes = fileDataSourceResponseServer.PaperSizes.ToList(),
-                PrinterName = fileDataSourceResponseServer.PrinterName,
-            };
+        public static FileDataSourceEntity ToFileDataSource(FileDataSourceResponseServer fileDataSource,
+                                                            FileDataEntity fileDataEntity) =>
+            new FileDataSourceEntity(fileDataSource.FileName, fileDataSource.FileExtensionType,
+                                     fileDataSource.PaperSize, fileDataSource.PrinterName, fileDataSource.FileDataSource).
+            Void(source => source.FileDataEntity = fileDataEntity);
 
         /// <summary>
         /// Преобразовать ошибки в формат БД
         /// </summary>
         public static ErrorComponent ToErrorComponent(ErrorCommonResponse error) =>
-            new ErrorComponent
-            {
-                ErrorConvertingType = error.ErrorConvertingType,
-                ErrorDescription = error.ErrorDescription,
-            };
+            new ErrorComponent(error.ErrorConvertingType, error.Description);
     }
 }

@@ -155,22 +155,22 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Сохранить изображение элемента ячейки Microstation
         /// </summary>
-        private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibrary) =>
-            _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
+        private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibraryBase) =>
+            _applicationMicrostation.CreateCellElementFromLibrary(signatureLibraryBase.PersonId, new PointMicrostation(0, 0), modelMicrostation).
             ResultVoidOk(cellElement => cellElement.LineWeight = 7).
             ToResultValueFromApplication().
-            ResultVoidOk(_ => _messagingService.ShowMessage($"Обработка подписи {signatureLibrary.PersonInformation.FullName}")).
-            ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
+            ResultVoidOk(_ => _messagingService.ShowMessage($"Обработка подписи {signatureLibraryBase.PersonInformation.FullName}")).
+            ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibraryBase));
 
         /// <summary>
         /// Конвертировать ячейку Microstation в Jpeg
         /// </summary>
-        private ISignatureFileData ToJpegByte(IElementMicrostation cellSignature, ISignatureLibrary signatureLibrary) =>
-            GetSignatureFileSavePath(signatureLibrary).
-            Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
+        private ISignatureFileData ToJpegByte(IElementMicrostation cellSignature, ISignatureLibrary signatureLibraryBase) =>
+            GetSignatureFileSavePath(signatureLibraryBase).
+            Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibraryBase),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonInformation,
+            Map(filePathEmf => new SignatureFileData(signatureLibraryBase.PersonId, signatureLibraryBase.PersonInformation,
                                                      JpegConverter.ToJpegFromEmf(filePathEmf), false ).
                                Void(_ => _fileSystemOperations.DeleteFile(filePathEmf))).
             Void(_ => cellSignature.Remove());
@@ -178,9 +178,9 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Получить имя для сохранения подписи
         /// </summary>
-        private static string GetSignatureFileSavePath(ISignatureLibrary signatureLibrary) =>
+        private static string GetSignatureFileSavePath(ISignatureLibrary signatureLibraryBase) =>
             ProjectSignatureSettings.SignaturesSaveFolder + Path.DirectorySeparatorChar +
-            signatureLibrary.PersonId + ".emf";
+            signatureLibraryBase.PersonId + ".emf";
 
         /// <summary>
         /// Загрузить подписи в базу
@@ -189,9 +189,9 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
             await signatureFileData.
             Void(_ => _messagingService.ShowMessage("Удаление подписей в базе")).
             Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteSignatures())).
-            Map(_ => ConverterDataFileToDto.SignaturesToDto(signatureFileData)).
-            Void(_ => _messagingService.ShowMessage("Отправка подписей в базу")).
-            Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
+            MapAsync(_ => ConverterDataFileToDto.SignaturesToDto(signatureFileData)).
+            VoidAsync(_ => _messagingService.ShowMessage("Отправка подписей в базу")).
+            MapBindAsync(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
             VoidAsync(ShowMessage);
 
         /// <summary>

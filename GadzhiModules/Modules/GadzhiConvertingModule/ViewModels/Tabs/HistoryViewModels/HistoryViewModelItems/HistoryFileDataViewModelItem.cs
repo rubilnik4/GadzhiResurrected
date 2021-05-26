@@ -4,6 +4,7 @@ using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Histories;
 using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Histories;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels.HistoryViewModelItems
 {
@@ -12,7 +13,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
     /// </summary>
     public class HistoryFileDataViewModelItem
     {
-        public HistoryFileDataViewModelItem(IHistoryFileData historyFileData)
+        public HistoryFileDataViewModelItem(IHistoryFileDataClient historyFileData)
         {
             HistoryFileData = historyFileData;
         }
@@ -20,7 +21,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
         /// <summary>
         /// Данные истории конвертации файла
         /// </summary>
-        public IHistoryFileData HistoryFileData { get; }
+        public IHistoryFileDataClient HistoryFileData { get; }
 
         /// <summary>
         /// Путь файла
@@ -35,26 +36,9 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
             StatusProcessingConverter.StatusProcessingToString(HistoryFileData.StatusProcessing);
 
         /// <summary>
-        /// Типы обработанных файлов
-        /// </summary>
-        public string FileExtensionTypes =>
-            HistoryFileData.FileExtensionTypes.
-            Select(fileType => fileType.ToString()).
-            DefaultIfEmpty("").
-            Aggregate((first, second) => first + "; " + second);
-
-        /// <summary>
         /// Количество ошибок
         /// </summary>
         public int ErrorCount =>
             HistoryFileData.ErrorCount;
-
-        /// <summary>
-        /// Форматы
-        /// </summary>
-        public string PaperSizes =>
-            HistoryFileData.PaperSizes.
-            DefaultIfEmpty("").
-            Aggregate((first, second) => first + "; " + second);
     }
 }

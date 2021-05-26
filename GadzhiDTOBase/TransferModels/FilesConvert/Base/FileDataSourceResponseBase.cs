@@ -10,12 +10,12 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     [DataContract]
     public abstract class FileDataSourceResponseBase
     {
-        protected FileDataSourceResponseBase(string fileName, FileExtensionType fileExtensionType, IList<string> paperSizes,
+        protected FileDataSourceResponseBase(string fileName, FileExtensionType fileExtensionType, string paperSize,
                                              string printerName, byte[] fileDataSource)
         {
             FileName = fileName;
             FileExtensionType = fileExtensionType;
-            PaperSizes = paperSizes;
+            PaperSize = paperSize;
             PrinterName = printerName;
             FileDataSource = fileDataSource;
         }
@@ -36,7 +36,7 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Формат печати
         /// </summary>
         [DataMember]
-        public IList<string> PaperSizes { get; private set; }
+        public string PaperSize { get; private set; }
 
         /// <summary>
         /// Имя принтера

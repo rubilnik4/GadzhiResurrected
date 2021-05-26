@@ -15,9 +15,9 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     [DataContract]
     public class FileDataSourceResponseServer : FileDataSourceResponseBase
     {
-        public FileDataSourceResponseServer(string fileName, FileExtensionType fileExtensionType, IList<string> paperSizes,
-                                                 string printerName, byte[] fileDataSource)
-            : base(fileName, fileExtensionType, paperSizes, printerName, fileDataSource)
+        public FileDataSourceResponseServer(string fileName, FileExtensionType fileExtensionType, string paperSize,
+                                            string printerName, byte[] fileDataSource)
+            : base(fileName, fileExtensionType, paperSize, printerName, fileDataSource)
         { }
     }
 }

@@ -242,6 +242,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataSourceClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Likes\LikeIdentityClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ConvertingMode.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerCompleteFilesClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerDetailClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServersInfoClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\Histories\IHistoryFileDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\GadzhiConvertingModule.cs" />

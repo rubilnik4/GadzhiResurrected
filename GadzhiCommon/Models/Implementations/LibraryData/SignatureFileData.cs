@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiCommon.Models.Implementations.LibraryData
@@ -8,28 +9,21 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
     /// </summary>
     public class SignatureFileData : SignatureLibrary, ISignatureFileData
     {
-        public SignatureFileData(string id, PersonInformation personInformation, byte[] signatureFileData, bool isVerticalImage)
+        public SignatureFileData(string id, PersonInformation personInformation,
+                                 IList<byte> signatureFileData, bool isVerticalImage)
             : base(id, personInformation)
         {
-            SignatureFileDataSource = ValidateSignatureFileDate(signatureFileData)
-                                      ? signatureFileData
-                                      : throw new ArgumentNullException(nameof(signatureFileData));
-
+            SignatureSource =  signatureFileData;
             IsVerticalImage = isVerticalImage;
         }
         /// <summary>
         /// Изображение подписи
         /// </summary>
-        public byte[] SignatureFileDataSource { get; }
+        public IList<byte> SignatureSource { get; }
 
         /// <summary>
         /// Вертикальное расположение изображения
         /// </summary>
         public bool IsVerticalImage { get; }
-
-        /// <summary>
-        /// Проверить корректность данных
-        /// </summary>
-        public static bool ValidateSignatureFileDate(byte[] signatureFileData) => signatureFileData?.Length > 0;
     }
 }

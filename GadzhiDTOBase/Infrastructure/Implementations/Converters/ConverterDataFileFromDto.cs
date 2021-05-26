@@ -68,7 +68,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// </summary>
         private static ISignatureFileData SignatureFileDataFromDto(SignatureDto signatureDto) =>
             new SignatureFileData(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation),
-                                  signatureDto.SignatureJpeg, false);
+                                  signatureDto.SignatureSource, false);
 
         /// <summary>
         /// Преобразовать подпись из трансферной модели
@@ -82,7 +82,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         private IResultValue<ISignatureFile> SignatureFileFromDto(SignatureDto signatureDto, string signatureFolder) =>
             SignatureFile.GetFilePathByFolder(signatureFolder, signatureDto.PersonId, false).
             Map(signatureFilePath => 
-                _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureDto.SignatureJpeg).WaitAndUnwrapException().
+                _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureDto.SignatureSourceList).WaitAndUnwrapException().
                 ResultValueOk(_ => new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation),
                                                      signatureFilePath, false)));
 
@@ -92,16 +92,15 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         private async Task<IResultValue<ISignatureFile>> SignatureFileFromDtoAsync(SignatureDto signatureDto, string signatureFolder) =>
             await SignatureFile.GetFilePathByFolder(signatureFolder, signatureDto.PersonId, false).
             Map(signatureFilePath =>
-                _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureDto.SignatureJpeg).
+                _fileSystemOperations.SaveFileFromByte(signatureFilePath, signatureDto.SignatureSourceList).
                 ResultValueOkAsync(_ => new SignatureFile(signatureDto.PersonId, PersonInformationFromDto(signatureDto.PersonInformation),
                                                           signatureFilePath, false)));
-     
+
         /// <summary>
         /// Преобразовать информацию о пользователе из трансферной модели
         /// </summary>
-        private static PersonInformation PersonInformationFromDto(PersonInformationDto personInformation) =>
-            (personInformation != null)
-                ? new PersonInformation(personInformation.Surname, personInformation.Name, personInformation.Patronymic, personInformation.DepartmentType)
-                : throw new ArgumentNullException(nameof(personInformation));
+        private static PersonInformation PersonInformationFromDto(PersonInformationDto personInformation) => 
+            new PersonInformation(personInformation.Surname, personInformation.Name, personInformation.Patronymic,
+                                  personInformation.DepartmentType);
     }
 }

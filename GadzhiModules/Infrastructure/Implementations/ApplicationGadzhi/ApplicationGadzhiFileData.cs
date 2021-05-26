@@ -18,7 +18,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange => _packageData.FileDataChange;
+        public ISubject<FilesChange> FileDataChange => 
+            _packageData.FileDataChange;
 
         /// <summary>
         /// Добавить файлы для конвертации

@@ -22,6 +22,18 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
     /// </summary>
     public class PackageData : IPackageData
     {
+        public PackageData()
+            : this(new List<IFileData>())
+        { }
+
+        public PackageData(IEnumerable<IFileData> filesData)
+        {
+            Id = Guid.Empty;
+            FilesQueueInfo = new FilesQueueInfo();
+            SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
+            _filesData = filesData.ToList();
+        }
+
         /// <summary>
         /// Журнал системных сообщений
         /// </summary>
@@ -32,19 +44,6 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// </summary>
         private readonly List<IFileData> _filesData;
 
-        public PackageData()
-            : this(new List<IFileData>())
-        { }
-
-        public PackageData(IEnumerable<IFileData> filesData)
-        {
-            Id = Guid.Empty;
-            FilesQueueInfo = new FilesQueueInfo();
-            SetStatusProcessingProject(StatusProcessingProject.NeedToLoadFiles);
-
-            _filesData = filesData?.ToList() ?? new List<IFileData>();
-        }
-
         /// <summary>
         /// ID идентификатор
         /// </summary>    
@@ -53,17 +52,14 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange => _fileDataChange;
-
-        /// <summary>
-        /// Подписка на изменение коллекции
-        /// </summary>
-        private readonly Subject<FilesChange> _fileDataChange = new Subject<FilesChange>();
+        public ISubject<FilesChange> FileDataChange { get; } = 
+            new Subject<FilesChange>();
 
         /// <summary>
         /// Данные о конвертируемых файлах
         /// </summary>
-        public IReadOnlyList<IFileData> FilesData => _filesData;
+        public IReadOnlyList<IFileData> FilesData =>
+            _filesData;
 
         /// <summary>
         /// Пути конвертируемых файлов
@@ -219,7 +215,7 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
         /// Обновить список файлов
         /// </summary>
         private void UpdateFileData(FilesChange fileChange) =>
-            _fileDataChange?.OnNext(fileChange);
+            FileDataChange.OnNext(fileChange);
 
         /// <summary>
         /// Можно ли добавить файл в список для конвертирования
@@ -237,10 +233,8 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Fi
 
             if (disposing)
             {
-                _fileDataChange.OnCompleted();
-                _fileDataChange.Dispose();
+                FileDataChange.OnCompleted();
             }
-
             _disposedValue = true;
         }
 

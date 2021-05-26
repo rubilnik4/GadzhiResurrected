@@ -89,7 +89,7 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
 
             signatureFileRequest.IsVerticalImage
                 ? new SignatureFileData(signatureFileData.PersonId, signatureFileData.PersonInformation,
-                                        ImageOperations.RotateImageInByte(signatureFileData.SignatureFileDataSource,
+                                        ImageOperations.RotateImageInByte(signatureFileData.SignatureSource.ToArray(),
                                                                           ImageRotation.Rotate270, ImageFormatApplication.Jpeg),
                                         true)
                 : signatureFileData;

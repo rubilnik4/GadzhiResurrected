@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using GadzhiCommon.Enums.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiDTOBase.TransferModels.Signatures
 {
@@ -7,7 +8,7 @@ namespace GadzhiDTOBase.TransferModels.Signatures
     /// Информация о пользователе. Трансферная модель
     /// </summary>
     [DataContract]
-    public class PersonInformationDto
+    public class PersonInformationDto: IPersonInformation
     {
         public PersonInformationDto(string surname, string name, string patronymic, DepartmentType departmentType)
         {

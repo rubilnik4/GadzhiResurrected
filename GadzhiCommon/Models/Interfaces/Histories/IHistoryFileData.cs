@@ -6,7 +6,8 @@ namespace GadzhiCommon.Models.Interfaces.Histories
     /// <summary>
     /// Данные истории конвертации файла
     /// </summary>
-    public interface IHistoryFileData
+    public interface IHistoryFileData<out TSource>
+        where TSource : IHistoryFileDataSource
     {
         /// <summary>
         /// Путь файла
@@ -21,16 +22,11 @@ namespace GadzhiCommon.Models.Interfaces.Histories
         /// <summary>
         /// Типы обработанных файлов
         /// </summary>
-        IReadOnlyCollection<FileExtensionType> FileExtensionTypes { get; }
+        IReadOnlyCollection<TSource> HistoryFileDataSources { get; }
 
         /// <summary>
         /// Количество ошибок
         /// </summary>
         int ErrorCount { get; }
-
-        /// <summary>
-        /// Форматы
-        /// </summary>
-        IReadOnlyCollection<string> PaperSizes { get; }
     }
 }

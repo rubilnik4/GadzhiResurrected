@@ -15,6 +15,7 @@ using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiCommon.Models.Interfaces.FilesConvert;
 using GadzhiConverting.Models.Interfaces.Printers;
 using GadzhiDTOServer.Infrastructure.Implementation;
 

@@ -1,39 +1,51 @@
 ﻿using System.Collections.Generic;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDAL.Entities.Base;
-using GadzhiDAL.Entities.PaperSizes;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace GadzhiDAL.Entities.FilesConvert
 {
     /// <summary>
     /// Информация об отконвертированных файлах в базе данных
     /// </summary>
-    public class FileDataSourceEntity: EntityBase<int>
+    public class FileDataSourceEntity
     {
+        public FileDataSourceEntity()
+        { }
+
+        public FileDataSourceEntity(string fileName, FileExtensionType fileExtensionType, 
+                                    string paperSize, string printerName, IList<byte> fileDataSource)
+        {
+            FileName = fileName;
+            FileExtensionType = fileExtensionType;
+            PaperSize = paperSize;
+            PrinterName = printerName;
+            FileDataSource = fileDataSource;
+        }
+
         /// <summary>
         /// Идентификатор
         /// </summary>
-        public override int Id { get; protected set; }
+        public virtual int Id { get; protected set; }
 
         /// <summary>
         /// Имя и расширение файла
         /// </summary>       
-        public virtual string FileName { get; set; }
+        public virtual string FileName { get; protected set; }
 
         /// <summary>
         /// Путь файла
         /// </summary>      
-        public virtual FileExtensionType FileExtensionType { get; set; }
+        public virtual FileExtensionType FileExtensionType { get; protected set; }
 
         /// <summary>
         /// Формат печати
         /// </summary>
-        public virtual IList<string> PaperSizes { get; set; }
+        public virtual string PaperSize { get; protected set; }
 
         /// <summary>
         /// Имя принтера
         /// </summary>
-        public virtual string PrinterName { get; set; }
+        public virtual string PrinterName { get; protected set; }
 
         /// <summary>
         /// Файл данных в формате zip GZipStream

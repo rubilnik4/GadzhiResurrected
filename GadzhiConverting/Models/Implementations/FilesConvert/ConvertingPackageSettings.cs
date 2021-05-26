@@ -5,6 +5,7 @@ using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
 using GadzhiCommon.Models.Interfaces.Errors;
+using GadzhiCommon.Models.Interfaces.FilesConvert;
 using GadzhiConverting.Infrastructure.Implementations;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiConverting.Models.Interfaces.Printers;

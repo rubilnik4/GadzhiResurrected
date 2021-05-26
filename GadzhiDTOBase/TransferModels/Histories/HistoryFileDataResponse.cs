@@ -10,16 +10,15 @@ namespace GadzhiDTOBase.TransferModels.Histories
     /// Данные истории конвертации файла. Трансферная модель
     /// </summary>
     [DataContract]
-    public class HistoryFileDataResponse: IHistoryFileData
+    public class HistoryFileDataResponse: IHistoryFileData<HistoryFileDataSourceResponse>
     {
         public HistoryFileDataResponse(string filePath, StatusProcessing statusProcessing,
-                                       IList<FileExtensionType> fileExtensionTypes, int errorCount, IList<string> paperSizes)
+                                       IList<HistoryFileDataSourceResponse> historyFileDataSources, int errorCount)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
-            FileExtensionTypesList = fileExtensionTypes;
+            HistoryFileDataSourceResponsesList = historyFileDataSources;
             ErrorCount = errorCount;
-            PaperSizesList = paperSizes;
         }
 
         /// <summary>
@@ -38,32 +37,19 @@ namespace GadzhiDTOBase.TransferModels.Histories
         /// Типы обработанных файлов
         /// </summary>
         [DataMember]
-        public IList<FileExtensionType> FileExtensionTypesList { get; private set; }
+        public IList<HistoryFileDataSourceResponse> HistoryFileDataSourceResponsesList { get; private set; }
 
         /// <summary>
         /// Типы обработанных файлов
         /// </summary>
         [IgnoreDataMember]
-        public IReadOnlyCollection<FileExtensionType> FileExtensionTypes =>
-            FileExtensionTypesList.ToList();
+        public IReadOnlyCollection<HistoryFileDataSourceResponse> HistoryFileDataSources =>
+            HistoryFileDataSourceResponsesList.ToList();
 
         /// <summary>
         /// Количество ошибок
         /// </summary>
         [DataMember]
         public int ErrorCount { get; private set; }
-
-        /// <summary>
-        /// Форматы
-        /// </summary>
-        [DataMember]
-        public IList<string> PaperSizesList { get; private set; }
-
-        /// <summary>
-        /// Форматы
-        /// </summary>
-        [IgnoreDataMember]
-        public IReadOnlyCollection<string> PaperSizes =>
-            PaperSizesList.ToList();
     }
 }

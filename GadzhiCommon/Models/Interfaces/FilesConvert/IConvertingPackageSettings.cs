@@ -2,7 +2,7 @@
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
 
-namespace GadzhiConverting.Models.Interfaces.FilesConvert
+namespace GadzhiCommon.Models.Interfaces.FilesConvert
 {
     public interface IConvertingPackageSettings
     {
@@ -20,6 +20,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// Тип конвертации
         /// </summary>
         IReadOnlyCollection<ConvertingModeType> ConvertingModeTypes { get; }
+
         /// <summary>
         /// Использовать подпись по умолчанию
         /// </summary>

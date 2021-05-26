@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Entities.FilesConvert.Base.Components;
+using GadzhiDAL.Entities.FilesConvert.Components;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
@@ -66,14 +66,13 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>        
         private static FileDataSourceResponseClient FileDataSourceToResponse(FileDataSourceEntity fileDataSourceEntity) =>
             new FileDataSourceResponseClient(fileDataSourceEntity.FileName, fileDataSourceEntity.FileExtensionType,
-                                             fileDataSourceEntity.PaperSizes.ToList(),
-                                             fileDataSourceEntity.PrinterName,
+                                             fileDataSourceEntity.PaperSize, fileDataSourceEntity.PrinterName,
                                              fileDataSourceEntity.FileDataSource.ToArray());
 
         /// <summary>
         /// Конвертировать ошибки в трансферную модель
         /// </summary>
         private static ErrorCommonResponse ToErrorCommon(ErrorComponent errorComponent) =>
-            new ErrorCommonResponse(errorComponent.ErrorConvertingType, errorComponent.ErrorDescription);
+            new ErrorCommonResponse(errorComponent.ErrorConvertingType, errorComponent.Description);
     }
 }

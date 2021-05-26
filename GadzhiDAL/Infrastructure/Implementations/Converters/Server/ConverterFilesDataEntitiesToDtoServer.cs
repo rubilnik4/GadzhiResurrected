@@ -30,7 +30,7 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Server
         /// </summary>
         private static ConvertingSettingsRequest ConvertingSettingsToRequest(ConvertingSettingsComponent convertingSettings) =>
             new ConvertingSettingsRequest(convertingSettings.PersonId, convertingSettings.PdfNamingType,
-                                           convertingSettings.ConvertingModeTypes.ToList(), 
+                                           convertingSettings.ConvertingModeTypesList.ToList(), 
                                            convertingSettings.UseDefaultSignature);
 
         /// <summary>

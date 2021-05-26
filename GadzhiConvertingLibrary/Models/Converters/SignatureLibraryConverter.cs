@@ -12,19 +12,19 @@ namespace GadzhiConvertingLibrary.Models.Converters
         /// <summary>
         /// Преобразовать имя с идентификатором в класс модуля конвертации
         /// </summary>
-        public static ISignatureLibraryApp ToSignatureLibraryApplication(ISignatureLibrary signatureLibrary) =>
-            (signatureLibrary != null)
-                ? new SignatureLibraryApp(signatureLibrary.PersonId, ToPersonInformationApp(signatureLibrary.PersonInformation))
-                : throw new ArgumentNullException(nameof(signatureLibrary));
+        public static ISignatureLibraryApp ToSignatureLibraryApplication(ISignatureLibrary signatureLibraryBase) =>
+            (signatureLibraryBase != null)
+                ? new SignatureLibraryApp(signatureLibraryBase.PersonId, ToPersonInformationApp(signatureLibraryBase.PersonInformation))
+                : throw new ArgumentNullException(nameof(signatureLibraryBase));
 
         /// <summary>
         /// Преобразовать имя с идентификатором и подписью в класс модуля конвертации
         /// </summary>
-        public static ISignatureFileApp ToSignatureFileApplication(ISignatureFile signatureFile) =>
-            (signatureFile != null)
-                ? new SignatureFileApp(signatureFile.PersonId, ToPersonInformationApp(signatureFile.PersonInformation),
-                                       signatureFile.SignatureFilePath, signatureFile.IsVerticalImage)
-                : throw new ArgumentNullException(nameof(signatureFile));
+        public static ISignatureFileApp ToSignatureFileApplication(ISignatureFile signatureFileBase) =>
+            (signatureFileBase != null)
+                ? new SignatureFileApp(signatureFileBase.PersonId, ToPersonInformationApp(signatureFileBase.PersonInformation),
+                                       signatureFileBase.SignatureFilePath, signatureFileBase.IsVerticalImage)
+                : throw new ArgumentNullException(nameof(signatureFileBase));
 
         /// <summary>
         /// Преобразовать информацию о пользователе в класс модуля конвертации

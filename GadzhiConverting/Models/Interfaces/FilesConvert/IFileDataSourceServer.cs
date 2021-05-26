@@ -18,7 +18,7 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// <summary>
         /// Формат печати
         /// </summary>
-        IReadOnlyCollection<StampPaperSizeType> PaperSizes { get; }
+        StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Имя принтера

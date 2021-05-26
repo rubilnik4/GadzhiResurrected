@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiDAL.Entities.Signatures;
+using GadzhiDAL.Models.Implementations;
 using GadzhiDAL.Services.Interfaces;
 using GadzhiDAL.Services.Interfaces.Signatures;
 using GadzhiDTOBase.TransferModels.Signatures;

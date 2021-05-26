@@ -70,7 +70,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
             await _fileSystemOperations.FileToByteAndZip(fileDataSourceServer.FilePathServer).
             MapAsync(resultFile =>
                 new FileDataSourceResponseServer(fileDataSourceServer.FileNameClient, fileDataSourceServer.FileExtensionType,
-                                                 fileDataSourceServer.PaperSizes.Select(paperSize => paperSize.ToString()).ToList(),
+                                                 fileDataSourceServer.PaperSize.ToString(),
                                                  fileDataSourceServer.PrinterName, resultFile.Value).
                 Map(fileSource => new ResultValue<FileDataSourceResponseServer>(fileSource, resultFile.Errors)));
 

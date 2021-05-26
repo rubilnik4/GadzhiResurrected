@@ -73,7 +73,8 @@ namespace GadzhiConverting.Models.Implementations
         /// <summary>
         /// Папка с подписями
         /// </summary>
-        public static string SignatureFolder => AppDomain.CurrentDomain.BaseDirectory + "Signatures";
+        public static string SignatureFolder => 
+            AppDomain.CurrentDomain.BaseDirectory + "Signatures";
 
         /// <summary>
         /// Имена для подписей

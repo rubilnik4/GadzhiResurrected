@@ -22,7 +22,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
                 {
                     m.Map(x => x.PersonId).Not.Nullable();
                     m.Map(x => x.PdfNamingType).CustomType<PdfNamingType>().Not.Nullable().Default("0");
-                    m.HasMany(x => x.ConvertingModeTypes).Element("ConvertingModeType");
+                    m.HasMany(x => x.ConvertingModeTypesList).Element("ConvertingModeType");
                     m.Map(x => x.UseDefaultSignature).Not.Nullable().Default("0");
                 });
             HasMany(x => x.FileDataEntities)

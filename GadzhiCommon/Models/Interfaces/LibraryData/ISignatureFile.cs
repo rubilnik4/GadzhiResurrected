@@ -1,15 +1,9 @@
-﻿namespace GadzhiCommon.Models.Interfaces.LibraryData
-{
-    /// <summary>
-    /// Имя с идентификатором и подпись
-    /// </summary>
-    public interface ISignatureFile: ISignatureLibrary
-    {
-        /// <summary>
-        /// Изображение подписи
-        /// </summary>
-        string SignatureFilePath { get; }
+﻿using GadzhiCommon.Models.Implementations.LibraryData;
 
+namespace GadzhiCommon.Models.Interfaces.LibraryData
+{
+    public interface ISignatureFile: ISignatureFileBase<PersonInformation>
+    {
         /// <summary>
         /// Вертикальное расположение изображения
         /// </summary>

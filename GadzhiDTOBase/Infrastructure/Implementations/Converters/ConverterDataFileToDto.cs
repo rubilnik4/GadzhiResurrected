@@ -23,7 +23,7 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// </summary>
         private static SignatureDto SignatureToDto(ISignatureFileData signatureFileData) =>
             new SignatureDto(signatureFileData.PersonId, PersonInformationToDto(signatureFileData.PersonInformation),
-                             signatureFileData.SignatureFileDataSource);
+                             signatureFileData.SignatureSource.ToArray());
 
         /// <summary>
         /// Преобразовать информацию о пользователе в  трансферную модель

@@ -160,7 +160,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>
         private static IErrorCommon ToErrorCommon(ErrorCommonResponse errorCommonResponse) =>
             (errorCommonResponse != null)
-                ? new ErrorCommon(errorCommonResponse.ErrorConvertingType, errorCommonResponse.ErrorDescription)
+                ? new ErrorCommon(errorCommonResponse.ErrorConvertingType, errorCommonResponse.Description)
                 : throw new ArgumentNullException(nameof(errorCommonResponse));
     }
 

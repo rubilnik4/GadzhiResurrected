@@ -12,15 +12,15 @@ namespace GadzhiDAL.Mappings.Signatures
     {
         public SignatureMap()
         {
-            Id(x => x.Id).Not.Nullable();
+            Id(x => x.PersonId).Not.Nullable();
             Component(x => x.PersonInformation, m =>
                 {
                     m.Map(x => x.Surname).Not.Nullable();
                     m.Map(x => x.Name).Not.Nullable();
                     m.Map(x => x.Patronymic).Not.Nullable();
-                    m.Map(x => x.DepartmentType).CustomType<DepartmentType>().Not.Nullable();
+                    m.Map(x => x.DepartmentType).CustomType<DepartmentType>().Not.Nullable().Default("0");
                 });
-            Map(x => x.SignatureJpeg).CustomType<BinaryBlobType>().LazyLoad();
+            Map(x => x.SignatureSource).CustomType<BinaryBlobType>().LazyLoad();
         }
     }
 }

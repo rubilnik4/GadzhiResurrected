@@ -10,12 +10,14 @@ namespace GadzhiConvertingLibrary.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Сохранить изображения подписей асинхронно
         /// </summary>
-        Task<IResultCollection<ISignatureFile>> ToSignaturesFileAsync(IEnumerable<ISignatureFileData> signaturesFileData, string signatureFolder);
+        Task<IResultCollection<ISignatureFile>> ToSignaturesFileAsync(IEnumerable<ISignatureFileData> signaturesFileData, 
+                                                                      string signatureFolder);
 
         /// <summary>
         /// Сохранить изображения подписей
         /// </summary>
-        IResultCollection<ISignatureFile> ToSignaturesFile(IEnumerable<ISignatureFileData> signaturesFileData, string signatureFolder);
+        IResultCollection<ISignatureFile> ToSignaturesFile(IEnumerable<ISignatureFileData> signaturesFileData,
+                                                                 string signatureFolder);
 
         /// <summary>
         /// Получить изображения подписей асинхронно

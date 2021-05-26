@@ -58,7 +58,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
             Void(_ => _messagingService.ShowMessage("Форматирование полей...")).
             CompressFieldsRanges().
             Void(_ => _loggerService.LogByObject(LoggerLevel.Debug, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), nameof(stampContainer.CompressFieldsRanges))).
-            Map(_ => GetSavedFileDataSource(stampContainer, documentLibrary, filePathCollection.FilePathMain)).
+            Map(_ => GetSavedFileDataSource(documentLibrary, filePathCollection.FilePathMain)).
             WhereContinue(_ => ConvertingModeChoice.IsPdfConvertingNeed(convertingSettings.ConvertingModeTypes),
                           filesDataSource => StampContainerCreatePdf(stampContainer, documentLibrary, filePathCollection.FilePathPdf,
                                                                      convertingSettings, ConvertingModeType.Pdf, colorPrintType).
@@ -75,10 +75,8 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// <summary>
         /// Получить путь к сохраненному файлу для обработки
         /// </summary>        
-        private static IResultCollection<IFileDataSourceServer> GetSavedFileDataSource(IStampContainer stampContainer, IDocumentLibrary documentLibrary,
-                                                                                       IFilePath filePath) =>
-            new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient, ConvertingModeType.Main,
-                                     stampContainer.GetStampsToPrint().Value?.Select(stamp => stamp.PaperSize) ?? Enumerable.Empty<StampPaperSizeType>()).
+        private static IResultCollection<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary, IFilePath filePath) =>
+            new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient, ConvertingModeType.Main).
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource).ToResultCollection());
 
         /// <summary>
