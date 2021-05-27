@@ -53,10 +53,8 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
 
             packageDataEntity?.StartConverting(identityServerName);
             var packageDataRequest = ConverterFilesDataEntitiesToDtoServer.PackageDataToRequest(packageDataEntity);
-
             await unitOfWork.CommitAsync();
-
-            return packageDataRequest ?? PackageDataRequestServer.EmptyPackage;
+            return packageDataRequest;
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             {
                 ConverterFilesDataEntitiesFromDtoServer.UpdatePackageDataFromShortResponse(filesDataEntity, packageDataShortResponseServer);
             }
-            
+
             await unitOfWork.CommitAsync();
             return Unit.Value;
         }
@@ -135,15 +133,13 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         private static async Task PaperSizeUpdate(IUnitOfWork unitOfWork, FileDataResponseServer fileDataResponseServer)
         {
             var paperSizes = fileDataResponseServer.FilesDataSource.
-                             SelectMany(fileDataSource => fileDataSource.PaperSizes).Distinct().
-                             Select(paperSize => new PaperSizeEntity { PaperSize = paperSize });
+                             Select(fileDataSource => fileDataSource.PaperSize).Distinct().
+                             Select(paperSize => new PaperSizeEntity(paperSize));
             foreach (var paperSize in paperSizes)
             {
                 await unitOfWork.Session.SaveOrUpdateAsync(paperSize);
             }
         }
-            //await unitOfWork.Session.
-            //SaveOrUpdateAsync();
 
         /// <summary>
         /// Проверить статус пакета. При отмене - удалить

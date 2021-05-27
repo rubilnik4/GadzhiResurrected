@@ -126,6 +126,7 @@
     <Compile Include="TransferModels\Histories\HistoryDataRequest.cs" />
     <Compile Include="TransferModels\Histories\HistoryDataResponse.cs" />
     <Compile Include="TransferModels\Histories\HistoryFileDataResponse.cs" />
+    <Compile Include="TransferModels\Histories\HistoryFileDataSourceResponse.cs" />
     <Compile Include="TransferModels\Likes\LikeIdentityResponse.cs" />
     <Compile Include="TransferModels\ServerStates\ServerCompleteFilesResponse.cs" />
     <Compile Include="TransferModels\ServerStates\ServerDetailQueueResponse.cs" />

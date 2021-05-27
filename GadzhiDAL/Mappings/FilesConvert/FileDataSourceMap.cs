@@ -16,7 +16,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
             Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.FileName).Not.Nullable().Default("");
             Map(x => x.FileExtensionType).CustomType<FileExtensionType>().Not.Nullable().Default("0");
-            HasMany(x => x.PaperSizes).Element("PaperSize");
+            Map(x => x.PaperSize).Not.Nullable().Default("");
             Map(x => x.PrinterName).Not.Nullable().Default("");
             Map(x => x.FileDataSource).CustomType<BinaryBlobType>().LazyLoad();
             References(x => x.FileDataEntity);

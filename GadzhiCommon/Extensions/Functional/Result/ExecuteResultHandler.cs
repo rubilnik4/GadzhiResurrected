@@ -15,8 +15,6 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// </summary> 
         public static IResultValue<T> ExecuteBindResultValue<T>(Func<T> method)
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-
             try
             {
                 var result = new ResultValue<T>(method.Invoke());
@@ -34,7 +32,6 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// </summary> 
         public static IResultValue<T> ExecuteBindResultValue<T>(Func<IResultValue<T>> method, IErrorCommon errorMessage = null)
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
             IResultValue<T> result;
             try
             {
@@ -46,7 +43,6 @@ namespace GadzhiCommon.Extensions.Functional.Result
                          ToResultValue<T>().
                          ConcatErrors(errorMessage);
             }
-
             return result;
         }       
     }

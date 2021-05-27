@@ -77,8 +77,9 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
                                    signatureFileRequest => signatureFileRequest.PersonId,
                                    signatureFileData => signatureFileData.PersonId,
                                    (signatureFileRequest, signatureFileData) => RotateSignature(signatureFileData, signatureFileRequest))).
-            ResultValueOk(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
-                                                                   ToApplication()).
+            ResultValueOkBind(signaturesFileData => signatureConverter.ToSignaturesFile(signaturesFileData, signatureFolder).
+                                                    ResultValueOk(signatureFiles => signatureFiles.ToApplication()).
+                                                    ToResultValueApplication()).
             ToResultCollection();
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
 
             signatureFileRequest.IsVerticalImage
                 ? new SignatureFileData(signatureFileData.PersonId, signatureFileData.PersonInformation,
-                                        ImageOperations.RotateImageInByte(signatureFileData.SignatureFileDataSource,
+                                        ImageOperations.RotateImageInByte(signatureFileData.SignatureSource.ToArray(),
                                                                           ImageRotation.Rotate270, ImageFormatApplication.Jpeg),
                                         true)
                 : signatureFileData;

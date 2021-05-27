@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using GadzhiDTOClient.TransferModels.FilesConvert;
 using NHibernate.Linq;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.FilesConvert.Components;
 using GadzhiDAL.Infrastructure.Implementations.DateTimes;
@@ -19,48 +21,30 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в модель базы данных
         /// </summary>      
-        public static PackageDataEntity ToPackageData(PackageDataRequestClient packageDataRequest, string identityName)
-        {
-            if (packageDataRequest == null) return null;
-
-            var packageDataAccess = packageDataRequest.FilesData?.AsQueryable().
-                                    Select(fileData => ToFileData(fileData));
-
-            var filesDataEntity = new PackageDataEntity();
-            filesDataEntity.SetId(packageDataRequest.Id);
-            filesDataEntity.IdentityLocalName = identityName;
-            filesDataEntity.IdentityServerName = String.Empty;
-            filesDataEntity.CreationDateTime = DateTimeService.GetDateTimeNow();
-            filesDataEntity.ConvertingSettings = ConvertingSettingsToRequest(packageDataRequest.ConvertingSettings);
-            filesDataEntity.SetFileDataEntities(packageDataAccess);
-
-            return filesDataEntity;
-        }
+        public static PackageDataEntity ToPackageData(PackageDataRequestClient packageData, string identityName) =>
+            new PackageDataEntity(packageData.Id.ToString(), StatusProcessingProject.InQueue,
+                                  DateTimeService.GetDateTimeNow(), identityName, String.Empty, 0,
+                                  packageData.FilesData.Select(ToFileData).ToList(),
+                                  ConvertingSettingsToRequest(packageData.ConvertingSettings)).
+            Void(package =>
+                     {
+                         foreach (var fileData in package.FileDataEntities) fileData.PackageDataEntity = package;
+                     });
 
         /// <summary>
         /// Преобразовать параметры конвертации из трансферной модели
         /// </summary>
         private static ConvertingSettingsComponent ConvertingSettingsToRequest(ConvertingSettingsRequest convertingSettings) =>
-           new ConvertingSettingsComponent
-           {
-               PersonId = convertingSettings.PersonId,
-               PdfNamingType = convertingSettings.PdfNamingType,
-               ConvertingModeType = convertingSettings.ConvertingModeType,
-               UseDefaultSignature = convertingSettings.UseDefaultSignature,
-           };
+           new ConvertingSettingsComponent(convertingSettings.PersonId, convertingSettings.PdfNamingType,
+                                           convertingSettings.ConvertingModeTypes.ToList(),
+                                           convertingSettings.UseDefaultSignature);
 
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс базы данных
         /// </summary>      
         private static FileDataEntity ToFileData(FileDataRequestClient fileDataRequest) =>
-            new FileDataEntity
-            {
-                ColorPrintType = fileDataRequest.ColorPrintType,
-                FilePath = fileDataRequest.FilePath,
-                FileDataSource = fileDataRequest.FileDataSource,
-                FileExtensionAdditional = fileDataRequest.FileExtensionAdditional,
-                FileDataSourceAdditional = fileDataRequest.FileDataSourceAdditional,
-                StatusProcessing = StatusProcessing.InQueue,
-            };
+            new FileDataEntity(fileDataRequest.FilePath, fileDataRequest.ColorPrintType, StatusProcessing.InQueue,
+                               new List<FileDataSourceEntity>(), new List<ErrorComponent>(), fileDataRequest.FileDataSource,
+                               fileDataRequest.FileExtensionAdditional, fileDataRequest.FileDataSourceAdditional);
     }
 }

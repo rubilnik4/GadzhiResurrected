@@ -18,7 +18,8 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Подписка на изменение коллекции
         /// </summary>
-        public ISubject<FilesChange> FileDataChange => _packageData.FileDataChange;
+        public ISubject<FilesChange> FileDataChange => 
+            _packageData.FileDataChange;
 
         /// <summary>
         /// Добавить файлы для конвертации
@@ -49,7 +50,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         {
             if (_statusProcessingInformation.IsConverting) return;
 
-            var allFilePaths = _fileSystemOperations.GetFilesFromPaths(fileOrDirectoriesPaths).ToList();
+            var allFilePaths = _filePathOperations.GetFilesFromPaths(fileOrDirectoriesPaths).ToList();
             _packageData.AddFiles(allFilePaths, _projectSettings.ConvertingSettings.ColorPrintType);
         }
 

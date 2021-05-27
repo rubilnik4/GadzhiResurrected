@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Infrastructure.Implementations;
+using GadzhiCommon.Models.Implementations.Functional;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Factories.Interfaces;
@@ -41,13 +42,14 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         /// <summary>
         /// Добавить пакет в очередь на конвертирование в базу
         /// </summary>       
-        public async Task QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName)
+        public async Task<Unit> QueueFilesData(PackageDataRequestClient packageDataRequest, string identityName)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             await _accessService.UpdateLastClientAccess(identityName);
             var packageDataEntity = ConverterFilesDataEntitiesFromDtoClient.ToPackageData(packageDataRequest, identityName);
             await unitOfWork.Session.SaveAsync(packageDataEntity);
             await unitOfWork.CommitAsync();
+            return Unit.Value;
         }
 
         /// <summary>
@@ -58,7 +60,6 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());
             var filesQueueInfo = await GetQueueCount(unitOfWork, packageDataEntity);
-
             return ConverterFilesDataEntitiesToDtoClient.PackageDataToIntermediateResponse(packageDataEntity, filesQueueInfo);
         }
 
@@ -70,8 +71,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());
             var fileDataEntity = packageDataEntity.FileDataEntities.First(entity => entity.FilePath == filePath);
-            var packageDataResponse = await ConverterFilesDataEntitiesToDtoClient.FileDataAccessToResponse(fileDataEntity);
-
+            var packageDataResponse = ConverterFilesDataEntitiesToDtoClient.FileDataAccessToResponse(fileDataEntity);
             return packageDataResponse;
         }
 
@@ -82,7 +82,7 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
             var packageDataEntity = await unitOfWork.Session.LoadAsync<PackageDataEntity>(id.ToString());
-            var packageDataResponse = await ConverterFilesDataEntitiesToDtoClient.PackageDataAccessToResponse(packageDataEntity);
+            var packageDataResponse = ConverterFilesDataEntitiesToDtoClient.PackageDataAccessToResponse(packageDataEntity);
 
             return packageDataResponse;
         }

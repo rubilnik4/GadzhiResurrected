@@ -9,26 +9,14 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Класс содержащий данные о отконвертированных файлах
     /// </summary>
     [DataContract]
-    public abstract class PackageDataResponseBase<TFileDataResponse, TFileDataSourceResponse> 
-        where TFileDataSourceResponse: FileDataSourceResponseBase
-        where TFileDataResponse: FileDataResponseBase<TFileDataSourceResponse>
+    public abstract class PackageDataResponseBase<TFileDataResponse, TFileDataSourceResponse>:
+        PackageDataShortResponseBase<TFileDataResponse>
+        where TFileDataSourceResponse : FileDataSourceResponseBase
+        where TFileDataResponse : FileDataResponseBase<TFileDataSourceResponse>
     {
-        /// <summary>
-        /// ID идентификатор
-        /// </summary>
-        [DataMember]
-        public Guid Id { get; set; }        
-
-        /// <summary>
-        /// Статус выполнения проекта
-        /// </summary>
-        [DataMember]
-        public StatusProcessingProject StatusProcessingProject { get; set; }
-
-        /// <summary>
-        /// Данные о отконвертированных файлах
-        /// </summary>
-        [DataMember]
-        public abstract IList<TFileDataResponse> FilesData { get; set; }
+        protected PackageDataResponseBase(Guid id, StatusProcessingProject statusProcessingProject,
+                                          IList<TFileDataResponse> filesData)
+            :base(id, statusProcessingProject, filesData)
+        { }
     }
 }

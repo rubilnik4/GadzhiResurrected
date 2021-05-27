@@ -76,21 +76,13 @@ namespace GadzhiDAL.Services.Implementations.ServerStates
         /// Записать время доступа сервера
         /// </summary>
         public async Task UpdateLastServerAccess(string identity) =>
-            await UpdateLastAccess(new ServerAccessEntity
-            {
-                Identity = identity,
-                LastAccess = DateTimeService.GetDateTimeNow()
-            });
+            await UpdateLastAccess(new ServerAccessEntity(identity, DateTimeService.GetDateTimeNow()));
 
         /// <summary>
         /// Записать время доступа сервера
         /// </summary>
         public async Task UpdateLastClientAccess(string identity) =>
-            await UpdateLastAccess(new ClientAccessEntity
-            {
-                Identity = identity,
-                LastAccess = DateTimeService.GetDateTimeNow()
-            });
+            await UpdateLastAccess(new ClientAccessEntity(identity, DateTimeService.GetDateTimeNow()));
 
         /// <summary>
         /// Записать время доступа

@@ -5,8 +5,9 @@
     /// </summary>
     public enum ConvertingModeType
     {
-        All,
+        Main,
         Pdf,
-        Export
+        Export,
+        Print
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.Errors;
 
 namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
 {
@@ -7,18 +8,24 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Ошибка конвертации
     /// </summary>
     [DataContract]
-    public class ErrorCommonResponse
+    public class ErrorCommonResponse: IError
     {
+        public ErrorCommonResponse(ErrorConvertingType errorConvertingType, string description)
+        {
+            ErrorConvertingType = errorConvertingType;
+            Description = description;
+        }
+
         /// <summary>
         /// Тип ошибки при конвертации файлов
         /// </summary>
         [DataMember]
-        public ErrorConvertingType ErrorConvertingType { get; set; }
+        public ErrorConvertingType ErrorConvertingType { get; private set; }
 
         /// <summary>
         /// Описание ошибки
         /// </summary>
         [DataMember]
-        public string ErrorDescription { get; set; }
+        public string Description { get; private set; }
     }
 }

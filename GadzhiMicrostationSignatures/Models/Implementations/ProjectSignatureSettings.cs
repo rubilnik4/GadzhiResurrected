@@ -11,10 +11,12 @@ namespace GadzhiMicrostationSignatures.Models.Implementations
     /// </summary>
     public class ProjectSignatureSettings: IProjectSignatureSettings
     {
-        public ProjectSignatureSettings(IFileSystemOperations fileSystemOperations,  IMessagingService messagingService)
+        public ProjectSignatureSettings(IFileSystemOperations fileSystemOperations, IFilePathOperations filePathOperations,
+                                        IMessagingService messagingService)
         {
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+            _fileSystemOperations = fileSystemOperations ;
+            _filePathOperations = filePathOperations;
+            _messagingService = messagingService ;
 
             PutSignatureTemplateToDataFolder();
         }
@@ -23,6 +25,11 @@ namespace GadzhiMicrostationSignatures.Models.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Операции с путями файлов
+        /// </summary>
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Класс для отображения изменений и логгирования
@@ -101,7 +108,7 @@ namespace GadzhiMicrostationSignatures.Models.Implementations
         {
             string signatureFileName = Path.Combine(DataResourcesFolder, SIGNATURE_MICROSTATION_FILE);
             string signatureFile = ConfigurationManager.AppSettings.Get("MicrostationSignatureFile");
-            if (!String.IsNullOrWhiteSpace(signatureFile) && _fileSystemOperations.IsFileExist(signatureFile))
+            if (!String.IsNullOrWhiteSpace(signatureFile) && _filePathOperations.IsFileExist(signatureFile))
             {
                 File.Copy(signatureFile, signatureFileName, true);
                 _messagingService.ShowMessage($"Загрузка подписей {signatureFile}");

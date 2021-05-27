@@ -4,13 +4,14 @@ using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiCommon.Helpers.Strings;
 using GadzhiCommon.Infrastructure.Implementations.Converters.LibraryData;
+using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiCommon.Models.Implementations.LibraryData
 {
     /// <summary>
     /// Информация о пользователе
     /// </summary>
-    public readonly struct PersonInformation : IEquatable<PersonInformation>
+    public readonly struct PersonInformation : IPersonInformation, IEquatable<PersonInformation>
     {
         public PersonInformation(string surname, string name, string patronymic, DepartmentType departmentType )
         {
@@ -43,34 +44,39 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// <summary>
         /// Отдел в строковом значении
         /// </summary>
-        public string Department => ConverterDepartmentType.DepartmentTypeToString(DepartmentType);
+        public string Department =>
+            ConverterDepartmentType.DepartmentTypeToString(DepartmentType);
 
         /// <summary>
         /// Полная информация
         /// </summary>
-        public string FullName => $"{Surname} {Name} {Patronymic}".Trim();
+        public string FullName =>
+            $"{Surname} {Name} {Patronymic}".Trim();
 
         /// <summary>
         /// Полная информация
         /// </summary>
-        public string FullInformation => $"{FullName} {ConverterDepartmentType.DepartmentTypeToString(DepartmentType)}".Trim();
+        public string FullInformation =>
+            $"{FullName} {ConverterDepartmentType.DepartmentTypeToString(DepartmentType)}".Trim();
 
         /// <summary>
         /// Загружена ли информация о пользователе полностью
         /// </summary>
-        public bool HasFullInformation => !String.IsNullOrWhiteSpace(Surname) && !String.IsNullOrWhiteSpace(Name) &&
-                                          !String.IsNullOrWhiteSpace(Patronymic) && DepartmentType != DepartmentType.Unknown;
+        public bool HasFullInformation =>
+            !String.IsNullOrWhiteSpace(Surname) && !String.IsNullOrWhiteSpace(Name) &&
+            !String.IsNullOrWhiteSpace(Patronymic) && DepartmentType != DepartmentType.Unknown;
 
         /// <summary>
         /// Проверка фамилии 
         /// </summary>
-        public bool SurnameEqual(string surname) => String.Equals(Surname, surname, StringComparison.CurrentCultureIgnoreCase);
+        public bool SurnameEqual(string surname) =>
+            String.Equals(Surname, surname, StringComparison.CurrentCultureIgnoreCase);
 
         /// <summary>
         /// Проверка фамилии и отдела
         /// </summary>
-        public bool SurnameAndDepartmentEqual(string surname, DepartmentType department) => SurnameEqual(surname) && 
-                                                                                           DepartmentType == department;
+        public bool SurnameAndDepartmentEqual(string surname, DepartmentType department) =>
+            SurnameEqual(surname) && DepartmentType == department;
 
         /// <summary>
         /// Преобразовать строку в информацию о пользователе

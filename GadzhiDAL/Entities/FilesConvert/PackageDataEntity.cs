@@ -3,75 +3,72 @@ using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommonServer.Enums;
-using GadzhiDAL.Entities.Base;
 using GadzhiDAL.Entities.FilesConvert.Components;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace GadzhiDAL.Entities.FilesConvert
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемом пакете в базе данных
     /// </summary>
-    public class PackageDataEntity : EntityBase<string>
+    public class PackageDataEntity
     {
+        public PackageDataEntity()
+        { }
+
+        public PackageDataEntity(string id, StatusProcessingProject statusProcessingProject, DateTime creationDateTime, 
+                                 string identityLocalName, string identityServerName, int attemptingConvertCount, 
+                                 IList<FileDataEntity> fileDataEntities, ConvertingSettingsComponent convertingSettings)
+        {
+            Id = id;
+            StatusProcessingProject = statusProcessingProject;
+            CreationDateTime = creationDateTime;
+            IdentityLocalName = identityLocalName;
+            IdentityServerName = identityServerName;
+            AttemptingConvertCount = attemptingConvertCount;
+            FileDataEntities = fileDataEntities;
+            ConvertingSettings = convertingSettings;
+        }
+
         /// <summary>
         /// Идентификатор
         /// </summary>
-        public override string Id { get; protected set; }
+        public virtual string Id { get; protected set; }
 
         /// <summary>
         /// Статус выполнения проекта
         /// </summary>      
-        public virtual StatusProcessingProject StatusProcessingProject { get; set; } = StatusProcessingProject.InQueue;
+        public virtual StatusProcessingProject StatusProcessingProject { get; set; }
 
         /// <summary>
         /// Время создания запроса на конвертирование
         /// </summary>
-        public virtual DateTime CreationDateTime { get; set; } = DateTime.MinValue;
+        public virtual DateTime CreationDateTime { get; protected set; } = DateTime.MinValue;
 
         /// <summary>
         /// Идентификация имени локального пользователя
         /// </summary>
-        public virtual string IdentityLocalName { get; set; } = String.Empty;
+        public virtual string IdentityLocalName { get; protected set; } 
 
         /// <summary>
         /// Идентификация имени сервера
         /// </summary>
-        public virtual string IdentityServerName { get; set; } = String.Empty;
+        public virtual string IdentityServerName { get; protected set; } 
 
         /// <summary>
         /// Количество попыток конвертирования
         /// </summary>      
-        public virtual int AttemptingConvertCount { get; set; }
+        public virtual int AttemptingConvertCount { get; protected set; }
 
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
-        public virtual IList<FileDataEntity> FileDataEntities { get; protected set; }
+        public virtual IList<FileDataEntity> FileDataEntities { get; set; }
 
         /// <summary>
         /// Данные о отконвертированных файлах
         /// </summary>       
-        public virtual ConvertingSettingsComponent ConvertingSettings { get; set; }
-
-        /// <summary>
-        /// Установить идентификатор
-        /// </summary>        
-        public virtual void SetId(Guid id)
-        {
-            Id = id.ToString();
-        }
-
-        /// <summary>
-        /// Поместить файлы в пакет для конвертирования и присвоить ссылки
-        /// </summary>      
-        public virtual void SetFileDataEntities(IEnumerable<FileDataEntity> fileDataEntities)
-        {
-            FileDataEntities = fileDataEntities.Select(fileData =>
-            {
-                fileData.PackageDataEntity = this;
-                return fileData;
-            }).ToList();
-        }
+        public virtual ConvertingSettingsComponent ConvertingSettings { get; protected set; }
 
         /// <summary>
         /// Присвоить статус конвертирования

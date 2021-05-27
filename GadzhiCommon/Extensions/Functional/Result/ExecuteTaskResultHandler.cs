@@ -14,19 +14,17 @@ namespace GadzhiCommon.Extensions.Functional.Result
         /// <summary>
         /// Отлов ошибок и суммирование ошибок для модуля конвертации   
         /// </summary> 
-        public static IResultValue<Task<T>> ExecuteBindResultValueAsync<T>(Func<Task<T>> method)
+        public static async Task<IResultValue<T>> ExecuteBindResultValueAsync<T>(Func<Task<T>> method)
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-
             try
             {
-                var result = new ResultValue<Task<T>>(method.Invoke());
-                return result;
+                var result =await method.Invoke();
+                return new ResultValue<T>(result);
             }
             catch (Exception ex)
             {
                 return new ErrorCommon(GetTypeException(ex), String.Empty, ex).
-                       ToResultValue<Task<T>>();
+                       ToResultValue<T>();
             }
         }
     }

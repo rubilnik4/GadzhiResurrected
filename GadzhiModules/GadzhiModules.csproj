@@ -201,10 +201,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\ListBoxSelectedItemsBehavior.cs" />
     <Compile Include="Helpers\Wpf\Behaviors\HyperLinkExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\ConvertingFileTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\FileExtensionTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryFileDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryTypeConverter.cs" />
@@ -221,7 +223,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingProjectConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingConverter.cs" />
     <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBlendBehavior.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBehavior.cs" />
     <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
     <Compile Include="Infrastructure\Implementations\Identities\ClientIdentity.cs" />
     <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
@@ -241,7 +243,9 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataSourceClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Likes\LikeIdentityClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ConvertingMode.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
@@ -252,6 +256,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerCompleteFilesClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerDetailClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServersInfoClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\Histories\IHistoryFileDataClient.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectResources.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectSettings.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\GadzhiConvertingModule.cs" />
@@ -285,6 +290,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelPart.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataSourceViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelPart.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\LikeViewModel.cs" />

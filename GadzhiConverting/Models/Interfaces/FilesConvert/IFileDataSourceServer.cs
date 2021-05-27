@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 
@@ -10,9 +11,14 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
     public interface  IFileDataSourceServer: IFilePath, IEnumerable<IFileDataSourceServer>
     {
         /// <summary>
+        /// Тип конвертации
+        /// </summary>
+        ConvertingModeType ConvertingModeType { get; }
+
+        /// <summary>
         /// Формат печати
         /// </summary>
-        IReadOnlyCollection<string> PaperSizes { get; }
+        StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Имя принтера

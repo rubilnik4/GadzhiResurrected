@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
-namespace GadzhiConverting.Models.Converters
+namespace GadzhiConverting.Infrastructure.Implementations.Converters
 {
     /// <summary>
     /// Преобразование параметров конвертации в класс модуля конвертирования
     /// </summary>
-    public static class SettingsApplicationConverter
+    public static class ConverterSettingsApplication
     {
         /// <summary>
         /// Преобразовать параметры конвертации в класс модуля конвертирования

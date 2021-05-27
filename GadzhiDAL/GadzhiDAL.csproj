@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\DependencyInjection.cs" />
-    <Compile Include="Entities\Base\EntityBase.cs" />
     <Compile Include="Entities\FilesConvert\Components\ErrorComponent.cs" />
     <Compile Include="Entities\FilesConvert\Components\ConvertingSettingsComponent.cs" />
     <Compile Include="Entities\FilesConvert\FileDataSourceEntity.cs" />
@@ -168,7 +167,7 @@
     <Compile Include="Entities\ServerStates\BaseAccessEntity.cs" />
     <Compile Include="Entities\ServerStates\ClientAccessEntity.cs" />
     <Compile Include="Entities\ServerStates\ServerAccessEntity.cs" />
-    <Compile Include="Entities\Signatures\MicrostationDataFiles.cs" />
+    <Compile Include="Models\Implementations\MicrostationDataFiles.cs" />
     <Compile Include="Entities\Signatures\Components\PersonInformationComponent.cs" />
     <Compile Include="Entities\Signatures\SignatureEntity.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
@@ -179,7 +178,7 @@
     <Compile Include="Mappings\ServerStates\ClientAccessMap.cs" />
     <Compile Include="Mappings\ServerStates\ServerAccessMap.cs" />
     <Compile Include="Models\Implementations\FileExtensionCount.cs" />
-    <Compile Include="Models\Implementations\MicrostationDataFileEntity.cs" />
+    <Compile Include="Entities\Signatures\MicrostationDataFileEntity.cs" />
     <Compile Include="Factories\Implementations\NHibernateFactoryManager.cs" />
     <Compile Include="Entities\FilesConvert\FileDataEntity.cs" />
     <Compile Include="Entities\FilesConvert\PackageDataEntity.cs" />

@@ -13,16 +13,22 @@ namespace GadzhiDTOServer.TransferModels.Signatures
     [DataContract]
     public  class MicrostationDataFileDto
     {
+        public MicrostationDataFileDto(string nameDatabase, byte[] microstationDataBase)
+        {
+            NameDatabase = nameDatabase;
+            MicrostationDataBase = microstationDataBase;
+        }
+
         /// <summary>
         /// Наименование базы
         /// </summary>
         [DataMember]
-        public string NameDatabase { get; set; }
+        public string NameDatabase { get; private set; }
 
         /// <summary>
         /// База подписей Microstation
         /// </summary>     
         [DataMember]
-        public byte[] MicrostationDataBase { get; set; }
+        public byte[] MicrostationDataBase { get; private set; }
     }
 }

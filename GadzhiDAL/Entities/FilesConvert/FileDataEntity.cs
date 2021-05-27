@@ -1,30 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
-using GadzhiDAL.Entities.Base;
-using GadzhiDAL.Entities.FilesConvert.Base.Components;
+using GadzhiDAL.Entities.FilesConvert.Components;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace GadzhiDAL.Entities.FilesConvert
 {
     /// <summary>
     /// Класс содержащий данные о конвертируемых файлах в базе данных
     /// </summary>
-    public class FileDataEntity : EntityBase<int>
+    public class FileDataEntity
     {
+        public FileDataEntity()
+        { }
+
+        public FileDataEntity(string filePath, ColorPrintType colorPrintType, StatusProcessing statusProcessing,
+                              IList<FileDataSourceEntity> fileDataSourceServerEntities, IList<ErrorComponent> fileErrors,
+                              IList<byte> fileDataSource, string fileExtensionAdditional, IList<byte> fileDataSourceAdditional)
+        {
+            FilePath = filePath;
+            ColorPrintType = colorPrintType;
+            StatusProcessing = statusProcessing;
+            FileDataSourceServerEntities = fileDataSourceServerEntities;
+            FileErrors = fileErrors;
+            FileDataSource = fileDataSource;
+            FileExtensionAdditional = fileExtensionAdditional;
+            FileDataSourceAdditional = fileDataSourceAdditional;
+        }
+
         /// <summary>
         /// Идентификатор
         /// </summary>
-        public override int Id { get; protected set; }
+        public virtual int Id { get; protected set; }
 
         /// <summary>
         /// Путь файла
         /// </summary>      
-        public virtual string FilePath { get; set; }
+        public virtual string FilePath { get; protected set; }
 
         /// <summary>
         /// Цвет печати
         /// </summary>       
-        public virtual ColorPrintType ColorPrintType { get; set; }
+        public virtual ColorPrintType ColorPrintType { get; protected set; }
 
         /// <summary>
         /// Статус обработки файла
@@ -34,7 +51,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Файлы отконвертированных данных в формате zip GZipStream
         /// </summary>      
-        public virtual IList<FileDataSourceEntity> FileDataSourceServerEntities { get; protected set; }
+        public virtual IList<FileDataSourceEntity> FileDataSourceServerEntities { get; set; }
 
         /// <summary>
         /// Тип ошибки при конвертации файла
@@ -49,7 +66,7 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// <summary>
         /// Расширение дополнительного файла
         /// </summary>       
-        public virtual string FileExtensionAdditional { get; set; }
+        public virtual string FileExtensionAdditional { get; protected set; }
 
         /// <summary>
         /// Дополнительный файл данных в формате zip GZipStream
@@ -60,18 +77,5 @@ namespace GadzhiDAL.Entities.FilesConvert
         /// Ссылка на родительский класс
         /// </summary>
         public virtual PackageDataEntity PackageDataEntity { get; set; }
-
-        /// <summary>
-        /// Поместить файлы в пакет для конвертирования и присвоить ссылки
-        /// </summary>      
-        public virtual void SetFileDataSourceEntities(IEnumerable<FileDataSourceEntity> fileDataSourceEntities)
-        {
-            FileDataSourceServerEntities = fileDataSourceEntities?.Select(fileDataSourceEntity =>
-            {
-                fileDataSourceEntity.FileDataEntity = this;
-                return fileDataSourceEntity;
-            }).ToList()
-            ?? new List<FileDataSourceEntity>();
-        }
     }
 }

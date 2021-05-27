@@ -10,12 +10,10 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
     /// </summary>
     public class SignatureFile : SignatureLibrary, ISignatureFile
     {
-        public SignatureFile(string personId, PersonInformation personInformation, string signatureFilePath, bool isVerticalImage)
+        public SignatureFile(string personId, PersonInformation personInformation,
+                             string signatureFilePath, bool isVerticalImage)
             : base(personId, personInformation)
         {
-            if (String.IsNullOrWhiteSpace(signatureFilePath)) throw new ArgumentNullException(nameof(signatureFilePath));
-            if (Path.GetExtension(signatureFilePath) != SaveFormat) throw new FileNotFoundException(nameof(signatureFilePath));
-
             SignatureFilePath = signatureFilePath;
             IsVerticalImage = isVerticalImage;
         }
@@ -39,8 +37,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         /// Сформировать путь для сохранения подписи
         /// </summary>
         public static string GetFilePathByFolder(string signatureFolderPath, string personId, bool isVerticalImage) =>
-            FileSystemOperations.CombineFilePath(signatureFolderPath, 
-                                                 personId + (isVerticalImage ? "_rotated" : String.Empty), 
-                                                 SaveFormat);
+            FilePathOperations.CombineFilePath(signatureFolderPath, personId + (isVerticalImage ? "_rotated" : String.Empty), 
+                                               SaveFormat);
     }
 }

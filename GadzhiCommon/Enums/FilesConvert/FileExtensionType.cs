@@ -19,6 +19,7 @@ namespace GadzhiCommon.Enums.FilesConvert
         Xls,
         Xlsx,
         All,
+        Print,
         Undefined,
     }
 }

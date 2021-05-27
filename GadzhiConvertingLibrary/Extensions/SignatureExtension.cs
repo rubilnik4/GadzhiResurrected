@@ -19,20 +19,18 @@ namespace GadzhiConvertingLibrary.Extensions
         /// Преобразовать имена с идентификаторами и подписями в класс модуля конвертации
         /// </summary>
         public static IEnumerable<ISignatureLibraryApp> ToApplication(this IEnumerable<ISignatureLibrary> signatureLibraries) =>
-            signatureLibraries?.Select(SignatureLibraryConverter.ToSignatureLibraryApplication)
-            ?? throw new ArgumentNullException(nameof(signatureLibraries));
+            signatureLibraries.Select(SignatureLibraryConverter.ToSignatureLibraryApplication);
 
         /// <summary>
         /// Преобразовать имя с идентификатором и подписью в класс модуля конвертации
         /// </summary>
-        public static ISignatureFileApp ToApplication(this ISignatureFile signatureFile) =>
-            SignatureLibraryConverter.ToSignatureFileApplication(signatureFile);
+        public static ISignatureFileApp ToApplication(this ISignatureFile signatureFileBase) =>
+            SignatureLibraryConverter.ToSignatureFileApplication(signatureFileBase);
 
         /// <summary>
         /// Преобразовать имена с идентификаторами и подписями в класс модуля конвертации
         /// </summary>
         public static IEnumerable<ISignatureFileApp> ToApplication(this IEnumerable<ISignatureFile> signatureFiles) =>
-            signatureFiles?.Select(SignatureLibraryConverter.ToSignatureFileApplication)
-            ?? throw new ArgumentNullException(nameof(signatureFiles));
+            signatureFiles.Select(SignatureLibraryConverter.ToSignatureFileApplication);
     }
 }

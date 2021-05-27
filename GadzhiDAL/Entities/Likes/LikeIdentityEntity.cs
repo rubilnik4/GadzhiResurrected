@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using GadzhiCommon.Models.Interfaces.Likes;
 
 namespace GadzhiDAL.Entities.Likes
@@ -6,12 +7,24 @@ namespace GadzhiDAL.Entities.Likes
     /// <summary>
     /// Лайк. Сущность
     /// </summary>
+    [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
     public class LikeIdentityEntity: ILikeIdentity
     {
+        public LikeIdentityEntity()
+        { }
+
+        public LikeIdentityEntity(string personId, string personFullname,
+                                  DateTime lastDateLike, int likeCount)
+        {
+            PersonId = personId;
+            PersonFullname = personFullname;
+            LastDateLike = lastDateLike;
+            LikeCount = likeCount;
+        }
         /// <summary>
         /// Идентификатор
         /// </summary>
-        public virtual string PersonId { get; set; }
+        public virtual string PersonId { get; protected set; }
 
         /// <summary>
         /// Имя пользователя

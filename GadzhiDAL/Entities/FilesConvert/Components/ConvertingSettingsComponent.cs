@@ -1,32 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.FilesConvert;
+
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace GadzhiDAL.Entities.FilesConvert.Components
 {
     /// <summary>
     /// Параметры конвертации. Компонент в базе данных
     /// </summary>
-    public class ConvertingSettingsComponent
+    public class ConvertingSettingsComponent: IConvertingPackageSettings
     {
+        public ConvertingSettingsComponent()
+        { }
+
+        public ConvertingSettingsComponent(string personId, PdfNamingType pdfNamingType,
+                                           IList<ConvertingModeType> convertingModeTypesList, bool useDefaultSignature)
+        {
+            PersonId = personId;
+            PdfNamingType = pdfNamingType;
+            ConvertingModeTypesList = convertingModeTypesList;
+            UseDefaultSignature = useDefaultSignature;
+        }
+
         /// <summary>
         /// Личная подпись
         /// </summary>
-        public string PersonId { get; set; } = String.Empty;
+        public virtual string PersonId { get; protected set; }
 
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
-        public PdfNamingType PdfNamingType { get; set; } = PdfNamingType.ByFile;
+        public virtual PdfNamingType PdfNamingType { get; protected set; }
 
         /// <summary>
         /// Принцип именования PDF
         /// </summary>
-        public ConvertingModeType ConvertingModeType { get; set; } = ConvertingModeType.All;
+        public virtual IList<ConvertingModeType> ConvertingModeTypesList { get; protected set; }
+
+        /// <summary>
+        /// Принцип именования PDF
+        /// </summary>
+        public IReadOnlyCollection<ConvertingModeType> ConvertingModeTypes =>
+            ConvertingModeTypesList.ToList();
 
         /// <summary>
         /// Использовать подпись по умолчанию
         /// </summary>
-        public bool UseDefaultSignature { get; set; }
+        public virtual bool UseDefaultSignature { get; protected set; }
     }
 }

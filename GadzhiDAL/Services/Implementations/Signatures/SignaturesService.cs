@@ -37,14 +37,11 @@ namespace GadzhiDAL.Services.Implementations.Signatures
         public async Task<IList<SignatureDto>> GetSignaturesNames()
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-
             var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().
                                                      OrderBy(signature => signature.PersonInformation.Surname).
                                                      ThenBy(signature => signature.PersonInformation.Name).
                                                      ToListAsync();
-            var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, true);
-
-            return signaturesDto;
+            return ConverterDataFile.SignaturesToDto(signatureEntities);
         }
 
         /// <summary>
@@ -53,7 +50,6 @@ namespace GadzhiDAL.Services.Implementations.Signatures
         public async Task<IList<DepartmentType>> GetSignaturesDepartments()
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-
             var departments = await unitOfWork.Session.Query<SignatureEntity>().
                                                Select(signature => signature.PersonInformation.DepartmentType).
                                                Distinct().
@@ -67,13 +63,10 @@ namespace GadzhiDAL.Services.Implementations.Signatures
         public async Task<IList<SignatureDto>> GetSignatures(IList<string> ids)
         {
             using var unitOfWork = _container.Resolve<IUnitOfWork>();
-
             var signatureEntities = await unitOfWork.Session.Query<SignatureEntity>().
-                                                     Where(signature => ids.Contains(signature.Id)).
+                                                     Where(signature => ids.Contains(signature.PersonId)).
                                                      ToListAsync();
-            var signaturesDto = ConverterDataFile.SignaturesToDto(signatureEntities, true);
-
-            return signaturesDto;
+            return ConverterDataFile.SignaturesToDto(signatureEntities);
         }
 
         /// <summary>
@@ -88,9 +81,7 @@ namespace GadzhiDAL.Services.Implementations.Signatures
             {
                 await unitOfWork.Session.SaveOrUpdateAsync(signatureEntity);
             }
-
             await unitOfWork.CommitAsync();
-
             return Unit.Value;
         }
 

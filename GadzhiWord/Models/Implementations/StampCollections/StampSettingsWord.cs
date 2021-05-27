@@ -10,13 +10,11 @@ namespace GadzhiWord.Models.Implementations.StampCollections
     /// </summary>
     public class StampSettingsWord: StampSettings
     {
-        public StampSettingsWord(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType, 
-                                 string paperSize, StampOrientationType orientationType, bool useDefaultSignature)
+        public StampSettingsWord(StampIdentifier id, string personId, PdfNamingTypeApplication pdfNamingType,
+                                 StampPaperSizeType paperSize, StampOrientationType orientationType, bool useDefaultSignature)
             :base(id, personId, pdfNamingType, useDefaultSignature)
         {
-            PaperSize = !String.IsNullOrWhiteSpace(paperSize)
-                      ? paperSize
-                      : throw new ArgumentNullException(nameof(paperSize));
+            PaperSize = paperSize;
             Orientation = orientationType;
         }
 
@@ -28,7 +26,7 @@ namespace GadzhiWord.Models.Implementations.StampCollections
         /// <summary>
         /// Формат
         /// </summary>
-        public string PaperSize { get; }
+        public StampPaperSizeType PaperSize { get; }
 
         /// <summary>
         /// Тип расположения штампа

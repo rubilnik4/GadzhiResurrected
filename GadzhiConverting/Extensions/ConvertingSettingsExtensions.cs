@@ -2,7 +2,7 @@
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.FilesConvert;
 using GadzhiCommon.Enums.ConvertingSettings;
-using GadzhiConverting.Models.Converters;
+using GadzhiConverting.Infrastructure.Implementations.Converters;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
 namespace GadzhiConverting.Extensions
@@ -17,12 +17,12 @@ namespace GadzhiConverting.Extensions
         /// Преобразовать параметры конвертации в класс модуля конвертирования
         /// </summary>
         public static ConvertingSettingsApp ToApplication(this IConvertingSettings convertingSettings) =>
-            SettingsApplicationConverter.ToConvertingSettingsApplication(convertingSettings);
+            ConverterSettingsApplication.ToConvertingSettingsApplication(convertingSettings);
 
         /// <summary>
         /// Преобразовать принцип именования PDF в класс модуля конвертирования
         /// </summary>
         public static PdfNamingTypeApplication ToApplication(this PdfNamingType pdfNamingType)=>
-            SettingsApplicationConverter.ToPdfNamingTypeApplication(pdfNamingType);
+            ConverterSettingsApplication.ToPdfNamingTypeApplication(pdfNamingType);
     }
 }

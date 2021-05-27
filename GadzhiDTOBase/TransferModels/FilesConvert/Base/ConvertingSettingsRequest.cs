@@ -1,6 +1,9 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using GadzhiCommon.Enums.ConvertingSettings;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Models.Interfaces.FilesConvert;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiDTOBase.TransferModels.Signatures;
 
@@ -10,14 +13,14 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
     /// Параметры конвертации. Трансферная модель
     /// </summary>
     [DataContract]
-    public class ConvertingSettingsRequest
+    public class ConvertingSettingsRequest: IConvertingPackageSettings
     {
         public ConvertingSettingsRequest(string personId, PdfNamingType pdfNamingType,
-                                         ConvertingModeType convertingModeType, bool useDefaultSignature)
+                                         IList<ConvertingModeType> convertingModeTypes, bool useDefaultSignature)
         {
             PersonId = personId;
             PdfNamingType = pdfNamingType;
-            ConvertingModeType = convertingModeType;
+            ConvertingModeTypesList = convertingModeTypes;
             UseDefaultSignature = useDefaultSignature;
         }
 
@@ -37,7 +40,14 @@ namespace GadzhiDTOBase.TransferModels.FilesConvert.Base
         /// Тип конвертации
         /// </summary>
         [DataMember]
-        public ConvertingModeType ConvertingModeType { get; private set; }
+        public IList<ConvertingModeType> ConvertingModeTypesList { get; private set; }
+
+        /// <summary>
+        /// Тип конвертации
+        /// </summary>
+        [IgnoreDataMember]
+        public IReadOnlyCollection<ConvertingModeType> ConvertingModeTypes =>
+            ConvertingModeTypesList.ToList();
 
         /// <summary>
         /// Использовать подпись по умолчанию

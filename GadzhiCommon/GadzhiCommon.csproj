@@ -117,6 +117,7 @@
     <Compile Include="Enums\FilesConvert\StatusErrorType.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessingProject.cs" />
     <Compile Include="Enums\FilesConvert\StatusProcessing.cs" />
+    <Compile Include="Infrastructure\Implementations\FilePathOperations.cs" />
     <Compile Include="Infrastructure\Implementations\FilesConvert\AdditionalFileExtensions.cs" />
     <Compile Include="Infrastructure\Implementations\FilesConvert\ValidFileExtensions.cs" />
     <Compile Include="Enums\LibraryData\DepartmentType.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Infrastructure\Implementations\Reflection\ReflectionInfo.cs" />
     <Compile Include="Infrastructure\Implementations\Services\RetryService.cs" />
     <Compile Include="Infrastructure\Implementations\Services\WcfServiceFactory.cs" />
+    <Compile Include="Infrastructure\Interfaces\IFilePathOperations.cs" />
     <Compile Include="Infrastructure\Interfaces\Services\IWcfServiceFactory.cs" />
     <Compile Include="Models\Enums\LoggerAction.cs" />
     <Compile Include="Models\Enums\ServerStates\ServerActivityType.cs" />
@@ -156,7 +158,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Wcf\ClientEndpoints.cs" />
     <Compile Include="Helpers\Dialogs\DialogFilters.cs" />
-    <Compile Include="Helpers\FileSystem\FileSavedCheck.cs" />
     <Compile Include="Infrastructure\Implementations\CheckStatusProcessing.cs" />
     <Compile Include="Infrastructure\Implementations\ExecuteAndCatchErrors.cs" />
     <Compile Include="Infrastructure\Implementations\FileSystemOperations.cs" />
@@ -175,15 +176,22 @@
     <Compile Include="Models\Implementations\LibraryData\SignatureLibrary.cs" />
     <Compile Include="Models\Implementations\ServerStates\ServerDetailBase.cs" />
     <Compile Include="Models\Implementations\ServerStates\ServerDetailQueue.cs" />
+    <Compile Include="Models\Interfaces\Errors\IError.cs" />
     <Compile Include="Models\Interfaces\Errors\IErrorCommon.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultValue.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultError.cs" />
     <Compile Include="Models\Interfaces\Errors\IResultCollection.cs" />
+    <Compile Include="Models\Interfaces\FilesConvert\IConvertingPackageSettings.cs" />
     <Compile Include="Models\Interfaces\Histories\IHistoryData.cs" />
     <Compile Include="Models\Interfaces\Histories\IHistoryFileData.cs" />
-    <Compile Include="Models\Interfaces\LibraryData\ISignatureFile.cs" />
+    <Compile Include="Models\Interfaces\Histories\IHistoryFileDataSource.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\IPersonInformation.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureFileBase.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureFileDataBase.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureFileData.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureFile.cs" />
     <Compile Include="Models\Interfaces\LibraryData\ISignatureLibrary.cs" />
+    <Compile Include="Models\Interfaces\LibraryData\ISignatureLibraryBase.cs" />
     <Compile Include="Models\Enums\LoggerLevel.cs" />
     <Compile Include="Models\Interfaces\Likes\ILikeIdentity.cs" />
     <Compile Include="Models\Interfaces\ServerStates\IServerCompleteFiles.cs" />

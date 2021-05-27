@@ -16,43 +16,20 @@ namespace GadzhiDTOBase.Infrastructure.Implementations.Converters
         /// Преобразовать подписи в трансферную модель
         /// </summary>
         public static IList<SignatureDto> SignaturesToDto(IEnumerable<ISignatureFileData> signaturesLibrary) =>
-            signaturesLibrary?.
-            Select(SignatureToDto).ToList()
-            ?? throw new ArgumentNullException(nameof(signaturesLibrary));
-
-        /// <summary>
-        /// Преобразовать подпись в трансферную модель
-        /// </summary>
-        public static SignatureDto SignatureLibraryToDto(ISignatureLibrary signatureLibrary) =>
-            (signatureLibrary != null)
-                ? new SignatureDto()
-                {
-                    PersonId = signatureLibrary.PersonId,
-                    PersonInformation = PersonInformationToDto(signatureLibrary.PersonInformation)
-                }
-                : throw new ArgumentNullException(nameof(signatureLibrary));
+            signaturesLibrary.Select(SignatureToDto).ToList();
 
         /// <summary>
         /// Преобразовать подпись в трансферную модель
         /// </summary>
         private static SignatureDto SignatureToDto(ISignatureFileData signatureFileData) =>
-            new SignatureDto()
-            {
-                PersonId = signatureFileData.PersonId,
-                PersonInformation = PersonInformationToDto(signatureFileData.PersonInformation),
-                SignatureJpeg = signatureFileData.SignatureFileDataSource,
-            };
+            new SignatureDto(signatureFileData.PersonId, PersonInformationToDto(signatureFileData.PersonInformation),
+                             signatureFileData.SignatureSource.ToArray());
 
         /// <summary>
         /// Преобразовать информацию о пользователе в  трансферную модель
         /// </summary>
         private static PersonInformationDto PersonInformationToDto(PersonInformation personInformation) =>
-            new PersonInformationDto()
-            {
-                Surname = personInformation.Surname,
-                Name = personInformation.Name,
-                Patronymic = personInformation.Patronymic,
-                DepartmentType = personInformation.DepartmentType,
-            };
+            new PersonInformationDto(personInformation.Surname, personInformation.Name,
+                                     personInformation.Patronymic, personInformation.DepartmentType);
     }
 }

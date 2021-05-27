@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiCommon.Enums.ConvertingSettings;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 using GadzhiModules.Infrastructure.Implementations.Converters;
 using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.FileConverting;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.ProjectSettings;
 using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Base;
 using Nito.Mvvm;
@@ -97,20 +99,10 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs
             ColorPrintConverter.ColorPrintsString;
 
         /// <summary>
-        /// Тип конвертации строковое значение
-        /// </summary>
-        [Logger]
-        public string ConvertingModeName
-        {
-            get => ConvertingModeTypeConverter.ConvertingModeToString(_convertingSettings.ConvertingModeType);
-            set => _convertingSettings.ConvertingModeType = ConvertingModeTypeConverter.ConvertingModeFromString(value);
-        }
-
-        /// <summary>
         /// Типы конвертаций
         /// </summary>
-        public IReadOnlyCollection<string> ConvertingModesString =>
-            ConvertingModeTypeConverter.ConvertingModeString;
+        public IReadOnlyCollection<ConvertingMode> ConvertingModes =>
+            _convertingSettings.ConvertingModes;
 
         /// <summary>
         /// Использовать подпись по умолчанию

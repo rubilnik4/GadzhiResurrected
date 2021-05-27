@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Extensions.Collection;
+using GadzhiCommon.Extensions.Functional;
 using GadzhiCommon.Extensions.StringAdditional;
 using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiCommon.Models.Implementations.Errors;
@@ -26,6 +27,12 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
     /// </summary>  
     public class ConverterClientPackageDataFromDto : IConverterClientPackageDataFromDto
     {
+        public ConverterClientPackageDataFromDto(IFileSystemOperations fileSystemOperations, IDialogService dialogService)
+        {
+            _fileSystemOperations = fileSystemOperations;
+            _dialogService = dialogService;
+        }
+
         /// <summary>
         /// Проверка состояния папок и файлов
         /// </summary>   
@@ -36,43 +43,26 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>        
         private readonly IDialogService _dialogService;
 
-        public ConverterClientPackageDataFromDto(IFileSystemOperations fileSystemOperations, IDialogService dialogService)
-        {
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-        }
-
         /// <summary>
         /// Конвертер пакета информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
-        public PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse)
-        {
-            var packageStatus = packageDataShortResponse.FilesData?.Select(ToFileStatusFromIntermediateResponse);
-            var queueStatus = ConvertToQueueInfoFromResponse(packageDataShortResponse.FilesQueueInfo);
-
-            return new PackageStatus(packageStatus,
-                                      packageDataShortResponse.StatusProcessingProject,
-                                      queueStatus);
-        }
+        public PackageStatus ToPackageStatusFromIntermediateResponse(PackageDataShortResponseClient packageDataShortResponse) =>
+            new PackageStatus(packageDataShortResponse.FilesData.Select(ToFileStatusFromIntermediateResponse),
+                              packageDataShortResponse.StatusProcessingProject,
+                              ConvertToQueueInfoFromResponse(packageDataShortResponse.FilesQueueInfo));
 
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части перед сохранение
         /// </summary>      
-        public PackageStatus ToPackageStatus(PackageDataResponseClient packageDataResponse)
-        {
-            var fileDataStatusResponse = ToPackageStatusFromResponse(packageDataResponse);
-            return new PackageStatus(fileDataStatusResponse, StatusProcessingProject.Writing);
-        }
+        public PackageStatus ToPackageStatus(PackageDataResponseClient packageDataResponse) =>
+            new PackageStatus(ToPackageStatusFromResponse(packageDataResponse), StatusProcessingProject.Writing);
 
         /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс клиентской части и сохранение файлов
         /// </summary>      
-        public async Task<PackageStatus> ToFilesStatusAndSaveFiles(PackageDataResponseClient packageDataResponse)
-        {
-            var fileDataStatusResponse = await ToPackageStatusFromResponseAndSaveFiles(packageDataResponse);
-            var filesStatus = new PackageStatus(fileDataStatusResponse, StatusProcessingProject.End);
-            return filesStatus;
-        }
+        public async Task<PackageStatus> ToFilesStatusAndSaveFiles(PackageDataResponseClient packageDataResponse) =>
+            new PackageStatus(await ToPackageStatusFromResponseAndSaveFiles(packageDataResponse),
+                              StatusProcessingProject.End);
 
         /// <summary>
         /// Конвертер пакета информации из основной трансферной модели в класс клиентской части перед сохранением
@@ -94,8 +84,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// Конвертер информации из промежуточной трансферной модели в класс клиентской части
         /// </summary>      
         private static FileStatus ToFileStatusFromIntermediateResponse(FileDataShortResponseClient fileResponse) =>
-            new FileStatus(fileResponse.FilePath,
-                           fileResponse.StatusProcessing,
+            new FileStatus(fileResponse.FilePath, fileResponse.StatusProcessing,
                            fileResponse.FileErrors.Select(ToErrorCommon));
 
         /// <summary>
@@ -124,13 +113,14 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         private async Task<IEnumerable<IErrorCommon>> SaveFileDataSourceFromDtoResponse(FileDataResponseClient fileDataResponse)
         {
             if (fileDataResponse.FilesDataSource == null)
-                return new List<IErrorCommon>() { new ErrorCommon(ErrorConvertingType.IncorrectDataSource, "Некорректные входные данные") };
+                return new List<IErrorCommon> { new ErrorCommon(ErrorConvertingType.IncorrectDataSource, "Некорректные входные данные") };
 
             string fileDirectoryName = Path.GetDirectoryName(fileDataResponse.FilePath);
             string convertingDirectoryName = Path.Combine(fileDirectoryName ?? throw new InvalidOperationException(nameof(fileDirectoryName)),
                                                           ProjectSettings.DirectoryForSavingConvertedFiles);
 
             var fileConvertErrorTypeTasks = fileDataResponse.FilesDataSource?.
+                                            Where(fileData => fileData.FileExtensionType != FileExtensionType.Print).
                                             Select(fileData => SaveFileDataSourceFromDtoResponse(fileData, convertingDirectoryName));
             return await Task.WhenAll(fileConvertErrorTypeTasks);
         }
@@ -142,7 +132,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
                                                                            string convertingDirectoryName)
         {
             string fileName = Path.GetFileNameWithoutExtension(fileDataSourceResponseClient.FileName);
-            string fileExtension = FileSystemOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FileName));
+            string fileExtension = FilePathOperations.ExtensionWithoutPoint(Path.GetExtension(fileDataSourceResponseClient.FileName));
             string fileExtensionValid = ValidFileExtensions.GetFileTypesValid(fileExtension).ToString().ToLowerCaseCurrentCulture();
             string directoryPath = _fileSystemOperations.CreateFolderByName(convertingDirectoryName, fileExtensionValid.ToUpperCaseCurrentCulture());
 
@@ -153,12 +143,10 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
             if (fileDataSourceResponseClient.FileDataSource.Length == 0) return new ErrorCommon(ErrorConvertingType.IncorrectDataSource,
                                                                                                 $"Некорректные входные данные {fileName}");
 
-            string filePath = FileSystemOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
-            Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource);
-
-            await _dialogService.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool,
-                                                                   $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
-
+            string filePath = FilePathOperations.CombineFilePath(directoryPath, fileName, fileExtensionValid);
+            Task<bool> UnzipFileAndSaveBool() => _fileSystemOperations.UnzipFileAndSave(filePath, fileDataSourceResponseClient.FileDataSource).
+                                                 MapAsync(result => result.OkStatus);
+            await _dialogService.RetryOrIgnoreBoolFunction(UnzipFileAndSaveBool, $"Файл {filePath} открыт или используется. Повторить попытку сохранения?");
             return new ErrorCommon(ErrorConvertingType.NoError, "Ошибки отсутствуют");
         }
         /// <summary>
@@ -172,7 +160,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters
         /// </summary>
         private static IErrorCommon ToErrorCommon(ErrorCommonResponse errorCommonResponse) =>
             (errorCommonResponse != null)
-                ? new ErrorCommon(errorCommonResponse.ErrorConvertingType, errorCommonResponse.ErrorDescription)
+                ? new ErrorCommon(errorCommonResponse.ErrorConvertingType, errorCommonResponse.Description)
                 : throw new ArgumentNullException(nameof(errorCommonResponse));
     }
 

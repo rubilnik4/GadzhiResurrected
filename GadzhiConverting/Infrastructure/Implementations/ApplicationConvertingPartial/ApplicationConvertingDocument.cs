@@ -49,16 +49,17 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         public IResultValue<IFileDataSourceServer> SaveDocument(IDocumentLibrary documentLibrary, IFilePath filePath) =>
             ExecuteAndHandleError(() => documentLibrary.SaveAs(filePath.FilePathServer),
                                   errorMessage: new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка сохранения файла {filePath.FileNameClient}")).
-            ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
+            ResultValueOk(_ => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, ConvertingModeType.Main));
 
         /// <summary>
         /// Сохранить файл PDF
         /// </summary>
         [Logger]
-        public IResultCollection<IFileDataSourceServer> CreateProcessingFile(IDocumentLibrary documentLibrary, IFilePath filePathMain, IFilePath filePathPdf,
-                                                                      IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
-            ExecuteBindResultValue(() => CreateProcessingDocument(documentLibrary, filePathMain, filePathPdf, convertingSettings, colorPrintType),
-                                         new ErrorCommon(ErrorConvertingType.PdfPrintingError, $"Ошибка обработки файла {filePathMain.FileNameClient}")).
+        public IResultCollection<IFileDataSourceServer> CreateProcessingFile(IDocumentLibrary documentLibrary, FilePathCollection filePathCollection,
+                                                                             IConvertingSettings convertingSettings, ColorPrintType colorPrintType) =>
+            ExecuteBindResultValue(() => CreateProcessingDocument(documentLibrary, filePathCollection, convertingSettings, colorPrintType),
+                                         new ErrorCommon(ErrorConvertingType.PdfPrintingError, 
+                                                         $"Ошибка обработки файла {filePathCollection.FilePathMain.FileNameClient}")).
             ToResultCollection();
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
                                                                     StampDocumentType stampDocumentType) =>
            ExecuteAndHandleError(() => documentLibrary.Export(filePath.FilePathServer, stampDocumentType),
                          errorMessage: new ErrorCommon(ErrorConvertingType.ExportError, $"Ошибка экспорта файла {filePath.FileNameClient}")).
-            ResultValueOk(fileExportPath => (IFileDataSourceServer)new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient));
+           ResultValueOk(fileExportPath => new FileDataSourceServer(filePath.FilePathServer, filePath.FilePathClient, ConvertingModeType.Export));
 
         /// <summary>
         /// Закрыть файл
@@ -86,11 +87,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// </summary>    
         private IResultValue<FileExtensionType> IsDocumentValid(string filePathDocument) =>
             filePathDocument.
-            WhereContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
+            WhereContinue(filePath => _filePathOperations.IsFileExist(filePath),
                 okFunc: filePath => new ResultValue<string>(filePath),
                 badFunc: filePath => new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл {filePath} не найден").
                                      ToResultValue<string>()).
-            ResultValueOk(FileSystemOperations.ExtensionWithoutPointFromPath).
+            ResultValueOk(FilePathOperations.ExtensionWithoutPointFromPath).
             ResultValueOkBind(ValidateFileExtension);
 
         /// <summary>

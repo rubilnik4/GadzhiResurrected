@@ -13,6 +13,7 @@ using GadzhiDTOServer.Contracts.FilesConvert;
 using System.Linq;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Interfaces.Logger;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiDTOBase.Infrastructure.Interfaces.Converters;
 
@@ -24,13 +25,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
     public class ProjectSettings : IProjectSettings
     {
         public ProjectSettings(SignatureServerServiceFactory signatureServerServiceFactory,
-                               IFileSystemOperations fileSystemOperations, IConverterDataFileFromDto converterDataFileFromDto,
-                               IMessagingService messagingService)
+                               IFileSystemOperations fileSystemOperations,  IFilePathOperations filePathOperations,
+                               IConverterDataFileFromDto converterDataFileFromDto, IMessagingService messagingService)
         {
-            _signatureServerServiceFactory = signatureServerServiceFactory ?? throw new ArgumentNullException(nameof(signatureServerServiceFactory));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
+            _signatureServerServiceFactory = signatureServerServiceFactory;
+            _fileSystemOperations = fileSystemOperations;
+            _filePathOperations = filePathOperations;
             _converterDataFileFromDto = converterDataFileFromDto;
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
+            _messagingService = messagingService;
         }
 
         /// <summary>
@@ -42,6 +44,11 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Операции с путями файлов
+        /// </summary>
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Преобразование подписи в трансферную модель
@@ -74,12 +81,12 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        private static IPrintersInformation _printersInformation;
+        private IResultValue<IPrintersInformation> _printersInformation;
 
         /// <summary>
         /// Информация о установленных в системе принтерах
         /// </summary>
-        public static IPrintersInformation PrintersInformation => 
+        public IResultValue<IPrintersInformation> PrintersInformation => 
             _printersInformation ??= ConverterPrintingConfiguration.ToPrintersInformation();
 
         /// <summary>
@@ -147,7 +154,8 @@ namespace GadzhiConverting.Infrastructure.Implementations
             string stampMicrostationFileName = Path.Combine(DataResourcesFolder, "stampMicrostation.cel");
 
             return new ConvertingResources(signatureMicrostationFileName, stampMicrostationFileName,
-                                           _signatureServerServiceFactory, _converterDataFileFromDto, _fileSystemOperations);
+                                           _signatureServerServiceFactory, _converterDataFileFromDto, 
+                                           _fileSystemOperations, _filePathOperations);
         }
     }
 }

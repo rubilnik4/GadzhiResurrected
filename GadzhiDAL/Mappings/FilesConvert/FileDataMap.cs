@@ -22,7 +22,7 @@ namespace GadzhiDAL.Mappings.FilesConvert
             HasMany(x => x.FileErrors).Component(x => 
                                                  {
                                                      x.Map(e => e.ErrorConvertingType);
-                                                     x.Map(e => e.ErrorDescription);
+                                                     x.Map(e => e.Description);
                                                  });
             HasMany(x => x.FileDataSourceServerEntities).Inverse().Cascade.All();
             References(x => x.PackageDataEntity);

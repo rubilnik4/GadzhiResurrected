@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommon.Models.Interfaces.LibraryData;
 
 namespace GadzhiConvertingLibrary.Infrastructure.Interfaces.Converters
@@ -9,12 +10,14 @@ namespace GadzhiConvertingLibrary.Infrastructure.Interfaces.Converters
         /// <summary>
         /// Сохранить изображения подписей асинхронно
         /// </summary>
-        Task<IReadOnlyList<ISignatureFile>> ToSignaturesFileAsync(IEnumerable<ISignatureFileData> signaturesFileData, string signatureFolder);
+        Task<IResultCollection<ISignatureFile>> ToSignaturesFileAsync(IEnumerable<ISignatureFileData> signaturesFileData, 
+                                                                      string signatureFolder);
 
         /// <summary>
         /// Сохранить изображения подписей
         /// </summary>
-        IReadOnlyList<ISignatureFile> ToSignaturesFile(IEnumerable<ISignatureFileData> signaturesFileData, string signatureFolder);
+        IResultCollection<ISignatureFile> ToSignaturesFile(IEnumerable<ISignatureFileData> signaturesFileData,
+                                                                 string signatureFolder);
 
         /// <summary>
         /// Получить изображения подписей асинхронно

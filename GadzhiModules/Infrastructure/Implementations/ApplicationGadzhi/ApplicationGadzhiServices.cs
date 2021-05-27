@@ -49,12 +49,12 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         public async Task ConvertingFiles()
         {
             if (_statusProcessingInformation.IsConverting) return;
-            
+
             var filesPath = _packageData.FilesData.Select(fileData => fileData.FilePath).ToList();
-            var resultErrorFileData = FilesDataValidation.ValidateFilesData(filesPath, _fileSystemOperations);
+            var resultErrorFileData = FilesDataValidation.ValidateFilesData(filesPath, _filePathOperations);
             if (resultErrorFileData.HasErrors)
             {
-                await AbortConvertingByError(resultErrorFileData);
+                await AbortConvertingByError(resultErrorFileData.Errors);
                 return;
             }
 
@@ -64,36 +64,34 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
         /// <summary>
         /// Отправка подготовленных файлов
         /// </summary>
-        private async Task ConvertingPreparedFiles()
-        {
-            var packageDataRequest = await PrepareFilesToSending();
-            var resultErrorPackage = PackageDataValidation.ValidatePackageData(packageDataRequest);
-            if (resultErrorPackage.HasErrors)
-            {
-                await AbortConvertingByError(resultErrorPackage);
-                return;
-            }
+        private async Task ConvertingPreparedFiles() =>
+             await PrepareFilesToSending().
+             ResultValueOkBindAsync(package => new ResultValue<PackageDataRequestClient>(package).
+                                               ConcatErrors(PackageDataValidation.ValidatePackageData(package).Errors).
+                                               Map(Task.FromResult)).
+             ResultVoidBadBindAsync(AbortConvertingByError).
+             ResultValueOkBindAsync(package => 
+                SendFilesToConverting(package).
+                MapAsync(result => (IResultValue<PackageDataRequestClient>)new ResultValue<PackageDataRequestClient>(package, result.Errors))).
+             ResultVoidOkAsync(_ => SubscribeToIntermediateResponse());
 
-            var sendResult = await SendFilesToConverting(packageDataRequest);
-            if (sendResult.OkStatus) SubscribeToIntermediateResponse();
-        }
-
-        private async Task AbortConvertingByError(IResultError resultError)
+        /// <summary>
+        /// Отмена конвертирования из-за ошибок
+        /// </summary>
+        private async Task AbortConvertingByError(IReadOnlyCollection<IErrorCommon> errors)
         {
-            await AbortPropertiesConverting(false, resultError.Errors.First());
-            await _dialogService.ShowError(resultError.Errors.First());
+            await AbortPropertiesConverting(false, errors.First());
+            await _dialogService.ShowError(errors.First());
         }
 
         /// <summary>
         /// Подготовить данные к отправке
         /// </summary>
-        private async Task<PackageDataRequestClient> PrepareFilesToSending()
+        private async Task<IResultValue<PackageDataRequestClient>> PrepareFilesToSending()
         {
             var filesStatusInSending = _fileDataProcessingStatusMark.GetFilesInSending();
             _packageData.ChangeFilesStatus(filesStatusInSending);
-
-            var filesDataRequest = await _fileDataProcessingStatusMark.GetFilesDataToRequest();
-            return filesDataRequest;
+            return await _fileDataProcessingStatusMark.GetFilesDataToRequest();
         }
 
         /// <summary>
@@ -169,7 +167,7 @@ namespace GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi
             UsingServiceRetry(service => service.Operations.GetCompleteFile(_packageData.Id, filePath)).
             ResultVoidOkAsync(fileDataResponse => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Download, ReflectionInfo.GetMethodBase(this),
                                                                               fileDataResponse, _packageData.Id.ToString())).
-            ResultValueOkAsync(fileDataResponse => 
+            ResultValueOkAsync(fileDataResponse =>
                 _fileDataProcessingStatusMark.GetFileStatusCompleteResponseBeforeWriting(fileDataResponse).
                 Void(fileStatusBeforeWrite => _packageData.ChangeFileStatus(packageStatus.StatusProcessingProject, fileStatusBeforeWrite)).
                 Map(_ => _fileDataProcessingStatusMark.GetFileStatusCompleteResponseAndWritten(fileDataResponse)).

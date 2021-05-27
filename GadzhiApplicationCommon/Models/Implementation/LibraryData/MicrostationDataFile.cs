@@ -6,10 +6,8 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
     {
         public MicrostationDataFile(string nameDatabase, byte[] signatureMicrostation)
         {
-            NameDatabase = nameDatabase ?? throw new ArgumentNullException(nameof(nameDatabase));
-            MicrostationDataBase = ValidateMicrostationDataFile(signatureMicrostation)
-                            ? signatureMicrostation
-                            : throw new ArgumentNullException(nameof(signatureMicrostation));
+            NameDatabase = nameDatabase;
+            MicrostationDataBase = signatureMicrostation;
         }
 
         /// <summary>
@@ -21,11 +19,5 @@ namespace GadzhiApplicationCommon.Models.Implementation.LibraryData
         /// Изображение подписи
         /// </summary>
         public byte[] MicrostationDataBase { get; }
-
-        /// <summary>
-        /// Проверить корректность данных
-        /// </summary>
-        public static bool ValidateMicrostationDataFile(byte[] signatureMicrostation) =>
-            signatureMicrostation?.Length > 0;
     }
 }

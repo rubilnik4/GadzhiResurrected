@@ -19,103 +19,55 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.DataFile
         /// Преобразовать идентификаторы с подписью в модель базы банных
         /// </summary>
         public static IList<SignatureEntity> SignaturesFromDto(IList<SignatureDto> signaturesDto) =>
-            signaturesDto?.Select(SignatureFromDto).ToList()
-            ?? throw new ArgumentNullException(nameof(signaturesDto));
+            signaturesDto.Select(SignatureFromDto).ToList();
 
         /// <summary>
         /// Преобразовать идентификаторы с подписью в трансферную модель
         /// </summary>
-        public static IList<SignatureDto> SignaturesToDto(IList<SignatureEntity> signatureEntities, bool signatureLoad) =>
-            signatureEntities.AsQueryable().
-                              Select(signature => SignatureToDto(signature, signatureLoad)).
-                              ToList();
+        public static IList<SignatureDto> SignaturesToDto(IList<SignatureEntity> signatureEntities) =>
+            signatureEntities.Select(SignatureToDto).ToList();
 
         /// <summary>
         /// Преобразовать идентификатор с подписью Microstation в модель базы банных
         /// </summary>
-        public static MicrostationDataFileEntity MicrostationDataFileFromDto(MicrostationDataFileDto microstationDataFileDto, string idDataFile)
-        {
-            if (microstationDataFileDto == null) throw new ArgumentNullException(nameof(microstationDataFileDto));
-            if (String.IsNullOrEmpty(idDataFile)) throw new ArgumentNullException(nameof(idDataFile));
-
-            var signatureMicrostationEntity = new MicrostationDataFileEntity()
-            {
-                NameDatabase = microstationDataFileDto.NameDatabase,
-                MicrostationDataBase = microstationDataFileDto.MicrostationDataBase,
-            };
-            signatureMicrostationEntity.SetId(idDataFile);
-
-            return signatureMicrostationEntity;
-        }
+        public static MicrostationDataFileEntity MicrostationDataFileFromDto(MicrostationDataFileDto microstationDataFileDto,
+                                                                             string idDataFile) =>
+            new MicrostationDataFileEntity(idDataFile, microstationDataFileDto.NameDatabase,
+                                           microstationDataFileDto.MicrostationDataBase);
 
         /// <summary>
         /// Преобразовать идентификатор с подписью Microstation в трансферную модель
         /// </summary>
-        public static MicrostationDataFileDto SignatureMicrostationToDto(MicrostationDataFileEntity microstationDataFileEntity)
-        {
-            if (microstationDataFileEntity == null) throw new ArgumentNullException(nameof(microstationDataFileEntity));
-
-            var signatureMicrostationDto = new MicrostationDataFileDto()
-            {
-                NameDatabase = microstationDataFileEntity.NameDatabase,
-                MicrostationDataBase = microstationDataFileEntity.MicrostationDataBase.ToArray(),
-            };
-
-            return signatureMicrostationDto;
-        }
+        public static MicrostationDataFileDto SignatureMicrostationToDto(MicrostationDataFileEntity microstationDataFileEntity) =>
+            new MicrostationDataFileDto(microstationDataFileEntity.NameDatabase,
+                                        microstationDataFileEntity.MicrostationDataBase.ToArray());
 
         /// <summary>
         /// Преобразовать идентификатор с подписью в модель базы банных
         /// </summary>
-        private static SignatureEntity SignatureFromDto(SignatureDto signatureDto)
-        {
-            if (signatureDto == null) throw new ArgumentNullException(nameof(signatureDto));
-
-            var signatureEntity = new SignatureEntity()
-            {
-                PersonInformation = PersonInformationFromDto(signatureDto.PersonInformation),
-                SignatureJpeg = signatureDto.SignatureJpeg,
-            };
-            signatureEntity.SetId(signatureDto.PersonId);
-
-            return signatureEntity;
-        }
-
+        private static SignatureEntity SignatureFromDto(SignatureDto signatureDto) =>
+            new SignatureEntity(signatureDto.PersonId,
+                                PersonInformationFromDto(signatureDto.PersonInformation),
+                                signatureDto.SignatureSource);
+        /// <summary>
+        /// Преобразовать информацию о пользователе в транспортную модель
+        /// </summary>
         private static PersonInformationComponent PersonInformationFromDto(PersonInformationDto personInformation) =>
-            (personInformation != null)
-                ? new PersonInformationComponent()
-                {
-                    Surname = personInformation.Surname,
-                    Name = personInformation.Name,
-                    Patronymic = personInformation.Patronymic,
-                    DepartmentType = personInformation.DepartmentType,
-                }
-                : throw new ArgumentNullException(nameof(personInformation));
+            new PersonInformationComponent(personInformation.Surname, personInformation.Name,
+                                           personInformation.Patronymic, personInformation.DepartmentType);
 
         /// <summary>
         /// Преобразовать идентификатор с подписью в трансферную модель
         /// </summary>
-        private static SignatureDto SignatureToDto(SignatureEntity signatureEntity, bool signatureLoad) =>
-            (signatureEntity != null)
-                ? new SignatureDto()
-                {
-                    PersonId = signatureEntity.Id,
-                    PersonInformation = PersonInformationToDto(signatureEntity.PersonInformation),
-                    SignatureJpeg = signatureLoad
-                                ? signatureEntity.SignatureJpeg.AsQueryable().ToArray()
-                                : null,
-                }
-                : throw new ArgumentNullException(nameof(signatureEntity));
+        private static SignatureDto SignatureToDto(SignatureEntity signatureEntity) =>
+            new SignatureDto(signatureEntity.PersonId, PersonInformationToDto(signatureEntity.PersonInformation),
+                             signatureEntity.SignatureSource.ToArray());
 
+        /// <summary>
+        /// Получить информацию о пользователе
+        /// </summary>
         private static PersonInformationDto PersonInformationToDto(PersonInformationComponent personInformation) =>
-            (personInformation != null)
-                ? new PersonInformationDto()
-                {
-                    Surname = personInformation.Surname,
-                    Name = personInformation.Name,
-                    Patronymic = personInformation.Patronymic,
-                    DepartmentType = personInformation.DepartmentType,
-                }
-                : throw new ArgumentNullException(nameof(personInformation));
+            new PersonInformationDto(personInformation.Surname, personInformation.Name,
+                                     personInformation.Patronymic, personInformation.DepartmentType);
     }
 }

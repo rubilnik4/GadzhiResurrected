@@ -64,12 +64,13 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Формат
         /// </summary>
-        private string _paperSize;
+        private StampPaperSizeType? _paperSize;
 
         /// <summary>
         /// Формат
         /// </summary>
-        private string PaperSize => _paperSize ??= WordPaperSizeToString.PaperSizeToString(_document.PageSetup.PaperSize);
+        private StampPaperSizeType PaperSize =>
+            _paperSize ??= WordPaperSizeToString.PaperSizeToString(_document.PageSetup.PaperSize);
 
         /// <summary>
         /// Формат

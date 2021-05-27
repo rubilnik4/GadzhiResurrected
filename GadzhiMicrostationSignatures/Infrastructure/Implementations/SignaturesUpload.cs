@@ -39,13 +39,14 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
     {
         public SignaturesUpload(IApplicationMicrostation applicationMicrostation, IProjectSignatureSettings projectSignatureSettings,
                                 IMessagingService messagingService, IFileSystemOperations fileSystemOperations,
-                                IWcfServerServicesFactory wcfServerServicesFactory)
+                                IFilePathOperations filePathOperations, IWcfServerServicesFactory wcfServerServicesFactory)
         {
-            _applicationMicrostation = applicationMicrostation ?? throw new ArgumentNullException(nameof(applicationMicrostation));
+            _applicationMicrostation = applicationMicrostation ;
             _projectSignatureSettings = projectSignatureSettings;
-            _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
-            _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ?? throw new ArgumentNullException(nameof(wcfServerServicesFactory));
+            _messagingService = messagingService ;
+            _fileSystemOperations = fileSystemOperations ;
+            _filePathOperations = filePathOperations;
+            _signatureServerServiceFactory = wcfServerServicesFactory?.SignatureServerServiceFactory ;
         }
 
         /// <summary>
@@ -67,6 +68,11 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// Проверка состояния папок и файлов
         /// </summary>   
         private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
+        /// Операции с путями файлов
+        /// </summary>
+        private readonly IFilePathOperations _filePathOperations;
 
         /// <summary>
         /// Сервис для добавления и получения данных о конвертируемых пакетах в серверной части
@@ -115,7 +121,7 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         private IResultValue<IDocumentMicrostation> MicrostationFileOpen(string filePathMicrostation) =>
             new ResultValue<string>(filePathMicrostation, new ErrorCommon(ErrorConvertingType.FileNotFound,
                                                                           "Не задан путь к файлу Microstation")).
-            ResultValueContinue(filePath => _fileSystemOperations.IsFileExist(filePath),
+            ResultValueContinue(filePath => _filePathOperations.IsFileExist(filePath),
                 okFunc: filePath => filePath,
                 badFunc: filePath => new ErrorCommon(ErrorConvertingType.FileNotFound, $"Файл {filePath} не существует")).
             ResultVoidOk(filePath => _messagingService.ShowMessage($"Загрузка файла {filePath}")).
@@ -149,22 +155,22 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Сохранить изображение элемента ячейки Microstation
         /// </summary>
-        private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibrary) =>
-            _applicationMicrostation.CreateCellElementFromLibrary(signatureLibrary.PersonId, new PointMicrostation(0, 0), modelMicrostation).
+        private IResultValue<ISignatureFileData> CreateJpegFromCell(IModelMicrostation modelMicrostation, ISignatureLibrary signatureLibraryBase) =>
+            _applicationMicrostation.CreateCellElementFromLibrary(signatureLibraryBase.PersonId, new PointMicrostation(0, 0), modelMicrostation).
             ResultVoidOk(cellElement => cellElement.LineWeight = 7).
             ToResultValueFromApplication().
-            ResultVoidOk(_ => _messagingService.ShowMessage($"Обработка подписи {signatureLibrary.PersonInformation.FullName}")).
-            ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibrary));
+            ResultVoidOk(_ => _messagingService.ShowMessage($"Обработка подписи {signatureLibraryBase.PersonInformation.FullName}")).
+            ResultValueOk(cellSignature => ToJpegByte(cellSignature, signatureLibraryBase));
 
         /// <summary>
         /// Конвертировать ячейку Microstation в Jpeg
         /// </summary>
-        private ISignatureFileData ToJpegByte(IElementMicrostation cellSignature, ISignatureLibrary signatureLibrary) =>
-            GetSignatureFileSavePath(signatureLibrary).
-            Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibrary),
+        private ISignatureFileData ToJpegByte(IElementMicrostation cellSignature, ISignatureLibrary signatureLibraryBase) =>
+            GetSignatureFileSavePath(signatureLibraryBase).
+            Void(filePath => cellSignature.DrawToEmfFile(GetSignatureFileSavePath(signatureLibraryBase),
                                                          ProjectSignatureSettings.JpegPixelSize.Width,
                                                          ProjectSignatureSettings.JpegPixelSize.Height)).
-            Map(filePathEmf => new SignatureFileData(signatureLibrary.PersonId, signatureLibrary.PersonInformation,
+            Map(filePathEmf => new SignatureFileData(signatureLibraryBase.PersonId, signatureLibraryBase.PersonInformation,
                                                      JpegConverter.ToJpegFromEmf(filePathEmf), false ).
                                Void(_ => _fileSystemOperations.DeleteFile(filePathEmf))).
             Void(_ => cellSignature.Remove());
@@ -172,9 +178,9 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
         /// <summary>
         /// Получить имя для сохранения подписи
         /// </summary>
-        private static string GetSignatureFileSavePath(ISignatureLibrary signatureLibrary) =>
+        private static string GetSignatureFileSavePath(ISignatureLibrary signatureLibraryBase) =>
             ProjectSignatureSettings.SignaturesSaveFolder + Path.DirectorySeparatorChar +
-            signatureLibrary.PersonId + ".emf";
+            signatureLibraryBase.PersonId + ".emf";
 
         /// <summary>
         /// Загрузить подписи в базу
@@ -183,20 +189,16 @@ namespace GadzhiMicrostationSignatures.Infrastructure.Implementations
             await signatureFileData.
             Void(_ => _messagingService.ShowMessage("Удаление подписей в базе")).
             Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteSignatures())).
-            Map(_ => ConverterDataFileToDto.SignaturesToDto(signatureFileData)).
-            Void(_ => _messagingService.ShowMessage("Отправка подписей в базу")).
-            Map(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
+            MapAsync(_ => ConverterDataFileToDto.SignaturesToDto(signatureFileData)).
+            VoidAsync(_ => _messagingService.ShowMessage("Отправка подписей в базу")).
+            MapBindAsync(signatures => _signatureServerServiceFactory.UsingServiceRetry(service => service.Operations.UploadSignatures(signatures))).
             VoidAsync(ShowMessage);
 
         /// <summary>
         /// Запаковать файл базы Microstation и преобразовать в байтовый массив
         /// </summary>
         private Task<IResultValue<byte[]>> MicrostationDataBaseToZip(string filePath) =>
-            _fileSystemOperations.FileToByteAndZip(filePath).
-             WhereContinueAsync(successAndZip => successAndZip.Success,
-                                okFunc: successAndZip => (IResultValue<byte[]>)new ResultValue<byte[]>(successAndZip.Zip),
-                                badFunc: successAndZip => new ResultValue<byte[]>(new ErrorCommon(ErrorConvertingType.IncorrectDataSource,
-                                                                                                  "Невозможно преобразовать файл в формат zip")));
+            _fileSystemOperations.FileToByteAndZip(filePath);
 
         /// <summary>
         /// Загрузить данные Microstation в базу

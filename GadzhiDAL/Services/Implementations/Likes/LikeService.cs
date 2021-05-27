@@ -50,13 +50,7 @@ namespace GadzhiDAL.Services.Implementations.Likes
             var likeEntity = await unitOfWork.Session.GetAsync<LikeIdentityEntity>(personId);
             if (likeEntity == null)
             {
-                var likeUpdateEntity = new LikeIdentityEntity
-                {
-                    PersonId = personId,
-                    PersonFullname = personFullName,
-                    LastDateLike = DateTimeService.GetDateTimeNow(),
-                    LikeCount = 1
-                };
+                var likeUpdateEntity = new LikeIdentityEntity(personId, personFullName, DateTimeService.GetDateTimeNow(), 1);
                 await unitOfWork.Session.SaveOrUpdateAsync(likeUpdateEntity);
             }
             else

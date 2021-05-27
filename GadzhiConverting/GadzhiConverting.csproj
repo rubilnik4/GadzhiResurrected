@@ -32,7 +32,7 @@
     <ProductName>GadzhiConverting</ProductName>
     <PublisherName>Ivan Rubilnik</PublisherName>
     <MinimumRequiredVersion>1.0.0.16</MinimumRequiredVersion>
-    <ApplicationRevision>39</ApplicationRevision>
+    <ApplicationRevision>41</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -209,7 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\PrinterInformationElement.cs" />
-    <Compile Include="Configuration\PrintersPdfCollection.cs" />
+    <Compile Include="Configuration\PrintersCollection.cs" />
     <Compile Include="Configuration\RegisterPrintersInformationSection.cs" />
     <Compile Include="DependencyInjection\BootStrapUnity.cs" />
     <Compile Include="Extensions\ConvertingSettingsExtensions.cs" />
@@ -225,7 +225,9 @@
     <Compile Include="Infrastructure\Implementations\ConvertingService.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataFromDto.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConverterServerPackageDataToDto.cs" />
-    <Compile Include="Infrastructure\Implementations\ConvertingTimeActions.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\ConvertingFilePath.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\ConvertingTimeActions.cs" />
+    <Compile Include="Infrastructure\Implementations\Converting\ConvertingValidation.cs" />
     <Compile Include="Infrastructure\Implementations\Converting\ConvertingModeChoice.cs" />
     <Compile Include="Infrastructure\Implementations\ProjectSettings.cs" />
     <Compile Include="Infrastructure\Interfaces\ApplicationConvertingPartial\IApplicationConverting.cs" />
@@ -235,10 +237,12 @@
     <Compile Include="Infrastructure\Interfaces\IConvertingFileData.cs" />
     <Compile Include="Infrastructure\Interfaces\IConvertingService.cs" />
     <Compile Include="Infrastructure\Interfaces\IProjectSettings.cs" />
-    <Compile Include="Models\Converters\SettingsApplicationConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterSettingsApplication.cs" />
     <Compile Include="Models\Implementations\ConvertingResources.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\ConvertingPackageSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\ConvertingSettings.cs" />
     <Compile Include="Models\Implementations\FilesConvert\FilePath.cs" />
+    <Compile Include="Models\Implementations\FilesConvert\FilePathCollection.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IConvertingSettings.cs" />
     <Compile Include="Models\Interfaces\FilesConvert\IFilePath.cs" />
     <Compile Include="Models\Interfaces\Printers\IPrinterInformation.cs" />

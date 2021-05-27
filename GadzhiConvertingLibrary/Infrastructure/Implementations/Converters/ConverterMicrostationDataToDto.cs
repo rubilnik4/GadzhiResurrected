@@ -12,10 +12,6 @@ namespace GadzhiConvertingLibrary.Infrastructure.Implementations.Converters
         /// Преобразовать подпись Microstation в трансферную модель
         /// </summary>
         public static MicrostationDataFileDto MicrostationDataFileToDto(MicrostationDataFile microstationDataFile) =>
-            new MicrostationDataFileDto
-            {
-                NameDatabase = microstationDataFile.NameDatabase,
-                MicrostationDataBase = microstationDataFile.MicrostationDataBase,
-            };
+            new MicrostationDataFileDto(microstationDataFile.NameDatabase, microstationDataFile.MicrostationDataBase);
     }
 }

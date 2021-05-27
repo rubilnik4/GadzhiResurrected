@@ -27,7 +27,7 @@ namespace GadzhiMicrostation.Microstation.Interfaces.ApplicationMicrostationPart
         /// <summary>
         /// Установить формат печати характерный для принтера
         /// </summary>       
-        IResultApplication SetPrinterPaperSize(string drawSize, string prefixSearchPaperSize);
+        IResultApplication SetPrinterPaperSize(StampPaperSizeType paperSize, string prefixSearchPaperSize);
 
 
         /// <summary>

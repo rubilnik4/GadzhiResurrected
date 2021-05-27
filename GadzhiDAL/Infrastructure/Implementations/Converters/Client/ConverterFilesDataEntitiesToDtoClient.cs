@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Entities.FilesConvert.Base.Components;
+using GadzhiDAL.Entities.FilesConvert.Components;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
@@ -24,111 +24,55 @@ namespace GadzhiDAL.Infrastructure.Implementations.Converters.Client
         /// </summary>       
         public static PackageDataShortResponseClient PackageDataToIntermediateResponse(PackageDataEntity packageDataEntity,
                                                                                        FilesQueueInfo filesQueueInfo) =>
-            (packageDataEntity != null)
-                ? new PackageDataShortResponseClient()
-                {
-                    Id = Guid.Parse(packageDataEntity.Id),
-                    StatusProcessingProject = packageDataEntity.StatusProcessingProject,
-                    FilesData = packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).ToList(),
-                    FilesQueueInfo = FilesQueueInfoToResponse(filesQueueInfo),
-                }
-                : throw new ArgumentNullException(nameof(packageDataEntity));
+           new PackageDataShortResponseClient(Guid.Parse(packageDataEntity.Id),
+                                              packageDataEntity.StatusProcessingProject,
+                                              packageDataEntity.FileDataEntities.Select(FileDataAccessToIntermediateResponse).ToList(),
+                                              FilesQueueInfoToResponse(filesQueueInfo));
 
         /// <summary>
         /// Конвертировать из модели базы данных в основной ответ
         /// </summary>          
-        public static async Task<PackageDataResponseClient> PackageDataAccessToResponse(PackageDataEntity packageDataEntity)
-        {
-            if (packageDataEntity == null) throw new ArgumentNullException(nameof(packageDataEntity));
+        public static PackageDataResponseClient PackageDataAccessToResponse(PackageDataEntity packageDataEntity) =>
+            new PackageDataResponseClient(Guid.Parse(packageDataEntity.Id),
+                                          packageDataEntity.StatusProcessingProject,
+                                          packageDataEntity.FileDataEntities.Select(FileDataAccessToResponse).ToList());
 
-            var filesDataTasks = packageDataEntity.FileDataEntities.AsQueryable().
-                                 Select(fileData => FileDataAccessToResponse(fileData));
-            var filesData = await Task.WhenAll(filesDataTasks);
-
-            return new PackageDataResponseClient()
-            {
-                Id = Guid.Parse(packageDataEntity.Id),
-                StatusProcessingProject = packageDataEntity.StatusProcessingProject,
-                FilesData = filesData,
-            };
-        }
 
         /// <summary>
         /// Конвертировать файл модели базы данных в промежуточную
         /// </summary>
-        private static FileDataShortResponseClient FileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity)
-        {
-            if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
-
-            var fileConvertErrorType = fileDataEntity.FileErrors.Select(ToErrorCommon).ToList();
-            if (!CheckStatusProcessing.CompletedStatusProcessing.Contains(fileDataEntity.StatusProcessing) &&
-                !fileDataEntity.FileErrors.Any())
-            {
-                var error = new ErrorCommonResponse()
-                {
-                    ErrorConvertingType = ErrorConvertingType.UnknownError,
-                    ErrorDescription = "Конвертирование пакета не может быть завершено"
-                };
-                fileConvertErrorType = new List<ErrorCommonResponse> { error };
-            }
-
-            return new FileDataShortResponseClient()
-            {
-                FilePath = fileDataEntity.FilePath,
-                StatusProcessing = fileDataEntity.StatusProcessing,
-                FileErrors = fileConvertErrorType,
-            };
-        }
+        private static FileDataShortResponseClient FileDataAccessToIntermediateResponse(FileDataEntity fileDataEntity) =>
+            new FileDataShortResponseClient(fileDataEntity.FilePath, fileDataEntity.StatusProcessing,
+                                            fileDataEntity.FileErrors.Select(ToErrorCommon).ToList());
 
         /// <summary>
         /// Конвертировать файл модели базы данных в основной ответ
         /// </summary>
-        public static async Task<FileDataResponseClient> FileDataAccessToResponse(FileDataEntity fileDataEntity)
-        {
-            if (fileDataEntity == null) throw new ArgumentNullException(nameof(fileDataEntity));
-
-            var fileDataSourceResponseClient = await fileDataEntity.FileDataSourceServerEntities.AsQueryable().
-                                               Select(fileData => FileDataSourceToResponse(fileData)).ToListAsync();
-
-            return new FileDataResponseClient()
-            {
-                FilePath = fileDataEntity.FilePath,
-                StatusProcessing = fileDataEntity.StatusProcessing,
-                FilesDataSource = fileDataSourceResponseClient,
-                FileErrors = fileDataEntity.FileErrors.Select(ToErrorCommon).ToList(),
-            };
-        }
+        public static FileDataResponseClient FileDataAccessToResponse(FileDataEntity fileDataEntity) =>
+            new FileDataResponseClient(fileDataEntity.FilePath, fileDataEntity.StatusProcessing,
+                                       fileDataEntity.FileErrors.Select(ToErrorCommon).ToList(),
+                                       fileDataEntity.FileDataSourceServerEntities.
+                                       Where(fileData => fileData.FileDataSource != null).
+                                       Select(FileDataSourceToResponse).ToList());
 
         /// <summary>
         /// Конвертировать информацию о количестве файлов в очереди
         /// </summary>        
         private static FilesQueueInfoResponseClient FilesQueueInfoToResponse(FilesQueueInfo filesQueueInfo) =>
-            new FilesQueueInfoResponseClient()
-            {
-                FilesInQueueCount = filesQueueInfo?.FilesInQueueCount ?? 0,
-                PackagesInQueueCount = filesQueueInfo?.PackagesInQueueCount ?? 0,
-            };
+            new FilesQueueInfoResponseClient(filesQueueInfo.FilesInQueueCount, filesQueueInfo.PackagesInQueueCount);
 
         /// <summary>
         /// Конвертировать информацию о готовых файлах
         /// </summary>        
         private static FileDataSourceResponseClient FileDataSourceToResponse(FileDataSourceEntity fileDataSourceEntity) =>
-            new FileDataSourceResponseClient()
-            {
-                FileName = fileDataSourceEntity?.FileName ?? throw new ArgumentNullException(nameof(fileDataSourceEntity)),
-                FileDataSource = fileDataSourceEntity.FileDataSource?.AsQueryable().ToArray(),
-            };
+            new FileDataSourceResponseClient(fileDataSourceEntity.FileName, fileDataSourceEntity.FileExtensionType,
+                                             fileDataSourceEntity.PaperSize, fileDataSourceEntity.PrinterName,
+                                             fileDataSourceEntity.FileDataSource.ToArray());
 
         /// <summary>
         /// Конвертировать ошибки в трансферную модель
         /// </summary>
         private static ErrorCommonResponse ToErrorCommon(ErrorComponent errorComponent) =>
-            (errorComponent != null)
-            ? new ErrorCommonResponse()
-            {
-                ErrorConvertingType = errorComponent.ErrorConvertingType,
-                ErrorDescription = errorComponent.ErrorDescription
-            }
-            : throw new ArgumentNullException(nameof(errorComponent));
+            new ErrorCommonResponse(errorComponent.ErrorConvertingType, errorComponent.Description);
     }
 }

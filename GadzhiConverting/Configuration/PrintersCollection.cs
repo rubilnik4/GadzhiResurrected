@@ -10,8 +10,8 @@ namespace GadzhiConverting.Configuration
     /// <summary>
     /// Конфигурационный файл. Параметры принтеров
     /// </summary>
-    [ConfigurationCollection(typeof(PrintersPdfCollection), AddItemName = nameof(PrinterInformationElement))]
-    public class PrintersPdfCollection : ConfigurationElementCollection, IEnumerable<PrinterInformationElement>
+    [ConfigurationCollection(typeof(PrintersCollection), AddItemName = nameof(PrinterInformationElement))]
+    public class PrintersCollection : ConfigurationElementCollection, IEnumerable<PrinterInformationElement>
     {
         /// <summary>
         /// Получить элемент по индексу
@@ -49,13 +49,14 @@ namespace GadzhiConverting.Configuration
         /// Создать новый элемент
         /// </summary>
         /// <returns></returns>
-        protected override ConfigurationElement CreateNewElement() => new PrinterInformationElement();
-        
+        protected override ConfigurationElement CreateNewElement() => 
+            new PrinterInformationElement();
+
         /// <summary>
         /// Получить ключ
         /// </summary>
-        protected override object GetElementKey(ConfigurationElement element) => (element as PrinterInformationElement)?.Name 
-                                                                                 ?? String.Empty;
+        protected override object GetElementKey(ConfigurationElement element) =>
+            (element as PrinterInformationElement)?.Id ?? String.Empty;
 
         /// <summary>
         /// Перечисление

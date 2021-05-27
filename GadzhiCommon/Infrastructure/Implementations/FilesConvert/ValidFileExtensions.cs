@@ -31,6 +31,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.FilesConvert
             { "pdf", FileExtensionType.Pdf},
             { "dwg", FileExtensionType.Dwg},
             { "xlsx", FileExtensionType.Xlsx},
+            { "print", FileExtensionType.Print},
         };
 
         /// <summary>
@@ -64,6 +65,6 @@ namespace GadzhiCommon.Infrastructure.Implementations.FilesConvert
         /// </summary>
         public static bool IsFileExtensionEqual(string fileExtension, FileExtensionType extensionTypeCompare) =>
             extensionTypeCompare.ToString().ToLowerCaseCurrentCulture() == 
-            FileSystemOperations.ExtensionWithoutPoint(fileExtension).ToLowerCaseCurrentCulture();
+            FilePathOperations.ExtensionWithoutPoint(fileExtension).ToLowerCaseCurrentCulture();
     }
 }

@@ -36,6 +36,7 @@ namespace GadzhiMicrostationSignatures.DependencyInjection
             container.RegisterType<ISignatureConverter, SignatureConverter>();
 
             container.RegisterType<IMessagingService, MessagingService>();
+            container.RegisterType<IFilePathOperations, FilePathOperations>();
             container.RegisterType<IFileSystemOperations, FileSystemOperations>();
 
             GadzhiConvertingLibrary.DependencyInjection.BootStrapUnity.RegisterServices(container);

@@ -10,18 +10,8 @@ namespace GadzhiCommon.Models.Interfaces.Errors
     /// <summary>
     /// Ошибка конвертации
     /// </summary>
-    public interface IErrorCommon: IEnumerable<IErrorCommon>
+    public interface IErrorCommon: IError, IEnumerable<IErrorCommon>
     {
-        /// <summary>
-        /// Тип ошибки при конвертации файлов
-        /// </summary>
-        ErrorConvertingType ErrorConvertingType { get; }
-
-        /// <summary>
-        /// Описание ошибки
-        /// </summary>
-        string Description { get; }
-
         /// <summary>
         /// Исключение
         /// </summary>

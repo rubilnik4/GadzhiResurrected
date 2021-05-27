@@ -52,6 +52,7 @@ namespace GadzhiResurrected
 
             unityContainer.RegisterType<IDialogService, DialogService>();
             unityContainer.RegisterType<IFileSystemOperations, FileSystemOperations>();
+            unityContainer.RegisterType<IFilePathOperations, FilePathOperations>();
             unityContainer.RegisterSingleton<IApplicationGadzhi, ApplicationGadzhi>();
         }
 

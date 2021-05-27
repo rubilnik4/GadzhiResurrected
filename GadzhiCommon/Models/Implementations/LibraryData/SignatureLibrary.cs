@@ -12,7 +12,7 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
 
         public SignatureLibrary(string personId, PersonInformation personInformation)
         {
-            PersonId = personId ?? throw new ArgumentNullException(nameof(personId));
+            PersonId = personId;
             PersonInformation = personInformation;
         }
 
@@ -33,7 +33,8 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         #endregion
 
         #region IEquatable
-        public override bool Equals(object obj) => obj is ISignatureLibrary signatureLibrary && Equals(signatureLibrary);
+        public override bool Equals(object obj) => 
+            obj is ISignatureLibrary signatureLibrary && Equals(signatureLibrary);
 
         public bool Equals(ISignatureLibrary other) => other?.PersonId == PersonId;
 
@@ -41,7 +42,6 @@ namespace GadzhiCommon.Models.Implementations.LibraryData
         {
             var hashCode = 17;
             hashCode = hashCode * 31 + PersonId.GetHashCode();
-
             return hashCode;
         }
         #endregion

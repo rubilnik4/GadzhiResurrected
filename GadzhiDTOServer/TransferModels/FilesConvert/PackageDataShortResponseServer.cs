@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using GadzhiCommon.Enums.FilesConvert;
 using GadzhiDTOBase.TransferModels.FilesConvert.Base;
 
 namespace GadzhiDTOServer.TransferModels.FilesConvert
@@ -11,10 +13,9 @@ namespace GadzhiDTOServer.TransferModels.FilesConvert
     [DataContract]
     public class PackageDataShortResponseServer : PackageDataShortResponseBase<FileDataShortResponseServer>
     {
-        /// <summary>
-        /// Промежуточные данные о конвертируемых файлах
-        /// </summary>
-        [DataMember]
-        public override IList<FileDataShortResponseServer> FilesData { get; set; }
+        public PackageDataShortResponseServer(Guid id, StatusProcessingProject statusProcessingProject,
+                                              IList<FileDataShortResponseServer> filesData)
+            :base(id, statusProcessingProject, filesData)
+        { }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using GadzhiCommon.Enums.FilesConvert;
 using GadzhiCommon.Models.Interfaces.Histories;
 using GadzhiModules.Infrastructure.Implementations.Converters;
+using GadzhiModules.Modules.GadzhiConvertingModule.Models.Interfaces.Histories;
 
 namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryViewModels.HistoryViewModelItems
 {
@@ -12,49 +13,46 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.ViewModels.Tabs.HistoryVi
     /// </summary>
     public class HistoryFileDataViewModelItem
     {
-        public HistoryFileDataViewModelItem(IHistoryFileData historyFileData)
+        public HistoryFileDataViewModelItem(IHistoryFileDataClient historyFileData)
         {
-            HistoryFileData = historyFileData;
+            _historyFileData = historyFileData;
         }
 
         /// <summary>
         /// Данные истории конвертации файла
         /// </summary>
-        public IHistoryFileData HistoryFileData { get; }
+        private readonly IHistoryFileDataClient _historyFileData;
+
+        /// <summary>
+        /// Отконвертированные файлы
+        /// </summary>
+        public IReadOnlyCollection<HistoryFileDataSourceViewModelItem> HistoryFileDataSourceViewModelItems =>
+            _historyFileData.HistoryFileDataSources.
+            Select(source => new HistoryFileDataSourceViewModelItem(source)).
+            ToList();
 
         /// <summary>
         /// Путь файла
         /// </summary>
-        public string FilePath => 
-            HistoryFileData.FilePath;
+        public string FilePath =>
+            _historyFileData.FilePath;
 
         /// <summary>
         /// Статус
         /// </summary>
         public string StatusProcessing =>
-            StatusProcessingConverter.StatusProcessingToString(HistoryFileData.StatusProcessing);
+            StatusProcessingConverter.StatusProcessingToString(_historyFileData.StatusProcessing);
 
         /// <summary>
-        /// Типы обработанных файлов
+        /// Типы цветов для печати
         /// </summary>
-        public string FileExtensionTypes =>
-            HistoryFileData.FileExtensionTypes.
-            Select(fileType => fileType.ToString()).
-            DefaultIfEmpty("").
-            Aggregate((first, second) => first + "; " + second);
+        public string ColorPrintType =>
+            ColorPrintConverter.ColorPrintToString(_historyFileData.ColorPrintType);
 
         /// <summary>
         /// Количество ошибок
         /// </summary>
         public int ErrorCount =>
-            HistoryFileData.ErrorCount;
-
-        /// <summary>
-        /// Форматы
-        /// </summary>
-        public string PaperSizes =>
-            HistoryFileData.PaperSizes.
-            DefaultIfEmpty("").
-            Aggregate((first, second) => first + "; " + second);
+            _historyFileData.ErrorCount;
     }
 }

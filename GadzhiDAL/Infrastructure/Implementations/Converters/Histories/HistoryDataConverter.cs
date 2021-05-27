@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GadzhiDAL.Entities.FilesConvert;
-using GadzhiDAL.Entities.FilesConvert.Base;
 using GadzhiDTOBase.TransferModels.Histories;
 
 namespace GadzhiDAL.Infrastructure.Implementations.Converters.Histories
