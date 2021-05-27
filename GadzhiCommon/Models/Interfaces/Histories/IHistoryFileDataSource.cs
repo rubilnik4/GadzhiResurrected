@@ -8,6 +8,11 @@ namespace GadzhiCommon.Models.Interfaces.Histories
     public interface IHistoryFileDataSource
     {
         /// <summary>
+        /// Имя файла
+        /// </summary>
+        string FileName { get; }
+
+        /// <summary>
         /// Типы допустимых расширений
         /// </summary>   
         FileExtensionType FileExtensionType { get; }

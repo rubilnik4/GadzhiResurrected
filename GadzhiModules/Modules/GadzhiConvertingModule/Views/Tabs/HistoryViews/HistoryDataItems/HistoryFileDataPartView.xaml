@@ -15,55 +15,58 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!--<DataGrid Grid.Row="0"
-                  ItemsSource="{Binding HistoryFileViewModelItems}"
-                  AutoGenerateColumns="False"
-                  EnableRowVirtualization="True"
-                  IsReadOnly="True"
-                  SelectionUnit="FullRow">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Имя файла" 
-                                        Width="2*" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="viewModels:HistoryFileDataViewModelItem">
-                            <TextBlock Text="{Binding FilePath}"
-                                       ToolTip="{Binding FilePath}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+        <Border Grid.Row="0"
+                BorderThickness="0 0 0 1"
+                BorderBrush="{DynamicResource MaterialDesignDivider}"
+                Padding="0 8 0 8">
+            <Grid>
+                <Grid.Resources>
+                    <Style x:Key="TextBlockColumnName"
+                           TargetType="{x:Type TextBlock}">
+                        <Setter Property="Margin" Value="-7 0 0 0" />
+                        <Setter Property="Foreground" Value="DimGray" />
+                    </Style>
+                </Grid.Resources>
 
-                <DataGridTextColumn Header="Статус"
-                                    Width="0.8*"
-                                    Binding="{Binding StatusProcessing}" />
-                <DataGridTextColumn Header="Типы"
-                                    Width="*"
-                                    Binding="{Binding FileExtensionTypes}" />
-                <DataGridTextColumn Header="Форматы"
-                                    Width="*"
-                                    Binding="{Binding PaperSizes}" />
-                <DataGridTextColumn Header="Ошибки"
-                                    Width="0.5*"
-                                    Binding="{Binding ErrorCount}" />
-            </DataGrid.Columns>
-        </DataGrid>-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="0.3*" />
+                </Grid.ColumnDefinitions>
 
-        <TreeView Grid.Row="0"
+                <TextBlock Grid.Column="1"
+                           Text="Путь"
+                           Style="{StaticResource TextBlockColumnName}"/>
+                <TextBlock Grid.Column="2"
+                           Text="Статус"
+                           Style="{StaticResource TextBlockColumnName}" />
+                <TextBlock Grid.Column="3"
+                           Text="Цвет"
+                           Style="{StaticResource TextBlockColumnName}" />
+                <TextBlock Grid.Column="4"
+                           Text="Ошибки"
+                           Style="{StaticResource TextBlockColumnName}" />
+            </Grid>
+        </Border>
+        <TreeView Grid.Row="1"
                   ItemsSource="{Binding HistoryFileViewModelItems}"
                   HorizontalContentAlignment="Stretch">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type viewModels:HistoryFileDataViewModelItem}"
-                                          ItemsSource="{Binding HistoryFileData.FileExtensionTypes}">
-                    <Grid HorizontalAlignment="Stretch">
+                                          ItemsSource="{Binding HistoryFileDataSourceViewModelItems}">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="0.3*"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" 
@@ -72,26 +75,34 @@
                         <TextBlock Grid.Column="1" 
                                    Text="{Binding StatusProcessing}"/>
                         <TextBlock Grid.Column="2" 
-                                   Text="{Binding FileExtensionTypes}"/>
+                                   Text="{Binding ColorPrintType}"/>
                         <TextBlock Grid.Column="3" 
-                                   Text="{Binding PaperSizes}"/>
-                        <TextBlock Grid.Column="4" 
                                    Text="{Binding ErrorCount}"/>
                     </Grid>
-                    <!--<TextBlock Text="{Binding FilePath}"
-                               Margin="3 2" />-->
                 </HierarchicalDataTemplate>
-                <!--<DataTemplate
-                    DataType="{x:Type domain:Movie}">
-                    <TextBlock
-                        Text="{Binding Name}"
-                        Margin="3 2"
-                        ToolTip="{Binding Director}" />
-                </DataTemplate>-->
+                <DataTemplate DataType="{x:Type viewModels:HistoryFileDataSourceViewModelItem}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" 
+                                   Text="{Binding FileName}"/>
+                        <TextBlock Grid.Column="1" 
+                                   Text="{Binding FileExtensionType}"/>
+                        <TextBlock Grid.Column="2" 
+                                   Text="{Binding PrinterName}"/>
+                        <TextBlock Grid.Column="3" 
+                                   Text="{Binding PaperSize}"/>
+                    </Grid>
+                </DataTemplate>
             </TreeView.Resources>
         </TreeView>
 
-        <Grid Grid.Row="1"
+        <Grid Grid.Row="2"
               Margin="0 5 0 3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

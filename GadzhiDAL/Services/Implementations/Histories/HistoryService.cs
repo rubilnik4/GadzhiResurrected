@@ -74,7 +74,7 @@ namespace GadzhiDAL.Services.Implementations.Histories
         private static IList<HistoryFileDataResponse> GetHistoryFile(PackageDataEntity package) =>
             package.FileDataEntities.
             Select(fileDataEntity =>
-                new HistoryFileDataResponse(fileDataEntity.FilePath, fileDataEntity.StatusProcessing,
+                new HistoryFileDataResponse(fileDataEntity.FilePath, fileDataEntity.StatusProcessing, fileDataEntity.ColorPrintType,
                                             fileDataEntity.FileDataSourceServerEntities.Select(GetHistorySource).ToList(),
                                             fileDataEntity.FileErrors?.Count ?? 0)).
             ToList();
@@ -83,8 +83,8 @@ namespace GadzhiDAL.Services.Implementations.Histories
         /// Получить обработанный файл
         /// </summary>
         private static HistoryFileDataSourceResponse GetHistorySource(FileDataSourceEntity fileDataSourceEntity) =>
-            new HistoryFileDataSourceResponse(fileDataSourceEntity.FileExtensionType, fileDataSourceEntity.PrinterName,
-                                              fileDataSourceEntity.PaperSize);
+            new HistoryFileDataSourceResponse(fileDataSourceEntity.FileName, fileDataSourceEntity.FileExtensionType,
+                                              fileDataSourceEntity.PrinterName, fileDataSourceEntity.PaperSize);
 
         /// <summary>
         /// Получить дату без времени

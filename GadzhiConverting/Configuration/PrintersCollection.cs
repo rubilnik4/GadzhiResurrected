@@ -49,13 +49,14 @@ namespace GadzhiConverting.Configuration
         /// Создать новый элемент
         /// </summary>
         /// <returns></returns>
-        protected override ConfigurationElement CreateNewElement() => new PrinterInformationElement();
+        protected override ConfigurationElement CreateNewElement() => 
+            new PrinterInformationElement();
 
         /// <summary>
         /// Получить ключ
         /// </summary>
-        protected override object GetElementKey(ConfigurationElement element) => (element as PrinterInformationElement)?.Id 
-                                                                                 ?? String.Empty;
+        protected override object GetElementKey(ConfigurationElement element) =>
+            (element as PrinterInformationElement)?.Id ?? String.Empty;
 
         /// <summary>
         /// Перечисление

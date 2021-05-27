@@ -25,6 +25,7 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters.Histories
         /// </summary>
         public static IHistoryFileDataClient ToClient(HistoryFileDataResponse historyFileDataResponse) =>
             new HistoryFileDataClient(historyFileDataResponse.FilePath, historyFileDataResponse.StatusProcessing,
+                                      historyFileDataResponse.ColorPrintType,
                                       historyFileDataResponse.HistoryFileDataSources.Select(ToSourceClient), 
                                       historyFileDataResponse.ErrorCount);
 
@@ -32,9 +33,8 @@ namespace GadzhiModules.Infrastructure.Implementations.Converters.Histories
         /// Преобразовать ответ в клиентскую версию
         /// </summary>
         public static IHistoryFileDataSource ToSourceClient(HistoryFileDataSourceResponse historyFileDataSourceResponse) =>
-            new HistoryFileDataSourceClient(historyFileDataSourceResponse.FileExtensionType,
-                                            historyFileDataSourceResponse.PrinterName,
-                                            historyFileDataSourceResponse.PaperSize);
+            new HistoryFileDataSourceClient(historyFileDataSourceResponse.FileName, historyFileDataSourceResponse.FileExtensionType,
+                                            historyFileDataSourceResponse.PrinterName, historyFileDataSourceResponse.PaperSize);
 
 
     }

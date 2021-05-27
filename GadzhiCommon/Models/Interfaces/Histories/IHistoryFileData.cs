@@ -20,6 +20,11 @@ namespace GadzhiCommon.Models.Interfaces.Histories
         StatusProcessing StatusProcessing { get; }
 
         /// <summary>
+        /// Типы цветов для печати
+        /// </summary>
+        ColorPrintType ColorPrintType { get; }
+
+        /// <summary>
         /// Типы обработанных файлов
         /// </summary>
         IReadOnlyCollection<TSource> HistoryFileDataSources { get; }

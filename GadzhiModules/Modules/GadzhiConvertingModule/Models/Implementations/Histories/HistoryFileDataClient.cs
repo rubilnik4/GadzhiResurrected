@@ -11,11 +11,12 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Hi
     /// </summary>
     public class HistoryFileDataClient: IHistoryFileDataClient
     {
-        public HistoryFileDataClient(string filePath, StatusProcessing statusProcessing, 
+        public HistoryFileDataClient(string filePath, StatusProcessing statusProcessing, ColorPrintType colorPrintType,
                                      IEnumerable<IHistoryFileDataSource> historyFileDataSources, int errorCount)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
+            ColorPrintType = colorPrintType;
             HistoryFileDataSources = historyFileDataSources.ToList();
             ErrorCount = errorCount;
         }
@@ -29,6 +30,11 @@ namespace GadzhiModules.Modules.GadzhiConvertingModule.Models.Implementations.Hi
         /// Статус
         /// </summary>
         public StatusProcessing StatusProcessing { get; }
+
+        /// <summary>
+        /// Типы цветов для печати
+        /// </summary>
+        public ColorPrintType ColorPrintType { get; }
 
         /// <summary>
         /// Типы обработанных файлов

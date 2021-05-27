@@ -206,6 +206,7 @@
     <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\ConvertingFileTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\FileExtensionTypeConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryFileDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
     <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryTypeConverter.cs" />
@@ -289,6 +290,7 @@
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelPart.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataSourceViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelItem.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelPart.cs" />
     <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\LikeViewModel.cs" />

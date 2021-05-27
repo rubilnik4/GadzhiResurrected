@@ -10,12 +10,20 @@ namespace GadzhiDTOBase.TransferModels.Histories
     [DataContract]
     public class HistoryFileDataSourceResponse : IHistoryFileDataSource
     {
-        public HistoryFileDataSourceResponse(FileExtensionType fileExtensionType, string printerName, string paperSize)
+        public HistoryFileDataSourceResponse(string fileName, FileExtensionType fileExtensionType, 
+                                             string printerName, string paperSize)
         {
+            FileName = fileName;
             FileExtensionType = fileExtensionType;
             PrinterName = printerName;
             PaperSize = paperSize;
         }
+
+        /// <summary>
+        /// Имя файла
+        /// </summary>
+        [DataMember]
+        public string FileName { get; private set; }
 
         /// <summary>
         /// Типы допустимых расширений

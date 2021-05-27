@@ -12,11 +12,12 @@ namespace GadzhiDTOBase.TransferModels.Histories
     [DataContract]
     public class HistoryFileDataResponse: IHistoryFileData<HistoryFileDataSourceResponse>
     {
-        public HistoryFileDataResponse(string filePath, StatusProcessing statusProcessing,
+        public HistoryFileDataResponse(string filePath, StatusProcessing statusProcessing, ColorPrintType colorPrintType,
                                        IList<HistoryFileDataSourceResponse> historyFileDataSources, int errorCount)
         {
             FilePath = filePath;
             StatusProcessing = statusProcessing;
+            ColorPrintType = colorPrintType;
             HistoryFileDataSourceResponsesList = historyFileDataSources;
             ErrorCount = errorCount;
         }
@@ -32,6 +33,12 @@ namespace GadzhiDTOBase.TransferModels.Histories
         /// </summary>
         [DataMember]
         public StatusProcessing StatusProcessing { get; private set; }
+
+        /// <summary>
+        /// Типы цветов для печати
+        /// </summary>
+        [DataMember]
+        public ColorPrintType ColorPrintType { get; private set; }
 
         /// <summary>
         /// Типы обработанных файлов
