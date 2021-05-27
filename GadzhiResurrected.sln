@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiPdfPrinting", "Gadzhi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiConvertingLibrary", "GadzhiConvertingLibrary\GadzhiConvertingLibrary.csproj", "{3A1FD6DF-0853-4C0C-B9F0-28E62F156651}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GadzhiPrintersTest", "GadzhiPrintersTest\GadzhiPrintersTest.csproj", "{5B2FFB04-289E-48B6-8F24-4AB7FCF753A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 		{3A1FD6DF-0853-4C0C-B9F0-28E62F156651}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A1FD6DF-0853-4C0C-B9F0-28E62F156651}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A1FD6DF-0853-4C0C-B9F0-28E62F156651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B2FFB04-289E-48B6-8F24-4AB7FCF753A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B2FFB04-289E-48B6-8F24-4AB7FCF753A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B2FFB04-289E-48B6-8F24-4AB7FCF753A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B2FFB04-289E-48B6-8F24-4AB7FCF753A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,9 +147,10 @@ Global
 		{0063BB4F-3E38-4481-905C-4B33CA839130} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 		{20ED0B21-CDB2-4C6C-9E96-5FE6B9FA36EB} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 		{3A1FD6DF-0853-4C0C-B9F0-28E62F156651} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
+		{5B2FFB04-289E-48B6-8F24-4AB7FCF753A3} = {4F45BD72-0258-49CE-B7BB-65D09E4369D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {98F57CE6-3DBD-4E61-8716-023B38EBCE68}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
+		SolutionGuid = {98F57CE6-3DBD-4E61-8716-023B38EBCE68}
 	EndGlobalSection
 EndGlobal
