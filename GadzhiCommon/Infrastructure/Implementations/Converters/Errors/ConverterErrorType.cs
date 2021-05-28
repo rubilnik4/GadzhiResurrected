@@ -33,6 +33,7 @@ namespace GadzhiCommon.Infrastructure.Implementations.Converters.Errors
                 { ErrorConvertingType.InvalidEnumArgumentException , "Ошибка перечисления" },
                 { ErrorConvertingType.AttemptingCount , "Превышено число попыток" },
                 { ErrorConvertingType.InternalError , "Внутренняя ошибка" },
+                { ErrorConvertingType.DatabaseError, "Ошибка базы данных" },
                 { ErrorConvertingType.UnknownError, "Неизвестная ошибка" },
 
                 { ErrorConvertingType.ApplicationNotLoad , "Ошибка загрузки приложения" },

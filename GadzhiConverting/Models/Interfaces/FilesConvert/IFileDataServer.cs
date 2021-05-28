@@ -59,5 +59,10 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         /// Установить количество попыток конвертирования
         /// </summary>       
         IFileDataServer SetAttemptingCount(int attemptingCount);
+
+        /// <summary>
+        /// Изменить расширение
+        /// </summary>
+        IFileDataServer ChangeExtension(string extension);
     }
 }

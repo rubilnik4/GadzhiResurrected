@@ -108,7 +108,7 @@ namespace GadzhiMicrostation.Microstation.Implementations.ApplicationMicrostatio
             new PageSettings().
             Map(pageSettings => pageSettings.PrinterSettings.PaperSizes.Cast<PaperSize>()).
             FirstOrDefault(paper => CheckPaperSizeName(paper.PaperName, paperSize, prefixSearchPaperSize)).
-            Map(paperSizeChecked => new ResultAppValue<string>(paperSizeChecked.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
+            Map(paperSizeChecked => new ResultAppValue<string>(paperSizeChecked?.PaperName, new ErrorApplication(ErrorApplicationType.PaperSizeNotFound,
                                                                                                                 $"Формат печати {paperSize} не найден")));
 
         /// <summary>

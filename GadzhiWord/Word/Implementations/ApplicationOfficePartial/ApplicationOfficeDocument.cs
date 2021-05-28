@@ -1,4 +1,5 @@
 ﻿using GadzhiApplicationCommon.Extensions.Functional;
+using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
@@ -20,7 +21,8 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         /// </summary>
         public IResultAppValue<IDocumentWord> OpenDocument(string filePath) =>
            new ResultAppValue<IDocumentWord>(new DocumentWord(ApplicationWord.Documents.Open(filePath), this),
-                                             new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Word не создан"));
+                                             new ErrorApplication(ErrorApplicationType.FileNotOpen, "Документ Word не создан")).
+           ResultVoidOk(document => document.ExportToDocx());
 
         /// <summary>
         /// Создать новую книгу Excel

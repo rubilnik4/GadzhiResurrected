@@ -81,6 +81,28 @@ namespace GadzhiDAL.Entities.FilesConvert
         }
 
         /// <summary>
+        /// Присвоить статус ошибки
+        /// </summary>
+        public virtual void AddAttemptingCount()
+        {
+            AttemptingConvertCount += 1;
+        }
+
+        /// <summary>
+        /// Присвоить статус ошибки
+        /// </summary>
+        public virtual void ErrorConverting(string identityServerName)
+        {
+            StatusProcessingProject = StatusProcessingProject.Error;
+            AttemptingConvertCount += 1;
+            foreach (var fileData in FileDataEntities)
+            {
+                fileData.FileErrors = new List<ErrorComponent>{new ErrorComponent(ErrorConvertingType.DatabaseError,
+                                                                                  "Ошибка чтения базы данных") };
+            }
+        }
+
+        /// <summary>
         /// Присвоить статус отмены конвертирования, если файл необработан
         /// </summary>
         public virtual void AbortConverting(ClientServer clientServer)

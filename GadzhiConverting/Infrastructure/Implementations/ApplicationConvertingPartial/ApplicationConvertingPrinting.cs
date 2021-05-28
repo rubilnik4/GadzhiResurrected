@@ -21,6 +21,7 @@ using GadzhiConverting.Models.Interfaces.FilesConvert;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Enums.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
 using GadzhiCommon.Infrastructure.Implementations.Reflection;
 using GadzhiCommon.Models.Enums;
@@ -76,7 +77,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.ApplicationConvertingP
         /// Получить путь к сохраненному файлу для обработки
         /// </summary>        
         private static IResultCollection<IFileDataSourceServer> GetSavedFileDataSource(IDocumentLibrary documentLibrary, IFilePath filePath) =>
-            new FileDataSourceServer(documentLibrary.FullName, filePath.FilePathClient, ConvertingModeType.Main).
+            new FileDataSourceServer(documentLibrary.FullName, 
+                                     filePath.ChangeExtensions(FilePathOperations.ExtensionWithoutPointFromPath(documentLibrary.FullName)).
+                                              FilePathClient, 
+                                     ConvertingModeType.Main).
             Map(fileDataSource => new ResultValue<IFileDataSourceServer>(fileDataSource).ToResultCollection());
 
         /// <summary>

@@ -3,7 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Extensions.Functional.Result;
 using GadzhiCommon.Models.Implementations.Functional;
+using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiCommonServer.Enums;
 using GadzhiDAL.Entities.FilesConvert;
 using GadzhiDAL.Entities.PaperSizes;
@@ -50,11 +52,11 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             var packageDataEntity = await unitOfWork.Session.Query<PackageDataEntity>().
                                           OrderBy(package => package.CreationDateTime).
                                           FirstOrDefaultAsync(ConditionConverting(identityServerName));
-
-            packageDataEntity?.StartConverting(identityServerName);
-            var packageDataRequest = ConverterFilesDataEntitiesToDtoServer.PackageDataToRequest(packageDataEntity);
+            var packageDataRequest = ExecuteResultHandler.ExecuteBindResultValue(
+                () => ConverterFilesDataEntitiesToDtoServer.PackageDataToRequest(packageDataEntity));
+            ValidatePackage(packageDataRequest, packageDataEntity, identityServerName);
             await unitOfWork.CommitAsync();
-            return packageDataRequest;
+            return packageDataRequest.Value ?? PackageDataRequestServer.EmptyPackage;
         }
 
         /// <summary>
@@ -160,5 +162,26 @@ namespace GadzhiDAL.Services.Implementations.FileConvert
             package => (package.StatusProcessingProject == StatusProcessingProject.InQueue ||
                         package.StatusProcessingProject == StatusProcessingProject.Converting &&
                         package.IdentityServerName == identityServerName);
+
+        /// <summary>
+        /// Проверка правильности загружаемого пакета
+        /// </summary>
+        private void ValidatePackage(IResultValue<PackageDataRequestServer> packageDataRequest,
+                                     PackageDataEntity packageDataEntity, string identityServerName)
+        {
+            const int attemptingConvertCount = 2;
+            if (packageDataRequest.OkStatus && packageDataEntity?.AttemptingConvertCount <= attemptingConvertCount)
+            {
+                packageDataEntity?.StartConverting(identityServerName);
+            }
+            else if (packageDataRequest.HasErrors && packageDataEntity?.AttemptingConvertCount <= attemptingConvertCount)
+            {
+                packageDataEntity?.AddAttemptingCount();
+            }
+            else
+            {
+                packageDataEntity?.ErrorConverting(identityServerName);
+            }
+        }
     }
 }

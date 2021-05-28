@@ -22,6 +22,7 @@
         InvalidEnumArgumentException,
         AttemptingCount,
         InternalError,
+        DatabaseError,
         UnknownError,
         ApplicationNotLoad, // Microstation and Word Errors
         LibraryNotFound,

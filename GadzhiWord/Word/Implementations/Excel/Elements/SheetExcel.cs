@@ -33,7 +33,8 @@ namespace GadzhiWord.Word.Implementations.Excel.Elements
         /// <summary>
         /// Вставить данные из буфера
         /// </summary>
-        public void PasteFromClipBoard() => _workSheet.Paste();
+        public void PasteFromClipBoard() =>
+            _workSheet.Paste();
 
         /// <summary>
         /// Перейти на новую строку после последней ячейки

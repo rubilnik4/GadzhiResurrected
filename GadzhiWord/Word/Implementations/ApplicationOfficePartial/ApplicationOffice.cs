@@ -80,7 +80,8 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         /// <summary>
         /// Загрузилась ли оболочка Word и Excel
         /// </summary>
-        public bool IsApplicationValid => ApplicationWord != null && ApplicationExcel != null;
+        public bool IsApplicationValid =>
+            ApplicationWord != null && ApplicationExcel != null;
 
         /// <summary>
         /// Закрыть приложение
@@ -88,9 +89,11 @@ namespace GadzhiWord.Word.Implementations.ApplicationOfficePartial
         public void CloseApplication()
         {
             _applicationWord?.Quit();
+            _applicationExcel?.Application.Quit();
             _applicationExcel?.Quit();
             _applicationWord = null;
             _applicationExcel = null;
-        }    
+            ExcelInstance.KillAllPreviousProcess();
+        }
     }
 }

@@ -11,6 +11,7 @@ using GadzhiApplicationCommon.Models.Interfaces.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections;
 using GadzhiApplicationCommon.Models.Interfaces.StampCollections.StampPartial;
 using GadzhiCommon.Enums.FilesConvert;
+using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Implementations.FilesConvert;
 using GadzhiWord.Models.Implementations.Specification;
 using GadzhiWord.Models.Implementations.Specification.Table;
@@ -32,8 +33,8 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
     {
         public DocumentWord(Document document, IApplicationOffice applicationOffice)
         {
-            _document = document ?? throw new ArgumentNullException(nameof(document));
-            ApplicationOffice = applicationOffice ?? throw new ArgumentNullException(nameof(applicationOffice));
+            _document = document;
+            ApplicationOffice = applicationOffice;
         }
 
         /// <summary>
@@ -54,12 +55,14 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Путь к файлу
         /// </summary>
-        public string FullName => _fullName ??= _document?.FullName;
+        public string FullName =>
+            _fullName ??= _document?.FullName;
 
         /// <summary>
         /// Загрузился ли файл
         /// </summary>
-        public bool IsDocumentValid => _document != null;
+        public bool IsDocumentValid =>
+            _document != null;
 
         /// <summary>
         /// Формат
@@ -88,7 +91,8 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Сохранить файл
         /// </summary>
-        public void Save() => _document.Save();
+        public void Save() =>
+            _document.Save();
 
         /// <summary>
         /// Сохранить файл
@@ -119,9 +123,18 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
             ResultValueOkBind(tables => ExportByTableType(tables, filePath, stampDocumentType));
 
         /// <summary>
+        /// Экспорт в DocX
+        /// </summary>
+        public string ExportToDocx() =>
+            Path.GetExtension(_document.FullName).
+            WhereOk(fileExtension => !ValidFileExtensions.IsFileExtensionEqual(fileExtension, FileExtensionType.Docx),
+                    _ => { _document.SaveAs(_document.FullName + "x", WdSaveFormat.wdFormatXMLDocument); return _document.FullName; });
+
+        /// <summary>
         /// Закрыть файл файл
         /// </summary>
-        public void Close() => _document.Close();
+        public void Close() =>
+            _document.Close();
 
         /// <summary>
         /// Закрыть файл файл
@@ -135,7 +148,8 @@ namespace GadzhiWord.Word.Implementations.Word.DocumentWordPartial
         /// <summary>
         /// Закрыть приложение
         /// </summary>
-        public void CloseApplication() => ApplicationOffice.CloseApplication();
+        public void CloseApplication() =>
+            ApplicationOffice.CloseApplication();
 
         /// <summary>
         /// Подключить дополнительные файлы

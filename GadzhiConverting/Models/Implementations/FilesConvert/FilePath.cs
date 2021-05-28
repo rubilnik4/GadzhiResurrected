@@ -75,6 +75,13 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
             Map(filePathClient => new FilePath(filePathServer, filePathClient));
 
         /// <summary>
+        /// Заменить расширение
+        /// </summary>
+        public IFilePath ChangeExtensions(string fileExtensionType) =>
+            new FilePath(Path.ChangeExtension(FilePathServer, fileExtensionType.ToString()),
+                         Path.ChangeExtension(FilePathClient, fileExtensionType.ToString()));
+
+        /// <summary>
         /// Изменить имя сервера
         /// </summary>
         public IFilePath ChangeServerName(string serverName) =>

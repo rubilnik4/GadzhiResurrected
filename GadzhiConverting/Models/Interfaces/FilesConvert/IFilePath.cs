@@ -48,6 +48,11 @@ namespace GadzhiConverting.Models.Interfaces.FilesConvert
         IFilePath ChangeServerPath(string filePathServer);
 
         /// <summary>
+        /// Заменить путь к файлу на сервере
+        /// </summary>
+        IFilePath ChangeExtensions(string fileExtensionType);
+
+        /// <summary>
         /// Изменить имя сервера
         /// </summary>
         IFilePath ChangeServerName(string serverName);

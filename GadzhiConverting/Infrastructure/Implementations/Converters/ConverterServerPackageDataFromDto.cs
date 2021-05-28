@@ -26,30 +26,30 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
     /// </summary>      
     public class ConverterServerPackageDataFromDto : IConverterServerPackageDataFromDto
     {
-        /// <summary>
-        /// Проверка состояния папок и файлов
-        /// </summary>   
-        private readonly IFileSystemOperations _fileSystemOperations;
-
         public ConverterServerPackageDataFromDto(IFileSystemOperations fileSystemOperations)
         {
             _fileSystemOperations = fileSystemOperations;
         }
 
         /// <summary>
+        /// Проверка состояния папок и файлов
+        /// </summary>   
+        private readonly IFileSystemOperations _fileSystemOperations;
+
+        /// <summary>
         /// Конвертер пакета информации из трансферной модели в класс серверной части
         /// </summary>      
-        public async Task<IPackageServer> ToFilesDataServerAndSaveFile(PackageDataRequestServer packageDataRequest)
-        {
-            var filesDataServerToConvertTask = packageDataRequest.FilesData?.Select(fileData =>
-                                               ToFileDataServerAndSaveFile(fileData, packageDataRequest.Id.ToString()));
-            var filesDataServerToConvert = await Task.WhenAll(filesDataServerToConvertTask ?? new List<Task<IFileDataServer>>());
-
-            return new PackageServer(packageDataRequest.Id, packageDataRequest.AttemptingConvertCount,
+        public async Task<IResultValue<IPackageServer>> ToFilesDataServerAndSaveFile(PackageDataRequestServer packageDataRequest) =>
+             await packageDataRequest.FilesData.
+             Select(fileData => ToFileDataServerAndSaveFile(fileData, packageDataRequest.Id.ToString())).
+             Map(Task.WhenAll).
+             MapAsync(results => results.ToResultCollection()).
+             MapAsync(result => (IResultValue<IReadOnlyCollection<IFileDataServer>>)result).
+             ResultValueOkAsync(filesData => new PackageServer(packageDataRequest.Id, packageDataRequest.AttemptingConvertCount,
                                      StatusProcessingProject.Converting,
                                      ToConvertingSettings(packageDataRequest.ConvertingSettings),
-                                     filesDataServerToConvert);
-        }
+                                     filesData));
+
 
         /// <summary>
         /// Преобразовать параметры конвертации из трансферной модели
@@ -61,10 +61,10 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         /// <summary>
         /// Конвертер информации из трансферной модели в единичный класс
         /// </summary>      
-        private async Task<IFileDataServer> ToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest, string packageGuid) =>
+        private async Task<IResultValue<IFileDataServer>> ToFileDataServerAndSaveFile(FileDataRequestServer fileDataRequest, string packageGuid) =>
              await SaveFileFromDtoRequest(fileDataRequest, packageGuid).
-             MapAsync(result => new FileDataServer(result.Value ?? String.Empty, fileDataRequest.FilePath,
-                                                   fileDataRequest.ColorPrintType, StatusProcessing.InQueue, result.Errors));
+             ResultValueOkAsync(filePath => new FileDataServer(filePath, fileDataRequest.FilePath, fileDataRequest.ColorPrintType,
+                                                               StatusProcessing.InQueue, new List<IErrorCommon>()));
 
         /// <summary>
         /// Сохранить данные из трансферной модели на жесткий диск
@@ -72,7 +72,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converters
         private async Task<IResultValue<string>> SaveFileFromDtoRequest(FileDataRequestServer fileDataRequest, string packageGuid) =>
              await ValidateDtoData.IsFileDataRequestValid(fileDataRequest).
              ToResultValue(_fileSystemOperations.CreateFolderByName(ProjectSettings.ConvertingDirectory, packageGuid)).
-             ResultValueOk(directoryPath => (directoryPath, new Guid())).
+             ResultValueOk(directoryPath => (directoryPath, Guid.NewGuid())).
              ResultValueOkBindAsync(directoryGuid =>
                 SaveFile(fileDataRequest, directoryGuid.directoryPath, directoryGuid.Item2).
                 MapBindAsync(result => SaveAdditionalFileIsNeed(fileDataRequest, directoryGuid.directoryPath, directoryGuid.Item2).

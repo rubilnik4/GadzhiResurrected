@@ -22,6 +22,7 @@ using GadzhiConverting.Infrastructure.Implementations.Converting;
 using GadzhiConverting.Models.Implementations.FilesConvert;
 using GadzhiConvertingLibrary.Infrastructure.Implementations.Services;
 using GadzhiConvertingLibrary.Infrastructure.Interfaces.Services;
+using GadzhiDTOServer.TransferModels.FilesConvert;
 using static GadzhiCommon.Infrastructure.Implementations.ExecuteAndCatchErrors;
 using static GadzhiCommon.Extensions.Functional.Result.ExecuteResultHandler;
 
@@ -45,7 +46,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
             _converterServerPackageDataToDto = converterServerPackageDataToDto ?? throw new ArgumentNullException(nameof(converterServerPackageDataToDto));
             _messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
             _fileSystemOperations = fileSystemOperations ?? throw new ArgumentNullException(nameof(fileSystemOperations));
-         
+
             _convertingUpdaterSubscriptions = new CompositeDisposable();
             _idPackage = null;
         }
@@ -139,14 +140,14 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// </summary>
         private void StartConvertingFile() =>
             IsConverting = true;
-        
+
 
         /// <summary>
         /// Отметки при завершении конвертирования файла
         /// </summary>
         private void StopConvertingFile() =>
             IsConverting = false;
-        
+
 
         /// <summary>
         /// Получить пакет на конвертирование и запустить процесс
@@ -160,15 +161,29 @@ namespace GadzhiConverting.Infrastructure.Implementations
                                 UsingServiceRetry(service => service.Operations.GetFirstInQueuePackage(ProjectSettings.NetworkName));
             if (packageResult.OkStatus && !packageResult.Value.IsEmptyPackage())
             {
-                var filesDataServer = await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageResult.Value);
-                _idPackage = filesDataServer.Id;
-                await ConvertingPackage(filesDataServer);
+                await ConvertingPackageCheck(packageResult.Value);
             }
             else if (packageResult.OkStatus && packageResult.Value.IsEmptyPackage())
             {
                 await ActionsInEmptyQueue();
             }
+            else
+            {
+                _messagingService.ShowErrors(packageResult.Errors);
+            }
         }
+
+        /// <summary>
+        /// Предварительная проверка конвертации
+        /// </summary>
+        private async Task ConvertingPackageCheck(PackageDataRequestServer packageRequest) =>
+            await _converterServerPackageDataFromDto.ToFilesDataServerAndSaveFile(packageRequest).
+            ResultVoidOkBindAsync(async package =>
+                {
+                    _idPackage = package.Id;
+                    await ConvertingPackage(package);
+                }).
+            ResultVoidBadAsync(errors => _messagingService.ShowErrors(errors));
 
         /// <summary>
         /// Конвертировать пакет
@@ -245,7 +260,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
                             _loggerService.ErrorsLog(result.Errors);
                             _messagingService.ShowErrors(result.Errors);
                         }
-                       
+
                         _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Upload, ReflectionInfo.GetMethodBase(this), packageServer.Id.ToString());
                         break;
                     }

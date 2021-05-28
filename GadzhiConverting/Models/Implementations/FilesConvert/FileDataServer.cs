@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GadzhiApplicationCommon.Extensions.Functional;
 using GadzhiCommon.Models.Interfaces.Errors;
 using GadzhiConverting.Models.Interfaces.FilesConvert;
 
@@ -21,11 +22,11 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         public const int ATTEMPTING_DEFAULT_COUNT = 1;
 
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, IErrorCommon fileErrors)
-         : this(fileDataServer, statusProcessing, new List<IErrorCommon>() { fileErrors }) { }
+         : this(fileDataServer, statusProcessing, new List<IErrorCommon> { fileErrors }) { }
 
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing, IEnumerable<IErrorCommon> fileErrors)
           : this(fileDataServer, statusProcessing, fileDataServer.NonNull().FilesDataSourceServer, fileErrors) { }
-        
+
         public FileDataServer(IFileDataServer fileDataServer, StatusProcessing statusProcessing,
                               IEnumerable<IFileDataSourceServer> filesDataSourceServer, IEnumerable<IErrorCommon> fileErrors)
         : this(fileDataServer.NonNull().FilePathServer, fileDataServer.NonNull().FilePathClient,
@@ -41,9 +42,9 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
 
         public FileDataServer(string filePathServer, string filePathClient, ColorPrintType colorPrintType,
                               StatusProcessing statusProcessing, int attemptingConvertCount,
-                              IEnumerable<IFileDataSourceServer> filesDataSourceServer, 
+                              IEnumerable<IFileDataSourceServer> filesDataSourceServer,
                               IEnumerable<IErrorCommon> fileErrors)
-            :base(filePathServer, filePathClient)
+            : base(filePathServer, filePathClient)
         {
             ColorPrintType = colorPrintType;
             StatusProcessing = statusProcessing;
@@ -102,7 +103,15 @@ namespace GadzhiConverting.Models.Implementations.FilesConvert
         /// Установить количество попыток конвертирования
         /// </summary>       
         public IFileDataServer SetAttemptingCount(int attemptingCount) =>
-            new FileDataServer(FilePathServer, FilePathClient, ColorPrintType, StatusProcessing, 
+            new FileDataServer(FilePathServer, FilePathClient, ColorPrintType, StatusProcessing,
                                attemptingCount, FilesDataSourceServer, FileErrors);
+
+        /// <summary>
+        /// Изменить расширение
+        /// </summary>
+        public IFileDataServer ChangeExtension(string extension) =>
+            ChangeExtensions(extension).
+            Map(fileData => new FileDataServer(fileData.FilePathServer, fileData.FilePathClient, ColorPrintType, 
+                                               StatusProcessing, AttemptingConvertCount, FilesDataSourceServer, FileErrors));
     }
 }

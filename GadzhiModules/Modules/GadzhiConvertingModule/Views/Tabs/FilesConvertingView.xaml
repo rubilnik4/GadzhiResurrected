@@ -151,6 +151,7 @@
                   SelectionUnit="FullRow"     
                   AutoGenerateColumns="False"
                   EnableRowVirtualization="True"
+                  HorizontalScrollBarVisibility="Disabled"
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}">

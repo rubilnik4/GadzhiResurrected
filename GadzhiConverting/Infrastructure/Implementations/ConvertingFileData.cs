@@ -113,7 +113,7 @@ namespace GadzhiConverting.Infrastructure.Implementations
         /// Создать PDF
         /// </summary>
         private IResultCollection<IFileDataSourceServer> CreateProcessingFile(IDocumentLibrary documentLibrary, IFileDataServer fileDataServer,
-                                                                   IConvertingSettings convertingSettings) =>
+                                                                              IConvertingSettings convertingSettings) =>
             new ResultError().
             ResultVoidOk(_ => _messagingService.ShowMessage("Создание файлов PDF и печать")).
             ResultVoidOk(_ => _loggerService.LogByObject(LoggerLevel.Info, LoggerAction.Operation, ReflectionInfo.GetMethodBase(this), fileDataServer.FileNameServer)).

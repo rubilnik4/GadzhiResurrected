@@ -18,5 +18,10 @@ namespace GadzhiWord.Word.Interfaces.Word
         /// Таблицы
         /// </summary>
         public IReadOnlyList<ITableElementWord> Tables { get; }
+
+        /// <summary>
+        /// Экспорт в DocX
+        /// </summary>
+        string ExportToDocx();
     }
 }

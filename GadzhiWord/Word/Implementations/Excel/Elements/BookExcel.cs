@@ -51,7 +51,7 @@ namespace GadzhiWord.Word.Implementations.Excel.Elements
         /// <summary>
         /// Закрыть
         /// </summary>
-        public void Close() => _workbook.Close();
+        public void Close() => _workbook.Close(true);
 
         /// <summary>
         /// Получить список листов

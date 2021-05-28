@@ -49,6 +49,11 @@ namespace GadzhiWord.Word.Interfaces.Word.Elements
         void CopyToClipBoard();
 
         /// <summary>
+        /// Скопировать строки в буфер
+        /// </summary>
+        void CopyRowsToClipBoard(int minRow, int maxRow);
+
+        /// <summary>
         /// Установить автоподбор ширины таблицы
         /// </summary>
         void SetAutoFit(bool autoFit);

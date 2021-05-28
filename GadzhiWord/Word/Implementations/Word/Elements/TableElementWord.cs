@@ -46,12 +46,14 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// <summary>
         /// Получить строки таблицы
         /// </summary>
-        public IReadOnlyList<IRowElementWord> RowsElementWord => _rowsElementWord ??= GetRowsElement();
+        public IReadOnlyList<IRowElementWord> RowsElementWord =>
+            _rowsElementWord ??= GetRowsElement();
 
         /// <summary>
         /// Получить ячейки таблицы
         /// </summary>
-        public IEnumerable<ICellElementWord> CellsElementWord => RowsElementWord.SelectMany(row => row.CellsElement);
+        public IEnumerable<ICellElementWord> CellsElementWord =>
+            RowsElementWord.SelectMany(row => row.CellsElement);
 
         /// <summary>
         /// Количество строк в начальной таблице Word без обертки
@@ -61,7 +63,8 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// <summary>
         /// Количество строк в начальной таблице Word без обертки
         /// </summary>
-        public int RowsCountInitial => _rowsCountInitial ??= _tableElement.Rows.Count;
+        public int RowsCountInitial => 
+            _rowsCountInitial ??= _tableElement.Rows.Count;
 
         /// <summary>
         /// Количество колонок в начальной таблице Word без обертки
@@ -99,7 +102,20 @@ namespace GadzhiWord.Word.Implementations.Word.Elements
         /// <summary>
         /// Скопировать таблицу в буфер
         /// </summary>
-        public void CopyToClipBoard() => _tableElement.Range.Copy();
+        public void CopyToClipBoard() => 
+            _tableElement.Range.Copy();
+
+        /// <summary>
+        /// Скопировать строки в буфер
+        /// </summary>
+        public void CopyRowsToClipBoard(int minRow, int maxRow)
+        {
+            int minRowValid = minRow >= 1 ? minRow : 1;
+            int maxRowValid = maxRow <= RowsCountInitial ? maxRow : RowsCountInitial;
+            var range = _tableElement.Range;
+            range.SetRange(minRowValid, maxRowValid);
+            range.Copy();
+        }
 
         /// <summary>
         /// Установить автоподбор ширины таблицы

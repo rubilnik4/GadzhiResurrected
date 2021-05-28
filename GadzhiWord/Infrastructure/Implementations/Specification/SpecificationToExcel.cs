@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using GadzhiApplicationCommon.Extensions.Functional.Result;
 using GadzhiApplicationCommon.Models.Implementation.Errors;
 using GadzhiApplicationCommon.Models.Interfaces.Errors;
@@ -34,7 +35,7 @@ namespace GadzhiWord.Infrastructure.Implementations.Specification
         /// <summary>
         /// Предварительная обработка листа
         /// </summary>
-        private static void PrepareSheet(ISheetExcel sheetExcel, SpecificationType specificationType) => 
+        private static void PrepareSheet(ISheetExcel sheetExcel, SpecificationType specificationType) =>
             TableProcessingSpecification.SetColumnsWidth(sheetExcel, specificationType);
 
 
