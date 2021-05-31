@@ -24,31 +24,22 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Удалить всю информацию из папки
         /// </summary>      
-        public void DeleteAllDataInDirectory(string directoryPath, DateTime timeNow, int hoursElapsed = -1)
-        {
-            if (String.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath)) return;
-            var directoryInfo = new DirectoryInfo(directoryPath);
-            foreach (var fileInfo in directoryInfo.EnumerateFiles())
-            {
-                if ((timeNow - fileInfo.LastWriteTime).Ticks >= hoursElapsed && !IsFileLocked(fileInfo).OkStatus)
-                {
-                    fileInfo.Delete();
-                }
-            }
-            foreach (var dir in directoryInfo.EnumerateDirectories())
-            {
-                if ((timeNow - dir.LastWriteTime).Ticks >= hoursElapsed)
-                {
-                    dir.Delete(true);
-                }
-            }
-        }
+        public IResultCollection<string> DeleteAllDataInDirectory(string directoryPath, DateTime timeNow, int hoursElapsed = -1) =>
+            directoryPath.
+            WhereContinue(_ => !String.IsNullOrWhiteSpace(directoryPath) && Directory.Exists(directoryPath),
+                okFunc: _ => new ResultValue<string>(directoryPath),
+                badFunc: _ => new ResultValue<string>(new ErrorCommon(ErrorConvertingType.IncorrectFileName,
+                                                                      "Неправильно заданный путь директории дл удаления"))).
+            ResultValueOk(path => new DirectoryInfo(path)).
+            ResultValueOkBind(directoryInfo => DeleteOperations.DeleteDirectories(directoryInfo, timeNow, hoursElapsed).
+                                               ConcatResult(DeleteOperations.DeleteFiles(directoryInfo, timeNow, hoursElapsed))).
+            ToResultCollection();
 
         /// <summary>
         /// Удалить файл
         /// </summary>
-        public void DeleteFile(string filePath) =>
-            File.Delete(filePath);
+        public IResultValue<string> DeleteFile(string filePath) =>
+           ExecuteResultHandler.ExecuteBindResultValue(() => { File.Delete(filePath); return filePath; });
 
         /// <summary>
         /// Представить файл в двоичном виде и запаковать
@@ -98,7 +89,7 @@ namespace GadzhiCommon.Infrastructure.Implementations
         /// <summary>
         /// Создать поддиректорию и присвоить идентификатор
         /// </summary>     
-        public string CreateFolderByGuid(string startingPath) => 
+        public string CreateFolderByGuid(string startingPath) =>
             CreateFolderByName(startingPath, Guid.NewGuid().ToString());
 
         /// <summary>
@@ -145,15 +136,5 @@ namespace GadzhiCommon.Infrastructure.Implementations
             await sourceStream.WriteAsync(fileByte, 0, fileByte.Length);
             return filePath;
         }
-
-        /// <summary>
-        /// Проверка, используется ли файл
-        /// </summary>
-        private static IResultError IsFileLocked(FileInfo file) =>
-            ExecuteResultHandler.ExecuteBindResultValue(() =>
-            {
-                using var stream = file?.Open(FileMode.Open, FileAccess.Read, FileShare.None);
-                return file;
-            }).ToResult();
     }
 }

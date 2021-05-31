@@ -269,7 +269,6 @@ namespace GadzhiConverting.Infrastructure.Implementations
                     _loggerService.InfoLog("Abort converting by user");
                     break;
             }
-
             _idPackage = null;
         }
 

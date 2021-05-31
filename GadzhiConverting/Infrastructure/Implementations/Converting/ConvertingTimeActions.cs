@@ -52,11 +52,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converting
                 loggerService.DebugLog("Очистка неиспользуемых пакетов...");
 
                 var result = await convertingServerServiceFactory.UsingServiceRetry(service => service.Operations.DeleteAllUnusedPackagesUntilDate(dateTimeNow));
-                if (result.HasErrors)
-                {
-                    messagingService.ShowErrors(result.Errors);
-                    loggerService.ErrorsLog(result.Errors);
-                }
+                if (result.HasErrors) messagingService.ShowAndLogErrors(result.Errors);
 
                 Properties.Settings.Default.UnusedDataCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();
@@ -68,7 +64,7 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converting
         /// </summary>
         [Logger]
         public static async Task DeleteAllUnusedDataOnDisk(IFileSystemOperations fileSystemOperations,
-                                                            IMessagingService messagingService, ILoggerService loggerService)
+                                                           IMessagingService messagingService, ILoggerService loggerService)
         {
             var dateTimeNow = DateTime.Now;
             var timeElapsed = new TimeSpan((dateTimeNow - Properties.Settings.Default.ConvertingDataFolderCheck).Ticks);
@@ -77,8 +73,11 @@ namespace GadzhiConverting.Infrastructure.Implementations.Converting
                 messagingService.ShowMessage("Очистка пространства на жестком диске...");
                 loggerService.DebugLog("Очистка пространства на жестком диске...");
 
-                await Task.Run(() => fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory, DateTime.Now,
-                                                                                   ProjectSettings.IntervalHoursToDeleteUnusedPackages));
+                KillPreviousRunProcesses();
+                var  result = await Task.Run(
+                    () => fileSystemOperations.DeleteAllDataInDirectory(ProjectSettings.ConvertingDirectory, DateTime.Now,
+                                                                        ProjectSettings.IntervalHoursToDeleteUnusedPackages));
+                if (result.HasErrors) messagingService.ShowAndLogErrors(result.Errors);
 
                 Properties.Settings.Default.ConvertingDataFolderCheck = new TimeSpan(dateTimeNow.Ticks);
                 Properties.Settings.Default.Save();
