@@ -2,6 +2,7 @@
 using System.Reflection;
 using GadzhiModules.Modules;
 using GadzhiResurrected.Infrastructure.Implementations.Reflections;
+using GadzhiResurrected.Modules;
 using Prism.Mvvm;
 
 namespace GadzhiResurrected.ViewModels

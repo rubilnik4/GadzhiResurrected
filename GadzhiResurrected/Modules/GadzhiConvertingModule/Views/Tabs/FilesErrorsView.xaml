@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="GadzhiResurrected.Modules.GadzhiConvertingModule.Views.Tabs.FilesErrorsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             xmlns:filesErrorsViewModelItems="clr-namespace:GadzhiResurrected.Modules.GadzhiConvertingModule.ViewModels.Tabs.FilesErrorsViewModelItems"
+             xmlns:tabs="clr-namespace:GadzhiResurrected.Modules.GadzhiConvertingModule.ViewModels.Tabs"
+             d:DataContext="{d:DesignInstance Type=tabs:FilesErrorsViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <Grid.Resources>
+            <Style x:Key="TextBlockDataGrid" 
+                   TargetType="{x:Type TextBlock}" 
+                   BasedOn="{StaticResource MaterialDesignTextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </Grid.Resources>
+        
+            <DataGrid HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch"                  
+                  ItemsSource="{Binding FilesErrorsCollection}"                   
+                  SelectionMode="Extended"  
+                  SelectionUnit="FullRow"                 
+                  AutoGenerateColumns="False"                
+                  EnableRowVirtualization="True"
+                  CanUserReorderColumns="False"   
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False" 
+                  CanUserSortColumns="False"
+                  CanUserResizeRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Имя файла" 
+                                    Width="0.5*" 
+                                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="filesErrorsViewModelItems:FileErrorViewModelItem">
+                            <TextBlock Style="{StaticResource TextBlockDataGrid}" 
+                                       Text="{Binding FileName}"
+                                       ToolTip="{Binding FileName}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Тип ошибки" 
+                                        Width="0.5*" 
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="filesErrorsViewModelItems:FileErrorViewModelItem">
+                            <TextBlock Style="{StaticResource TextBlockDataGrid}" 
+                                       Text="{Binding ErrorTypeString}"
+                                       ToolTip="{Binding ErrorTypeString}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Описание ошибки" 
+                                        Width="1*" 
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="filesErrorsViewModelItems:FileErrorViewModelItem">
+                            <TextBlock Style="{StaticResource TextBlockDataGrid}" 
+                                       Text="{Binding ErrorDescription}"
+                                       ToolTip="{Binding ErrorDescription}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

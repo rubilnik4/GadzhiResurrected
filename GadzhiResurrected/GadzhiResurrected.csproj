@@ -97,8 +97,17 @@
     <Reference Include="AspectInjector.Broker, Version=2.4.0.0, Culture=neutral, PublicKeyToken=a29e12442a3d3609, processorArchitecture=MSIL">
       <HintPath>..\packages\AspectInjector.2.4.0\lib\netstandard2.0\AspectInjector.Broker.dll</HintPath>
     </Reference>
+    <Reference Include="ChannelAdam.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5cc5a4db964eb79, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.Core.1.2.1\lib\net45\ChannelAdam.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ChannelAdam.Wcf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=947cb12151510e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.Wcf.2.1.1\lib\net45\ChannelAdam.Wcf.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.5\lib\net47\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=2.0.0.2422, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.0\lib\net452\MaterialDesignColors.dll</HintPath>
@@ -114,6 +123,45 @@
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Context, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.Context.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Context.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Coordination, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.Coordination.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Coordination.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Interop.WaitHandles, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.Interop.WaitHandles.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Interop.WaitHandles.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Oop, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.Oop.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Oop.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Tasks, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.Tasks.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.Cancellation, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.Cancellation.1.0.5\lib\netstandard2.0\Nito.Cancellation.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.Collections.Deque, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.Collections.Deque.1.0.4\lib\netstandard2.0\Nito.Collections.Deque.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.Disposables, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.Disposables.2.0.1\lib\net461\Nito.Disposables.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.Mvvm.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.Mvvm.Async.1.0.0-pre-03\lib\netstandard2.0\Nito.Mvvm.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.Mvvm.Core, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.Mvvm.Core.1.2.2\lib\netstandard2.0\Nito.Mvvm.Core.dll</HintPath>
     </Reference>
     <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
@@ -158,6 +206,9 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reactive, Version=4.4.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.4.4.1\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reflection.Metadata, Version=1.4.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.Metadata.1.8.1\lib\net461\System.Reflection.Metadata.dll</HintPath>
     </Reference>
@@ -168,6 +219,7 @@
     <Reference Include="System.Runtime.InteropServices" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.4.7.1\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
@@ -178,6 +230,8 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -205,6 +259,86 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\AboutApplicationDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\OkCancelDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\DialogViews\ResultDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Resources\DialogResource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Resources\GadzhiResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ConvertingSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesConvertingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryDataPartView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryFileDataPartView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryFilterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\LikeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerViews\ServerDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerViews\ServerInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerViews\ServerTotalView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -213,7 +347,166 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\Wpf\Behaviors\DataGridSelectedItemsBehavior.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\HyperlinkBehavior.cs" />
+    <Compile Include="Helpers\Wpf\Behaviors\ListBoxSelectedItemsBehavior.cs" />
+    <Compile Include="Helpers\Wpf\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhi.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiFileData.cs" />
+    <Compile Include="Infrastructure\Implementations\ApplicationGadzhi\ApplicationGadzhiServices.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ColorPrintConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataFromDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConverterClientPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ConvertingModeTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\ConvertingFileTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\FileExtensionTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryDataConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryFileDataConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Histories\HistoryTypeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\Likes\LikeConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\PdfNamingConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerActivityConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerStates\ServerCompleteFilesConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerStates\ServerDetailConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\ServerStates\ServersInfoConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\Converters\StatusProcessingProjectConverter.cs" />
+    <Compile Include="Infrastructure\Implementations\DialogService.cs" />
+    <Compile Include="Infrastructure\Implementations\FileDataProcessingStatusMark.cs" />
+    <Compile Include="Infrastructure\Implementations\Identities\ClientIdentity.cs" />
     <Compile Include="Infrastructure\Implementations\Reflections\VersionReflection.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\ConvertingClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\HistoryClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\LikeClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\ServerStateClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\SignatureClientServiceFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\Services\WcfClientServicesFactory.cs" />
+    <Compile Include="Infrastructure\Implementations\StatusProcessingInformation.cs" />
+    <Compile Include="Infrastructure\Implementations\Validates\FilesDataValidation.cs" />
+    <Compile Include="Infrastructure\Implementations\Validates\PackageDataValidation.cs" />
+    <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhi.cs" />
+    <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiFileData.cs" />
+    <Compile Include="Infrastructure\Interfaces\ApplicationGadzhi\IApplicationGadzhiServices.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientPackageDataFromDto.cs" />
+    <Compile Include="Infrastructure\Interfaces\Converters\IConverterClientPackageDataToDto.cs" />
+    <Compile Include="Infrastructure\Interfaces\IDialogService.cs" />
+    <Compile Include="Infrastructure\Interfaces\IFileDataProcessingStatusMark.cs" />
+    <Compile Include="Infrastructure\Interfaces\IStatusProcessingInformation.cs" />
+    <Compile Include="Infrastructure\Interfaces\Services\IWcfClientServicesFactory.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\GadzhiConvertingModule.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\DialogButtonsType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\DialogResultType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\DialogViewModel\MessageDialogType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Enums\Histories\HistoryType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FileData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\FilesQueueInfo.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\FileStatus.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\PackageStatus.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\Information\QueueStatus.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\PackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\ReactiveSubjects\ActionType.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\FileConverting\ReactiveSubjects\FilesChange.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryDataClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Histories\HistoryFileDataSourceClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\Likes\LikeIdentityClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ConvertingMode.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ConvertingSettings.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectResources.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ProjectSettings\ProjectSettings.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerCompleteFilesClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServerDetailClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Implementations\ServerStates\ServersInfoClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IFileData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\FileConverting\IPackageData.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\Histories\IHistoryFileDataClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IConvertingSettings.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectResources.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ProjectSettings\IProjectSettings.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ServerStates\IServerCompleteFilesClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Models\Interfaces\ServerStates\IServerDetailClient.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Base\DialogViewModelBase.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\AboutApplicationDialogViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\DialogFactory.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\MessageDialogViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\OkCancelDialogViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\DialogViewModel\ResultDialogViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\GadzhiConvertingViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ConvertingSettingsViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesConvertingViewModelItems\FileDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\FilesErrorsViewModelItems\FileErrorViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryDataViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryFilterViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryDataViewModelPart.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataSourceViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\HistoryViewModels\HistoryViewModelItems\HistoryFileDataViewModelPart.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\LikeViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\LikeViewModelItems\LikeViewModelItem.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerDetailViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerInfoViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\ViewModels\Tabs\ServerViewModels\ServerTotalViewModel.cs" />
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\AboutApplicationDialogView.xaml.cs">
+      <DependentUpon>AboutApplicationDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\MessageDialogView.xaml.cs">
+      <DependentUpon>MessageDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\OkCancelDialogView.xaml.cs">
+      <DependentUpon>OkCancelDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\DialogViews\ResultDialogView.xaml.cs">
+      <DependentUpon>ResultDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\GadzhiConvertingView.xaml.cs">
+      <DependentUpon>GadzhiConvertingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ConvertingSettingsView.xaml.cs">
+      <DependentUpon>ConvertingSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesConvertingView.xaml.cs">
+      <DependentUpon>FilesConvertingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\FilesErrorsView.xaml.cs">
+      <DependentUpon>FilesErrorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryView.xaml.cs">
+      <DependentUpon>HistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryDataPartView.xaml.cs">
+      <DependentUpon>HistoryDataPartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataItems\HistoryFileDataPartView.xaml.cs">
+      <DependentUpon>HistoryFileDataPartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryDataView.xaml.cs">
+      <DependentUpon>HistoryDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\HistoryViews\HistoryFilterView.xaml.cs">
+      <DependentUpon>HistoryFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\LikeView.xaml.cs">
+      <DependentUpon>LikeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerView.xaml.cs">
+      <DependentUpon>ServerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerViews\ServerDetailView.xaml.cs">
+      <DependentUpon>ServerDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerViews\ServerInfoView.xaml.cs">
+      <DependentUpon>ServerInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GadzhiConvertingModule\Views\Tabs\ServerViews\ServerTotalView.xaml.cs">
+      <DependentUpon>ServerTotalView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\RegionNames.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -262,13 +555,13 @@
       <Project>{C17ACFF2-E801-4A76-9E7C-DB9EA825DC65}</Project>
       <Name>GadzhiCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GadzhiDTOBase\GadzhiDTOBase.csproj">
+      <Project>{6CC66305-C66B-4D9B-9ECF-5089A5FE8369}</Project>
+      <Name>GadzhiDTOBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GadzhiDTOClient\GadzhiDTOClient.csproj">
       <Project>{de167026-7a41-4b2c-8f2a-00ea175e891e}</Project>
       <Name>GadzhiDTOClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GadzhiModules\GadzhiModules.csproj">
-      <Project>{c0ec27ff-7373-45d7-b399-0c6afe0e8bf4}</Project>
-      <Name>GadzhiModules</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

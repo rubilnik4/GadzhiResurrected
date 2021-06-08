@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GadzhiCommon.Infrastructure.Implementations;
 using GadzhiCommon.Infrastructure.Interfaces;
-using GadzhiModules.Infrastructure.Implementations;
-using GadzhiModules.Infrastructure.Interfaces;
 using GadzhiModules.Modules.GadzhiConvertingModule;
 using GadzhiResurrected.Views;
 using Prism.Ioc;
@@ -11,11 +9,13 @@ using Prism.Mvvm;
 using Prism.Unity;
 using System.Windows;
 using GadzhiCommon.Infrastructure.Implementations.Logger;
-using GadzhiModules.Infrastructure.Implementations.ApplicationGadzhi;
-using GadzhiModules.Infrastructure.Interfaces.ApplicationGadzhi;
-using GadzhiModules.Modules.GadzhiConvertingModule.ViewModels;
+using GadzhiResurrected.Infrastructure.Implementations;
+using GadzhiResurrected.Infrastructure.Interfaces;
+using GadzhiResurrected.Infrastructure.Interfaces.ApplicationGadzhi;
+using GadzhiResurrected.Modules.GadzhiConvertingModule;
 using GadzhiResurrected.ViewModels;
 using Unity;
+using ApplicationGadzhi = GadzhiResurrected.Infrastructure.Implementations.ApplicationGadzhi.ApplicationGadzhi;
 
 namespace GadzhiResurrected
 {

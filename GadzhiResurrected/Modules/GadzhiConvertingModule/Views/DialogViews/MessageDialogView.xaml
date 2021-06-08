@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="GadzhiResurrected.Modules.GadzhiConvertingModule.Views.DialogViews.MessageDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:converters="clr-namespace:GadzhiResurrected.Helpers.Wpf.Converters"
+             xmlns:dialogViewModel="clr-namespace:GadzhiResurrected.Modules.GadzhiConvertingModule.ViewModels.DialogViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600"
+             MinWidth="300"
+             d:DataContext="{d:DesignInstance Type=dialogViewModel:MessageDialogViewModel, IsDesignTimeCreatable=False}"
+             >
+    <Grid>
+        <Grid.Resources >
+            <ResourceDictionary>
+                <converters:BoolToVisibilityConverter x:Key="VisibilityConverter"
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Collapsed"/>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" 
+                    Style="{StaticResource StackPanelTitle}">
+            <TextBlock Text="{Binding Title}"
+                       Style="{StaticResource TextBlockTitle}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Style="{StaticResource StackPanelResult}">
+            <materialDesign:PackIcon Kind="Information"
+                                     Style="{StaticResource PackIconResultStyle}"
+                                     Visibility="{Binding IsInformationType, Converter={StaticResource VisibilityConverter}}"/>
+            <materialDesign:PackIcon Kind="Error"
+                                     Style="{StaticResource PackIconResultStyle}"
+                                     Foreground="{StaticResource ColorRedError}"
+                                     Visibility="{Binding IsErrorType, Converter={StaticResource VisibilityConverter}}"/>
+            <TextBlock Text="{Binding Message}"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <DockPanel Grid.Row="2"
+                   Style="{StaticResource DockPanelButtons}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" 
+                        IsCancel="True"
+                        Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                        Content="Закрыть"
+                        Style="{StaticResource ButtonResult}">
+                </Button>
+            </Grid>
+        </DockPanel>
+
+    </Grid>
+</UserControl>
